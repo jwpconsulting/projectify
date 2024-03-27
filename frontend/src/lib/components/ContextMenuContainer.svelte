@@ -55,23 +55,24 @@
                 }
                 const { anchor } = $contextMenuState;
 
+                const callback = () => repositionContextMenu(anchor);
+
                 unsubscribers = {
                     removeFocusTrap: keepFocusInside(contextMenu),
                     removeResizeObserver: addResizeObserver(
                         contextMenu,
-                        anchor,
+                        callback,
                     ),
-                    removeMutationObserver: addMutationObserver(anchor),
+                    removeMutationObserver: addMutationObserver(
+                        anchor,
+                        callback,
+                    ),
                     removeEscapeSubscriber: handleKey(
                         "Escape",
                         closeContextMenu,
                     ),
-                    removeScrollTrap: onScroll(() =>
-                        repositionContextMenu(anchor),
-                    ),
-                    removeResizeListener: onResize(
-                        repositionContextMenu.bind(null, anchor),
-                    ),
+                    removeScrollTrap: onScroll(callback),
+                    removeResizeListener: onResize(callback),
                 };
             } else {
                 clearTraps();
@@ -102,11 +103,9 @@
      */
     function addResizeObserver(
         contextMenu: HTMLElement,
-        anchor: HTMLElement,
+        callback: () => void,
     ): () => void {
-        const resizeObserver = new ResizeObserver(() =>
-            repositionContextMenu(anchor),
-        );
+        const resizeObserver = new ResizeObserver(callback);
         resizeObserver.observe(contextMenu);
         return () => resizeObserver.disconnect();
     }
@@ -114,10 +113,11 @@
     /**
      * Observe changes made to context menu anchor
      */
-    function addMutationObserver(anchor: HTMLElement): () => void {
-        const mutationObserver = new MutationObserver(() =>
-            repositionContextMenu(anchor),
-        );
+    function addMutationObserver(
+        anchor: HTMLElement,
+        callback: () => void,
+    ): () => void {
+        const mutationObserver = new MutationObserver(callback);
         const mutationObserverConfig: MutationObserverInit = {
             childList: true,
         };
