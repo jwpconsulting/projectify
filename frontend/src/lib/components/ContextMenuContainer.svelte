@@ -31,7 +31,8 @@
     let contextMenu: HTMLElement | undefined = undefined;
 
     interface Unsubscribers {
-        removeObservers: () => void;
+        removeResizeObserver: () => void;
+        removeMutationObserver: () => void;
         removeFocusTrap: () => void;
         removeEscapeSubscriber: () => void;
         removeScrollTrap: () => void;
@@ -56,7 +57,11 @@
 
                 unsubscribers = {
                     removeFocusTrap: keepFocusInside(contextMenu),
-                    removeObservers: addObservers(contextMenu, anchor),
+                    removeResizeObserver: addResizeObserver(
+                        contextMenu,
+                        anchor,
+                    ),
+                    removeMutationObserver: addMutationObserver(anchor),
                     removeEscapeSubscriber: handleKey(
                         "Escape",
                         closeContextMenu,
@@ -81,22 +86,32 @@
             return;
         }
         unsubscribers.removeFocusTrap();
-        unsubscribers.removeObservers();
+        unsubscribers.removeResizeObserver();
+        unsubscribers.removeMutationObserver();
         unsubscribers.removeEscapeSubscriber();
         unsubscribers.removeScrollTrap();
         unsubscribers.removeResizeListener();
+        unsubscribers = undefined;
     }
 
-    function addObservers(
+    /**
+     * Observe changes made to context menu size
+     */
+    function addResizeObserver(
         contextMenu: HTMLElement,
         anchor: HTMLElement,
     ): () => void {
-        // Observe changes made to context menu size
         const resizeObserver = new ResizeObserver(() =>
             repositionContextMenu(anchor),
         );
         resizeObserver.observe(contextMenu);
-        // Observe changes made to context menu anchor
+        return resizeObserver.disconnect.bind(null);
+    }
+
+    /**
+     * Observe changes made to context menu anchor
+     */
+    function addMutationObserver(anchor: HTMLElement): () => void {
         const mutationObserver = new MutationObserver(() =>
             repositionContextMenu(anchor),
         );
@@ -104,10 +119,7 @@
             childList: true,
         };
         mutationObserver.observe(anchor, mutationObserverConfig);
-        return () => {
-            resizeObserver.disconnect();
-            mutationObserver.disconnect();
-        };
+        return mutationObserver.disconnect.bind(null);
     }
 
     function repositionContextMenu(anchor: HTMLElement) {
