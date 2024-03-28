@@ -1,0 +1,41 @@
+Projectify
+==========
+
+Projectify is made by JWP Consulting GK, here in Setagaya City, Tokyo.
+
+JWP Consulting GK is just me at the moment, but over time some awesome people
+have helped with this project.
+
+This all started as an attempt to remake Wunderlist. Over time I realized that
+remaking Wunderlist is only part of the equation. The whole issue is that apps
+come and go, with us left to clean up the mess and flee from platform to
+platform.
+
+What if an online service could make itself redundant, handing users back the
+keys to their digital self?
+
+THANKS
+======
+
+> if I have seen further, it is by standing on the shoulders of giants.
+
+(from my MVP Isaac Newton)
+
+First things first: This project would have never been possible without the
+countless, millions of volunteer hours by all the people who make free software
+happen.
+
+Life would be nothing without the friends you make along the way. Thanks go out
+to:
+
+* Noboru Nakagawa
+* Giosuè Russo
+* Karim Marzouq
+* Sean Winchester
+* Saki
+
+Would you
+
+Yours,
+
+Justus W. Perlwitz
