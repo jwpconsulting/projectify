@@ -30,6 +30,7 @@ import TeamMembersHelpPage from "./en/help/team-members.md?raw";
 import TrialHelpPage from "./en/help/trial.md?raw";
 import WorkspacesHelpPage from "./en/help/workspaces.md?raw";
 import SecurityDisclose from "./en/security/disclose.md?raw";
+import SecurityGeneral from "./en/security/general.md?raw";
 import type { MessageDirectory } from "./types";
 
 const messages: MessageDirectory = {
@@ -1344,6 +1345,10 @@ const messages: MessageDirectory = {
             title: "Vulnerability Disclosure Policy",
             content: SecurityDisclose,
         },
+        general: {
+            title: "Security Information",
+            content: SecurityGeneral,
+        },
     },
     "help": {
         "title": "Help - Projectify",
@@ -1462,6 +1467,7 @@ const messages: MessageDirectory = {
                 },
                 security: {
                     title: "Security",
+                    general: "General information",
                     disclose: "Disclosure Policy",
                 },
                 legal: {
