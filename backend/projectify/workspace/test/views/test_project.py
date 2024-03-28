@@ -229,12 +229,12 @@ class TestProjectArchive:
                 archived=False,
             )
         )
-        with django_assert_num_queries(7):
+        with django_assert_num_queries(4):
             response = rest_user_client.post(
                 resource_url,
                 data={"archived": True},
             )
-            assert response.status_code == 200, response.data
+            assert response.status_code == 204, response.data
         assert (
             count
             == len(
@@ -246,12 +246,12 @@ class TestProjectArchive:
             )
             + 1
         )
-        with django_assert_num_queries(7):
+        with django_assert_num_queries(4):
             response = rest_user_client.post(
                 resource_url,
                 data={"archived": False},
             )
-            assert response.status_code == 200, response.data
+            assert response.status_code == 204, response.data
         assert count == len(
             project_find_by_workspace_uuid(
                 who=team_member.user,
