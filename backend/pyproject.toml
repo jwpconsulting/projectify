@@ -130,7 +130,7 @@ channels-redis = "~4.0.0"
 cryptography = "42.0.4"
 dj-database-url = "~2.1.0"
 django = "~5"
-django-anymail = {extras = ["mailgun"], version = "~8.6"}
+django-anymail = {extras = ["mailgun"], version = "~10.3"}
 django-celery-results = "~2.5.0"
 django-cloudinary-storage = "~0.3.0"
 django-configurations = "^2.4.1"
