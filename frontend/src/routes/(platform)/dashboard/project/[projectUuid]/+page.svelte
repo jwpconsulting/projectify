@@ -24,22 +24,23 @@
     import { currentProject, currentSections } from "$lib/stores/dashboard";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
-    import type { User } from "$lib/types/user";
     import type {
         SectionWithTasks,
         ProjectDetail,
     } from "$lib/types/workspace";
 
-    export let data: { user: User; project: ProjectDetail } | undefined =
-        undefined;
+    export let data: { injectProject?: ProjectDetail } | undefined = undefined;
 
     let project: ProjectDetail | undefined = undefined;
-    $: project = $currentProject ?? data?.project;
+    $: project = $currentProject ?? data?.injectProject;
+    $: {
+        console.log(project);
+    }
 
     $: hasSections = project ? project.sections.length > 0 : false;
 
     let sections: SectionWithTasks[];
-    $: sections = $currentSections ?? [];
+    $: sections = $currentSections ?? data?.injectProject?.sections ?? [];
 
     async function onAddNewSection() {
         if (!project) {
