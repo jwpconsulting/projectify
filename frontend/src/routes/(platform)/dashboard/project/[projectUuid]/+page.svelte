@@ -33,9 +33,6 @@
 
     let project: ProjectDetail | undefined = undefined;
     $: project = $currentProject ?? data?.injectProject;
-    $: {
-        console.log(project);
-    }
 
     $: hasSections = project ? project.sections.length > 0 : false;
 
