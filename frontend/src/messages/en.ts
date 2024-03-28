@@ -806,6 +806,8 @@ const messages: MessageDirectory = {
                 label: "Request workspace deletion (opens email client)",
                 email: "mailto:hello@projectifyapp.com?subject=Workspace+deletion",
             },
+            "confirm-navigate-away":
+                "You have unsaved changes to this workspace. Would you like to navigate away?",
         },
         "team-members": {
             "title": "{title} team members - Projectify",
