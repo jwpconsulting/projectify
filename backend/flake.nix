@@ -68,6 +68,11 @@
               buildInputs = (old.buildInputs or [ ]) ++ [ super.hatchling super.setuptools ];
             }
           );
+          django-anymail = super.django-anymail.overridePythonAttrs (
+            old: {
+              buildInputs = (old.buildInputs or [ ]) ++ [ super.hatchling ];
+            }
+          );
           cryptography = super.cryptography.overridePythonAttrs (old: rec {
             cargoDeps = pkgs.rustPlatform.fetchCargoTarball {
               inherit (old) src;
