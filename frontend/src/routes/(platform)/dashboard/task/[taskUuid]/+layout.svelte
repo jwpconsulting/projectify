@@ -29,7 +29,13 @@
 </script>
 
 <svelte:head>
-    <title>{$_("task.title", { values: { title: task.title } })}</title>
+    {#await task}
+        <title>{$_("task.title-loading")}</title>
+    {:then task}
+        <title>
+            {$_("task.title", { values: { title: task.title } })}
+        </title>
+    {/await}
 </svelte:head>
 
 <slot />
