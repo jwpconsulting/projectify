@@ -143,6 +143,12 @@
                     </li>
                     <li>
                         <Anchor
+                            label={$_("navigation.footer.nav.legal.credits")}
+                            href="/credits"
+                        />
+                    </li>
+                    <li>
+                        <Anchor
                             label={$_(
                                 "navigation.footer.nav.legal.free-software",
                             )}

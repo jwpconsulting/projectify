@@ -54,5 +54,8 @@
         </ul>
         <!-- eslint-disable-next-line svelte/no-at-html-tags -->
         <p>{@html $_("free-software.trademark")}</p>
+        <h2>{$_("free-software.third-party.title")}</h2>
+        <p>{$_("free-software.third-party.body")}</p>
+        <a href="/credits">{$_("free-software.third-party.label")}</a>
     </div>
 </HeroLayout>
