@@ -18,30 +18,24 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import type { Task } from "$lib/types/workspace";
     import { getTaskUrl } from "$lib/urls";
 
     export let task: Task;
 </script>
 
-<div
+<a
+    href={getTaskUrl(task.uuid)}
     class="flex flex-row items-start items-center gap-1 self-start sm:gap-6 lg:self-center"
 >
-    <div class="shrink-0">
-        <Anchor
-            label={$_("dashboard.task-card.task-number", {
-                values: { number: task.number },
-            })}
-            href={getTaskUrl(task.uuid)}
-            size="normal"
-        />
+    <div class="shrink-0 font-bold">
+        {$_("dashboard.task-card.task-number", {
+            values: { number: task.number },
+        })}
     </div>
-    <div class="line-clamp-3 justify-self-start lg:line-clamp-1 lg:h-6">
-        <Anchor
-            label={task.title}
-            href={getTaskUrl(task.uuid)}
-            size="normal"
-        />
+    <div
+        class="line-clamp-3 justify-self-start hover:text-primary lg:line-clamp-1 lg:h-6"
+    >
+        {task.title}
     </div>
-</div>
+</a>

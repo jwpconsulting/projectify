@@ -37,11 +37,10 @@
 
 <a
     {href}
-    class={`font-medium text-primary underline hover:text-primary-hover active:text-primary-pressed ${anchorClass}`}
-    target={openBlank ? "_blank" : "_self"}
->
-    {label}{#if openBlank}
-        <span class="sr-only">{$_("typography.anchor.new-tab")} </span><Icon
+    class="text-primary underline hover:text-primary-hover active:text-primary-pressed {anchorClass}"
+    target={openBlank ? "_blank" : undefined}
+    >{label}{#if openBlank}
+        <span class="sr-only">{$_("typography.anchor.new-tab")}</span><Icon
             src={ExternalLink}
             class="inline-block h-4 w-4 px-px"
             theme="outline"
