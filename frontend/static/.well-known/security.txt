@@ -1,0 +1,10 @@
+# JWP Consulting GK security contacts and policy
+
+# Our security contact channels
+Contact: mailto:hello@projectifyapp.com
+
+# Link to our vulnerability disclosure policy
+Policy: https://www.projectifyapp.com/security/disclosure
+
+# Languages that our team speaks and understands
+Preferred-Languages: en, ja, de
