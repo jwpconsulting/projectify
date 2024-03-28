@@ -55,7 +55,10 @@
             class="h-full w-full overflow-x-auto rounded-full object-cover object-center"
         />
     {:else if name}
-        <!-- TODO Avatar needs accessible label -->
-        <Avatar size={innerSize} {name} />
+        <!-- TODO workaround since name is not reactive inside Avatar -->
+        {#key name}
+            <!-- TODO Avatar needs accessible label -->
+            <Avatar size={innerSize} {name} />
+        {/key}
     {/if}
 </div>
