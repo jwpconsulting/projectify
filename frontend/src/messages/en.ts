@@ -1302,6 +1302,16 @@ const messages: MessageDirectory = {
         },
         "trademark":
             "<strong>Projectify</strong> is a registered trademark in the EU, USA, and Japan. Use of the trademark is only permitted with permisson by JWP Consulting GK.",
+        "third-party": {
+            title: "Third party attributions",
+            body: "For third party attributions, please view the following page:",
+            label: "Credits and attributions",
+        },
+    },
+    "credits": {
+        title: "Credits and attribution - Projectify",
+        hero: "Credits and attribution",
+        body: "Please view the following text for attribution for third party packages used for serving this frontend:",
     },
     "contact-us": {
         "title": "Contact - Projectify",
@@ -1448,6 +1458,7 @@ const messages: MessageDirectory = {
                     "privacy": "Privacy Policy",
                     "tos": "Terms of Service",
                     "free-software": "Free Software",
+                    "credits": "Credits",
                 },
             },
             epilogue: {
