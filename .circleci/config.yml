@@ -296,6 +296,14 @@ jobs:
       - run:
           name: Run mypy
           command: poetry run mypy bin/rename-component
+  frontend_third_party_licenses:
+    executor: node
+    working_directory: ~/projectify/frontend
+    steps:
+      - prepare_test_frontend
+      - run:
+          name: Check whether third-party-licenses.txt is up to date
+          command: npm run check:third-party-licenses
 workflows:
   test_all:
     jobs:
@@ -316,3 +324,4 @@ workflows:
       - frontend_poetry_check
       - frontend_python_lint
       - frontend_mypy
+      - frontend_third_party_licenses
