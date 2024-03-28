@@ -18,18 +18,22 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
+    import Loading from "$lib/components/loading.svelte";
     import TaskCard from "$lib/figma/cards/TaskCard.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+    import { currentProject } from "$lib/stores/dashboard";
     import { getDashboardProjectUrl } from "$lib/urls";
 
     import type { PageData } from "./$types";
 
     export let data: PageData;
-    const { project } = data;
-    $: backUrl = getDashboardProjectUrl(project.uuid);
+    $: project = $currentProject;
+    $: backUrl = project ? getDashboardProjectUrl(project.uuid) : undefined;
 </script>
 
-{#await data.tasks then tasks}
+{#await data.tasks}
+    <Loading />
+{:then tasks}
     {#if tasks.length}
         <div class="flex flex-col gap-6 px-4 pb-6 pt-4">
             <div class="flex flex-col gap-2">
@@ -38,6 +42,24 @@
                         values: { search: data.search },
                     })}
                 </h1>
+                {#if backUrl}
+                    <p>
+                        <Anchor
+                            label={$_("dashboard.search.found.back")}
+                            size="normal"
+                            href={backUrl}
+                        />
+                    </p>
+                {/if}
+            </div>
+            <div class="flex flex-col">
+                {#if project}
+                    {#each tasks as task}
+                        <TaskCard {task} {project} />
+                    {/each}
+                {/if}
+            </div>
+            {#if backUrl}
                 <p>
                     <Anchor
                         label={$_("dashboard.search.found.back")}
@@ -45,21 +67,9 @@
                         href={backUrl}
                     />
                 </p>
-            </div>
-            <div class="flex flex-col">
-                {#each tasks as task}
-                    <TaskCard {task} {project} />
-                {/each}
-            </div>
-            <p>
-                <Anchor
-                    label={$_("dashboard.search.found.back")}
-                    size="normal"
-                    href={backUrl}
-                />
-            </p>
+            {/if}
         </div>
-    {:else}
+    {:else if backUrl}
         <div class="flex items-center justify-center py-6">
             <div
                 class="flex flex-col gap-4 rounded-md bg-base-100 p-6 shadow-sm"

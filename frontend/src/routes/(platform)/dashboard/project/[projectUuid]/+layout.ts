@@ -15,44 +15,58 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { error } from "@sveltejs/kit";
-
 import { currentWorkspace, currentProject } from "$lib/stores/dashboard";
 import type { ProjectDetail } from "$lib/types/workspace";
+import { dashboardUrl } from "$lib/urls/dashboard";
 
 import type { LayoutLoadEvent } from "./$types";
 
+import { goto } from "$app/navigation";
+
 interface Data {
-    project: ProjectDetail;
+    project: Promise<ProjectDetail | undefined>;
 }
 
-export async function load({
+export function load({
     params: { projectUuid },
     fetch,
-}: LayoutLoadEvent): Promise<Data> {
-    const project = await currentProject.loadUuid(projectUuid, { fetch });
-    if (!project) {
-        // If we don't have a project, we don't have anything (no
-        // workspace uuid etc), so we are back to the dashboard in that case.
-        // TODO tell the user that we have done so
-        error(404, `No project could be found for UUID '${projectUuid}'`);
-    }
-    const workspaceUuid = project.workspace.uuid;
-    currentWorkspace
-        .loadUuid(workspaceUuid, {
-            fetch,
-        })
-        .then((workspace) => {
-            if (!workspace) {
+}: LayoutLoadEvent): Data {
+    const project: Promise<ProjectDetail | undefined> = currentProject
+        .loadUuid(projectUuid, { fetch })
+        .then((project) => {
+            if (!project) {
+                // If we don't have a project, we don't have anything (no
+                // workspace uuid etc), so we are back to the dashboard in that case.
+                // TODO tell the user that we have done so
                 throw new Error(
-                    `For project ${projectUuid}, the workspace with UUID ${workspaceUuid} could not be found.`,
+                    `No project could be found for UUID '${projectUuid}'`,
                 );
             }
+            return project;
         })
-        .catch((error) =>
-            console.error(
-                `Something went very wrong when fetching workspace ${workspaceUuid}: ${error}`,
-            ),
-        );
+        .then((project) => {
+            const workspaceUuid = project.workspace.uuid;
+            currentWorkspace
+                .loadUuid(workspaceUuid, {
+                    fetch,
+                })
+                .then((workspace) => {
+                    if (!workspace) {
+                        throw new Error(
+                            `For project ${projectUuid}, the workspace with UUID ${workspaceUuid} could not be found.`,
+                        );
+                    }
+                })
+                .catch((error) =>
+                    console.error(
+                        `Something went very wrong when fetching workspace ${workspaceUuid}: ${error}`,
+                    ),
+                );
+            return project;
+        })
+        .catch(async () => {
+            await goto(dashboardUrl);
+            return undefined;
+        });
     return { project };
 }

@@ -17,7 +17,7 @@
  */
 import { searchTasks } from "$lib/stores/dashboard";
 import type { SearchInput } from "$lib/types/base";
-import type { TaskWithSection } from "$lib/types/workspace";
+import type { ProjectDetail, TaskWithSection } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
 
 import type { PageLoadEvent } from "./$types";
@@ -28,17 +28,19 @@ interface Data {
 }
 export function load({ url, parent }: PageLoadEvent): Data {
     const search: SearchInput = url.searchParams.get("search") ?? undefined;
-    const tasks = new Promise<TaskWithSection[]>((resolve, reject) => {
-        parent()
-            .then(({ project }) => {
-                const { sections: sections } = project;
-                const tasks = searchTasks(
-                    unwrap(sections, "Expected sections"),
-                    search,
-                );
-                resolve(tasks);
-            })
-            .catch(reject);
+    const awaitProject = new Promise<ProjectDetail | undefined>((resolve) =>
+        parent().then(({ project }) => resolve(project)),
+    );
+    const tasks = awaitProject.then((project) => {
+        if (project === undefined) {
+            throw new Error("Expected project");
+        }
+        const { sections: sections } = project;
+        const tasks = searchTasks(
+            unwrap(sections, "Expected sections"),
+            search,
+        );
+        return tasks;
     });
     return { tasks, search };
 }
