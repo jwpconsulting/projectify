@@ -50,6 +50,7 @@ const config: KnipConfig = {
         "open",
         "bin/test",
         "bin/prebuild.sh",
+        "bin/check-third-party-licenses",
     ],
     ignoreDependencies: [
         "esm-loader-import-alias",
