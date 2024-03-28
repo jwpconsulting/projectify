@@ -16,8 +16,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import { onMount } from "svelte";
     import { _, number } from "svelte-i18n";
 
+    import Loading from "$lib/components/loading.svelte";
     import Breadcrumbs from "$lib/figma/screens/task/Breadcrumbs.svelte";
     import Form from "$lib/figma/screens/task/Form.svelte";
     import Layout from "$lib/figma/screens/task/Layout.svelte";
@@ -28,7 +30,15 @@
     import { createSubTaskAssignment } from "$lib/stores/dashboard";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createTeamMemberAssignment } from "$lib/stores/dashboard/teamMemberAssignment";
-    import type { TaskWithSection } from "$lib/types/workspace";
+    import type {
+        LabelAssignment,
+        SubTaskAssignment,
+        TeamMemberAssignment,
+    } from "$lib/types/stores";
+    import type {
+        TaskWithSection,
+        TaskWithWorkspace,
+    } from "$lib/types/workspace";
     import {
         getDashboardSectionUrl,
         getDashboardProjectUrl,
@@ -40,24 +50,37 @@
 
     export let data: PageData;
     const { task } = data;
-    const { section: section } = task;
-    const { project: project } = section;
 
     // Initial data
-    let { title, description } = task;
-    let dueDate = task.due_date && coerceIsoDate(task.due_date);
+    let title: string | undefined = undefined;
+    let description: string | undefined = undefined;
+    let dueDate: string | undefined = undefined;
 
-    $: teamMemberAssignment = createTeamMemberAssignment(task);
-    $: labelAssignment = createLabelAssignment(task);
-    $: subTaskAssignment = createSubTaskAssignment(task);
-    $: subTasks = subTaskAssignment.subTasks;
+    let teamMemberAssignment: TeamMemberAssignment | undefined = undefined;
+    let labelAssignment: LabelAssignment | undefined = undefined;
+    let subTaskAssignment: SubTaskAssignment | undefined = undefined;
+
+    onMount(async () => {
+        const t = await task;
+        title = t.title;
+        description = t.description;
+        dueDate = t.due_date && coerceIsoDate(t.due_date);
+        teamMemberAssignment = createTeamMemberAssignment(t);
+        labelAssignment = createLabelAssignment(t);
+        subTaskAssignment = createSubTaskAssignment(t);
+    });
+
+    $: subTasks = subTaskAssignment?.subTasks;
 
     // XXX I am sure we can have really fancy validation
     $: canUpdate = !updating && title !== "" && $subTasks !== undefined;
 
     let updating = false;
 
-    async function action(continueEditing: boolean) {
+    async function action(task: TaskWithWorkspace, continueEditing: boolean) {
+        if (title === undefined) {
+            throw new Error("Expected title");
+        }
         if (!$labelAssignment) {
             throw new Error("Expected $labelAssignment");
         }
@@ -78,7 +101,7 @@
                     assignee: $teamMemberAssignment,
                     labels: $labelAssignment,
                     sub_tasks: $subTasks,
-                    section: section,
+                    section: task.section,
                 },
                 { fetch },
             );
@@ -86,75 +109,93 @@
                 await goto(getTaskUrl(task.uuid));
                 return;
             }
-            await goto(getDashboardSectionUrl(section.uuid));
+            await goto(getDashboardSectionUrl(task.section.uuid));
         } catch (e) {
             updating = false;
             throw e;
         }
     }
-
-    $: crumbs = [
-        {
-            label: project.title,
-            href: getDashboardProjectUrl(project.uuid),
-        },
-        {
-            label: section.title,
-            href: getDashboardSectionUrl(section.uuid),
-        },
-        // We could add a better task name here, or even
-        // extract the whole thing as a layout for any task/[taskUuid] route
-        { label: $number(task.number), href: getTaskUrl(task.uuid) },
-    ];
 </script>
 
 <svelte:head>
-    <title
-        >{$_("task.update-task-title", {
-            values: { title: task.title },
-        })}</title
-    >
+    {#await task}
+        <title>{$_("task.update-task-title-loading")}</title>
+    {:then task}
+        <title
+            >{$_("task.update-task-title", {
+                values: { title: task.title },
+            })}</title
+        >
+    {/await}
 </svelte:head>
 
-<Layout>
-    <TopBar slot="top-bar" {section}>
-        <Breadcrumbs slot="breadcrumbs" {crumbs} />
-        <svelte:fragment slot="buttons">
-            <Button
-                grow={false}
-                action={{
-                    kind: "submit",
-                    form: "task-form",
-                    disabled: !canUpdate,
-                }}
-                color="blue"
-                size="medium"
-                style={{ kind: "primary" }}
-                label={$_("task-screen.update.update")}
+{#await task}
+    <Loading />
+{:then task}
+    <Layout>
+        <TopBar slot="top-bar" section={task.section}>
+            <Breadcrumbs
+                slot="breadcrumbs"
+                crumbs={[
+                    {
+                        label: task.section.project.title,
+                        href: getDashboardProjectUrl(
+                            task.section.project.uuid,
+                        ),
+                    },
+                    {
+                        label: task.section.title,
+                        href: getDashboardSectionUrl(task.section.uuid),
+                    },
+                    // We could add a better task name here, or even
+                    // extract the whole thing as a layout for any task/[taskUuid] route
+                    {
+                        label: $number(task.number),
+                        href: getTaskUrl(task.uuid),
+                    },
+                ]}
             />
-            <Button
-                grow={false}
-                action={{
-                    kind: "button",
-                    action: () => action(true),
-                    disabled: !canUpdate,
-                }}
-                color="blue"
-                size="medium"
-                style={{ kind: "primary" }}
-                label={$_("task-screen.update.update-continue-editing")}
-            />
+            <svelte:fragment slot="buttons">
+                <Button
+                    grow={false}
+                    action={{
+                        kind: "submit",
+                        form: "task-form",
+                        disabled: !canUpdate,
+                    }}
+                    color="blue"
+                    size="medium"
+                    style={{ kind: "primary" }}
+                    label={$_("task-screen.update.update")}
+                />
+                <Button
+                    grow={false}
+                    action={{
+                        kind: "button",
+                        action: () => action(task, true),
+                        disabled: !canUpdate,
+                    }}
+                    color="blue"
+                    size="medium"
+                    style={{ kind: "primary" }}
+                    label={$_("task-screen.update.update-continue-editing")}
+                />
+            </svelte:fragment>
+        </TopBar>
+        <svelte:fragment slot="content">
+            {#if teamMemberAssignment && labelAssignment && subTaskAssignment}
+                <Form
+                    action={action.bind(null, task, false)}
+                    {teamMemberAssignment}
+                    {labelAssignment}
+                    {subTaskAssignment}
+                    bind:title
+                    bind:dueDate
+                    bind:description
+                />
+            {:else}
+                <Loading />
+            {/if}
         </svelte:fragment>
-    </TopBar>
-    <svelte:fragment slot="content">
-        <Form
-            action={action.bind(null, false)}
-            {teamMemberAssignment}
-            {labelAssignment}
-            {subTaskAssignment}
-            bind:title
-            bind:dueDate
-            bind:description
-        />
-    </svelte:fragment>
-</Layout>
+    </Layout>
+{/await}

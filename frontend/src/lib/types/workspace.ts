@@ -75,7 +75,9 @@ export type TaskWithSection = Task & {
     section: Section;
 };
 
+// TODO rename TaskDetail
 export type TaskWithWorkspace = Task & {
+    sub_tasks: SubTask[];
     section: Section & {
         project: Project & {
             workspace: Workspace;

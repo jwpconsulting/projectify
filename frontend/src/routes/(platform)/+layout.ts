@@ -19,21 +19,19 @@ import { redirect, error } from "@sveltejs/kit";
 import { get } from "svelte/store";
 
 import { currentWorkspaces } from "$lib/stores/dashboard";
-import { fetchUser, currentUser } from "$lib/stores/user";
+import { currentUser } from "$lib/stores/user";
 import type { User } from "$lib/types/user";
 import { getLogInWithNextUrl } from "$lib/urls/user";
 
 import type { LayoutLoadEvent } from "./$types";
 
 export async function load({
+    parent,
     url,
     fetch,
 }: LayoutLoadEvent): Promise<{ user: User }> {
-    // For reasons, fetchuser fires twice.
-    // We should have user contain some kind of hint that the user is now
-    // being fetched, so we don't fetch it twice.
-    const user = get(currentUser) ?? (await fetchUser({ fetch }));
-
+    const data = await parent();
+    const user = get(currentUser) ?? (await data.user);
     if (user === undefined) {
         const next = getLogInWithNextUrl(url.pathname);
         console.log("Not logged in, redirecting to", next);

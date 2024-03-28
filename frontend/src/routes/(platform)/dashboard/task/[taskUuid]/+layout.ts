@@ -15,33 +15,39 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { error } from "@sveltejs/kit";
-
 import { currentTask, currentWorkspace } from "$lib/stores/dashboard";
 import type { TaskWithWorkspace } from "$lib/types/workspace";
 
 import type { LayoutLoadEvent } from "./$types";
 
 interface Data {
-    task: TaskWithWorkspace;
+    task: Promise<TaskWithWorkspace>;
 }
 
-export async function load({
-    params: { taskUuid },
-    fetch,
-}: LayoutLoadEvent): Promise<Data> {
-    const task = await currentTask.loadUuid(taskUuid, { fetch });
-    if (!task) {
-        error(404, `No task could be found for UUID '${taskUuid}'`);
-    }
-    currentWorkspace
-        .loadUuid(task.section.project.workspace.uuid, { fetch })
-        .catch((error) =>
-            console.error(
-                `Error when fetching currentWorkspace for task ${taskUuid}: ${error}`,
-            ),
-        );
-    return {
-        task,
-    };
+export function load({ params: { taskUuid }, fetch }: LayoutLoadEvent): Data {
+    // TODO add back
+    // if (!task) {
+    //     error(404, `No task could be found for UUID '${taskUuid}'`);
+    // }
+    const task = currentTask
+        .loadUuid(taskUuid, { fetch })
+        .then((task) => {
+            if (!task) {
+                throw new Error(
+                    `No task could be found for UUID '${taskUuid}'`,
+                );
+            }
+            return task;
+        })
+        .then((task) => {
+            currentWorkspace
+                .loadUuid(task.section.project.workspace.uuid, { fetch })
+                .catch((error) =>
+                    console.error(
+                        `Error when fetching currentWorkspace for task ${taskUuid}: ${error}`,
+                    ),
+                );
+            return task;
+        });
+    return { task };
 }

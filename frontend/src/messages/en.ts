@@ -190,7 +190,9 @@ const messages: MessageDirectory = {
     // TODO merge this into task-screen
     "task": {
         "title": "{title} - Projectify",
+        "title-loading": "Viewing task - Projectify",
         "update-task-title": "Edit {title} - Projectify",
+        "update-task-title-loading": "Editing task - Projectify",
         "create-task-title": "Add task to {title} - Projectify",
         "go-back-to-section": "Go back to section",
     },

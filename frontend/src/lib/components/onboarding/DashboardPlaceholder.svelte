@@ -218,7 +218,7 @@
             </div>
             <div class="min-w-0 grow">
                 {#if $currentUser}
-                    <Dashboard data={{ user: $currentUser, project }} />
+                    <Dashboard data={{ injectProject: project }} />
                 {/if}
             </div>
         </div>

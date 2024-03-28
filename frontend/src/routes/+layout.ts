@@ -22,15 +22,22 @@ import "$lib/i18n";
 import { locale } from "svelte-i18n";
 
 import { fetchUser } from "$lib/stores/user";
+import type { User } from "$lib/types/user";
 
 import { browser } from "$app/environment";
 
-export async function load({ fetch }: { fetch: typeof window.fetch }) {
+interface Data {
+    user?: Promise<User | undefined>;
+}
+
+export async function load({
+    fetch,
+}: {
+    fetch: typeof window.fetch;
+}): Promise<Data> {
     if (browser) {
-        await Promise.all([
-            locale.set(window.navigator.language),
-            fetchUser({ fetch }),
-        ]);
+        await Promise.all([locale.set(window.navigator.language)]);
+        return { user: fetchUser({ fetch }) };
     }
     // TODO add waitLocale await here
     return {};
