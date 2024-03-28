@@ -16,6 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import type { BeforeNavigate } from "@sveltejs/kit";
     import { _ } from "svelte-i18n";
 
     import vars from "$lib/env";
@@ -29,6 +30,8 @@
     import { uploadImage } from "$lib/utils/file";
 
     import type { PageData } from "./$types";
+
+    import { beforeNavigate } from "$app/navigation";
 
     export let data: PageData;
 
@@ -87,6 +90,17 @@
         state = { kind: "viewing" };
         resetForm();
     }
+
+    beforeNavigate((navigation: BeforeNavigate) => {
+        if (state.kind == "editing") {
+            const navigateAway = window.confirm(
+                $_("workspace-settings.general.confirm-navigate-away"),
+            );
+            if (!navigateAway) {
+                navigation.cancel();
+            }
+        }
+    });
 </script>
 
 <svelte:head>

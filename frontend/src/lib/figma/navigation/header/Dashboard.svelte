@@ -21,11 +21,12 @@
     import Layout from "$lib/figma/navigation/header/Layout.svelte";
     import { toggleMobileMenu } from "$lib/stores/globalUi";
     import type { User } from "$lib/types/user";
+    import { dashboardUrl } from "$lib/urls/dashboard";
 
     export let user: User;
 </script>
 
-<Layout logoVisibleDesktop>
+<Layout logoVisibleDesktop logoHref={dashboardUrl}>
     <svelte:fragment slot="desktop-right">
         <div class="flex flex-row gap-4">
             <UserAccount {user} />

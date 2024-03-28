@@ -685,6 +685,8 @@ const messages: MessageDirectory = {
             },
             "cancel": "Cancel",
             "save": "Save changes",
+            "confirm-navigate-away":
+                "You have unsaved changes to your user profile. Would you like to navigate away?",
         },
         "update-email-address": {
             "title": "Update email address",
@@ -804,6 +806,8 @@ const messages: MessageDirectory = {
                 label: "Request workspace deletion (opens email client)",
                 email: "mailto:hello@projectifyapp.com?subject=Workspace+deletion",
             },
+            "confirm-navigate-away":
+                "You have unsaved changes to this workspace. Would you like to navigate away?",
         },
         "team-members": {
             "title": "{title} team members - Projectify",

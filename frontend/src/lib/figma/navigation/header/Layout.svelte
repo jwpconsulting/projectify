@@ -23,6 +23,7 @@
     export let logoVisibleDesktop = false;
     export let logoVisibleMobile = false;
     export let alwaysVisible = false;
+    export let logoHref = "/";
 
     $: justCenter =
         !$$slots["desktop-left"] &&
@@ -50,7 +51,7 @@
 >
     <div class="flex flex-row items-center gap-4">
         {#if logoVisibleDesktop}
-            <a href="/" class="shrink">
+            <a href={logoHref} class="shrink">
                 <img src={PolyLogo} alt={$_("navigation.header.logo.alt")} />
             </a>
         {/if}
@@ -73,7 +74,7 @@
         class="flex flex-row items-center justify-between border-b-2 border-border bg-foreground px-2 py-4 md:hidden"
     >
         {#if logoVisibleMobile}
-            <a href="/">
+            <a href={logoHref}>
                 <img src={PolyLogo} alt={$_("navigation.header.logo.alt")} />
                 <!-- TODO add text that says "back to landing" for AT users -->
             </a>
