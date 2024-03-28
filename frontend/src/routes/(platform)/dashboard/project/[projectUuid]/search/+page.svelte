@@ -35,7 +35,7 @@
     <Loading />
 {:then tasks}
     {#if tasks.length}
-        <div class="flex flex-col gap-6 px-4 pb-6 pt-4">
+        <div class="flex flex-col gap-6 bg-foreground px-4 pb-6 pt-4">
             <div class="flex flex-col gap-2">
                 <h1 class="text-xl font-bold">
                     {$_("dashboard.search.found.title", {
@@ -52,7 +52,7 @@
                     </p>
                 {/if}
             </div>
-            <div class="flex flex-col">
+            <div class="flex flex-col gap-1">
                 {#if project}
                     {#each tasks as task}
                         <TaskCard {task} {project} />
