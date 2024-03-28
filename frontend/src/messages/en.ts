@@ -29,6 +29,7 @@ import TasksHelpPage from "./en/help/tasks.md?raw";
 import TeamMembersHelpPage from "./en/help/team-members.md?raw";
 import TrialHelpPage from "./en/help/trial.md?raw";
 import WorkspacesHelpPage from "./en/help/workspaces.md?raw";
+import SecurityDisclose from "./en/security/disclose.md?raw";
 import type { MessageDirectory } from "./types";
 
 const messages: MessageDirectory = {
@@ -1338,6 +1339,12 @@ const messages: MessageDirectory = {
         },
         content: Accessiblity,
     },
+    "security": {
+        disclose: {
+            title: "Vulnerability Disclosure Policy",
+            content: SecurityDisclose,
+        },
+    },
     "help": {
         "title": "Help - Projectify",
         "sub-page-title": "{topic} help - Projectify",
@@ -1452,6 +1459,10 @@ const messages: MessageDirectory = {
                     "accessibility-statement": "Accessibility statement",
                     "contact-us": "Contact us",
                     "corporate-info": "Corporate information",
+                },
+                security: {
+                    title: "Security",
+                    disclose: "Disclosure Policy",
                 },
                 legal: {
                     "title": "Legal",

@@ -126,6 +126,21 @@
             </section>
             <section class="flex flex-col gap-1">
                 <h6 class="font-bold">
+                    {$_("navigation.footer.nav.security.title")}
+                </h6>
+                <ul class="flex flex-col gap-2">
+                    <li>
+                        <Anchor
+                            label={$_(
+                                "navigation.footer.nav.security.disclose",
+                            )}
+                            href="/security/disclose"
+                        />
+                    </li>
+                </ul>
+            </section>
+            <section class="flex flex-col gap-1">
+                <h6 class="font-bold">
                     {$_("navigation.footer.nav.legal.title")}
                 </h6>
                 <ul class="flex flex-col gap-2">
