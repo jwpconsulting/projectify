@@ -37,7 +37,7 @@
 
 <a
     {href}
-    class={`font-medium text-primary underline hover:text-primary-hover active:text-primary-pressed ${anchorClass}`}
+    class="font-medium text-primary underline hover:text-primary-hover active:text-primary-pressed {anchorClass}"
     target={openBlank ? "_blank" : "_self"}
 >
     {label}{#if openBlank}
