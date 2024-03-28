@@ -23,8 +23,6 @@
     import type { Overlay } from "$lib/types/ui";
     import { keepFocusInside } from "$lib/utils/focus";
 
-    import { browser } from "$app/environment";
-
     export let store: Readable<Overlay<unknown>>;
     // method used to close this overlay
     export let closeOverlay: () => void;
@@ -33,39 +31,36 @@
 
     let overlayElement: HTMLElement;
 
-    onMount(() => {
-        if (!browser) {
-            return undefined;
+    interface Unsubscribers {
+        removeEscapeListener: () => void;
+        removeFocusTrap: () => void;
+    }
+    let unsubscribers: Unsubscribers | undefined = undefined;
+
+    function cleanup() {
+        if (unsubscribers) {
+            unsubscribers.removeEscapeListener();
+            unsubscribers.removeFocusTrap();
+            unsubscribers = undefined;
         }
-        let unfocus: undefined | (() => void) = undefined;
-        let escapeUnsubscriber: (() => void) | undefined = undefined;
-        const unsubscriber = store.subscribe(($store) => {
+    }
+
+    onMount(() => {
+        return store.subscribe(($store) => {
             if ($store.kind === "visible") {
-                console.log("visible now", overlayElement);
-                unfocus = keepFocusInside(overlayElement);
-                escapeUnsubscriber = handleKey("Escape", closeOverlay);
+                console.debug("overlay visible now", overlayElement);
+                unsubscribers = {
+                    removeFocusTrap: keepFocusInside(overlayElement),
+                    removeEscapeListener: handleKey("Escape", closeOverlay),
+                };
             } else {
-                if (unfocus) {
-                    unfocus();
-                    unfocus = undefined;
-                }
-                if (escapeUnsubscriber) {
-                    escapeUnsubscriber();
-                    escapeUnsubscriber = undefined;
-                }
+                cleanup();
             }
         });
-        return () => {
-            if (unfocus) {
-                unfocus();
-                unfocus = undefined;
-            }
-            if (escapeUnsubscriber) {
-                escapeUnsubscriber();
-                escapeUnsubscriber = undefined;
-            }
-            unsubscriber();
-        };
+    });
+
+    onMount(() => {
+        return cleanup;
     });
 </script>
 

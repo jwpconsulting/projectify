@@ -24,7 +24,6 @@
         <slot name="title" />
     </h1>
     <form class="flex flex-col gap-8" on:submit|preventDefault={onSubmit}>
-        <input type="submit" class="hidden" />
         {#if $$slots.message}
             <slot name="message" />
         {/if}
