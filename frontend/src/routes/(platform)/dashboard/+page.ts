@@ -17,8 +17,10 @@
  */
 import { error, redirect } from "@sveltejs/kit";
 
-import { getWorkspaces } from "$lib/repository/workspace";
-import { selectedWorkspaceUuid } from "$lib/stores/dashboard";
+import {
+    currentWorkspaces,
+    selectedWorkspaceUuid,
+} from "$lib/stores/dashboard";
 import { getDashboardWorkspaceUrl } from "$lib/urls";
 import { startUrl } from "$lib/urls/onboarding";
 
@@ -31,7 +33,7 @@ export async function load({ fetch }: PageLoadEvent): Promise<void> {
     if (maybeWorkspaceUuid) {
         redirect(302, getDashboardWorkspaceUrl(maybeWorkspaceUuid));
     }
-    const workspaces = await getWorkspaces({ fetch });
+    const workspaces = await currentWorkspaces.load({ fetch });
     if (!workspaces) {
         // The workspaces endpoint not being reachable is unrecoverable
         error(500);
