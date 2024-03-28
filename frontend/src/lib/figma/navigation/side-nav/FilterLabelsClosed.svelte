@@ -46,21 +46,32 @@
     />
     {#if $labelExpandOpen}
         <div class="flex flex-col items-center gap-2">
+            <label class="sr-only" for="select-all-labels">
+                {$_("filter-label.all")}
+            </label>
             <SelectLabelCheckBox
                 label={{ kind: "allLabels" }}
                 checked={$selectedLabels.kind === "allLabels"}
                 onCheck={() => filterByLabel({ kind: "allLabels" })}
                 onUncheck={() => unfilterByLabel({ kind: "allLabels" })}
             />
+            <label class="sr-only" for="select-all-labels">
+                {$_("filter-label.none")}
+            </label>
             <SelectLabelCheckBox
                 label={{ kind: "noLabel" }}
                 checked={$selectedLabels.kind === "noLabel"}
                 onCheck={() => filterByLabel({ kind: "noLabel" })}
                 onUncheck={() => unfilterByLabel({ kind: "noLabel" })}
+                id="select-no-label"
             />
             {#each $labelFilterSearchResults as label}
+                <label class="sr-only" for="select-{label.uuid}">
+                    {label.name}
+                </label>
                 <SelectLabelCheckBox
                     label={{ kind: "label", label: label }}
+                    id="select-{label.uuid}"
                     checked={$selectedLabels.kind === "labels"
                         ? $selectedLabels.labelUuids.has(label.uuid)
                         : false}
