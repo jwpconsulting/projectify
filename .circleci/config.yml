@@ -158,12 +158,10 @@ jobs:
           command: mkdir junit
       - cli/install
       - run:
-          name: Collect tests
+          name: Collect tests and run pytest
           command: |
-            circleci tests glob "*/test/test_*.py" "*/test/*/test_*.py" | circleci tests split --split-by=timings > /tmp/tests-to-run
-      - run:
-          name: Run pytest
-          command: poetry run pytest --junitxml=test-results/junit.xml $(cat /tmp/tests-to-run)
+            TEST_FILES=$(circleci tests glob "**/test_*.py" | circleci tests split --split-by=timings)
+            poetry run pytest --junitxml=test-results/junit.xml $TEST_FILES
       - store_test_results:
           path: test-results
       - store_artifacts:
