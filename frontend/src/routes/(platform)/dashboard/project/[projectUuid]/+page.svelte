@@ -18,27 +18,33 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
+    import Loading from "$lib/components/loading.svelte";
     import SectionC from "$lib/figma/cards/Section.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { currentProject, currentSections } from "$lib/stores/dashboard";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
-    import type { SectionWithTasks } from "$lib/types/workspace";
+    import type { User } from "$lib/types/user";
+    import type {
+        SectionWithTasks,
+        ProjectDetail,
+    } from "$lib/types/workspace";
 
-    import type { PageData } from "./$types";
+    export let data: { user: User; project: ProjectDetail } | undefined =
+        undefined;
 
-    export let data: PageData;
+    let project: ProjectDetail | undefined = undefined;
+    $: project = $currentProject ?? data?.project;
 
-    let { project } = data;
-
-    $: project = $currentProject ?? project;
-
-    $: hasSections = project.sections.length > 0;
+    $: hasSections = project ? project.sections.length > 0 : false;
 
     let sections: SectionWithTasks[];
-    $: sections = $currentSections ?? project.sections;
+    $: sections = $currentSections ?? [];
 
     async function onAddNewSection() {
+        if (!project) {
+            throw new Error("Expected project");
+        }
         await openConstructiveOverlay({
             kind: "createSection",
             project,
@@ -47,31 +53,40 @@
 </script>
 
 <svelte:head>
-    <title>{$_("dashboard.title", { values: { title: project.title } })}</title
-    >
+    {#if project}
+        <title
+            >{$_("dashboard.title", {
+                values: { title: project.title },
+            })}</title
+        >
+    {/if}
 </svelte:head>
 
 <!-- Sections -->
 <div class="flex flex-col gap-4 md:p-2">
-    {#each sections as section (section.uuid)}
-        <SectionC {project} {section} />
+    {#if project}
+        {#each sections as section (section.uuid)}
+            <SectionC {project} {section} />
+        {:else}
+            <section
+                class="py-2 px-4 gap-8 bg-foreground rounded-lg flex flex-col"
+            >
+                <p>
+                    {$_("dashboard.no-sections.message")}
+                </p>
+                <Button
+                    style={{ kind: "primary" }}
+                    color="blue"
+                    size="medium"
+                    grow={false}
+                    label={$_("dashboard.no-sections.prompt")}
+                    action={{ kind: "button", action: onAddNewSection }}
+                />
+            </section>
+        {/each}
     {:else}
-        <section
-            class="py-2 px-4 gap-8 bg-foreground rounded-lg flex flex-col"
-        >
-            <p>
-                {$_("dashboard.no-sections.message")}
-            </p>
-            <Button
-                style={{ kind: "primary" }}
-                color="blue"
-                size="medium"
-                grow={false}
-                label={$_("dashboard.no-sections.prompt")}
-                action={{ kind: "button", action: onAddNewSection }}
-            />
-        </section>
-    {/each}
+        <Loading />
+    {/if}
 </div>
 
 {#if hasSections && $currentTeamMemberCan("create", "section")}

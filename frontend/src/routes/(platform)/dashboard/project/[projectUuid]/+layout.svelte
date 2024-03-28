@@ -21,24 +21,21 @@
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import { currentProject } from "$lib/stores/dashboard";
     import type { SectionWithTasks } from "$lib/types/workspace";
     import { getProjectSearchUrl } from "$lib/urls/dashboard";
 
-    import type { LayoutData } from "./$types";
-
-    export let data: LayoutData;
-
-    $: project = data.project;
+    $: project = $currentProject;
     let searchInput: string | undefined = undefined;
 
     $: canSearch = searchInput !== undefined;
-    $: projectHasTasks = project.sections.some(
-        (s: SectionWithTasks) => s.tasks.length > 0,
-    );
+    $: projectHasTasks =
+        project &&
+        project.sections.some((s: SectionWithTasks) => s.tasks.length > 0);
 </script>
 
 <div class="flex h-full flex-col items-center gap-4 bg-background py-4">
-    {#if projectHasTasks}
+    {#if project && projectHasTasks}
         <form
             action={getProjectSearchUrl(project)}
             class="flex w-full max-w-md flex-col gap-2 rounded-xl bg-foreground px-4 py-4"

@@ -35,13 +35,18 @@ type HttpStore<T> = Readable<T | undefined> & {
 export function createHttpStore<T>(
     getter: (context: RepositoryContext) => Promise<T | undefined>,
 ): HttpStore<T> {
+    let value: T | undefined = undefined;
     const { set, subscribe } = writable<T | undefined>(undefined);
     const load = async (
         context: RepositoryContext,
     ): Promise<T | undefined> => {
-        const result = await getter(context);
-        set(result);
-        return result;
+        if (value) {
+            console.debug(`Skipping loading this resource`);
+            return value;
+        }
+        value = await getter(context);
+        set(value);
+        return value;
     };
     return {
         subscribe,

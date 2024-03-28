@@ -20,10 +20,7 @@
     import { _ } from "svelte-i18n";
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import {
-        archiveProject,
-        deleteProject,
-    } from "$lib/repository/workspace/project";
+    import { deleteProject } from "$lib/repository/workspace/project";
     import { currentArchivedProjects } from "$lib/stores/dashboard";
     import {
         openConstructiveOverlay,
@@ -38,7 +35,6 @@
             kind: "recoverProject",
             project,
         });
-        await archiveProject(project, false, { fetch });
     }
 
     async function deleteAction(project: Project) {

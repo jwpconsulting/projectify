@@ -193,13 +193,5 @@ class ProjectArchive(APIView):
                     not archived
                 )
             )
-        project_archive(
-            project=project,
-            archived=archived,
-            who=request.user,
-        )
-        project.refresh_from_db()
-        output_serializer = ProjectDetailSerializer(
-            instance=project,
-        )
-        return Response(output_serializer.data, status=status.HTTP_200_OK)
+        project_archive(project=project, archived=archived, who=request.user)
+        return Response(status=status.HTTP_204_NO_CONTENT)
