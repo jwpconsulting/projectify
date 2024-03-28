@@ -198,17 +198,13 @@ jobs:
           name: Generate type information
           command: npm run sync-types
       - run:
-          name: Collect files to check
+          name: Collect files to check and run eslint
           command: |
-            circleci tests glob "src/**/*.{ts,js,svelte}" |
-            circleci tests split --split-by=timings > /tmp/files-to-check
+            TEST_FILES=$(circleci tests glob "src/**/*.{ts,js,svelte}" | circleci tests split --split-by=filesize)
+            npx eslint $TEST_FILES
       - store_artifacts:
           path: /tmp/files-to-check
           destination: files-checked
-      - run:
-          name: Run eslint (split)
-          command: npx eslint $(cat /tmp/files-to-check)
-
   frontend_prettier:
     executor: node
     working_directory: ~/projectify/frontend
