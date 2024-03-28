@@ -26,6 +26,7 @@
 
     export let user: User | undefined;
     export let active: boolean;
+    export let ariaLabel: string;
 
     let content: AvatarVariantContent;
     $: content = {
@@ -59,5 +60,8 @@
     {/if}
     <div class="relative z-0 p-0.5">
         <AvatarVariant {content} size="medium" />
+    </div>
+    <div class="sr-only">
+        {ariaLabel}
     </div>
 </button>
