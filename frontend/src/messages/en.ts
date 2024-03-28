@@ -285,6 +285,7 @@ const messages: MessageDirectory = {
                     archive: "Go to archive",
                 },
                 "context-menu": "Open project context menu",
+                "open-project": "Open {title} project",
             },
             "filter-team-members": {
                 "open-collapsible": "Open team member filter menu",
