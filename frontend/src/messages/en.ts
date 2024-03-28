@@ -645,6 +645,8 @@ const messages: MessageDirectory = {
             "move-up": "Move sub task up",
             "move-down": "Move sub task down",
             "remove": "Remove sub task",
+            "done": "Sub task done",
+            "enter-a-subtask": "Enter a subtask",
         },
         "new-task-breadcrumb": "New task (currently creating)",
         // TODO organize this as "form": {} with labels and placeholders
@@ -656,7 +658,6 @@ const messages: MessageDirectory = {
         "edit": "Edit",
         "task-title": "Task title",
         "assignee": "Assignee",
-        "enter-a-subtask": "Enter a subtask",
     },
     "user-account-settings": {
         "title": "User account settings",
