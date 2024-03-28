@@ -685,6 +685,8 @@ const messages: MessageDirectory = {
             },
             "cancel": "Cancel",
             "save": "Save changes",
+            "confirm-navigate-away":
+                "You have unsaved changes to your user profile. Would you like to navigate away?",
         },
         "update-email-address": {
             "title": "Update email address",

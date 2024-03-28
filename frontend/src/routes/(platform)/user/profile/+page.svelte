@@ -16,6 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import type { BeforeNavigate } from "@sveltejs/kit";
     import { _ } from "svelte-i18n";
 
     import UploadAvatar from "$lib/figma/buttons/UploadAvatar.svelte";
@@ -27,6 +28,8 @@
     import { changePasswordUrl, updateEmailAddressUrl } from "$lib/urls/user";
 
     import type { PageData } from "./$types";
+
+    import { beforeNavigate } from "$app/navigation";
 
     export let data: PageData;
 
@@ -40,7 +43,7 @@
     let imageFile: File | undefined = undefined;
 
     function fileSelected(file: File, src: string) {
-        state = "editing";
+        startEditing();
         imageFile = file;
         user.profile_picture = src;
     }
@@ -55,23 +58,42 @@
                 : { kind: "keep" as const };
         // TODO handle validation errors
         user = await updateUserProfile(preferredName, picture, { fetch });
-        // TODO show confirmation flash when saving complete Justus
-        // 2023-08-03
-        state = "viewing";
         imageFile = undefined;
+        finishEditing();
     }
 
     function removePicture() {
-        state = "editing";
+        startEditing();
         user.profile_picture = null;
         imageFile = undefined;
     }
 
-    function cancel() {
+    function startEditing() {
+        state = "editing";
+    }
+
+    function finishEditing() {
+        // TODO show confirmation flash when saving complete Justus
+        // 2023-08-03
+        state = "viewing";
+    }
+
+    function cancelEditing() {
         state = "viewing";
         preferredName = user.preferred_name ?? undefined;
         user = data.user;
     }
+
+    beforeNavigate((navigation: BeforeNavigate) => {
+        if (state == "editing") {
+            const navigateAway = window.confirm(
+                $_("user-account-settings.overview.confirm-navigate-away"),
+            );
+            if (!navigateAway) {
+                navigation.cancel();
+            }
+        }
+    });
 </script>
 
 <form class="flex flex-col gap-10" on:submit|preventDefault={save}>
@@ -131,9 +153,7 @@
             bind:value={preferredName}
             style={{ inputType: "text" }}
             readonly={state !== "editing"}
-            onClick={() => {
-                state = "editing";
-            }}
+            onClick={startEditing}
         />
     </div>
     <div class="flex flex-col gap-2">
@@ -150,7 +170,7 @@
         <Button
             action={{
                 kind: "button",
-                action: cancel,
+                action: cancelEditing,
                 disabled: state !== "editing",
             }}
             size="medium"
