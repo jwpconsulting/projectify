@@ -132,6 +132,14 @@
                     <li>
                         <Anchor
                             label={$_(
+                                "navigation.footer.nav.security.general",
+                            )}
+                            href="/security/general"
+                        />
+                    </li>
+                    <li>
+                        <Anchor
+                            label={$_(
                                 "navigation.footer.nav.security.disclose",
                             )}
                             href="/security/disclose"
