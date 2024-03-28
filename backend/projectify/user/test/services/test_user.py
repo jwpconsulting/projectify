@@ -46,8 +46,12 @@ def test_user_update(user: User, faker: Faker) -> None:
 def test_user_change_password(
     user: User, password: str, faker: Faker, mailoutbox: Mailbox
 ) -> None:
-    """Test changing a user's password. Check that notification email goes out."""
-    new_password = "hello-123"
+    """
+    Test changing a user's password. Check that notification email goes out.
+
+    Tests with a reaaaalllyyyy long password.
+    """
+    new_password = "hello-123" * 100
     # First we give in the wrong old password
     with pytest.raises(serializers.ValidationError):
         user_change_password(
