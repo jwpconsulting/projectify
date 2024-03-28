@@ -24,9 +24,17 @@
     import { currentProject, currentSections } from "$lib/stores/dashboard";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
-    import type { SectionWithTasks } from "$lib/types/workspace";
+    import type { User } from "$lib/types/user";
+    import type {
+        SectionWithTasks,
+        ProjectDetail,
+    } from "$lib/types/workspace";
 
-    $: project = $currentProject;
+    export let data: { user: User; project: ProjectDetail } | undefined =
+        undefined;
+
+    let project: ProjectDetail | undefined = undefined;
+    $: project = $currentProject ?? data?.project;
 
     $: hasSections = project ? project.sections.length > 0 : false;
 
