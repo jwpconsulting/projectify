@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2021, 2022, 2023 JWP Consulting GK
+# Copyright (C) 2021-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -21,9 +21,6 @@ from collections.abc import (
     Sequence,
 )
 
-from .. import (
-    redis_helper,
-)
 from .base import (
     Base,
 )
@@ -130,16 +127,16 @@ class Production(Base):
     # Obviously, this isn't great
     # https://github.com/django/channels_redis/issues/235
     # https://github.com/django/channels_redis/pull/337
-    redis_url = redis_helper.decode_redis_url(
-        os.environ["REDIS_TLS_URL"],
-    )
 
     CHANNEL_LAYERS = {
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",
             "CONFIG": {
                 "hosts": [
-                    redis_helper.make_channels_redis_host(redis_url),
+                    {
+                        "address": REDIS_TLS_URL,
+                        "ssl_cert_reqs": None,
+                    }
                 ],
                 "symmetric_encryption_keys": [SECRET_KEY],
             },
