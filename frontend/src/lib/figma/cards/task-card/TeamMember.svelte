@@ -30,7 +30,7 @@
 
     $: teamMemberAssignment = createTeamMemberAssignment(task);
 
-    $: assignee = task.assignee ?? $teamMemberAssignment;
+    $: assignee = $teamMemberAssignment;
 
     async function openUserPicker() {
         const contextMenuType: ContextMenuType = {
