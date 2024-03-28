@@ -72,9 +72,9 @@ function getSubscriptionForCollection(
         const sarus = new Sarus({
             url,
             eventListeners: {
-                open: [console.debug.bind(null, "Connection opened to", url)],
-                close: [console.debug.bind(null, "Connection closed to", url)],
-                error: [console.error.bind(null, "Connection error for", url)],
+                open: [() => console.debug("Connection opened to", url)],
+                close: [() => console.debug("Connection closed to", url)],
+                error: [() => console.error("Connection error for", url)],
                 message: [onMessage],
             },
         });
