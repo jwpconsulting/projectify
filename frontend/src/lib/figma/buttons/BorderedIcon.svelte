@@ -23,6 +23,7 @@
     import type { BorderedIconType } from "$lib/figma/types";
 
     export let type: BorderedIconType;
+    export let ariaLabel: string;
     // TODO allow disabling
 
     $: src = {
@@ -45,5 +46,8 @@
         class="rounded-lg border border-border p-1 group-hover:bg-secondary-hover group-active:bg-primary group-active:text-base-100"
     >
         <Icon {src} theme="outline" />
+    </div>
+    <div class="sr-only">
+        {ariaLabel}
     </div>
 </button>
