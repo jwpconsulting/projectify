@@ -15,12 +15,14 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+import { currentWorkspaces } from "$lib/stores/dashboard";
 import { logOut } from "$lib/stores/user";
 
 import type { PageLoadEvent } from "./$types";
 
 export async function load({ fetch }: PageLoadEvent): Promise<void> {
     await logOut({ fetch });
+    currentWorkspaces.reset();
 }
 
 // we can't log out server side

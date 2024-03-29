@@ -27,6 +27,7 @@ import type { RepositoryContext } from "$lib/types/repository";
 // TODO This could be RepoGetter, except that RepoGetter takes a uuid
 type HttpStore<T> = Readable<T | undefined> & {
     load: (context: RepositoryContext) => Promise<T | undefined>;
+    reset: () => void;
 };
 
 /*
@@ -40,7 +41,7 @@ export function createHttpStore<T>(
     const load = async (
         context: RepositoryContext,
     ): Promise<T | undefined> => {
-        if (value) {
+        if (value !== undefined) {
             console.debug(`Skipping loading this resource`);
             return value;
         }
@@ -51,5 +52,9 @@ export function createHttpStore<T>(
     return {
         subscribe,
         load,
+        reset() {
+            set(undefined);
+            value = undefined;
+        },
     };
 }
