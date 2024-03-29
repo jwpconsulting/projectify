@@ -22,7 +22,7 @@
     DEALINGS IN THE SOFTWARE.
 -->
 <script lang="ts" context="module">
-    const getNumber = (name: string) => {
+    function getNumber(name: string): number {
         const charactersArray = Array.from(name);
         let charactersCodesSum = 0;
 
@@ -31,27 +31,27 @@
         });
 
         return charactersCodesSum;
-    };
+    }
 
-    const getDigit = (number: number, ntn: number) => {
+    function getDigit(number: number, ntn: number): number {
         return Math.floor((number / Math.pow(10, ntn)) % 10);
-    };
+    }
 
-    const getUnit = (number: number, range: number, index?: number) => {
+    function getUnit(number: number, range: number, index?: number): number {
         const value = number % range;
 
         if (index && getDigit(number, index) % 2 === 0) {
             return -value;
         } else return value;
-    };
+    }
 
-    const getRandomColor = (
+    function getRandomColor(
         number: number,
         colors: string[],
         range: number,
-    ) => {
+    ): string {
         return colors[number % range];
-    };
+    }
 
     // Source
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random#getting_a_random_integer_between_two_values
@@ -61,11 +61,11 @@
         return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
     }
 
-    const getRandomId = (): string => {
+    function getRandomId(): string {
         const array: unknown[] = [...Array<unknown>(8)];
         const ints = array.map(() => getRandomInt(0, 255));
         return ints.toString();
-    };
+    }
 </script>
 
 <script lang="ts">
@@ -108,7 +108,7 @@
 </script>
 
 <svg
-    viewBox={"0 0 " + SIZE + " " + SIZE}
+    viewBox="0 0 {SIZE} {SIZE}"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     width={size}
