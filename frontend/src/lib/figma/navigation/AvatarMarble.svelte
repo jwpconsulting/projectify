@@ -115,6 +115,7 @@
     height={size}
     data-testid="avatar-marble"
 >
+    <title>{name}</title>
     <mask
         id={maskId}
         maskUnits="userSpaceOnUse"
