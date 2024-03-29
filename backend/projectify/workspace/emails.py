@@ -15,17 +15,37 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Workspace emails."""
+from django.utils import timezone
+
 from projectify.premail.email import (
+    Context,
+    EmailAddress,
     TemplateEmail,
 )
+from projectify.user.models.user import User
 
-from . import (
-    models,
-)
+from .models.team_member_invite import TeamMemberInvite
 
 
-class TeamMemberInviteEmail(TemplateEmail[models.TeamMemberInvite]):
+class TeamMemberInviteEmail(TemplateEmail[TeamMemberInvite]):
     """Email that informs users about an invite."""
 
-    model = models.TeamMemberInvite
+    model = TeamMemberInvite
     template_prefix = "workspace/email/team_member_invite"
+
+    def __init__(
+        self, *, receiver: EmailAddress, obj: TeamMemberInvite, who: User
+    ):
+        """Designate receiver."""
+        self.receiver = receiver
+        self.obj = obj
+        self.who = who
+
+    def get_context(self) -> Context:
+        """Add name of inviter, current date."""
+        return {
+            **super().get_context(),
+            "invited_by": self.who.preferred_name or self.who.email,
+            "when": timezone.now(),
+            "workspace_title": self.obj.workspace.title,
+        }
