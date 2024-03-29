@@ -66,12 +66,6 @@
         const ints = array.map(() => getRandomInt(0, 255));
         return ints.toString();
     };
-    const DEFAULTS = {
-        colors: ["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"],
-        name: "Clara Barton",
-        square: false,
-        size: 40,
-    };
 </script>
 
 <script lang="ts">
@@ -96,15 +90,21 @@
         return elementsProperties;
     }
 
-    export let size = DEFAULTS.size;
-    export let name = DEFAULTS.name;
-    export let square = DEFAULTS.square;
-    export let colors = DEFAULTS.colors;
+    export let size: number;
+    export let name: string;
+    export let square = false;
+    export let colors = [
+        "#92A1C6",
+        "#146A7C",
+        "#F0AB3D",
+        "#C271B4",
+        "#C20D90",
+    ];
 
-    const properties = generateColors(name, colors);
+    $: properties = generateColors(name, colors);
 
-    const maskId = `mask__marble${getRandomId()}`;
-    const filterId = `prefix__filter0_f${getRandomId()}`;
+    $: maskId = `mask__marble${getRandomId()}`;
+    $: filterId = `prefix__filter0_f${getRandomId()}`;
 </script>
 
 <svg
