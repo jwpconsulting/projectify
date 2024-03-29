@@ -120,6 +120,7 @@
     <div class="flex flex-col items-center justify-between gap-4">
         <div bind:this={workspaceContextMenuAnchor}>
             <BorderedIcon
+                ariaLabel={$_("dashboard.side-nav.workspace-selector.select")}
                 type="workspace"
                 on:click={$currentWorkspaces !== undefined
                     ? showWorkspaceContextMenu

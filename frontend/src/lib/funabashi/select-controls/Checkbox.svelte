@@ -29,6 +29,8 @@
     export let onDeselect: (() => void) | undefined = undefined;
     export let onClick: (() => void) | undefined = undefined;
 
+    export let id: string | undefined = undefined;
+
     function onChange() {
         if (checked && onSelect) {
             onSelect();
@@ -70,6 +72,7 @@
         bind:checked
         on:change={onChange}
         on:click|stopPropagation={onClick}
+        {id}
         {disabled}
         {required}
     />

@@ -30,8 +30,7 @@
         | SelectLabel
         | { kind: "createLabel"; labelColor: LabelColor };
     export let checked: boolean;
-    // This should be required
-    export let name: string | undefined = undefined;
+    export let id: string | undefined = undefined;
 
     // think about whether we really need these
     export let onCheck: () => void;
@@ -85,7 +84,7 @@
         bind:checked
         on:change={onChange}
         on:click|stopPropagation
-        {name}
+        {id}
         class="absolute left-0 top-0 h-7 w-11 appearance-none rounded-1.5xl border border-transparent focus:border-base-content focus:outline-none"
     />
 </div>

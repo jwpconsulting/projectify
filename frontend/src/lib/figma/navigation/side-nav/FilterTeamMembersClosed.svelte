@@ -30,6 +30,7 @@
         toggleUserExpandOpen,
         userExpandOpen,
     } from "$lib/stores/dashboard/ui";
+    import { getDisplayName } from "$lib/types/user";
 </script>
 
 <div class="flex flex-col items-center gap-6">
@@ -45,6 +46,7 @@
     {#if $userExpandOpen}
         <div class="flex flex-col items-center gap-2">
             <SelectTeamMemberClosed
+                ariaLabel={$_("filter-team-member.assigned-nobody")}
                 user={undefined}
                 active={$selectedTeamMember.kind === "unassigned"}
                 on:select={() => filterByTeamMember({ kind: "unassigned" })}
@@ -53,6 +55,7 @@
             />
             {#each $teamMemberSearchResults as teamMember}
                 <SelectTeamMemberClosed
+                    ariaLabel={getDisplayName(teamMember.user)}
                     user={teamMember.user}
                     active={$selectedTeamMember.kind === "teamMembers" &&
                         $selectedTeamMember.teamMemberUuids.has(

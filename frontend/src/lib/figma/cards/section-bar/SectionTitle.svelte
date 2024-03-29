@@ -60,6 +60,11 @@
                 class="h-6 w-6"
                 theme="outline"
             />
+            <div class="sr-only">
+                {open
+                    ? $_("dashboard.section.collapse.close")
+                    : $_("dashboard.section.collapse.open")}
+            </div>
         </button>
         <h1 class="line-clamp-1 min-w-0 shrink font-bold">
             {section.title}

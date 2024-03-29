@@ -39,6 +39,8 @@
             onDeselect();
         }
     }
+
+    const id = self.crypto.randomUUID();
 </script>
 
 <button
@@ -51,6 +53,7 @@
                 checked={active}
                 disabled={false}
                 contained={true}
+                id="checkbox-{id}"
                 {onSelect}
                 {onDeselect}
             />
@@ -72,7 +75,7 @@
                     size="medium"
                 />
             {/if}
-            <div class="text-regular min-w-0 truncate">
+            <label class="text-regular min-w-0 truncate" for="checkbox-{id}">
                 {#if teamMemberSelectionInput.kind === "unassigned"}
                     {$_("filter-team-member.assigned-nobody")}
                 {:else if teamMemberSelectionInput.kind === "allTeamMembers"}
@@ -80,7 +83,7 @@
                 {:else if teamMemberSelectionInput.kind === "teamMember"}
                     {getDisplayName(teamMemberSelectionInput.teamMember.user)}
                 {/if}
-            </div>
+            </label>
         </div>
     </div>
     <div

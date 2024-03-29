@@ -39,22 +39,23 @@
                 <div class="flex flex-col items-center gap-6">
                     <div class="flex flex-col items-center gap-4">
                         {#if workspace?.projects}
-                            {#each workspace.projects as board}
+                            {#each workspace.projects as project}
                                 <SquovalIcon
                                     ariaLabel={$_(
-                                        "dashboard.side-nav.projects.context-menu",
+                                        "dashboard.side-nav.projects.open-project",
+                                        { values: { title: project.title } },
                                     )}
                                     icon="board"
                                     state="active"
                                     action={{
                                         kind: "a",
                                         href: getDashboardProjectUrl(
-                                            board.uuid,
+                                            project.uuid,
                                         ),
                                         onInteract: selectProjectUuid.bind(
                                             null,
                                             workspace.uuid,
-                                            board.uuid,
+                                            project.uuid,
                                         ),
                                     }}
                                 />

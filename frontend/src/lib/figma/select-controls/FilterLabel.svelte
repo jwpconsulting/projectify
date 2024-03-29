@@ -32,6 +32,8 @@
     export let onUncheck: () => void;
     export let onEdit: (() => void) | undefined = undefined;
 
+    const id = self.crypto.randomUUID();
+
     function click() {
         checked = !checked;
         if (checked) {
@@ -56,8 +58,14 @@
     on:click={click}
 >
     <div class="flex min-w-0 flex-row items-center gap-2">
-        <SelectLabelCheckBox {label} bind:checked {onCheck} {onUncheck} />
-        <div class="text-regular truncate">
+        <SelectLabelCheckBox
+            id="checkbox-{id}"
+            {label}
+            bind:checked
+            {onCheck}
+            {onUncheck}
+        />
+        <label class="text-regular truncate" for="checkbox-{id}">
             {#if label.kind === "allLabels"}
                 {$_("filter-label.all")}
             {:else if label.kind === "noLabel"}
@@ -65,7 +73,7 @@
             {:else if label.kind === "label"}
                 {label.label.name}
             {/if}
-        </div>
+        </label>
     </div>
     <div class="flex flex-row items-center gap-2">
         {#if label.kind === "label" && onEdit}

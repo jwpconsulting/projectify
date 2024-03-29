@@ -35,26 +35,32 @@
     export let readonly = true;
     export let onInteract: (() => void) | undefined = undefined;
     export let onEnter: (() => void) | undefined = undefined;
+
+    const id = self.crypto.randomUUID();
 </script>
 
 <div class="flex w-full flex-row items-center justify-between gap-2 px-2 py-1">
     <div class="flex grow flex-row items-center gap-2">
+        <label for="checkbox-{id}" class="sr-only">
+            {$_("task-screen.sub-tasks.done")}
+        </label>
         <Checkbox
             bind:checked={subTask.done}
             disabled={readonly}
             contained={false}
             onClick={onInteract}
+            id="checkbox-{id}"
         />
         <div class="grow">
-            <label for="sub-task" class="sr-only">
-                $_("task-screen.enter-a-subtask")}
+            <label for={id} class="sr-only">
+                {$_("task-screen.sub-tasks.enter-a-subtask")}
             </label>
-            <!-- XXX duplicate IDs here -->
             <InputField
                 label={undefined}
                 style={{ inputType: "text" }}
-                placeholder={$_("task-screen.enter-a-subtask")}
-                name="sub-task"
+                placeholder={$_("task-screen.sub-tasks.enter-a-subtask")}
+                name="sub-task-{id}"
+                {id}
                 bind:value={subTask.title}
                 {readonly}
                 onClick={onInteract}

@@ -20,6 +20,7 @@
 
     import HeroLayout from "$lib/components/layouts/HeroLayout.svelte";
 
+    import Vendored from "../../../../third-party-licenses-vendored.txt?raw";
     import ThirdParty from "../../../../third-party-licenses.txt?raw";
 </script>
 
@@ -33,7 +34,9 @@
     </div>
     <div slot="content" class="prose">
         <p>{$_("credits.body")}</p>
-        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+        <h2>{$_("credits.vendored")}</h2>
+        <pre>{Vendored}</pre>
+        <h2>{$_("credits.npm")}</h2>
         <pre>{ThirdParty}</pre>
     </div>
 </HeroLayout>

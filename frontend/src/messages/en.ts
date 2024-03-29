@@ -205,6 +205,12 @@ const messages: MessageDirectory = {
         },
         "task-card": {
             "add-label": "Assign label",
+            "assign-team-member": {
+                "assigned":
+                    "Currently assigned {name}. Activate to assign to new team member.",
+                "not-assigned":
+                    "Currently not assigned. Activate to assign to team meber.",
+            },
             "task-number": "#{number}",
             "move-up": "Move task up",
             "move-down": "Move task down",
@@ -237,6 +243,7 @@ const messages: MessageDirectory = {
             prompt: "Add a section",
         },
         "section": {
+            "collapse": { open: "Open section", close: "Collapse section" },
             "empty": {
                 message: "No tasks in this section.",
                 prompt: "Add a task here",
@@ -285,6 +292,7 @@ const messages: MessageDirectory = {
                     archive: "Go to archive",
                 },
                 "context-menu": "Open project context menu",
+                "open-project": "Open {title} project",
             },
             "filter-team-members": {
                 "open-collapsible": "Open team member filter menu",
@@ -645,6 +653,8 @@ const messages: MessageDirectory = {
             "move-up": "Move sub task up",
             "move-down": "Move sub task down",
             "remove": "Remove sub task",
+            "done": "Sub task done",
+            "enter-a-subtask": "Enter a subtask",
         },
         "new-task-breadcrumb": "New task (currently creating)",
         // TODO organize this as "form": {} with labels and placeholders
@@ -656,7 +666,6 @@ const messages: MessageDirectory = {
         "edit": "Edit",
         "task-title": "Task title",
         "assignee": "Assignee",
-        "enter-a-subtask": "Enter a subtask",
     },
     "user-account-settings": {
         "title": "User account settings",
@@ -1313,7 +1322,9 @@ const messages: MessageDirectory = {
     "credits": {
         title: "Credits and attribution - Projectify",
         hero: "Credits and attribution",
-        body: "Please view the following text for attribution for third party packages used for serving this frontend:",
+        body: "Please view the following text for attribution for third party dependencies used for serving this frontend:",
+        vendored: "Vendored dependencies",
+        npm: "NPM dependencies",
     },
     "contact-us": {
         "title": "Contact - Projectify",
