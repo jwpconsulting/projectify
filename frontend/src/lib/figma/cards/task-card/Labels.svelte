@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -107,7 +107,7 @@
     </div>
 {:else if canUpdate}
     <button
-        class="flex flex-row items-center self-start rounded-full px-4 py-1 font-bold text-primary outline outline-dashed outline-1 outline-primary"
+        class="flex flex-row items-center self-start rounded-full px-4 py-1 font-bold text-primary outline-dashed outline-1 outline-primary focus:outline focus:outline-inherit"
         on:click|preventDefault={openLabelPicker}
     >
         {$_("dashboard.task-card.add-label")}</button
