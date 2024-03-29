@@ -54,8 +54,9 @@
                 checked={$selectedLabels.kind === "allLabels"}
                 onCheck={() => filterByLabel({ kind: "allLabels" })}
                 onUncheck={() => unfilterByLabel({ kind: "allLabels" })}
+                id="select-all-labels"
             />
-            <label class="sr-only" for="select-all-labels">
+            <label class="sr-only" for="select-no-label">
                 {$_("filter-label.none")}
             </label>
             <SelectLabelCheckBox
