@@ -243,6 +243,7 @@ const messages: MessageDirectory = {
             prompt: "Add a section",
         },
         "section": {
+            "collapse": { open: "Open section", close: "Collapse section" },
             "empty": {
                 message: "No tasks in this section.",
                 prompt: "Add a task here",
