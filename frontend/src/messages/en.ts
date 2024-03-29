@@ -1321,7 +1321,9 @@ const messages: MessageDirectory = {
     "credits": {
         title: "Credits and attribution - Projectify",
         hero: "Credits and attribution",
-        body: "Please view the following text for attribution for third party packages used for serving this frontend:",
+        body: "Please view the following text for attribution for third party dependencies used for serving this frontend:",
+        vendored: "Vendored dependencies",
+        npm: "NPM dependencies",
     },
     "contact-us": {
         "title": "Contact - Projectify",

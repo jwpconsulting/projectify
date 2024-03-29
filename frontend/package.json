@@ -2,7 +2,6 @@
     "name": "projectify-frontend",
     "version": "0.0.1",
     "scripts": {
-        "postinstall": "bin/prebuild.sh",
         "dev": "vite dev --host --port 3000",
         "build": "vite build",
         "package": "vite package",
@@ -92,7 +91,6 @@
         "rollup-plugin-visualizer": "~5.12",
         "sass": "~1.71.0",
         "svelte": "~4.2.11",
-        "svelte-boring-avatars": "~1.2.5",
         "svelte-i18n": "~4.0.0",
         "svelte-local-storage-store": "~0.6.4",
         "tailwindcss": "~3.3.7",
