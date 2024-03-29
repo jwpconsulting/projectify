@@ -49,9 +49,9 @@
 
     // Invite form
     let inviteEmail: string | undefined;
+    let inviteEmailValidation: InputFieldValidation | undefined = undefined;
 
     let state: FormViewState = { kind: "start" };
-    let inviteEmailValidation: InputFieldValidation | undefined = undefined;
 
     async function performInviteUser() {
         if (inviteEmail === undefined) {
@@ -61,6 +61,8 @@
         const result = await inviteUser(workspace, inviteEmail, { fetch });
         if (result.ok) {
             state = { kind: "start" };
+            inviteEmail = undefined;
+            inviteEmailValidation = undefined;
             return;
         }
         if (result.error.email === undefined) {
