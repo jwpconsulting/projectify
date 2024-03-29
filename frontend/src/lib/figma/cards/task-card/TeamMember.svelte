@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -16,12 +16,15 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import { _ } from "svelte-i18n";
+
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import { updateTask } from "$lib/repository/workspace";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { createTeamMemberAssignment } from "$lib/stores/dashboard/teamMemberAssignment";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
+    import { getDisplayName } from "$lib/types/user";
     import type { TaskWithSection } from "$lib/types/workspace";
 
     export let task: TaskWithSection;
@@ -62,4 +65,13 @@
         content={{ kind: "single", user: assignee?.user }}
         size="medium"
     />
+    <div class="sr-only">
+        {#if assignee}
+            {$_("dashboard.task-card.assign-team-member.assigned", {
+                values: { name: getDisplayName(assignee.user) },
+            })}
+        {:else}
+            {$_("dashboard.task-card.assign-team-member.not-assigned")}
+        {/if}
+    </div>
 </button>

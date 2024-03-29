@@ -205,6 +205,12 @@ const messages: MessageDirectory = {
         },
         "task-card": {
             "add-label": "Assign label",
+            "assign-team-member": {
+                "assigned":
+                    "Currently assigned {name}. Activate to assign to new team member.",
+                "not-assigned":
+                    "Currently not assigned. Activate to assign to team meber.",
+            },
             "task-number": "#{number}",
             "move-up": "Move task up",
             "move-down": "Move task down",
