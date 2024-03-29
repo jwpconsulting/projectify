@@ -157,7 +157,9 @@ def team_member_invite_create(
     )
 
     email_to_send = TeamMemberInviteEmail(
-        receiver=EmailAddress(email), obj=team_member_invite
+        receiver=EmailAddress(email),
+        obj=team_member_invite,
+        who=who,
     )
     email_to_send.send()
 
