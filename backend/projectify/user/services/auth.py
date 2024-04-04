@@ -64,7 +64,7 @@ def user_sign_up(
         )
     if not privacy_policy_agreed:
         raise serializers.ValidationError(
-            {"tos_agreed": _("Must agree to privacy policy")}
+            {"privacy_policy_agreed": _("Must agree to privacy policy")}
         )
 
     agreement_dt = timezone.now()
