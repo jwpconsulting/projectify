@@ -12,3 +12,8 @@ NODE_ENV = "production"
 from = "/*"
 to = "/redirect.html"
 status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "frame-ancestors 'none'"
