@@ -155,13 +155,11 @@ export async function logIn(
 
 export async function logOut(
     repositoryContext: RepositoryContext,
-): Promise<void> {
-    failOrOk(
-        await postWithCredentialsJson(
-            "/user/user/log-out",
-            undefined,
-            repositoryContext,
-        ),
+): Promise<ApiResponse<void, void>> {
+    return await postWithCredentialsJson(
+        "/user/user/log-out",
+        undefined,
+        repositoryContext,
     );
 }
 
