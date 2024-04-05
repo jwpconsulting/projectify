@@ -20,9 +20,9 @@ addopts = [
 ]
 
 [tool.poetry]
-name = "projectify-frontend"
+name = "tools"
 version = "0.1.0"
-description = "Projectify frontend"
+description = "Tooling for Projectify frontend"
 authors = ["Justus Perlwitz <justus@jwpconsulting.net>"]
 license = "AGPL"
 readme = "README.md"

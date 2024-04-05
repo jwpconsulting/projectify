@@ -24,25 +24,6 @@ npm run check
 npm run fix | sort --key=2 -h
 ```
 
-## Installing the python tools
-
-```
-poetry install --all-extras
-```
-
-And then
-
-```
-poetry run bin/rename_component.py
-```
-
-How to test
-
-```
-poetry run flake8
-poetry run mypy
-```
-
 ## Using Nix Flake and direnv
 
 You can automatically make Node and other tools available using the nix flake
@@ -62,10 +43,14 @@ a few hours. If you have any questions, please contact the maintainers.
 
 ## Creating a new component
 
+Note: Tools have been moved to the tools folder accessible from the monorepo
+root. Look for `tools/bin/new_component`
+
 This will create a component and story file for you automatically.
 
 ```
-bin/new_component path/within/src NameOfComponent
+# Might have to run this from a poetry shell launched from within `tools/`
+../tools/bin/new_component path/within/src NameOfComponent
 ```
 
 # Bulk renaming components
@@ -88,7 +73,8 @@ src/lib/figma/overlays/context-menu/WorkspaceOverlay.svelte,src/lib/figma/overla
 Then run
 
 ```
-poetry run bin/rename_component.py multiple rename.csv
+# Might have to run this from a poetry shell launched from within `tools/`
+../tools/bin/rename_component.py multiple rename.csv
 ```
 
 # Updating Storybook
