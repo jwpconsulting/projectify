@@ -17,10 +17,10 @@
  */
 
 import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
-import {
-    circleIconSizes,
-    circleIconIcons,
-    type ButtonAction,
+import type {
+    CircleIconIcon,
+    CircleIconSize,
+    ButtonAction,
 } from "$lib/funabashi/types";
 import { makeStorybookSelect } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
@@ -47,21 +47,20 @@ const meta: Meta<CircleIcon> = {
     component: CircleIcon,
     argTypes: {
         action: action,
-        icon: {
-            options: circleIconIcons,
-            control: {
-                type: "radio",
-            },
-        },
-        size: {
-            options: circleIconSizes,
-            control: {
-                type: "radio",
-            },
-        },
+        icon: makeStorybookSelect<CircleIconIcon>({
+            Ellipsis: "ellipsis",
+            Edit: "edit",
+            Delete: "delete",
+            Up: "up",
+            Down: "down",
+            Close: "close",
+        }),
+        size: makeStorybookSelect<CircleIconSize>({
+            Medium: "medium",
+        }),
     },
     args: {
-        icon: circleIconIcons[0],
+        icon: "ellipsis",
         size: "medium",
         action: "button",
     },

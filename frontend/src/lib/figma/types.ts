@@ -24,7 +24,7 @@ export type MenuButtonColor = (typeof menuButtonColors)[number];
 const borderedIconTypes = ["workspace", "filter"] as const;
 export type BorderedIconType = (typeof borderedIconTypes)[number];
 
-export const avatarStateSizes = ["medium", "large"] as const;
+const avatarStateSizes = ["medium", "large"] as const;
 export type AvatarStateSize = (typeof avatarStateSizes)[number];
 
 export interface AvatarVariantContent {

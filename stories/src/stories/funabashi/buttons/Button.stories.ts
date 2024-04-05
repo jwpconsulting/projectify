@@ -16,8 +16,11 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { buttonColors } from "$lib/funabashi/types";
-import type { ButtonAction, ButtonStyle } from "$lib/funabashi/types";
+import type {
+    ButtonColor,
+    ButtonAction,
+    ButtonStyle,
+} from "$lib/funabashi/types";
 import { makeStorybookSelect } from "$lib-stories/storybook";
 import { Plus } from "@steeze-ui/heroicons";
 import type { Meta, StoryObj } from "@storybook/svelte";
@@ -76,10 +79,10 @@ const meta: Meta<Button> = {
         label: {
             control: "text",
         },
-        color: {
-            control: "radio",
-            options: buttonColors,
-        },
+        color: makeStorybookSelect<ButtonColor>({
+            Blue: "blue",
+            Red: "red",
+        }),
         style,
         action,
     },

@@ -40,16 +40,16 @@ export type ButtonStyle =
           kind: "tertiary";
           icon?: { position: "right" | "left"; icon: IconSource };
       };
-export const buttonColors = ["blue", "red"] as const;
+const buttonColors = ["blue", "red"] as const;
 export type ButtonColor = (typeof buttonColors)[number];
-export const buttonSizes = ["medium"] as const;
+const buttonSizes = ["medium"] as const;
 export type ButtonSize = (typeof buttonSizes)[number];
 
 // For buttons/CircleIcon.svelte
-export const circleIconSizes = ["medium"] as const;
+const circleIconSizes = ["medium"] as const;
 export type CircleIconSize = (typeof circleIconSizes)[number];
 // TODO rename circleIcons
-export const circleIconIcons = [
+const circleIconIcons = [
     "ellipsis",
     "edit",
     "delete",
@@ -61,7 +61,7 @@ export const circleIconIcons = [
 export type CircleIconIcon = (typeof circleIconIcons)[number];
 
 // For buttons/SquovalIcon.svelte
-export const squovalIcons = [
+const squovalIcons = [
     // TODO rename project
     "board",
     "teamMember",
@@ -77,7 +77,7 @@ export const squovalIcons = [
     "help",
 ] as const;
 export type SquovalIcon = (typeof squovalIcons)[number];
-export const squovalStates = ["inactive", "disabled", "active"] as const;
+const squovalStates = ["inactive", "disabled", "active"] as const;
 export type SquovalState = (typeof squovalStates)[number];
 
 // For input-fields/InputField.svelte

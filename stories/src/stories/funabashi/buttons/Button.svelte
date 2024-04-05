@@ -21,13 +21,15 @@
         ButtonAction,
         ButtonStyle,
         ButtonColor,
+        ButtonSize,
     } from "$lib/funabashi/types";
-    import { buttonSizes } from "$lib/funabashi/types";
 
     export let label: string;
     export let style: ButtonStyle;
     export let color: ButtonColor;
     export let action: ButtonAction;
+
+    const buttonSizes: ButtonSize[] = ["medium"];
 </script>
 
 <div class="flex flex-col flex-wrap gap-2">

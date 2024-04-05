@@ -16,25 +16,34 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { makeStorybookSelect } from "$lib-stories/storybook";
 import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
-import { squovalIcons, squovalStates } from "$lib/funabashi/types";
+import type { SquovalState, SquovalIcon as Icon } from "$lib/funabashi/types";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<SquovalIcon> = {
     component: SquovalIcon,
     argTypes: {
-        icon: {
-            options: squovalIcons,
-            control: {
-                type: "radio",
-            },
-        },
-        state: {
-            options: squovalStates,
-            control: {
-                type: "radio",
-            },
-        },
+        icon: makeStorybookSelect<Icon>({
+            // TODO rename project
+            "Board": "board",
+            "Team member": "teamMember",
+            "Label": "label",
+            "Bulk": "bulk",
+            "Move": "move",
+            "Filter team member": "filterTeamMember",
+            "Delete": "delete",
+            "Ellipsis": "ellipsis",
+            "Plus": "plus",
+            "Edit": "edit",
+            "Dots vertical": "dotsVertical",
+            "Help": "help",
+        }),
+        state: makeStorybookSelect<SquovalState>({
+            Inactive: "inactive",
+            Disabled: "disabled",
+            active: "active",
+        }),
     },
     args: {
         action: { kind: "button", action: console.log },
