@@ -43,21 +43,8 @@ const config: KnipConfig = {
         "$app/*": ["node_modules/@sveltejs/kit/src/runtime/app/*"],
         "$env/*": [".svelte-kit/ambient.d.ts"],
     },
-    ignoreBinaries: [
-        "env",
-        "poetry",
-        "tsx",
-        "open",
-        "bin/test",
-        "bin/prebuild.sh",
-        "bin/check-third-party-licenses",
-    ],
-    ignoreDependencies: [
-        "esm-loader-import-alias",
-        "esm-loader-import-relative-extension",
-        "esm-loader-typescript",
-        "node-esm-loader",
-    ],
+    ignoreBinaries: ["env", "poetry", "open", "bin/test"],
+    ignoreDependencies: [],
     compilers: {
         // https://github.com/webpro/knip/blob/7011a5107b6693f70a966a12bc3c31b6bc3353a8/docs/compilers.md
         svelte: (text: string) =>

@@ -61,6 +61,10 @@ module.exports = {
         "node_modules",
         ".storebook",
         ".svelte-kit",
+        "src/lib/**",
+        "src/message/**",
+        "src/routes/**",
+        "src/types/**",
     ],
     settings: {
         "import/ignore": [
