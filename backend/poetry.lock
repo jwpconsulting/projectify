@@ -764,6 +764,17 @@ files = [
 django = ">=3"
 
 [[package]]
+name = "django-ratelimit"
+version = "4.1.0"
+description = "Cache-based rate-limiting for Django."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "django-ratelimit-4.1.0.tar.gz", hash = "sha256:555943b283045b917ad59f196829530d63be2a39adb72788d985b90c81ba808b"},
+    {file = "django_ratelimit-4.1.0-py2.py3-none-any.whl", hash = "sha256:d047a31cf94d83ef1465d7543ca66c6fc16695559b5f8d814d1b51df15110b92"},
+]
+
+[[package]]
 name = "django-test-migrations"
 version = "1.3.0"
 description = "Test django schema and data migrations, including ordering"
@@ -2322,4 +2333,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "a589a76075cac3969fe287a8b196ef68ede523a8c742536ff45f3dd0e9f81cde"
+content-hash = "e29520be7c66d65167ae5bf30ed335c1b54221d5d8d135e864802110ae57628c"

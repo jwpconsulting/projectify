@@ -151,6 +151,7 @@ uvicorn = "~0.17.6"
 websockets = "~10.3"
 whitenoise = "~6.2.0"
 faker = "^19.13.0"
+django-ratelimit = "^4.1.0"
 
 [tool.poetry.group.dev]
 
