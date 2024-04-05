@@ -22,8 +22,9 @@ from rest_framework import (
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.status import HTTP_204_NO_CONTENT
+from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
+from projectify.user.serializers import UserSerializer
 from projectify.user.services.auth import (
     user_confirm_email,
     user_confirm_password_reset,
@@ -95,7 +96,7 @@ class ConfirmEmail(views.APIView):
 
 
 class LogIn(views.APIView):
-    """Log a user in."""
+    """Log a user in. Return user to signify success."""
 
     permission_classes = (AllowAny,)
 
@@ -110,12 +111,15 @@ class LogIn(views.APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
-        user_log_in(
+        user = user_log_in(
             email=data["email"],
             password=data["password"],
             request=request,
         )
-        return Response(status=HTTP_204_NO_CONTENT)
+        response_serializer = UserSerializer(
+            instance=user,
+        )
+        return Response(data=response_serializer.data, status=HTTP_200_OK)
 
 
 # Reset password

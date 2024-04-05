@@ -110,7 +110,7 @@ def user_log_in(
     email: str,
     password: str,
     request: HttpRequest,
-) -> Optional[User]:
+) -> User:
     """Log a user in, return cookies."""
     user = authenticate(request, username=email, password=password)
     if user is None:
@@ -141,7 +141,6 @@ def user_log_in(
     login(request, user)
     if not isinstance(user, User):
         raise ValueError("User is not User, why?")
-    # XXX consider if returning a user is necessary here
     return user
 
 
