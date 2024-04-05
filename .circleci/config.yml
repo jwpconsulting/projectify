@@ -253,6 +253,9 @@ jobs:
     steps:
       - prepare_test_frontend
       - run:
+          name: Generate type information
+          command: npm run sync-types
+      - run:
           name: Check all
           command: bin/test
   tools_poetry_check:
