@@ -24,7 +24,7 @@ import {
     teamMember,
     labelAssignment,
     makeStorybookSelect,
-} from "$lib/storybook";
+} from "$lib-stories/storybook";
 import type { ConstructiveOverlayType, ContextMenuType } from "$lib/types/ui";
 
 // Initiating lateral export in 3... 2... 1...

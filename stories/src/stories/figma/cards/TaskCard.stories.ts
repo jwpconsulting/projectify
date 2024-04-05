@@ -17,7 +17,7 @@
  */
 
 import TaskCard from "$lib/figma/cards/TaskCard.svelte";
-import { mobileParameters, task } from "$lib/storybook";
+import { mobileParameters, task } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<TaskCard> = {

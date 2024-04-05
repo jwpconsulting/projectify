@@ -17,7 +17,7 @@
  */
 
 import TabBar from "$lib/figma/screens/workspace-settings/TabBar.svelte";
-import { workspace } from "$lib/storybook";
+import { workspace } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 import { activeSetting } from "./config";

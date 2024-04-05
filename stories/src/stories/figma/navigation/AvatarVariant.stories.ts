@@ -18,7 +18,7 @@
 
 import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
 import { avatarStateSizes } from "$lib/figma/types";
-import { user1, user2 } from "$lib/storybook";
+import { user1, user2 } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<AvatarVariant> = {

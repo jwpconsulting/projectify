@@ -17,7 +17,7 @@
  */
 
 import SideNav from "$lib/figma/navigation/SideNav.svelte";
-import { workspace, mobileParameters } from "$lib/storybook";
+import { workspace, mobileParameters } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<SideNav> = {

@@ -17,7 +17,7 @@
  */
 
 import MobileMenuOverlay from "$lib/figma/overlays/MobileMenuOverlay.svelte";
-import { makeStorybookSelect, mobileParameters } from "$lib/storybook";
+import { makeStorybookSelect, mobileParameters } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const target = makeStorybookSelect({

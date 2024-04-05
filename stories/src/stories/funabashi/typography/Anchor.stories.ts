@@ -18,7 +18,7 @@
 
 import type { AnchorSize } from "$lib/funabashi/types";
 import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-import { makeStorybookSelect } from "$lib/storybook";
+import { makeStorybookSelect } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<Anchor> = {

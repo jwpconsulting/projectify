@@ -18,7 +18,7 @@
 
 import FilterLabels from "$lib/figma/navigation/side-nav/FilterLabels.svelte";
 import type { FilterLabelMenuState } from "$lib/figma/types";
-import { makeStorybookSelect, mappedLabels } from "$lib/storybook";
+import { makeStorybookSelect, mappedLabels } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const states = makeStorybookSelect<FilterLabelMenuState>({

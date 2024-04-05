@@ -17,7 +17,7 @@
  */
 
 import TaskLabel from "$lib/figma/screens/task/TaskLabel.svelte";
-import { makeStorybookSelect, mappedLabels } from "$lib/storybook";
+import { makeStorybookSelect, mappedLabels } from "$lib-stories/storybook";
 import type { Label } from "$lib/types/workspace";
 import type { Meta, StoryObj } from "@storybook/svelte";
 

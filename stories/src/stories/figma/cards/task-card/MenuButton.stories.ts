@@ -17,7 +17,7 @@
  */
 
 import MenuButton from "$lib/figma/cards/task-card/MenuButton.svelte";
-import { task, section } from "$lib/storybook";
+import { task, section } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<MenuButton> = {

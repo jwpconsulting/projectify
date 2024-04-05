@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { makeStorybookSelect } from "$lib/storybook";
+import { makeStorybookSelect } from "$lib-stories/storybook";
 
 export const activeSetting = makeStorybookSelect({
     "Index": "index",

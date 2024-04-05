@@ -21,7 +21,7 @@ import {
     makeStorybookSelect,
     mobileParameters,
     teamMemberSelectionInputs,
-} from "$lib/storybook";
+} from "$lib-stories/storybook";
 import type { TeamMemberSelectionInput } from "$lib/types/ui";
 import type { Meta, StoryObj } from "@storybook/svelte";
 

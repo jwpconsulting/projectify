@@ -17,7 +17,7 @@
  */
 
 import CreateOrUpdateLabel from "$lib/figma/navigation/side-nav/filter-labels/CreateOrUpdateLabel.svelte";
-import { makeStorybookSelect, mappedLabels } from "$lib/storybook";
+import { makeStorybookSelect, mappedLabels } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const states = makeStorybookSelect({

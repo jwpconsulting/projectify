@@ -21,7 +21,7 @@ import {
     workspace,
     mobileParameters,
     makeStorybookSelect,
-} from "$lib/storybook";
+} from "$lib-stories/storybook";
 import type { Workspace } from "$lib/types/workspace";
 import type { Meta, StoryObj } from "@storybook/svelte";
 

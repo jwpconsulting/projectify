@@ -17,7 +17,7 @@
  */
 
 import Layout from "$lib/figma/navigation/header/Layout.svelte";
-import { mobileParameters } from "$lib/storybook";
+import { mobileParameters } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<Layout> = {

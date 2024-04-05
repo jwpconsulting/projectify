@@ -17,7 +17,7 @@
  */
 
 import SubTaskLine from "$lib/figma/screens/task/SubTaskLine.svelte";
-import { subTask } from "$lib/storybook";
+import { subTask } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<SubTaskLine> = {

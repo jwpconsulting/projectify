@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { project, section } from "$lib/storybook";
+import { project, section } from "$lib-stories/storybook";
 import type { SectionDetail } from "$lib/types/workspace";
 import CreateTask from "$routes/(platform)/dashboard/section/[sectionUuid]/create-task/+page.svelte";
 import type { Meta, StoryObj } from "@storybook/svelte";

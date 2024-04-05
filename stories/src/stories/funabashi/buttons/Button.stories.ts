@@ -18,7 +18,7 @@
 
 import { buttonColors } from "$lib/funabashi/types";
 import type { ButtonAction, ButtonStyle } from "$lib/funabashi/types";
-import { makeStorybookSelect } from "$lib/storybook";
+import { makeStorybookSelect } from "$lib-stories/storybook";
 import { Plus } from "@steeze-ui/heroicons";
 import type { Meta, StoryObj } from "@storybook/svelte";
 

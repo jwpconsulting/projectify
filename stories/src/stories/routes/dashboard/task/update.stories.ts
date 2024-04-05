@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { mobileParameters, task } from "$lib/storybook";
+import { mobileParameters, task } from "$lib-stories/storybook";
 import Update from "$routes/(platform)/dashboard/task/[taskUuid]/update/+page.svelte";
 import type { Meta, StoryObj } from "@storybook/svelte";
 

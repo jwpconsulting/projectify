@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { mobileParameters, project, section } from "$lib/storybook";
+import { mobileParameters, project, section } from "$lib-stories/storybook";
 import Dashboard from "$routes/(platform)/dashboard/project/[projectUuid]/+page.svelte";
 import type { Meta, StoryObj } from "@storybook/svelte";
 

@@ -17,7 +17,7 @@
  */
 
 import ReadSubTasks from "$lib/figma/screens/task/ReadSubTasks.svelte";
-import { subTask } from "$lib/storybook";
+import { subTask } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<ReadSubTasks> = {

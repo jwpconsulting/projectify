@@ -17,7 +17,7 @@
  */
 
 import TeamMemberCard from "$lib/figma/screens/workspace-settings/TeamMemberCard.svelte";
-import { teamMember } from "$lib/storybook";
+import { teamMember } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<TeamMemberCard> = {

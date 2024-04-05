@@ -17,7 +17,7 @@
  */
 
 import Breadcrumbs from "$lib/figma/screens/task/Breadcrumbs.svelte";
-import { makeStorybookSelect } from "$lib/storybook";
+import { makeStorybookSelect } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 // TODO

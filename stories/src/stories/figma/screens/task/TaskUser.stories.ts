@@ -17,7 +17,7 @@
  */
 
 import TaskUser from "$lib/figma/screens/task/TaskUser.svelte";
-import { teamMember } from "$lib/storybook";
+import { teamMember } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<TaskUser> = {

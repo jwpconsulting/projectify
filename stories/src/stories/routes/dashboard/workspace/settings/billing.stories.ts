@@ -23,7 +23,7 @@ import {
     trialCustomer,
     user1,
     customCustomer,
-} from "$lib/storybook";
+} from "$lib-stories/storybook";
 import type { Customer } from "$lib/types/corporate";
 import type { User } from "$lib/types/user";
 import type { Workspace } from "$lib/types/workspace";

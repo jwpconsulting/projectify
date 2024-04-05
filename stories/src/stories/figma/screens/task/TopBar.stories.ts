@@ -17,7 +17,7 @@
  */
 
 import TopBar from "$lib/figma/screens/task/TopBar.svelte";
-import { task, section, project } from "$lib/storybook";
+import { task, section, project } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<TopBar> = {

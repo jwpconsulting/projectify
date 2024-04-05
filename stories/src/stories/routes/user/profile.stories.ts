@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { user1 } from "$lib/storybook";
+import { user1 } from "$lib-stories/storybook";
 import Profile from "$routes/(platform)/user/profile/+page.svelte";
 import type { Meta, StoryObj } from "@storybook/svelte";
 

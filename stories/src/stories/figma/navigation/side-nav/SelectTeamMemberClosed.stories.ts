@@ -17,7 +17,7 @@
  */
 
 import SelectTeamMemberClosed from "$lib/figma/navigation/side-nav/SelectTeamMemberClosed.svelte";
-import { makeStorybookSelect, user1, user2 } from "$lib/storybook";
+import { makeStorybookSelect, user1, user2 } from "$lib-stories/storybook";
 import type { User } from "$lib/types/user";
 import type { Meta, StoryObj } from "@storybook/svelte";
 

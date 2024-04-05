@@ -17,7 +17,7 @@
  */
 
 import Project from "$lib/figma/overlays/context-menu/Project.svelte";
-import { project } from "$lib/storybook";
+import { project } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<Project> = {

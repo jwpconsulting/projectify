@@ -17,7 +17,7 @@
  */
 
 import TeamMember from "$lib/figma/overlays/context-menu/TeamMember.svelte";
-import { teamMemberAssignment } from "$lib/storybook";
+import { teamMemberAssignment } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<TeamMember> = {

@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { makeStorybookSelect } from "$lib/storybook";
+import { makeStorybookSelect } from "$lib-stories/storybook";
 import LogIn from "$routes/(storefront)/(auth)/user/log-in/+page.svelte";
 import type { Meta, StoryObj } from "@storybook/svelte";
 

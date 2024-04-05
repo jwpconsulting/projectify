@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { workspace, makeStorybookSelect, user1 } from "$lib/storybook";
+import { workspace, makeStorybookSelect, user1 } from "$lib-stories/storybook";
 import type { User } from "$lib/types/user";
 import type { Workspace } from "$lib/types/workspace";
 import TeamMembers from "$routes/(platform)/dashboard/workspace/[workspaceUuid]/settings/team-members/+page.svelte";

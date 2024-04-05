@@ -17,7 +17,7 @@
  */
 
 import SelectProject from "$lib/figma/navigation/side-nav/SelectProject.svelte";
-import { project } from "$lib/storybook";
+import { project } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<SelectProject> = {

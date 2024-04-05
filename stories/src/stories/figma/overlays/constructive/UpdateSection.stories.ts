@@ -17,7 +17,7 @@
  */
 
 import UpdateSection from "$lib/figma/overlays/constructive/UpdateSection.svelte";
-import { section } from "$lib/storybook";
+import { section } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<UpdateSection> = {

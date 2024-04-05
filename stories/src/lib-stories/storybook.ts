@@ -33,7 +33,7 @@ import type {
 import { getIndexFromLabelColor, labelColors } from "$lib/utils/colors";
 import type { LabelColor } from "$lib/utils/colors";
 
-import type { Customer } from "./types/corporate";
+import type { Customer } from "$lib/types/corporate";
 
 export const user1: User = {
     email: "this-email-is-very-long-so-you-know-we-mean-business@example.com",

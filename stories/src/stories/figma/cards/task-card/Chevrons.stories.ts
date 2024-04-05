@@ -17,7 +17,7 @@
  */
 
 import Chevrons from "$lib/figma/cards/task-card/Chevrons.svelte";
-import { task } from "$lib/storybook";
+import { task } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<Chevrons> = {

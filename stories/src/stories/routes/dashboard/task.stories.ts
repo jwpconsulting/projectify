@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { task } from "$lib/storybook";
+import { task } from "$lib-stories/storybook";
 import Task from "$routes/(platform)/dashboard/task/[taskUuid]/+page.svelte";
 import type { Meta, StoryObj } from "@storybook/svelte";
 

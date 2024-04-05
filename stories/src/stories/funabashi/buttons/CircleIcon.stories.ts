@@ -22,7 +22,7 @@ import {
     circleIconIcons,
     type ButtonAction,
 } from "$lib/funabashi/types";
-import { makeStorybookSelect } from "$lib/storybook";
+import { makeStorybookSelect } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const action = makeStorybookSelect<ButtonAction>({

@@ -17,7 +17,7 @@
  */
 
 import Section from "$lib/figma/overlays/context-menu/Section.svelte";
-import { project, section } from "$lib/storybook";
+import { project, section } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<Section> = {

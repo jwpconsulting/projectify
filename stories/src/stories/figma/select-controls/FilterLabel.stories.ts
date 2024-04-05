@@ -22,7 +22,7 @@ import {
     selectLabels,
     makeStorybookSelect,
     mobileParameters,
-} from "$lib/storybook";
+} from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const short: SelectLabel = {

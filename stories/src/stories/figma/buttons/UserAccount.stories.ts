@@ -17,7 +17,7 @@
  */
 
 import UserAccount from "$lib/figma/buttons/UserAccount.svelte";
-import { user1 } from "$lib/storybook";
+import { user1 } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<UserAccount> = {

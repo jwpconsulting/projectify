@@ -17,7 +17,7 @@
  */
 
 import ContextMenu from "$lib/figma/overlays/ContextMenu.svelte";
-import { makeStorybookSelect } from "$lib/storybook";
+import { makeStorybookSelect } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 import { contextMenus } from "./config";

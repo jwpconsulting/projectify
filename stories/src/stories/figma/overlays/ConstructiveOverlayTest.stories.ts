@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { mobileParameters } from "$lib/storybook";
+import { mobileParameters } from "$lib-stories/storybook";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 import { constructiveOverlays } from "./config";
