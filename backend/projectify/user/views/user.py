@@ -22,8 +22,10 @@ from typing import (
 
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import AnonymousUser
+from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
+from django_ratelimit.decorators import ratelimit
 from rest_framework import (
     parsers,
     serializers,
@@ -119,6 +121,7 @@ class ChangePassword(views.APIView):
         current_password = serializers.CharField()
         new_password = serializers.CharField()
 
+    @method_decorator(ratelimit(key="user", rate="5/h"))
     def post(self, request: Request) -> Response:
         """Handle POST."""
         user = request.user
@@ -145,6 +148,7 @@ class RequestEmailAddressUpdate(views.APIView):
         password = serializers.CharField()
         new_email = serializers.EmailField()
 
+    @method_decorator(ratelimit(key="user", rate="5/h"))
     def post(self, request: Request) -> Response:
         """Handle POST."""
         user = request.user

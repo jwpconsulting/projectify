@@ -15,6 +15,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """User authentication views."""
+from django.utils.decorators import method_decorator
+
+from django_ratelimit.decorators import ratelimit
 from rest_framework import (
     serializers,
     views,
@@ -58,6 +61,7 @@ class SignUp(views.APIView):
         tos_agreed = serializers.BooleanField()
         privacy_policy_agreed = serializers.BooleanField()
 
+    @method_decorator(ratelimit(key="ip", rate="5/h"))
     def post(self, request: Request) -> Response:
         """Handle POST."""
         serializer = self.InputSerializer(data=request.data)
@@ -124,7 +128,11 @@ class LogIn(views.APIView):
 
 # Reset password
 class PasswordResetRequest(views.APIView):
-    """Request password to be reset."""
+    """
+    Request password to be reset.
+
+    Rate limited to 5 times per email per hour.
+    """
 
     permission_classes = (AllowAny,)
 
@@ -133,6 +141,9 @@ class PasswordResetRequest(views.APIView):
 
         email = serializers.EmailField()
 
+    @method_decorator(ratelimit(key="post:email", rate="5/h"))
+    @method_decorator(ratelimit(key="ip", rate="5/h"))
+    @method_decorator(ratelimit(key="ip", rate="1/m"))
     def post(self, request: Request) -> Response:
         """Handle POST."""
         serializer = self.InputSerializer(data=request.data)

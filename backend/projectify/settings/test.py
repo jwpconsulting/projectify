@@ -41,6 +41,9 @@ class Test(Base):
     # Celery
     CELERY_BROKER_URL = "memory://"
 
+    # django-ratelimit
+    RATELIMIT_ENABLE = False
+
     @classmethod
     def pre_setup(cls) -> None:
         """Load environment variables from .env."""

@@ -114,18 +114,26 @@ export async function signUp(
     tosAgreed: boolean,
     privacyPolicyAgreed: boolean,
     repositoryContext: RepositoryContext,
-): Promise<void> {
-    failOrOk(
-        await postWithCredentialsJson(
-            "/user/user/sign-up",
-            {
-                email,
-                password,
-                tos_agreed: tosAgreed,
-                privacy_policy_agreed: privacyPolicyAgreed,
-            },
-            repositoryContext,
-        ),
+): Promise<
+    ApiResponse<
+        void,
+        {
+            email?: string;
+            password?: string;
+            tos_agreed?: string;
+            privacy_policy_agreed?: string;
+        }
+    >
+> {
+    return await postWithCredentialsJson(
+        "/user/user/sign-up",
+        {
+            email,
+            password,
+            tos_agreed: tosAgreed,
+            privacy_policy_agreed: privacyPolicyAgreed,
+        },
+        repositoryContext,
     );
 }
 

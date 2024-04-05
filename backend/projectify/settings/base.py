@@ -135,6 +135,7 @@ class Base(Configuration):
 
     MIDDLEWARE = [
         "django.middleware.security.SecurityMiddleware",
+        "projectify.middleware.reverse_proxy",
         "django.middleware.gzip.GZipMiddleware",
         "corsheaders.middleware.CorsMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
@@ -294,6 +295,10 @@ class Base(Configuration):
     STRIPE_SECRET_KEY: Optional[str] = None
     STRIPE_ENDPOINT_SECRET: Optional[str] = None
     STRIPE_PRICE_OBJECT: Optional[str] = None
+
+    # django-ratelimit
+    RATELIMIT_ENABLE = True
+    RATELIMIT_EXCEPTION_CLASS = "rest_framework.exceptions.Throttled"
 
     @classmethod
     def post_setup(cls) -> None:

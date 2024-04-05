@@ -257,6 +257,9 @@ django-extensions==3.2.3 ; python_version >= "3.11" and python_version < "3.12" 
 django-pgtrigger==4.11.0 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:35843058d6fb6e0077d26e111f121852130b2e1d77e739077efbb2dae3d67f80 \
     --hash=sha256:44bb04b240f2b09add0f62aad9d02fc0e3698e88a1b7fe9840eb7fd4786ae9e7
+django-ratelimit==4.1.0 ; python_version >= "3.11" and python_version < "3.12" \
+    --hash=sha256:555943b283045b917ad59f196829530d63be2a39adb72788d985b90c81ba808b \
+    --hash=sha256:d047a31cf94d83ef1465d7543ca66c6fc16695559b5f8d814d1b51df15110b92
 django==5.0.3 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:5c7d748ad113a81b2d44750ccc41edc14e933f56581683db548c9257e078cc83 \
     --hash=sha256:5fb37580dcf4a262f9258c1f4373819aacca906431f505e4688e37f3a99195df

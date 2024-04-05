@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2023-2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -99,6 +99,8 @@ async function fetchResponse<T, E = unknown>(
         return { kind: "forbidden", ok: false, error };
     } else if (response.status === 404) {
         return { kind: "notFound", ok: false, error };
+    } else if (response.status === 429) {
+        return { kind: "tooManyRequests", ok: false, error };
     } else {
         console.error(
             `Out-of-scope error encountered (status code ${response.status})`,

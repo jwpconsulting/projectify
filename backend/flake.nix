@@ -73,6 +73,11 @@
               buildInputs = (old.buildInputs or [ ]) ++ [ super.hatchling ];
             }
           );
+          django-ratelimit = super.django-ratelimit.overridePythonAttrs (
+            old: {
+              buildInputs = (old.buildInputs or [ ]) ++ [ super.setuptools ];
+            }
+          );
           cryptography = super.cryptography.overridePythonAttrs (old: rec {
             cargoDeps = pkgs.rustPlatform.fetchCargoTarball {
               inherit (old) src;
