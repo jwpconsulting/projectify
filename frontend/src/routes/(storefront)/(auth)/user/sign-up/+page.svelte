@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023, 2024 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -27,9 +27,14 @@
     import { signUp } from "$lib/repository/user";
     import type { FormViewState } from "$lib/types/ui";
     import { logInUrl, sentEmailConfirmationLinkUrl } from "$lib/urls/user";
+    import type { InputFieldValidation } from "$lib/funabashi/types";
 
     let email: string | undefined = undefined;
+    let emailValidation: InputFieldValidation | undefined = undefined;
+
     let password: string | undefined = undefined;
+    let passwordValidation: InputFieldValidation | undefined = undefined;
+
     let tosAgreed: boolean | undefined = undefined;
     let privacyPolicyAgreed: boolean | undefined = undefined;
 
@@ -62,20 +67,55 @@
             };
             return;
         }
-        // TODO form validation
-        try {
-            // TODO show actual server error to user here
-            await signUp(email, password, tosAgreed, privacyPolicyAgreed, {
+        const response = await signUp(
+            email,
+            password,
+            tosAgreed,
+            privacyPolicyAgreed,
+            {
                 fetch,
-            });
-        } catch {
+            },
+        );
+        if (response.ok) {
+            await goto(sentEmailConfirmationLinkUrl);
+            return;
+        }
+        emailValidation = undefined;
+        passwordValidation = undefined;
+        if (response.kind === "tooManyRequests") {
             state = {
                 kind: "error",
-                message: $_("auth.sign-up.generic-error"),
+                message: $_("auth.sign-up.error.too-many-requests"),
             };
             return;
         }
-        await goto(sentEmailConfirmationLinkUrl);
+        if (response.error.email) {
+            emailValidation = { ok: false, error: response.error.email };
+        } else {
+            emailValidation = {
+                ok: true,
+                result: $_("auth.sign-up.email.valid"),
+            };
+        }
+        if (response.error.password) {
+            passwordValidation = { ok: false, error: response.error.password };
+        } else {
+            passwordValidation = {
+                ok: true,
+                result: $_("auth.sign-up.password.valid"),
+            };
+        }
+        if (emailValidation.ok && passwordValidation.ok) {
+            state = {
+                kind: "error",
+                message: $_("auth.sign-up.error.generic"),
+            };
+        } else {
+            state = {
+                kind: "error",
+                message: $_("auth.sign-up.error.field"),
+            };
+        }
     }
 </script>
 
@@ -96,6 +136,7 @@
             label={$_("auth.sign-up.email.label")}
             bind:value={email}
             required
+            validation={emailValidation}
         />
         <InputField
             placeholder={$_("auth.sign-up.password.placeholder")}
@@ -104,6 +145,7 @@
             label={$_("auth.sign-up.password.label")}
             bind:value={password}
             required
+            validation={passwordValidation}
         />
         <!-- XXX false positive -->
         <!-- svelte-ignore a11y-label-has-associated-control -->

@@ -484,11 +484,13 @@ const messages: MessageDirectory = {
                 label: "Email",
                 placeholder: "Enter your email",
                 missing: "Must enter email",
+                valid: "Email looks good",
             },
             "password": {
                 label: "Password",
                 placeholder: "Enter your password",
                 missing: "Must enter password",
+                valid: "Password looks good",
             },
             "tos": {
                 label: "I agree to the Terms of Service",
@@ -503,8 +505,13 @@ const messages: MessageDirectory = {
                 submitting: "Signing you up",
             },
             "already-have-an-account": "Already have an account?",
-            "generic-error":
-                "We are unable to sign you up with these credentials. Please confirm whether you have not signed up with this email already.",
+            "error": {
+                "generic":
+                    "We are unable to sign you up with these credentials. Please confirm whether you have not signed up with this email already.",
+                "field": "Please check the fields above for any errors.",
+                "too-many-requests":
+                    "You have tried signing up too many times. Please wait until you try again.",
+            },
             "log-in-here": "Log in here",
         },
         "confirmation-link-sent": {
