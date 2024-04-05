@@ -62,6 +62,9 @@
         if (response.ok) {
             // TODO redirect to `/{redirectTo}` instead
             // To prevent users not being redirected to third parties
+            // SvelteKit's goto sort of addresses this already, it would just
+            // be cleaner to not have to only rely on SvelteKit's in-host goto
+            // destination restriction
             await goto(redirectTo ?? dashboardUrl);
             return;
         }
