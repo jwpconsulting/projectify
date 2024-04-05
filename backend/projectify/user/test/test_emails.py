@@ -39,13 +39,13 @@ class TestUserEmailConfirmationEmail:
 
     def test_send(self, user: User, mailoutbox: list[EmailMessage]) -> None:
         """Test send."""
-        user.email = "contains space@example.com"
+        user.email = "space@example.com"
         user.save()
         mail = UserEmailConfirmationEmail(receiver=user, obj=user)
         mail.send()
         assert len(mailoutbox) == 1
         m = mailoutbox[0]
-        assert "contains%20space%40example.com" in m.body
+        assert "space%40example.com" in m.body
         match = re.search("/user/confirm-email/.+/(.+)\n", m.body)
         assert match
         token = Token(match.group(1))

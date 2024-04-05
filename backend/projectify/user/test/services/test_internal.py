@@ -36,13 +36,13 @@ pytestmark = pytest.mark.django_db
 
 def test_user_create() -> None:
     """Test creating a normal user."""
-    u = user_create(email="hello@example")
+    u = user_create(email="hello@localhost")
     assert u.is_active is False
 
 
 def test_user_create_superuser() -> None:
     """Test creating a superuser. A superuser should be active."""
-    u = user_create_superuser(email="hello@example")
+    u = user_create_superuser(email="hello@localhost")
     assert u.is_active is True
 
 

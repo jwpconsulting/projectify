@@ -33,7 +33,11 @@ from django.urls import (
 )
 
 import pytest
-from rest_framework.status import HTTP_200_OK, HTTP_403_FORBIDDEN
+from rest_framework.status import (
+    HTTP_200_OK,
+    HTTP_400_BAD_REQUEST,
+    HTTP_403_FORBIDDEN,
+)
 from rest_framework.test import APIClient
 
 from projectify.user.services.internal import user_make_token
@@ -85,7 +89,7 @@ class TestUserReadUpdate:
         user: User,
     ) -> None:
         """Test updating."""
-        with django_assert_num_queries(1):
+        with django_assert_num_queries(3):
             response = rest_user_client.put(
                 resource_url,
                 data={},
@@ -113,6 +117,19 @@ class TestUserReadUpdate:
             data={"preferred_name": "Here's to the finest crew in Starfleet."},
         )
         assert response.status_code == HTTP_403_FORBIDDEN, response.data
+        user.refresh_from_db()
+        # Canary in the mines
+        assert user.preferred_name == name
+
+    def test_naughty_preferred_name(
+        self, rest_user_client: APIClient, resource_url: str, user: User
+    ) -> None:
+        """Test that we do not allow injecting a domain name."""
+        name = user.preferred_name
+        response = rest_user_client.put(
+            resource_url, data={"preferred_name": "google.com"}
+        )
+        assert response.status_code == HTTP_400_BAD_REQUEST, response.data
         user.refresh_from_db()
         # Canary in the mines
         assert user.preferred_name == name
@@ -205,7 +222,7 @@ class TestChangePassword:
         # 1 for changing the password
         # 7 for session update
         # 2 for email send
-        with django_assert_num_queries(10):
+        with django_assert_num_queries(12):
             response = rest_user_client.post(
                 resource_url,
                 data={
@@ -240,7 +257,7 @@ class TestRequestEmailAddressUpdate:
         """Test sending the correct data."""
         old_email = user.email
         new_email = "henlo-wolrd@example.com"
-        with django_assert_num_queries(3):
+        with django_assert_num_queries(5):
             response = rest_user_client.post(
                 resource_url,
                 data={"new_email": new_email, "password": password},
@@ -271,7 +288,7 @@ class TestConfirmEmailAddressUpdate:
         user.unconfirmed_email = "new-email@example.com"
         user.save()
         token = user_make_token(user=user, kind="update_email_address")
-        with django_assert_num_queries(4):
+        with django_assert_num_queries(6):
             response = rest_user_client.post(
                 resource_url,
                 data={"confirmation_token": token},

@@ -9,10 +9,11 @@ anymore (woops) and getting IntegrityErrors instead of ValidationErrors when
 we violate constraints. This can happen for example when the label name vs
 workspace pk constraint is violated.
 
-At the time of writing, I have augmented workspaces.models.label.Label with
-a full_clean() calling save() override. This shall be added to other Model
-instances as well. Calling full_clean has an impact on query count, so a lot
-of test case numbers will have to be adjusted.
+At the time of writing, I have augmented workspaces.models.label.Label and
+user.models.user.User with a full_clean() calling save() override. This shall
+be added to other Model instances as well. Calling full_clean has an impact on
+query count, so a lot of test case numbers will have to be adjusted.
+
 # Done
 
 ## Use correct User type for typing
