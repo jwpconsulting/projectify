@@ -18,9 +18,8 @@
 /*
  * Stories for user update email form
  */
-import type { Meta, StoryObj } from "@storybook/svelte";
-
 import UpdateEmail from "$routes/(platform)/user/profile/update-email-address/+page.svelte";
+import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<UpdateEmail> = {
     component: UpdateEmail,

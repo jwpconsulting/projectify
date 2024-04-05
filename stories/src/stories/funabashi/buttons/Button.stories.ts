@@ -15,12 +15,12 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { Plus } from "@steeze-ui/heroicons";
-import type { Meta, StoryObj } from "@storybook/svelte";
 
 import { buttonColors } from "$lib/funabashi/types";
 import type { ButtonAction, ButtonStyle } from "$lib/funabashi/types";
 import { makeStorybookSelect } from "$lib/storybook";
+import { Plus } from "@steeze-ui/heroicons";
+import type { Meta, StoryObj } from "@storybook/svelte";
 
 import Button from "./Button.svelte";
 

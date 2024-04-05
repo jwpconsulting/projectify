@@ -15,7 +15,6 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { Meta, StoryObj } from "@storybook/svelte";
 
 import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
 import {
@@ -24,6 +23,7 @@ import {
     makeStorybookSelect,
 } from "$lib/storybook";
 import type { Workspace } from "$lib/types/workspace";
+import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<WorkspaceSelector> = {
     component: WorkspaceSelector,

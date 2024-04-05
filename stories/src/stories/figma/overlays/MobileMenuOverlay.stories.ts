@@ -15,10 +15,10 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { Meta, StoryObj } from "@storybook/svelte";
 
 import MobileMenuOverlay from "$lib/figma/overlays/MobileMenuOverlay.svelte";
 import { makeStorybookSelect, mobileParameters } from "$lib/storybook";
+import type { Meta, StoryObj } from "@storybook/svelte";
 
 const target = makeStorybookSelect({
     Landing: { kind: "landing" },

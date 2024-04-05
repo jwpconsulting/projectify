@@ -15,10 +15,9 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
 import { Search } from "@steeze-ui/heroicons";
 import type { Meta, StoryObj } from "@storybook/svelte";
-
-import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
 
 const meta: Meta<SideNavMenuCategory> = {
     component: SideNavMenuCategory,

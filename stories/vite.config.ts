@@ -1,0 +1,1 @@
+../frontend/vite.config.ts

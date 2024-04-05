@@ -15,9 +15,8 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { Meta, StoryObj } from "@storybook/svelte";
-
 import TabElement from "$lib/figma/buttons/TabElement.svelte";
+import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<TabElement> = {
     component: TabElement,

@@ -15,10 +15,10 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { Meta, StoryObj } from "@storybook/svelte";
 
 import Footer from "$lib/figma/navigation/Footer.svelte";
 import { mobileParameters } from "$lib/storybook";
+import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<Footer> = {
     component: Footer,

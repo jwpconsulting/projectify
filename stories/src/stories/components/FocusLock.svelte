@@ -16,10 +16,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    import { onMount } from "svelte";
-
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { keepFocusInside } from "$lib/utils/focus";
+    import { onMount } from "svelte";
 
     let buttonGroup: HTMLElement;
 

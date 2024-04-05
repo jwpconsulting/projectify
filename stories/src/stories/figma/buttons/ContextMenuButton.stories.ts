@@ -15,12 +15,12 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { Search } from "@steeze-ui/heroicons";
-import type { Meta, StoryObj } from "@storybook/svelte";
 
 import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
 import type { MenuButtonColor } from "$lib/figma/types";
 import { makeStorybookSelect } from "$lib/storybook";
+import { Search } from "@steeze-ui/heroicons";
+import type { Meta, StoryObj } from "@storybook/svelte";
 
 const colors = makeStorybookSelect<MenuButtonColor>({
     Base: "base",

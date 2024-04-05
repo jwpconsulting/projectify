@@ -15,10 +15,10 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { Meta, StoryObj } from "@storybook/svelte";
 
 import ReadSubTasks from "$lib/figma/screens/task/ReadSubTasks.svelte";
 import { subTask } from "$lib/storybook";
+import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<ReadSubTasks> = {
     component: ReadSubTasks,

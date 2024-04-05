@@ -15,12 +15,12 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { Meta, StoryObj } from "@storybook/svelte";
 
 import { workspace, makeStorybookSelect, user1 } from "$lib/storybook";
 import type { User } from "$lib/types/user";
 import type { Workspace } from "$lib/types/workspace";
 import Settings from "$routes/(platform)/dashboard/workspace/[workspaceUuid]/settings/+page.svelte";
+import type { Meta, StoryObj } from "@storybook/svelte";
 
 // XXX duplicated because we can't import ./$types
 interface PageData {

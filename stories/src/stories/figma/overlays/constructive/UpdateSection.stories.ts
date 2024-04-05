@@ -15,10 +15,10 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { Meta, StoryObj } from "@storybook/svelte";
 
 import UpdateSection from "$lib/figma/overlays/constructive/UpdateSection.svelte";
 import { section } from "$lib/storybook";
+import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<UpdateSection> = {
     component: UpdateSection,

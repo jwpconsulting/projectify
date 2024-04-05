@@ -18,10 +18,10 @@
 /*
  * Stories for user change password form
  */
-import type { Meta, StoryObj } from "@storybook/svelte";
 
 import { user1 } from "$lib/storybook";
 import ChangePassword from "$routes/(platform)/user/profile/change-password/+page.svelte";
+import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<ChangePassword> = {
     component: ChangePassword,

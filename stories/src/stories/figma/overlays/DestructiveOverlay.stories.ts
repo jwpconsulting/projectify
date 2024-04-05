@@ -15,9 +15,8 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { Meta, StoryObj } from "@storybook/svelte";
-
 import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
+import type { Meta, StoryObj } from "@storybook/svelte";
 
 import { destructiveOverlays } from "./config";
 

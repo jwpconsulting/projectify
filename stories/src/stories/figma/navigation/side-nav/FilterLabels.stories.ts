@@ -15,11 +15,11 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { Meta, StoryObj } from "@storybook/svelte";
 
 import FilterLabels from "$lib/figma/navigation/side-nav/FilterLabels.svelte";
 import type { FilterLabelMenuState } from "$lib/figma/types";
 import { makeStorybookSelect, mappedLabels } from "$lib/storybook";
+import type { Meta, StoryObj } from "@storybook/svelte";
 
 const states = makeStorybookSelect<FilterLabelMenuState>({
     List: { kind: "list" },

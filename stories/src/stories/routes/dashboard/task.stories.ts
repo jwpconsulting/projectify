@@ -15,10 +15,10 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { Meta, StoryObj } from "@storybook/svelte";
 
 import { task } from "$lib/storybook";
 import Task from "$routes/(platform)/dashboard/task/[taskUuid]/+page.svelte";
+import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<Task> = {
     component: Task,

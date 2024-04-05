@@ -15,11 +15,11 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { Meta, StoryObj } from "@storybook/svelte";
 
 import SelectTeamMemberClosed from "$lib/figma/navigation/side-nav/SelectTeamMemberClosed.svelte";
 import { makeStorybookSelect, user1, user2 } from "$lib/storybook";
 import type { User } from "$lib/types/user";
+import type { Meta, StoryObj } from "@storybook/svelte";
 
 const users = makeStorybookSelect<User | null>({
     "With user 1": user1,

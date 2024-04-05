@@ -15,7 +15,6 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { Meta, StoryObj } from "@storybook/svelte";
 
 import {
     workspace,
@@ -29,6 +28,7 @@ import type { Customer } from "$lib/types/corporate";
 import type { User } from "$lib/types/user";
 import type { Workspace } from "$lib/types/workspace";
 import Billing from "$routes/(platform)/dashboard/workspace/[workspaceUuid]/settings/billing/+page.svelte";
+import type { Meta, StoryObj } from "@storybook/svelte";
 
 // XXX duplicated because we can't import ./$types
 interface PageData {

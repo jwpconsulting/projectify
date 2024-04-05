@@ -15,7 +15,6 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { Meta, StoryObj } from "@storybook/svelte";
 
 import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
 import {
@@ -24,6 +23,7 @@ import {
     type ButtonAction,
 } from "$lib/funabashi/types";
 import { makeStorybookSelect } from "$lib/storybook";
+import type { Meta, StoryObj } from "@storybook/svelte";
 
 const action = makeStorybookSelect<ButtonAction>({
     "Button": {

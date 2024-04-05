@@ -15,11 +15,11 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { Meta, StoryObj } from "@storybook/svelte";
 
 import { project, section } from "$lib/storybook";
 import type { SectionDetail } from "$lib/types/workspace";
 import CreateTask from "$routes/(platform)/dashboard/section/[sectionUuid]/create-task/+page.svelte";
+import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<CreateTask> = {
     component: CreateTask,

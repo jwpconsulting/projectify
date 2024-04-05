@@ -1,0 +1,1 @@
+../frontend/postcss.config.cjs

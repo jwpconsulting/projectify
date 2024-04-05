@@ -38,7 +38,6 @@
 
 # Linters
 # -------
-/frontend/.mypy_cache/
 /frontend/.eslintcache
 
 # TODO still needed?
@@ -50,3 +49,11 @@
 # Frontend stories
 # ========
 /stories/node_modules
+/stories/.svelte-kit
+# Linters
+# -------
+/stories/.eslintcache
+
+# Tooling
+# =======
+/tools/.mypy_cache/

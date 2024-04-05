@@ -15,7 +15,6 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { Meta, StoryObj } from "@storybook/svelte";
 
 import FilterLabel from "$lib/figma/select-controls/FilterLabel.svelte";
 import type { SelectLabel } from "$lib/figma/types";
@@ -24,6 +23,7 @@ import {
     makeStorybookSelect,
     mobileParameters,
 } from "$lib/storybook";
+import type { Meta, StoryObj } from "@storybook/svelte";
 
 const short: SelectLabel = {
     label: {
