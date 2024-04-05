@@ -25,7 +25,6 @@ module.exports = {
         "plugin:import/recommended",
         "plugin:import/typescript",
         "plugin:svelte/recommended",
-        "plugin:storybook/recommended",
         "plugin:@typescript-eslint/recommended",
     ],
     plugins: [
