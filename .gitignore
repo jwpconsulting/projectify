@@ -46,3 +46,7 @@
 /frontend/.vercel
 /frontend/.netlify
 /frontend/tmp
+
+# Frontend stories
+# ========
+/stories/node_modules
