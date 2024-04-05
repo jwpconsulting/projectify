@@ -17,8 +17,7 @@
  */
 import type { IconSource } from "@steeze-ui/svelte-icon";
 
-const anchorSizes = ["normal", "large"] as const;
-export type AnchorSize = (typeof anchorSizes)[number];
+export type AnchorSize = "normal" | "large";
 
 // For all buttons
 // Using an additional onInteract property, we can catch clicking on an anchor
@@ -40,45 +39,36 @@ export type ButtonStyle =
           kind: "tertiary";
           icon?: { position: "right" | "left"; icon: IconSource };
       };
-export const buttonColors = ["blue", "red"] as const;
-export type ButtonColor = (typeof buttonColors)[number];
-export const buttonSizes = ["medium"] as const;
-export type ButtonSize = (typeof buttonSizes)[number];
+export type ButtonColor = "blue" | "red";
+export type ButtonSize = "medium";
 
 // For buttons/CircleIcon.svelte
-export const circleIconSizes = ["medium"] as const;
-export type CircleIconSize = (typeof circleIconSizes)[number];
-// TODO rename circleIcons
-export const circleIconIcons = [
-    "ellipsis",
-    "edit",
-    "delete",
-    "up",
-    "down",
-    "close",
-] as const;
+export type CircleIconSize = "medium";
 // TODO rename CircleIcon
-export type CircleIconIcon = (typeof circleIconIcons)[number];
+export type CircleIconIcon =
+    | "ellipsis"
+    | "edit"
+    | "delete"
+    | "up"
+    | "down"
+    | "close";
 
 // For buttons/SquovalIcon.svelte
-export const squovalIcons = [
+export type SquovalIcon =
     // TODO rename project
-    "board",
-    "teamMember",
-    "label",
-    "bulk",
-    "move",
-    "filterTeamMember",
-    "delete",
-    "ellipsis",
-    "plus",
-    "edit",
-    "dotsVertical",
-    "help",
-] as const;
-export type SquovalIcon = (typeof squovalIcons)[number];
-export const squovalStates = ["inactive", "disabled", "active"] as const;
-export type SquovalState = (typeof squovalStates)[number];
+    | "board"
+    | "teamMember"
+    | "label"
+    | "bulk"
+    | "move"
+    | "filterTeamMember"
+    | "delete"
+    | "ellipsis"
+    | "plus"
+    | "edit"
+    | "dotsVertical"
+    | "help";
+export type SquovalState = "inactive" | "disabled" | "active";
 
 // For input-fields/InputField.svelte
 // TODO rename to InputFieldKind Justus 2022-09-22

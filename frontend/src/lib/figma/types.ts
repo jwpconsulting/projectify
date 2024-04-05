@@ -18,14 +18,11 @@
 import type { User } from "$lib/types/user";
 import type { Label } from "$lib/types/workspace";
 
-const menuButtonColors = ["base", "primary", "destructive"] as const;
-export type MenuButtonColor = (typeof menuButtonColors)[number];
+export type MenuButtonColor = "base" | "primary" | "destructive";
 
-const borderedIconTypes = ["workspace", "filter"] as const;
-export type BorderedIconType = (typeof borderedIconTypes)[number];
+export type BorderedIconType = "workspace" | "filter";
 
-export const avatarStateSizes = ["medium", "large"] as const;
-export type AvatarStateSize = (typeof avatarStateSizes)[number];
+export type AvatarStateSize = "medium" | "large";
 
 export interface AvatarVariantContent {
     kind: "single";

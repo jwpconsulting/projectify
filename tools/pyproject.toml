@@ -33,6 +33,9 @@ click = "~8.1.7"
 toml = "~0.10.2"
 
 [tool.poetry.group.dev.dependencies]
+ipython = "~8.4.0"
+
+[tool.poetry.group.test.dependencies]
 black = "~22.6"
 flake8 = "~4.0.1"
 flake8-black = "~0.3.3"

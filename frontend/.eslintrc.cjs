@@ -25,7 +25,6 @@ module.exports = {
         "plugin:import/recommended",
         "plugin:import/typescript",
         "plugin:svelte/recommended",
-        "plugin:storybook/recommended",
         "plugin:@typescript-eslint/recommended",
     ],
     plugins: [
@@ -90,26 +89,6 @@ module.exports = {
         "prefer-const": "error",
         "unused-imports/no-unused-imports": "error",
         "import/no-unresolved": "off",
-        "import/order": [
-            "error",
-            {
-                "alphabetize": {
-                    order: "asc",
-                    caseInsensitive: true,
-                },
-                "groups": [
-                    "builtin",
-                    "external",
-                    "internal",
-                    "parent",
-                    "sibling",
-                    "index",
-                    "object",
-                ],
-                "newlines-between": "always",
-                "pathGroups": [{ pattern: "$lib/*", group: "internal" }],
-            },
-        ],
         "import/first": "error",
         "import/newline-after-import": "error",
         "import/no-cycle": "error",
