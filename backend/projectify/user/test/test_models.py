@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Test user models."""
+from django.core.exceptions import ValidationError
+
 import pytest
 
 from ..models import User, UserInvite
@@ -28,6 +30,30 @@ class TestUser:
         """Test user factory."""
         assert user.email
         assert user.preferred_name is not None
+
+    def test_preferred_name_validation(self, user: User) -> None:
+        """Test url like names can not be inserted."""
+        # Rejected
+        user.preferred_name = "www.google.com"
+        with pytest.raises(ValidationError):
+            user.full_clean()
+
+        user.preferred_name = "http://localhost"
+        with pytest.raises(ValidationError):
+            user.full_clean()
+
+        # Allowed
+        user.preferred_name = "http: //localhost"
+        user.full_clean()
+
+        user.preferred_name = "Department of: silly walks"
+        user.full_clean()
+
+        user.preferred_name = "www. google"
+        user.full_clean()
+
+        user.preferred_name = "Foob. Ar"
+        user.full_clean()
 
 
 @pytest.mark.django_db

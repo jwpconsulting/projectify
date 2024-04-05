@@ -16,6 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """User model in user app."""
 from typing import (
+    Any,
     ClassVar,
 )
 
@@ -80,3 +81,22 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     objects: ClassVar[BaseUserManager["User"]] = BaseUserManager()
 
     USERNAME_FIELD = "email"
+
+    def save(self, *args: Any, **kwargs: Any) -> None:
+        """Override save and call full_clean."""
+        self.full_clean()
+        return super().save(*args, **kwargs)
+
+    class Meta(BaseModel.Meta, AbstractBaseUser.Meta):
+        """Add constraints."""
+
+        constraints = (
+            models.CheckConstraint(
+                name="preferred_name",
+                # Match period followed by space, or not period
+                check=models.Q(preferred_name__regex=r"^([.:]\s|[^.:])+$"),
+                violation_error_message=_(
+                    "Preferred name can only contain '.' or ':' if followed by whitespace."
+                ),
+            ),
+        )
