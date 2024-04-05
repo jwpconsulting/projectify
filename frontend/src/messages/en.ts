@@ -561,10 +561,12 @@ const messages: MessageDirectory = {
             },
             "return-to-log-in": "Return to log in",
             "error": {
-                generic:
+                "generic":
                     "Something went wrong when requesting your password reset link. Please try again using this form, or contact support if you have any questions",
-                validation:
+                "validation":
                     "Please check the fields above again for errors and submit again",
+                "too-many-requests":
+                    "You can only use this feature so many times in a short time. Please try again later.",
             },
         },
         "requested-password-reset": {

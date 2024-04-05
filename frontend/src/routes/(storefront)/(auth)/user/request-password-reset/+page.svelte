@@ -50,6 +50,13 @@
                 kind: "error",
                 message: $_("auth.request-password-reset.error.validation"),
             };
+        } else if (response.kind === "tooManyRequests") {
+            state = {
+                kind: "error",
+                message: $_(
+                    "auth.request-password-reset.error.too-many-requests",
+                ),
+            };
         } else {
             state = {
                 kind: "error",

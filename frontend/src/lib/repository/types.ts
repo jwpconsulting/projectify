@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2023-2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -22,4 +22,5 @@ export type ApiResponse<T, E> =
     | { kind: "ok"; ok: true; data: T }
     | { kind: "badRequest"; ok: false; error: E } // 400
     | { kind: "forbidden"; ok: false; error: E } // 403
-    | { kind: "notFound"; ok: false; error: E }; // 404
+    | { kind: "notFound"; ok: false; error: E } // 404
+    | { kind: "tooManyRequests"; ok: false; error: E }; // 429
