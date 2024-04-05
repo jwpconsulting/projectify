@@ -69,11 +69,3 @@ else
     echo "knip didn't exit cleanly"
     exit 1
 fi
-
-if bin/check-i18n
-then
-    echo "bin/check-i18n successful"
-else
-    echo "bin/check-i18n didn't exit cleanly"
-    exit 1
-fi

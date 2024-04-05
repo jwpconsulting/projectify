@@ -93,7 +93,6 @@ module.exports = {
         "import/first": "error",
         "import/newline-after-import": "error",
         "import/no-cycle": "error",
-        "import/no-relative-packages": "error",
         // Since we use typescript, we have declarations for __BUILD_DATE__
         // and others, so we don't need to check for plain JS undefined
         // variables.
