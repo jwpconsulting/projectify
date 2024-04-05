@@ -59,7 +59,7 @@ class TestLogOut:
             log_in_url,
             data={"email": user.email, "password": password},
         )
-        assert response.status_code == 204, response.data
+        assert response.status_code == 200, response.data
         with django_assert_num_queries(4):
             response = rest_client.post(resource_url)
             assert response.status_code == 204, response.data
@@ -156,7 +156,12 @@ class TestLogIn:
                 resource_url,
                 data={"email": user.email, "password": password},
             )
-            assert response.status_code == 204, response.data
+            assert response.status_code == 200, response.data
+        assert response.data == {
+            "email": user.email,
+            "profile_picture": None,
+            "preferred_name": user.preferred_name,
+        }
 
 
 class TestPasswordResetRequest:
