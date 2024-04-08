@@ -20,7 +20,7 @@
     import Profile from "$lib/figma/overlays/context-menu/Profile.svelte";
     import Project from "$lib/figma/overlays/context-menu/Project.svelte";
     import Section from "$lib/figma/overlays/context-menu/Section.svelte";
-    import SideNavContextMenu from "$lib/figma/overlays/context-menu/SideNavContextMenu.svelte";
+    import SideNav from "$lib/figma/overlays/context-menu/SideNav.svelte";
     import Task from "$lib/figma/overlays/context-menu/Task.svelte";
     import TeamMember from "$lib/figma/overlays/context-menu/TeamMember.svelte";
     import Workspace from "$lib/figma/overlays/context-menu/Workspace.svelte";
@@ -34,7 +34,7 @@
 {:else if target.kind === "workspace"}
     <Workspace workspaces={target.workspaces} />
 {:else if target.kind === "sideNav"}
-    <SideNavContextMenu workspace={target.workspace} />
+    <SideNav workspace={target.workspace} />
 {:else if target.kind === "project"}
     <Project workspace={target.workspace} project={target.project} />
 {:else if target.kind === "section"}
