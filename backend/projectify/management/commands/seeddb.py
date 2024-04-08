@@ -193,7 +193,7 @@ class Command(BaseCommand):
                     description=self.fake.paragraph(
                         TASK_DESCRIPTION_SENTENCES
                     ),
-                    workspace_board_section=section,
+                    section=section,
                     due_date=self.fake.date_time(tzinfo=timezone.utc),
                     workspace=together["workspace"],
                     _order=_order,
