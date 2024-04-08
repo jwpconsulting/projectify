@@ -97,7 +97,7 @@ class TaskQuerySet(models.QuerySet["Task"]):
     def filter_by_project(self, project: "Project") -> Self:
         """Filter by tasks contained in project."""
         return self.filter(
-            section__workspace_board=project,
+            section__project=project,
         )
 
 
@@ -285,7 +285,7 @@ class Task(TitleDescriptionModel, BaseModel):
                             "workspace_project"."workspace_id")
                         INNER JOIN "workspace_section"
                             ON ("workspace_project"."id" = \
-                                 "workspace_section"."workspace_board_id")
+                                 "workspace_section"."project_id")
                         INNER JOIN "workspace_task"
                             ON ("workspace_section"."id" = \
                                 "workspace_task"."section_id")

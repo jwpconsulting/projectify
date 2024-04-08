@@ -353,11 +353,7 @@ class Command(BaseCommand):
 
         workspaces_sections = Section.objects.bulk_create(
             [
-                Section(
-                    workspace_board=project,
-                    title=title,
-                    _order=_order,
-                )
+                Section(project=project, title=title, _order=_order)
                 for _, projects in groupby(
                     workspaces_projects, key=lambda b: b.workspace
                 )
