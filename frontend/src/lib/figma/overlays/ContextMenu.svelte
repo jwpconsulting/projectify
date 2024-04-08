@@ -16,7 +16,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    import HelpContextMenu from "$lib/figma/overlays/context-menu/HelpContextMenu.svelte";
     import Label from "$lib/figma/overlays/context-menu/Label.svelte";
     import Permissions from "$lib/figma/overlays/context-menu/Permissions.svelte";
     import Profile from "$lib/figma/overlays/context-menu/Profile.svelte";
@@ -43,8 +42,6 @@
     <Section project={target.project} section={target.section} />
 {:else if target.kind === "task"}
     <Task kind={target} />
-{:else if target.kind === "help"}
-    <HelpContextMenu />
 {:else if target.kind === "permissions"}
     <Permissions />
 {:else if target.kind === "updateTeamMember"}

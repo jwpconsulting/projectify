@@ -74,12 +74,6 @@ export const Task: Story = {
     },
 };
 
-export const Help: Story = {
-    args: {
-        target: "help",
-    },
-};
-
 export const Permissions: Story = {
     args: {
         target: "permissions",

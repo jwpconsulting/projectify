@@ -69,9 +69,6 @@ export const contextMenus: Record<string, ContextMenuType> = {
         location: "task",
         section,
     },
-    "Help": {
-        kind: "help",
-    },
     "Permissions": {
         kind: "permissions",
     },
