@@ -133,16 +133,14 @@ def get_workspace_resource_count(
             return SubTask.objects.filter(task__workspace=workspace).count()
         case "Task":
             return Task.objects.filter(
-                workspace_board_section__workspace_board__workspace=workspace
+                section__project__workspace=workspace
             ).count()
         case "TaskLabel":
             return TaskLabel.objects.filter(label__workspace=workspace).count()
         case "Project":
             return workspace.project_set.count()
         case "Section":
-            return Section.objects.filter(
-                workspace_board__workspace=workspace
-            ).count()
+            return Section.objects.filter(project__workspace=workspace).count()
         case "TeamMemberAndInvite":
             user_count = workspace.users.count()
             invite_count = workspace.teammemberinvite_set.filter(

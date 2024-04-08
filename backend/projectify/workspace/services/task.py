@@ -64,7 +64,7 @@ def task_create(
     # XXX Implicit N+1 here
     workspace = section.project.workspace
     return Task.objects.create(
-        workspace_board_section=section,
+        section=section,
         title=title,
         description=description,
         due_date=due_date,
@@ -203,7 +203,7 @@ def task_move_after(
         other_tasks = section.task_set.select_for_update()
         len(other_tasks)
         # And assign task's section
-        task.workspace_board_section = section
+        task.section = section
         task.save()
 
     # Change order

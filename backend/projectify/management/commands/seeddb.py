@@ -193,7 +193,7 @@ class Command(BaseCommand):
                     description=self.fake.paragraph(
                         TASK_DESCRIPTION_SENTENCES
                     ),
-                    workspace_board_section=section,
+                    section=section,
                     due_date=self.fake.date_time(tzinfo=timezone.utc),
                     workspace=together["workspace"],
                     _order=_order,
@@ -353,11 +353,7 @@ class Command(BaseCommand):
 
         workspaces_sections = Section.objects.bulk_create(
             [
-                Section(
-                    workspace_board=project,
-                    title=title,
-                    _order=_order,
-                )
+                Section(project=project, title=title, _order=_order)
                 for _, projects in groupby(
                     workspaces_projects, key=lambda b: b.workspace
                 )

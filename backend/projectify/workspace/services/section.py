@@ -42,11 +42,7 @@ def section_create(
         who,
         project.workspace,
     )
-    section = Section(
-        title=title,
-        description=description,
-        workspace_board=project,
-    )
+    section = Section(title=title, description=description, project=project)
     section.save()
     send_project_change_signal(project)
     return section
