@@ -29,6 +29,8 @@ export const currentArchivedProjects = derived<
     if (!uuid) {
         return;
     }
+    // XXX this will not use { fetch } present in load() function
+    // Justus 2024-04-08
     getArchivedProjects(uuid, { fetch })
         .then(set)
         .catch((error: Error) => {

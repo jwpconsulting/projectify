@@ -172,17 +172,6 @@ const messages: MessageDirectory = {
                 "copy-link": "Copy link",
                 "delete-task": "Delete task",
             },
-            "help": {
-                "help-and-tips": "Help and tips",
-                "blog": "Blog",
-            },
-            "permissions": {
-                "all-roles": "All roles",
-                "owner": "Owner",
-                "maintainer": "Maintainer",
-                "contributor": "Contributor",
-                "observer": "Observer",
-            },
         },
     },
     // TODO find out if we can factor this into somewhere
@@ -1478,6 +1467,7 @@ const messages: MessageDirectory = {
                 resources: {
                     "title": "Resources",
                     "help-and-tips": "Help and tips",
+                    "blog": "Blog",
                 },
                 company: {
                     "title": "Company",

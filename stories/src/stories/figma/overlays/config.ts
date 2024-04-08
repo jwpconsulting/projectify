@@ -69,12 +69,6 @@ export const contextMenus: Record<string, ContextMenuType> = {
         location: "task",
         section,
     },
-    "Help": {
-        kind: "help",
-    },
-    "Permissions": {
-        kind: "permissions",
-    },
     // TODO name of component / kind should be update team member assignment?
     // TODO yep, I agree even one month later. Justus 2023-10-19
     "Update team member": {

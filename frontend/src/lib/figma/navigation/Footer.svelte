@@ -90,6 +90,13 @@
                             openBlank
                         />
                     </li>
+                    <li>
+                        <Anchor
+                            href="https://www.jwpconsulting.net/tags/projectify/"
+                            label={$_("navigation.footer.nav.resources.blog")}
+                            openBlank
+                        />
+                    </li>
                 </ul>
             </section>
             <section class="flex flex-col gap-1">
