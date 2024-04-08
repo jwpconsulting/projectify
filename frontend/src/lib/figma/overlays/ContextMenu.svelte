@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -17,7 +17,6 @@
 -->
 <script lang="ts">
     import Label from "$lib/figma/overlays/context-menu/Label.svelte";
-    import Permissions from "$lib/figma/overlays/context-menu/Permissions.svelte";
     import Profile from "$lib/figma/overlays/context-menu/Profile.svelte";
     import Project from "$lib/figma/overlays/context-menu/Project.svelte";
     import Section from "$lib/figma/overlays/context-menu/Section.svelte";
@@ -42,8 +41,6 @@
     <Section project={target.project} section={target.section} />
 {:else if target.kind === "task"}
     <Task kind={target} />
-{:else if target.kind === "permissions"}
-    <Permissions />
 {:else if target.kind === "updateTeamMember"}
     <TeamMember teamMemberAssignment={target.teamMemberAssignment} />
 {:else if target.kind === "updateLabel"}

@@ -74,12 +74,6 @@ export const Task: Story = {
     },
 };
 
-export const Permissions: Story = {
-    args: {
-        target: "permissions",
-    },
-};
-
 export const UpdateTeamMember: Story = {
     args: {
         target: "update-team-member",

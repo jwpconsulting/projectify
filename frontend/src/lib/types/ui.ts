@@ -140,7 +140,6 @@ export type ContextMenuType =
           section: SectionWithTasks;
           project: ProjectDetail;
       }
-    | { kind: "permissions" }
     | {
           kind: "updateTeamMember";
           teamMemberAssignment: TeamMemberAssignment;

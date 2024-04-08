@@ -172,13 +172,6 @@ const messages: MessageDirectory = {
                 "copy-link": "Copy link",
                 "delete-task": "Delete task",
             },
-            "permissions": {
-                "all-roles": "All roles",
-                "owner": "Owner",
-                "maintainer": "Maintainer",
-                "contributor": "Contributor",
-                "observer": "Observer",
-            },
         },
     },
     // TODO find out if we can factor this into somewhere
