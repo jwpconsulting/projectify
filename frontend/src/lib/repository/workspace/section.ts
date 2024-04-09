@@ -84,7 +84,7 @@ export async function deleteSection(
 
 // RPC
 export async function moveSection(
-    { uuid }: Section,
+    { uuid }: Pick<Section, "uuid">,
     order: number,
     repositoryContext: RepositoryContext,
 ) {

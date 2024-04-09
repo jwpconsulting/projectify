@@ -26,7 +26,6 @@
     import { goto } from "$lib/navigation";
     import {
         createTask as createTaskFn,
-        type CreateUpdateTaskData,
     } from "$lib/repository/workspace";
     import { createSubTaskAssignment } from "$lib/stores/dashboard";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
@@ -68,7 +67,7 @@
         if (!$labelAssignment) {
             throw new Error("Expected $labelAssignment");
         }
-        const createTaskFull: CreateUpdateTaskData = {
+        const createTaskFull = {
             title,
             description,
             section: section,

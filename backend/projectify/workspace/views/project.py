@@ -100,9 +100,7 @@ class ProjectReadUpdateDelete(APIView):
         )
         if project is None:
             raise NotFound(_("No project found for this uuid"))
-        serializer = ProjectDetailSerializer(
-            instance=project,
-        )
+        serializer = ProjectDetailSerializer(instance=project)
         return Response(serializer.data)
 
     def put(self, request: Request, project_uuid: UUID) -> Response:

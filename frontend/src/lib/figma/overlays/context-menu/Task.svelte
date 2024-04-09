@@ -48,6 +48,9 @@
     export let kind: ContextMenuType & { kind: "task" };
 
     async function promptDeleteTask() {
+        if (kind.location !== "dashboard") {
+            throw new Error("Expected location to be dashboard");
+        }
         const { uuid } = kind.section;
         await openDestructiveOverlay({
             kind: "deleteTask" as const,

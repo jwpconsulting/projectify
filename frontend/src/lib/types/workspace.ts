@@ -95,7 +95,8 @@ export type Section = {
 } & TimestampedType &
     CreateSection;
 
-export type SectionWithTasks = Section & Required<Pick<Section, "tasks">>;
+export type SectionWithTasks = Pick<Section, "uuid" | "_order" | "title"> &
+    Required<Pick<Section, "tasks">>;
 
 export type SectionDetail = Section &
     Required<Pick<Section, "project" | "tasks">>;

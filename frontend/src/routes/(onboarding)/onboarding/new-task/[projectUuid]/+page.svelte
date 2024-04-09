@@ -24,7 +24,6 @@
     import { goto } from "$lib/navigation";
     import {
         createTask,
-        type CreateUpdateTaskData,
     } from "$lib/repository/workspace";
     import { createSection } from "$lib/repository/workspace/section";
     import { getNewLabelUrl } from "$lib/urls/onboarding";
@@ -58,7 +57,7 @@
         const assignee = workspace.team_members.find(
             (w) => w.user.email === user.email,
         );
-        const task: CreateUpdateTaskData = {
+        const task = {
             title: taskTitle,
             labels: [],
             section,

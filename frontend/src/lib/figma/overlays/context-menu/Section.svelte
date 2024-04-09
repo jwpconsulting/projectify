@@ -38,10 +38,10 @@
         openConstructiveOverlay,
         openDestructiveOverlay,
     } from "$lib/stores/globalUi";
-    import type { Project, Section } from "$lib/types/workspace";
+    import type { Project, Section, SectionWithTasks } from "$lib/types/workspace";
 
     export let project: Project;
-    export let section: Section;
+    export let section: SectionWithTasks;
 
     let closed: boolean;
     $: {

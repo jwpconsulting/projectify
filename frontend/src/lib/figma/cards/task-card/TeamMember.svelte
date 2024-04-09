@@ -25,9 +25,9 @@
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
     import { getDisplayName } from "$lib/types/user";
-    import type { TaskWithSection } from "$lib/types/workspace";
+    import type { Task } from "$lib/types/workspace";
 
-    export let task: TaskWithSection;
+    export let task: Task;
 
     let userPickerBtnRef: HTMLElement;
 

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -16,26 +16,14 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { project, section } from "$lib-stories/storybook";
-import type { SectionDetail } from "$lib/types/workspace";
-import CreateTask from "$routes/(platform)/dashboard/section/[sectionUuid]/create-task/+page.svelte";
+import Loading from "$lib/components/loading.svelte";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-const meta: Meta<CreateTask> = {
-    component: CreateTask,
-    args: {
-        data: {
-            section: {
-                ...section,
-                project: project,
-                created: "",
-                modified: "",
-            } satisfies SectionDetail,
-        },
-    },
+const meta: Meta<Loading> = {
+    component: Loading,
 };
 export default meta;
 
-type Story = StoryObj<CreateTask>;
+type Story = StoryObj<Loading>;
 
 export const Default: Story = {};
