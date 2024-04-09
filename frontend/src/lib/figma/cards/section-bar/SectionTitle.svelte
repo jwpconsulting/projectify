@@ -26,11 +26,11 @@
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
-    import type { Project, Section } from "$lib/types/workspace";
+    import type { Project, SectionWithTasks } from "$lib/types/workspace";
     import { getNewTaskUrl } from "$lib/urls";
 
     export let project: Project;
-    export let section: Section;
+    export let section: SectionWithTasks;
     export let open: boolean;
 
     const { uuid } = section;

@@ -108,7 +108,6 @@
                                     kind: "task",
                                     task,
                                     location: "task",
-                                    section: task.section,
                                 },
                                 contextMenuRef,
                             ),

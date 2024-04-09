@@ -22,11 +22,7 @@ import {
     moveTaskToSection,
 } from "$lib/repository/workspace";
 import type { RepositoryContext } from "$lib/types/repository";
-import type {
-    Task,
-    TaskWithSection,
-    SectionWithTasks,
-} from "$lib/types/workspace";
+import type { Task, SectionWithTasks, Section } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
 
 type TaskPosition =
@@ -55,8 +51,8 @@ export function getTaskPosition(
 }
 
 export async function moveToTop(
-    section: SectionWithTasks,
-    task: TaskWithSection,
+    section: Pick<Section, "uuid">,
+    task: Pick<Task, "uuid">,
     repositoryContext: RepositoryContext,
 ) {
     await moveTaskToSection(task, section, repositoryContext);
@@ -67,8 +63,8 @@ export async function moveToBottom(
     task: Task,
     repositoryContext: RepositoryContext,
 ) {
-    const tasks = unwrap(section.tasks, "Expected tasks");
-    const lastTask = unwrap(tasks.at(-1), "Expected lastTask");
+    const { tasks } = section;
+    const lastTask = tasks[tasks.length - 1];
     await moveTaskAfterTask(task, lastTask, repositoryContext);
 }
 
@@ -77,7 +73,7 @@ export async function moveUp(
     task: Task,
     repositoryContext: RepositoryContext,
 ) {
-    const tasks = unwrap(section.tasks, "Expected tasks");
+    const { tasks } = section;
     const position = getTaskPosition(section, task);
     if (!(position.kind === "within" || position.kind === "end")) {
         throw new Error("Expected task to be within or at end");

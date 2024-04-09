@@ -59,7 +59,7 @@ export const contextMenus: Record<string, ContextMenuType> = {
         section,
         project: {
             ...project,
-            sections: [{ ...section, tasks: [task] }],
+            sections: [],
             workspace,
         },
     },
@@ -67,7 +67,6 @@ export const contextMenus: Record<string, ContextMenuType> = {
         kind: "task" as const,
         task,
         location: "task",
-        section,
     },
     // TODO name of component / kind should be update team member assignment?
     // TODO yep, I agree even one month later. Justus 2023-10-19

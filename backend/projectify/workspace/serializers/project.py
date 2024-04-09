@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -15,36 +15,66 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Project serializers."""
-from projectify.workspace.serializers.task import (
-    TaskWithSubTaskSerializer,
+from rest_framework import serializers
+
+from projectify.workspace.models.project import Project
+from projectify.workspace.models.section import Section
+from projectify.workspace.models.task import Task
+from projectify.workspace.serializers.base import (
+    LabelBaseSerializer,
+    ProjectBaseSerializer,
+    SubTaskBaseSerializer,
+    TeamMemberBaseSerializer,
+    WorkspaceBaseSerializer,
 )
 
-from . import (
-    base,
-)
 
+class TaskSerializer(serializers.ModelSerializer[Task]):
+    """Serialize all task details."""
 
-class SectionSerializer(base.SectionBaseSerializer):
-    """
-    Section serializer.
-
-    Serializers the tasks that it contains.
-    """
-
-    tasks = TaskWithSubTaskSerializer(
-        many=True, read_only=True, source="task_set"
+    labels = LabelBaseSerializer(many=True, read_only=True)
+    assignee = TeamMemberBaseSerializer(read_only=True)
+    # TODO Justus 2024-04-09
+    # This can be simplified as well, might only have to return completion
+    # percentage
+    sub_tasks = SubTaskBaseSerializer(
+        many=True, read_only=True, source="subtask_set"
     )
 
-    class Meta(base.SectionBaseSerializer.Meta):
+    class Meta:
         """Meta."""
 
+        # Leaving out created, updated, _order, and description
+        model = Task
         fields = (
-            *base.SectionBaseSerializer.Meta.fields,
+            "title",
+            "uuid",
+            "due_date",
+            "number",
+            "labels",
+            "assignee",
+            "sub_tasks",
+        )
+
+
+class SectionSerializer(serializers.ModelSerializer[Section]):
+    """Reduced section serializer."""
+
+    tasks = TaskSerializer(many=True, read_only=True, source="task_set")
+
+    class Meta:
+        """Meta."""
+
+        model = Section
+        fields = (
+            "uuid",
+            "_order",
+            "title",
             "tasks",
         )
 
 
-class ProjectDetailSerializer(base.ProjectBaseSerializer):
+class ProjectDetailSerializer(ProjectBaseSerializer):
     """
     Project serializer.
 
@@ -56,13 +86,14 @@ class ProjectDetailSerializer(base.ProjectBaseSerializer):
         many=True, read_only=True, source="section_set"
     )
 
-    workspace = base.WorkspaceBaseSerializer(read_only=True)
+    workspace = WorkspaceBaseSerializer(read_only=True)
 
-    class Meta(base.ProjectBaseSerializer.Meta):
+    class Meta(ProjectBaseSerializer.Meta):
         """Meta."""
 
+        model = Project
         fields = (
-            *base.ProjectBaseSerializer.Meta.fields,
+            *ProjectBaseSerializer.Meta.fields,
             "sections",
             "workspace",
         )

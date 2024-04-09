@@ -22,12 +22,12 @@
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
     import type {
-        TaskWithSection,
         ProjectDetail,
         SectionWithTasks,
+        Task,
     } from "$lib/types/workspace";
 
-    export let task: TaskWithSection;
+    export let task: Task;
     // this is only ever needed for the dashboard, not when a task is part
     // of search results... time for another ADT?
     export let project: ProjectDetail;
@@ -42,7 +42,6 @@
                       kind: "task",
                       task,
                       location: "task",
-                      section: task.section,
                   }
                 : {
                       kind: "task" as const,

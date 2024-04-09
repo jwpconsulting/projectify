@@ -28,6 +28,8 @@ const meta: Meta<CreateTask> = {
             section: {
                 ...section,
                 project: project,
+                created: "",
+                modified: "",
             } satisfies SectionDetail,
         },
     },

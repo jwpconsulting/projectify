@@ -101,7 +101,6 @@
                     assignee: $teamMemberAssignment,
                     labels: $labelAssignment,
                     sub_tasks: $subTasks,
-                    section: task.section,
                 },
                 { fetch },
             );

@@ -26,12 +26,7 @@ import type {
     TasksPerUser,
     TeamMemberSelection,
 } from "$lib/types/ui";
-import type {
-    Label,
-    Task,
-    Section,
-    SectionWithTasks,
-} from "$lib/types/workspace";
+import type { Label, Task, SectionWithTasks } from "$lib/types/workspace";
 
 interface CurrentFilter {
     labels: LabelSelection;
@@ -114,20 +109,17 @@ export const currentSections = derived<
 );
 
 export const tasksPerUser: Readable<TasksPerUser> = derived<
-    Readable<Section[] | undefined>,
+    Readable<SectionWithTasks[] | undefined>,
     TasksPerUser
 >(
     currentSections,
-    ($currentSections, set) => {
-        if (!$currentSections) {
+    ($currentSections: SectionWithTasks[] | undefined, set) => {
+        if ($currentSections === undefined) {
             return;
         }
         const assigned = new Map<string, number>();
         let unassigned = 0;
-        $currentSections.forEach((section) => {
-            if (!section.tasks) {
-                return;
-            }
+        $currentSections.forEach((section: SectionWithTasks) => {
             section.tasks.forEach((task) => {
                 const uuid = task.assignee?.uuid;
                 if (uuid === undefined) {

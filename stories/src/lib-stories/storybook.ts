@@ -178,8 +178,6 @@ const task2: Task = {
 
 export const section: SectionWithTasks = {
     title: "section name that is very very very very very very long",
-    created: "",
-    modified: "",
     uuid: nullUuid,
     tasks: [task, task2],
     _order: 0,

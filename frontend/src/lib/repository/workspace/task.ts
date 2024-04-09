@@ -35,23 +35,22 @@ import type {
 
 // Task CRUD
 // Create
-export interface CreateUpdateTaskData {
-    title: string;
-    description?: string;
-    // TODO this has to be optional in the backend -> undefined means unset
-    // labels
-    labels: Pick<Label, "uuid">[];
-    // TODO this has to be optional in the backend -> undefined means unset
-    // assignee
-    assignee?: Pick<TeamMember, "uuid">;
-    section: Pick<Section, "uuid">;
-    // TODO dueDate plz
-    due_date?: string;
-    sub_tasks?: CreateUpdateSubTask[];
-}
 
 export async function createTask(
-    data: CreateUpdateTaskData,
+    data: {
+        title: string;
+        description?: string;
+        // TODO this has to be optional in the backend -> undefined means unset
+        // labels
+        labels: Pick<Label, "uuid">[];
+        // TODO this has to be optional in the backend -> undefined means unset
+        // assignee
+        assignee?: Pick<TeamMember, "uuid">;
+        section: Pick<Section, "uuid">;
+        // TODO dueDate plz
+        due_date?: string;
+        sub_tasks?: CreateUpdateSubTask[];
+    },
     repositoryContext: RepositoryContext,
 ): Promise<Task> {
     const response = await postWithCredentialsJson<Task>(
@@ -97,7 +96,19 @@ export async function getTask(
 // incl. labels and so on
 export async function updateTask(
     task: Pick<Task, "uuid">,
-    data: CreateUpdateTaskData,
+    data: {
+        title: string;
+        description?: string;
+        // TODO this has to be optional in the backend -> undefined means unset
+        // labels
+        labels: Pick<Label, "uuid">[];
+        // TODO this has to be optional in the backend -> undefined means unset
+        // assignee
+        assignee?: Pick<TeamMember, "uuid">;
+        // TODO dueDate plz
+        due_date?: string;
+        sub_tasks?: CreateUpdateSubTask[];
+    },
     repositoryContext: RepositoryContext,
 ): Promise<Task | undefined> {
     const { uuid } = task;
@@ -105,9 +116,6 @@ export async function updateTask(
         `/workspace/task/${uuid}`,
         {
             ...data,
-            section: {
-                uuid: data.section.uuid,
-            },
             assignee: data.assignee ? { uuid: data.assignee.uuid } : null,
             labels: data.labels.map((l) => {
                 return { uuid: l.uuid };
@@ -126,8 +134,8 @@ export async function updateTask(
 }
 
 export async function moveTaskToSection(
-    task: Task,
-    { uuid }: Section,
+    task: Pick<Task, "uuid">,
+    { uuid }: Pick<Section, "uuid">,
     repositoryContext: RepositoryContext,
 ): Promise<void> {
     failOrOk(
@@ -140,8 +148,8 @@ export async function moveTaskToSection(
 }
 
 export async function moveTaskAfterTask(
-    task: Task,
-    { uuid }: Task,
+    task: Pick<Task, "uuid">,
+    { uuid }: Pick<Task, "uuid">,
     repositoryContext: RepositoryContext,
 ): Promise<void> {
     failOrOk(
@@ -154,7 +162,7 @@ export async function moveTaskAfterTask(
 }
 
 // Delete
-export async function deleteTask(task: Task): Promise<void> {
+export async function deleteTask(task: Pick<Task, "uuid">): Promise<void> {
     failOrOk(
         await deleteWithCredentialsJson(`/workspace/task/${task.uuid}`, {
             fetch,

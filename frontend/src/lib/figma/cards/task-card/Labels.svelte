@@ -27,9 +27,9 @@
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { LabelAssignment } from "$lib/types/stores";
     import type { ContextMenuType } from "$lib/types/ui";
-    import type { Label, TaskWithSection } from "$lib/types/workspace";
+    import type { Label, Task } from "$lib/types/workspace";
 
-    export let task: TaskWithSection;
+    export let task: Task;
 
     let labelPickerOpen = false;
 

@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -16,7 +16,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    // TODO rename me to Section.svelte
     import { _ } from "svelte-i18n";
 
     import SectionTitle from "$lib/figma/cards/section-bar/SectionTitle.svelte";
@@ -43,10 +42,7 @@
             {#each section.tasks as task (task.uuid)}
                 <TaskCard
                     {project}
-                    task={{
-                        ...task,
-                        section: section,
-                    }}
+{task}
                     {section}
                 />
             {:else}

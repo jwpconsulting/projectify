@@ -19,7 +19,6 @@ import type { TeamMemberAssignment, LabelAssignment } from "$lib/types/stores";
 import type {
     Label,
     Task,
-    TaskWithSection,
     Workspace,
     Project,
     ProjectDetail,
@@ -75,7 +74,7 @@ export type DestructiveOverlayType =
     | { kind: "deleteTeamMember"; teamMember: TeamMember }
     | {
           kind: "deleteSection";
-          section: Section;
+          section: SectionWithTasks;
       }
     | { kind: "deleteTask"; task: Task }
     // XXX this is never used
@@ -123,18 +122,16 @@ export type ContextMenuType =
     | {
           kind: "section";
           project: Project;
-          section: Section;
+          section: SectionWithTasks;
       }
     | {
           kind: "task";
-          task: TaskWithSection;
+          task: Task;
           location: "task";
-          // TODO remove this property
-          section: Section;
       }
     | {
           kind: "task";
-          task: TaskWithSection;
+          task: Task;
           location: "dashboard";
           // TODO remove this property?
           section: SectionWithTasks;
@@ -158,7 +155,7 @@ export type ConstructiveOverlayType =
     | { kind: "createSection"; project: Project }
     | {
           kind: "updateSection";
-          section: Section;
+          section: Pick<Section, "uuid" | "title">;
       }
     | { kind: "recoverProject"; project: Project };
 export type ConstructiveOverlayState = Overlay<ConstructiveOverlayType>;

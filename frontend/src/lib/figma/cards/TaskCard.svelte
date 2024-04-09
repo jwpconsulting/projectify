@@ -23,12 +23,12 @@
     import TeamMember from "$lib/figma/cards/task-card/TeamMember.svelte";
     import Title from "$lib/figma/cards/task-card/Title.svelte";
     import type {
-        TaskWithSection,
         ProjectDetail,
         SectionWithTasks,
+        Task,
     } from "$lib/types/workspace";
 
-    export let task: TaskWithSection;
+    export let task: Task;
     export let project: ProjectDetail;
     export let section: SectionWithTasks | undefined = undefined;
 </script>
