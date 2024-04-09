@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Workspace ws consumers."""
+import logging
 from abc import (
     ABCMeta,
     abstractmethod,
@@ -57,6 +58,8 @@ from .serializers.project import ProjectDetailSerializer
 from .serializers.task_detail import TaskDetailSerializer
 from .serializers.workspace import WorkspaceDetailSerializer
 from .types import ConsumerEvent, Message
+
+logger = logging.getLogger(__name__)
 
 CODE_OBJECT_DISAPPEARED = 404
 
@@ -102,16 +105,18 @@ class BaseConsumer(JsonWebsocketConsumer, metaclass=ABCMeta):
             self.channel_name,
         )
 
-    def disconnect(self, close_code: object) -> None:
+    def disconnect(self, close_code: int) -> None:
         """Handle disconnect."""
         async_to_sync(self.channel_layer.group_discard)(
             self.get_group_name(),
             self.channel_name,
         )
+        logger.debug("Disconnecting with code %d", close_code)
 
     def receive_json(self, content: object) -> None:
         """Do nothing when receiving json."""
-        pass
+        del content
+        logger.debug("Received message, but don't know what to do with it.")
 
     @abstractmethod
     def get_group_name(self) -> str:
