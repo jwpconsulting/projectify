@@ -522,7 +522,7 @@ const messages: MessageDirectory = {
                 label: "Email",
                 placeholder: "Enter your email",
                 missing: "Must enter email",
-                valid: "Email address found",
+                valid: "Email address is valid",
             },
             "password": {
                 label: "Password",
@@ -536,9 +536,12 @@ const messages: MessageDirectory = {
             },
             "no-account": "Don't have an account yet?",
             "error": {
-                credentials:
+                "credentials":
                     "Invalid credentials. Please see the errors above.",
-                other: "Invalid credentials. Please check email and password.",
+                "rate-limit":
+                    "You are trying to log in too many times. Please slow down.",
+                "other":
+                    "Invalid credentials. Please check email and password.",
             },
             "sign-up-here": "Sign up here",
         },

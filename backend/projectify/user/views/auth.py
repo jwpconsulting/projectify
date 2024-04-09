@@ -17,11 +17,13 @@
 """User authentication views."""
 from django.utils.decorators import method_decorator
 
+from django_ratelimit.core import get_usage
 from django_ratelimit.decorators import ratelimit
 from rest_framework import (
     serializers,
     views,
 )
+from rest_framework.exceptions import Throttled
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -110,19 +112,42 @@ class LogIn(views.APIView):
         email = serializers.EmailField()
         password = serializers.CharField()
 
+    @method_decorator(
+        ratelimit(
+            group="projectify.user.views.auth.LogIn.post",
+            key="post:email",
+            rate="60/h",
+        )
+    )
+    @method_decorator(
+        ratelimit(
+            group="projectify.user.views.auth.LogIn.post",
+            key="ip",
+            rate="10/m",
+        )
+    )
     def post(self, request: Request) -> Response:
         """Handle POST."""
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
-        user = user_log_in(
-            email=data["email"],
-            password=data["password"],
-            request=request,
-        )
-        response_serializer = UserSerializer(
-            instance=user,
-        )
+        try:
+            user = user_log_in(
+                email=data["email"], password=data["password"], request=request
+            )
+        except serializers.ValidationError as e:
+            limit = get_usage(
+                request,
+                group="projectify.user.views.auth.LogIn.post",
+                key="post:email",
+                rate="5/m",
+                increment=True,
+            )
+            if limit and limit["should_limit"]:
+                raise Throttled()
+            else:
+                raise e
+        response_serializer = UserSerializer(instance=user)
         return Response(data=response_serializer.data, status=HTTP_200_OK)
 
 
