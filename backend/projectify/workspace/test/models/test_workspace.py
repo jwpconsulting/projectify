@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -19,6 +19,7 @@
 from django import (
     db,
 )
+from django.core.exceptions import ValidationError
 
 import psycopg.errors
 import pytest
@@ -40,6 +41,29 @@ class TestWorkspace:
     def test_factory(self, workspace: Workspace) -> None:
         """Assert that the creates."""
         assert workspace
+
+    def test_title_constraint(self, workspace: Workspace) -> None:
+        """Assert we can not put URL-like strings in workspace.title."""
+        workspace.title = "www.google.com"
+        with pytest.raises(ValidationError):
+            workspace.full_clean()
+
+        workspace.title = "http://localhost"
+        with pytest.raises(ValidationError):
+            workspace.full_clean()
+
+        # Allowed
+        workspace.title = "http: //localhost"
+        workspace.full_clean()
+
+        workspace.title = "Department of: silly walks"
+        workspace.full_clean()
+
+        workspace.title = "www. google"
+        workspace.full_clean()
+
+        workspace.title = "Foob. Ar"
+        workspace.full_clean()
 
     def test_add_project(
         self,
