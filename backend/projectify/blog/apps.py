@@ -15,13 +15,3 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Blogs apps.py."""
-from django.apps import (
-    AppConfig,
-)
-
-
-class BlogConfig(AppConfig):
-    """Blog apps.py config."""
-
-    default_auto_field = "django.db.models.BigAutoField"
-    name = "projectify.blog"

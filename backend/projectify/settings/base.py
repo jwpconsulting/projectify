@@ -123,7 +123,6 @@ class Base(Configuration):
         "projectify",
         "projectify.user.apps.UserConfig",
         "projectify.workspace.apps.WorkspaceConfig",
-        "projectify.blog.apps.BlogConfig",
         "projectify.corporate.apps.CorporateConfig",
     )
 
