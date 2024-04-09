@@ -200,6 +200,7 @@ exclude = [
     "settings",
     "migrations",
 ]
+min_confidence = 80
 
 [tool.pytest.ini_options]
 FAIL_INVALID_TEMPLATE_VARS = "True"
