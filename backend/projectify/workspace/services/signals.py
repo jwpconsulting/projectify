@@ -48,14 +48,6 @@ HasOrIsWorkspace = Union[
     TeamMember,
     Project,
 ]
-HasOrIsProject = Union[
-    Project,
-    Section,
-    Task,
-    TaskLabel,
-    SubTask,
-]
-HasOrIsTask = Union[Task, TaskLabel, SubTask, ChatMessage]
 
 
 def group_send(destination: str, event: ConsumerEvent) -> None:
