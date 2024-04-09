@@ -58,3 +58,6 @@ application = ProtocolTypeRouter(
         "websocket": websocket_application,
     }
 )
+
+
+__all__ = ("application",)
