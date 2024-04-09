@@ -95,12 +95,12 @@ cffi==1.15.1 ; python_version >= "3.11" and python_version < "3.12" and platform
 channels-redis==4.2.0 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:01c26c4d5d3a203f104bba9e5585c0305a70df390d21792386586068162027fd \
     --hash=sha256:2c5b944a39bd984b72aa8005a3ae11637bf29b5092adeb91c9aad4ab819a8ac4
-channels==4.0.0 ; python_version >= "3.11" and python_version < "3.12" \
-    --hash=sha256:0ce53507a7da7b148eaa454526e0e05f7da5e5d1c23440e4886cf146981d8420 \
-    --hash=sha256:2253334ac76f67cba68c2072273f7e0e67dbdac77eeb7e318f511d2f9a53c5e4
-channels[daphne]==4.0.0 ; python_version >= "3.11" and python_version < "3.12" \
-    --hash=sha256:0ce53507a7da7b148eaa454526e0e05f7da5e5d1c23440e4886cf146981d8420 \
-    --hash=sha256:2253334ac76f67cba68c2072273f7e0e67dbdac77eeb7e318f511d2f9a53c5e4
+channels==4.1.0 ; python_version >= "3.11" and python_version < "3.12" \
+    --hash=sha256:a3c4419307f582c3f71d67bfb6eff748ae819c2f360b9b141694d84f242baa48 \
+    --hash=sha256:e0ed375719f5c1851861f05ed4ce78b0166f9245ca0ecd836cb77d4bb531489d
+channels[daphne]==4.1.0 ; python_version >= "3.11" and python_version < "3.12" \
+    --hash=sha256:a3c4419307f582c3f71d67bfb6eff748ae819c2f360b9b141694d84f242baa48 \
+    --hash=sha256:e0ed375719f5c1851861f05ed4ce78b0166f9245ca0ecd836cb77d4bb531489d
 charset-normalizer==3.2.0 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:04e57ab9fbf9607b77f7d057974694b4f6b142da9ed4a199859d9d4d5c63fe96 \
     --hash=sha256:09393e1b2a9461950b1c9a45d5fd251dc7c6f228acab64da1c9c0165d9c7765c \
