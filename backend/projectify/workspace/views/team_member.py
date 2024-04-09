@@ -39,10 +39,7 @@ from projectify.workspace.services.team_member import (
     team_member_update,
 )
 
-from ..models.team_member import (
-    TeamMember,
-    TeamMemberQuerySet,
-)
+from ..models.team_member import TeamMember
 
 
 # Create
@@ -50,27 +47,15 @@ from ..models.team_member import (
 class TeamMemberReadUpdateDelete(views.APIView):
     """Delete a team member."""
 
-    serializer_class = TeamMemberBaseSerializer
-    queryset = TeamMember.objects.all()
-    lookup_field = "uuid"
-    lookup_url_kwarg = "team_member_uuid"
-
-    def get_queryset(self) -> TeamMemberQuerySet:
-        """Restrict to this user's workspace's team members."""
-        return self.queryset.filter_by_user(self.request.user)
-
     def get(self, request: Request, team_member_uuid: UUID) -> Response:
         """Handle GET."""
         team_member = team_member_find_by_team_member_uuid(
-            who=request.user,
-            team_member_uuid=team_member_uuid,
+            who=request.user, team_member_uuid=team_member_uuid
         )
         if team_member is None:
             raise NotFound(_("Could not find team member for given UUID"))
 
-        serializer = TeamMemberBaseSerializer(
-            instance=team_member,
-        )
+        serializer = TeamMemberBaseSerializer(instance=team_member)
 
         return Response(status=HTTP_200_OK, data=serializer.data)
 
@@ -86,15 +71,13 @@ class TeamMemberReadUpdateDelete(views.APIView):
     def put(self, request: Request, team_member_uuid: UUID) -> Response:
         """Handle PUT."""
         team_member = team_member_find_by_team_member_uuid(
-            who=request.user,
-            team_member_uuid=team_member_uuid,
+            who=request.user, team_member_uuid=team_member_uuid
         )
         if team_member is None:
             raise NotFound(_("Could not find team member for given UUID"))
 
         serializer = self.InputSerializer(
-            data=request.data,
-            instance=team_member,
+            data=request.data, instance=team_member
         )
         serializer.is_valid(raise_exception=True)
         team_member_update(
@@ -108,8 +91,7 @@ class TeamMemberReadUpdateDelete(views.APIView):
     def delete(self, request: Request, team_member_uuid: UUID) -> Response:
         """Handle DELETE."""
         team_member = team_member_find_by_team_member_uuid(
-            who=request.user,
-            team_member_uuid=team_member_uuid,
+            who=request.user, team_member_uuid=team_member_uuid
         )
         if team_member is None:
             raise NotFound(_("Could not find team member for given UUID"))

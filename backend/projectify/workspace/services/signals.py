@@ -26,12 +26,8 @@ from channels.layers import (
     get_channel_layer,
 )
 
-from ..models import TaskLabel
-from ..models.chat_message import ChatMessage
 from ..models.label import Label
 from ..models.project import Project
-from ..models.section import Section
-from ..models.sub_task import SubTask
 from ..models.task import Task
 from ..models.team_member import TeamMember
 from ..models.workspace import Workspace
@@ -48,14 +44,6 @@ HasOrIsWorkspace = Union[
     TeamMember,
     Project,
 ]
-HasOrIsProject = Union[
-    Project,
-    Section,
-    Task,
-    TaskLabel,
-    SubTask,
-]
-HasOrIsTask = Union[Task, TaskLabel, SubTask, ChatMessage]
 
 
 def group_send(destination: str, event: ConsumerEvent) -> None:

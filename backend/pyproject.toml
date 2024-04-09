@@ -125,7 +125,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 celery = {extras = ["redis"], version = "~5.2.7"}
-channels = {version = "~4.0.0", extras = ["daphne"]}
+channels = {version = "^4.1.0", extras = ["daphne"]}
 channels-redis = "^4.2"
 cryptography = "42.0.4"
 dj-database-url = "~2.1.0"
@@ -200,6 +200,7 @@ exclude = [
     "settings",
     "migrations",
 ]
+min_confidence = 80
 
 [tool.pytest.ini_options]
 FAIL_INVALID_TEMPLATE_VARS = "True"

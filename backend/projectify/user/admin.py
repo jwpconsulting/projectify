@@ -31,7 +31,7 @@ class UserAdmin(admin.ModelAdmin[models.User]):
 
     list_filter = ("is_active", "is_staff", "is_superuser")
     list_display = (
-        "email",
+        "__str__",
         "is_active",
         "is_staff",
         "is_superuser",

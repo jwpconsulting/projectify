@@ -64,3 +64,10 @@ else
     echo "There was an error running pytest"
     exit 1
 fi
+
+if poetry run vulture .
+then
+    echo "Vulture did not find any issues"
+else
+    echo "There were some issues when running vulture. See the output above."
+fi

@@ -151,6 +151,7 @@ class TestWorkspaceCheckoutSessionCreate:
         workspace: Workspace,
     ) -> None:
         """Test it works even with no customer."""
+        del mock_stripe_checkout
         resource_url = reverse(
             "corporate:customers:create-checkout-session",
             args=(str(workspace.uuid),),
@@ -172,6 +173,7 @@ class TestWorkspaceCheckoutSessionCreate:
         paid_customer: Customer,
     ) -> None:
         """Test that there is an error on paid customer."""
+        del mock_stripe_checkout
         resource_url = reverse(
             "corporate:customers:create-checkout-session",
             args=(str(paid_customer.workspace.uuid),),
