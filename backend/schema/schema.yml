@@ -205,7 +205,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Output'
+                $ref: '#/components/schemas/PasswordPolicies'
           description: ''
   /user/user/profile-picture/upload:
     post:
@@ -736,7 +736,7 @@ paths:
           description: No response body
 components:
   schemas:
-    Output:
+    PasswordPolicies:
       type: object
       description: Serialize password policies.
       properties:

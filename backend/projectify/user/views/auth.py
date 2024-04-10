@@ -212,17 +212,19 @@ class PasswordPolicyRead(views.APIView):
 
     permission_classes = (AllowAny,)
 
-    class OutputSerializer(serializers.Serializer):
+    class PasswordPoliciesSerializer(serializers.Serializer):
         """Serialize password policies."""
 
         policies = serializers.ListField(child=serializers.CharField())
 
     @extend_schema(
-        responses=OutputSerializer,
+        responses=PasswordPoliciesSerializer,
     )
     def get(self, request: Request) -> Response:
         """Return all information about current password policy."""
         del request
         validators = password_validators_help_texts()
-        serializer = self.OutputSerializer(instance={"policies": validators})
+        serializer = self.PasswordPoliciesSerializer(
+            instance={"policies": validators}
+        )
         return Response(data=serializer.data, status=HTTP_200_OK)

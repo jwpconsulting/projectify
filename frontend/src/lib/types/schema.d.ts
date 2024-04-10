@@ -186,7 +186,7 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         /** @description Serialize password policies. */
-        Output: {
+        PasswordPolicies: {
             policies: string[];
         };
     };
@@ -353,7 +353,7 @@ export interface operations {
         responses: {
             200: {
                 content: {
-                    "application/json": components["schemas"]["Output"];
+                    "application/json": components["schemas"]["PasswordPolicies"];
                 };
             };
         };
