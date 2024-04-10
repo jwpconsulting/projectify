@@ -142,7 +142,7 @@ gunicorn = "~20.1.0"
 newrelic = "~9"
 pillow = "^10.3.0"
 psycopg = {version = "^3.1.18", extras = ["c"]}
-python = "~3.11"
+python = "~3.11.6"
 python-dotenv = "~0.20.0"
 redis = "^5"
 rules = "~3.3"
