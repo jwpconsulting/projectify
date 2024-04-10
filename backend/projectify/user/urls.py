@@ -24,6 +24,7 @@ from projectify.user.views.auth import (
     ConfirmEmail,
     LogIn,
     LogOut,
+    PasswordPolicyRead,
     PasswordResetConfirm,
     PasswordResetRequest,
     SignUp,
@@ -102,6 +103,11 @@ auth_patterns = (
         "confirm-password-reset",
         PasswordResetConfirm.as_view(),
         name="confirm-password-reset",
+    ),
+    path(
+        "password-policy",
+        PasswordPolicyRead.as_view(),
+        name="password-policy",
     ),
 )
 

@@ -15,10 +15,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """User authentication views."""
+from django.contrib.auth.password_validation import (
+    password_validators_help_texts,
+)
 from django.utils.decorators import method_decorator
 
 from django_ratelimit.core import get_usage
 from django_ratelimit.decorators import ratelimit
+from drf_spectacular.utils import extend_schema
 from rest_framework import (
     serializers,
     views,
@@ -201,3 +205,24 @@ class PasswordResetConfirm(views.APIView):
             new_password=data["new_password"],
         )
         return Response(status=HTTP_204_NO_CONTENT)
+
+
+class PasswordPolicyRead(views.APIView):
+    """Return information about password policy."""
+
+    permission_classes = (AllowAny,)
+
+    class OutputSerializer(serializers.Serializer):
+        """Serialize password policies."""
+
+        policies = serializers.ListField(child=serializers.CharField())
+
+    @extend_schema(
+        responses=OutputSerializer,
+    )
+    def get(self, request: Request) -> Response:
+        """Return all information about current password policy."""
+        del request
+        validators = password_validators_help_texts()
+        serializer = self.OutputSerializer(instance={"policies": validators})
+        return Response(data=serializer.data, status=HTTP_200_OK)

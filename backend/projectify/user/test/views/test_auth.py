@@ -231,3 +231,32 @@ class TestPasswordResetConfirm:
             assert response.status_code == 204, response.data
         user.refresh_from_db()
         assert user.check_password("evenmoresecurepassword123")
+
+
+class TestPasswordPolicyRead:
+    """Test password policy read."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("user:auth:password-policy")
+
+    def test_get(
+        self,
+        rest_client: APIClient,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test GET."""
+        with django_assert_num_queries(0):
+            response = rest_client.get(resource_url)
+        assert response.status_code == 200, response.data
+        assert response.data == {
+            "policies": [
+                "Your password can’t be too similar to your other personal "
+                "information.",
+                "Your password must contain at least 8 characters.",
+                "Your password can’t be a commonly used password.",
+                "Your password can’t be entirely numeric.",
+            ]
+        }
