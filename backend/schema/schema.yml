@@ -1,0 +1,726 @@
+openapi: 3.0.3
+info:
+  title: Projectify backend API
+  version: 1.0.0
+  description: API for the Projectify project management software
+paths:
+  /corporate/stripe-webhook/:
+    post:
+      operationId: corporate_stripe_webhook_create
+      description: Construct event type using data coming from stripe.
+      tags:
+      - corporate
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /corporate/workspace/{workspace_uuid}/create-billing-portal-session:
+    post:
+      operationId: corporate_workspace_create_billing_portal_session_create
+      description: Handle POST.
+      parameters:
+      - in: path
+        name: workspace_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - corporate
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /corporate/workspace/{workspace_uuid}/create-checkout-session:
+    post:
+      operationId: corporate_workspace_create_checkout_session_create
+      description: Handle POST.
+      parameters:
+      - in: path
+        name: workspace_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - corporate
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /corporate/workspace/{workspace_uuid}/customer:
+    get:
+      operationId: corporate_workspace_customer_retrieve
+      description: Handle GET.
+      parameters:
+      - in: path
+        name: workspace_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - corporate
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /corporate/workspace/{workspace_uuid}/redeem-coupon:
+    post:
+      operationId: corporate_workspace_redeem_coupon_create
+      description: Handle POST.
+      parameters:
+      - in: path
+        name: workspace_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - corporate
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /user/user/change-password:
+    post:
+      operationId: user_user_change_password_create
+      description: Handle POST.
+      tags:
+      - user
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /user/user/confirm-email:
+    post:
+      operationId: user_user_confirm_email_create
+      description: Handle POST.
+      tags:
+      - user
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /user/user/confirm-password-reset:
+    post:
+      operationId: user_user_confirm_password_reset_create
+      description: Handle POST.
+      tags:
+      - user
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /user/user/current-user:
+    get:
+      operationId: user_user_current_user_retrieve
+      description: Handle GET.
+      tags:
+      - user
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    put:
+      operationId: user_user_current_user_update
+      description: Update a user.
+      tags:
+      - user
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /user/user/email-address-update/confirm:
+    post:
+      operationId: user_user_email_address_update_confirm_create
+      description: Handle POST.
+      tags:
+      - user
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /user/user/email-address-update/request:
+    post:
+      operationId: user_user_email_address_update_request_create
+      description: Handle POST.
+      tags:
+      - user
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /user/user/log-in:
+    post:
+      operationId: user_user_log_in_create
+      description: Handle POST.
+      tags:
+      - user
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /user/user/log-out:
+    post:
+      operationId: user_user_log_out_create
+      description: Handle POST.
+      tags:
+      - user
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /user/user/profile-picture/upload:
+    post:
+      operationId: user_user_profile_picture_upload_create
+      description: Handle POST.
+      tags:
+      - user
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /user/user/request-password-reset:
+    post:
+      operationId: user_user_request_password_reset_create
+      description: Handle POST.
+      tags:
+      - user
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /user/user/sign-up:
+    post:
+      operationId: user_user_sign_up_create
+      description: Handle POST.
+      tags:
+      - user
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /workspace/label/:
+    post:
+      operationId: workspace_label_create
+      description: Create the label.
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /workspace/label/{label_uuid}:
+    put:
+      operationId: workspace_label_update
+      description: Handle PUT.
+      parameters:
+      - in: path
+        name: label_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+    delete:
+      operationId: workspace_label_destroy
+      description: Handle DELETE.
+      parameters:
+      - in: path
+        name: label_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /workspace/project/:
+    post:
+      operationId: workspace_project_create
+      description: Create a project.
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /workspace/project/{project_uuid}:
+    get:
+      operationId: workspace_project_retrieve
+      description: Handle GET.
+      parameters:
+      - in: path
+        name: project_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+    put:
+      operationId: workspace_project_update
+      description: Handle PUT.
+      parameters:
+      - in: path
+        name: project_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+    delete:
+      operationId: workspace_project_destroy
+      description: Handle DELETE.
+      parameters:
+      - in: path
+        name: project_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /workspace/project/{project_uuid}/archive:
+    post:
+      operationId: workspace_project_archive_create
+      description: Process request.
+      parameters:
+      - in: path
+        name: project_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /workspace/section/:
+    post:
+      operationId: workspace_section_create
+      description: Create a section.
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /workspace/section/{section_uuid}:
+    get:
+      operationId: workspace_section_retrieve
+      description: Handle GET.
+      parameters:
+      - in: path
+        name: section_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+    put:
+      operationId: workspace_section_update
+      description: Update section.
+      parameters:
+      - in: path
+        name: section_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+    delete:
+      operationId: workspace_section_destroy
+      description: Handle DELETE.
+      parameters:
+      - in: path
+        name: section_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /workspace/section/{section_uuid}/move:
+    post:
+      operationId: workspace_section_move_create
+      description: Process request.
+      parameters:
+      - in: path
+        name: section_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /workspace/task/:
+    post:
+      operationId: workspace_task_create
+      description: Handle POST.
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /workspace/task/{task_uuid}:
+    get:
+      operationId: workspace_task_retrieve
+      description: Handle GET.
+      parameters:
+      - in: path
+        name: task_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+    put:
+      operationId: workspace_task_update
+      description: |-
+        Override update behavior. Return using different serializer.
+
+        The idea is that we accept abbreviated nested fields, but return
+        the data whole. (ws board section, sub tasks, labels, etc.)
+      parameters:
+      - in: path
+        name: task_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+    delete:
+      operationId: workspace_task_destroy
+      description: Delete task.
+      parameters:
+      - in: path
+        name: task_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /workspace/task/{task_uuid}/move-after-task:
+    post:
+      operationId: workspace_task_move_after_task_create
+      description: Process the request.
+      parameters:
+      - in: path
+        name: task_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /workspace/task/{task_uuid}/move-to-section:
+    post:
+      operationId: workspace_task_move_to_section_create
+      description: Process the request.
+      parameters:
+      - in: path
+        name: task_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /workspace/team-member/{team_member_uuid}:
+    get:
+      operationId: workspace_team_member_retrieve
+      description: Handle GET.
+      parameters:
+      - in: path
+        name: team_member_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+    put:
+      operationId: workspace_team_member_update
+      description: Handle PUT.
+      parameters:
+      - in: path
+        name: team_member_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+    delete:
+      operationId: workspace_team_member_destroy
+      description: Handle DELETE.
+      parameters:
+      - in: path
+        name: team_member_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /workspace/workspace/:
+    post:
+      operationId: workspace_workspace_create
+      description: Create the workspace and add this user.
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /workspace/workspace/{workspace_uuid}:
+    get:
+      operationId: workspace_workspace_retrieve
+      description: Handle GET.
+      parameters:
+      - in: path
+        name: workspace_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+    put:
+      operationId: workspace_workspace_update
+      description: Handle PUT.
+      parameters:
+      - in: path
+        name: workspace_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /workspace/workspace/{workspace_uuid}/archived-projects/:
+    get:
+      operationId: workspace_workspace_archived_projects_retrieve
+      description: Get queryset.
+      parameters:
+      - in: path
+        name: workspace_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /workspace/workspace/{workspace_uuid}/invite-team-member:
+    post:
+      operationId: workspace_workspace_invite_team_member_create
+      description: Handle POST.
+      parameters:
+      - in: path
+        name: workspace_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /workspace/workspace/{workspace_uuid}/picture-upload:
+    post:
+      operationId: workspace_workspace_picture_upload_create
+      description: Handle POST.
+      parameters:
+      - in: path
+        name: workspace_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /workspace/workspace/{workspace_uuid}/uninvite-team-member:
+    post:
+      operationId: workspace_workspace_uninvite_team_member_create
+      description: Handle POST.
+      parameters:
+      - in: path
+        name: workspace_uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /workspace/workspace/user-workspaces/:
+    get:
+      operationId: workspace_workspace_user_workspaces_retrieve
+      description: Handle GET.
+      tags:
+      - workspace
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
