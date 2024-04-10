@@ -67,18 +67,61 @@ class SignUp(views.APIView):
         tos_agreed = serializers.BooleanField()
         privacy_policy_agreed = serializers.BooleanField()
 
-    @method_decorator(ratelimit(key="ip", rate="5/h"))
+    class SignUpErrorSerializer(serializers.Serializer):
+        """Hint for drf-spectacular."""
+
+        email = serializers.CharField(required=False)
+        password = serializers.CharField(required=False)
+        policies = serializers.ListField(
+            child=serializers.CharField(), required=False
+        )
+        tos_agreed = serializers.CharField(required=False)
+        privacy_policy_agreed = serializers.CharField(required=False)
+
+    @extend_schema(
+        request=SignUpSerializer,
+        responses={
+            204: None,
+            400: SignUpErrorSerializer,
+            429: None,
+        },
+    )
+    @method_decorator(ratelimit(key="ip", rate="60/h"))
     def post(self, request: Request) -> Response:
         """Handle POST."""
-        serializer = self.InputSerializer(data=request.data)
+        # See if we are throttled
+        limit = get_usage(
+            request,
+            group="projectify.user.views.auth.SignUp.post",
+            key="ip",
+            rate="4/h",
+            increment=False,
+        )
+        print(limit)
+        if limit and limit["should_limit"]:
+            raise Throttled()
+
+        serializer = self.SignUpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
+
         user_sign_up(
             email=data["email"],
             password=data["password"],
             tos_agreed=data["tos_agreed"],
             privacy_policy_agreed=data["privacy_policy_agreed"],
         )
+
+        # Increment limit only on success
+        usage = get_usage(
+            request,
+            group="projectify.user.views.auth.SignUp.post",
+            key="ip",
+            rate="4/h",
+            increment=True,
+        )
+
+        print(usage)
         return Response(status=HTTP_204_NO_CONTENT)
 
 

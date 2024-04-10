@@ -64,7 +64,8 @@ as requests failing
 
 Rate limits should be:
 
-- `SignUp`, 5 times per hour _per IP_, 1 time per minute _per IP_
+- `SignUp`, 5 times per hour _per IP_ (if successful), 60 times per hour _per
+  IP_ (regardless of success)
 - `PasswordResetRequest`, 5 times per hour _per IP_, 5 times per hour _per
   request email_, 1 time per minute _per IP_
 - `RequestEmailAddressUpdate`, 5 times per hour _per user_

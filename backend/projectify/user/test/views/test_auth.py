@@ -102,6 +102,37 @@ class TestSignUp:
             assert response.status_code == 204, response.data
         assert User.objects.count() == 1
 
+    def test_rate_limit(
+        self,
+        rest_client: APIClient,
+        resource_url: str,
+        faker: Faker,
+        settings: Base,
+    ) -> None:
+        """Test signing up a new user."""
+        settings.RATELIMIT_ENABLE = True
+        for _ in range(5):
+            response = rest_client.post(
+                resource_url,
+                data={
+                    "email": faker.email(),
+                    "password": faker.password(),
+                    "tos_agreed": True,
+                    "privacy_policy_agreed": True,
+                },
+            )
+            assert response.status_code == 204
+        response = rest_client.post(
+            resource_url,
+            data={
+                "email": faker.email(),
+                "password": faker.password(),
+                "tos_agreed": True,
+                "privacy_policy_agreed": True,
+            },
+        )
+        assert response.status_code == 429
+
 
 class TestConfirmEmail:
     """Test confirming a newly registered user's email address."""
