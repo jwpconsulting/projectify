@@ -170,6 +170,7 @@ hatchling = "^1.21.1"
 ipython = "~8.22"
 pdbpp = "~0.10.3"
 ruff = "^0.1.6"
+drf-spectacular = "^0.27.2"
 
 [tool.poetry.group.test]
 

@@ -27,9 +27,8 @@ from dotenv import (
     load_dotenv,
 )
 
-from .base import (
-    Base,
-)
+from .base import Base
+from .spectacular import SpectacularSettings
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +55,7 @@ def environ_get_or_warn(key: str) -> Optional[str]:
     return None
 
 
-class Development(Base):
+class Development(SpectacularSettings, Base):
     """Development configuration."""
 
     SITE_TITLE = "Local Development"
@@ -66,6 +65,7 @@ class Development(Base):
     INSTALLED_APPS = (
         *Base.INSTALLED_APPS,
         "debug_toolbar",
+        "drf_spectacular",
     )
 
     MIDDLEWARE = list(add_debug_middleware(Base.MIDDLEWARE))

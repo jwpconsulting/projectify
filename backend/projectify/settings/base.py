@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2021, 2022, 2023 JWP Consulting GK
+# Copyright (C) 2021-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -261,6 +261,7 @@ class Base(Configuration):
             "rest_framework.permissions.IsAuthenticated",
         ),
         "EXCEPTION_HANDLER": "projectify.exception_handler.exception_handler",
+        "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     }
 
     # Where to store media
