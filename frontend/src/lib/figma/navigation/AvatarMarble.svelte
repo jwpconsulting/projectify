@@ -50,7 +50,11 @@
         colors: string[],
         range: number,
     ): string {
-        return colors[number % range];
+        const color = colors[number % range];
+        if (color === undefined) {
+            throw new Error("Expected color");
+        }
+        return color;
     }
 
     // Source
@@ -69,25 +73,32 @@
 </script>
 
 <script lang="ts">
-    const ELEMENTS = 3;
     const SIZE = 80;
 
-    function generateColors(name: string, colors: string[]) {
-        const numFromName = getNumber(name);
-        const range = colors.length;
-
-        const elementsProperties = Array.from(
-            { length: ELEMENTS },
-            (_, i) => ({
+    interface Color {
+        color: string;
+        translateX: number;
+        translateY: number;
+        scale: number;
+        rotate: number;
+    }
+    function generateColors(
+        name: string,
+        colors: string[],
+    ): [Color, Color, Color] {
+        const makeColor = (i: number): Color => {
+            return {
                 color: getRandomColor(numFromName + i, colors, range),
                 translateX: getUnit(numFromName * (i + 1), SIZE / 10, 1),
                 translateY: getUnit(numFromName * (i + 1), SIZE / 10, 2),
                 scale: 1.2 + getUnit(numFromName * (i + 1), SIZE / 20) / 10,
                 rotate: getUnit(numFromName * (i + 1), 360, 1),
-            }),
-        );
+            };
+        };
+        const numFromName = getNumber(name);
+        const range = colors.length;
 
-        return elementsProperties;
+        return [makeColor(0), makeColor(1), makeColor(2)];
     }
 
     export let size: number;

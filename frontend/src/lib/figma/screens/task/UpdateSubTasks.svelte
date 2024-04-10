@@ -41,6 +41,9 @@
         const inputs = lineContainer.getElementsByTagName("input");
         const last = inputs[inputs.length - 1];
         // focus on the input
+        if (last === undefined) {
+            throw new Error("Expected last");
+        }
         last.focus();
     }
 </script>

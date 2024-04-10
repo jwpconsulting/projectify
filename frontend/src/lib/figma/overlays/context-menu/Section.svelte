@@ -38,7 +38,11 @@
         openConstructiveOverlay,
         openDestructiveOverlay,
     } from "$lib/stores/globalUi";
-    import type { Project, Section, SectionWithTasks } from "$lib/types/workspace";
+    import type {
+        Project,
+        Section,
+        SectionWithTasks,
+    } from "$lib/types/workspace";
 
     export let project: Project;
     export let section: SectionWithTasks;

@@ -1,6 +1,5 @@
 {
     "singleQuote": false,
     "quoteProps": "consistent",
-    "plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss"],
     "tailwindFunctions": ["tw"]
 }
