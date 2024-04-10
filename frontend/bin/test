@@ -25,6 +25,13 @@
 
 npm run sync-types || exit
 
+if npm run check:schema
+then
+    echo "npm run check:schema successful"
+else
+    echo "npm run check:schema didn't exit cleanly, continuing..."
+fi
+
 if npm run format
 then
     echo "npm run format successful"
