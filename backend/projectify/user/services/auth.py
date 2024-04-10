@@ -19,6 +19,8 @@ import logging
 from typing import Optional
 
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import transaction
 from django.http import HttpRequest
 from django.utils import timezone
@@ -67,11 +69,15 @@ def user_sign_up(
             {"privacy_policy_agreed": _("Must agree to privacy policy")}
         )
 
+    try:
+        validate_password(password=password, user=User(email=email))
+    except DjangoValidationError as e:
+        raise serializers.ValidationError({"policies": e.error_list})
+
     agreement_dt = timezone.now()
 
     user = user_create(
         email=email,
-        # Here we should validate the password with Django's validation criteria
         password=password,
         tos_agreed=agreement_dt,
         privacy_policy_agreed=agreement_dt,

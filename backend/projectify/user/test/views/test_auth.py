@@ -20,6 +20,7 @@ from django.urls import (
 )
 
 import pytest
+from faker import Faker
 from rest_framework.test import APIClient
 
 from projectify.user.services.auth import user_sign_up
@@ -82,6 +83,7 @@ class TestSignUp:
         rest_client: APIClient,
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
+        faker: Faker,
     ) -> None:
         """Test signing up a new user."""
         assert User.objects.count() == 0
@@ -92,7 +94,7 @@ class TestSignUp:
                 # the future
                 data={
                     "email": "hello@localhost",
-                    "password": "password",
+                    "password": faker.password(),
                     "tos_agreed": True,
                     "privacy_policy_agreed": True,
                 },
