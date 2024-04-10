@@ -68,6 +68,9 @@ user_patterns = (
         ConfirmEmailAddressUpdate.as_view(),
         name="confirm-email-address-update",
     ),
+)
+
+auth_patterns = (
     # Auth
     path(
         "log-out",
@@ -102,4 +105,7 @@ user_patterns = (
     ),
 )
 
-urlpatterns = (path("user/", include((user_patterns, "users"))),)
+urlpatterns = (
+    path("user/", include((user_patterns, "users"))),
+    path("user/", include((auth_patterns, "auth"))),
+)

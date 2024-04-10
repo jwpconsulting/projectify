@@ -37,12 +37,12 @@ class TestLogOut:
     @pytest.fixture
     def log_in_url(self) -> str:
         """Return URL to log in."""
-        return reverse("user:users:log-in")
+        return reverse("user:auth:log-in")
 
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("user:users:log-out")
+        return reverse("user:auth:log-out")
 
     def test_log_out_after_log_in(
         self,
@@ -75,7 +75,7 @@ class TestSignUp:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("user:users:sign-up")
+        return reverse("user:auth:sign-up")
 
     def test_signing_up(
         self,
@@ -107,7 +107,7 @@ class TestConfirmEmail:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("user:users:confirm-email")
+        return reverse("user:auth:confirm-email")
 
     def test_confirm_for_new_user(
         self,
@@ -140,7 +140,7 @@ class TestLogIn:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("user:users:log-in")
+        return reverse("user:auth:log-in")
 
     def test_authenticated_user(
         self,
@@ -170,7 +170,7 @@ class TestPasswordResetRequest:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("user:users:request-password-reset")
+        return reverse("user:auth:request-password-reset")
 
     def test_request_password_reset(
         self,
@@ -194,12 +194,12 @@ class TestPasswordResetConfirm:
     @pytest.fixture
     def request_url(self) -> str:
         """Return URL to request the reset."""
-        return reverse("user:users:request-password-reset")
+        return reverse("user:auth:request-password-reset")
 
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("user:users:confirm-password-reset")
+        return reverse("user:auth:confirm-password-reset")
 
     def test_confirm_password_reset(
         self,
