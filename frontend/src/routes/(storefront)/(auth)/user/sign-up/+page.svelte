@@ -24,10 +24,11 @@
     import Checkbox from "$lib/funabashi/select-controls/Checkbox.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
-    import { signUp } from "$lib/repository/user";
     import type { FormViewState } from "$lib/types/ui";
     import { logInUrl, sentEmailConfirmationLinkUrl } from "$lib/urls/user";
     import type { InputFieldValidation } from "$lib/funabashi/types";
+    import { openApiClient } from "$lib/repository/util";
+    import { onMount } from "svelte";
 
     let email: string | undefined = undefined;
     let emailValidation: InputFieldValidation | undefined = undefined;
@@ -39,6 +40,16 @@
     let privacyPolicyAgreed: boolean | undefined = undefined;
 
     let state: FormViewState = { kind: "start" };
+
+    // Load password policies
+    let passwordPolicies: string[] | undefined = undefined;
+    onMount(async () => {
+        const response = await openApiClient.GET("/user/user/password-policy");
+        if (response.data === undefined) {
+            throw new Error("Could not get password policies");
+        }
+        passwordPolicies = response.data.policies;
+    });
 
     async function action() {
         state = { kind: "submitting" };
@@ -67,38 +78,45 @@
             };
             return;
         }
-        const response = await signUp(
-            email,
-            password,
-            tosAgreed,
-            privacyPolicyAgreed,
+        const { error, response } = await openApiClient.POST(
+            "/user/user/sign-up",
             {
+                body: {
+                    email,
+                    password,
+                    tos_agreed: tosAgreed,
+                    privacy_policy_agreed: privacyPolicyAgreed,
+                },
                 fetch,
             },
         );
-        if (response.ok) {
+        if (error === undefined) {
             await goto(sentEmailConfirmationLinkUrl);
             return;
         }
         emailValidation = undefined;
         passwordValidation = undefined;
-        if (response.kind === "tooManyRequests") {
+        if (response.status === 429) {
             state = {
                 kind: "error",
                 message: $_("auth.sign-up.error.too-many-requests"),
             };
             return;
         }
-        if (response.error.email) {
-            emailValidation = { ok: false, error: response.error.email };
+        if (error.email) {
+            emailValidation = { ok: false, error: error.email };
         } else {
             emailValidation = {
                 ok: true,
                 result: $_("auth.sign-up.email.valid"),
             };
         }
-        if (response.error.password) {
-            passwordValidation = { ok: false, error: response.error.password };
+        if (error.policies !== undefined || error.password !== undefined) {
+            const errors = [
+                ...(error.policies ?? []),
+                ...(error.password ? [error.password] : []),
+            ];
+            passwordValidation = { ok: false, error: errors.join(", ") };
         } else {
             passwordValidation = {
                 ok: true,
@@ -138,15 +156,27 @@
             required
             validation={emailValidation}
         />
-        <InputField
-            placeholder={$_("auth.sign-up.password.placeholder")}
-            style={{ inputType: "password" }}
-            name="password"
-            label={$_("auth.sign-up.password.label")}
-            bind:value={password}
-            required
-            validation={passwordValidation}
-        />
+        <section class="flex flex-col gap-2">
+            <InputField
+                placeholder={$_("auth.sign-up.password.placeholder")}
+                style={{ inputType: "password" }}
+                name="password"
+                label={$_("auth.sign-up.password.label")}
+                bind:value={password}
+                required
+                validation={passwordValidation}
+            />
+            {#if passwordPolicies}
+                <header class="font-bold">
+                    {$_("auth.sign-up.password.policies")}
+                </header>
+                <ul class="flex list-inside list-disc flex-col gap-0.5">
+                    {#each passwordPolicies as policy}
+                        <li>{policy}</li>
+                    {/each}
+                </ul>
+            {/if}
+        </section>
         <!-- XXX false positive -->
         <!-- svelte-ignore a11y-label-has-associated-control -->
         <label class="flex flex-row items-center gap-2">

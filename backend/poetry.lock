@@ -828,6 +828,7 @@ files = [
 [package.dependencies]
 Django = ">=2.2"
 djangorestframework = ">=3.10.3"
+drf-spectacular-sidecar = {version = "*", optional = true, markers = "extra == \"sidecar\""}
 inflection = ">=0.3.1"
 jsonschema = ">=2.6.0"
 PyYAML = ">=5.1"
@@ -836,6 +837,20 @@ uritemplate = ">=2.0.0"
 [package.extras]
 offline = ["drf-spectacular-sidecar"]
 sidecar = ["drf-spectacular-sidecar"]
+
+[[package]]
+name = "drf-spectacular-sidecar"
+version = "2024.4.1"
+description = "Serve self-contained distribution builds of Swagger UI and Redoc with Django"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "drf-spectacular-sidecar-2024.4.1.tar.gz", hash = "sha256:68532dd094714f79c1775c00848f22c10f004826abc856442ff30c3bc9c40bb4"},
+    {file = "drf_spectacular_sidecar-2024.4.1-py3-none-any.whl", hash = "sha256:8359befe69a8953fea86be01c1ff37038854a62546225551de16c47c07dccd4e"},
+]
+
+[package.dependencies]
+Django = ">=2.2"
 
 [[package]]
 name = "editables"
@@ -2596,4 +2611,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "7517369abfd06068e523c3e3efc0216b207c92cf91749a7442cab0bd34e8aed7"
+content-hash = "f0530117dfe4c80171402c9713867d6c92bca2e679cb410719570d4d57a06ba6"

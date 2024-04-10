@@ -84,6 +84,20 @@ def test_user_sign_up(faker: Faker) -> None:
     assert user.tos_agreed is not None
 
 
+def test_user_sign_up_weak_password(faker: Faker) -> None:
+    """Test signing up a new user, and choose a weak passsword."""
+    assert User.objects.count() == 0
+    user_sign_up(
+        email=faker.email(),
+        password="weak-password-123",
+        tos_agreed=True,
+        privacy_policy_agreed=True,
+    )
+    user = User.objects.get()
+    assert user.privacy_policy_agreed is not None
+    assert user.tos_agreed is not None
+
+
 def test_user_confirm_email(user: User, inactive_user: User) -> None:
     """Test activating an active and inactive user."""
     assert user.is_active

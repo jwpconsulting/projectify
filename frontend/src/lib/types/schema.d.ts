@@ -58,6 +58,10 @@ export interface paths {
         /** @description Handle POST. */
         post: operations["user_user_log_out_create"];
     };
+    "/user/user/password-policy": {
+        /** @description Return all information about current password policy. */
+        get: operations["user_user_password_policy_retrieve"];
+    };
     "/user/user/profile-picture/upload": {
         /** @description Handle POST. */
         post: operations["user_user_profile_picture_upload_create"];
@@ -180,7 +184,28 @@ export interface paths {
 export type webhooks = Record<string, never>;
 
 export interface components {
-    schemas: never;
+    schemas: {
+        /** @description Serialize password policies. */
+        PasswordPolicies: {
+            policies: string[];
+        };
+        /** @description Take in email and password. */
+        SignUp: {
+            /** Format: email */
+            email: string;
+            password: string;
+            tos_agreed: boolean;
+            privacy_policy_agreed: boolean;
+        };
+        /** @description Hint for drf-spectacular. */
+        SignUpError: {
+            email?: string;
+            password?: string;
+            policies?: string[];
+            tos_agreed?: string;
+            privacy_policy_agreed?: string;
+        };
+    };
     responses: never;
     parameters: never;
     requestBodies: never;
@@ -339,6 +364,16 @@ export interface operations {
             };
         };
     };
+    /** @description Return all information about current password policy. */
+    user_user_password_policy_retrieve: {
+        responses: {
+            200: {
+                content: {
+                    "application/json": components["schemas"]["PasswordPolicies"];
+                };
+            };
+        };
+    };
     /** @description Handle POST. */
     user_user_profile_picture_upload_create: {
         responses: {
@@ -359,9 +394,25 @@ export interface operations {
     };
     /** @description Handle POST. */
     user_user_sign_up_create: {
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SignUp"];
+                "application/x-www-form-urlencoded": components["schemas"]["SignUp"];
+                "multipart/form-data": components["schemas"]["SignUp"];
+            };
+        };
         responses: {
             /** @description No response body */
-            200: {
+            204: {
+                content: never;
+            };
+            400: {
+                content: {
+                    "application/json": components["schemas"]["SignUpError"];
+                };
+            };
+            /** @description No response body */
+            429: {
                 content: never;
             };
         };

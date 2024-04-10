@@ -108,35 +108,6 @@ export async function confirmEmailAddressUpdate(
 }
 
 // Auth
-export async function signUp(
-    email: string,
-    password: string,
-    tosAgreed: boolean,
-    privacyPolicyAgreed: boolean,
-    repositoryContext: RepositoryContext,
-): Promise<
-    ApiResponse<
-        void,
-        {
-            email?: string;
-            password?: string;
-            tos_agreed?: string;
-            privacy_policy_agreed?: string;
-        }
-    >
-> {
-    return await postWithCredentialsJson(
-        "/user/user/sign-up",
-        {
-            email,
-            password,
-            tos_agreed: tosAgreed,
-            privacy_policy_agreed: privacyPolicyAgreed,
-        },
-        repositoryContext,
-    );
-}
-
 export async function confirmEmail(
     email: string,
     token: string,

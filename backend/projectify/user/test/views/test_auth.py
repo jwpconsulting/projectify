@@ -20,8 +20,10 @@ from django.urls import (
 )
 
 import pytest
+from faker import Faker
 from rest_framework.test import APIClient
 
+from projectify.settings.base import Base
 from projectify.user.services.auth import user_sign_up
 from projectify.user.services.internal import user_make_token
 from pytest_types import DjangoAssertNumQueries
@@ -37,12 +39,12 @@ class TestLogOut:
     @pytest.fixture
     def log_in_url(self) -> str:
         """Return URL to log in."""
-        return reverse("user:users:log-in")
+        return reverse("user:auth:log-in")
 
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("user:users:log-out")
+        return reverse("user:auth:log-out")
 
     def test_log_out_after_log_in(
         self,
@@ -75,13 +77,14 @@ class TestSignUp:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("user:users:sign-up")
+        return reverse("user:auth:sign-up")
 
     def test_signing_up(
         self,
         rest_client: APIClient,
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
+        faker: Faker,
     ) -> None:
         """Test signing up a new user."""
         assert User.objects.count() == 0
@@ -92,13 +95,65 @@ class TestSignUp:
                 # the future
                 data={
                     "email": "hello@localhost",
-                    "password": "password",
+                    "password": faker.password(),
                     "tos_agreed": True,
                     "privacy_policy_agreed": True,
                 },
             )
             assert response.status_code == 204, response.data
         assert User.objects.count() == 1
+
+    def test_rate_limit(
+        self,
+        rest_client: APIClient,
+        resource_url: str,
+        faker: Faker,
+        settings: Base,
+    ) -> None:
+        """Test signing up a new user."""
+        settings.RATELIMIT_ENABLE = True
+        for _ in range(5):
+            response = rest_client.post(
+                resource_url,
+                data={
+                    "email": faker.email(),
+                    "password": faker.password(),
+                    "tos_agreed": True,
+                    "privacy_policy_agreed": True,
+                },
+            )
+            assert response.status_code == 204
+        response = rest_client.post(
+            resource_url,
+            data={
+                "email": faker.email(),
+                "password": faker.password(),
+                "tos_agreed": True,
+                "privacy_policy_agreed": True,
+            },
+        )
+        assert response.status_code == 429
+
+    def test_signing_up_weak_pw(
+        self,
+        rest_client: APIClient,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        faker: Faker,
+    ) -> None:
+        """Test signing up a new user."""
+        with django_assert_num_queries(1):
+            response = rest_client.post(
+                resource_url,
+                data={
+                    "email": "hello@localhost",
+                    "password": "password",
+                    "tos_agreed": True,
+                    "privacy_policy_agreed": True,
+                },
+            )
+            assert response.status_code == 400, response.data
+        assert response.data == {"policies": ["This password is too common."]}
 
 
 class TestConfirmEmail:
@@ -107,7 +162,7 @@ class TestConfirmEmail:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("user:users:confirm-email")
+        return reverse("user:auth:confirm-email")
 
     def test_confirm_for_new_user(
         self,
@@ -140,7 +195,7 @@ class TestLogIn:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("user:users:log-in")
+        return reverse("user:auth:log-in")
 
     def test_authenticated_user(
         self,
@@ -170,7 +225,7 @@ class TestPasswordResetRequest:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("user:users:request-password-reset")
+        return reverse("user:auth:request-password-reset")
 
     def test_request_password_reset(
         self,
@@ -194,12 +249,12 @@ class TestPasswordResetConfirm:
     @pytest.fixture
     def request_url(self) -> str:
         """Return URL to request the reset."""
-        return reverse("user:users:request-password-reset")
+        return reverse("user:auth:request-password-reset")
 
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("user:users:confirm-password-reset")
+        return reverse("user:auth:confirm-password-reset")
 
     def test_confirm_password_reset(
         self,
@@ -231,3 +286,32 @@ class TestPasswordResetConfirm:
             assert response.status_code == 204, response.data
         user.refresh_from_db()
         assert user.check_password("evenmoresecurepassword123")
+
+
+class TestPasswordPolicyRead:
+    """Test password policy read."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("user:auth:password-policy")
+
+    def test_get(
+        self,
+        rest_client: APIClient,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test GET."""
+        with django_assert_num_queries(0):
+            response = rest_client.get(resource_url)
+        assert response.status_code == 200, response.data
+        assert response.data == {
+            "policies": [
+                "Your password can’t be too similar to your other personal "
+                "information.",
+                "Your password must contain at least 8 characters.",
+                "Your password can’t be a commonly used password.",
+                "Your password can’t be entirely numeric.",
+            ]
+        }

@@ -24,6 +24,7 @@ from projectify.user.views.auth import (
     ConfirmEmail,
     LogIn,
     LogOut,
+    PasswordPolicyRead,
     PasswordResetConfirm,
     PasswordResetRequest,
     SignUp,
@@ -68,6 +69,9 @@ user_patterns = (
         ConfirmEmailAddressUpdate.as_view(),
         name="confirm-email-address-update",
     ),
+)
+
+auth_patterns = (
     # Auth
     path(
         "log-out",
@@ -100,6 +104,14 @@ user_patterns = (
         PasswordResetConfirm.as_view(),
         name="confirm-password-reset",
     ),
+    path(
+        "password-policy",
+        PasswordPolicyRead.as_view(),
+        name="password-policy",
+    ),
 )
 
-urlpatterns = (path("user/", include((user_patterns, "users"))),)
+urlpatterns = (
+    path("user/", include((user_patterns, "users"))),
+    path("user/", include((auth_patterns, "auth"))),
+)

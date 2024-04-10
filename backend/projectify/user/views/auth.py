@@ -15,10 +15,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """User authentication views."""
+from django.contrib.auth.password_validation import (
+    password_validators_help_texts,
+)
 from django.utils.decorators import method_decorator
 
 from django_ratelimit.core import get_usage
 from django_ratelimit.decorators import ratelimit
+from drf_spectacular.utils import extend_schema
 from rest_framework import (
     serializers,
     views,
@@ -55,7 +59,7 @@ class SignUp(views.APIView):
 
     permission_classes = (AllowAny,)
 
-    class InputSerializer(serializers.Serializer):
+    class SignUpSerializer(serializers.Serializer):
         """Take in email and password."""
 
         email = serializers.EmailField()
@@ -63,18 +67,61 @@ class SignUp(views.APIView):
         tos_agreed = serializers.BooleanField()
         privacy_policy_agreed = serializers.BooleanField()
 
-    @method_decorator(ratelimit(key="ip", rate="5/h"))
+    class SignUpErrorSerializer(serializers.Serializer):
+        """Hint for drf-spectacular."""
+
+        email = serializers.CharField(required=False)
+        password = serializers.CharField(required=False)
+        policies = serializers.ListField(
+            child=serializers.CharField(), required=False
+        )
+        tos_agreed = serializers.CharField(required=False)
+        privacy_policy_agreed = serializers.CharField(required=False)
+
+    @extend_schema(
+        request=SignUpSerializer,
+        responses={
+            204: None,
+            400: SignUpErrorSerializer,
+            429: None,
+        },
+    )
+    @method_decorator(ratelimit(key="ip", rate="60/h"))
     def post(self, request: Request) -> Response:
         """Handle POST."""
-        serializer = self.InputSerializer(data=request.data)
+        # See if we are throttled
+        limit = get_usage(
+            request,
+            group="projectify.user.views.auth.SignUp.post",
+            key="ip",
+            rate="4/h",
+            increment=False,
+        )
+        print(limit)
+        if limit and limit["should_limit"]:
+            raise Throttled()
+
+        serializer = self.SignUpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
+
         user_sign_up(
             email=data["email"],
             password=data["password"],
             tos_agreed=data["tos_agreed"],
             privacy_policy_agreed=data["privacy_policy_agreed"],
         )
+
+        # Increment limit only on success
+        usage = get_usage(
+            request,
+            group="projectify.user.views.auth.SignUp.post",
+            key="ip",
+            rate="4/h",
+            increment=True,
+        )
+
+        print(usage)
         return Response(status=HTTP_204_NO_CONTENT)
 
 
@@ -114,7 +161,7 @@ class LogIn(views.APIView):
 
     @method_decorator(
         ratelimit(
-            group="projectify.user.views.auth.LogIn.post",
+            group="projectify.user.views.auth.login.post",
             key="post:email",
             rate="60/h",
         )
@@ -201,3 +248,26 @@ class PasswordResetConfirm(views.APIView):
             new_password=data["new_password"],
         )
         return Response(status=HTTP_204_NO_CONTENT)
+
+
+class PasswordPolicyRead(views.APIView):
+    """Return information about password policy."""
+
+    permission_classes = (AllowAny,)
+
+    class PasswordPoliciesSerializer(serializers.Serializer):
+        """Serialize password policies."""
+
+        policies = serializers.ListField(child=serializers.CharField())
+
+    @extend_schema(
+        responses=PasswordPoliciesSerializer,
+    )
+    def get(self, request: Request) -> Response:
+        """Return all information about current password policy."""
+        del request
+        validators = password_validators_help_texts()
+        serializer = self.PasswordPoliciesSerializer(
+            instance={"policies": validators}
+        )
+        return Response(data=serializer.data, status=HTTP_200_OK)
