@@ -47,7 +47,7 @@ commands:
           command: ln -sv ~/.local/share/poetry/bin/poetry /usr/local/bin
       - run:
           name: Install pip packages
-          command: poetry install --with test --no-root
+          command: poetry install --with test --with dev --no-root
       - save_cache:
           key: poetry-cache-v1-{{ checksum "poetry.lock" }}
           paths:
@@ -150,6 +150,14 @@ jobs:
       - run:
           name: Seed DB
           command: poetry run ./manage.py seeddb --n-users 3 --n-workspaces 1 --n-projects 1 --n-labels 1 --n-tasks 1
+  backend_schema:
+    executor: python_and_postgres
+    working_directory: ~/projectify/backend
+    steps:
+      - prepare_poetry
+      - run:
+          name: Test if schema.yml up to date
+          command: poetry run bin/test-schema
   frontend_svelte-check:
     executor: node
     working_directory: ~/projectify/frontend
@@ -295,6 +303,7 @@ workflows:
       - backend_tests
       - backend_seeddb
       - backend_collectstatic
+      - backend_schema
       - frontend_svelte-check
       - frontend_eslint
       - frontend_prettier

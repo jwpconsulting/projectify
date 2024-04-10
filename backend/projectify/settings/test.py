@@ -19,13 +19,17 @@ from dotenv import (
     load_dotenv,
 )
 
-from .base import (
-    Base,
-)
+from .base import Base
+from .spectacular import SpectacularSettings
 
 
-class Test(Base):
+class Test(SpectacularSettings, Base):
     """Test configuration."""
+
+    INSTALLED_APPS = (
+        *Base.INSTALLED_APPS,
+        "drf_spectacular",
+    )
 
     SITE_TITLE = "Projectify Pytest"
 
