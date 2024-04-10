@@ -72,7 +72,7 @@ def user_sign_up(
     try:
         validate_password(password=password, user=User(email=email))
     except DjangoValidationError as e:
-        raise serializers.ValidationError({"policies": e.error_list})
+        raise serializers.ValidationError({"policies": e.messages})
 
     agreement_dt = timezone.now()
 

@@ -23,6 +23,7 @@ import pytest
 from faker import Faker
 from rest_framework.test import APIClient
 
+from projectify.settings.base import Base
 from projectify.user.services.auth import user_sign_up
 from projectify.user.services.internal import user_make_token
 from pytest_types import DjangoAssertNumQueries
@@ -132,6 +133,27 @@ class TestSignUp:
             },
         )
         assert response.status_code == 429
+
+    def test_signing_up_weak_pw(
+        self,
+        rest_client: APIClient,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        faker: Faker,
+    ) -> None:
+        """Test signing up a new user."""
+        with django_assert_num_queries(1):
+            response = rest_client.post(
+                resource_url,
+                data={
+                    "email": "hello@localhost",
+                    "password": "password",
+                    "tos_agreed": True,
+                    "privacy_policy_agreed": True,
+                },
+            )
+            assert response.status_code == 400, response.data
+        assert response.data == {"policies": ["This password is too common."]}
 
 
 class TestConfirmEmail:

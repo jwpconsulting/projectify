@@ -189,6 +189,22 @@ export interface components {
         PasswordPolicies: {
             policies: string[];
         };
+        /** @description Take in email and password. */
+        SignUp: {
+            /** Format: email */
+            email: string;
+            password: string;
+            tos_agreed: boolean;
+            privacy_policy_agreed: boolean;
+        };
+        /** @description Hint for drf-spectacular. */
+        SignUpError: {
+            email?: string;
+            password?: string;
+            policies?: string[];
+            tos_agreed?: string;
+            privacy_policy_agreed?: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -378,9 +394,25 @@ export interface operations {
     };
     /** @description Handle POST. */
     user_user_sign_up_create: {
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SignUp"];
+                "application/x-www-form-urlencoded": components["schemas"]["SignUp"];
+                "multipart/form-data": components["schemas"]["SignUp"];
+            };
+        };
         responses: {
             /** @description No response body */
-            200: {
+            204: {
+                content: never;
+            };
+            400: {
+                content: {
+                    "application/json": components["schemas"]["SignUpError"];
+                };
+            };
+            /** @description No response body */
+            429: {
                 content: never;
             };
         };

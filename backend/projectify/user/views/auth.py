@@ -59,7 +59,7 @@ class SignUp(views.APIView):
 
     permission_classes = (AllowAny,)
 
-    class InputSerializer(serializers.Serializer):
+    class SignUpSerializer(serializers.Serializer):
         """Take in email and password."""
 
         email = serializers.EmailField()
@@ -161,7 +161,7 @@ class LogIn(views.APIView):
 
     @method_decorator(
         ratelimit(
-            group="projectify.user.views.auth.LogIn.post",
+            group="projectify.user.views.auth.login.post",
             key="post:email",
             rate="60/h",
         )

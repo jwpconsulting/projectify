@@ -236,11 +236,31 @@ paths:
       description: Handle POST.
       tags:
       - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+        required: true
       security:
       - cookieAuth: []
       - {}
       responses:
-        '200':
+        '204':
+          description: No response body
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUpError'
+          description: ''
+        '429':
           description: No response body
   /workspace/label/:
     post:
@@ -746,6 +766,40 @@ components:
             type: string
       required:
       - policies
+    SignUp:
+      type: object
+      description: Take in email and password.
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        tos_agreed:
+          type: boolean
+        privacy_policy_agreed:
+          type: boolean
+      required:
+      - email
+      - password
+      - privacy_policy_agreed
+      - tos_agreed
+    SignUpError:
+      type: object
+      description: Hint for drf-spectacular.
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        policies:
+          type: array
+          items:
+            type: string
+        tos_agreed:
+          type: string
+        privacy_policy_agreed:
+          type: string
   securitySchemes:
     cookieAuth:
       type: apiKey

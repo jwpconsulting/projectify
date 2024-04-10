@@ -6,7 +6,7 @@ from typing import (
     Union,
 )
 
-ErrorMessage = Union[str, Mapping[str, ErrorMessage]]
+ErrorMessage = Union[str, Sequence[ErrorMessage], Mapping[str, ErrorMessage]]
 Code = str
 
 class APIException(Exception):
