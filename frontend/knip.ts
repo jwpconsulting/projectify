@@ -60,7 +60,6 @@ const config: KnipConfig = {
         "esm-loader-typescript",
         "node-esm-loader",
         "prettier-plugin-svelte",
-        "prettier-plugin-tailwindcss",
     ],
     compilers: {
         // https://github.com/webpro/knip/blob/7011a5107b6693f70a966a12bc3c31b6bc3353a8/docs/compilers.md
