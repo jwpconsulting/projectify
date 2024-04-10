@@ -31,6 +31,7 @@ from django.db import (
     models,
     transaction,
 )
+from django.utils.translation import gettext_lazy as _
 
 import pgtrigger
 from django_extensions.db.models import (
@@ -120,7 +121,18 @@ class Workspace(TitleDescriptionModel, BaseModel):
         return self.title
 
     class Meta:
-        """Add triggers."""
+        """Add constraints and triggers."""
+
+        constraints = (
+            models.CheckConstraint(
+                name="title",
+                # Match period followed by space, or not period
+                check=models.Q(title__regex=r"^([.:]\s|[^.:])+$"),
+                violation_error_message=_(
+                    "Workspace title can only contain '.' or ':' if followed by whitespace."
+                ),
+            ),
+        )
 
         triggers = (
             pgtrigger.Trigger(
