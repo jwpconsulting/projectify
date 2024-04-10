@@ -191,6 +191,22 @@ paths:
       responses:
         '200':
           description: No response body
+  /user/user/password-policy:
+    get:
+      operationId: user_user_password_policy_retrieve
+      description: Return all information about current password policy.
+      tags:
+      - user
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Output'
+          description: ''
   /user/user/profile-picture/upload:
     post:
       operationId: user_user_profile_picture_upload_create
@@ -719,6 +735,17 @@ paths:
         '200':
           description: No response body
 components:
+  schemas:
+    Output:
+      type: object
+      description: Serialize password policies.
+      properties:
+        policies:
+          type: array
+          items:
+            type: string
+      required:
+      - policies
   securitySchemes:
     cookieAuth:
       type: apiKey
