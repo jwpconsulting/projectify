@@ -47,6 +47,8 @@
     import { coerceIsoDate } from "$lib/utils/date";
 
     import type { PageData } from "./$types";
+    import { beforeNavigate } from "$app/navigation";
+    import type { BeforeNavigate } from "@sveltejs/kit";
 
     export let data: PageData;
     const { task } = data;
@@ -114,6 +116,15 @@
             throw e;
         }
     }
+
+    beforeNavigate((navigation: BeforeNavigate) => {
+        const navigateAway = window.confirm(
+            $_("task-screen.confirm-navigate-away.update"),
+        );
+        if (!navigateAway) {
+            navigation.cancel();
+        }
+    });
 </script>
 
 <svelte:head>

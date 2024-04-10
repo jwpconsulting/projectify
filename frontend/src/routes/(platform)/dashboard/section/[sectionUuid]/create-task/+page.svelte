@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -36,6 +36,8 @@
     } from "$lib/urls";
 
     import type { PageData } from "./$types";
+    import { beforeNavigate } from "$app/navigation";
+    import type { BeforeNavigate } from "@sveltejs/kit";
 
     export let data: PageData;
 
@@ -103,6 +105,15 @@
             href: getNewTaskUrl(section.uuid),
         },
     ];
+
+    beforeNavigate((navigation: BeforeNavigate) => {
+        const navigateAway = window.confirm(
+            $_("task-screen.confirm-navigate-away.create"),
+        );
+        if (!navigateAway) {
+            navigation.cancel();
+        }
+    });
 </script>
 
 <svelte:head>

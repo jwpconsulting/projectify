@@ -667,6 +667,10 @@ const messages: MessageDirectory = {
         "edit": "Edit",
         "task-title": "Task title",
         "assignee": "Assignee",
+        "confirm-navigate-away": {
+            create: "You are editing an unsaved new task. Are you sure you want to navigate away and discard your changes?",
+            update: "You are editing a task. Are you sure you want to navigate away and discard your changes?",
+        },
     },
     "user-account-settings": {
         "title": "User account settings",
