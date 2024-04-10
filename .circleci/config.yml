@@ -255,6 +255,14 @@ jobs:
       - run:
           name: Check whether third-party-licenses.txt is up to date
           command: npm run check:third-party-licenses
+  frontend_schema:
+    executor: node
+    working_directory: ~/projectify/frontend
+    steps:
+      - prepare_npm
+      - run:
+          name: Check if schema.d.ts in frontend is up to date
+          command: npm run check:schema
   stories_test:
     executor: node
     working_directory: ~/projectify/stories
@@ -312,6 +320,7 @@ workflows:
       - frontend_build
       - frontend_visualize-bundle
       - frontend_third_party_licenses
+      - frontend_schema
       - stories_test
       - tools_poetry_check
       - tools_python_lint
