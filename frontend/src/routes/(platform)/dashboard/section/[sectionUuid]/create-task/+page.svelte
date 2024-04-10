@@ -24,9 +24,7 @@
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { goto } from "$lib/navigation";
-    import {
-        createTask as createTaskFn,
-    } from "$lib/repository/workspace";
+    import { createTask as createTaskFn } from "$lib/repository/workspace";
     import { createSubTaskAssignment } from "$lib/stores/dashboard";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createTeamMemberAssignment } from "$lib/stores/dashboard/teamMemberAssignment";

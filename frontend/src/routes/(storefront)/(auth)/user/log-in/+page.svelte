@@ -67,12 +67,18 @@
             // destination restriction
             await goto(redirectTo ?? dashboardUrl);
             return;
-        } else if (response.kind === "tooManyRequests"){
-            state = {kind:"error", message: $_("auth.log-in.error.rate-limit")};
-        } else if (response.kind === "badRequest"){
-            state = {kind:"error", message: $_("auth.log-in.error.credentials")};
+        } else if (response.kind === "tooManyRequests") {
+            state = {
+                kind: "error",
+                message: $_("auth.log-in.error.rate-limit"),
+            };
+        } else if (response.kind === "badRequest") {
+            state = {
+                kind: "error",
+                message: $_("auth.log-in.error.credentials"),
+            };
         } else {
-            state = {kind:"error", message: $_("auth.log-in.error.other")};
+            state = { kind: "error", message: $_("auth.log-in.error.other") };
         }
         emailValidation = undefined;
         passwordValidation = undefined;
