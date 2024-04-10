@@ -66,6 +66,7 @@ class Development(SpectacularSettings, Base):
         *Base.INSTALLED_APPS,
         "debug_toolbar",
         "drf_spectacular",
+        "drf_spectacular_sidecar",
     )
 
     MIDDLEWARE = list(add_debug_middleware(Base.MIDDLEWARE))

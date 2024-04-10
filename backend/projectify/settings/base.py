@@ -300,6 +300,9 @@ class Base(Configuration):
     RATELIMIT_ENABLE = True
     RATELIMIT_EXCEPTION_CLASS = "rest_framework.exceptions.Throttled"
 
+    # drf-spectacular
+    SERVE_SPECTACULAR = False
+
     @classmethod
     def post_setup(cls) -> None:
         """Warn if FRONTEND_URL ends on '/'."""
