@@ -51,9 +51,11 @@ const config: KnipConfig = {
         "bin/test",
         "bin/prebuild.sh",
         "bin/check-third-party-licenses",
+        "bin/update-schema",
     ],
     ignoreDependencies: [
         "esm-loader-import-alias",
+        "openapi-typescript",
         "esm-loader-import-relative-extension",
         "esm-loader-typescript",
         "node-esm-loader",

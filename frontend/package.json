@@ -16,6 +16,7 @@
         "check:nocache": "npm run check:prettier:nocache && npm run check:svelte-check && npm run check:eslint:nocache && npm run check:knip",
         "check:prettier": "prettier --ignore-path ../.gitignore --plugin prettier-plugin-svelte --plugin prettier-plugin-tailwindcss --check --cache --cache-strategy content .",
         "check:prettier:nocache": "prettier --ignore-path ../.gitignore --plugin prettier-plugin-svelte --plugin prettier-plugin-tailwindcss --check .",
+        "check:schema": "bin/update-schema && git diff --exit-code src/lib/types/schema.d.ts",
         "check:svelte-check": "svelte-check --tsconfig tsconfig.json --fail-on-warnings",
         "check:third-party-licenses": "bin/check-third-party-licenses",
         "sync-types": "svelte-kit sync",
@@ -26,6 +27,7 @@
         "fix:nocache": "npm run fix:prettier:nocache && npm run fix:eslint:nocache",
         "fix:prettier": "prettier --ignore-path ../.gitignore --plugin prettier-plugin-svelte --plugin prettier-plugin-tailwindcss --log-level warn --write --cache --cache-strategy content .",
         "fix:prettier:nocache": "prettier --ignore-path ../.gitignore --plugin prettier-plugin-svelte --plugin prettier-plugin-tailwindcss --log-level warn --write .",
+        "fix:schema": "bin/update-schema",
         "fix:third-party-licenses": "generate-license-file --ci --overwrite --input package.json --output third-party-licenses.txt",
         "show:bundle:client": "open .svelte-kit/output/client/bundle.html",
         "show:bundle:server": "open .svelte-kit/output/server/bundle.html"
@@ -48,6 +50,7 @@
         "generate-license-file": "~3.0.1",
         "knip": "~2.23.0",
         "node-esm-loader": "~0.3.0",
+        "openapi-typescript": "~6.7.5",
         "prettier": "~3.0.3",
         "prettier-plugin-svelte": "~3.0.3",
         "prettier-plugin-tailwindcss": "~0.5.11",
