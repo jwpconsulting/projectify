@@ -35,12 +35,14 @@ export const labelColors = [
     "green",
 ] as const;
 export type LabelColor = (typeof labelColors)[number];
+// TODO return undefined instead
 export function getLabelColorFromIndex(index: number): LabelColor | null {
-    if (index > labelColors.length - 1) {
+    const color = labelColors[index];
+    if (color === undefined) {
         console.error(`Expected color for ${index}`);
         return null;
     }
-    return labelColors[index];
+    return color;
 }
 export function getIndexFromLabelColor(color: LabelColor): number {
     const index = labelColors.indexOf(color);

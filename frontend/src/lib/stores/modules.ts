@@ -65,6 +65,9 @@ export async function moveToBottom(
 ) {
     const { tasks } = section;
     const lastTask = tasks[tasks.length - 1];
+    if (lastTask === undefined) {
+        throw new Error("Expected lastTask");
+    }
     await moveTaskAfterTask(task, lastTask, repositoryContext);
 }
 

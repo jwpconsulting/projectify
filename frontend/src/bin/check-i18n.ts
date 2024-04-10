@@ -104,6 +104,9 @@ async function extractMessageStrings(): Promise<MessageString[]> {
                     throw new Error("No groups were matched");
                 }
                 const { message } = groups;
+                if (message === undefined) {
+                    throw new Error("Expected message");
+                }
                 return [
                     {
                         path,

@@ -38,9 +38,10 @@ export async function load({ fetch }: PageLoadEvent): Promise<void> {
         // The workspaces endpoint not being reachable is unrecoverable
         error(500);
     }
-    if (workspaces.length === 0) {
+    const workspace = workspaces[0];
+    if (workspace === undefined) {
         redirect(302, startUrl);
+    } else {
+        redirect(302, getDashboardWorkspaceUrl(workspace.uuid));
     }
-    const [workspace, ..._rest] = workspaces;
-    redirect(302, getDashboardWorkspaceUrl(workspace.uuid));
 }
