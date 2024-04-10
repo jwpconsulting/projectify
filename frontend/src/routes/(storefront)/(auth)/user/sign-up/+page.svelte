@@ -28,6 +28,8 @@
     import type { FormViewState } from "$lib/types/ui";
     import { logInUrl, sentEmailConfirmationLinkUrl } from "$lib/urls/user";
     import type { InputFieldValidation } from "$lib/funabashi/types";
+    import { openApiClient } from "$lib/repository/util";
+    import { onMount } from "svelte";
 
     let email: string | undefined = undefined;
     let emailValidation: InputFieldValidation | undefined = undefined;
@@ -39,6 +41,16 @@
     let privacyPolicyAgreed: boolean | undefined = undefined;
 
     let state: FormViewState = { kind: "start" };
+
+    // Load password policies
+    let passwordPolicies: string[] | undefined = undefined;
+    onMount(async () => {
+        const response = await openApiClient.GET("/user/user/password-policy");
+        if (response.data === undefined) {
+            throw new Error("Could not get password policies");
+        }
+        passwordPolicies = response.data.policies;
+    });
 
     async function action() {
         state = { kind: "submitting" };
@@ -138,15 +150,27 @@
             required
             validation={emailValidation}
         />
-        <InputField
-            placeholder={$_("auth.sign-up.password.placeholder")}
-            style={{ inputType: "password" }}
-            name="password"
-            label={$_("auth.sign-up.password.label")}
-            bind:value={password}
-            required
-            validation={passwordValidation}
-        />
+        <section class="flex flex-col gap-2">
+            <InputField
+                placeholder={$_("auth.sign-up.password.placeholder")}
+                style={{ inputType: "password" }}
+                name="password"
+                label={$_("auth.sign-up.password.label")}
+                bind:value={password}
+                required
+                validation={passwordValidation}
+            />
+            {#if passwordPolicies}
+                <header class="font-bold">
+                    {$_("auth.sign-up.password.policies")}
+                </header>
+                <ul class="flex list-inside list-disc flex-col gap-0.5">
+                    {#each passwordPolicies as policy}
+                        <li>{policy}</li>
+                    {/each}
+                </ul>
+            {/if}
+        </section>
         <!-- XXX false positive -->
         <!-- svelte-ignore a11y-label-has-associated-control -->
         <label class="flex flex-row items-center gap-2">

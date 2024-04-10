@@ -480,6 +480,7 @@ const messages: MessageDirectory = {
                 placeholder: "Enter your password",
                 missing: "Must enter password",
                 valid: "Password looks good",
+                policies: "Rules for choosing a safe password:",
             },
             "tos": {
                 label: "I agree to the Terms of Service",

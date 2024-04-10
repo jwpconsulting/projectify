@@ -18,8 +18,10 @@
 import vars from "$lib/env";
 import type { RepositoryContext } from "$lib/types/repository";
 import { getCookie } from "$lib/utils/cookie";
+import createClient from "openapi-fetch";
 
 import type { ApiResponse } from "./types";
+import type { paths } from "$lib/types/schema";
 
 const getOptions: RequestInit = {
     credentials: "include",
@@ -64,6 +66,10 @@ function parseResponseData(data: string): unknown | string | undefined {
     }
 }
 
+const baseUrl = vars.API_ENDPOINT;
+
+export const openApiClient = createClient<paths>({ baseUrl });
+
 async function fetchResponse<T, E = unknown>(
     url: string,
     options: RequestInit,
@@ -71,7 +77,7 @@ async function fetchResponse<T, E = unknown>(
 ): Promise<ApiResponse<T, E>> {
     let response: Response | undefined = undefined;
     try {
-        response = await fetch(`${vars.API_ENDPOINT}${url}`, options);
+        response = await fetch(`${baseUrl}${url}`, options);
     } catch (error) {
         if (!(error instanceof Error)) {
             console.error(error);
