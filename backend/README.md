@@ -2,7 +2,7 @@
 
 # Requirements
 
-- Python 3.11 (I recommend using [asdf](https://asdf-vm.com/))
+- Python ~3.11.6 (I recommend using [asdf](https://asdf-vm.com/))
 - [poetry](https://python-poetry.org/docs/)
 - PostgreSQL >= 15.5
 - Redis (6 >= for production)
@@ -22,7 +22,7 @@ Managing Python is convenient using asdf:
 ```
 asdf plugin-add python
 # This is the version used at the time of writing, subject to change
-asdf install python 3.11.4
+asdf install python 3.11.6
 ```
 
 # Quickstart

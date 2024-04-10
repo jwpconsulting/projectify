@@ -142,6 +142,12 @@ class Development(SpectacularSettings, Base):
     SESSION_COOKIE_SECURE = False
     SESSION_COOKIE_SAMESITE = "Lax"
 
+    # Rest Framework settings for drf-spectacular
+    REST_FRAMEWORK = {
+        **Base.REST_FRAMEWORK,
+        "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    }
+
     @classmethod
     def pre_setup(cls) -> None:
         """Load environment variables from .env."""
