@@ -261,7 +261,6 @@ class Base(Configuration):
             "rest_framework.permissions.IsAuthenticated",
         ),
         "EXCEPTION_HANDLER": "projectify.exception_handler.exception_handler",
-        "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     }
 
     # Where to store media
