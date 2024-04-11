@@ -34,8 +34,8 @@ Including another URLconf
 
 
 """
+from collections.abc import Sequence
 from typing import (
-    Iterable,
     Union,
 )
 
@@ -67,7 +67,7 @@ from projectify.workspace.consumers import (
     WorkspaceConsumer,
 )
 
-urlpatterns: Iterable[Union[URLResolver, URLPattern]] = (
+urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     # TODO may I use projectify.admin.admin.urls here?
     path("admin/", admin.site.urls),
     path(

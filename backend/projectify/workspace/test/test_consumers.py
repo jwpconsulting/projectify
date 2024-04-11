@@ -229,6 +229,11 @@ async def make_communicator(
             url = f"ws/task/{resource.uuid}/"
     communicator = WebsocketCommunicator(websocket_application, url)
     communicator.scope["user"] = user
+    headers = communicator.scope.get("headers", [])
+    communicator.scope["headers"] = [
+        *headers,
+        [b"origin", b"http://localhost"],
+    ]
     connected, _maybe_code = await communicator.connect()
     assert connected, _maybe_code
     return communicator
