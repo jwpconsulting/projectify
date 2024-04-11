@@ -1,5 +1,7 @@
+from typing import Any
+
 class WebsocketCommunicator:
-    scope: dict[str, object]
+    scope: dict[str, Any]
 
     def __init__(self, asgi_application: object, resource: str) -> None: ...
 

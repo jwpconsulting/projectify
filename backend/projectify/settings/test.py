@@ -36,6 +36,9 @@ class Test(SpectacularSettings, Base):
     # TODO populate me
     SECRET_KEY = "test"
 
+    # Allow localhost, so that websocket connections may pass
+    ALLOWED_HOSTS = ["localhost"]
+
     FRONTEND_URL = "https://example.com"
 
     # Email

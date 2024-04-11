@@ -32,6 +32,7 @@ from channels.routing import (
     ProtocolTypeRouter,
     URLRouter,
 )
+from channels.security.websocket import AllowedHostsOriginValidator
 from configurations.asgi import (
     get_asgi_application,
 )
@@ -50,7 +51,9 @@ from .urls import (  # noqa: E402
     websocket_urlpatterns,
 )
 
-websocket_application = AuthMiddlewareStack(URLRouter(websocket_urlpatterns))
+websocket_application = AllowedHostsOriginValidator(
+    AuthMiddlewareStack(URLRouter(websocket_urlpatterns))
+)
 
 application = ProtocolTypeRouter(
     {
