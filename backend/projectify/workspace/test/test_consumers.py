@@ -33,6 +33,7 @@ from channels.db import (
 from channels.testing import (
     WebsocketCommunicator,
 )
+from rest_framework.exceptions import ValidationError
 
 from projectify.asgi import (
     websocket_application,
@@ -44,9 +45,6 @@ from projectify.user.models import User
 from projectify.user.models.user_invite import UserInvite
 from projectify.user.services.internal import user_create
 
-from .. import (
-    models,
-)
 from ..models.const import TeamMemberRoles
 from ..models.label import Label
 from ..models.project import Project
@@ -118,7 +116,7 @@ async def other_user() -> AsyncIterable[User]:
 
 
 @pytest.fixture
-async def workspace(user: User) -> models.Workspace:
+async def workspace(user: User) -> AsyncIterable[Workspace]:
     """Create a paid for workspace."""
     workspace = await database_sync_to_async(workspace_create)(
         title="Workspace title",
@@ -131,40 +129,70 @@ async def workspace(user: User) -> models.Workspace:
         stripe_customer_id="stripe_",
         seats=10,
     )
-    return workspace
+    yield workspace
+    try:
+        await workspace.arefresh_from_db()
+        await database_sync_to_async(workspace_delete)(
+            who=user, workspace=workspace
+        )
+    except Workspace.DoesNotExist:
+        pass
 
 
 @pytest.fixture
-async def team_member(workspace: Workspace, user: User) -> TeamMember:
+async def team_member(
+    workspace: Workspace, user: User
+) -> AsyncIterable[TeamMember]:
     """Return team member with owner status."""
     team_member = await database_sync_to_async(team_member_find_for_workspace)(
         workspace=workspace, user=user
     )
     assert team_member
-    return team_member
+    yield team_member
+    try:
+        await team_member.arefresh_from_db()
+        await database_sync_to_async(team_member_delete)(
+            who=user, team_member=team_member
+        )
+    except TeamMember.DoesNotExist:
+        pass
+    except ValidationError:
+        pass
 
 
 @pytest.fixture
-async def project(workspace: Workspace, user: User) -> Project:
+async def project(workspace: Workspace, user: User) -> AsyncIterable[Project]:
     """Create project."""
-    return await database_sync_to_async(project_create)(
+    project = await database_sync_to_async(project_create)(
         who=user,
         title="Don't care",
         workspace=workspace,
     )
+    yield project
+    try:
+        await project.arefresh_from_db()
+        await database_sync_to_async(project_delete)(who=user, project=project)
+    except Project.DoesNotExist:
+        pass
 
 
 @pytest.fixture
 async def section(
     project: Project,
     user: User,
-) -> Section:
+) -> AsyncIterable[Section]:
     """Create section."""
-    return await database_sync_to_async(section_create)(
+    section = await database_sync_to_async(section_create)(
         project=project,
         who=user,
         title="I am a section",
     )
+    yield section
+    try:
+        await section.arefresh_from_db()
+        await database_sync_to_async(section_delete)(who=user, section=section)
+    except Section.DoesNotExist:
+        pass
 
 
 @pytest.fixture
@@ -172,33 +200,51 @@ async def task(
     user: User,
     section: Section,
     team_member: TeamMember,
-) -> Task:
+) -> AsyncIterable[Task]:
     """Create task."""
-    return await database_sync_to_async(task_create)(
+    task = await database_sync_to_async(task_create)(
         section=section,
         who=user,
         assignee=team_member,
         title="I am a task",
     )
+    yield task
+    try:
+        await task.arefresh_from_db()
+        await database_sync_to_async(task_delete)(who=user, task=task)
+    except Task.DoesNotExist:
+        pass
 
 
 @pytest.fixture
-async def label(workspace: Workspace, user: User) -> Label:
+async def label(workspace: Workspace, user: User) -> AsyncIterable[Label]:
     """Create a label."""
-    return await database_sync_to_async(label_create)(
+    label = await database_sync_to_async(label_create)(
         workspace=workspace,
         who=user,
         color=0,
         name="don't care",
     )
+    yield label
+    try:
+        await label.arefresh_from_db()
+        await database_sync_to_async(label_delete)(who=user, label=label)
+    except Label.DoesNotExist:
+        pass
 
 
 @pytest.fixture
-async def sub_task(task: Task, user: User) -> SubTask:
+async def sub_task(task: Task, user: User) -> AsyncIterable[SubTask]:
     """Create sub task."""
-    return await database_sync_to_async(sub_task_create)(
+    sub_task = await database_sync_to_async(sub_task_create)(
         task=task, who=user, title="don't care", done=False
     )
+    yield sub_task
+    try:
+        await sub_task.arefresh_from_db()
+        await database_sync_to_async(sub_task.delete)()
+    except SubTask.DoesNotExist:
+        pass
 
 
 HasUuid = Union[Workspace, Project, Task]
@@ -682,10 +728,6 @@ class TestTaskLabel:
 
         await database_sync_to_async(section_delete)(who=user, section=section)
         await database_sync_to_async(project_delete)(who=user, project=project)
-        await database_sync_to_async(label_delete)(who=user, label=label)
-        await database_sync_to_async(workspace_delete)(
-            who=user, workspace=workspace
-        )
 
 
 class TestSubTask:
