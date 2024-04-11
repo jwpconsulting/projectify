@@ -26,8 +26,6 @@ from typing import (
     cast,
 )
 
-from django.db import models as django_models
-
 import pytest
 from channels.db import (
     database_sync_to_async,
@@ -201,12 +199,6 @@ async def sub_task(task: Task, user: User) -> SubTask:
     return await database_sync_to_async(sub_task_create)(
         task=task, who=user, title="don't care", done=False
     )
-
-
-@database_sync_to_async
-def delete_model_instance(model_instance: django_models.Model) -> None:
-    """Delete model instance."""
-    model_instance.delete()
 
 
 HasUuid = Union[Workspace, Project, Task]
@@ -692,7 +684,7 @@ class TestTaskLabel:
 
         await database_sync_to_async(section_delete)(who=user, section=section)
         await database_sync_to_async(project_delete)(who=user, project=project)
-        await delete_model_instance(label)
+        await database_sync_to_async(label_delete)(who=user, label=label)
         await database_sync_to_async(workspace_delete)(
             who=user, workspace=workspace
         )
@@ -759,7 +751,7 @@ class TestSubTask:
         await project_communicator.disconnect()
         await task_communicator.disconnect()
 
-        await delete_model_instance(task)
+        await database_sync_to_async(task_delete)(who=user, task=task)
         await database_sync_to_async(section_delete)(who=user, section=section)
         await database_sync_to_async(project_delete)(who=user, project=project)
         await database_sync_to_async(workspace_delete)(
@@ -788,11 +780,10 @@ class TestChatMessage:
         )
         assert await expect_message(task_communicator, task)
         # TODO chat messages are not supported right now,
-        # so no chat_message_delete service exists.
-        # await delete_model_instance(chat_message)
-        # message = await communicator.receive_json_from()
+        # so no chat_message_delete service exists, and we don't have to delete
+        # it either
         await task_communicator.disconnect()
-        await delete_model_instance(task)
+        await database_sync_to_async(task_delete)(who=user, task=task)
         await database_sync_to_async(section_delete)(who=user, section=section)
         await database_sync_to_async(project_delete)(who=user, project=project)
         await database_sync_to_async(workspace_delete)(
