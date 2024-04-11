@@ -509,8 +509,9 @@ class TestSection:
         )
         assert await expect_message(project_communicator, project)
 
+        # XXX Might be able to disconnect after project_delete as well
         await project_communicator.disconnect()
-        await delete_model_instance(project)
+        await database_sync_to_async(project_delete)(who=user, project=project)
         await database_sync_to_async(workspace_delete)(
             who=user, workspace=workspace
         )
@@ -642,7 +643,7 @@ class TestTask:
         await clean_up_communicator(task_communicator)
 
         await delete_model_instance(section)
-        await delete_model_instance(project)
+        await database_sync_to_async(project_delete)(who=user, project=project)
         await database_sync_to_async(workspace_delete)(
             who=user, workspace=workspace
         )
@@ -690,7 +691,7 @@ class TestTaskLabel:
         await task_communicator.disconnect()
 
         await delete_model_instance(section)
-        await delete_model_instance(project)
+        await database_sync_to_async(project_delete)(who=user, project=project)
         await delete_model_instance(label)
         await database_sync_to_async(workspace_delete)(
             who=user, workspace=workspace
@@ -760,7 +761,7 @@ class TestSubTask:
 
         await delete_model_instance(task)
         await delete_model_instance(section)
-        await delete_model_instance(project)
+        await database_sync_to_async(project_delete)(who=user, project=project)
         await database_sync_to_async(workspace_delete)(
             who=user, workspace=workspace
         )
@@ -793,7 +794,7 @@ class TestChatMessage:
         await task_communicator.disconnect()
         await delete_model_instance(task)
         await delete_model_instance(section)
-        await delete_model_instance(project)
+        await database_sync_to_async(project_delete)(who=user, project=project)
         await database_sync_to_async(workspace_delete)(
             who=user, workspace=workspace
         )
