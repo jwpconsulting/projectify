@@ -461,8 +461,9 @@ class TestProject:
         await clean_up_communicator(workspace_communicator)
         await clean_up_communicator(project_communicator)
 
-        await delete_model_instance(team_member)
-        await delete_model_instance(workspace)
+        await database_sync_to_async(workspace_delete)(
+            who=user, workspace=workspace
+        )
 
 
 class TestSection:
@@ -510,8 +511,9 @@ class TestSection:
 
         await project_communicator.disconnect()
         await delete_model_instance(project)
-        await delete_model_instance(team_member)
-        await delete_model_instance(workspace)
+        await database_sync_to_async(workspace_delete)(
+            who=user, workspace=workspace
+        )
 
 
 class TestLabel:
@@ -549,8 +551,9 @@ class TestLabel:
         )
         assert await expect_message(workspace_communicator, workspace)
 
-        await delete_model_instance(team_member)
-        await delete_model_instance(workspace)
+        await database_sync_to_async(workspace_delete)(
+            who=user, workspace=workspace
+        )
         await workspace_communicator.disconnect()
 
 
@@ -640,8 +643,9 @@ class TestTask:
 
         await delete_model_instance(section)
         await delete_model_instance(project)
-        await delete_model_instance(team_member)
-        await delete_model_instance(workspace)
+        await database_sync_to_async(workspace_delete)(
+            who=user, workspace=workspace
+        )
 
 
 class TestTaskLabel:
@@ -687,9 +691,10 @@ class TestTaskLabel:
 
         await delete_model_instance(section)
         await delete_model_instance(project)
-        await delete_model_instance(team_member)
         await delete_model_instance(label)
-        await delete_model_instance(workspace)
+        await database_sync_to_async(workspace_delete)(
+            who=user, workspace=workspace
+        )
 
 
 class TestSubTask:
@@ -756,8 +761,9 @@ class TestSubTask:
         await delete_model_instance(task)
         await delete_model_instance(section)
         await delete_model_instance(project)
-        await delete_model_instance(team_member)
-        await delete_model_instance(workspace)
+        await database_sync_to_async(workspace_delete)(
+            who=user, workspace=workspace
+        )
 
 
 class TestChatMessage:
@@ -788,5 +794,6 @@ class TestChatMessage:
         await delete_model_instance(task)
         await delete_model_instance(section)
         await delete_model_instance(project)
-        await delete_model_instance(team_member)
-        await delete_model_instance(workspace)
+        await database_sync_to_async(workspace_delete)(
+            who=user, workspace=workspace
+        )
