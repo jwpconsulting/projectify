@@ -77,13 +77,17 @@
             throw new Error("Expected create state");
         }
 
+        if ($currentWorkspace === undefined) {
+            throw new Error("Expected $currentWorkspace");
+        }
+
         editState = { kind: "submitting" };
         labelNameValidation = undefined;
         chosenColorValidation = undefined;
 
         const color = getIndexFromLabelColor(chosenColor);
         const response = await createLabel(
-            currentWorkspace.unwrap(),
+            $currentWorkspace,
             { name: labelName, color },
             { fetch },
         );
