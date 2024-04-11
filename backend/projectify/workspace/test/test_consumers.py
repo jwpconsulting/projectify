@@ -642,7 +642,7 @@ class TestTask:
         # Ideally, a task consumer will disconnect when a task is deleted
         await clean_up_communicator(task_communicator)
 
-        await delete_model_instance(section)
+        await database_sync_to_async(section_delete)(who=user, section=section)
         await database_sync_to_async(project_delete)(who=user, project=project)
         await database_sync_to_async(workspace_delete)(
             who=user, workspace=workspace
@@ -690,7 +690,7 @@ class TestTaskLabel:
         await project_communicator.disconnect()
         await task_communicator.disconnect()
 
-        await delete_model_instance(section)
+        await database_sync_to_async(section_delete)(who=user, section=section)
         await database_sync_to_async(project_delete)(who=user, project=project)
         await delete_model_instance(label)
         await database_sync_to_async(workspace_delete)(
@@ -760,7 +760,7 @@ class TestSubTask:
         await task_communicator.disconnect()
 
         await delete_model_instance(task)
-        await delete_model_instance(section)
+        await database_sync_to_async(section_delete)(who=user, section=section)
         await database_sync_to_async(project_delete)(who=user, project=project)
         await database_sync_to_async(workspace_delete)(
             who=user, workspace=workspace
@@ -793,7 +793,7 @@ class TestChatMessage:
         # message = await communicator.receive_json_from()
         await task_communicator.disconnect()
         await delete_model_instance(task)
-        await delete_model_instance(section)
+        await database_sync_to_async(section_delete)(who=user, section=section)
         await database_sync_to_async(project_delete)(who=user, project=project)
         await database_sync_to_async(workspace_delete)(
             who=user, workspace=workspace
