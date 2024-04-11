@@ -101,7 +101,18 @@ logger = logging.getLogger(__name__)
 async def user() -> AsyncIterable[User]:
     """Create a user."""
     user = await database_sync_to_async(user_create)(
-        email="consumer-test@example.com"
+        email="consumer-test-1@example.com"
+    )
+    yield user
+    # TODO use a service based user deletion here
+    await database_sync_to_async(user.delete)()
+
+
+@pytest.fixture
+async def other_user() -> AsyncIterable[User]:
+    """Create another user."""
+    user = await database_sync_to_async(user_create)(
+        email="consumer-test-2@example.com"
     )
     yield user
     # TODO use a service based user deletion here
@@ -234,8 +245,10 @@ async def make_communicator(
         *headers,
         [b"origin", b"http://localhost"],
     ]
-    connected, _maybe_code = await communicator.connect()
-    assert connected, _maybe_code
+    connected, code = await communicator.connect()
+    if connected is False:
+        await communicator.disconnect()
+        raise Exception(f"Not connected: {code}")
     return communicator
 
 
@@ -270,6 +283,18 @@ async def task_communicator(task: Task, user: User) -> WebsocketCommunicator:
 
 class TestWorkspace:
     """Test consumer behavior for Workspace changes."""
+
+    async def test_not_found(self, user: User, other_user: User) -> None:
+        """Test we can't connect to an unrelated workspace's consumer."""
+        workspace = await database_sync_to_async(workspace_create)(
+            owner=user, title="A workspace"
+        )
+        with pytest.raises(Exception) as e:
+            await make_communicator(workspace, other_user)
+        assert e.match("Not connected: 404")
+        await database_sync_to_async(workspace_delete)(
+            who=user, workspace=workspace
+        )
 
     async def test_workspace_life_cycle(
         self,
@@ -369,6 +394,26 @@ class TestTeamMember:
 
 class TestProject:
     """Test consumer behavior for Project changes."""
+
+    async def test_not_found(
+        self,
+        workspace: Workspace,
+        user: User,
+        other_user: User,
+        team_member: TeamMember,
+    ) -> None:
+        """Test we can't connect to an unrelated project's consumer."""
+        project = await database_sync_to_async(project_create)(
+            who=user, workspace=workspace, title=""
+        )
+        with pytest.raises(Exception) as e:
+            await make_communicator(project, other_user)
+        assert e.match("Not connected: 404")
+
+        await database_sync_to_async(project_delete)(who=user, project=project)
+        await database_sync_to_async(workspace_delete)(
+            who=user, workspace=workspace
+        )
 
     async def test_project_life_cycle(
         self,
@@ -509,8 +554,36 @@ class TestLabel:
         await workspace_communicator.disconnect()
 
 
-class TestTaskConsumer:
+class TestTask:
     """Test consumer behavior for tasks."""
+
+    async def test_not_found(
+        self,
+        user: User,
+        other_user: User,
+        section: Section,
+        project: Project,
+        team_member: TeamMember,
+        workspace: Workspace,
+    ) -> None:
+        """Test we can't connect to an unrelated task's consumer."""
+        del team_member
+        task = await database_sync_to_async(task_create_nested)(
+            who=user,
+            section=section,
+            title="A task",
+            sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
+            labels=[],
+        )
+        with pytest.raises(Exception) as e:
+            await make_communicator(task, other_user)
+        assert e.match("Not connected: 404")
+        await database_sync_to_async(task_delete)(who=user, task=task)
+        await database_sync_to_async(section_delete)(who=user, section=section)
+        await database_sync_to_async(project_delete)(who=user, project=project)
+        await database_sync_to_async(workspace_delete)(
+            who=user, workspace=workspace
+        )
 
     async def test_task_life_cycle(
         self,
