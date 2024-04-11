@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 // XXX "stores.ts" should be renamed "modules.ts" maybe?
-import type { Readable, Subscriber, Writable } from "svelte/store";
+import type { Readable, Writable } from "svelte/store";
 
 import type {
     LabelAssignmentInput,
@@ -61,14 +61,10 @@ export interface SubTaskAssignment
 const subscriptionTypes = ["workspace", "project", "task"] as const;
 export type SubscriptionType = (typeof subscriptionTypes)[number];
 
-// A subscriber that can deal with possible undefined values
-export type MaybeSubscriber<T> = Subscriber<T | undefined>;
-
 export type RepoGetter<T> = (
     uuid: string,
     repositoryContext: RepositoryContext,
 ) => Promise<T | undefined>;
 export interface WsResource<T> extends Readable<T | undefined> {
     loadUuid: RepoGetter<T>;
-    unwrap: () => T;
 }

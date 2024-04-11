@@ -22,12 +22,10 @@ import { writable } from "svelte/store";
 import vars from "$lib/env";
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
-    MaybeSubscriber,
     RepoGetter,
     SubscriptionType,
     WsResource,
 } from "$lib/types/stores";
-import { unwrap } from "$lib/utils/type";
 
 import { browser } from "$app/environment";
 
@@ -35,11 +33,6 @@ interface Message {
     type: string;
     uuid: string;
     data: unknown;
-}
-
-interface WsMessage {
-    message: Message;
-    timeStamp: number;
 }
 
 function makeAbsoluteUrl(url: string): string {
@@ -56,13 +49,8 @@ type EventListener = (event: MessageEvent<string>) => void;
 function getSubscriptionForCollection(
     collection: string,
     uuid: string,
-    onWsMessage: (wsMessage: WsMessage) => void,
+    onMessage: EventListener,
 ): Unsubscriber {
-    const onMessage: EventListener = (event: MessageEvent<string>) => {
-        const message: Message = JSON.parse(event.data) as Message;
-        const { timeStamp } = event;
-        onWsMessage({ message, timeStamp });
-    };
     // XXX
     // It appears that errors here are very hard to debug,
     // e.g., wrong URL schema
@@ -89,7 +77,7 @@ function getSubscriptionForCollection(
  *
  *  ┌─────┐   loadUuid  ┌─────┐ ──────────────┐
  *  │Start│────────────►│Ready│               │ subscription update:
- *  └─────┘             └─────┘ ◄─────────────┘ updateSubscribers()
+ *  └─────┘             └─────┘ ◄─────────────┘ set(newValue)
  *                        ▲ │
  *                        │ │ loadUuid
  *                        │ │
@@ -99,75 +87,51 @@ function getSubscriptionForCollection(
  * one initial load
  */
 
-type Subscribers<T> = Set<MaybeSubscriber<T>>;
-type WsStoreState<T> =
+type WsStoreState =
     | {
           collection: SubscriptionType;
           kind: "start";
-          subscribers: Subscribers<T>;
       }
     | {
           collection: SubscriptionType;
           kind: "ready";
           uuid: string;
-          subscribers: Subscribers<T>;
           unsubscriber: Unsubscriber;
-          value: T | undefined;
       };
 
-// TODO warn when this store never updates a subscriber
-// warn when this store deinitializes without ever adding a subscriber
 export function createWsStore<T>(
     collection: SubscriptionType,
     getter: RepoGetter<T>,
 ): WsResource<T> {
-    type State = WsStoreState<T>;
-    let state: State = { collection, kind: "start", subscribers: new Set() };
+    type State = WsStoreState;
+    let state: State = { collection, kind: "start" };
+    const { subscribe, set } = writable<T | undefined>(undefined);
 
-    const receiveWsMessage = (message: WsMessage): void => {
+    const onMessage: EventListener = (event: MessageEvent<string>) => {
+        const message: Message = JSON.parse(event.data) as Message;
         if (state.kind === "start") {
             throw new Error("State.kind is start");
         }
-        const value: T = message.message.data as T;
-        state = {
-            ...state,
-            value,
-        };
-        updateSubscribers(state);
-    };
-
-    const updateSubscribers = (state: State & { kind: "ready" }) => {
-        state.subscribers.forEach((subscriber) => subscriber(state.value));
-    };
-
-    const removeSubscriber = (subscriber: MaybeSubscriber<T>) => {
-        state.subscribers.delete(subscriber);
-        // This could be an edge case, since we don't return to start, ever.
-        // So when someone subscribes and unsubscribes, that means a component
-        // or similar was unloaded prematurely. For this reason, we log that
-        // here until we gain some more insight on this issue.
-        if (state.kind === "start") {
-            console.log(
-                `Removed subscriber for ${collection} collection before store was ever initialized`,
-            );
-            return;
-        }
+        set(message.data as T);
     };
 
     const loadUuid = async (
         uuid: string,
         repositoryContext: RepositoryContext,
     ): Promise<T | undefined> => {
+        if (state.kind === "ready" && uuid !== state.uuid) {
+            // If we have already loaded a value:
+            // First, we update all subscribers and tell them the current value
+            // is undefined
+            set(undefined);
+        }
         // Fetch value early, since we need it either way
-        const value = await getter(uuid, repositoryContext);
+        const newValue = await getter(uuid, repositoryContext);
         // Then, when we find out we have already initialized for this uuid,
         // we can skip the queue and return early without cleaning up an
         // existing subscription.
         if (state.kind === "ready" && uuid === state.uuid) {
-            state = {
-                ...state,
-                value,
-            };
+            set(newValue);
         } else {
             // On the other hand, if the uuid is changing, we need to unsubscribe
             // and create a new sub, as follows:
@@ -179,7 +143,7 @@ export function createWsStore<T>(
             const unsubscriber = getSubscriptionForCollection(
                 collection,
                 uuid,
-                receiveWsMessage,
+                onMessage,
             );
             // Since further reloads are independent of any fetch (the data comes
             // from ws), we don't have to store the repositoryContext as part of
@@ -191,32 +155,14 @@ export function createWsStore<T>(
                 kind: "ready",
                 uuid,
                 unsubscriber,
-                value,
             };
         }
-        // Either way, we absolutely need to update our subscribers.
-        updateSubscribers(state);
+        set(newValue);
         // And the caller of this method is definitely waiting for their result
-        return value;
+        return newValue;
     };
 
-    return {
-        loadUuid,
-        subscribe(run: MaybeSubscriber<T>): Unsubscriber {
-            // This is surprisingly easy to implement!
-            // https://github.com/sveltejs/svelte/blob/8e76ef156e2bdd2a1e7a506a593c2d5f58c498b5/packages/svelte/src/runtime/store/index.js#L86
-            state.subscribers.add(run);
-            // If we have nothing, return undefined
-            run(state.kind === "ready" ? state.value : undefined);
-            return () => removeSubscriber(run);
-        },
-        unwrap(): T {
-            if (state.kind !== "ready") {
-                throw new Error("Store wasn't ready");
-            }
-            return unwrap(state.value, "Expected state.value to be present");
-        },
-    };
+    return { loadUuid, subscribe };
 }
 // Online connection
 
