@@ -33,7 +33,6 @@ from channels.db import (
 from channels.testing import (
     WebsocketCommunicator,
 )
-from rest_framework.exceptions import ValidationError
 
 from projectify.asgi import (
     websocket_application,
@@ -49,7 +48,6 @@ from ..models.const import TeamMemberRoles
 from ..models.label import Label
 from ..models.project import Project
 from ..models.section import Section
-from ..models.sub_task import SubTask
 from ..models.task import Task
 from ..models.team_member import TeamMember
 from ..models.workspace import Workspace
@@ -68,7 +66,7 @@ from ..services.section import (
     section_move,
     section_update,
 )
-from ..services.sub_task import sub_task_create, sub_task_update_many
+from ..services.sub_task import sub_task_update_many
 from ..services.task import (
     task_create,
     task_create_nested,
@@ -130,35 +128,21 @@ async def workspace(user: User) -> AsyncIterable[Workspace]:
         seats=10,
     )
     yield workspace
-    try:
-        await workspace.arefresh_from_db()
-        await database_sync_to_async(workspace_delete)(
-            who=user, workspace=workspace
-        )
-    except Workspace.DoesNotExist:
-        pass
+    await database_sync_to_async(workspace_delete)(
+        who=user, workspace=workspace
+    )
 
 
 @pytest.fixture
-async def team_member(
-    workspace: Workspace, user: User
-) -> AsyncIterable[TeamMember]:
+async def team_member(workspace: Workspace, user: User) -> TeamMember:
     """Return team member with owner status."""
     team_member = await database_sync_to_async(team_member_find_for_workspace)(
         workspace=workspace, user=user
     )
     assert team_member
     team_member.user = user
-    yield team_member
-    try:
-        await team_member.arefresh_from_db()
-        await database_sync_to_async(team_member_delete)(
-            who=user, team_member=team_member
-        )
-    except TeamMember.DoesNotExist:
-        pass
-    except ValidationError:
-        pass
+    return team_member
+    # No delete necessary, it will be deleted as part of the workspace
 
 
 @pytest.fixture
@@ -172,13 +156,9 @@ async def project(
         workspace=workspace,
     )
     yield project
-    try:
-        await project.arefresh_from_db()
-        await database_sync_to_async(project_delete)(
-            who=team_member.user, project=project
-        )
-    except Project.DoesNotExist:
-        pass
+    await database_sync_to_async(project_delete)(
+        who=team_member.user, project=project
+    )
 
 
 @pytest.fixture
@@ -192,13 +172,9 @@ async def section(
         title="I am a section",
     )
     yield section
-    try:
-        await section.arefresh_from_db()
-        await database_sync_to_async(section_delete)(
-            who=team_member.user, section=section
-        )
-    except Section.DoesNotExist:
-        pass
+    await database_sync_to_async(section_delete)(
+        who=team_member.user, section=section
+    )
 
 
 @pytest.fixture
@@ -214,13 +190,7 @@ async def task(
         title="I am a task",
     )
     yield task
-    try:
-        await task.arefresh_from_db()
-        await database_sync_to_async(task_delete)(
-            who=team_member.user, task=task
-        )
-    except Task.DoesNotExist:
-        pass
+    await database_sync_to_async(task_delete)(who=team_member.user, task=task)
 
 
 @pytest.fixture
@@ -235,29 +205,9 @@ async def label(
         name="don't care",
     )
     yield label
-    try:
-        await label.arefresh_from_db()
-        await database_sync_to_async(label_delete)(
-            who=team_member.user, label=label
-        )
-    except Label.DoesNotExist:
-        pass
-
-
-@pytest.fixture
-async def sub_task(
-    task: Task, team_member: TeamMember
-) -> AsyncIterable[SubTask]:
-    """Create sub task."""
-    sub_task = await database_sync_to_async(sub_task_create)(
-        task=task, who=team_member.user, title="don't care", done=False
+    await database_sync_to_async(label_delete)(
+        who=team_member.user, label=label
     )
-    yield sub_task
-    try:
-        await sub_task.arefresh_from_db()
-        await database_sync_to_async(sub_task.delete)()
-    except SubTask.DoesNotExist:
-        pass
 
 
 HasUuid = Union[Workspace, Project, Task]
@@ -363,10 +313,8 @@ class TestWorkspace:
             title="A new hope",
         )
         assert await expect_message(workspace_communicator, workspace)
-
         await database_sync_to_async(workspace_delete)(
-            who=team_member.user,
-            workspace=workspace,
+            who=team_member.user, workspace=workspace
         )
         await clean_up_communicator(workspace_communicator)
 
@@ -530,7 +478,6 @@ class TestSection:
         )
         assert await expect_message(project_communicator, project)
 
-        # XXX Might be able to disconnect after project_delete as well
         await project_communicator.disconnect()
 
 
@@ -678,11 +625,20 @@ class TestSubTask:
         team_member: TeamMember,
         project: Project,
         task: Task,
-        sub_task: SubTask,
         project_communicator: WebsocketCommunicator,
         task_communicator: WebsocketCommunicator,
     ) -> None:
         """Test that project and task consumer fire."""
+        # Simulate adding a task
+        (sub_task,) = await database_sync_to_async(sub_task_update_many)(
+            who=team_member.user,
+            task=task,
+            sub_tasks=[],
+            create_sub_tasks=[
+                {"title": "to do", "done": False, "_order": 0},
+            ],
+            update_sub_tasks=[],
+        )
         # Simulate editing a task
         await database_sync_to_async(sub_task_update_many)(
             who=team_member.user,
@@ -711,17 +667,6 @@ class TestSubTask:
         )
         assert await expect_message(project_communicator, project)
         assert await expect_message(task_communicator, task)
-
-        # Simulate adding a task
-        await database_sync_to_async(sub_task_update_many)(
-            who=team_member.user,
-            task=task,
-            sub_tasks=[],
-            create_sub_tasks=[
-                {"title": "to do", "done": False, "_order": 0},
-            ],
-            update_sub_tasks=[],
-        )
         assert await expect_message(project_communicator, project)
         assert await expect_message(task_communicator, task)
 
