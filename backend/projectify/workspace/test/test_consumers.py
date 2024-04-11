@@ -320,14 +320,12 @@ class TestTeamMember:
     async def test_team_member_life_cycle(
         self,
         user: User,
+        other_user: User,
         workspace: Workspace,
         team_member: TeamMember,
         workspace_communicator: WebsocketCommunicator,
     ) -> None:
         """Test signal firing on team member save or delete."""
-        other_user = await database_sync_to_async(user_create)(
-            email="hello-world@example.com"
-        )
         # New team member
         other_team_member = await database_sync_to_async(
             team_member_invite_create
