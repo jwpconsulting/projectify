@@ -447,9 +447,6 @@ class TestProject:
         assert e.match("Not connected: 404")
 
         await database_sync_to_async(project_delete)(who=user, project=project)
-        await database_sync_to_async(workspace_delete)(
-            who=user, workspace=workspace
-        )
 
     async def test_project_life_cycle(
         self,
@@ -497,10 +494,6 @@ class TestProject:
         await clean_up_communicator(workspace_communicator)
         await clean_up_communicator(project_communicator)
 
-        await database_sync_to_async(workspace_delete)(
-            who=user, workspace=workspace
-        )
-
 
 class TestSection:
     """Test section behavior."""
@@ -547,10 +540,6 @@ class TestSection:
 
         # XXX Might be able to disconnect after project_delete as well
         await project_communicator.disconnect()
-        await database_sync_to_async(project_delete)(who=user, project=project)
-        await database_sync_to_async(workspace_delete)(
-            who=user, workspace=workspace
-        )
 
 
 class TestLabel:
@@ -599,31 +588,13 @@ class TestTask:
 
     async def test_not_found(
         self,
-        user: User,
         other_user: User,
-        section: Section,
-        project: Project,
-        team_member: TeamMember,
-        workspace: Workspace,
+        task: Task,
     ) -> None:
         """Test we can't connect to an unrelated task's consumer."""
-        del team_member
-        task = await database_sync_to_async(task_create_nested)(
-            who=user,
-            section=section,
-            title="A task",
-            sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
-            labels=[],
-        )
         with pytest.raises(Exception) as e:
             await make_communicator(task, other_user)
         assert e.match("Not connected: 404")
-        await database_sync_to_async(task_delete)(who=user, task=task)
-        await database_sync_to_async(section_delete)(who=user, section=section)
-        await database_sync_to_async(project_delete)(who=user, project=project)
-        await database_sync_to_async(workspace_delete)(
-            who=user, workspace=workspace
-        )
 
     async def test_task_life_cycle(
         self,
@@ -678,12 +649,6 @@ class TestTask:
         # Ideally, a task consumer will disconnect when a task is deleted
         await clean_up_communicator(task_communicator)
 
-        await database_sync_to_async(section_delete)(who=user, section=section)
-        await database_sync_to_async(project_delete)(who=user, project=project)
-        await database_sync_to_async(workspace_delete)(
-            who=user, workspace=workspace
-        )
-
 
 class TestTaskLabel:
     """Test consumer behavior for task labels."""
@@ -725,9 +690,6 @@ class TestTaskLabel:
 
         await project_communicator.disconnect()
         await task_communicator.disconnect()
-
-        await database_sync_to_async(section_delete)(who=user, section=section)
-        await database_sync_to_async(project_delete)(who=user, project=project)
 
 
 class TestSubTask:
@@ -791,26 +753,12 @@ class TestSubTask:
         await project_communicator.disconnect()
         await task_communicator.disconnect()
 
-        await database_sync_to_async(task_delete)(who=user, task=task)
-        await database_sync_to_async(section_delete)(who=user, section=section)
-        await database_sync_to_async(project_delete)(who=user, project=project)
-        await database_sync_to_async(workspace_delete)(
-            who=user, workspace=workspace
-        )
-
 
 class TestChatMessage:
     """Test consumer behavior for chat messages."""
 
     async def test_chat_message_saved_or_deleted(
-        self,
-        user: User,
-        workspace: Workspace,
-        team_member: TeamMember,
-        project: Project,
-        section: Section,
-        task: Task,
-        task_communicator: WebsocketCommunicator,
+        self, user: User, task: Task, task_communicator: WebsocketCommunicator
     ) -> None:
         """Assert event is fired when chat message is saved or deleted."""
         await database_sync_to_async(chat_message_create)(
@@ -823,9 +771,3 @@ class TestChatMessage:
         # so no chat_message_delete service exists, and we don't have to delete
         # it either
         await task_communicator.disconnect()
-        await database_sync_to_async(task_delete)(who=user, task=task)
-        await database_sync_to_async(section_delete)(who=user, section=section)
-        await database_sync_to_async(project_delete)(who=user, project=project)
-        await database_sync_to_async(workspace_delete)(
-            who=user, workspace=workspace
-        )
