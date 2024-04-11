@@ -158,6 +158,16 @@ export function createWsStore<T>(
         uuid: string,
         repositoryContext: RepositoryContext,
     ): Promise<T | undefined> => {
+        if (state.kind === "ready" && uuid !== state.uuid) {
+            // If we have already loaded a value:
+            // First, we update all subscribers and tell them the current value
+            // is undefined
+            state = {
+                ...state,
+                value: undefined,
+            };
+            updateSubscribers(state);
+        }
         // Fetch value early, since we need it either way
         const value = await getter(uuid, repositoryContext);
         // Then, when we find out we have already initialized for this uuid,
