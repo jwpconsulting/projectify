@@ -148,6 +148,7 @@ async def team_member(
         workspace=workspace, user=user
     )
     assert team_member
+    team_member.user = user
     yield team_member
     try:
         await team_member.arefresh_from_db()
@@ -161,83 +162,95 @@ async def team_member(
 
 
 @pytest.fixture
-async def project(workspace: Workspace, user: User) -> AsyncIterable[Project]:
+async def project(
+    workspace: Workspace, team_member: TeamMember
+) -> AsyncIterable[Project]:
     """Create project."""
     project = await database_sync_to_async(project_create)(
-        who=user,
+        who=team_member.user,
         title="Don't care",
         workspace=workspace,
     )
     yield project
     try:
         await project.arefresh_from_db()
-        await database_sync_to_async(project_delete)(who=user, project=project)
+        await database_sync_to_async(project_delete)(
+            who=team_member.user, project=project
+        )
     except Project.DoesNotExist:
         pass
 
 
 @pytest.fixture
 async def section(
-    project: Project,
-    user: User,
+    project: Project, team_member: TeamMember
 ) -> AsyncIterable[Section]:
     """Create section."""
     section = await database_sync_to_async(section_create)(
         project=project,
-        who=user,
+        who=team_member.user,
         title="I am a section",
     )
     yield section
     try:
         await section.arefresh_from_db()
-        await database_sync_to_async(section_delete)(who=user, section=section)
+        await database_sync_to_async(section_delete)(
+            who=team_member.user, section=section
+        )
     except Section.DoesNotExist:
         pass
 
 
 @pytest.fixture
 async def task(
-    user: User,
     section: Section,
     team_member: TeamMember,
 ) -> AsyncIterable[Task]:
     """Create task."""
     task = await database_sync_to_async(task_create)(
         section=section,
-        who=user,
+        who=team_member.user,
         assignee=team_member,
         title="I am a task",
     )
     yield task
     try:
         await task.arefresh_from_db()
-        await database_sync_to_async(task_delete)(who=user, task=task)
+        await database_sync_to_async(task_delete)(
+            who=team_member.user, task=task
+        )
     except Task.DoesNotExist:
         pass
 
 
 @pytest.fixture
-async def label(workspace: Workspace, user: User) -> AsyncIterable[Label]:
+async def label(
+    workspace: Workspace, team_member: TeamMember
+) -> AsyncIterable[Label]:
     """Create a label."""
     label = await database_sync_to_async(label_create)(
         workspace=workspace,
-        who=user,
+        who=team_member.user,
         color=0,
         name="don't care",
     )
     yield label
     try:
         await label.arefresh_from_db()
-        await database_sync_to_async(label_delete)(who=user, label=label)
+        await database_sync_to_async(label_delete)(
+            who=team_member.user, label=label
+        )
     except Label.DoesNotExist:
         pass
 
 
 @pytest.fixture
-async def sub_task(task: Task, user: User) -> AsyncIterable[SubTask]:
+async def sub_task(
+    task: Task, team_member: TeamMember
+) -> AsyncIterable[SubTask]:
     """Create sub task."""
     sub_task = await database_sync_to_async(sub_task_create)(
-        task=task, who=user, title="don't care", done=False
+        task=task, who=team_member.user, title="don't care", done=False
     )
     yield sub_task
     try:
@@ -322,39 +335,37 @@ async def task_communicator(task: Task, user: User) -> WebsocketCommunicator:
 class TestWorkspace:
     """Test consumer behavior for Workspace changes."""
 
-    async def test_not_found(self, user: User, other_user: User) -> None:
+    async def test_not_found(
+        self, workspace: Workspace, other_user: User
+    ) -> None:
         """Test we can't connect to an unrelated workspace's consumer."""
-        workspace = await database_sync_to_async(workspace_create)(
-            owner=user, title="A workspace"
-        )
         with pytest.raises(Exception) as e:
             await make_communicator(workspace, other_user)
         assert e.match("Not connected: 404")
-        await database_sync_to_async(workspace_delete)(
-            who=user, workspace=workspace
-        )
 
     async def test_workspace_life_cycle(
         self,
-        user: User,
+        team_member: TeamMember,
     ) -> None:
         """Test signal firing on workspace change."""
         workspace = await database_sync_to_async(workspace_create)(
-            owner=user,
+            owner=team_member.user,
             title="A workspace",
         )
 
-        workspace_communicator = await make_communicator(workspace, user)
+        workspace_communicator = await make_communicator(
+            workspace, team_member.user
+        )
 
         await database_sync_to_async(workspace_update)(
             workspace=workspace,
-            who=user,
+            who=team_member.user,
             title="A new hope",
         )
         assert await expect_message(workspace_communicator, workspace)
 
         await database_sync_to_async(workspace_delete)(
-            who=user,
+            who=team_member.user,
             workspace=workspace,
         )
         await clean_up_communicator(workspace_communicator)
@@ -365,7 +376,6 @@ class TestTeamMember:
 
     async def test_team_member_life_cycle(
         self,
-        user: User,
         other_user: User,
         workspace: Workspace,
         team_member: TeamMember,
@@ -378,14 +388,14 @@ class TestTeamMember:
         )(
             workspace=workspace,
             email_or_user=other_user,
-            who=user,
+            who=team_member.user,
         )
         assert isinstance(other_team_member, TeamMember)
         await expect_message(workspace_communicator, workspace)
         # Team member updated
         await database_sync_to_async(team_member_update)(
             team_member=other_team_member,
-            who=user,
+            who=team_member.user,
             role=TeamMemberRoles.OBSERVER,
         )
         await expect_message(workspace_communicator, workspace)
@@ -395,7 +405,7 @@ class TestTeamMember:
         # Team member deleted (delete initial ws user as well)
         await database_sync_to_async(team_member_delete)(
             team_member=other_team_member,
-            who=user,
+            who=team_member.user,
         )
         await expect_message(workspace_communicator, workspace)
 
@@ -403,7 +413,7 @@ class TestTeamMember:
         await database_sync_to_async(team_member_invite_create)(
             workspace=workspace,
             email_or_user="doesnotexist@example.com",
-            who=user,
+            who=team_member.user,
         )
         await expect_message(workspace_communicator, workspace)
 
@@ -411,15 +421,9 @@ class TestTeamMember:
         await database_sync_to_async(team_member_invite_delete)(
             workspace=workspace,
             email="doesnotexist@example.com",
-            who=user,
+            who=team_member.user,
         )
         await expect_message(workspace_communicator, workspace)
-
-        # With only one remaining user, we call workspace_delete instead
-        await database_sync_to_async(workspace_delete)(
-            workspace=workspace,
-            who=user,
-        )
         # Before we would expect a message here, but now we disconnect when a
         # workspace is deleted
         await clean_up_communicator(workspace_communicator)
@@ -431,26 +435,14 @@ class TestTeamMember:
 class TestProject:
     """Test consumer behavior for Project changes."""
 
-    async def test_not_found(
-        self,
-        workspace: Workspace,
-        user: User,
-        other_user: User,
-        team_member: TeamMember,
-    ) -> None:
+    async def test_not_found(self, other_user: User, project: Project) -> None:
         """Test we can't connect to an unrelated project's consumer."""
-        project = await database_sync_to_async(project_create)(
-            who=user, workspace=workspace, title=""
-        )
         with pytest.raises(Exception) as e:
             await make_communicator(project, other_user)
         assert e.match("Not connected: 404")
 
-        await database_sync_to_async(project_delete)(who=user, project=project)
-
     async def test_project_life_cycle(
         self,
-        user: User,
         workspace: Workspace,
         team_member: TeamMember,
         workspace_communicator: WebsocketCommunicator,
@@ -458,18 +450,20 @@ class TestProject:
         """Test workspace / board consumer behavior for board changes."""
         # Create
         project = await database_sync_to_async(project_create)(
-            who=user,
+            who=team_member.user,
             workspace=workspace,
             title="It's time to chew bubble gum and write Django",
             description="And I'm all out of Django",
         )
         assert await expect_message(workspace_communicator, workspace)
 
-        project_communicator = await make_communicator(project, user)
+        project_communicator = await make_communicator(
+            project, team_member.user
+        )
 
         # Update
         await database_sync_to_async(project_update)(
-            who=user,
+            who=team_member.user,
             project=project,
             title="don't care",
         )
@@ -478,7 +472,7 @@ class TestProject:
 
         # Archive
         await database_sync_to_async(project_archive)(
-            who=user,
+            who=team_member.user,
             project=project,
             archived=True,
         )
@@ -486,7 +480,7 @@ class TestProject:
 
         # Delete
         await database_sync_to_async(project_delete)(
-            who=user,
+            who=team_member.user,
             project=project,
         )
         assert await expect_message(workspace_communicator, workspace)
@@ -500,8 +494,6 @@ class TestSection:
 
     async def test_section_life_cycle(
         self,
-        user: User,
-        workspace: Workspace,
         team_member: TeamMember,
         project: Project,
         project_communicator: WebsocketCommunicator,
@@ -509,7 +501,7 @@ class TestSection:
         """Test project consumer behavior for section changes."""
         # Create it
         section = await database_sync_to_async(section_create)(
-            who=user,
+            who=team_member.user,
             title="A section",
             project=project,
         )
@@ -517,7 +509,7 @@ class TestSection:
 
         # Update it
         await database_sync_to_async(section_update)(
-            who=user,
+            who=team_member.user,
             section=section,
             title="Title has changed",
         )
@@ -525,7 +517,7 @@ class TestSection:
 
         # Move it
         await database_sync_to_async(section_move)(
-            who=user,
+            who=team_member.user,
             section=section,
             order=0,
         )
@@ -533,7 +525,7 @@ class TestSection:
 
         # Delete it
         await database_sync_to_async(section_delete)(
-            who=user,
+            who=team_member.user,
             section=section,
         )
         assert await expect_message(project_communicator, project)
@@ -549,13 +541,12 @@ class TestLabel:
         self,
         workspace: Workspace,
         team_member: TeamMember,
-        user: User,
         workspace_communicator: WebsocketCommunicator,
     ) -> None:
         """Test that workspace consumer fires on label changes."""
         # Create
         label = await database_sync_to_async(label_create)(
-            who=user,
+            who=team_member.user,
             workspace=workspace,
             color=0,
             name="hello",
@@ -563,7 +554,7 @@ class TestLabel:
         assert await expect_message(workspace_communicator, workspace)
         # Update
         await database_sync_to_async(label_update)(
-            who=user,
+            who=team_member.user,
             label=label,
             color=1,
             name="updated",
@@ -572,25 +563,17 @@ class TestLabel:
 
         # Delete
         await database_sync_to_async(label_delete)(
-            who=user,
+            who=team_member.user,
             label=label,
         )
         assert await expect_message(workspace_communicator, workspace)
-
-        await database_sync_to_async(workspace_delete)(
-            who=user, workspace=workspace
-        )
         await workspace_communicator.disconnect()
 
 
 class TestTask:
     """Test consumer behavior for tasks."""
 
-    async def test_not_found(
-        self,
-        other_user: User,
-        task: Task,
-    ) -> None:
+    async def test_not_found(self, other_user: User, task: Task) -> None:
         """Test we can't connect to an unrelated task's consumer."""
         with pytest.raises(Exception) as e:
             await make_communicator(task, other_user)
@@ -598,8 +581,6 @@ class TestTask:
 
     async def test_task_life_cycle(
         self,
-        user: User,
-        workspace: Workspace,
         team_member: TeamMember,
         project: Project,
         section: Section,
@@ -608,7 +589,7 @@ class TestTask:
         """Test that board and task consumer fire."""
         # Create
         task = await database_sync_to_async(task_create_nested)(
-            who=user,
+            who=team_member.user,
             section=section,
             title="A task",
             sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
@@ -616,11 +597,11 @@ class TestTask:
         )
         assert await expect_message(project_communicator, project)
 
-        task_communicator = await make_communicator(task, user)
+        task_communicator = await make_communicator(task, team_member.user)
 
         # Update
         await database_sync_to_async(task_update_nested)(
-            who=user,
+            who=team_member.user,
             task=task,
             title="A task",
             sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
@@ -631,7 +612,7 @@ class TestTask:
 
         # Move
         await database_sync_to_async(task_move_after)(
-            who=user,
+            who=team_member.user,
             task=task,
             after=section,
         )
@@ -640,7 +621,7 @@ class TestTask:
 
         # Delete
         await database_sync_to_async(task_delete)(
-            who=user,
+            who=team_member.user,
             task=task,
         )
         assert await expect_message(project_communicator, project)
@@ -655,12 +636,9 @@ class TestTaskLabel:
 
     async def test_label_added_or_removed(
         self,
-        user: User,
-        workspace: Workspace,
         team_member: TeamMember,
         label: Label,
         project: Project,
-        section: Section,
         task: Task,
         project_communicator: WebsocketCommunicator,
         task_communicator: WebsocketCommunicator,
@@ -668,7 +646,7 @@ class TestTaskLabel:
         """Test that project and task consumer fire."""
         # Add label
         await database_sync_to_async(task_update_nested)(
-            who=user,
+            who=team_member.user,
             task=task,
             title=task.title,
             labels=[label],
@@ -679,7 +657,7 @@ class TestTaskLabel:
 
         # Remove label
         await database_sync_to_async(task_update_nested)(
-            who=user,
+            who=team_member.user,
             task=task,
             title=task.title,
             labels=[],
@@ -697,11 +675,8 @@ class TestSubTask:
 
     async def test_sub_task_saved_or_deleted_project(
         self,
-        user: User,
-        workspace: Workspace,
         team_member: TeamMember,
         project: Project,
-        section: Section,
         task: Task,
         sub_task: SubTask,
         project_communicator: WebsocketCommunicator,
@@ -710,7 +685,7 @@ class TestSubTask:
         """Test that project and task consumer fire."""
         # Simulate editing a task
         await database_sync_to_async(sub_task_update_many)(
-            who=user,
+            who=team_member.user,
             task=task,
             sub_tasks=[sub_task],
             create_sub_tasks=[],
@@ -728,7 +703,7 @@ class TestSubTask:
 
         # Simulate removing a task
         await database_sync_to_async(sub_task_update_many)(
-            who=user,
+            who=team_member.user,
             task=task,
             sub_tasks=[sub_task],
             create_sub_tasks=[],
@@ -739,7 +714,7 @@ class TestSubTask:
 
         # Simulate adding a task
         await database_sync_to_async(sub_task_update_many)(
-            who=user,
+            who=team_member.user,
             task=task,
             sub_tasks=[],
             create_sub_tasks=[
@@ -758,11 +733,14 @@ class TestChatMessage:
     """Test consumer behavior for chat messages."""
 
     async def test_chat_message_saved_or_deleted(
-        self, user: User, task: Task, task_communicator: WebsocketCommunicator
+        self,
+        team_member: TeamMember,
+        task: Task,
+        task_communicator: WebsocketCommunicator,
     ) -> None:
         """Assert event is fired when chat message is saved or deleted."""
         await database_sync_to_async(chat_message_create)(
-            who=user,
+            who=team_member.user,
             task=task,
             text="Hello world",
         )
