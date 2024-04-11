@@ -151,9 +151,7 @@ async def project(
 ) -> AsyncIterable[Project]:
     """Create project."""
     project = await database_sync_to_async(project_create)(
-        who=team_member.user,
-        title="Don't care",
-        workspace=workspace,
+        who=team_member.user, title="Don't care", workspace=workspace
     )
     yield project
     await database_sync_to_async(project_delete)(
@@ -167,9 +165,7 @@ async def section(
 ) -> AsyncIterable[Section]:
     """Create section."""
     section = await database_sync_to_async(section_create)(
-        project=project,
-        who=team_member.user,
-        title="I am a section",
+        project=project, who=team_member.user, title="I am a section"
     )
     yield section
     await database_sync_to_async(section_delete)(
@@ -199,10 +195,7 @@ async def label(
 ) -> AsyncIterable[Label]:
     """Create a label."""
     label = await database_sync_to_async(label_create)(
-        workspace=workspace,
-        who=team_member.user,
-        color=0,
-        name="don't care",
+        workspace=workspace, who=team_member.user, color=0, name="don't care"
     )
     yield label
     await database_sync_to_async(label_delete)(
@@ -299,8 +292,7 @@ class TestWorkspace:
     ) -> None:
         """Test signal firing on workspace change."""
         workspace = await database_sync_to_async(workspace_create)(
-            owner=team_member.user,
-            title="A workspace",
+            owner=team_member.user, title="A workspace"
         )
 
         workspace_communicator = await make_communicator(
@@ -308,9 +300,7 @@ class TestWorkspace:
         )
 
         await database_sync_to_async(workspace_update)(
-            workspace=workspace,
-            who=team_member.user,
-            title="A new hope",
+            workspace=workspace, who=team_member.user, title="A new hope"
         )
         assert await expect_message(workspace_communicator, workspace)
         await database_sync_to_async(workspace_delete)(
@@ -333,11 +323,7 @@ class TestTeamMember:
         # New team member
         other_team_member = await database_sync_to_async(
             team_member_invite_create
-        )(
-            workspace=workspace,
-            email_or_user=other_user,
-            who=team_member.user,
-        )
+        )(workspace=workspace, email_or_user=other_user, who=team_member.user)
         assert isinstance(other_team_member, TeamMember)
         await expect_message(workspace_communicator, workspace)
         # Team member updated
@@ -352,8 +338,7 @@ class TestTeamMember:
 
         # Team member deleted (delete initial ws user as well)
         await database_sync_to_async(team_member_delete)(
-            team_member=other_team_member,
-            who=team_member.user,
+            team_member=other_team_member, who=team_member.user
         )
         await expect_message(workspace_communicator, workspace)
 
@@ -411,25 +396,20 @@ class TestProject:
 
         # Update
         await database_sync_to_async(project_update)(
-            who=team_member.user,
-            project=project,
-            title="don't care",
+            who=team_member.user, project=project, title="don't care"
         )
         assert await expect_message(project_communicator, project)
         assert await expect_message(workspace_communicator, workspace)
 
         # Archive
         await database_sync_to_async(project_archive)(
-            who=team_member.user,
-            project=project,
-            archived=True,
+            who=team_member.user, project=project, archived=True
         )
         assert await expect_message(workspace_communicator, workspace)
 
         # Delete
         await database_sync_to_async(project_delete)(
-            who=team_member.user,
-            project=project,
+            who=team_member.user, project=project
         )
         assert await expect_message(workspace_communicator, workspace)
 
@@ -449,32 +429,25 @@ class TestSection:
         """Test project consumer behavior for section changes."""
         # Create it
         section = await database_sync_to_async(section_create)(
-            who=team_member.user,
-            title="A section",
-            project=project,
+            who=team_member.user, title="A section", project=project
         )
         assert await expect_message(project_communicator, project)
 
         # Update it
         await database_sync_to_async(section_update)(
-            who=team_member.user,
-            section=section,
-            title="Title has changed",
+            who=team_member.user, section=section, title="Title has changed"
         )
         assert await expect_message(project_communicator, project)
 
         # Move it
         await database_sync_to_async(section_move)(
-            who=team_member.user,
-            section=section,
-            order=0,
+            who=team_member.user, section=section, order=0
         )
         assert await expect_message(project_communicator, project)
 
         # Delete it
         await database_sync_to_async(section_delete)(
-            who=team_member.user,
-            section=section,
+            who=team_member.user, section=section
         )
         assert await expect_message(project_communicator, project)
 
@@ -493,25 +466,18 @@ class TestLabel:
         """Test that workspace consumer fires on label changes."""
         # Create
         label = await database_sync_to_async(label_create)(
-            who=team_member.user,
-            workspace=workspace,
-            color=0,
-            name="hello",
+            who=team_member.user, workspace=workspace, color=0, name="hello"
         )
         assert await expect_message(workspace_communicator, workspace)
         # Update
         await database_sync_to_async(label_update)(
-            who=team_member.user,
-            label=label,
-            color=1,
-            name="updated",
+            who=team_member.user, label=label, color=1, name="updated"
         )
         assert await expect_message(workspace_communicator, workspace)
 
         # Delete
         await database_sync_to_async(label_delete)(
-            who=team_member.user,
-            label=label,
+            who=team_member.user, label=label
         )
         assert await expect_message(workspace_communicator, workspace)
         await workspace_communicator.disconnect()
@@ -685,9 +651,7 @@ class TestChatMessage:
     ) -> None:
         """Assert event is fired when chat message is saved or deleted."""
         await database_sync_to_async(chat_message_create)(
-            who=team_member.user,
-            task=task,
-            text="Hello world",
+            who=team_member.user, task=task, text="Hello world"
         )
         assert await expect_message(task_communicator, task)
         # TODO chat messages are not supported right now,
