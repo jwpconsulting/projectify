@@ -37,7 +37,7 @@ from asgiref.sync import async_to_sync as _async_to_sync
 from channels.generic.websocket import (
     JsonWebsocketConsumer,
 )
-from rest_framework import serializers
+from rest_framework import serializers, status
 
 from projectify.user.models import User
 
@@ -60,8 +60,6 @@ from .serializers.workspace import WorkspaceDetailSerializer
 from .types import ConsumerEvent, Message
 
 logger = logging.getLogger(__name__)
-
-CODE_OBJECT_DISAPPEARED = 404
 
 async_to_sync = cast(Any, _async_to_sync)
 
@@ -92,13 +90,18 @@ class BaseConsumer(JsonWebsocketConsumer, metaclass=ABCMeta):
     def connect(self) -> None:
         """Handle connect."""
         self.user = self.scope["user"]
-        if self.user.is_anonymous:
-            self.close(403)
-            return
         self.uuid = self.scope["url_route"]["kwargs"]["uuid"]
-        if self.get_object(self.user, self.uuid) is None:
-            self.close(404)
+
+        if self.user.is_anonymous:
+            logger.debug("Anonymous user tried to access %s", self.uuid)
+            self.close(status.HTTP_403_FORBIDDEN)
             return
+
+        if self.get_object(self.user, self.uuid) is None:
+            logger.debug("No object found for uuid %s", self.uuid)
+            self.close(status.HTTP_404_NOT_FOUND)
+            return
+
         self.accept()
         async_to_sync(self.channel_layer.group_add)(
             self.get_group_name(),
@@ -150,7 +153,7 @@ class WorkspaceConsumer(BaseConsumer):
         )
 
         if workspace is None:
-            self.disconnect(close_code=CODE_OBJECT_DISAPPEARED)
+            self.close(status.HTTP_410_GONE)
             return
 
         workspace.quota = workspace_get_all_quotas(workspace)
@@ -182,7 +185,7 @@ class ProjectConsumer(BaseConsumer):
         )
 
         if project is None:
-            self.disconnect(close_code=CODE_OBJECT_DISAPPEARED)
+            self.close(status.HTTP_410_GONE)
             return
 
         serialized = serialize(ProjectDetailSerializer, project, event)
@@ -208,7 +211,7 @@ class TaskConsumer(BaseConsumer):
         )
 
         if task is None:
-            self.disconnect(close_code=CODE_OBJECT_DISAPPEARED)
+            self.close(status.HTTP_410_GONE)
             return
 
         serialized = serialize(TaskDetailSerializer, task, event)
