@@ -90,13 +90,18 @@ class BaseConsumer(JsonWebsocketConsumer, metaclass=ABCMeta):
     def connect(self) -> None:
         """Handle connect."""
         self.user = self.scope["user"]
+        self.uuid = self.scope["url_route"]["kwargs"]["uuid"]
+
         if self.user.is_anonymous:
+            logger.debug("Anonymous user tried to access %s", self.uuid)
             self.close(status.HTTP_403_FORBIDDEN)
             return
-        self.uuid = self.scope["url_route"]["kwargs"]["uuid"]
+
         if self.get_object(self.user, self.uuid) is None:
+            logger.debug("No object found for uuid %s", self.uuid)
             self.close(status.HTTP_404_NOT_FOUND)
             return
+
         self.accept()
         async_to_sync(self.channel_layer.group_add)(
             self.get_group_name(),
