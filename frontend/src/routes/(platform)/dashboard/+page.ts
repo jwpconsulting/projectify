@@ -31,7 +31,7 @@ export async function load({ fetch }: PageLoadEvent): Promise<void> {
         selectedWorkspaceUuid.subscribe,
     );
     if (maybeWorkspaceUuid) {
-        redirect(302, getDashboardWorkspaceUrl(maybeWorkspaceUuid));
+        redirect(302, getDashboardWorkspaceUrl({uuid: maybeWorkspaceUuid}));
     }
     const workspaces = await currentWorkspaces.load({ fetch });
     if (!workspaces) {
@@ -42,6 +42,6 @@ export async function load({ fetch }: PageLoadEvent): Promise<void> {
     if (workspace === undefined) {
         redirect(302, startUrl);
     } else {
-        redirect(302, getDashboardWorkspaceUrl(workspace.uuid));
+        redirect(302, getDashboardWorkspaceUrl(workspace));
     }
 }

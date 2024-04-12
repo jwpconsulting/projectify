@@ -16,16 +16,15 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import type { SettingKind } from "$lib/types/dashboard";
-import type { Project, Section } from "$lib/types/workspace";
+import type { Project, Section, Workspace } from "$lib/types/workspace";
 
 // This will be shown every time we suggest the user to go "back to home"
 // or similar
 export const backToHomeUrl = "/";
 
 // TODO put me into dashboard urls
-// TODO accept workspace directly
-export function getDashboardWorkspaceUrl(workspaceUuid: string) {
-    return `/dashboard/workspace/${workspaceUuid}`;
+export function getDashboardWorkspaceUrl({ uuid }: Pick<Workspace, "uuid">) {
+    return `/dashboard/workspace/${uuid}`;
 }
 
 // TODO put me into dashboard urls
