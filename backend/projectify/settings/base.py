@@ -88,6 +88,7 @@ class Base(Configuration):
 
     # CORS
     CORS_ALLOW_CREDENTIALS = True
+    CORS_ALLOWED_ORIGINS: Optional[Sequence[str]]
 
     # Installed applications
     # Applications from Django project
