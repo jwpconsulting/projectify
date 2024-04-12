@@ -32,10 +32,11 @@ from channels.routing import (
     ProtocolTypeRouter,
     URLRouter,
 )
-from channels.security.websocket import AllowedHostsOriginValidator
 from configurations.asgi import (
     get_asgi_application,
 )
+
+from projectify.middleware import CsrfTrustedOriginsOriginValidator
 
 # TODO still needed? We should just let the server crash when this env var is
 # unset
@@ -51,7 +52,7 @@ from .urls import (  # noqa: E402
     websocket_urlpatterns,
 )
 
-websocket_application = AllowedHostsOriginValidator(
+websocket_application = CsrfTrustedOriginsOriginValidator(
     AuthMiddlewareStack(URLRouter(websocket_urlpatterns))
 )
 
