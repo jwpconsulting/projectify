@@ -31,6 +31,5 @@ export async function load({
     if (!section) {
         error(404);
     }
-    const project = section.project;
-    redirect(302, getDashboardProjectUrl(project));
+    redirect(302, getDashboardProjectUrl(section.project));
 }
