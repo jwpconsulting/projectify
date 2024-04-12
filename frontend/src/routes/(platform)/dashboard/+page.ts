@@ -31,7 +31,7 @@ export async function load({ fetch }: PageLoadEvent): Promise<void> {
         selectedWorkspaceUuid.subscribe,
     );
     if (maybeWorkspaceUuid) {
-        redirect(302, getDashboardWorkspaceUrl({uuid: maybeWorkspaceUuid}));
+        redirect(302, getDashboardWorkspaceUrl({ uuid: maybeWorkspaceUuid }));
     }
     const workspaces = await currentWorkspaces.load({ fetch });
     if (!workspaces) {

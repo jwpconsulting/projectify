@@ -38,15 +38,17 @@ export function getDashboardSectionUrl({ uuid }: Pick<Section, "uuid">) {
 }
 
 // TODO put me into dashboard urls
-// TODO accept workspace directly
-export function getSettingsUrl(workspaceUuid: string, kind: SettingKind) {
+export function getSettingsUrl(
+    { uuid }: Pick<Workspace, "uuid">,
+    kind: SettingKind,
+) {
     const suffix = {
         "index": "",
         "team-members": "/team-members",
         "billing": "/billing",
         "quota": "/quota",
     }[kind];
-    return `/dashboard/workspace/${workspaceUuid}/settings${suffix}`;
+    return `/dashboard/workspace/${uuid}/settings${suffix}`;
 }
 
 // TODO put me into dashboard urls

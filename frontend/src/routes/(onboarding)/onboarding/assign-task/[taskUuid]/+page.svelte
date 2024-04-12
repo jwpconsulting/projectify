@@ -56,7 +56,7 @@
                 openBlank
             />
             <Anchor
-                href={getSettingsUrl(workspace.uuid, "billing")}
+                href={getSettingsUrl(workspace, "billing")}
                 label={$_(
                     "onboarding.assign-task.follow-up.go-to-billing-settings",
                 )}

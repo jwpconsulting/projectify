@@ -48,7 +48,7 @@
         icon={Archive}
     />
     <ContextMenuButton
-        kind={{ kind: "a", href: getSettingsUrl(workspace.uuid, "index") }}
+        kind={{ kind: "a", href: getSettingsUrl(workspace, "index") }}
         label={$_("overlay.context-menu.side-nav.workspace-settings")}
         icon={Cog}
     />
