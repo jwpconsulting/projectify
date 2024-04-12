@@ -64,7 +64,7 @@ export async function load({ parent, fetch }: PageLoadEvent): Promise<void> {
     if (archived && archived.length > 0) {
         // There are archived boards, so we redirect to the ws board archive
         // TODO show the user a notification in case of a redirect to here
-        redirect(302, getArchiveUrl(workspaceUuid));
+        redirect(302, getArchiveUrl(parentData.workspace));
     }
     // TODO maybe throw in a nice notification to the user here that we have
     // not found any project for this workspace

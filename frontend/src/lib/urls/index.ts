@@ -52,9 +52,8 @@ export function getSettingsUrl(
 }
 
 // TODO put me into dashboard urls
-// TODO accept workspace directly
-export function getArchiveUrl(workspaceUuid: string) {
-    return `/dashboard/workspace/${workspaceUuid}/archive`;
+export function getArchiveUrl({ uuid }: Pick<Workspace, "uuid">) {
+    return `/dashboard/workspace/${uuid}/archive`;
 }
 
 // TODO put me into auth routes

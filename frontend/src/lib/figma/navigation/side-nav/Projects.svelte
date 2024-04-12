@@ -64,7 +64,7 @@
                 <p>
                     <Anchor
                         label={$_("dashboard.side-nav.projects.empty.archive")}
-                        href={getArchiveUrl(workspace.uuid)}
+                        href={getArchiveUrl(workspace)}
                         size="normal"
                     />
                 </p>
