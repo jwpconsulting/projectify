@@ -107,10 +107,10 @@
                 { fetch },
             );
             if (continueEditing) {
-                await goto(getTaskUrl(task.uuid));
+                await goto(getTaskUrl(task));
                 return;
             }
-            await goto(getDashboardSectionUrl(task.section.uuid));
+            await goto(getDashboardSectionUrl(task.section));
         } catch (e) {
             updating = false;
             throw e;
@@ -149,19 +149,17 @@
                 crumbs={[
                     {
                         label: task.section.project.title,
-                        href: getDashboardProjectUrl(
-                            task.section.project.uuid,
-                        ),
+                        href: getDashboardProjectUrl(task.section.project),
                     },
                     {
                         label: task.section.title,
-                        href: getDashboardSectionUrl(task.section.uuid),
+                        href: getDashboardSectionUrl(task.section),
                     },
                     // We could add a better task name here, or even
                     // extract the whole thing as a layout for any task/[taskUuid] route
                     {
                         label: $number(task.number),
-                        href: getTaskUrl(task.uuid),
+                        href: getTaskUrl(task),
                     },
                 ]}
             />

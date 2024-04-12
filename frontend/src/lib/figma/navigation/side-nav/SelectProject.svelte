@@ -58,7 +58,7 @@
 <a
     class="group block flex w-full flex-row justify-between gap-1 px-4 py-1 hover:bg-base-200"
     class:bg-base-200={contextMenuOpen}
-    href={getDashboardProjectUrl(project.uuid)}
+    href={getDashboardProjectUrl(project)}
     on:click={() => selectProjectUuid(workspace.uuid, project.uuid)}
 >
     <div class="flex min-w-0 flex-row items-center gap-2">

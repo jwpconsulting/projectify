@@ -38,7 +38,7 @@
     nextLabel={$_("onboarding.assign-task.continue")}
     nextAction={{
         kind: "a",
-        href: getDashboardProjectUrl(project.uuid),
+        href: getDashboardProjectUrl(project),
     }}
 >
     <svelte:fragment slot="title"
@@ -56,7 +56,7 @@
                 openBlank
             />
             <Anchor
-                href={getSettingsUrl(workspace.uuid, "billing")}
+                href={getSettingsUrl(workspace, "billing")}
                 label={$_(
                     "onboarding.assign-task.follow-up.go-to-billing-settings",
                 )}

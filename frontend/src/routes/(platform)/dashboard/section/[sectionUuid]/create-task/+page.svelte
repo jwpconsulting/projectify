@@ -78,12 +78,12 @@
         };
         creating = true;
         try {
-            const { uuid } = await createTaskFn(createTaskFull, { fetch });
+            const task = await createTaskFn(createTaskFull, { fetch });
             if (continueEditing) {
-                await goto(getTaskUrl(uuid));
+                await goto(getTaskUrl(task));
                 return;
             }
-            await goto(getDashboardSectionUrl(section.uuid));
+            await goto(getDashboardSectionUrl(section));
             return;
         } catch (e) {
             creating = false;
@@ -94,15 +94,15 @@
     $: crumbs = [
         {
             label: project.title,
-            href: getDashboardProjectUrl(project.uuid),
+            href: getDashboardProjectUrl(project),
         },
         {
             label: section.title,
-            href: getDashboardSectionUrl(section.uuid),
+            href: getDashboardSectionUrl(section),
         },
         {
             label: $_("task-screen.new-task-breadcrumb"),
-            href: getNewTaskUrl(section.uuid),
+            href: getNewTaskUrl(section),
         },
     ];
 

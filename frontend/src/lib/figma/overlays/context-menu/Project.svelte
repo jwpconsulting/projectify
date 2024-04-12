@@ -135,7 +135,7 @@
             project,
         });
         await repoArchiveProject(project, true, { fetch });
-        await goto(getArchiveUrl(workspace.uuid));
+        await goto(getArchiveUrl(workspace));
     }
 </script>
 

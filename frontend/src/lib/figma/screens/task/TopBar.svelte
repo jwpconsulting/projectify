@@ -34,7 +34,7 @@
             <CircleIcon
                 action={{
                     kind: "a",
-                    href: getDashboardSectionUrl(section.uuid),
+                    href: getDashboardSectionUrl(section),
                 }}
                 size="medium"
                 icon="close"

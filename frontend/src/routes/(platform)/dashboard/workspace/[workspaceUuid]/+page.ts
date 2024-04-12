@@ -45,16 +45,15 @@ export async function load({ parent, fetch }: PageLoadEvent): Promise<void> {
         projects.map((b) => b.uuid).includes(maybeProjectUuid)
     ) {
         // ... we redirect to it
-        redirect(302, getDashboardProjectUrl(maybeProjectUuid));
+        redirect(302, getDashboardProjectUrl({ uuid: maybeProjectUuid }));
     }
     // If we can't find it, that's also OK, because:
     // If we find any projects, we pick the first and direct the user there
     const first_project = projects.at(0);
     if (first_project) {
-        const { uuid } = first_project;
         // TODO show the user a notification in case of a redirect to here
         // Indicate that the previous UUID is not available anymore
-        redirect(302, getDashboardProjectUrl(uuid));
+        redirect(302, getDashboardProjectUrl(first_project));
     }
 
     // Now we check if anything is archived and redirect to the archive in that
@@ -65,7 +64,7 @@ export async function load({ parent, fetch }: PageLoadEvent): Promise<void> {
     if (archived && archived.length > 0) {
         // There are archived boards, so we redirect to the ws board archive
         // TODO show the user a notification in case of a redirect to here
-        redirect(302, getArchiveUrl(workspaceUuid));
+        redirect(302, getArchiveUrl(parentData.workspace));
     }
     // TODO maybe throw in a nice notification to the user here that we have
     // not found any project for this workspace

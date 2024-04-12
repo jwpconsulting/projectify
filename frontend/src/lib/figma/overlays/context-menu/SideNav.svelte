@@ -43,12 +43,12 @@
         icon={$sideNavOpen ? ArrowCircleLeft : ArrowCircleRight}
     />
     <ContextMenuButton
-        kind={{ kind: "a", href: getArchiveUrl(workspace.uuid) }}
+        kind={{ kind: "a", href: getArchiveUrl(workspace) }}
         label={$_("overlay.context-menu.side-nav.go-to-archive")}
         icon={Archive}
     />
     <ContextMenuButton
-        kind={{ kind: "a", href: getSettingsUrl(workspace.uuid, "index") }}
+        kind={{ kind: "a", href: getSettingsUrl(workspace, "index") }}
         label={$_("overlay.context-menu.side-nav.workspace-settings")}
         icon={Cog}
     />

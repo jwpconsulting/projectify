@@ -28,7 +28,7 @@
 
     export let data: PageData;
     $: project = $currentProject;
-    $: backUrl = project ? getDashboardProjectUrl(project.uuid) : undefined;
+    $: backUrl = project ? getDashboardProjectUrl(project) : undefined;
 </script>
 
 {#await data.tasks}

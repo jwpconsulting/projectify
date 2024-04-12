@@ -16,47 +16,44 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import type { SettingKind } from "$lib/types/dashboard";
+import type { Project, Section, Task, Workspace } from "$lib/types/workspace";
 
 // This will be shown every time we suggest the user to go "back to home"
 // or similar
 export const backToHomeUrl = "/";
 
 // TODO put me into dashboard urls
-// TODO accept workspace directly
-export function getDashboardWorkspaceUrl(workspaceUuid: string) {
-    return `/dashboard/workspace/${workspaceUuid}`;
+export function getDashboardWorkspaceUrl({ uuid }: Pick<Workspace, "uuid">) {
+    return `/dashboard/workspace/${uuid}`;
 }
 
 // TODO put me into dashboard urls
-// TODO accept project directly
-export function getDashboardProjectUrl(projectUuid: string) {
-    return `/dashboard/project/${projectUuid}`;
+export function getDashboardProjectUrl({ uuid }: Pick<Project, "uuid">) {
+    return `/dashboard/project/${uuid}`;
 }
 
 // TODO put me into dashboard urls
-export function getDashboardSectionUrl(
-    // TODO accept section directly
-    sectionUuid: string,
+export function getDashboardSectionUrl({ uuid }: Pick<Section, "uuid">) {
+    return `/dashboard/section/${uuid}`;
+}
+
+// TODO put me into dashboard urls
+export function getSettingsUrl(
+    { uuid }: Pick<Workspace, "uuid">,
+    kind: SettingKind,
 ) {
-    return `/dashboard/section/${sectionUuid}`;
-}
-
-// TODO put me into dashboard urls
-// TODO accept workspace directly
-export function getSettingsUrl(workspaceUuid: string, kind: SettingKind) {
     const suffix = {
         "index": "",
         "team-members": "/team-members",
         "billing": "/billing",
         "quota": "/quota",
     }[kind];
-    return `/dashboard/workspace/${workspaceUuid}/settings${suffix}`;
+    return `/dashboard/workspace/${uuid}/settings${suffix}`;
 }
 
 // TODO put me into dashboard urls
-// TODO accept workspace directly
-export function getArchiveUrl(workspaceUuid: string) {
-    return `/dashboard/workspace/${workspaceUuid}/archive`;
+export function getArchiveUrl({ uuid }: Pick<Workspace, "uuid">) {
+    return `/dashboard/workspace/${uuid}/archive`;
 }
 
 // TODO put me into auth routes
@@ -66,19 +63,16 @@ export function getProfileUrl() {
 }
 
 // TODO put me into dashboard urls
-// TODO accept section directly
-export function getNewTaskUrl(sectionUuid: string) {
-    return `/dashboard/section/${sectionUuid}/create-task`;
+export function getNewTaskUrl({ uuid }: Pick<Section, "uuid">) {
+    return `/dashboard/section/${uuid}/create-task`;
 }
 
 // TODO put me into dashboard urls
-// TODO accept task directly
-export function getTaskUrl(taskUuid: string) {
-    return `/dashboard/task/${taskUuid}`;
+export function getTaskUrl({ uuid }: Pick<Task, "uuid">) {
+    return `/dashboard/task/${uuid}`;
 }
 
 // TODO put me into dashboard urls
-// TODO accept task directly
-export function getTaskEditUrl(taskUuid: string) {
-    return `/dashboard/task/${taskUuid}/update`;
+export function getTaskEditUrl({ uuid }: Pick<Task, "uuid">) {
+    return `/dashboard/task/${uuid}/update`;
 }

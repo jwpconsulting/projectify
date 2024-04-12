@@ -78,7 +78,7 @@
             <Button
                 action={{
                     kind: "a",
-                    href: getNewTaskUrl(section.uuid),
+                    href: getNewTaskUrl(section),
                 }}
                 style={{
                     kind: "tertiary",

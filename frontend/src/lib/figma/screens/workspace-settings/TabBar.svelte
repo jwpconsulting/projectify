@@ -30,24 +30,24 @@
 
 <div class="flex flex-row flex-wrap">
     <TabElement
-        href={getSettingsUrl(workspace.uuid, "index")}
+        href={getSettingsUrl(workspace, "index")}
         label={$_("workspace-settings.general.heading")}
         active={activeSetting === "index"}
     />
     <TabElement
-        href={getSettingsUrl(workspace.uuid, "team-members")}
+        href={getSettingsUrl(workspace, "team-members")}
         label={$_("workspace-settings.team-members.heading")}
         active={activeSetting === "team-members"}
     />
     {#if $currentTeamMemberCan("read", "customer")}
         <TabElement
-            href={getSettingsUrl(workspace.uuid, "billing")}
+            href={getSettingsUrl(workspace, "billing")}
             label={$_("workspace-settings.billing.heading")}
             active={activeSetting === "billing"}
         />
     {/if}
     <TabElement
-        href={getSettingsUrl(workspace.uuid, "quota")}
+        href={getSettingsUrl(workspace, "quota")}
         label={$_("workspace-settings.quota.heading")}
         active={activeSetting === "quota"}
     />

@@ -36,7 +36,7 @@
         <ContextMenuButton
             kind={{
                 kind: "a",
-                href: getDashboardWorkspaceUrl(workspace.uuid),
+                href: getDashboardWorkspaceUrl(workspace),
                 onInteract: () => selectWorkspaceUuid(workspace.uuid),
             }}
             label={workspace.title}

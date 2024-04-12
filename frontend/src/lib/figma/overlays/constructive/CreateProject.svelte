@@ -51,8 +51,7 @@
             { fetch },
         );
         if (result.ok) {
-            const { uuid } = result.data;
-            await goto(getDashboardProjectUrl(uuid));
+            await goto(getDashboardProjectUrl(result.data));
             resolveConstructiveOverlay();
         } else {
             // TODO format error
