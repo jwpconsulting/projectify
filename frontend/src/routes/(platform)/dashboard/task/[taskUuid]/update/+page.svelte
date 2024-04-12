@@ -110,7 +110,7 @@
                 await goto(getTaskUrl(task.uuid));
                 return;
             }
-            await goto(getDashboardSectionUrl(task.section.uuid));
+            await goto(getDashboardSectionUrl(task.section));
         } catch (e) {
             updating = false;
             throw e;
@@ -153,7 +153,7 @@
                     },
                     {
                         label: task.section.title,
-                        href: getDashboardSectionUrl(task.section.uuid),
+                        href: getDashboardSectionUrl(task.section),
                     },
                     // We could add a better task name here, or even
                     // extract the whole thing as a layout for any task/[taskUuid] route

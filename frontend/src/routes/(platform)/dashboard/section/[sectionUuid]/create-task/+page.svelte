@@ -83,7 +83,7 @@
                 await goto(getTaskUrl(uuid));
                 return;
             }
-            await goto(getDashboardSectionUrl(section.uuid));
+            await goto(getDashboardSectionUrl(section));
             return;
         } catch (e) {
             creating = false;
@@ -98,7 +98,7 @@
         },
         {
             label: section.title,
-            href: getDashboardSectionUrl(section.uuid),
+            href: getDashboardSectionUrl(section),
         },
         {
             label: $_("task-screen.new-task-breadcrumb"),

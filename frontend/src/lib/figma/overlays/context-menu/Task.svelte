@@ -51,13 +51,12 @@
         if (kind.location !== "dashboard") {
             throw new Error("Expected location to be dashboard");
         }
-        const { uuid } = kind.section;
         await openDestructiveOverlay({
             kind: "deleteTask" as const,
             task: kind.task,
         });
         await deleteTask(kind.task);
-        await goto(getDashboardSectionUrl(uuid));
+        await goto(getDashboardSectionUrl(kind.section));
     }
 
     let moveToSectionOpened = false;
