@@ -26,6 +26,8 @@ from typing import (
     cast,
 )
 
+from django.contrib.auth.models import AnonymousUser
+
 import pytest
 from channels.db import (
     database_sync_to_async,
@@ -222,7 +224,7 @@ pytestmark = [pytest.mark.django_db, pytest.mark.asyncio]
 
 
 async def make_communicator(
-    resource: Union[Workspace, Project, Task], user: User
+    resource: Union[Workspace, Project, Task], user: Union[User, AnonymousUser]
 ) -> WebsocketCommunicator:
     """Create a websocket communicator for a given resource and user."""
     match resource:
@@ -282,6 +284,9 @@ class TestWorkspace:
         self, workspace: Workspace, other_user: User
     ) -> None:
         """Test we can't connect to an unrelated workspace's consumer."""
+        with pytest.raises(Exception) as e:
+            await make_communicator(workspace, AnonymousUser())
+        assert e.match("Not connected: 403")
         with pytest.raises(Exception) as e:
             await make_communicator(workspace, other_user)
         assert e.match("Not connected: 404")
@@ -370,6 +375,9 @@ class TestProject:
 
     async def test_not_found(self, other_user: User, project: Project) -> None:
         """Test we can't connect to an unrelated project's consumer."""
+        with pytest.raises(Exception) as e:
+            await make_communicator(project, AnonymousUser())
+        assert e.match("Not connected: 403")
         with pytest.raises(Exception) as e:
             await make_communicator(project, other_user)
         assert e.match("Not connected: 404")
@@ -488,6 +496,9 @@ class TestTask:
 
     async def test_not_found(self, other_user: User, task: Task) -> None:
         """Test we can't connect to an unrelated task's consumer."""
+        with pytest.raises(Exception) as e:
+            await make_communicator(task, AnonymousUser())
+        assert e.match("Not connected: 403")
         with pytest.raises(Exception) as e:
             await make_communicator(task, other_user)
         assert e.match("Not connected: 404")
