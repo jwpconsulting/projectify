@@ -25,7 +25,7 @@
 </script>
 
 <a
-    href={getTaskUrl(task.uuid)}
+    href={getTaskUrl(task)}
     class="flex flex-row items-start items-center gap-1 self-start sm:gap-6 lg:self-center"
 >
     <div class="shrink-0 font-bold">

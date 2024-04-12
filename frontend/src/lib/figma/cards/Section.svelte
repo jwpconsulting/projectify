@@ -47,7 +47,7 @@
                     <Anchor
                         label={$_("dashboard.section.empty.prompt")}
                         size="normal"
-                        href={getNewTaskUrl(section.uuid)}
+                        href={getNewTaskUrl(section)}
                     />
                 </p>
             {/each}

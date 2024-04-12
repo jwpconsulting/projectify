@@ -89,7 +89,7 @@
         <ContextMenuButton
             kind={{
                 kind: "a",
-                href: getTaskUrl(kind.task.uuid),
+                href: getTaskUrl(kind.task),
             }}
             label={$_("overlay.context-menu.task.open-task")}
             icon={ArrowsExpand}
@@ -145,7 +145,7 @@
             kind: "button",
             action: copyToClipboard.bind(
                 null,
-                new URL(getTaskUrl(kind.task.uuid), document.baseURI).href,
+                new URL(getTaskUrl(kind.task), document.baseURI).href,
             ),
         }}
         label={$_("overlay.context-menu.task.copy-link")}

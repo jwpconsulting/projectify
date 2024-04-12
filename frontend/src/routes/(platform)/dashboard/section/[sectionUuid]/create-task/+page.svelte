@@ -78,9 +78,9 @@
         };
         creating = true;
         try {
-            const { uuid } = await createTaskFn(createTaskFull, { fetch });
+            const task = await createTaskFn(createTaskFull, { fetch });
             if (continueEditing) {
-                await goto(getTaskUrl(uuid));
+                await goto(getTaskUrl(task));
                 return;
             }
             await goto(getDashboardSectionUrl(section));
@@ -102,7 +102,7 @@
         },
         {
             label: $_("task-screen.new-task-breadcrumb"),
-            href: getNewTaskUrl(section.uuid),
+            href: getNewTaskUrl(section),
         },
     ];
 

@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import type { SettingKind } from "$lib/types/dashboard";
-import type { Project, Section, Workspace } from "$lib/types/workspace";
+import type { Project, Section, Task, Workspace } from "$lib/types/workspace";
 
 // This will be shown every time we suggest the user to go "back to home"
 // or similar
@@ -63,19 +63,16 @@ export function getProfileUrl() {
 }
 
 // TODO put me into dashboard urls
-// TODO accept section directly
-export function getNewTaskUrl(sectionUuid: string) {
-    return `/dashboard/section/${sectionUuid}/create-task`;
+export function getNewTaskUrl({ uuid }: Pick<Section, "uuid">) {
+    return `/dashboard/section/${uuid}/create-task`;
 }
 
 // TODO put me into dashboard urls
-// TODO accept task directly
-export function getTaskUrl(taskUuid: string) {
-    return `/dashboard/task/${taskUuid}`;
+export function getTaskUrl({ uuid }: Pick<Task, "uuid">) {
+    return `/dashboard/task/${uuid}`;
 }
 
 // TODO put me into dashboard urls
-// TODO accept task directly
-export function getTaskEditUrl(taskUuid: string) {
-    return `/dashboard/task/${taskUuid}/update`;
+export function getTaskEditUrl({ uuid }: Pick<Task, "uuid">) {
+    return `/dashboard/task/${uuid}/update`;
 }

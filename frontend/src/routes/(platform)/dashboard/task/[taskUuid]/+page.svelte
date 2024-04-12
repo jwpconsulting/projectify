@@ -56,7 +56,7 @@
         if (!$currentTeamMemberCan("update", "task")) {
             return;
         }
-        await goto(getTaskEditUrl((await task).uuid));
+        await goto(getTaskEditUrl(await task));
     }
 </script>
 
@@ -78,7 +78,7 @@
                     },
                     {
                         label: $number(task.number),
-                        href: getTaskUrl(task.uuid),
+                        href: getTaskUrl(task),
                     },
                 ]}
             />
@@ -90,7 +90,7 @@
                         size="medium"
                         style={{ kind: "primary" }}
                         label={$_("task-screen.edit")}
-                        action={{ kind: "a", href: getTaskEditUrl(task.uuid) }}
+                        action={{ kind: "a", href: getTaskEditUrl(task) }}
                     />
                 {/if}
                 <div bind:this={contextMenuRef}>

@@ -107,7 +107,7 @@
                 { fetch },
             );
             if (continueEditing) {
-                await goto(getTaskUrl(task.uuid));
+                await goto(getTaskUrl(task));
                 return;
             }
             await goto(getDashboardSectionUrl(task.section));
@@ -159,7 +159,7 @@
                     // extract the whole thing as a layout for any task/[taskUuid] route
                     {
                         label: $number(task.number),
-                        href: getTaskUrl(task.uuid),
+                        href: getTaskUrl(task),
                     },
                 ]}
             />
