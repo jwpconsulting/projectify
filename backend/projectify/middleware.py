@@ -21,10 +21,16 @@ from typing import (
     Optional,
 )
 
+from django.core.exceptions import ImproperlyConfigured
+from django.core.handlers.asgi import ASGIHandler
 from django.http import (
     HttpRequest,
     HttpResponse,
 )
+
+from channels.security.websocket import OriginValidator
+
+from projectify.lib.settings import get_settings
 
 GetResponse = Callable[[HttpRequest], HttpResponse]
 
@@ -81,3 +87,14 @@ def reverse_proxy(get_response: GetResponse) -> GetResponse:
         return get_response(request)
 
     return process_request
+
+
+def CsrfTrustedOriginsOriginValidator(application: ASGIHandler) -> ASGIHandler:
+    """Return an OriginValidator configured to use CSRF_TRUSTED_ORIGINS."""
+    settings = get_settings()
+    origins = settings.CSRF_TRUSTED_ORIGINS
+    if origins is None:
+        raise ImproperlyConfigured(
+            "Need to specify CSRF_TRUSTED_ORIGINS in settings"
+        )
+    return OriginValidator(application, origins)

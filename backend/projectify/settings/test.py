@@ -37,7 +37,7 @@ class Test(SpectacularSettings, Base):
     SECRET_KEY = "test"
 
     # Allow localhost, so that websocket connections may pass
-    ALLOWED_HOSTS = ["localhost"]
+    CSRF_TRUSTED_ORIGINS = ("http://localhost",)
 
     FRONTEND_URL = "https://example.com"
 

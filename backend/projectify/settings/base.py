@@ -28,7 +28,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 import warnings
 from collections.abc import (
-    Iterable,
     Sequence,
 )
 from pathlib import (
@@ -70,7 +69,7 @@ class Base(Configuration):
     SITE_TITLE: Optional[str] = None
 
     # SECURITY WARNING: don't run with debug turned on in production!
-    ALLOWED_HOSTS: Iterable[str] = []
+    ALLOWED_HOSTS: Sequence[str] = []
 
     # Debug
     DEBUG_TOOLBAR = False
@@ -85,6 +84,7 @@ class Base(Configuration):
     CSRF_USE_SESSIONS = False
     CSRF_COOKIE_SAMESITE = "None"
     CSRF_COOKIE_SECURE = True
+    CSRF_TRUSTED_ORIGINS: Optional[Sequence[str]]
 
     # CORS
     CORS_ALLOW_CREDENTIALS = True
