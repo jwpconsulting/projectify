@@ -49,9 +49,7 @@
                                     state="active"
                                     action={{
                                         kind: "a",
-                                        href: getDashboardProjectUrl(
-                                            project.uuid,
-                                        ),
+                                        href: getDashboardProjectUrl(project),
                                         onInteract: selectProjectUuid.bind(
                                             null,
                                             workspace.uuid,

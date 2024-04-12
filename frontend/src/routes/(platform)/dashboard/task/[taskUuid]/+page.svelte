@@ -70,9 +70,7 @@
                 crumbs={[
                     {
                         label: task.section.project.title,
-                        href: getDashboardProjectUrl(
-                            task.section.project.uuid,
-                        ),
+                        href: getDashboardProjectUrl(task.section.project),
                     },
                     {
                         label: task.section.title,

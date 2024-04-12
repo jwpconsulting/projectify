@@ -38,7 +38,7 @@
     nextLabel={$_("onboarding.assign-task.continue")}
     nextAction={{
         kind: "a",
-        href: getDashboardProjectUrl(project.uuid),
+        href: getDashboardProjectUrl(project),
     }}
 >
     <svelte:fragment slot="title"

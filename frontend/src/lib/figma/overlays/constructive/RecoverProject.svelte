@@ -41,7 +41,7 @@
         });
         if (result.ok) {
             resolveConstructiveOverlay();
-            await goto(getDashboardProjectUrl(project.uuid));
+            await goto(getDashboardProjectUrl(project));
             return;
         }
         state = {

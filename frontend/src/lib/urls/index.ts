@@ -16,6 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import type { SettingKind } from "$lib/types/dashboard";
+import type { Project } from "$lib/types/workspace";
 
 // This will be shown every time we suggest the user to go "back to home"
 // or similar
@@ -28,9 +29,8 @@ export function getDashboardWorkspaceUrl(workspaceUuid: string) {
 }
 
 // TODO put me into dashboard urls
-// TODO accept project directly
-export function getDashboardProjectUrl(projectUuid: string) {
-    return `/dashboard/project/${projectUuid}`;
+export function getDashboardProjectUrl({ uuid }: Pick<Project, "uuid">) {
+    return `/dashboard/project/${uuid}`;
 }
 
 // TODO put me into dashboard urls

@@ -32,5 +32,5 @@ export async function load({
         error(404);
     }
     const project = section.project;
-    redirect(302, getDashboardProjectUrl(project.uuid));
+    redirect(302, getDashboardProjectUrl(project));
 }

@@ -94,7 +94,7 @@
     $: crumbs = [
         {
             label: project.title,
-            href: getDashboardProjectUrl(project.uuid),
+            href: getDashboardProjectUrl(project),
         },
         {
             label: section.title,
