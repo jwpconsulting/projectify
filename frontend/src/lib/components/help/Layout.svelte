@@ -53,7 +53,6 @@
         </ul>
     </nav>
     <div slot="content" class="prose">
-        <h2>{heroContent.title}</h2>
         <!-- skip links -->
         <nav>
             <h3>{$_("help.skip")}</h3>
