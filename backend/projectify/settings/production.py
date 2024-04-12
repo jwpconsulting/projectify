@@ -80,22 +80,9 @@ class Production(Base):
     # Celery
     CELERY_BROKER_URL = REDIS_TLS_URL
 
-    CORS_ALLOWED_ORIGINS = (
-        "https://www.projectifyapp.com",
-        "https://staging.projectifyapp.com",
-        "http://localhost:3000",
-    )
-    CORS_ALLOWED_ORIGIN_REGEXES = (
-        r"^https://deploy-preview-\d+--projectifyapp.netlify.app$",
-        r"^https://.+--projectifyapp-staging.netlify.app$",
-    )
+    CORS_ALLOWED_ORIGINS = ("https://www.projectifyapp.com",)
 
-    CSRF_TRUSTED_ORIGINS = (
-        "https://*.netlify.app",
-        "https://www.projectifyapp.com",
-        "https://staging.projectifyapp.com",
-        "http://localhost:3000",
-    )
+    CSRF_TRUSTED_ORIGINS = ("https://www.projectifyapp.com",)
 
     # Cloudinary
     STORAGES = {
