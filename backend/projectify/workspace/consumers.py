@@ -148,7 +148,7 @@ class WorkspaceConsumer(BaseConsumer):
         )
 
         if workspace is None:
-            self.disconnect(close_code=status.HTTP_410_GONE)
+            self.close(status.HTTP_410_GONE)
             return
 
         workspace.quota = workspace_get_all_quotas(workspace)
@@ -180,7 +180,7 @@ class ProjectConsumer(BaseConsumer):
         )
 
         if project is None:
-            self.disconnect(close_code=status.HTTP_410_GONE)
+            self.close(status.HTTP_410_GONE)
             return
 
         serialized = serialize(ProjectDetailSerializer, project, event)
@@ -206,7 +206,7 @@ class TaskConsumer(BaseConsumer):
         )
 
         if task is None:
-            self.disconnect(close_code=status.HTTP_410_GONE)
+            self.close(status.HTTP_410_GONE)
             return
 
         serialized = serialize(TaskDetailSerializer, task, event)

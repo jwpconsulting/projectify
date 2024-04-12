@@ -220,6 +220,15 @@ async def expect_message(
     ] == str(has_uuid.uuid)
 
 
+async def expect_disconnect(
+    communicator: WebsocketCommunicator, code: int
+) -> None:
+    """Test if websocket.close is received."""
+    response = await communicator.receive_output(1)
+    assert response["type"] == "websocket.close"
+    assert response["code"] == code
+
+
 pytestmark = [pytest.mark.django_db, pytest.mark.asyncio]
 
 
@@ -311,6 +320,7 @@ class TestWorkspace:
         await database_sync_to_async(workspace_delete)(
             who=team_member.user, workspace=workspace
         )
+        await expect_disconnect(workspace_communicator, 410)
         await clean_up_communicator(workspace_communicator)
 
 
@@ -419,6 +429,7 @@ class TestProject:
         await database_sync_to_async(project_delete)(
             who=team_member.user, project=project
         )
+        await expect_disconnect(project_communicator, 410)
         assert await expect_message(workspace_communicator, workspace)
 
         await clean_up_communicator(workspace_communicator)
@@ -548,6 +559,7 @@ class TestTask:
             who=team_member.user,
             task=task,
         )
+        await expect_disconnect(task_communicator, 410)
         assert await expect_message(project_communicator, project)
 
         await clean_up_communicator(project_communicator)
