@@ -101,7 +101,7 @@
                 teamMember: teamMember,
             }}
             active={isSelected($selected, teamMember)}
-            count={$tasksPerUser.assigned.get(teamMember.uuid)}
+            count={$tasksPerUser.assigned.get(teamMember.uuid) ?? 0}
             onSelect={() =>
                 select({
                     kind: "teamMember",
