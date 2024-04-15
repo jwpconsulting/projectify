@@ -15,32 +15,40 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Workspace admin."""
-from django.contrib import (
-    admin,
-)
+from typing import Optional
+
+from django.contrib import admin
+from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
-from . import (
-    models,
-)
+from .models.chat_message import ChatMessage
+from .models.label import Label
+from .models.project import Project
+from .models.section import Section
+from .models.sub_task import SubTask
+from .models.task import Task
+from .models.task_label import TaskLabel
+from .models.team_member import TeamMember
+from .models.team_member_invite import TeamMemberInvite
+from .models.workspace import Workspace
 
 
-class TeamMemberInline(admin.TabularInline[models.TeamMember]):
+class TeamMemberInline(admin.TabularInline[TeamMember]):
     """TeamMember Inline."""
 
-    model = models.TeamMember
+    model = TeamMember
     extra = 0
 
 
-class ProjectInline(admin.TabularInline[models.Project]):
+class ProjectInline(admin.TabularInline[Project]):
     """Project Inline."""
 
-    model = models.Project
+    model = Project
     extra = 0
 
 
-@admin.register(models.Workspace)
-class WorkspaceAdmin(admin.ModelAdmin[models.Workspace]):
+@admin.register(Workspace)
+class WorkspaceAdmin(admin.ModelAdmin[Workspace]):
     """Workspace Admin."""
 
     inlines = (TeamMemberInline, ProjectInline)
@@ -55,21 +63,33 @@ class WorkspaceAdmin(admin.ModelAdmin[models.Workspace]):
     search_help_text = _("You can search by workspace title")
 
 
-@admin.register(models.TeamMemberInvite)
-class TeamMemberInviteAdmin(admin.ModelAdmin[models.TeamMemberInvite]):
+@admin.register(TeamMemberInvite)
+class TeamMemberInviteAdmin(admin.ModelAdmin[TeamMemberInvite]):
     """Team member invite admin."""
 
-    list_display = ("workspace_title",)
+    list_display = ("workspace_title", "redeemed", "redeemed_when")
     list_select_related = ("workspace",)
+    list_filter = (
+        "redeemed",
+        "redeemed_when",
+    )
 
     @admin.display(description=_("Workspace title"))
-    def workspace_title(self, instance: models.TeamMemberInvite) -> str:
+    def workspace_title(self, instance: TeamMemberInvite) -> str:
         """Return the workspace's title."""
         return instance.workspace.title
 
+    def has_change_permission(
+        self, request: HttpRequest, obj: Optional[TeamMemberInvite] = None
+    ) -> bool:
+        """Forbid anyone from changing this."""
+        del request
+        del obj
+        return False
 
-@admin.register(models.TeamMember)
-class TeamMemberAdmin(admin.ModelAdmin[models.TeamMember]):
+
+@admin.register(TeamMember)
+class TeamMemberAdmin(admin.ModelAdmin[TeamMember]):
     """TeamMember Admin."""
 
     list_display = (
@@ -92,25 +112,25 @@ class TeamMemberAdmin(admin.ModelAdmin[models.TeamMember]):
     )
 
     @admin.display(description=_("Workspace title"))
-    def workspace_title(self, instance: models.TeamMember) -> str:
+    def workspace_title(self, instance: TeamMember) -> str:
         """Return the workspace's title."""
         return instance.workspace.title
 
     @admin.display(description=_("User email"))
-    def user_email(self, instance: models.TeamMember) -> str:
+    def user_email(self, instance: TeamMember) -> str:
         """Return the workspace's title."""
         return instance.user.email
 
 
-class SectionInline(admin.TabularInline[models.Section]):
+class SectionInline(admin.TabularInline[Section]):
     """Section inline admin."""
 
-    model = models.Section
+    model = Section
     extra = 0
 
 
-@admin.register(models.Project)
-class ProjectAdmin(admin.ModelAdmin[models.Project]):
+@admin.register(Project)
+class ProjectAdmin(admin.ModelAdmin[Project]):
     """Project Admin."""
 
     inlines = (SectionInline,)
@@ -124,21 +144,21 @@ class ProjectAdmin(admin.ModelAdmin[models.Project]):
     readonly_fields = ("uuid",)
 
     @admin.display(description=_("Workspace title"))
-    def workspace_title(self, instance: models.Project) -> str:
+    def workspace_title(self, instance: Project) -> str:
         """Return the workspace's title."""
         return instance.workspace.title
 
 
-class TaskInline(admin.TabularInline[models.Task]):
+class TaskInline(admin.TabularInline[Task]):
     """Task inline admin."""
 
-    model = models.Task
+    model = Task
     extra = 0
     readonly_fields = ("assignee",)
 
 
-@admin.register(models.Section)
-class SectionAdmin(admin.ModelAdmin[models.Section]):
+@admin.register(Section)
+class SectionAdmin(admin.ModelAdmin[Section]):
     """Section Admin."""
 
     inlines = (TaskInline,)
@@ -153,32 +173,32 @@ class SectionAdmin(admin.ModelAdmin[models.Section]):
     readonly_fields = ("uuid",)
 
     @admin.display(description=_("Project title"))
-    def project_title(self, instance: models.Section) -> str:
+    def project_title(self, instance: Section) -> str:
         """Return the project's title."""
         return instance.project.title
 
     @admin.display(description=_("Workspace title"))
-    def workspace_title(self, instance: models.Section) -> str:
+    def workspace_title(self, instance: Section) -> str:
         """Return the workspace's title."""
         return instance.project.workspace.title
 
 
-class SubTaskInline(admin.TabularInline[models.SubTask]):
+class SubTaskInline(admin.TabularInline[SubTask]):
     """SubTask inline admin."""
 
-    model = models.SubTask
+    model = SubTask
     extra = 0
 
 
-class TaskLabelInline(admin.TabularInline[models.TaskLabel]):
+class TaskLabelInline(admin.TabularInline[TaskLabel]):
     """TaskLabel inline admin."""
 
-    model = models.TaskLabel
+    model = TaskLabel
     extra = 0
 
 
-@admin.register(models.Task)
-class TaskAdmin(admin.ModelAdmin[models.Task]):
+@admin.register(Task)
+class TaskAdmin(admin.ModelAdmin[Task]):
     """Task Admin."""
 
     inlines = (SubTaskInline, TaskLabelInline)
@@ -194,23 +214,23 @@ class TaskAdmin(admin.ModelAdmin[models.Task]):
     readonly_fields = ("uuid", "assignee")
 
     @admin.display(description=_("Section title"))
-    def section_title(self, instance: models.Task) -> str:
+    def section_title(self, instance: Task) -> str:
         """Return the project's title."""
         return instance.section.title
 
     @admin.display(description=_("Project title"))
-    def project_title(self, instance: models.Task) -> str:
+    def project_title(self, instance: Task) -> str:
         """Return the project's title."""
         return instance.section.project.title
 
     @admin.display(description=_("Workspace title"))
-    def workspace_title(self, instance: models.Task) -> str:
+    def workspace_title(self, instance: Task) -> str:
         """Return the workspace's title."""
         return instance.section.project.workspace.title
 
 
-@admin.register(models.Label)
-class LabelAdmin(admin.ModelAdmin[models.Label]):
+@admin.register(Label)
+class LabelAdmin(admin.ModelAdmin[Label]):
     """Label admin."""
 
     list_display = (
@@ -222,13 +242,13 @@ class LabelAdmin(admin.ModelAdmin[models.Label]):
     readonly_fields = ("uuid",)
 
     @admin.display(description=_("Workspace title"))
-    def workspace_title(self, instance: models.Label) -> str:
+    def workspace_title(self, instance: Label) -> str:
         """Return the workspace's title."""
         return instance.workspace.title
 
 
-@admin.register(models.SubTask)
-class SubTaskAdmin(admin.ModelAdmin[models.SubTask]):
+@admin.register(SubTask)
+class SubTaskAdmin(admin.ModelAdmin[SubTask]):
     """SubTask Admin."""
 
     list_display = (
@@ -244,29 +264,29 @@ class SubTaskAdmin(admin.ModelAdmin[models.SubTask]):
     readonly_fields = ("uuid",)
 
     @admin.display(description=_("Task title"))
-    def task_title(self, instance: models.SubTask) -> str:
+    def task_title(self, instance: SubTask) -> str:
         """Return the task's title."""
         return instance.task.title
 
     @admin.display(description=_("Section title"))
-    def section_title(self, instance: models.SubTask) -> str:
+    def section_title(self, instance: SubTask) -> str:
         """Return the project's title."""
         return instance.task.section.title
 
     @admin.display(description=_("Project title"))
-    def project_title(self, instance: models.SubTask) -> str:
+    def project_title(self, instance: SubTask) -> str:
         """Return the project's title."""
         return instance.task.section.project.title
 
     @admin.display(description=_("Workspace title"))
-    def workspace_title(self, instance: models.SubTask) -> str:
+    def workspace_title(self, instance: SubTask) -> str:
         """Return the workspace's title."""
         project = instance.task.section.project
         return project.workspace.title
 
 
-@admin.register(models.ChatMessage)
-class ChatMessageAdmin(admin.ModelAdmin[models.ChatMessage]):
+@admin.register(ChatMessage)
+class ChatMessageAdmin(admin.ModelAdmin[ChatMessage]):
     """ChatMessage admin."""
 
     list_display = (
@@ -281,22 +301,22 @@ class ChatMessageAdmin(admin.ModelAdmin[models.ChatMessage]):
     readonly_fields = ("uuid", "author")
 
     @admin.display(description=_("Task title"))
-    def task_title(self, instance: models.ChatMessage) -> str:
+    def task_title(self, instance: ChatMessage) -> str:
         """Return the task's title."""
         return instance.task.title
 
     @admin.display(description=_("Section title"))
-    def section_title(self, instance: models.ChatMessage) -> str:
+    def section_title(self, instance: ChatMessage) -> str:
         """Return the project's title."""
         return instance.task.section.title
 
     @admin.display(description=_("Project title"))
-    def project_title(self, instance: models.ChatMessage) -> str:
+    def project_title(self, instance: ChatMessage) -> str:
         """Return the project's title."""
         return instance.task.section.project.title
 
     @admin.display(description=_("Workspace title"))
-    def workspace_title(self, instance: models.ChatMessage) -> str:
+    def workspace_title(self, instance: ChatMessage) -> str:
         """Return the workspace's title."""
         project = instance.task.section.project
         return project.workspace.title
