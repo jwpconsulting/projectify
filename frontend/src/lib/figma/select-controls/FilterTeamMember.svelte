@@ -26,7 +26,7 @@
 
     export let teamMemberSelectionInput: TeamMemberSelectionInput;
     export let active: boolean;
-    export let count: number | undefined;
+    export let count: number;
 
     export let onSelect: () => void;
     export let onDeselect: () => void;
@@ -89,6 +89,6 @@
     <div
         class="flex shrink-0 flex-row items-center gap-2 rounded-2.5xl bg-background px-2 py-0.5 text-primary group-hover:bg-foreground"
     >
-        {count ?? ""}
+        {count}
     </div>
 </button>

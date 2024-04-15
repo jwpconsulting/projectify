@@ -1,15 +1,41 @@
+You need to be workspace owner to your workspace's billing settings. [Learn
+more about roles here](/help/roles).
+
 # Billing settings
 
-To go to workspace settings, click the ellipsis next to the workspace button in the side menu. This will open up a sub menu where you can access the current workspace’s settings page. From this page, you can access the billing settings of your account.
+To edit your billing settings, go to the **Billing** tab in the workspace
+settings. You can access the workspace settings by clicking **workspace
+ellipsis button** (...) and clicking **Workspace settings** in the context
+menu. From there select the **Billing** tab.
 
-# Removing/adding workspaces
+# Upgrading a trial workspace
 
-Only users with the permission role of Owner can create and delete workspaces. You will need to provide your banking details for each workspace you create.
+To upgrade a trial workspace to a paid workspace, first select the number of
+workspace seats you would like to add to your workspace using the **Workspace
+seats** field.
 
-# Removing/adding team members
+Click the **Go to checkout button** and you will be redirected to a checkout
+page where you can enter your payment details. The checkout page is implemented
+using Stripe billing and Stripe will securely handle your payment information.
 
-Only users with the permission role of Owner can invite or remove users. Be aware that you will not be able to invite team members if you do not have enough seats available in your workspace. In order to add more seats, please amend the seat numbers in your account.
+Learn more about what a trial workspace can do on the [trial workspace help
+page](/help/trial). To understand the differences between a trial workspace and
+a paid workspace, please refer to the [workspace quotas help
+page](/help/quota).
 
-# Delete your account
+# Manage a subscription and retrieve invoices
 
-To delete your account visit the billing page in workspace settings and cancel your subscription. Deleting your account will also remove team members from any workspaces that you own. You can transfer ownership of the account to a different team member before deletion to ensure that content and team members can continue to use the workspace. Deleting your account without transferring ownership will delete all data including personal information and all content created on the platform will cease to exist.
+After upgrading to a paid workspace, you can edit your billing information any
+time by going to your workspace billing settings. From there you can click the
+**Edit billing details** button. You will be redirected to the Stripe billing
+portal. You can perform the following actions there:
+
+- Update billing information
+- Update payment methods
+- Update your subscription
+- Cancel, pause and resume your subscription
+- Download invoices
+
+# Billing contact
+
+If you have any questions about billing, please [contact us](/contact-us).
