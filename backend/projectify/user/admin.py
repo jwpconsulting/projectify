@@ -15,18 +15,20 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """User app model admins."""
+from typing import Optional
+
 from django.contrib import (
     admin,
 )
+from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
-from . import (
-    models,
-)
+from projectify.user.models.user import User
+from projectify.user.models.user_invite import UserInvite
 
 
-@admin.register(models.User)
-class UserAdmin(admin.ModelAdmin[models.User]):
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin[User]):
     """User admin."""
 
     list_filter = ("is_active", "is_staff", "is_superuser")
@@ -44,6 +46,20 @@ class UserAdmin(admin.ModelAdmin[models.User]):
     search_help_text = _("You can search by email and preferred name")
 
 
-@admin.register(models.UserInvite)
-class UserInviteAdmin(admin.ModelAdmin[models.UserInvite]):
+@admin.register(UserInvite)
+class UserInviteAdmin(admin.ModelAdmin[UserInvite]):
     """User invite admin."""
+
+    list_filter = ("redeemed",)
+    list_display = (
+        "email",
+        "redeemed",
+    )
+
+    def has_change_permission(
+        self, request: HttpRequest, obj: Optional[UserInvite] = None
+    ) -> bool:
+        """Forbid anyone from changing this."""
+        del request
+        del obj
+        return False
