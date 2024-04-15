@@ -1426,8 +1426,8 @@ const messages: MessageDirectory = {
             content: FiltersHelpPage,
         },
         "billing": {
-            title: "Billing and accounts",
-            description: "Payment and account information",
+            title: "Billing",
+            description: "Billing and payment information",
             content: BillingHelpPage,
         },
         "trial": {
