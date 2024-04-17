@@ -272,9 +272,9 @@ drf-spectacular[sidecar]==0.27.2 ; python_full_version >= "3.11.6" and python_fu
 faker==19.13.0 ; python_full_version >= "3.11.6" and python_full_version < "3.12.0" \
     --hash=sha256:14ccb0aec342d33aa3889a864a56e5b3c2d56bce1b89f9189f4fbc128b9afc1e \
     --hash=sha256:da880a76322db7a879c848a0771e129338e0a680a9f695fd9a3e7a6ac82b45e1
-gunicorn==20.1.0 ; python_full_version >= "3.11.6" and python_full_version < "3.12.0" \
-    --hash=sha256:9dcc4547dbb1cb284accfb15ab5667a0e5d1881cc443e0677b4882a4067a807e \
-    --hash=sha256:e0a968b5ba15f8a328fdfd7ab1fcb5af4470c28aaf7e55df02a99bc13138e6e8
+gunicorn==22.0.0 ; python_full_version >= "3.11.6" and python_full_version < "3.12.0" \
+    --hash=sha256:350679f91b24062c86e386e198a15438d53a7a8207235a78ba1b53df4c4378d9 \
+    --hash=sha256:4a0b436239ff76fb33f11c07a16482c521a7e09c1ce3cc293c2330afe01bec63
 h11==0.14.0 ; python_full_version >= "3.11.6" and python_full_version < "3.12.0" \
     --hash=sha256:8f19fbbe99e72420ff35c00b27a34cb9937e902a8b810e2c88300c6f0a3b699d \
     --hash=sha256:e3fe4ac4b851c468cc8363d500db52c2ead036020723024a109d37346efaa761
@@ -393,6 +393,9 @@ newrelic==9.8.0 ; python_full_version >= "3.11.6" and python_full_version < "3.1
     --hash=sha256:eb76abc5ef093b804c39c187241d71a7a708debd386484966f85b88fb2c79a63 \
     --hash=sha256:f274ec466271f8c1ef76fdcf4cdf0a3dfe146aa696626e52bac452d432056de0 \
     --hash=sha256:fab06501364befff11cb3e99426a2baba046e0c72e86b7a42c5319bd3a19d470
+packaging==23.1 ; python_full_version >= "3.11.6" and python_full_version < "3.12.0" \
+    --hash=sha256:994793af429502c4ea2ebf6bf664629d07c1a9fe974af92966e4b8d2df7edc61 \
+    --hash=sha256:a392980d2b6cffa644431898be54b0045151319d1e7ec34f0cfed48767dd334f
 pillow==10.3.0 ; python_full_version >= "3.11.6" and python_full_version < "3.12.0" \
     --hash=sha256:048ad577748b9fa4a99a0548c64f2cb8d672d5bf2e643a739ac8faff1164238c \
     --hash=sha256:048eeade4c33fdf7e08da40ef402e748df113fd0b4584e32c4af74fe78baaeb2 \
