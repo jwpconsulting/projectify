@@ -59,7 +59,7 @@ function generateLicenseFile(): Plugin {
 function createSitemapPlugin(domain: string, options: Options): Plugin {
     return {
         name: "create-sitemap",
-        buildEnd() {
+        writeBundle() {
             createSitemap(domain, options);
         },
     };
@@ -81,6 +81,7 @@ async function getPluginOptions(
         createSitemapPlugin(getFromEnv(env, "VITE_PROJECTIFY_DOMAIN"), {
             debug: mode !== "production",
             changeFreq: "daily",
+            outDir: ".svelte-kit/output/prerendered/pages",
         }),
         generateLicenseFile(),
     ];
