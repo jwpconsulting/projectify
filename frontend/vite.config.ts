@@ -29,8 +29,17 @@ import type {
 } from "vite";
 import type { ConfigEnv } from "vite";
 import { loadEnv } from "vite";
+import { createSitemap } from "svelte-sitemap/src/index.js";
+import type { Options } from "svelte-sitemap/src/interfaces/global.interface";
 
-const pluginDefaults: PluginOption[] = [sveltekit()];
+function createSitemapPlugin(domain: string, options: Options): Plugin {
+    return {
+        name: "create-sitemap",
+        buildEnd() {
+            createSitemap(domain, options);
+        },
+    };
+}
 
 const configDefaults: UserConfig = {
     build: {
@@ -38,7 +47,17 @@ const configDefaults: UserConfig = {
     },
 };
 
-async function getPluginOptions(mode: string): Promise<PluginOption[]> {
+async function getPluginOptions(
+    env: Record<string, string>,
+    mode: string,
+): Promise<PluginOption[]> {
+    const pluginDefaults: PluginOption[] = [
+        sveltekit(),
+        createSitemapPlugin(getFromEnv(env, "VITE_PROJECTIFY_DOMAIN"), {
+            debug: mode !== "production",
+            changeFreq: "daily",
+        }),
+    ];
     if (mode !== "staging") {
         return pluginDefaults;
     }
@@ -118,7 +137,7 @@ const config: UserConfigExport = defineConfig(async ({ mode }: ConfigEnv) => {
         esbuild: {
             drop: mode === "production" ? ["console", "debugger"] : [],
         },
-        plugins: await getPluginOptions(mode),
+        plugins: await getPluginOptions(env, mode),
         server: {
             proxy: getProxyConfig(env),
         },
