@@ -21,6 +21,8 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { page } from "$app/stores";
     import Landing from "$lib/figma/navigation/header/Landing.svelte";
+    import status404Image from "./assets/status404Image.png";
+    import status500Image from "./assets/status500Image.png";
 </script>
 
 <svelte:head>
@@ -40,8 +42,8 @@
 </svelte:head>
 
 <Landing />
-<main class="flex grow flex-col gap-12 p-20">
-    <header class="flex flex-col gap-12">
+<div class="flex grow flex-col items-center gap-12 p-20">
+    <main class="flex max-w-lg flex-col gap-6">
         <h1 class="text-5xl font-bold">
             {#if $page.status == 404}
                 {$_("error-page.404-not-found.title")}
@@ -52,21 +54,32 @@
             {/if}
         </h1>
         {#if $page.status == 404}
-            <p class="text-xl font-bold">
-                {$_("error-page.404-not-found.body")}
-            </p>
+            <img
+                alt={$_("error-page.404-not-found.img-alt")}
+                class="max-w-sm"
+                src={status404Image}
+            />
+            <p>{$_("error-page.404-not-found.explanation")}</p>
+            <p>{$_("error-page.404-not-found.what-to-do")}</p>
+            <Anchor
+                label={$_("error-page.404-not-found.contact")}
+                href="/contact-us"
+            />
         {:else if $page.error}
-            <p>
-                {$_("error-page.other.body")}
-            </p>
-            <p>
-                {$page.error.toString()}
-            </p>
+            <img
+                alt={$_("error-page.other.img-alt")}
+                class="max-w-sm"
+                src={status500Image}
+            />
+            <p>{$_("error-page.other.explanation")}</p>
+            <pre>{JSON.stringify($page.error)}</pre>
+            <p>{$_("error-page.other.what-to-do")}</p>
+            <Anchor
+                label={$_("error-page.other.contact")}
+                href="/contact-us"
+            />
         {:else}
             {$_("error-page.no-error.body")}
         {/if}
-    </header>
-    <section>
-        <Anchor label={$_("error-page.take-me-home")} href="/" size="large" />
-    </section>
-</main>
+    </main>
+</div>
