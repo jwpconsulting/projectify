@@ -50,7 +50,6 @@ const config: KnipConfig = {
         "open",
         "bin/test",
         "bin/prebuild.sh",
-        "bin/check-third-party-licenses",
         "bin/update-schema",
     ],
     ignoreDependencies: [
@@ -60,6 +59,8 @@ const config: KnipConfig = {
         "esm-loader-typescript",
         "node-esm-loader",
         "prettier-plugin-svelte",
+        // Synthetic import created as part of vite build
+        "third-party-licenses",
     ],
     compilers: {
         // https://github.com/webpro/knip/blob/7011a5107b6693f70a966a12bc3c31b6bc3353a8/docs/compilers.md
