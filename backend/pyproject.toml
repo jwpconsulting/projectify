@@ -123,6 +123,9 @@ description = ""
 authors = ["Justus Perlwitz <justus@jwpconsulting.net>"]
 readme = "README.md"
 
+[tool.poetry.scripts]
+projectify-backend = "gunicorn.app.wsgiapp:run"
+
 [tool.poetry.dependencies]
 celery = {extras = ["redis"], version = "~5.2.7"}
 channels = {version = "^4.1.0", extras = ["daphne"]}

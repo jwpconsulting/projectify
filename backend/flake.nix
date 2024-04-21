@@ -71,16 +71,27 @@
           poetrylock = ./poetry.lock;
           groups = [ "dev" "test" ];
         };
+        app = mkPoetryApplication {
+          inherit projectDir;
+          inherit overrides;
+          inherit python;
+          pyproject = ./pyproject.toml;
+          poetrylock = ./poetry.lock;
+          groups = [ ];
+        };
       in
       {
         devShell = pkgs.mkShell {
           buildInputs = [
             python
-            poetryEnv
             postgresql
             pkgs.heroku
             # Allow poetry to install
+            # XXX Still necessary?
             pkgs.openssl
+
+            app
+            poetryEnv
           ];
           shellHook = ''
             # For gunicorn
