@@ -46,12 +46,7 @@ then
     exit 1
 fi
 
-poetry run newrelic-admin run-program \
-    gunicorn projectify.asgi \
-    --workers 1 \
-    --bind "0.0.0.0:$PORT" \
-    --worker-class uvicorn.workers.UvicornWorker \
-    --log-config gunicorn-error.log &
+poetry run newrelic-admin run-program gunicorn &
 PID1="$!"
 poetry run newrelic-admin run-program \
     celery --app projectify \
