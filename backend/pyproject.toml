@@ -131,6 +131,9 @@ version = "0.1.0"
 description = "Projectify backend"
 authors = ["Justus Perlwitz <justus@jwpconsulting.net>"]
 readme = "README.md"
+exclude = [
+    "projectify/*/test",
+]
 
 [tool.poetry.scripts]
 projectify-backend = "gunicorn.app.wsgiapp:run"
