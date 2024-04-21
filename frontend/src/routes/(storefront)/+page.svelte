@@ -24,15 +24,11 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
 
     import Filters from "./assets/filters.png";
-    import Hero from "./assets/hero.png";
     import OpenSource from "./assets/open-source.png";
     import Privacy from "./assets/privacy.png";
     import Responsive from "./assets/responsive.png";
     import SubTask from "./assets/sub-task.png";
     import TaskMenu from "./assets/task-menu.png";
-    import HeroDevelopmentTeams from "./solutions/assets/hero-development-teams.png";
-    import HeroProjectManagement from "./solutions/assets/hero-project-management.png";
-    import HeroResearch from "./solutions/assets/hero-research.png";
 </script>
 
 <svelte:head>
@@ -63,7 +59,7 @@
             />
         </div>
         <div class="max-w-md">
-            <img src={Hero} alt={$_("index.hero.alt")} />
+            <enhanced:img src="./assets/hero.png" alt={$_("index.hero.alt")} />
         </div>
     </section>
     <div slot="content" class="flex flex-col gap-16">
@@ -135,8 +131,8 @@
             <div class="flex flex-col gap-5 text-center">
                 <div class="grid grid-cols-1 gap-8 sm:grid-cols-3">
                     <div class="flex flex-col gap-3">
-                        <img
-                            src={HeroDevelopmentTeams}
+                        <enhanced:img
+                            src="./solutions/assets/hero-development-teams.png"
                             alt={$_(
                                 "index.solutions.list.development-teams.alt",
                             )}
@@ -150,8 +146,8 @@
                         />
                     </div>
                     <div class="flex flex-col gap-3">
-                        <img
-                            src={HeroResearch}
+                        <enhanced:img
+                            src="./solutions/assets/hero-research.png"
                             alt={$_("index.solutions.list.research.alt")}
                         />
                         <Anchor
@@ -161,8 +157,8 @@
                         />
                     </div>
                     <div class="flex flex-col gap-3">
-                        <img
-                            src={HeroProjectManagement}
+                        <enhanced:img
+                            src="./solutions/assets/hero-project-management.png"
                             alt={$_(
                                 "index.solutions.list.project-management.alt",
                             )}

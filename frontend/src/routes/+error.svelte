@@ -21,8 +21,6 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { page } from "$app/stores";
     import Landing from "$lib/figma/navigation/header/Landing.svelte";
-    import status404Image from "./assets/status404Image.png";
-    import status500Image from "./assets/status500Image.png";
 </script>
 
 <svelte:head>
@@ -54,10 +52,10 @@
             {/if}
         </h1>
         {#if $page.status == 404}
-            <img
+            <enhanced:img
                 alt={$_("error-page.404-not-found.img-alt")}
                 class="max-w-sm"
-                src={status404Image}
+                src="./assets/status404Image.png"
             />
             <p>{$_("error-page.404-not-found.explanation")}</p>
             <p>{$_("error-page.404-not-found.what-to-do")}</p>
@@ -66,10 +64,10 @@
                 href="/contact-us"
             />
         {:else if $page.error}
-            <img
+            <enhanced:img
                 alt={$_("error-page.other.img-alt")}
                 class="max-w-sm"
-                src={status500Image}
+                src="./assets/status500Image.png"
             />
             <p>{$_("error-page.other.explanation")}</p>
             <pre>{JSON.stringify($page.error)}</pre>

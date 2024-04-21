@@ -19,6 +19,7 @@ import { exec } from "node:child_process";
 import { promisify } from "node:util";
 
 import { sveltekit } from "@sveltejs/kit/vite";
+import { enhancedImages } from "@sveltejs/enhanced-img";
 import { defineConfig } from "vite";
 import type {
     UserConfig,
@@ -75,6 +76,7 @@ async function getPluginOptions(
     mode: string,
 ): Promise<PluginOption[]> {
     const pluginDefaults: PluginOption[] = [
+        enhancedImages(),
         sveltekit(),
         createSitemapPlugin(getFromEnv(env, "VITE_PROJECTIFY_DOMAIN"), {
             debug: mode !== "production",
