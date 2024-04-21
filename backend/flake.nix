@@ -103,7 +103,14 @@
       {
         packages = {
           inherit projectify-backend;
-          default = self.packages.${system}.projectify-backend;
+          default = projectify-backend;
+        };
+        # Run with `nix run`
+        apps = {
+          default = {
+            type = "app";
+            program = "${projectify-backend}/bin/projectify-backend";
+          };
         };
         devShell = poetryEnv.env.overrideAttrs (oldattrs: {
           buildInputs = [
