@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2021, 2022, 2023 JWP Consulting GK
+# Copyright (C) 2021-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -119,7 +119,7 @@ class Development(SpectacularSettings, Base):
 
     CELERY_TASK_ALWAYS_EAGER = True
     # TODO if celery is eager, a broker should not be necessary, right?
-    CELERY_BROKER_URL = os.environ["REDIS_TLS_URL"]
+    CELERY_BROKER_URL = os.environ.get("REDIS_TLS_URL")
 
     # Email
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
