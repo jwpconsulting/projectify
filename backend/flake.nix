@@ -71,6 +71,14 @@
           poetrylock = ./poetry.lock;
           groups = [ "dev" "test" ];
         };
+        app = mkPoetryApplication {
+          inherit projectDir;
+          inherit overrides;
+          inherit python;
+          pyproject = ./pyproject.toml;
+          poetrylock = ./poetry.lock;
+          groups = [ ];
+        };
       in
       {
         devShell = poetryEnv.env.overrideAttrs (oldattrs: {
