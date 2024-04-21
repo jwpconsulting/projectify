@@ -173,7 +173,13 @@ class DevelopmentNix(Development):
     }
 
     # Use middelware from production for added realism
-    MIDDLEWARE = list(populate_production_middleware(Development.MIDDLEWARE))
+    MIDDLEWARE = list(populate_production_middleware(Base.MIDDLEWARE))
 
     # We need to inject the static root path during the nix build process
     STATIC_ROOT = Path(os.environ["STATIC_ROOT"])
+
+    # No need for debug or debug libs, for added realism
+    DEBUG = False
+    INSTALLED_APPS = Base.INSTALLED_APPS
+    SERVE_SPECTACULAR = False
+    DEBUG_TOOLBAR = False
