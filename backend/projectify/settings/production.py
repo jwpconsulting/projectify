@@ -16,10 +16,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Production settings."""
 import os
-from collections.abc import (
-    Iterable,
-    Sequence,
-)
+
+from projectify.lib.settings import populate_production_middleware
 
 from .base import (
     Base,
@@ -38,23 +36,6 @@ def get_redis_tls_url() -> str:
     raise ValueError(
         "Neither REDIS_TLS_URL nor REDIS_URL could be found in the environment"
     )
-
-
-def populate_production_middleware(middleware: Sequence[str]) -> Iterable[str]:
-    """Remove CORS middleware. No idea why we should do that."""
-    csrf_middleware = "django.middleware.csrf.CsrfViewMiddleware"
-    gzip_middleware = "django.middleware.gzip.GZipMiddleware"
-    disable_csrf = "DISABLE_CSRF_PROTECTION" in os.environ
-    for m in middleware:
-        if m == csrf_middleware and disable_csrf:
-            yield "projectify.middleware.DisableCSRFMiddleware"
-            continue
-        elif m == gzip_middleware:
-            # Yield white noise *after* gzip
-            yield m
-            yield "whitenoise.middleware.WhiteNoiseMiddleware"
-        else:
-            yield m
 
 
 class Production(Base):
