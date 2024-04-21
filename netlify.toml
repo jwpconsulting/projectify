@@ -10,7 +10,7 @@ NODE_ENV = "production"
 
 [[redirects]]
 from = "/*"
-to = "/redirect.html"
+to = "/fallback.html"
 status = 200
 
 [[headers]]

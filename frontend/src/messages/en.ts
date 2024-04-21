@@ -338,11 +338,29 @@ const messages: MessageDirectory = {
         },
         empty: "No projects have been archived.",
     },
-    // Factor this into a general error section
-    "page404": {
-        title: "Lost your way?",
-        body: "The page you're looking for doesn't exist.",
-        home: "Take me home",
+    "error-page": {
+        "404-not-found": {
+            "title": "Page not found",
+            "explanation":
+                "The page you're looking for doesn't exist. Maybe there is a typo in the URL you meant to visit?",
+            "what-to-do":
+                "If you have difficulties using the Projectify application, or would like to report a problem, please contact us:",
+            "contact": "Go to contact us page",
+            "img-alt": "Illustration of Poly the mascot looking lost",
+        },
+        "no-error": {
+            title: "Page was opened without error",
+            body: "This page was opened, but nothing bad happened. Why?",
+        },
+        "other": {
+            "title": "Application error",
+            "explanation":
+                "An error occured that the application does not know how to handle. The details are as follows:",
+            "what-to-do":
+                "We are sorry this happened. If the same error keeps happening, please contact us:",
+            "contact": "Go to contact us page",
+            "img-alt": "Illustration of a broken egg",
+        },
     },
     // Factor this into a general error section
     "connection-status": {

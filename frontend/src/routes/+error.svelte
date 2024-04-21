@@ -19,18 +19,67 @@
     import { _ } from "svelte-i18n";
 
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+    import { page } from "$app/stores";
+    import Landing from "$lib/figma/navigation/header/Landing.svelte";
+    import status404Image from "./assets/status404Image.png";
+    import status500Image from "./assets/status500Image.png";
 </script>
 
-<div class="flex flex-col gap-12 p-20">
-    <header class="flex flex-col gap-12">
+<svelte:head>
+    {#if $page.status == 404}
+        <title>
+            {$_("error-page.404-not-found.title")}
+        </title>
+    {:else if $page.error}
+        <title>
+            {$_("error-page.other.title")}
+        </title>
+    {:else}
+        <title>
+            {$_("error-page.no-error.title")}
+        </title>
+    {/if}
+</svelte:head>
+
+<Landing />
+<div class="flex grow flex-col items-center gap-12 p-20">
+    <main class="flex max-w-lg flex-col gap-6">
         <h1 class="text-5xl font-bold">
-            {$_("page404.title")}
+            {#if $page.status == 404}
+                {$_("error-page.404-not-found.title")}
+            {:else if $page.error}
+                {$_("error-page.other.title")}
+            {:else}
+                {$_("error-page.no-error.title")}
+            {/if}
         </h1>
-        <p class="text-xl font-bold">
-            {$_("page404.body")}
-        </p>
-    </header>
-    <section>
-        <Anchor label={$_("page404.home")} href="/" size="large" />
-    </section>
+        {#if $page.status == 404}
+            <img
+                alt={$_("error-page.404-not-found.img-alt")}
+                class="max-w-sm"
+                src={status404Image}
+            />
+            <p>{$_("error-page.404-not-found.explanation")}</p>
+            <p>{$_("error-page.404-not-found.what-to-do")}</p>
+            <Anchor
+                label={$_("error-page.404-not-found.contact")}
+                href="/contact-us"
+            />
+        {:else if $page.error}
+            <img
+                alt={$_("error-page.other.img-alt")}
+                class="max-w-sm"
+                src={status500Image}
+            />
+            <p>{$_("error-page.other.explanation")}</p>
+            <pre>{JSON.stringify($page.error)}</pre>
+            <p>{$_("error-page.other.what-to-do")}</p>
+            <Anchor
+                label={$_("error-page.other.contact")}
+                href="/contact-us"
+            />
+        {:else}
+            {$_("error-page.no-error.body")}
+        {/if}
+    </main>
 </div>

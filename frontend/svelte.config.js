@@ -32,12 +32,7 @@ const config = {
         adapter: adapter({
             pages: "build",
             assets: "build",
-            /* XXX we get this error:
-             * > Using @sveltejs/adapter-static
-             * Overwriting build/redirect.html with fallback page. Consider
-             * using a different name for the fallback.
-             */
-            fallback: "redirect.html",
+            fallback: "fallback.html",
             precompress: false,
             strict: true,
         }),
