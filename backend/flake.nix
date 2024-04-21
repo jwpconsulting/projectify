@@ -17,26 +17,25 @@
       let
         # see https://github.com/nix-community/poetry2nix/tree/master#api for more functions and examples.
         pkgs = nixpkgs.legacyPackages.${system};
-        inherit (poetry2nix.lib.mkPoetry2Nix { inherit pkgs; }) mkPoetryEnv defaultPoetryOverrides;
+        inherit (poetry2nix.lib.mkPoetry2Nix { inherit pkgs; }) mkPoetryApplication mkPoetryEnv defaultPoetryOverrides;
         projectDir = self;
         postgresql = pkgs.postgresql_15;
         python = pkgs.python311;
+        # Thanks to
+        # https://github.com/nix-community/poetry2nix/blob/master/docs/edgecases.md#modulenotfounderror-no-module-named-packagename
+        pypkgs-build-requirements = {
+          django-anymail = [ "hatchling" ];
+          django-cloudinary-storage = [ "setuptools" ];
+          django-debug-toolbar = [ "hatchling" "setuptools" ];
+          django-pgtrigger = [ "poetry" ];
+          django-ratelimit = [ "setuptools" ];
+          django-test-migrations = [ "poetry" ];
+          editables = [ "flit-core" ];
+          sqlparse = [ "hatchling" ];
+          twisted = [ "hatchling" "hatch-fancy-pypi-readme" ];
+          types-stripe = [ "setuptools" ];
+        };
         overrides = defaultPoetryOverrides.extend (self: super: {
-          django-cloudinary-storage = super.django-cloudinary-storage.overridePythonAttrs (
-            old: {
-              buildInputs = (old.buildInputs or [ ]) ++ [ super.setuptools ];
-            }
-          );
-          twisted = super.twisted.overridePythonAttrs (
-            old: {
-              buildInputs = (old.buildInputs or [ ]) ++ [ super.hatchling super.hatch-fancy-pypi-readme ];
-            }
-          );
-          django-pgtrigger = super.django-pgtrigger.overridePythonAttrs (
-            old: {
-              buildInputs = (old.buildInputs or [ ]) ++ [ super.poetry ];
-            }
-          );
           psycopg-c = super.psycopg-c.overridePythonAttrs (
             old: {
               nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
@@ -48,36 +47,6 @@
               ];
             }
           );
-          django-test-migrations = super.django-test-migrations.overridePythonAttrs (
-            old: {
-              buildInputs = (old.buildInputs or [ ]) ++ [ super.poetry ];
-            }
-          );
-          types-stripe = super.types-stripe.overridePythonAttrs (
-            old: {
-              buildInputs = (old.buildInputs or [ ]) ++ [ super.setuptools ];
-            }
-          );
-          editables = super.editables.overridePythonAttrs (
-            old: {
-              buildInputs = (old.buildInputs or [ ]) ++ [ super.flit-core ];
-            }
-          );
-          django-debug-toolbar = super.django-debug-toolbar.overridePythonAttrs (
-            old: {
-              buildInputs = (old.buildInputs or [ ]) ++ [ super.hatchling super.setuptools ];
-            }
-          );
-          django-anymail = super.django-anymail.overridePythonAttrs (
-            old: {
-              buildInputs = (old.buildInputs or [ ]) ++ [ super.hatchling ];
-            }
-          );
-          django-ratelimit = super.django-ratelimit.overridePythonAttrs (
-            old: {
-              buildInputs = (old.buildInputs or [ ]) ++ [ super.setuptools ];
-            }
-          );
           cryptography = super.cryptography.overridePythonAttrs (old: rec {
             cargoDeps = pkgs.rustPlatform.fetchCargoTarball {
               inherit (old) src;
@@ -87,7 +56,13 @@
             };
             cargoRoot = "src/rust";
           });
-        });
+        } // (builtins.mapAttrs
+          (package: build-requirements: (
+            (builtins.getAttr package super).overridePythonAttrs (old: {
+              buildInputs = (old.buildInputs or [ ]) ++ (builtins.map (pkg: if builtins.isString pkg then builtins.getAttr pkg super else pkg) build-requirements);
+            })
+          ))
+          pypkgs-build-requirements));
         poetryEnv = mkPoetryEnv {
           inherit projectDir;
           inherit overrides;
