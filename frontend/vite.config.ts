@@ -31,6 +31,29 @@ import type { ConfigEnv } from "vite";
 import { loadEnv } from "vite";
 import { createSitemap } from "svelte-sitemap/src/index.js";
 import type { Options } from "svelte-sitemap/src/interfaces/global.interface";
+import { getLicenseFileText } from "generate-license-file";
+
+function generateLicenseFile(): Plugin {
+    return {
+        name: "generate-license-file",
+        resolveId(source: string) {
+            if (source !== "third-party-licenses") {
+                return null;
+            }
+            return { id: source };
+        },
+        async load(id: string) {
+            if (id !== "third-party-licenses") {
+                return null;
+            }
+            const content = await getLicenseFileText("./package.json");
+            return {
+                code: `export default ${JSON.stringify(content)}`,
+                map: { mappings: "" },
+            };
+        },
+    };
+}
 
 function createSitemapPlugin(domain: string, options: Options): Plugin {
     return {
@@ -57,6 +80,7 @@ async function getPluginOptions(
             debug: mode !== "production",
             changeFreq: "daily",
         }),
+        generateLicenseFile(),
     ];
     if (mode !== "staging") {
         return pluginDefaults;

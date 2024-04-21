@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2023-2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -44,7 +44,7 @@ const config: KnipConfig = {
         "$env/*": [".svelte-kit/ambient.d.ts"],
     },
     ignoreBinaries: ["env", "poetry", "open", "bin/test"],
-    ignoreDependencies: [],
+    ignoreDependencies: ["third-party-licenses"],
     compilers: {
         // https://github.com/webpro/knip/blob/7011a5107b6693f70a966a12bc3c31b6bc3353a8/docs/compilers.md
         svelte: (text: string) =>

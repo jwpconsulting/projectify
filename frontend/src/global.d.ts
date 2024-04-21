@@ -22,3 +22,7 @@ declare const __GIT_COMMIT_HASH__: string;
 declare const __BUILD_DATE__: string;
 
 declare const __MODE__: string;
+
+declare module "third-party-licenses" {
+    export = string;
+}

@@ -249,14 +249,6 @@ jobs:
       - store_artifacts:
           path: .svelte-kit/output/server/bundle.html
           destination: server-bundle
-  frontend_third_party_licenses:
-    executor: node
-    working_directory: ~/projectify/frontend
-    steps:
-      - prepare_npm
-      - run:
-          name: Check whether third-party-licenses.txt is up to date
-          command: npm run check:third-party-licenses
   frontend_schema:
     executor: node
     working_directory: ~/projectify/frontend
@@ -321,7 +313,6 @@ workflows:
       - frontend_check-i18n
       - frontend_build
       - frontend_visualize-bundle
-      - frontend_third_party_licenses
       - frontend_schema
       - stories_test
       - tools_poetry_check
