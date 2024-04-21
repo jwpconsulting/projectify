@@ -19,18 +19,54 @@
     import { _ } from "svelte-i18n";
 
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+    import { page } from "$app/stores";
+    import Landing from "$lib/figma/navigation/header/Landing.svelte";
 </script>
 
-<div class="flex flex-col gap-12 p-20">
+<svelte:head>
+    {#if $page.status == 404}
+        <title>
+            {$_("error-page.404-not-found.title")}
+        </title>
+    {:else if $page.error}
+        <title>
+            {$_("error-page.other.title")}
+        </title>
+    {:else}
+        <title>
+            {$_("error-page.no-error.title")}
+        </title>
+    {/if}
+</svelte:head>
+
+<Landing />
+<main class="flex grow flex-col gap-12 p-20">
     <header class="flex flex-col gap-12">
         <h1 class="text-5xl font-bold">
-            {$_("page404.title")}
+            {#if $page.status == 404}
+                {$_("error-page.404-not-found.title")}
+            {:else if $page.error}
+                {$_("error-page.other.title")}
+            {:else}
+                {$_("error-page.no-error.title")}
+            {/if}
         </h1>
-        <p class="text-xl font-bold">
-            {$_("page404.body")}
-        </p>
+        {#if $page.status == 404}
+            <p class="text-xl font-bold">
+                {$_("error-page.404-not-found.body")}
+            </p>
+        {:else if $page.error}
+            <p>
+                {$_("error-page.other.body")}
+            </p>
+            <p>
+                {$page.error.toString()}
+            </p>
+        {:else}
+            {$_("error-page.no-error.body")}
+        {/if}
     </header>
     <section>
-        <Anchor label={$_("page404.home")} href="/" size="large" />
+        <Anchor label={$_("error-page.take-me-home")} href="/" size="large" />
     </section>
-</div>
+</main>

@@ -338,11 +338,20 @@ const messages: MessageDirectory = {
         },
         empty: "No projects have been archived.",
     },
-    // Factor this into a general error section
-    "page404": {
-        title: "Lost your way?",
-        body: "The page you're looking for doesn't exist.",
-        home: "Take me home",
+    "error-page": {
+        "404-not-found": {
+            title: "Page not found",
+            body: "The page you're looking for doesn't exist.",
+        },
+        "no-error": {
+            title: "Page was opened without error",
+            body: "This page was opened, but nothing bad happened. Why?",
+        },
+        "other": {
+            title: "An error occurred",
+            body: "An error occured that the application does not know how to handle",
+        },
+        "take-me-home": "Take me home",
     },
     // Factor this into a general error section
     "connection-status": {
