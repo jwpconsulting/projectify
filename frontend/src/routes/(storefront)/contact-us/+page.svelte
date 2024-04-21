@@ -51,7 +51,10 @@
             </p>
         </div>
         <div class="hidden shrink basis-1/4 md:block">
-            <enhanced:img src="./illustration.png" alt={$_("contact-us.illustration.alt")} />
+            <enhanced:img
+                src="./illustration.png"
+                alt={$_("contact-us.illustration.alt")}
+            />
         </div>
     </div>
 </HeroLayout>
