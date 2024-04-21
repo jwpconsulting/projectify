@@ -77,10 +77,31 @@
           inherit python;
           pyproject = ./pyproject.toml;
           poetrylock = ./poetry.lock;
-          groups = [ ];
+          groups = [ "dev" "test" ];
+          buildInputs = [ pkgs.makeWrapper ];
+          # The DATABASE_URL below will only work on localhost
+          postInstall = ''
+            cp gunicorn.conf.py \
+              gunicorn-error.log \
+              manage.py \
+              "$out/bin"
+            mkdir -p "$out/srv/static"
+            DJANGO_SETTINGS_MODULE=projectify.settings.development \
+              DJANGO_CONFIGURATION=DevelopmentNix \
+              STATIC_ROOT="$out/srv/static" \
+              python "$out/bin/manage.py" collectstatic \
+                --no-input
+            wrapProgram "$out/bin/projectify-backend" \
+              --set DJANGO_SETTINGS_MODULE projectify.settings.development \
+              --set DJANGO_CONFIGURATION DevelopmentNix \
+              --set PORT 8000 \
+              --set STATIC_ROOT "$out/srv/static" \
+              --set DATABASE_URL postgres://%2Fvar%2Frun%2Fpostgresql/projectify
+          '';
         };
       in
       {
+        packages.default = app;
         devShell = poetryEnv.env.overrideAttrs (oldattrs: {
           buildInputs = [
             postgresql
