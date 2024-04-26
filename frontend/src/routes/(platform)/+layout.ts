@@ -54,4 +54,6 @@ export async function load({
 // Prerender: This page is completely prerenderable, there is no user data here
 export const prerender = false;
 // SSR, this can be prerendered
+// TODO this can be turned to true
+// Justus 2024-04-26
 export const ssr = false;
