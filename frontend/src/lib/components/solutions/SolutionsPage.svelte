@@ -34,7 +34,7 @@
     >
 </svelte:head>
 
-<HeroLayout>
+<HeroLayout heroBackground>
     <Hero slot="hero" heroContent={pageContent.heroContent} />
 
     <div

@@ -25,7 +25,7 @@
     <title>{$_("free-software.title")}</title>
 </svelte:head>
 
-<HeroLayout>
+<HeroLayout heroBackground>
     <div slot="hero">
         <h1 class="text-3xl font-bold">{$_("free-software.hero")}</h1>
     </div>

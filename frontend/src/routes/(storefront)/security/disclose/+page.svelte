@@ -28,7 +28,7 @@
     <title>{$_("security.disclose.title")}</title>
 </svelte:head>
 
-<HeroLayout>
+<HeroLayout heroBackground>
     <!-- eslint-disable-next-line svelte/no-at-html-tags -->
     <main class="prose" slot="content">{@html markdown.content}</main>
 </HeroLayout>

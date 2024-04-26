@@ -128,7 +128,7 @@
     <title>{$_("solutions.index.title")}</title>
 </svelte:head>
 
-<HeroLayout>
+<HeroLayout heroBackground>
     <Hero slot="hero" {heroContent} />
     <div
         slot="content"

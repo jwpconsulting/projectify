@@ -25,4 +25,4 @@ export { load };
 // TODO check
 export const prerender = false;
 // SSR, this can be prerendered
-export const ssr = false;
+export const ssr = true;

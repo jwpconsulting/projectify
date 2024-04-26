@@ -29,7 +29,7 @@
     <title>{$_("terms-of-service.title")}</title>
 </svelte:head>
 
-<HeroLayout isProseContent={true}>
+<HeroLayout isProseContent heroBackground>
     <nav slot="side" class="flex max-w-xs grow flex-col gap-2">
         <p id="top" class="font-bold">{$_("terms-of-service.nav.title")}</p>
         <ol class="list-inside list-disc">

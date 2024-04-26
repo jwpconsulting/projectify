@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    export let heroBackground = true;
+    export let heroBackground: boolean;
     export let isProseContent = false;
 </script>
 
@@ -27,7 +27,7 @@
 >
     {#if $$slots.hero}
         <div
-            class="flex w-full flex-col items-center bg-background"
+            class="flex w-full flex-col items-center"
             class:bg-background={heroBackground}
         >
             <div class="w-full max-w-4xl px-6 py-6 sm:py-12">

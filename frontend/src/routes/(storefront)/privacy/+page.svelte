@@ -31,7 +31,7 @@
     <title>{$_("privacy-policy.title")}</title>
 </svelte:head>
 
-<HeroLayout isProseContent={true}>
+<HeroLayout isProseContent heroBackground>
     <nav slot="side" class="flex max-w-xs grow flex-col gap-2">
         <p id="top" class="font-bold">{$_("privacy-policy.nav.title")}</p>
         <ol class="list-inside list-disc">
