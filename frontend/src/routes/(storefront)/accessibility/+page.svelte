@@ -40,7 +40,7 @@
     <title>{$_("accessibility.title")}</title>
 </svelte:head>
 
-<HeroLayout>
+<HeroLayout heroBackground>
     <Hero slot="hero" {heroContent} />
 
     <!-- eslint-disable-next-line svelte/no-at-html-tags -->

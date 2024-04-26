@@ -41,7 +41,7 @@
     >
 </svelte:head>
 
-<HeroLayout>
+<HeroLayout heroBackground>
     <Hero slot="hero" {heroContent} />
     <nav slot="side" class="flex grow flex-col gap-4 sm:max-w-xs">
         <h2 class="text-3xl font-bold">{$_("help.help-sections")}</h2>

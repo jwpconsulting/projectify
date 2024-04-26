@@ -42,7 +42,7 @@
     <title>{$_("help.title")}</title>
 </svelte:head>
 
-<HeroLayout>
+<HeroLayout heroBackground>
     <Hero slot="hero" {heroContent} />
     <div slot="content" class="flex w-full flex-col gap-4">
         <div

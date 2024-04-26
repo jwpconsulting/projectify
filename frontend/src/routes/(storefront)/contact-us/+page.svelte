@@ -32,7 +32,7 @@
     <title>{$_("contact-us.title")}</title>
 </svelte:head>
 
-<HeroLayout>
+<HeroLayout heroBackground>
     <Hero {heroContent} slot="hero" />
     <div
         slot="content"

@@ -28,7 +28,7 @@
     <title>{$_("credits.title")}</title>
 </svelte:head>
 
-<HeroLayout>
+<HeroLayout heroBackground>
     <div slot="hero">
         <h1 class="text-3xl font-bold">{$_("credits.hero")}</h1>
     </div>
