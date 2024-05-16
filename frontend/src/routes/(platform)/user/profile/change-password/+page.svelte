@@ -26,6 +26,7 @@
     import { getProfileUrl } from "$lib/urls";
     import { changedPasswordUrl } from "$lib/urls/user";
     import { openApiClient } from "$lib/repository/util";
+    import { onMount } from "svelte";
 
     let state: FormViewState = { kind: "start" };
 
@@ -35,6 +36,15 @@
     let newPassword1: string | undefined = undefined;
     let newPasswordValidation: InputFieldValidation | undefined = undefined;
     let newPassword2: string | undefined = undefined;
+
+    let passwordPolicies: string[] | undefined = undefined;
+    onMount(async () => {
+        const response = await openApiClient.GET("/user/user/password-policy");
+        if (response.data === undefined) {
+            throw new Error("Could not get password policies");
+        }
+        passwordPolicies = response.data.policies;
+    });
 
     $: canSubmit = state.kind !== "submitting";
 
@@ -161,6 +171,16 @@
             required
             validation={newPasswordValidation}
         />
+        {#if passwordPolicies}
+            <header class="font-bold">
+                {$_("auth.sign-up.password.policies")}
+            </header>
+            <ul class="flex list-inside list-disc flex-col gap-0.5">
+                {#each passwordPolicies as policy}
+                    <li>{policy}</li>
+                {/each}
+            </ul>
+        {/if}
         {#if state.kind === "error"}
             <p>
                 {state.message}
