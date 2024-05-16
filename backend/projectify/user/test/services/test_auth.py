@@ -26,8 +26,6 @@ from faker import Faker
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from projectify.user.services.internal import Token, user_make_token
-
 from ...models import User
 from ...services.auth import (
     user_confirm_email,
@@ -37,6 +35,7 @@ from ...services.auth import (
     user_request_password_reset,
     user_sign_up,
 )
+from ...services.internal import Token, user_make_token
 
 pytestmark = pytest.mark.django_db
 
@@ -87,15 +86,14 @@ def test_user_sign_up(faker: Faker) -> None:
 def test_user_sign_up_weak_password(faker: Faker) -> None:
     """Test signing up a new user, and choose a weak passsword."""
     assert User.objects.count() == 0
-    user_sign_up(
-        email=faker.email(),
-        password="weak-password-123",
-        tos_agreed=True,
-        privacy_policy_agreed=True,
-    )
-    user = User.objects.get()
-    assert user.privacy_policy_agreed is not None
-    assert user.tos_agreed is not None
+    with pytest.raises(ValidationError):
+        user_sign_up(
+            email=faker.email(),
+            password="asd123",
+            tos_agreed=True,
+            privacy_policy_agreed=True,
+        )
+    assert User.objects.count() == 0
 
 
 def test_user_confirm_email(user: User, inactive_user: User) -> None:
@@ -122,7 +120,7 @@ def test_user_confirm_email(user: User, inactive_user: User) -> None:
 @pytest.fixture
 def session_middleware() -> SessionMiddleware:
     """Create a session middlware instance."""
-    return SessionMiddleware(lambda _x: HttpResponse())
+    return SessionMiddleware(lambda _: HttpResponse())
 
 
 @pytest.fixture
