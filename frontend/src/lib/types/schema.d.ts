@@ -185,6 +185,17 @@ export type webhooks = Record<string, never>;
 
 export interface components {
     schemas: {
+        /** @description Accept old and new password. */
+        ChangePassword: {
+            current_password: string;
+            new_password: string;
+        };
+        /** @description These fields may be populated in a 400 response. */
+        ChangePasswordError: {
+            current_password?: string;
+            new_password?: string;
+            policies?: string[];
+        };
         /** @description Serialize password policies. */
         PasswordPolicies: {
             policies: string[];
@@ -285,10 +296,22 @@ export interface operations {
     };
     /** @description Handle POST. */
     user_user_change_password_create: {
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangePassword"];
+                "application/x-www-form-urlencoded": components["schemas"]["ChangePassword"];
+                "multipart/form-data": components["schemas"]["ChangePassword"];
+            };
+        };
         responses: {
             /** @description No response body */
-            200: {
+            204: {
                 content: never;
+            };
+            400: {
+                content: {
+                    "application/json": components["schemas"]["ChangePasswordError"];
+                };
             };
         };
     };

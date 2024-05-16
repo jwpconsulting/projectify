@@ -26,6 +26,7 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
 from django_ratelimit.decorators import ratelimit
+from drf_spectacular.utils import extend_schema
 from rest_framework import (
     parsers,
     serializers,
@@ -115,17 +116,33 @@ class ProfilePictureUpload(views.APIView):
 class ChangePassword(views.APIView):
     """Allow changing password by specifying old and new password."""
 
-    class InputSerializer(serializers.Serializer):
+    class ChangePasswordSerializer(serializers.Serializer):
         """Accept old and new password."""
 
         current_password = serializers.CharField()
         new_password = serializers.CharField()
 
+    class ChangePasswordErrorSerializer(serializers.Serializer):
+        """These fields may be populated in a 400 response."""
+
+        current_password = serializers.CharField(required=False)
+        new_password = serializers.CharField(required=False)
+        policies = serializers.ListField(
+            child=serializers.CharField(), required=False
+        )
+
+    @extend_schema(
+        request=ChangePasswordSerializer,
+        responses={
+            204: None,
+            400: ChangePasswordErrorSerializer,
+        },
+    )
     @method_decorator(ratelimit(key="user", rate="5/h"))
     def post(self, request: Request) -> Response:
         """Handle POST."""
         user = request.user
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.ChangePasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         user_change_password(
