@@ -19,6 +19,7 @@ import vars from "$lib/env";
 import {
     failOrOk,
     getWithCredentialsJson,
+    openApiClient,
     postWithCredentialsJson,
     putWithCredentialsJson,
 } from "$lib/repository/util";
@@ -73,15 +74,14 @@ export async function updateProfilePicture(
 export async function changePassword(
     current_password: string,
     new_password: string,
-    repositoryContext: RepositoryContext,
-): Promise<
-    ApiResponse<void, { current_password?: string; new_password?: string }>
-> {
-    return await postWithCredentialsJson(
-        "/user/user/change-password",
-        { current_password, new_password },
-        repositoryContext,
-    );
+    // TODO: Think about how to pass this back in, or make the current
+    // fetch a global state perhaps
+    // repositoryContext: RepositoryContext,
+) {
+    return await openApiClient.POST("/user/user/change-password", {
+        body: { current_password, new_password },
+        // credentials: "include",
+    });
 }
 
 export async function requestEmailAddressUpdate(

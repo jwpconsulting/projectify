@@ -58,10 +58,8 @@
             return;
         }
         state = { kind: "submitting" };
-        const result = await changePassword(currentPassword, newPassword1, {
-            fetch,
-        });
-        if (result.ok) {
+        const result = await changePassword(currentPassword, newPassword1);
+        if (result.error === undefined) {
             await goto(changedPasswordUrl);
             return;
         }
@@ -96,7 +94,7 @@
                 kind: "error",
                 message: $_(
                     "user-account-settings.change-password.validation.general-error",
-                    { values: { detail: JSON.stringify(result.error) } },
+                    { values: { details: JSON.stringify(result.error) } },
                 ),
             };
         } else {
