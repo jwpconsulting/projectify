@@ -20,6 +20,7 @@ import re
 import pytest
 from faker import Faker
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from projectify.user.services.internal import Token, user_make_token
 from pytest_types import Mailbox
@@ -43,8 +44,22 @@ def test_user_update(user: User, faker: Faker) -> None:
     assert user.preferred_name == new_name
 
 
+def test_user_change_password_weak_password(user: User, password: str) -> None:
+    """Test changing password with weak password."""
+    with pytest.raises(ValidationError):
+        user_change_password(
+            user=user,
+            current_password=password,
+            new_password="asd123",
+        )
+
+    user.refresh_from_db()
+    assert user.check_password("asd123") is False
+    assert user.check_password(password) is True
+
+
 def test_user_change_password(
-    user: User, password: str, faker: Faker, mailoutbox: Mailbox
+    user: User, password: str, mailoutbox: Mailbox
 ) -> None:
     """
     Test changing a user's password. Check that notification email goes out.

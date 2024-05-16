@@ -18,7 +18,9 @@
 import logging
 from typing import Optional
 
+from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import PermissionDenied
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
@@ -69,6 +71,10 @@ def user_change_password(
         raise serializers.ValidationError(
             {"current_password": _("Incorrect password. Check again.")}
         )
+    try:
+        validate_password(password=new_password, user=user)
+    except DjangoValidationError as e:
+        raise serializers.ValidationError({"policies": e.messages})
     user.set_password(new_password)
     user.save()
 
