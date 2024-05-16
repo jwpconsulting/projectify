@@ -19,7 +19,6 @@ import vars from "$lib/env";
 import {
     failOrOk,
     getWithCredentialsJson,
-    openApiClient,
     postWithCredentialsJson,
     putWithCredentialsJson,
 } from "$lib/repository/util";
@@ -69,19 +68,6 @@ export async function updateProfilePicture(
         imageFile,
         vars.API_ENDPOINT + "/user/user/profile-picture/upload",
     );
-}
-
-export async function changePassword(
-    current_password: string,
-    new_password: string,
-    // TODO: Think about how to pass this back in, or make the current
-    // fetch a global state perhaps
-    // repositoryContext: RepositoryContext,
-) {
-    return await openApiClient.POST("/user/user/change-password", {
-        body: { current_password, new_password },
-        // credentials: "include",
-    });
 }
 
 export async function requestEmailAddressUpdate(

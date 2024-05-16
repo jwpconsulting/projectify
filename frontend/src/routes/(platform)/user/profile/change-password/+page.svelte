@@ -22,10 +22,10 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import { goto } from "$lib/navigation";
-    import { changePassword } from "$lib/repository/user";
     import type { FormViewState } from "$lib/types/ui";
     import { getProfileUrl } from "$lib/urls";
     import { changedPasswordUrl } from "$lib/urls/user";
+    import { openApiClient } from "$lib/repository/util";
 
     let state: FormViewState = { kind: "start" };
 
@@ -58,15 +58,23 @@
             return;
         }
         state = { kind: "submitting" };
-        const result = await changePassword(currentPassword, newPassword1);
-        if (result.error === undefined) {
+        const { error } = await openApiClient.POST(
+            "/user/user/change-password",
+            {
+                body: {
+                    current_password: currentPassword,
+                    new_password: newPassword1,
+                },
+            },
+        );
+        if (error === undefined) {
             await goto(changedPasswordUrl);
             return;
         }
-        if (result.error.current_password !== undefined) {
+        if (error.current_password !== undefined) {
             currentPasswordValidation = {
                 ok: false,
-                error: result.error.current_password,
+                error: error.current_password,
             };
         } else {
             currentPasswordValidation = {
@@ -76,11 +84,12 @@
                 ),
             };
         }
-        if (result.error.new_password !== undefined) {
-            newPasswordValidation = {
-                ok: false,
-                error: result.error.new_password,
-            };
+        if (error.policies !== undefined || error.new_password !== undefined) {
+            const errors = [
+                ...(error.policies ?? []),
+                ...(error.new_password ? [error.new_password] : []),
+            ];
+            newPasswordValidation = { ok: false, error: errors.join(", ") };
         } else {
             newPasswordValidation = {
                 ok: true,
@@ -94,7 +103,7 @@
                 kind: "error",
                 message: $_(
                     "user-account-settings.change-password.validation.general-error",
-                    { values: { details: JSON.stringify(result.error) } },
+                    { values: { details: JSON.stringify(error) } },
                 ),
             };
         } else {
