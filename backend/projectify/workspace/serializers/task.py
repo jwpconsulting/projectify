@@ -35,4 +35,6 @@ class TaskWithSubTaskSerializer(base.TaskBaseSerializer):
         fields = (
             *base.TaskBaseSerializer.Meta.fields,
             "sub_tasks",
+            "labels",
+            "assignee",
         )

@@ -212,7 +212,11 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         """Meta."""
 
         fields = (
-            *base.TaskBaseSerializer.Meta.fields,
+            "title",
+            "description",
+            "assignee",
+            "labels",
+            "due_date",
             "section",
             "sub_tasks",
         )

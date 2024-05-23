@@ -19,6 +19,7 @@ from uuid import UUID
 
 from django.utils.translation import gettext_lazy as _
 
+from drf_spectacular.utils import extend_schema
 from rest_framework import (
     serializers,
     status,
@@ -42,7 +43,6 @@ from projectify.workspace.selectors.task import (
     TaskDetailQuerySet,
     task_find_by_task_uuid,
 )
-from projectify.workspace.serializers.base import TaskBaseSerializer
 from projectify.workspace.serializers.task_detail import (
     TaskCreateUpdateSerializer,
     TaskDetailSerializer,
@@ -79,6 +79,14 @@ def get_object(request: Request, task_uuid: UUID) -> models.Task:
 class TaskCreate(APIView):
     """Create a task."""
 
+    @extend_schema(
+        request=TaskCreateUpdateSerializer,
+        responses={
+            201: TaskDetailSerializer,
+            # TODO specify error format here
+            400: None,
+        },
+    )
     def post(self, request: Request) -> Response:
         """Handle POST."""
         serializer = TaskCreateUpdateSerializer(
@@ -106,7 +114,7 @@ class TaskCreate(APIView):
             labels=labels,
             sub_tasks=sub_tasks,
         )
-        output_serializer = TaskBaseSerializer(instance=task)
+        output_serializer = TaskDetailSerializer(instance=task)
         return Response(
             data=output_serializer.data, status=status.HTTP_201_CREATED
         )

@@ -125,7 +125,8 @@ class TestTaskCreate(UnauthenticatedTestMixin):
         # 25 now
         # 26 now
         # 24 now
-        with django_assert_num_queries(22):
+        # 21 now Justus 2024-05-23
+        with django_assert_num_queries(25):
             response = rest_user_client.post(
                 resource_url,
                 {**payload, "assignee": {"uuid": str(team_member.uuid)}},

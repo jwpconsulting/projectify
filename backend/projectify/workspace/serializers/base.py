@@ -142,8 +142,6 @@ class TaskBaseSerializer(serializers.ModelSerializer[models.Task]):
             "uuid",
             "due_date",
             "number",
-            "labels",
-            "assignee",
         )
 
 
