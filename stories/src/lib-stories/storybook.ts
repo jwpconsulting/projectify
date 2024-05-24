@@ -82,6 +82,7 @@ export const teamMember: TeamMember = {
     user: user1,
     uuid: nullUuid,
     role: "OWNER",
+    job_title: null,
     created: "",
     modified: "",
 };
@@ -95,6 +96,9 @@ export const teamMemberSelectionInputs: TeamMemberSelectionInput[] = [
 export const project: Project = {
     uuid: nullUuid,
     title: "Project with a long name, it is long",
+    description: null,
+    archived: null,
+    due_date: null,
     created: "",
     modified: "",
 };
@@ -102,6 +106,7 @@ export const project: Project = {
 export const workspace = {
     uuid: nullUuid,
     title: "This is a workspace, the title is veeeeeryyy loooong",
+    description: null,
     created: "",
     modified: "",
     picture: null,
@@ -134,11 +139,12 @@ export const subTask: SubTask = {
     modified: "",
     uuid: nullUuid,
     done: false,
-    order: 0,
+    _order: 0,
 };
 
 export const task: TaskWithSection = {
     title: "This task has a very long name, yes, it's long, and as you know that will tell us whether we have overflow problems or not.",
+    description: null,
     created: "",
     modified: "",
     uuid: nullUuid,
@@ -150,6 +156,7 @@ export const task: TaskWithSection = {
     sub_tasks: [subTask],
     section: {
         title: "section name that is long",
+        description: null,
         created: "",
         modified: "",
         uuid: nullUuid,
@@ -157,6 +164,9 @@ export const task: TaskWithSection = {
         project: {
             uuid: nullUuid,
             title: "Project with a long name, it is long",
+            description: null,
+            archived: null,
+            due_date: null,
             created: "",
             modified: "",
         },
@@ -165,6 +175,7 @@ export const task: TaskWithSection = {
 
 const task2: Task = {
     title: "A second task, worthy of being a task, and having a wordy title",
+    description: null,
     created: "",
     modified: "",
     uuid: "00000000-0000-0000-0000-000000000001",
@@ -178,6 +189,7 @@ const task2: Task = {
 
 export const section: SectionWithTasks = {
     title: "section name that is very very very very very very long",
+    description: null,
     uuid: nullUuid,
     tasks: [task, task2],
     _order: 0,
