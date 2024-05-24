@@ -99,10 +99,14 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         constraints = (
             models.CheckConstraint(
                 name="preferred_name",
-                # Match period followed by space, or not period
-                check=models.Q(preferred_name__regex=r"^([.:]\s|[^.:])+$"),
+                # Match period, colon followed by space, or not period
+                # or period, colon at end of word
+                check=models.Q(
+                    preferred_name__regex=r"^([.:]\s|[^.:])+[.:]?$"
+                ),
                 violation_error_message=_(
-                    "Preferred name can only contain '.' or ':' if followed by whitespace."
+                    "Preferred name can only contain '.' or ':' if followed "
+                    "by whitespace or if located at the end."
                 ),
             ),
         )
