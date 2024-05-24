@@ -194,6 +194,10 @@ class SubTaskBaseSerializer(serializers.ModelSerializer[models.SubTask]):
             "done",
             "_order",
         )
+        extra_kwargs = {
+            "description": {"required": True},
+            "done": {"required": True},
+        }
 
 
 class LabelBaseSerializer(serializers.ModelSerializer[models.Label]):
