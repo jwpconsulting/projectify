@@ -114,6 +114,9 @@ class ProjectBaseSerializer(serializers.ModelSerializer[models.Project]):
             "uuid",
             "archived",
         )
+        extra_kwargs = {
+            "due_date": {"required": True},
+        }
 
 
 class SectionBaseSerializer(serializers.ModelSerializer[models.Section]):

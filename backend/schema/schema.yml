@@ -915,6 +915,7 @@ components:
           readOnly: true
       required:
       - created
+      - due_date
       - modified
       - title
       - uuid
