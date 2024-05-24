@@ -19,6 +19,7 @@ from uuid import UUID
 
 from django.utils.translation import gettext_lazy as _
 
+from drf_spectacular.utils import extend_schema
 from rest_framework import (
     serializers,
     status,
@@ -42,10 +43,10 @@ from projectify.workspace.selectors.task import (
     TaskDetailQuerySet,
     task_find_by_task_uuid,
 )
-from projectify.workspace.serializers.base import TaskBaseSerializer
 from projectify.workspace.serializers.task_detail import (
-    TaskCreateUpdateSerializer,
+    TaskCreateSerializer,
     TaskDetailSerializer,
+    TaskUpdateSerializer,
 )
 from projectify.workspace.services.sub_task import ValidatedData
 from projectify.workspace.services.task import (
@@ -79,9 +80,17 @@ def get_object(request: Request, task_uuid: UUID) -> models.Task:
 class TaskCreate(APIView):
     """Create a task."""
 
+    @extend_schema(
+        request=TaskCreateSerializer,
+        responses={
+            201: TaskDetailSerializer,
+            # TODO specify error format here
+            400: None,
+        },
+    )
     def post(self, request: Request) -> Response:
         """Handle POST."""
-        serializer = TaskCreateUpdateSerializer(
+        serializer = TaskCreateSerializer(
             data=request.data, context={"request": request}
         )
         serializer.is_valid(raise_exception=True)
@@ -106,7 +115,7 @@ class TaskCreate(APIView):
             labels=labels,
             sub_tasks=sub_tasks,
         )
-        output_serializer = TaskBaseSerializer(instance=task)
+        output_serializer = TaskDetailSerializer(instance=task)
         return Response(
             data=output_serializer.data, status=status.HTTP_201_CREATED
         )
@@ -122,6 +131,14 @@ class TaskRetrieveUpdateDelete(APIView):
         serializer = TaskDetailSerializer(instance=instance)
         return Response(data=serializer.data)
 
+    @extend_schema(
+        request=TaskUpdateSerializer,
+        responses={
+            200: TaskDetailSerializer,
+            # TODO specify error format here
+            400: None,
+        },
+    )
     def put(self, request: Request, task_uuid: UUID) -> Response:
         """
         Override update behavior. Return using different serializer.
@@ -133,7 +150,7 @@ class TaskRetrieveUpdateDelete(APIView):
         # https://github.com/encode/django-rest-framework/blob/d32346bae55f3e4718a185fb60e9f7a28e389c85/rest_framework/mixins.py#L65
         # We probably don't have to get the full object here!
         instance = get_object(request, task_uuid)
-        serializer = TaskCreateUpdateSerializer(
+        serializer = TaskUpdateSerializer(
             instance,
             data=request.data,
             # Mild code duplication from
@@ -164,7 +181,9 @@ class TaskRetrieveUpdateDelete(APIView):
 
         instance = get_object(request, task_uuid)
         response_serializer = TaskDetailSerializer(instance=instance)
-        return Response(response_serializer.data)
+        return Response(
+            status=status.HTTP_200_OK, data=response_serializer.data
+        )
 
     def delete(self, request: Request, task_uuid: UUID) -> Response:
         """Delete task."""

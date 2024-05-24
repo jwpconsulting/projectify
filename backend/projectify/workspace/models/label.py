@@ -63,7 +63,6 @@ class Label(BaseModel):
     name = models.CharField(max_length=255)
     color = models.PositiveBigIntegerField(
         help_text=_("Color index"),
-        default=0,
     )
     workspace = models.ForeignKey[Workspace](
         Workspace,

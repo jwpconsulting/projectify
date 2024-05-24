@@ -48,6 +48,7 @@
     const workspaceFallback: WorkspaceDetail = {
         uuid: "does-not-exist",
         title: "",
+        description: null,
         created: "",
         picture: null,
         modified: "",
@@ -60,13 +61,17 @@
     const projectFallback: ProjectDetail = {
         uuid: "does-not-exist",
         title: $_("onboarding.new-project.default-name"),
+        description: null,
         modified: "",
         created: "",
         sections: [],
+        due_date: null,
+        archived: null,
         workspace: workspaceFallback,
     };
     const sectionFallback: Section = {
         title: "",
+        description: null,
         modified: "",
         created: "",
         uuid: "",
@@ -74,9 +79,11 @@
     };
     const taskFallback: Task = {
         title: "",
+        description: null,
         modified: "",
         created: "",
         uuid: "",
+        due_date: null,
         number: 1,
         labels: [],
         _order: 0,

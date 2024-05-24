@@ -20,7 +20,7 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import { _ } from "svelte-i18n";
 
-    export let description: string | undefined;
+    export let description: string | null;
     export let readonly = false;
     export let onInteract: (() => void) | undefined = undefined;
 </script>

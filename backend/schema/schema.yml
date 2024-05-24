@@ -494,10 +494,28 @@ paths:
       description: Handle POST.
       tags:
       - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TaskCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TaskCreate'
+        required: true
       security:
       - cookieAuth: []
       responses:
-        '200':
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDetail'
+          description: ''
+        '400':
           description: No response body
   /workspace/task/{task_uuid}:
     get:
@@ -533,10 +551,28 @@ paths:
         required: true
       tags:
       - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TaskUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TaskUpdate'
+        required: true
       security:
       - cookieAuth: []
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDetail'
+          description: ''
+        '400':
           description: No response body
     delete:
       operationId: workspace_task_destroy
@@ -797,6 +833,55 @@ components:
           type: array
           items:
             type: string
+    ChatMessageBase:
+      type: object
+      description: ChatMessage model serializer.
+      properties:
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        text:
+          type: string
+        author:
+          allOf:
+          - $ref: '#/components/schemas/TeamMemberBase'
+          readOnly: true
+      required:
+      - author
+      - created
+      - modified
+      - text
+      - uuid
+    LabelBase:
+      type: object
+      description: Label model serializer.
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        color:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Color index
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - color
+      - name
+      - uuid
     PasswordPolicies:
       type: object
       description: Serialize password policies.
@@ -807,6 +892,104 @@ components:
             type: string
       required:
       - policies
+    ProjectUp:
+      type: object
+      description: |-
+        Serialize project and workspace containing it.
+
+        Used when serializing up from a task or ws board section.
+      properties:
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        due_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Due date for this workspace board
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        archived:
+          type: string
+          format: date-time
+          nullable: true
+          description: Archival timestamp of this workspace board.
+        workspace:
+          allOf:
+          - $ref: '#/components/schemas/WorkspaceBase'
+          readOnly: true
+      required:
+      - archived
+      - created
+      - description
+      - due_date
+      - modified
+      - title
+      - uuid
+      - workspace
+    RoleEnum:
+      enum:
+      - OBSERVER
+      - CONTRIBUTOR
+      - MAINTAINER
+      - OWNER
+      type: string
+      description: |-
+        * `OBSERVER` - Observer
+        * `CONTRIBUTOR` - Contributor
+        * `MAINTAINER` - Maintainer
+        * `OWNER` - Owner
+    SectionUp:
+      type: object
+      description: Serialize section up the hierarchy.
+      properties:
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        _order:
+          type: integer
+          readOnly: true
+          title: ' order'
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        project:
+          allOf:
+          - $ref: '#/components/schemas/ProjectUp'
+          readOnly: true
+      required:
+      - _order
+      - created
+      - description
+      - modified
+      - project
+      - title
+      - uuid
     SignUp:
       type: object
       description: Take in email and password.
@@ -841,6 +1024,304 @@ components:
           type: string
         privacy_policy_agreed:
           type: string
+    SubTaskBase:
+      type: object
+      description: SubTask model serializer.
+      properties:
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        done:
+          type: boolean
+          description: Designate whether this sub task is done
+        _order:
+          type: integer
+          readOnly: true
+          title: ' order'
+      required:
+      - _order
+      - created
+      - description
+      - done
+      - modified
+      - title
+      - uuid
+    SubTaskCreateUpdate:
+      type: object
+      description: A sub task serializer that accepts a missing UUID.
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        done:
+          type: boolean
+          description: Designate whether this sub task is done
+      required:
+      - title
+    TaskCreate:
+      type: object
+      description: Serializer for creating tasks.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        assignee:
+          allOf:
+          - $ref: '#/components/schemas/UuidObject'
+          nullable: true
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/UuidObject'
+          writeOnly: true
+        due_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Due date for this task
+        sub_tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubTaskCreateUpdate'
+        section:
+          $ref: '#/components/schemas/UuidObject'
+      required:
+      - assignee
+      - description
+      - due_date
+      - labels
+      - section
+      - title
+    TaskDetail:
+      type: object
+      description: |-
+        Serialize all task details.
+
+        Serializes up to the workspace in one direction, and all chat messages,
+        labels and sub task in the other direction.
+      properties:
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        _order:
+          type: integer
+          readOnly: true
+          title: ' order'
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        due_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Due date for this task
+        number:
+          type: integer
+          readOnly: true
+        sub_tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubTaskBase'
+          readOnly: true
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabelBase'
+          readOnly: true
+        assignee:
+          allOf:
+          - $ref: '#/components/schemas/TeamMemberBase'
+          readOnly: true
+        chat_messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessageBase'
+          readOnly: true
+        section:
+          allOf:
+          - $ref: '#/components/schemas/SectionUp'
+          readOnly: true
+      required:
+      - _order
+      - assignee
+      - chat_messages
+      - created
+      - description
+      - due_date
+      - labels
+      - modified
+      - number
+      - section
+      - sub_tasks
+      - title
+      - uuid
+    TaskUpdate:
+      type: object
+      description: Serializer for updating tasks.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        assignee:
+          allOf:
+          - $ref: '#/components/schemas/UuidObject'
+          nullable: true
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/UuidObject'
+          writeOnly: true
+        due_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Due date for this task
+        sub_tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubTaskCreateUpdate'
+      required:
+      - assignee
+      - description
+      - due_date
+      - labels
+      - title
+    TeamMemberBase:
+      type: object
+      description: Team member serializer.
+      properties:
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+        user:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        job_title:
+          type: string
+          nullable: true
+          maxLength: 255
+      required:
+      - created
+      - job_title
+      - modified
+      - role
+      - user
+      - uuid
+    User:
+      type: object
+      description: User serializer.
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        preferred_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        profile_picture:
+          type: string
+          nullable: true
+          description: Return profile picture.
+          readOnly: true
+      required:
+      - email
+      - preferred_name
+      - profile_picture
+    UuidObject:
+      type: object
+      description: Deserialize the UUID for a any object with a UUID.
+      properties:
+        uuid:
+          type: string
+          format: uuid
+      required:
+      - uuid
+    WorkspaceBase:
+      type: object
+      description: Workspace base serializer.
+      properties:
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        picture:
+          type: string
+          nullable: true
+          description: Return profile picture.
+          readOnly: true
+      required:
+      - created
+      - description
+      - modified
+      - picture
+      - title
+      - uuid
   securitySchemes:
     cookieAuth:
       type: apiKey

@@ -20,11 +20,6 @@ export interface TimestampedType {
     modified: string;
 }
 
-export interface TitleDescriptionType {
-    title: string;
-    description?: string;
-}
-
 export type SearchInput = string | undefined;
 
 // https://stackoverflow.com/questions/65332597/typescript-is-there-a-recursive-keyof/65334052#65334052

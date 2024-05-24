@@ -38,6 +38,7 @@
     import type { PageData } from "./$types";
     import { beforeNavigate } from "$app/navigation";
     import type { BeforeNavigate } from "@sveltejs/kit";
+    import type { FormViewState } from "$lib/types/ui";
 
     export let data: PageData;
 
@@ -46,8 +47,8 @@
 
     // form fields
     let title: string | undefined = undefined;
-    let description: string | undefined = undefined;
-    let dueDate: string | undefined = undefined;
+    let description: string | null = null;
+    let dueDate: string | null = null;
 
     // Do the following 3 variables have to be reactive? If so,
     // what do they depend on?
@@ -56,9 +57,13 @@
     const subTaskAssignment = createSubTaskAssignment();
     $: subTasks = subTaskAssignment.subTasks;
 
-    $: canCreate = !creating && title !== undefined;
+    $: canCreate =
+        state.kind !== "done" &&
+        state.kind !== "submitting" &&
+        title !== undefined;
 
-    let creating = false;
+    type State = FormViewState | { kind: "done" };
+    let state: State = { kind: "start" };
 
     async function action(continueEditing: boolean) {
         if (!title) {
@@ -76,17 +81,18 @@
             due_date: dueDate,
             sub_tasks: $subTasks,
         };
-        creating = true;
+        state = { kind: "submitting" };
         try {
-            const task = await createTaskFn(createTaskFull, { fetch });
+            const task = await createTaskFn(createTaskFull);
             if (continueEditing) {
                 await goto(getTaskUrl(task));
                 return;
             }
+            state = { kind: "done" };
             await goto(getDashboardSectionUrl(section));
             return;
         } catch (e) {
-            creating = false;
+            state = { kind: "error", message: JSON.stringify(e) };
             throw e;
         }
     }
@@ -107,6 +113,9 @@
     ];
 
     beforeNavigate((navigation: BeforeNavigate) => {
+        if (state.kind === "done") {
+            return;
+        }
         const navigateAway = window.confirm(
             $_("task-screen.confirm-navigate-away.create"),
         );

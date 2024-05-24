@@ -34,8 +34,8 @@
     export let action: () => void;
 
     export let title: string | undefined;
-    export let description: string | undefined;
-    export let dueDate: string | undefined;
+    export let description: string | null;
+    export let dueDate: string | null;
 
     export let teamMemberAssignment: TeamMemberAssignment;
     export let labelAssignment: LabelAssignment;

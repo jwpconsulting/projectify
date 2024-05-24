@@ -19,13 +19,17 @@ import { derived, writable } from "svelte/store";
 import type { Readable } from "svelte/store";
 
 import type { SubTaskAssignment } from "$lib/types/stores";
-import type { CreateUpdateSubTask, Task } from "$lib/types/workspace";
+import type { CreateUpdateSubTask, SubTask, Task } from "$lib/types/workspace";
 
 function filterSubTasks(
     subTasks: Partial<CreateUpdateSubTask>[],
 ): CreateUpdateSubTask[] | undefined {
     const nonPartials = subTasks.map((el: Partial<CreateUpdateSubTask>) => {
-        if (el.done !== undefined && el.title !== undefined) {
+        if (
+            el.done !== undefined &&
+            el.title !== undefined &&
+            el.description !== undefined
+        ) {
             return {
                 title: el.title,
                 description: el.description,
@@ -45,7 +49,7 @@ function filterSubTasks(
 }
 
 export function createSubTaskAssignment(task?: Task): SubTaskAssignment {
-    const existingSubTasks = task?.sub_tasks ?? [];
+    const existingSubTasks: SubTask[] = [...(task?.sub_tasks ?? [])];
     const { subscribe, set, update } =
         writable<Partial<CreateUpdateSubTask>[]>(existingSubTasks);
     const addSubTask = () => {

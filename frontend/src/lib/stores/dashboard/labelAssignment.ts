@@ -40,7 +40,7 @@ function evaluateLabelAssignment(state: LabelAssignmentState): string[] {
 }
 
 export function createLabelAssignment(task?: Task): LabelAssignment {
-    const maybeLabels: Label[] = task?.labels ?? [];
+    const maybeLabels: readonly Label[] = task?.labels ?? [];
     const selection: LabelAssignmentState =
         maybeLabels.length > 0
             ? {

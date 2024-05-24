@@ -22,6 +22,7 @@ import {
     handle404,
     failOrOk,
     deleteWithCredentialsJson,
+    openApiClient,
 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
@@ -39,7 +40,7 @@ import type {
 export async function createTask(
     data: {
         title: string;
-        description?: string;
+        description: string | null;
         // TODO this has to be optional in the backend -> undefined means unset
         // labels
         labels: Pick<Label, "uuid">[];
@@ -48,32 +49,36 @@ export async function createTask(
         assignee?: Pick<TeamMember, "uuid">;
         section: Pick<Section, "uuid">;
         // TODO dueDate plz
-        due_date?: string;
+        due_date: string | null;
         sub_tasks?: CreateUpdateSubTask[];
     },
-    repositoryContext: RepositoryContext,
+    // TODO allow adding fetch reference here again
+    // repositoryContext: RepositoryContext,
 ): Promise<Task> {
-    const response = await postWithCredentialsJson<Task>(
+    const body = {
+        ...data,
+        section: {
+            uuid: data.section.uuid,
+        },
+        labels: data.labels.map((l) => {
+            return { uuid: l.uuid };
+        }),
+        assignee: data.assignee ? { uuid: data.assignee.uuid } : null,
+    };
+    const { data: content, response } = await openApiClient.POST(
         "/workspace/task/",
         {
-            ...data,
-            section: {
-                uuid: data.section.uuid,
-            },
-            labels: data.labels.map((l) => {
-                return { uuid: l.uuid };
-            }),
-            assignee: data.assignee ? { uuid: data.assignee.uuid } : null,
+            body,
         },
-        repositoryContext,
     );
-    if (response.ok) {
-        return response.data;
-    } else if (response.kind === "badRequest") {
+    if (response.status === 400) {
         // TODO show the user what the bad request was
-        console.error(response.error);
+        throw new Error("400 encountered");
     }
-    throw new Error("Don't know how to handle this");
+    if (content === undefined) {
+        throw new Error("Other error encountered");
+    }
+    return content;
 }
 
 // Read
@@ -98,16 +103,16 @@ export async function updateTask(
     task: Pick<Task, "uuid">,
     data: {
         title: string;
-        description?: string;
+        description: string | null;
         // TODO this has to be optional in the backend -> undefined means unset
         // labels
-        labels: Pick<Label, "uuid">[];
+        labels: readonly Pick<Label, "uuid">[];
         // TODO this has to be optional in the backend -> undefined means unset
         // assignee
         assignee?: Pick<TeamMember, "uuid">;
         // TODO dueDate plz
-        due_date?: string;
-        sub_tasks?: CreateUpdateSubTask[];
+        due_date: string | null;
+        sub_tasks?: readonly CreateUpdateSubTask[];
     },
     repositoryContext: RepositoryContext,
 ): Promise<Task | undefined> {

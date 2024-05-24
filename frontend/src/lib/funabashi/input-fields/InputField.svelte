@@ -33,7 +33,7 @@
     import { tw } from "$lib/utils/ui";
 
     // TODO make border customizable (e.g. in TaskFormFields)
-    export let value: string | undefined = undefined;
+    export let value: string | undefined | null = undefined;
     export let placeholder: string;
     export let style: InputFieldStyle;
     export let name: string;

@@ -76,6 +76,9 @@ class WorkspaceBaseSerializer(serializers.ModelSerializer[models.Workspace]):
             "uuid",
             "picture",
         )
+        extra_kwargs = {
+            "description": {"required": True},
+        }
 
 
 class TeamMemberBaseSerializer(serializers.ModelSerializer[models.TeamMember]):
@@ -94,6 +97,10 @@ class TeamMemberBaseSerializer(serializers.ModelSerializer[models.TeamMember]):
             "role",
             "job_title",
         )
+        extra_kwargs = {
+            "job_title": {"required": True},
+            "role": {"required": True},
+        }
 
 
 class ProjectBaseSerializer(serializers.ModelSerializer[models.Project]):
@@ -110,6 +117,11 @@ class ProjectBaseSerializer(serializers.ModelSerializer[models.Project]):
             "uuid",
             "archived",
         )
+        extra_kwargs = {
+            "due_date": {"required": True},
+            "archived": {"required": True},
+            "description": {"required": True},
+        }
 
 
 class SectionBaseSerializer(serializers.ModelSerializer[models.Section]):
@@ -125,6 +137,9 @@ class SectionBaseSerializer(serializers.ModelSerializer[models.Section]):
             "_order",
             "uuid",
         )
+        extra_kwargs = {
+            "description": {"required": True},
+        }
 
 
 class TaskBaseSerializer(serializers.ModelSerializer[models.Task]):
@@ -135,16 +150,18 @@ class TaskBaseSerializer(serializers.ModelSerializer[models.Task]):
 
         model = models.Task
         read_only_fields = ("number",)
-        fields = (
+        fields: Sequence[str] = (
             *timestamps,
             *title_description,
             "_order",
             "uuid",
             "due_date",
             "number",
-            "labels",
-            "assignee",
         )
+        extra_kwargs = {
+            "due_date": {"required": True},
+            "description": {"required": True},
+        }
 
 
 class ChatMessageBaseSerializer(
@@ -180,6 +197,10 @@ class SubTaskBaseSerializer(serializers.ModelSerializer[models.SubTask]):
             "done",
             "_order",
         )
+        extra_kwargs = {
+            "description": {"required": True},
+            "done": {"required": True},
+        }
 
 
 class LabelBaseSerializer(serializers.ModelSerializer[models.Label]):

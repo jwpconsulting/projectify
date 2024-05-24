@@ -26,7 +26,7 @@
         undefined;
     export let readonly = false;
 
-    export let labels: Label[];
+    export let labels: readonly Label[];
 
     let btnRef: HTMLElement;
 </script>

@@ -49,14 +49,15 @@
     import type { PageData } from "./$types";
     import { beforeNavigate } from "$app/navigation";
     import type { BeforeNavigate } from "@sveltejs/kit";
+    import type { FormViewState } from "$lib/types/ui";
 
     export let data: PageData;
     const { task } = data;
 
     // Initial data
     let title: string | undefined = undefined;
-    let description: string | undefined = undefined;
-    let dueDate: string | undefined = undefined;
+    let description: string | null = null;
+    let dueDate: string | null = null;
 
     let teamMemberAssignment: TeamMemberAssignment | undefined = undefined;
     let labelAssignment: LabelAssignment | undefined = undefined;
@@ -75,9 +76,14 @@
     $: subTasks = subTaskAssignment?.subTasks;
 
     // XXX I am sure we can have really fancy validation
-    $: canUpdate = !updating && title !== "" && $subTasks !== undefined;
+    $: canUpdate =
+        state.kind !== "done" &&
+        state.kind !== "submitting" &&
+        title !== "" &&
+        $subTasks !== undefined;
 
-    let updating = false;
+    type State = FormViewState | { kind: "done" };
+    let state: State = { kind: "start" };
 
     async function action(task: TaskWithWorkspace, continueEditing: boolean) {
         if (title === undefined) {
@@ -92,7 +98,7 @@
             title,
             description,
         };
-        updating = true;
+        state = { kind: "submitting" };
         try {
             await performUpdateTask(
                 submitTask,
@@ -106,18 +112,22 @@
                 },
                 { fetch },
             );
+            state = { kind: "done" };
             if (continueEditing) {
                 await goto(getTaskUrl(task));
-                return;
+            } else {
+                await goto(getDashboardSectionUrl(task.section));
             }
-            await goto(getDashboardSectionUrl(task.section));
         } catch (e) {
-            updating = false;
+            state = { kind: "error", message: JSON.stringify(e) };
             throw e;
         }
     }
 
     beforeNavigate((navigation: BeforeNavigate) => {
+        if (state.kind === "done") {
+            return;
+        }
         const navigateAway = window.confirm(
             $_("task-screen.confirm-navigate-away.update"),
         );

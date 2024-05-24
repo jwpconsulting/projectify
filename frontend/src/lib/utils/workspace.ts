@@ -29,7 +29,7 @@ import type { SubTask } from "$lib/types/workspace";
 export function getSubTaskProgress(
     // We are only interested in done, and other properties may not
     // be given when creating new sub tasks
-    sub_tasks: Partial<Pick<SubTask, "done">>[],
+    sub_tasks: readonly Partial<Pick<SubTask, "done">>[],
 ): number | undefined {
     if (sub_tasks.length === 0) {
         return undefined;

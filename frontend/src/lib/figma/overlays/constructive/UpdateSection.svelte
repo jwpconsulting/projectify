@@ -29,15 +29,19 @@
     import type { FormViewState } from "$lib/types/ui";
     import type { Section } from "$lib/types/workspace";
 
-    export let section: Pick<Section, "uuid" | "title">;
+    export let section: Pick<Section, "uuid" | "title" | "description">;
 
     let state: FormViewState = { kind: "start" };
 
     let { title } = section;
+    const { description } = section;
 
     async function onSubmit() {
         state = { kind: "submitting" };
-        const result = await updateSection({ ...section, title }, { fetch });
+        const result = await updateSection(
+            { ...section, title, description },
+            { fetch },
+        );
         if (!result.ok) {
             // TODO show error
             state = { kind: "error", message: JSON.stringify(result.error) };
