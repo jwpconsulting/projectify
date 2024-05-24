@@ -150,15 +150,11 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         return reverse("workspace:tasks:read-update-delete", args=(task.uuid,))
 
     @pytest.fixture
-    def payload(
-        self,
-        section: models.Section,
-    ) -> dict[str, object]:
+    def payload(self) -> dict[str, object]:
         """Create payload."""
         return {
             "title": "Hello world",
             "description": None,
-            "section": {"uuid": str(section.uuid)},
             "number": 2,
             "labels": [],
             "assignee": None,
@@ -170,7 +166,6 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         rest_meddling_client: APIClient,
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
-        workspace: models.Workspace,
     ) -> None:
         """Test retrieving when logged in, but not authorized."""
         with django_assert_num_queries(1):
@@ -206,7 +201,8 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         # 29 now
         # 31 now
         # 28 now
-        with django_assert_num_queries(25):
+        # 22 now
+        with django_assert_num_queries(22):
             response = rest_user_client.put(
                 resource_url,
                 {**payload, "assignee": {"uuid": str(team_member.uuid)}},

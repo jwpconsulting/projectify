@@ -39,25 +39,15 @@ from rest_framework.request import (
 )
 
 from projectify.user.models.user import User
-from projectify.workspace.selectors.section import (
-    section_find_for_user_and_uuid,
-)
 
-from .. import (
-    models,
-)
-from . import (
-    base,
-)
-from .section import (
-    SectionUpSerializer,
-)
-from .sub_task import (
-    SubTaskCreateUpdateSerializer,
-)
-from .task import (
-    TaskWithSubTaskSerializer,
-)
+from ..models.section import Section
+from ..models.task import Task
+from ..models.team_member import TeamMember
+from ..selectors.section import section_find_for_user_and_uuid
+from . import base
+from .section import SectionUpSerializer
+from .sub_task import SubTaskCreateUpdateSerializer
+from .task import TaskWithSubTaskSerializer
 
 
 class TaskDetailSerializer(TaskWithSubTaskSerializer):
@@ -119,7 +109,7 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
     def validate_section(
         self,
         value: UuidDict,
-    ) -> models.Section:
+    ) -> Section:
         """Validate the section."""
         request: Request = self.context["request"]
         user: User = request.user
@@ -149,8 +139,14 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
 
     def validate(self, data: dict[str, Any]) -> dict[str, Any]:
         """Validate user access to ws board sect, assignee and labels."""
-        section: models.Section = data["section"]
+        section: Optional[Section] = data.get("section")
         # TODO select related
+        if section is None and self.instance:
+            section = self.instance.section
+        elif section is not None:
+            pass
+        else:
+            raise ValueError("Section was not provided. Why?")
         workspace = section.project.workspace
 
         # Then we filter the list of labels for labels that are contained
@@ -184,7 +180,7 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
                     uuid=assignee_uuid["uuid"]
                 ).get()
             )
-        except models.TeamMember.DoesNotExist:
+        except TeamMember.DoesNotExist:
             raise serializers.ValidationError(
                 {
                     "assignee": _("The assignee could not be found"),
@@ -198,17 +194,15 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
             "assignee": assignee,
         }
 
-    def create(self, validated_data: dict[str, Any]) -> models.Task:
+    def create(self, validated_data: dict[str, Any]) -> Task:
         """Do not call this method."""
         raise NotImplementedError("Don't call")
 
-    def update(
-        self, instance: models.Task, validated_data: dict[str, Any]
-    ) -> models.Task:
+    def update(self, instance: Task, validated_data: dict[str, Any]) -> Task:
         """Do not call this method."""
         raise NotImplementedError("Don't call")
 
-    def save(self, **kwargs: Any) -> models.Task:
+    def save(self, **kwargs: Any) -> Task:
         """Do not call this method."""
         raise NotImplementedError("Don't call")
 

@@ -358,6 +358,20 @@ export interface components {
             chat_messages: readonly components["schemas"]["ChatMessageBase"][];
             section: components["schemas"]["SectionUp"];
         };
+        /** @description Task update serializer. */
+        TaskUpdate: {
+            title: string;
+            description: string | null;
+            assignee: components["schemas"]["UuidObject"] | null;
+            labels: components["schemas"]["UuidObject"][];
+            /**
+             * Format: date-time
+             * @description Due date for this task
+             */
+            due_date: string | null;
+            section?: components["schemas"]["UuidObject"];
+            sub_tasks?: components["schemas"]["SubTaskCreateUpdate"][];
+        };
         /** @description Team member serializer. */
         TeamMemberBase: {
             /** Format: date-time */
@@ -834,9 +848,21 @@ export interface operations {
                 task_uuid: string;
             };
         };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TaskUpdate"];
+                "application/x-www-form-urlencoded": components["schemas"]["TaskUpdate"];
+                "multipart/form-data": components["schemas"]["TaskUpdate"];
+            };
+        };
         responses: {
-            /** @description No response body */
             200: {
+                content: {
+                    "application/json": components["schemas"]["TaskDetail"];
+                };
+            };
+            /** @description No response body */
+            400: {
                 content: never;
             };
         };
