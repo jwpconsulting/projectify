@@ -18,16 +18,13 @@
 from unittest.mock import (
     MagicMock,
 )
-from uuid import uuid4
 
 import pytest
 from rest_framework.request import (
     Request,
 )
 
-from projectify.lib.auth import validate_perm
 from projectify.user.models import User
-from projectify.workspace.models.const import TeamMemberRoles
 
 from ...models.label import Label
 from ...models.section import Section
@@ -36,13 +33,14 @@ from ...models.task import Task
 from ...models.team_member import TeamMember
 from ...models.workspace import Workspace
 from ...serializers.task_detail import (
-    TaskCreateUpdateSerializer,
+    TaskCreateSerializer,
     TaskDetailSerializer,
+    TaskUpdateSerializer,
 )
-from ...services.workspace import workspace_add_user
+
+pytestmark = pytest.mark.django_db
 
 
-@pytest.mark.django_db
 class TestTaskDetailSerializer:
     """Test the task detail serializer."""
 
@@ -67,16 +65,16 @@ class TestTaskDetailSerializer:
         assert "title" in serializer.validated_data
 
 
-@pytest.mark.django_db
-class TestTaskCreateUpdateSerializer:
-    """Test the task update serializer."""
+@pytest.fixture
+def user_request(user: User) -> Request:
+    """Return a request with a user."""
+    user_request = MagicMock()
+    user_request.user = user
+    return user_request
 
-    @pytest.fixture
-    def user_request(self, user: User) -> Request:
-        """Return a request with a user."""
-        user_request = MagicMock()
-        user_request.user = user
-        return user_request
+
+class TestTaskCreateSerializer:
+    """Test the task update serializer."""
 
     def test_readonly_fields(
         self,
@@ -90,7 +88,7 @@ class TestTaskCreateUpdateSerializer:
         """Check that fields are actually readonly by trying a few."""
         assert task.subtask_set.count() == 1
         task.assign_to(team_member)
-        serializer = TaskCreateUpdateSerializer(
+        serializer = TaskCreateSerializer(
             task,
             data={
                 "title": task.title,
@@ -129,7 +127,7 @@ class TestTaskCreateUpdateSerializer:
         user_request: Request,
     ) -> None:
         """Test creating a task."""
-        serializer = TaskCreateUpdateSerializer(
+        serializer = TaskCreateSerializer(
             data={
                 "title": "This is a great task title.",
                 "description": None,
@@ -160,7 +158,7 @@ class TestTaskCreateUpdateSerializer:
         unrelated_section: Section,
     ) -> None:
         """Test creating a task but the ws board section is wrong."""
-        serializer = TaskCreateUpdateSerializer(
+        serializer = TaskCreateSerializer(
             data={
                 "title": "This is a great task title.",
                 "labels": [],
@@ -174,13 +172,16 @@ class TestTaskCreateUpdateSerializer:
         assert not serializer.is_valid()
         assert serializer.errors["section"]
 
+
+class TestTaskUpdateSerializer:
+    """Test TaskUpdateSerializer."""
+
     def test_update(
         self,
         task: Task,
         label: Label,
         team_member: TeamMember,
         workspace: Workspace,
-        section: Section,
         sub_task: SubTask,
         user_request: Request,
     ) -> None:
@@ -188,7 +189,7 @@ class TestTaskCreateUpdateSerializer:
         assert len(task.subtask_set.all()) == 1
         assert task.due_date is not None
         due_date = task.due_date
-        serializer = TaskCreateUpdateSerializer(
+        serializer = TaskUpdateSerializer(
             task,
             data={
                 "title": task.title,
@@ -196,9 +197,6 @@ class TestTaskCreateUpdateSerializer:
                 "labels": [{"uuid": str(label.uuid)}],
                 "assignee": {"uuid": str(team_member.uuid)},
                 "due_date": due_date.isoformat(),
-                "section": {
-                    "uuid": str(section.uuid),
-                },
                 "sub_tasks": [
                     {
                         "title": "Frobnice fluffballs",
@@ -250,68 +248,7 @@ class TestTaskCreateUpdateSerializer:
             "title": task.title,
             "description": None,
             "workspace": workspace,
-            "section": section,
         }
-
-    def test_update_no_ws_board_section(
-        self,
-        task: Task,
-        user_request: Request,
-    ) -> None:
-        """Test updating a task when a board does not exist."""
-        serializer = TaskCreateUpdateSerializer(
-            task,
-            data={
-                "title": task.title,
-                "labels": [],
-                "assignee": None,
-                "section": {
-                    "uuid": str(uuid4()),
-                },
-            },
-            context={"request": user_request},
-        )
-        assert not serializer.is_valid()
-        (error,) = serializer.errors["section"]
-        assert "exist" in error
-
-    def test_update_wrong_workspace(
-        self,
-        task: Task,
-        team_member: TeamMember,
-        user_request: Request,
-        unrelated_section: Section,
-        unrelated_workspace: Workspace,
-    ) -> None:
-        """Test assigning a task to an unrelated ws board section."""
-        # We need to add ourselves to make sure we have access to the
-        # section
-        workspace_add_user(
-            workspace=unrelated_workspace,
-            user=team_member.user,
-            role=TeamMemberRoles.OBSERVER,
-        )
-        # test for sanity
-        validate_perm(
-            "workspace.read_section",
-            team_member.user,
-            unrelated_section.project.workspace,
-        )
-        serializer = TaskCreateUpdateSerializer(
-            task,
-            data={
-                "title": task.title,
-                "labels": [],
-                "assignee": None,
-                "section": {
-                    "uuid": str(unrelated_section.uuid),
-                },
-            },
-            context={"request": user_request},
-        )
-        assert not serializer.is_valid()
-        (error,) = serializer.errors["section"]
-        assert "cannot be assigned" in error
 
     def test_update_missing_label(
         self,
@@ -323,7 +260,7 @@ class TestTaskCreateUpdateSerializer:
         unrelated_label: Label,
     ) -> None:
         """Test updating with an unrelated label."""
-        serializer = TaskCreateUpdateSerializer(
+        serializer = TaskUpdateSerializer(
             task,
             data={
                 "title": task.title,
@@ -333,9 +270,6 @@ class TestTaskCreateUpdateSerializer:
                     {"uuid": str(unrelated_label.uuid)},
                 ],
                 "assignee": None,
-                "section": {
-                    "uuid": str(task.section.uuid),
-                },
                 "due_date": None,
             },
             context={"request": user_request},
@@ -352,16 +286,13 @@ class TestTaskCreateUpdateSerializer:
         unrelated_team_member: TeamMember,
     ) -> None:
         """Test updating a task."""
-        serializer = TaskCreateUpdateSerializer(
+        serializer = TaskUpdateSerializer(
             task,
             data={
                 "title": task.title,
                 "description": None,
                 "labels": [],
                 "assignee": {"uuid": str(unrelated_team_member.uuid)},
-                "section": {
-                    "uuid": str(task.section.uuid),
-                },
                 "due_date": None,
             },
             context={"request": user_request},

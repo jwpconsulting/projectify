@@ -498,13 +498,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TaskCreateUpdate'
+              $ref: '#/components/schemas/TaskCreate'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/TaskCreateUpdate'
+              $ref: '#/components/schemas/TaskCreate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/TaskCreateUpdate'
+              $ref: '#/components/schemas/TaskCreate'
         required: true
       security:
       - cookieAuth: []
@@ -1079,13 +1079,9 @@ components:
           description: Designate whether this sub task is done
       required:
       - title
-    TaskCreateUpdate:
+    TaskCreate:
       type: object
-      description: |-
-        Serialize update information for a task.
-
-        Instead of serializing label and assignee, it accepts label uuids and
-        assignee uuid and evaluates them.
+      description: Serializer for creating tasks.
       properties:
         title:
           type: string
@@ -1096,7 +1092,6 @@ components:
         assignee:
           allOf:
           - $ref: '#/components/schemas/UuidObject'
-          writeOnly: true
           nullable: true
         labels:
           type: array
@@ -1108,14 +1103,12 @@ components:
           format: date-time
           nullable: true
           description: Due date for this task
-        section:
-          allOf:
-          - $ref: '#/components/schemas/UuidObject'
-          writeOnly: true
         sub_tasks:
           type: array
           items:
             $ref: '#/components/schemas/SubTaskCreateUpdate'
+        section:
+          $ref: '#/components/schemas/UuidObject'
       required:
       - assignee
       - description
@@ -1200,7 +1193,7 @@ components:
       - uuid
     TaskUpdate:
       type: object
-      description: Task update serializer.
+      description: Serializer for updating tasks.
       properties:
         title:
           type: string
@@ -1211,7 +1204,6 @@ components:
         assignee:
           allOf:
           - $ref: '#/components/schemas/UuidObject'
-          writeOnly: true
           nullable: true
         labels:
           type: array
@@ -1223,8 +1215,6 @@ components:
           format: date-time
           nullable: true
           description: Due date for this task
-        section:
-          $ref: '#/components/schemas/UuidObject'
         sub_tasks:
           type: array
           items:

@@ -20,6 +20,7 @@ Task detail serializer.
 We have put this here to avoid circular reference problems,
 because ws board section requires importing the task serializer.
 """
+from collections.abc import Sequence
 from typing import (
     Any,
     Optional,
@@ -85,13 +86,15 @@ class UuidDict(TypedDict):
 
 class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
     """
-    Serialize update information for a task.
+    Serialize create or update information for a task.
 
     Instead of serializing label and assignee, it accepts label uuids and
     assignee uuid and evaluates them.
+
+    Don't use directly, use TaskCreateSerializer or TaskUpdateSerializer
+    instead.
     """
 
-    section = base.UuidObjectSerializer(write_only=True)
     # TODO make label optional, when unset remove labels or on create
     # do not assign label
     labels = serializers.ListField(
@@ -102,51 +105,14 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
     # TODO make assignee optional
     # assignee = base.UuidObjectSerializer(required=False, write_only=True)
     # Then interpret missing as delete assignee
-    assignee = base.UuidObjectSerializer(allow_null=True, write_only=True)
+    assignee = base.UuidObjectSerializer(allow_null=True)
 
     sub_tasks = SubTaskCreateUpdateSerializer(many=True, required=False)
 
-    def validate_section(
-        self,
-        value: UuidDict,
-    ) -> Section:
-        """Validate the section."""
-        request: Request = self.context["request"]
-        user: User = request.user
-
-        # First, we make sure we are assigning the task to a project
-        # section that the request's user has access to.
-        section = section_find_for_user_and_uuid(
-            user=user,
-            section_uuid=value["uuid"],
-        )
-        if section is None:
-            raise serializers.ValidationError(
-                _("Section does not exist"),
-            )
-        # TODO select related
-        workspace = section.project.workspace
-        if self.instance and self.instance.workspace != workspace:
-            raise serializers.ValidationError(
-                _("This task cannot be assigned to another workspace"),
-            )
-        # We pass the correct value back here, and use it for the three
-        # dependent values label, assignee and sub task.
-        # The question is whether we can put each into a separate validate_*
-        # method and make ws board section available to them instead using
-        # the serializer context.
-        return section
-
-    def validate(self, data: dict[str, Any]) -> dict[str, Any]:
+    def _validate(
+        self, data: dict[str, Any], section: Section
+    ) -> dict[str, Any]:
         """Validate user access to ws board sect, assignee and labels."""
-        section: Optional[Section] = data.get("section")
-        # TODO select related
-        if section is None and self.instance:
-            section = self.instance.section
-        elif section is not None:
-            pass
-        else:
-            raise ValueError("Section was not provided. Why?")
         workspace = section.project.workspace
 
         # Then we filter the list of labels for labels that are contained
@@ -209,12 +175,79 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
     class Meta(base.TaskBaseSerializer.Meta):
         """Meta."""
 
-        fields = (
+        fields: Sequence[str] = (
             "title",
             "description",
             "assignee",
             "labels",
             "due_date",
-            "section",
             "sub_tasks",
         )
+
+
+class TaskCreateSerializer(TaskCreateUpdateSerializer):
+    """Serializer for creating tasks."""
+
+    section = base.UuidObjectSerializer()
+
+    def validate_section(
+        self,
+        value: UuidDict,
+    ) -> Section:
+        """Validate the section."""
+        request: Request = self.context["request"]
+        user: User = request.user
+
+        # First, we make sure we are assigning the task to a project
+        # section that the request's user has access to.
+        section = section_find_for_user_and_uuid(
+            user=user,
+            section_uuid=value["uuid"],
+        )
+        if section is None:
+            raise serializers.ValidationError(
+                _("Section does not exist"),
+            )
+        # We pass the correct value back here, and use it for the three
+        # dependent values label, assignee and sub task.
+        # The question is whether we can put each into a separate validate_*
+        # method and make ws board section available to them instead using
+        # the serializer context.
+        return section
+
+    def validate(self, data: dict[str, Any]) -> dict[str, Any]:
+        """
+        Validate section based on section field.
+
+        If you refer to TaskUpdateSerializer, you will see that section here
+        comes from the task instance directly, since the task has already
+        been created.
+        """
+        section = data["section"]
+        return self._validate(data, section)
+
+    class Meta(TaskCreateUpdateSerializer.Meta):
+        """Add section field."""
+
+        fields = (
+            *TaskCreateUpdateSerializer.Meta.fields,
+            "section",
+        )
+
+
+class TaskUpdateSerializer(TaskCreateUpdateSerializer):
+    """Serializer for updating tasks."""
+
+    def validate(self, data: dict[str, Any]) -> dict[str, Any]:
+        """Run validation logic based off of given instance."""
+        if not self.instance:
+            raise ValueError("Expected self.instance")
+
+        # TODO select related
+        section: Section = self.instance.section
+        return self._validate(data, section)
+
+    class Meta(TaskCreateUpdateSerializer.Meta):
+        """Meta."""
+
+        fields = TaskCreateUpdateSerializer.Meta.fields

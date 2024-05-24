@@ -150,7 +150,7 @@ class TaskBaseSerializer(serializers.ModelSerializer[models.Task]):
 
         model = models.Task
         read_only_fields = ("number",)
-        fields = (
+        fields: Sequence[str] = (
             *timestamps,
             *title_description,
             "_order",

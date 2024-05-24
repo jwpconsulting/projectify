@@ -310,13 +310,8 @@ export interface components {
             /** @description Designate whether this sub task is done */
             done?: boolean;
         };
-        /**
-         * @description Serialize update information for a task.
-         *
-         * Instead of serializing label and assignee, it accepts label uuids and
-         * assignee uuid and evaluates them.
-         */
-        TaskCreateUpdate: {
+        /** @description Serializer for creating tasks. */
+        TaskCreate: {
             title: string;
             description: string | null;
             assignee: components["schemas"]["UuidObject"] | null;
@@ -326,8 +321,8 @@ export interface components {
              * @description Due date for this task
              */
             due_date: string | null;
-            section: components["schemas"]["UuidObject"];
             sub_tasks?: components["schemas"]["SubTaskCreateUpdate"][];
+            section: components["schemas"]["UuidObject"];
         };
         /**
          * @description Serialize all task details.
@@ -358,7 +353,7 @@ export interface components {
             chat_messages: readonly components["schemas"]["ChatMessageBase"][];
             section: components["schemas"]["SectionUp"];
         };
-        /** @description Task update serializer. */
+        /** @description Serializer for updating tasks. */
         TaskUpdate: {
             title: string;
             description: string | null;
@@ -369,7 +364,6 @@ export interface components {
              * @description Due date for this task
              */
             due_date: string | null;
-            section?: components["schemas"]["UuidObject"];
             sub_tasks?: components["schemas"]["SubTaskCreateUpdate"][];
         };
         /** @description Team member serializer. */
@@ -805,9 +799,9 @@ export interface operations {
     workspace_task_create: {
         requestBody: {
             content: {
-                "application/json": components["schemas"]["TaskCreateUpdate"];
-                "application/x-www-form-urlencoded": components["schemas"]["TaskCreateUpdate"];
-                "multipart/form-data": components["schemas"]["TaskCreateUpdate"];
+                "application/json": components["schemas"]["TaskCreate"];
+                "application/x-www-form-urlencoded": components["schemas"]["TaskCreate"];
+                "multipart/form-data": components["schemas"]["TaskCreate"];
             };
         };
         responses: {
