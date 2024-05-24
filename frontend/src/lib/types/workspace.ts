@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { TimestampedType, TitleDescriptionType } from "$lib/types/base";
+import type { TimestampedType } from "$lib/types/base";
 import type { User } from "$lib/types/user";
 
 export type TeamMemberRole =
@@ -27,7 +27,7 @@ export type TeamMemberRole =
 export type TeamMember = {
     user: User;
     uuid: string;
-    job_title?: string;
+    job_title: string | null;
     role: TeamMemberRole;
 } & TimestampedType;
 
@@ -40,15 +40,18 @@ export interface Label {
 export type SubTask = {
     uuid: string;
     done: boolean;
-    order: number;
-} & TimestampedType &
-    TitleDescriptionType;
+    _order: number;
+    title: string;
+    description: string | null;
+} & TimestampedType;
 
-export type CreateUpdateSubTask = {
+export interface CreateUpdateSubTask {
     done: boolean;
     // This will only exist for a sub task that is already inside a task
     uuid?: string;
-} & TitleDescriptionType;
+    title: string;
+    description: string | null;
+}
 
 type ChatMessage = {
     author: TeamMember;
@@ -58,18 +61,19 @@ type ChatMessage = {
 
 // All the info we can receive from the API
 export type Task = {
+    title: string;
+    description: string | null;
     _order: number;
     uuid: string;
     // TODO the following should be a Date
-    due_date?: string;
+    due_date: string | null;
     number: number;
-    labels: Label[];
+    labels: readonly Label[];
     assignee?: TeamMember;
     section?: Section;
-    sub_tasks?: SubTask[];
-    chat_messages?: ChatMessage[];
-} & TimestampedType &
-    TitleDescriptionType;
+    sub_tasks?: readonly SubTask[];
+    chat_messages?: readonly ChatMessage[];
+} & TimestampedType;
 
 export type TaskWithSection = Task & {
     section: Section;
@@ -85,7 +89,10 @@ export type TaskWithWorkspace = Task & {
     };
 };
 
-export type CreateSection = TitleDescriptionType;
+export interface CreateSection {
+    title: string;
+    description: string | null;
+}
 
 export type Section = {
     _order: number;
@@ -95,20 +102,24 @@ export type Section = {
 } & TimestampedType &
     CreateSection;
 
-export type SectionWithTasks = Pick<Section, "uuid" | "_order" | "title"> &
+export type SectionWithTasks = Pick<
+    Section,
+    "uuid" | "_order" | "title" | "description"
+> &
     Required<Pick<Section, "tasks">>;
 
 export type SectionDetail = Section &
     Required<Pick<Section, "project" | "tasks">>;
 
 export type Project = {
-    due_date?: string;
+    due_date: string | null;
     uuid: string;
     sections?: Section[];
-    archived?: string;
+    archived: string | null;
     workspace?: Workspace;
-} & TimestampedType &
-    TitleDescriptionType;
+    title: string;
+    description: string | null;
+} & TimestampedType;
 
 export type ProjectDetail = Project & {
     workspace: Workspace;
@@ -148,8 +159,9 @@ export type Workspace = {
     labels?: Label[];
     uuid: string;
     quota?: WorkspaceQuota;
-} & TimestampedType &
-    TitleDescriptionType;
+    title: string;
+    description: string | null;
+} & TimestampedType;
 
 export type WorkspaceDetail = Required<
     Pick<

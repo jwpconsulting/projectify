@@ -22,7 +22,7 @@
 
     // XXX For now, we store dates a plain strings
     // TODO when select due date, we should show the text as text-utility
-    export let dueDate: string | undefined;
+    export let dueDate: string | null;
     export let onInteract: (() => void) | undefined = undefined;
 
     export let readonly = false;

@@ -72,7 +72,7 @@ export async function updateWorkspace(
     // TODO take workspace type instead of uuid string
     uuid: string,
     title: string,
-    description: string | undefined,
+    description: string | null,
     repositoryContext: RepositoryContext,
 ): Promise<Workspace> {
     const response = await putWithCredentialsJson<Workspace>(

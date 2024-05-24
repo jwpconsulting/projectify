@@ -55,8 +55,8 @@
 
     // Initial data
     let title: string | undefined = undefined;
-    let description: string | undefined = undefined;
-    let dueDate: string | undefined = undefined;
+    let description: string | null = null;
+    let dueDate: string | null = null;
 
     let teamMemberAssignment: TeamMemberAssignment | undefined = undefined;
     let labelAssignment: LabelAssignment | undefined = undefined;

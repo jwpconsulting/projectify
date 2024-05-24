@@ -46,8 +46,8 @@
 
     // form fields
     let title: string | undefined = undefined;
-    let description: string | undefined = undefined;
-    let dueDate: string | undefined = undefined;
+    let description: string | null = null;
+    let dueDate: string | null = null;
 
     // Do the following 3 variables have to be reactive? If so,
     // what do they depend on?
@@ -78,7 +78,7 @@
         };
         creating = true;
         try {
-            const task = await createTaskFn(createTaskFull, { fetch });
+            const task = await createTaskFn(createTaskFull);
             if (continueEditing) {
                 await goto(getTaskUrl(task));
                 return;

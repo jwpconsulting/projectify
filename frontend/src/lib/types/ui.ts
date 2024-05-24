@@ -155,7 +155,7 @@ export type ConstructiveOverlayType =
     | { kind: "createSection"; project: Project }
     | {
           kind: "updateSection";
-          section: Pick<Section, "uuid" | "title">;
+          section: Pick<Section, "uuid" | "title" | "description">;
       }
     | { kind: "recoverProject"; project: Project };
 export type ConstructiveOverlayState = Overlay<ConstructiveOverlayType>;

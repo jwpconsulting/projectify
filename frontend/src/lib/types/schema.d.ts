@@ -196,9 +196,79 @@ export interface components {
             new_password?: string;
             policies?: string[];
         };
+        /** @description ChatMessage model serializer. */
+        ChatMessageBase: {
+            /** Format: date-time */
+            created: string;
+            /** Format: date-time */
+            modified: string;
+            /** Format: uuid */
+            uuid: string;
+            text: string;
+            author: components["schemas"]["TeamMemberBase"];
+        };
+        /** @description Label model serializer. */
+        LabelBase: {
+            name: string;
+            /**
+             * Format: int64
+             * @description Color index
+             */
+            color: number;
+            /** Format: uuid */
+            uuid: string;
+        };
         /** @description Serialize password policies. */
         PasswordPolicies: {
             policies: string[];
+        };
+        /**
+         * @description Serialize project and workspace containing it.
+         *
+         * Used when serializing up from a task or ws board section.
+         */
+        ProjectUp: {
+            /** Format: date-time */
+            created: string;
+            /** Format: date-time */
+            modified: string;
+            title: string;
+            description: string | null;
+            /**
+             * Format: date-time
+             * @description Due date for this workspace board
+             */
+            due_date: string | null;
+            /** Format: uuid */
+            uuid: string;
+            /**
+             * Format: date-time
+             * @description Archival timestamp of this workspace board.
+             */
+            archived: string | null;
+            workspace: components["schemas"]["WorkspaceBase"];
+        };
+        /**
+         * @description * `OBSERVER` - Observer
+         * * `CONTRIBUTOR` - Contributor
+         * * `MAINTAINER` - Maintainer
+         * * `OWNER` - Owner
+         * @enum {string}
+         */
+        RoleEnum: "OBSERVER" | "CONTRIBUTOR" | "MAINTAINER" | "OWNER";
+        /** @description Serialize section up the hierarchy. */
+        SectionUp: {
+            /** Format: date-time */
+            created: string;
+            /** Format: date-time */
+            modified: string;
+            title: string;
+            description: string | null;
+            /** order */
+            _order: number;
+            /** Format: uuid */
+            uuid: string;
+            project: components["schemas"]["ProjectUp"];
         };
         /** @description Take in email and password. */
         SignUp: {
@@ -215,6 +285,116 @@ export interface components {
             policies?: string[];
             tos_agreed?: string;
             privacy_policy_agreed?: string;
+        };
+        /** @description SubTask model serializer. */
+        SubTaskBase: {
+            /** Format: date-time */
+            created: string;
+            /** Format: date-time */
+            modified: string;
+            title: string;
+            description: string | null;
+            /** Format: uuid */
+            uuid: string;
+            /** @description Designate whether this sub task is done */
+            done: boolean;
+            /** order */
+            _order: number;
+        };
+        /** @description A sub task serializer that accepts a missing UUID. */
+        SubTaskCreateUpdate: {
+            /** Format: uuid */
+            uuid?: string;
+            title: string;
+            description?: string | null;
+            /** @description Designate whether this sub task is done */
+            done?: boolean;
+        };
+        /**
+         * @description Serialize update information for a task.
+         *
+         * Instead of serializing label and assignee, it accepts label uuids and
+         * assignee uuid and evaluates them.
+         */
+        TaskCreateUpdate: {
+            title: string;
+            description: string | null;
+            assignee: components["schemas"]["UuidObject"] | null;
+            labels: components["schemas"]["UuidObject"][];
+            /**
+             * Format: date-time
+             * @description Due date for this task
+             */
+            due_date: string | null;
+            section: components["schemas"]["UuidObject"];
+            sub_tasks?: components["schemas"]["SubTaskCreateUpdate"][];
+        };
+        /**
+         * @description Serialize all task details.
+         *
+         * Serializes up to the workspace in one direction, and all chat messages,
+         * labels and sub task in the other direction.
+         */
+        TaskDetail: {
+            /** Format: date-time */
+            created: string;
+            /** Format: date-time */
+            modified: string;
+            title: string;
+            description: string | null;
+            /** order */
+            _order: number;
+            /** Format: uuid */
+            uuid: string;
+            /**
+             * Format: date-time
+             * @description Due date for this task
+             */
+            due_date: string | null;
+            number: number;
+            sub_tasks: readonly components["schemas"]["SubTaskBase"][];
+            labels: readonly components["schemas"]["LabelBase"][];
+            assignee: components["schemas"]["TeamMemberBase"];
+            chat_messages: readonly components["schemas"]["ChatMessageBase"][];
+            section: components["schemas"]["SectionUp"];
+        };
+        /** @description Team member serializer. */
+        TeamMemberBase: {
+            /** Format: date-time */
+            created: string;
+            /** Format: date-time */
+            modified: string;
+            user: components["schemas"]["User"];
+            /** Format: uuid */
+            uuid: string;
+            role: components["schemas"]["RoleEnum"];
+            job_title: string | null;
+        };
+        /** @description User serializer. */
+        User: {
+            /** Format: email */
+            email: string;
+            preferred_name: string | null;
+            /** @description Return profile picture. */
+            profile_picture: string | null;
+        };
+        /** @description Deserialize the UUID for a any object with a UUID. */
+        UuidObject: {
+            /** Format: uuid */
+            uuid: string;
+        };
+        /** @description Workspace base serializer. */
+        WorkspaceBase: {
+            /** Format: date-time */
+            created: string;
+            /** Format: date-time */
+            modified: string;
+            title: string;
+            description: string | null;
+            /** Format: uuid */
+            uuid: string;
+            /** @description Return profile picture. */
+            picture: string | null;
         };
     };
     responses: never;
@@ -609,9 +789,21 @@ export interface operations {
     };
     /** @description Handle POST. */
     workspace_task_create: {
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TaskCreateUpdate"];
+                "application/x-www-form-urlencoded": components["schemas"]["TaskCreateUpdate"];
+                "multipart/form-data": components["schemas"]["TaskCreateUpdate"];
+            };
+        };
         responses: {
+            201: {
+                content: {
+                    "application/json": components["schemas"]["TaskDetail"];
+                };
+            };
             /** @description No response body */
-            200: {
+            400: {
                 content: never;
             };
         };

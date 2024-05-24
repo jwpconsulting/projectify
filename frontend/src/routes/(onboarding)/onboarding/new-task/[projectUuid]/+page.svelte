@@ -44,7 +44,7 @@
         }
         const result = await createSection(
             project,
-            { title: sectionTitle },
+            { title: sectionTitle, description: null },
             { fetch },
         );
         if (!result.ok) {
@@ -57,11 +57,13 @@
         );
         const task = {
             title: taskTitle,
+            description: null,
             labels: [],
             section,
             assignee,
+            due_date: null,
         };
-        const { uuid } = await createTask(task, { fetch });
+        const { uuid } = await createTask(task);
         await goto(getNewLabelUrl(uuid));
     }
 </script>

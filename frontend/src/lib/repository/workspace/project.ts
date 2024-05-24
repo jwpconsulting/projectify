@@ -41,7 +41,7 @@ export async function createProject(
     repositoryContext: RepositoryContext,
 ): Promise<ApiResponse<Project, unknown>> {
     const { uuid: workspace_uuid } = workspace;
-    const response = await postWithCredentialsJson<Workspace>(
+    const response = await postWithCredentialsJson<Project>(
         `/workspace/project/`,
         { ...project, workspace_uuid },
         repositoryContext,
