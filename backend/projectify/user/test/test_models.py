@@ -38,11 +38,18 @@ class TestUser:
         with pytest.raises(ValidationError):
             user.full_clean()
 
+        user.preferred_name = "www.google.com."
+        with pytest.raises(ValidationError):
+            user.full_clean()
+
         user.preferred_name = "http://localhost"
         with pytest.raises(ValidationError):
             user.full_clean()
 
         # Allowed
+        user.preferred_name = "John McHurDur Jr."
+        user.full_clean()
+
         user.preferred_name = "http: //localhost"
         user.full_clean()
 
