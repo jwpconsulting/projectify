@@ -914,6 +914,7 @@ components:
           - $ref: '#/components/schemas/WorkspaceBase'
           readOnly: true
       required:
+      - archived
       - created
       - due_date
       - modified

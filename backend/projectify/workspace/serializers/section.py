@@ -40,6 +40,10 @@ class ProjectUpSerializer(base.ProjectBaseSerializer):
             *base.ProjectBaseSerializer.Meta.fields,
             "workspace",
         )
+        extra_kwargs = {
+            "due_date": {"required": True},
+            "archived": {"required": True},
+        }
 
 
 class SectionUpSerializer(base.SectionBaseSerializer):
