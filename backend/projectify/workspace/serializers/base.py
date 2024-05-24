@@ -76,6 +76,9 @@ class WorkspaceBaseSerializer(serializers.ModelSerializer[models.Workspace]):
             "uuid",
             "picture",
         )
+        extra_kwargs = {
+            "description": {"required": True},
+        }
 
 
 class TeamMemberBaseSerializer(serializers.ModelSerializer[models.TeamMember]):

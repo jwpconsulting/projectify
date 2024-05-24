@@ -1266,6 +1266,7 @@ components:
           readOnly: true
       required:
       - created
+      - description
       - modified
       - picture
       - title
