@@ -49,6 +49,7 @@
     import type { PageData } from "./$types";
     import { beforeNavigate } from "$app/navigation";
     import type { BeforeNavigate } from "@sveltejs/kit";
+    import type { FormViewState } from "$lib/types/ui";
 
     export let data: PageData;
     const { task } = data;
@@ -75,9 +76,14 @@
     $: subTasks = subTaskAssignment?.subTasks;
 
     // XXX I am sure we can have really fancy validation
-    $: canUpdate = !updating && title !== "" && $subTasks !== undefined;
+    $: canUpdate =
+        state.kind !== "done" &&
+        state.kind !== "submitting" &&
+        title !== "" &&
+        $subTasks !== undefined;
 
-    let updating = false;
+    type State = FormViewState | { kind: "done" };
+    let state: State = { kind: "start" };
 
     async function action(task: TaskWithWorkspace, continueEditing: boolean) {
         if (title === undefined) {
@@ -92,7 +98,7 @@
             title,
             description,
         };
-        updating = true;
+        state = { kind: "submitting" };
         try {
             await performUpdateTask(
                 submitTask,
@@ -106,13 +112,14 @@
                 },
                 { fetch },
             );
+            state = { kind: "done" };
             if (continueEditing) {
                 await goto(getTaskUrl(task));
                 return;
             }
             await goto(getDashboardSectionUrl(task.section));
         } catch (e) {
-            updating = false;
+            state = { kind: "error", message: JSON.stringify(e) };
             throw e;
         }
     }
