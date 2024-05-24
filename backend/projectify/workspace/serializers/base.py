@@ -94,6 +94,7 @@ class TeamMemberBaseSerializer(serializers.ModelSerializer[models.TeamMember]):
             "role",
             "job_title",
         )
+        extra_kwargs = {"job_title": {"required": True}}
 
 
 class ProjectBaseSerializer(serializers.ModelSerializer[models.Project]):
