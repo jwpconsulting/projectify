@@ -120,6 +120,7 @@ class ProjectBaseSerializer(serializers.ModelSerializer[models.Project]):
         extra_kwargs = {
             "due_date": {"required": True},
             "archived": {"required": True},
+            "description": {"required": True},
         }
 
 

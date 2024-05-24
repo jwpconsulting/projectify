@@ -43,6 +43,7 @@ class ProjectUpSerializer(base.ProjectBaseSerializer):
         extra_kwargs = {
             "due_date": {"required": True},
             "archived": {"required": True},
+            "description": {"required": True},
         }
 
 

@@ -916,6 +916,7 @@ components:
       required:
       - archived
       - created
+      - description
       - due_date
       - modified
       - title
