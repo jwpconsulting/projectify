@@ -52,6 +52,7 @@ class TestTaskDetailSerializer:
             task,
             data={
                 "title": task.title,
+                "description": None,
                 "number": 133337,
                 "uuid": 2,
                 "due_date": None,
@@ -93,6 +94,7 @@ class TestTaskCreateUpdateSerializer:
             task,
             data={
                 "title": task.title,
+                "description": None,
                 "number": 133337,
                 "uuid": 2,
                 "labels": [],
@@ -112,6 +114,7 @@ class TestTaskCreateUpdateSerializer:
             "assignee": None,
             "labels": [],
             "title": task.title,
+            "description": None,
             "workspace": workspace,
             "section": section,
             "due_date": None,
@@ -129,6 +132,7 @@ class TestTaskCreateUpdateSerializer:
         serializer = TaskCreateUpdateSerializer(
             data={
                 "title": "This is a great task title.",
+                "description": None,
                 "labels": [{"uuid": str(label.uuid)}],
                 "assignee": {"uuid": str(team_member.uuid)},
                 "section": {
@@ -143,6 +147,7 @@ class TestTaskCreateUpdateSerializer:
             "assignee": team_member,
             "labels": [label],
             "title": "This is a great task title.",
+            "description": None,
             "workspace": workspace,
             "section": section,
             "due_date": None,
@@ -187,6 +192,7 @@ class TestTaskCreateUpdateSerializer:
             task,
             data={
                 "title": task.title,
+                "description": None,
                 "labels": [{"uuid": str(label.uuid)}],
                 "assignee": {"uuid": str(team_member.uuid)},
                 "due_date": due_date.isoformat(),
@@ -242,6 +248,7 @@ class TestTaskCreateUpdateSerializer:
                 ],
             },
             "title": task.title,
+            "description": None,
             "workspace": workspace,
             "section": section,
         }
@@ -320,6 +327,7 @@ class TestTaskCreateUpdateSerializer:
             task,
             data={
                 "title": task.title,
+                "description": None,
                 "labels": [
                     {"uuid": str(label.uuid)},
                     {"uuid": str(unrelated_label.uuid)},
@@ -348,6 +356,7 @@ class TestTaskCreateUpdateSerializer:
             task,
             data={
                 "title": task.title,
+                "description": None,
                 "labels": [],
                 "assignee": {"uuid": str(unrelated_team_member.uuid)},
                 "section": {

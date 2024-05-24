@@ -79,6 +79,7 @@ class TestTaskCreate(UnauthenticatedTestMixin):
         """Return a payload for API."""
         return {
             "title": "bla",
+            "description": None,
             "labels": [],
             "assignee": None,
             "section": {"uuid": str(section.uuid)},
@@ -156,6 +157,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         """Create payload."""
         return {
             "title": "Hello world",
+            "description": None,
             "section": {"uuid": str(section.uuid)},
             "number": 2,
             "labels": [],

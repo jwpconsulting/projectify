@@ -81,6 +81,10 @@ class TaskDetailSerializer(TaskWithSubTaskSerializer):
             "chat_messages",
             "section",
         )
+        extra_kwargs = {
+            "due_date": {"required": True},
+            "description": {"required": True},
+        }
 
 
 class UuidDict(TypedDict):

@@ -1100,6 +1100,7 @@ components:
             $ref: '#/components/schemas/SubTaskCreateUpdate'
       required:
       - assignee
+      - description
       - due_date
       - labels
       - section
@@ -1170,6 +1171,7 @@ components:
       - assignee
       - chat_messages
       - created
+      - description
       - due_date
       - labels
       - modified
