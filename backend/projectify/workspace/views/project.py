@@ -103,6 +103,19 @@ class ProjectReadUpdateDelete(APIView):
         serializer = ProjectDetailSerializer(instance=project)
         return Response(serializer.data)
 
+    class ProjectUpdateSerializer(serializers.ModelSerializer[Project]):
+        """Serializer for PUT."""
+
+        class Meta:
+            """Meta."""
+
+            model = Project
+            fields = (
+                "title",
+                "description",
+                "due_date",
+            )
+
     def put(self, request: Request, project_uuid: UUID) -> Response:
         """Handle PUT."""
         project = project_find_by_project_uuid(
@@ -111,7 +124,7 @@ class ProjectReadUpdateDelete(APIView):
         )
         if project is None:
             raise NotFound(_("No project found for this uuid"))
-        serializer = ProjectBaseSerializer(
+        serializer = self.ProjectUpdateSerializer(
             instance=project,
             data=request.data,
         )
