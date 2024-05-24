@@ -59,6 +59,9 @@ class SectionUpSerializer(base.SectionBaseSerializer):
             *base.SectionBaseSerializer.Meta.fields,
             "project",
         )
+        extra_kwargs = {
+            "description": {"required": True},
+        }
 
 
 class SectionDetailSerializer(base.SectionBaseSerializer):

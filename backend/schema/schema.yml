@@ -967,6 +967,7 @@ components:
       required:
       - _order
       - created
+      - description
       - modified
       - project
       - title

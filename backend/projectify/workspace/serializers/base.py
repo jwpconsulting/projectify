@@ -137,6 +137,9 @@ class SectionBaseSerializer(serializers.ModelSerializer[models.Section]):
             "_order",
             "uuid",
         )
+        extra_kwargs = {
+            "description": {"required": True},
+        }
 
 
 class TaskBaseSerializer(serializers.ModelSerializer[models.Task]):
