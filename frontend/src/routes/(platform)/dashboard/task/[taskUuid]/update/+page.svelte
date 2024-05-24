@@ -115,9 +115,9 @@
             state = { kind: "done" };
             if (continueEditing) {
                 await goto(getTaskUrl(task));
-                return;
+            } else {
+                await goto(getDashboardSectionUrl(task.section));
             }
-            await goto(getDashboardSectionUrl(task.section));
         } catch (e) {
             state = { kind: "error", message: JSON.stringify(e) };
             throw e;
@@ -125,6 +125,9 @@
     }
 
     beforeNavigate((navigation: BeforeNavigate) => {
+        if (state.kind === "done") {
+            return;
+        }
         const navigateAway = window.confirm(
             $_("task-screen.confirm-navigate-away.update"),
         );
