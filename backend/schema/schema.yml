@@ -1094,6 +1094,7 @@ components:
             $ref: '#/components/schemas/SubTaskCreateUpdate'
       required:
       - assignee
+      - due_date
       - labels
       - section
       - title
@@ -1163,6 +1164,7 @@ components:
       - assignee
       - chat_messages
       - created
+      - due_date
       - labels
       - modified
       - number
@@ -1220,6 +1222,7 @@ components:
           readOnly: true
       required:
       - email
+      - preferred_name
       - profile_picture
     UuidObject:
       type: object

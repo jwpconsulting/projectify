@@ -143,6 +143,7 @@ class TaskBaseSerializer(serializers.ModelSerializer[models.Task]):
             "due_date",
             "number",
         )
+        extra_kwargs = {"due_date": {"required": True}}
 
 
 class ChatMessageBaseSerializer(

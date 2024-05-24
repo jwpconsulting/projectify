@@ -50,3 +50,4 @@ class UserSerializer(serializers.ModelSerializer[models.User]):
             "preferred_name",
             "profile_picture",
         )
+        extra_kwargs = {"preferred_name": {"required": True}}

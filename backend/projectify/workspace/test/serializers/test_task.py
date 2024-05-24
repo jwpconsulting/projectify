@@ -50,7 +50,12 @@ class TestTaskDetailSerializer:
         """Check that fields are actually readonly by trying a few."""
         serializer = TaskDetailSerializer(
             task,
-            data={"title": task.title, "number": 133337, "uuid": 2},
+            data={
+                "title": task.title,
+                "number": 133337,
+                "uuid": 2,
+                "due_date": None,
+            },
         )
         # it is_valid, because DRF just ignores the read only fields inside
         # data
@@ -95,6 +100,7 @@ class TestTaskCreateUpdateSerializer:
                 "section": {
                     "uuid": str(section.uuid),
                 },
+                "due_date": None,
             },
             context={"request": user_request},
         )
@@ -108,6 +114,7 @@ class TestTaskCreateUpdateSerializer:
             "title": task.title,
             "workspace": workspace,
             "section": section,
+            "due_date": None,
         }
 
     def test_create(
@@ -127,6 +134,7 @@ class TestTaskCreateUpdateSerializer:
                 "section": {
                     "uuid": str(section.uuid),
                 },
+                "due_date": None,
             },
             context={"request": user_request},
         )
@@ -137,6 +145,7 @@ class TestTaskCreateUpdateSerializer:
             "title": "This is a great task title.",
             "workspace": workspace,
             "section": section,
+            "due_date": None,
         }
 
     def test_create_unrelated_section(
@@ -319,6 +328,7 @@ class TestTaskCreateUpdateSerializer:
                 "section": {
                     "uuid": str(task.section.uuid),
                 },
+                "due_date": None,
             },
             context={"request": user_request},
         )
@@ -343,6 +353,7 @@ class TestTaskCreateUpdateSerializer:
                 "section": {
                     "uuid": str(task.section.uuid),
                 },
+                "due_date": None,
             },
             context={"request": user_request},
         )

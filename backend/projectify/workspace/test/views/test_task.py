@@ -85,6 +85,7 @@ class TestTaskCreate(UnauthenticatedTestMixin):
             "sub_tasks": [
                 {"title": "I am a sub task", "done": False},
             ],
+            "due_date": None,
         }
 
     def test_unauthorized(
@@ -159,6 +160,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
             "number": 2,
             "labels": [],
             "assignee": None,
+            "due_date": None,
         }
 
     def test_unauthorized(
