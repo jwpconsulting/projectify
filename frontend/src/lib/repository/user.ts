@@ -70,20 +70,6 @@ export async function updateProfilePicture(
     );
 }
 
-export async function changePassword(
-    current_password: string,
-    new_password: string,
-    repositoryContext: RepositoryContext,
-): Promise<
-    ApiResponse<void, { current_password?: string; new_password?: string }>
-> {
-    return await postWithCredentialsJson(
-        "/user/user/change-password",
-        { current_password, new_password },
-        repositoryContext,
-    );
-}
-
 export async function requestEmailAddressUpdate(
     password: string,
     new_email: string,

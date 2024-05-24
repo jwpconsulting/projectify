@@ -94,11 +94,29 @@ paths:
       description: Handle POST.
       tags:
       - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePassword'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChangePassword'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChangePassword'
+        required: true
       security:
       - cookieAuth: []
       responses:
-        '200':
+        '204':
           description: No response body
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangePasswordError'
+          description: ''
   /user/user/confirm-email:
     post:
       operationId: user_user_confirm_email_create
@@ -756,6 +774,29 @@ paths:
           description: No response body
 components:
   schemas:
+    ChangePassword:
+      type: object
+      description: Accept old and new password.
+      properties:
+        current_password:
+          type: string
+        new_password:
+          type: string
+      required:
+      - current_password
+      - new_password
+    ChangePasswordError:
+      type: object
+      description: These fields may be populated in a 400 response.
+      properties:
+        current_password:
+          type: string
+        new_password:
+          type: string
+        policies:
+          type: array
+          items:
+            type: string
     PasswordPolicies:
       type: object
       description: Serialize password policies.

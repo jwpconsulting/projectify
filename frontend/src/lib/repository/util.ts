@@ -18,7 +18,7 @@
 import vars from "$lib/env";
 import type { RepositoryContext } from "$lib/types/repository";
 import { getCookie } from "$lib/utils/cookie";
-import createClient from "openapi-fetch";
+import createClient, { type Middleware } from "openapi-fetch";
 
 import type { ApiResponse } from "./types";
 import type { paths } from "$lib/types/schema";
@@ -68,7 +68,24 @@ function parseResponseData(data: string): unknown | string | undefined {
 
 const baseUrl = vars.API_ENDPOINT;
 
-export const openApiClient = createClient<paths>({ baseUrl });
+// TODO consider adding content type and accept here? Perhaps based on
+// if GET or else
+export const openApiClient = createClient<paths>({
+    baseUrl,
+    credentials: "include",
+});
+
+const csrfMiddleWare: Middleware = {
+    onRequest(request: Request) {
+        const csrftoken = getCookie("csrftoken");
+        if (csrftoken === undefined) {
+            return request;
+        }
+        request.headers.set("X-CSRFToken", csrftoken);
+        return request;
+    },
+};
+openApiClient.use(csrfMiddleWare);
 
 async function fetchResponse<T, E = unknown>(
     url: string,

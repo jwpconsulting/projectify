@@ -22,10 +22,11 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import { goto } from "$lib/navigation";
-    import { changePassword } from "$lib/repository/user";
     import type { FormViewState } from "$lib/types/ui";
     import { getProfileUrl } from "$lib/urls";
     import { changedPasswordUrl } from "$lib/urls/user";
+    import { openApiClient } from "$lib/repository/util";
+    import { onMount } from "svelte";
 
     let state: FormViewState = { kind: "start" };
 
@@ -35,6 +36,15 @@
     let newPassword1: string | undefined = undefined;
     let newPasswordValidation: InputFieldValidation | undefined = undefined;
     let newPassword2: string | undefined = undefined;
+
+    let passwordPolicies: string[] | undefined = undefined;
+    onMount(async () => {
+        const response = await openApiClient.GET("/user/user/password-policy");
+        if (response.data === undefined) {
+            throw new Error("Could not get password policies");
+        }
+        passwordPolicies = response.data.policies;
+    });
 
     $: canSubmit = state.kind !== "submitting";
 
@@ -58,17 +68,23 @@
             return;
         }
         state = { kind: "submitting" };
-        const result = await changePassword(currentPassword, newPassword1, {
-            fetch,
-        });
-        if (result.ok) {
+        const { error } = await openApiClient.POST(
+            "/user/user/change-password",
+            {
+                body: {
+                    current_password: currentPassword,
+                    new_password: newPassword1,
+                },
+            },
+        );
+        if (error === undefined) {
             await goto(changedPasswordUrl);
             return;
         }
-        if (result.error.current_password !== undefined) {
+        if (error.current_password !== undefined) {
             currentPasswordValidation = {
                 ok: false,
-                error: result.error.current_password,
+                error: error.current_password,
             };
         } else {
             currentPasswordValidation = {
@@ -78,11 +94,12 @@
                 ),
             };
         }
-        if (result.error.new_password !== undefined) {
-            newPasswordValidation = {
-                ok: false,
-                error: result.error.new_password,
-            };
+        if (error.policies !== undefined || error.new_password !== undefined) {
+            const errors = [
+                ...(error.policies ?? []),
+                ...(error.new_password ? [error.new_password] : []),
+            ];
+            newPasswordValidation = { ok: false, error: errors.join(", ") };
         } else {
             newPasswordValidation = {
                 ok: true,
@@ -96,7 +113,7 @@
                 kind: "error",
                 message: $_(
                     "user-account-settings.change-password.validation.general-error",
-                    { values: { detail: JSON.stringify(result.error) } },
+                    { values: { details: JSON.stringify(error) } },
                 ),
             };
         } else {
@@ -154,6 +171,16 @@
             required
             validation={newPasswordValidation}
         />
+        {#if passwordPolicies}
+            <header class="font-bold">
+                {$_("auth.sign-up.password.policies")}
+            </header>
+            <ul class="flex list-inside list-disc flex-col gap-0.5">
+                {#each passwordPolicies as policy}
+                    <li>{policy}</li>
+                {/each}
+            </ul>
+        {/if}
         {#if state.kind === "error"}
             <p>
                 {state.message}
