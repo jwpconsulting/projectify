@@ -1202,6 +1202,7 @@ components:
       - created
       - job_title
       - modified
+      - role
       - user
       - uuid
     User:
