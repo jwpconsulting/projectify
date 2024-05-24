@@ -43,6 +43,7 @@ from projectify.workspace.selectors.task import (
     TaskDetailQuerySet,
     task_find_by_task_uuid,
 )
+from projectify.workspace.serializers.base import UuidObjectSerializer
 from projectify.workspace.serializers.task_detail import (
     TaskCreateUpdateSerializer,
     TaskDetailSerializer,
@@ -78,6 +79,11 @@ def get_object(request: Request, task_uuid: UUID) -> models.Task:
 # Create
 class TaskCreate(APIView):
     """Create a task."""
+
+    class TaskCreateSerializer(TaskCreateUpdateSerializer):
+        """Task create serializer."""
+
+        section = UuidObjectSerializer(write_only=True)
 
     @extend_schema(
         request=TaskCreateUpdateSerializer,
@@ -130,6 +136,19 @@ class TaskRetrieveUpdateDelete(APIView):
         serializer = TaskDetailSerializer(instance=instance)
         return Response(data=serializer.data)
 
+    class TaskUpdateSerializer(TaskCreateUpdateSerializer):
+        """Task update serializer."""
+
+        section = UuidObjectSerializer(required=False)
+
+    @extend_schema(
+        request=TaskUpdateSerializer,
+        responses={
+            200: TaskDetailSerializer,
+            # TODO specify error format here
+            400: None,
+        },
+    )
     def put(self, request: Request, task_uuid: UUID) -> Response:
         """
         Override update behavior. Return using different serializer.
@@ -141,7 +160,7 @@ class TaskRetrieveUpdateDelete(APIView):
         # https://github.com/encode/django-rest-framework/blob/d32346bae55f3e4718a185fb60e9f7a28e389c85/rest_framework/mixins.py#L65
         # We probably don't have to get the full object here!
         instance = get_object(request, task_uuid)
-        serializer = TaskCreateUpdateSerializer(
+        serializer = self.TaskUpdateSerializer(
             instance,
             data=request.data,
             # Mild code duplication from
@@ -172,7 +191,9 @@ class TaskRetrieveUpdateDelete(APIView):
 
         instance = get_object(request, task_uuid)
         response_serializer = TaskDetailSerializer(instance=instance)
-        return Response(response_serializer.data)
+        return Response(
+            status=status.HTTP_200_OK, data=response_serializer.data
+        )
 
     def delete(self, request: Request, task_uuid: UUID) -> Response:
         """Delete task."""

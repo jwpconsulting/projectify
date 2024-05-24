@@ -551,10 +551,28 @@ paths:
         required: true
       tags:
       - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TaskUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TaskUpdate'
+        required: true
       security:
       - cookieAuth: []
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDetail'
+          description: ''
+        '400':
           description: No response body
     delete:
       operationId: workspace_task_destroy
@@ -1180,6 +1198,43 @@ components:
       - sub_tasks
       - title
       - uuid
+    TaskUpdate:
+      type: object
+      description: Task update serializer.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        assignee:
+          allOf:
+          - $ref: '#/components/schemas/UuidObject'
+          writeOnly: true
+          nullable: true
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/UuidObject'
+          writeOnly: true
+        due_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Due date for this task
+        section:
+          $ref: '#/components/schemas/UuidObject'
+        sub_tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubTaskCreateUpdate'
+      required:
+      - assignee
+      - description
+      - due_date
+      - labels
+      - title
     TeamMemberBase:
       type: object
       description: Team member serializer.
