@@ -861,6 +861,7 @@ components:
           format: uuid
           readOnly: true
       required:
+      - color
       - name
       - uuid
     PasswordPolicies:
