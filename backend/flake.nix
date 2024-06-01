@@ -79,24 +79,33 @@
           poetrylock = ./poetry.lock;
           groups = [ ];
           buildInputs = [ pkgs.makeWrapper ];
+          outputs = [ "out" "static" ];
           # The DATABASE_URL below will only work on localhost
           postInstall = ''
-            cp gunicorn.conf.py \
-              gunicorn-error.log \
+            cp \
               manage.py \
               "$out/bin"
-            mkdir -p "$out/srv/static"
+            mkdir "$static"
             DJANGO_SETTINGS_MODULE=projectify.settings.development \
               DJANGO_CONFIGURATION=DevelopmentNix \
-              STATIC_ROOT="$out/srv/static" \
+              STATIC_ROOT="$static" \
               python "$out/bin/manage.py" collectstatic \
                 --no-input
+            wrapProgram "$out/bin/manage.py" \
+              --set DJANGO_SETTINGS_MODULE projectify.settings.development \
+              --set DJANGO_CONFIGURATION DevelopmentNix \
+              --set DATABASE_URL postgres://%2Fvar%2Frun%2Fpostgresql/projectify \
+              --set STATIC_ROOT "$static"
             wrapProgram "$out/bin/projectify-backend" \
               --set DJANGO_SETTINGS_MODULE projectify.settings.development \
               --set DJANGO_CONFIGURATION DevelopmentNix \
               --set PORT 8000 \
-              --set STATIC_ROOT "$out/srv/static" \
-              --set DATABASE_URL postgres://%2Fvar%2Frun%2Fpostgresql/projectify
+              --set STATIC_ROOT "$static" \
+              --set DATABASE_URL postgres://%2Fvar%2Frun%2Fpostgresql/projectify \
+              --add-flags --config \
+              --add-flags ${./gunicorn.conf.py} \
+              --add-flags --log-config \
+              --add-flags ${./gunicorn-error.log}
           '';
         };
       in
@@ -104,6 +113,24 @@
         packages = {
           inherit projectify-backend;
           default = projectify-backend;
+          container = pkgs.dockerTools.buildLayeredImage {
+            name = "projectify-backend";
+            tag = "latest";
+            contents = [ projectify-backend pkgs.bash pkgs.coreutils pkgs.file ];
+            # For /var/run/postgresql
+            extraCommands = ''
+              mkdir -p var/run/postgresql
+            '';
+            config = {
+              Cmd = [ "${projectify-backend}/bin/projectify-backend" ];
+              ExposedPorts = {
+                "8000/tcp" = {};
+              };
+              Volumes = {
+                "/var/run/postgresql" = {};
+              };
+            };
+          };
         };
         # Run with `nix run`
         apps = {
