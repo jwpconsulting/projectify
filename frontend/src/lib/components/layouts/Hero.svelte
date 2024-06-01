@@ -45,7 +45,10 @@
     </div>
     {#if heroContent.image}
         <div class="w-full max-w-xs justify-self-center">
-            <img src={heroContent.image.src} alt={heroContent.image.alt} />
+            <enhanced:img
+                src={heroContent.image.src}
+                alt={heroContent.image.alt}
+            />
         </div>
     {/if}
 </header>

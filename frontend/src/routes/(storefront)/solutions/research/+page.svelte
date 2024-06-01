@@ -21,9 +21,9 @@
     import SolutionsPage from "$lib/components/solutions/SolutionsPage.svelte";
     import type { SolutionsPageContent } from "$lib/types/ui";
 
-    import Filters from "../../assets/filters.png";
-    import HeroResearch from "../assets/hero-research.png";
-    import ResearchTasks from "../assets/research-tasks.png";
+    import Filters from "../../assets/filters.png?enhanced";
+    import HeroResearch from "../assets/hero-research.png?enhanced";
+    import ResearchTasks from "../assets/research-tasks.png?enhanced";
 
     $: pageContent = {
         heroContent: {

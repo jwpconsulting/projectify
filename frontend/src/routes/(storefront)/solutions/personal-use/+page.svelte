@@ -21,10 +21,10 @@
     import SolutionsPage from "$lib/components/solutions/SolutionsPage.svelte";
     import type { SolutionsPageContent } from "$lib/types/ui";
 
-    import HeroPersonal from "../assets/hero-personal.png";
-    import PersonalSubTask from "../assets/personal-sub-task.png";
-    import PersonalTaskCollab from "../assets/personal-task-collab.png";
-    import PersonalTasks from "../assets/personal-tasks.png";
+    import HeroPersonal from "../assets/hero-personal.png?enhanced";
+    import PersonalSubTask from "../assets/personal-sub-task.png?enhanced";
+    import PersonalTaskCollab from "../assets/personal-task-collab.png?enhanced";
+    import PersonalTasks from "../assets/personal-tasks.png?enhanced";
 
     $: pageContent = {
         heroContent: {

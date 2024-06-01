@@ -21,8 +21,8 @@
     import SolutionsPage from "$lib/components/solutions/SolutionsPage.svelte";
     import type { SolutionsPageContent } from "$lib/types/ui";
 
-    import HeroRemoteWork from "../assets/hero-remote-work.png";
-    import RemoteWorkTasks from "../assets/remote-work-tasks.png";
+    import HeroRemoteWork from "../assets/hero-remote-work.png?enhanced";
+    import RemoteWorkTasks from "../assets/remote-work-tasks.png?enhanced";
 
     $: pageContent = {
         heroContent: {

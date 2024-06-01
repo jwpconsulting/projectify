@@ -42,6 +42,6 @@
         {/if}
     </div>
     <div class="w-full max-w-xs justify-self-center">
-        <img src={feature.image.src} alt={feature.image.alt} />
+        <enhanced:img src={feature.image.src} alt={feature.image.alt} />
     </div>
 </section>

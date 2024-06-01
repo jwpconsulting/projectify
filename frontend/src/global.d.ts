@@ -23,6 +23,15 @@ declare const __BUILD_DATE__: string;
 
 declare const __MODE__: string;
 
+// Automatically generated third-party-licenses module as part of vite
+// build process
 declare module "third-party-licenses" {
     export = string;
+}
+
+// Used for @sveltejs/enhanced-img, images have to be loaded by appending
+// ?enhanced
+declare module "*.png?enhanced" {
+    const value: string;
+    export = value;
 }

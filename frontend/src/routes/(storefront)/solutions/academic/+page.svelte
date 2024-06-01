@@ -21,8 +21,8 @@
     import SolutionsPage from "$lib/components/solutions/SolutionsPage.svelte";
     import type { SolutionsPageContent } from "$lib/types/ui";
 
-    import AcademicSubTask from "../assets/academic-sub-task.png";
-    import HeroAcademic from "../assets/hero-academic.png";
+    import AcademicSubTask from "../assets/academic-sub-task.png?enhanced";
+    import HeroAcademic from "../assets/hero-academic.png?enhanced";
 
     $: pageContent = {
         heroContent: {

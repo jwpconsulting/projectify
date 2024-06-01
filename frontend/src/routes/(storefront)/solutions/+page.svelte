@@ -23,13 +23,13 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import type { SolutionsHeroContent } from "$lib/types/ui";
 
-    import HeroAcademic from "./assets/hero-academic.png";
-    import HeroDevelopmentTeams from "./assets/hero-development-teams.png";
-    import HeroPersonal from "./assets/hero-personal.png";
-    import HeroProjectManagement from "./assets/hero-project-management.png";
-    import HeroRemoteWork from "./assets/hero-remote-work.png";
-    import HeroResearch from "./assets/hero-research.png";
-    import HeroSolutions from "./assets/hero-solutions.png";
+    import HeroAcademic from "./assets/hero-academic.png?enhanced";
+    import HeroDevelopmentTeams from "./assets/hero-development-teams.png?enhanced";
+    import HeroPersonal from "./assets/hero-personal.png?enhanced";
+    import HeroProjectManagement from "./assets/hero-project-management.png?enhanced";
+    import HeroRemoteWork from "./assets/hero-remote-work.png?enhanced";
+    import HeroResearch from "./assets/hero-research.png?enhanced";
+    import HeroSolutions from "./assets/hero-solutions.png?enhanced";
 
     interface Solution {
         href: string;
@@ -137,7 +137,7 @@
         {#each solutions as solution}
             <section class="flex h-full flex-col justify-between gap-4">
                 <div class="flex flex-col gap-4">
-                    <img
+                    <enhanced:img
                         src={solution.image.src}
                         alt={solution.image.alt}
                         class="rounded-lg"
