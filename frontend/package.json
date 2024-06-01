@@ -31,7 +31,7 @@
         "show:bundle:server": "open .svelte-kit/output/server/bundle.html"
     },
     "devDependencies": {
-        "@sveltejs/vite-plugin-svelte": "^3.0.0",
+        "@sveltejs/vite-plugin-svelte": "~3.1.1",
         "@types/pikaday": "~1.7.9",
         "@typescript-eslint/eslint-plugin": "~6.8.0",
         "@typescript-eslint/parser": "~6.8.0",
