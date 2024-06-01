@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import Fuse from "fuse.js";
+import Fuse, { type FuseResult } from "fuse.js";
 import { readonly, writable } from "svelte/store";
 import type { Readable, Writable } from "svelte/store";
 
@@ -43,7 +43,7 @@ export function searchAmong<T extends object>(
 
     return searchEngine
         .search(searchText)
-        .map((res: Fuse.FuseResult<T>) => res.item);
+        .map((res: FuseResult<T>) => res.item);
 }
 
 export function internallyWritable<T>(theThing: T): {
