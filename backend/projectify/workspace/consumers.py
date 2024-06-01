@@ -110,7 +110,15 @@ class ClientRequestSerializer(serializers.Serializer):
 class ClientResponse(TypedDict):
     """An update to a resource."""
 
-    kind: Literal["subscribed", "notSubscribed", "notFound", "changed", "gone"]
+    kind: Literal[
+        "subscribed",
+        "unsubscribed",
+        "alreadySubscribed",
+        "notSubscribed",
+        "notFound",
+        "changed",
+        "gone",
+    ]
     resource: Literal["workspace", "project", "task"]
     uuid: UUID
     content: NotRequired[object]
@@ -120,7 +128,15 @@ class ClientResponseSerializer(serializers.Serializer):
     """Serializer for change."""
 
     kind = serializers.ChoiceField(
-        choices=["subscribed", "notSubscribed", "notFound", "changed", "gone"]
+        choices=[
+            "subscribed",
+            "unsubscribed",
+            "alreadySubscribed",
+            "notSubscribed",
+            "notFound",
+            "changed",
+            "gone",
+        ]
     )
     resource = serializers.ChoiceField(
         choices=["workspace", "project", "task"]
@@ -150,10 +166,10 @@ class ChangeConsumer(JsonWebsocketConsumer):
 
     def add_subscription_for(
         self, resource: Literal["workspace", "project", "task"], uuid: UUID
-    ) -> Literal["not_found", "ok"]:
+    ) -> Literal["not_found", "subscribed", "already_subscribed"]:
         """Add a resource subscription."""
         match resource:
-            case "workspace":
+            case "workspace" if uuid not in self.workspace_subscriptions:
                 workspace = workspace_find_by_workspace_uuid(
                     who=self.user, workspace_uuid=uuid
                 )
@@ -161,7 +177,7 @@ class ChangeConsumer(JsonWebsocketConsumer):
                     return "not_found"
                 group_name = workspace_group_name(workspace)
                 self.workspace_subscriptions[uuid] = workspace
-            case "project":
+            case "project" if uuid not in self.project_subscriptions:
                 project = project_find_by_project_uuid(
                     who=self.user, project_uuid=uuid
                 )
@@ -169,20 +185,22 @@ class ChangeConsumer(JsonWebsocketConsumer):
                     return "not_found"
                 group_name = project_group_name(project)
                 self.project_subscriptions[uuid] = project
-            case "task":
+            case "task" if uuid not in self.task_subscriptions:
                 task = task_find_by_task_uuid(who=self.user, task_uuid=uuid)
                 if task is None:
                     return "not_found"
                 group_name = task_group_name(task)
                 self.task_subscriptions[uuid] = task
+            case _:
+                return "already_subscribed"
         async_to_sync(self.channel_layer.group_add)(
             group_name, self.channel_name
         )
-        return "ok"
+        return "subscribed"
 
     def remove_subscription_for(
         self, resource: Literal["workspace", "project", "task"], uuid: UUID
-    ) -> Literal["not_subscribed", "ok"]:
+    ) -> Literal["not_subscribed", "unsubscribed"]:
         """Remove a resource subscription."""
         match resource:
             case "workspace":
@@ -203,7 +221,7 @@ class ChangeConsumer(JsonWebsocketConsumer):
         async_to_sync(self.channel_layer.group_discard)(
             group_name, self.channel_name
         )
-        return "ok"
+        return "unsubscribed"
 
     def remove_all_subscriptions(self) -> None:
         """Remove all subscriptions, discard self from channel layer."""
@@ -234,7 +252,13 @@ class ChangeConsumer(JsonWebsocketConsumer):
         resource = data["resource"]
         uuid = data["uuid"]
 
-        result: Literal["ok", "not_found", "not_subscribed"]
+        result: Literal[
+            "subscribed",
+            "not_found",
+            "not_subscribed",
+            "already_subscribed",
+            "unsubscribed",
+        ]
 
         match data["action"], resource:
             case "subscribe", resource:
@@ -243,6 +267,19 @@ class ChangeConsumer(JsonWebsocketConsumer):
                 result = self.remove_subscription_for(resource, uuid)
 
         match result:
+            case "already_subscribed":
+                logger.debug(
+                    "Client was already subscribed to resource %s uuid %s",
+                    resource,
+                    uuid,
+                )
+                self.respond(
+                    {
+                        "kind": "alreadySubscribed",
+                        "resource": resource,
+                        "uuid": uuid,
+                    }
+                )
             case "not_found":
                 logger.debug(
                     "No object found for uuid %s and resource %s",
@@ -260,7 +297,16 @@ class ChangeConsumer(JsonWebsocketConsumer):
                 logger.debug(
                     "Not subscribed to uuid %s and resource %s", uuid, resource
                 )
-            case "ok":
+            case "unsubscribed":
+                self.respond(
+                    {
+                        "kind": "unsubscribed",
+                        "resource": resource,
+                        "uuid": uuid,
+                    }
+                )
+                pass
+            case "subscribed":
                 self.respond(
                     {
                         "kind": "subscribed",
@@ -268,7 +314,6 @@ class ChangeConsumer(JsonWebsocketConsumer):
                         "uuid": uuid,
                     }
                 )
-                pass
 
     def workspace_change(self, event: ConsumerEvent) -> None:
         """Respond to project change event."""

@@ -29,12 +29,6 @@ import type {
 
 import { browser } from "$app/environment";
 
-interface Message {
-    type: string;
-    uuid: string;
-    data: unknown;
-}
-
 function makeAbsoluteUrl(url: string): string {
     if (!url.startsWith("/")) {
         return url;
@@ -45,32 +39,110 @@ function makeAbsoluteUrl(url: string): string {
 }
 
 type EventListener = (event: MessageEvent<string>) => void;
+type ChangeListener<T> = (changed: T) => void;
 
-function getSubscriptionForCollection(
-    collection: string,
-    uuid: string,
-    onMessage: EventListener,
-): Unsubscriber {
-    // XXX
-    // It appears that errors here are very hard to debug,
-    // e.g., wrong URL schema
-    // Check if we have a relative URL
-    const url = makeAbsoluteUrl(`${vars.WS_ENDPOINT}/${collection}/${uuid}/`);
-    try {
-        const sarus = new Sarus({
+let wsConnection: Sarus | undefined = undefined;
+
+type Resource = "workspace" | "project" | "task";
+type WsRequest =
+    | { action: "subscribe"; resource: Resource; uuid: string }
+    | { action: "unsubscribe"; resource: Resource; uuid: string };
+type WsResponse<T> =
+    | {
+          kind: "notSubscribed" | "notFound" | "gone" | "subscribed";
+          resource: Resource;
+          uuid: string;
+      }
+    | { kind: "changed"; resource: Resource; uuid: string; content: T };
+
+function sendWs(request: WsRequest) {
+    if (wsConnection === undefined) {
+        const url = makeAbsoluteUrl(`${vars.WS_ENDPOINT}/workspace/change`);
+        wsConnection = new Sarus({
             url,
             eventListeners: {
                 open: [() => console.debug("Connection opened to", url)],
                 close: [() => console.debug("Connection closed to", url)],
                 error: [() => console.error("Connection error for", url)],
-                message: [onMessage],
+                message: [],
             },
         });
-        return () => sarus.disconnect();
-    } catch (e) {
-        console.error("When initializing Sarus", e);
-        throw e;
     }
+    wsConnection.send(JSON.stringify(request));
+}
+
+function onMessage(attach: boolean, listener: EventListener) {
+    if (wsConnection === undefined) {
+        throw new Error("Expected wsConnection");
+    }
+    if (attach) {
+        wsConnection.on("message", listener);
+    } else {
+        wsConnection.off("message", listener);
+    }
+}
+
+function unsubscribeFromCollection(resource: Resource, uuid: string) {
+    if (wsConnection === undefined) {
+        throw new Error("Expected wsConnection");
+    }
+    // TODO await confirmation
+    sendWs({ action: "unsubscribe", resource, uuid });
+}
+
+async function getSubscriptionForCollection<T>(
+    resource: Resource,
+    uuid: string,
+    listener: ChangeListener<T>,
+): Promise<Unsubscriber> {
+    const establishedConnectionPromise = new Promise<Unsubscriber>(
+        (resolve, reject) => {
+            const passMessageToListener = (event: MessageEvent<string>) => {
+                const message = JSON.parse(event.data) as WsResponse<T>;
+                if (message.resource !== resource) {
+                    return;
+                }
+                if (message.uuid !== uuid) {
+                    return;
+                }
+                if (message.kind === "changed") {
+                    listener(message.content);
+                } else {
+                    console.warn("Unhandled message", message);
+                }
+            };
+            const establishedConnectionCb = (event: MessageEvent<string>) => {
+                const message = JSON.parse(event.data) as WsResponse<T>;
+                if (message.resource !== resource) {
+                    return;
+                }
+                if (message.uuid !== uuid) {
+                    return;
+                }
+                if (message.kind === "notFound") {
+                    reject(new Error(`${uuid} not found`));
+                }
+                if (message.kind !== "subscribed") {
+                    console.warn("Don't know how to handle", message);
+                    return;
+                }
+
+                onMessage(false, establishedConnectionCb);
+                onMessage(true, passMessageToListener);
+                resolve(() => {
+                    unsubscribeFromCollection(resource, uuid);
+                    onMessage(false, passMessageToListener);
+                });
+            };
+            sendWs({
+                action: "subscribe",
+                resource,
+                uuid,
+            });
+            onMessage(true, establishedConnectionCb);
+        },
+    );
+    return await establishedConnectionPromise;
 }
 
 /* Subscribable WS Store
@@ -107,12 +179,11 @@ export function createWsStore<T>(
     let state: State = { collection, kind: "start" };
     const { subscribe, set } = writable<T | undefined>(undefined);
 
-    const onMessage: EventListener = (event: MessageEvent<string>) => {
-        const message: Message = JSON.parse(event.data) as Message;
+    const onMessage: ChangeListener<T> = (changed: T) => {
         if (state.kind === "start") {
             throw new Error("State.kind is start");
         }
-        set(message.data as T);
+        set(changed);
     };
 
     const loadUuid = async (
@@ -140,7 +211,7 @@ export function createWsStore<T>(
             if (state.kind === "ready") {
                 state.unsubscriber();
             }
-            const unsubscriber = getSubscriptionForCollection(
+            const unsubscriber = await getSubscriptionForCollection(
                 collection,
                 uuid,
                 onMessage,
