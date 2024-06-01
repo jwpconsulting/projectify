@@ -19,7 +19,7 @@ import logging
 from typing import (
     Any,
     Literal,
-    Optional,
+    NotRequired,
     Type,
     TypedDict,
     TypeVar,
@@ -55,7 +55,7 @@ from .selectors.workspace import (
 from .serializers.project import ProjectDetailSerializer
 from .serializers.task_detail import TaskDetailSerializer
 from .serializers.workspace import WorkspaceDetailSerializer
-from .types import ConsumerEvent, Message
+from .types import ConsumerEvent
 
 logger = logging.getLogger(__name__)
 
@@ -67,16 +67,10 @@ M = TypeVar("M", bound=models.Model)
 
 def serialize(
     serializer: Type[serializers.ModelSerializer[M]],
-    instance: Optional[M],
-    event: ConsumerEvent,
-) -> Message:
+    instance: M,
+) -> object:
     """Serialize a django model instance and then render it to JSON."""
-    return {
-        "type": event["type"],
-        "uuid": event["uuid"],
-        # If the instance has been deleted, we return null / None
-        "data": serializer(instance).data if instance else None,
-    }
+    return serializer(instance).data
 
 
 def workspace_group_name(workspace: Workspace) -> str:
@@ -114,41 +108,25 @@ class ClientRequestSerializer(serializers.Serializer):
 
 
 class ClientResponse(TypedDict):
-    """A response to a ClientRequest."""
+    """An update to a resource."""
 
-    kind: Literal["response"]
+    kind: Literal["subscribed", "notSubscribed", "notFound", "changed", "gone"]
     resource: Literal["workspace", "project", "task"]
-    status: Literal[200, 404]
     uuid: UUID
+    content: NotRequired[object]
 
 
 class ClientResponseSerializer(serializers.Serializer):
-    """Serializer for ClientResponse."""
-
-    kind = serializers.CharField()
-    resource = serializers.CharField()
-    status = serializers.IntegerField()
-    uuid = serializers.UUIDField()
-
-
-class Change(TypedDict):
-    """An update to a resource."""
-
-    kind: Literal["change", "gone"]
-    resource: Literal["workspace", "project", "task"]
-    uuid: str
-    content: Optional[object]
-
-
-class ChangeSerializer(serializers.Serializer):
     """Serializer for change."""
 
-    kind = serializers.ChoiceField(choices=["change", "gone"])
+    kind = serializers.ChoiceField(
+        choices=["subscribed", "notSubscribed", "notFound", "changed", "gone"]
+    )
     resource = serializers.ChoiceField(
         choices=["workspace", "project", "task"]
     )
     uuid = serializers.UUIDField()
-    content = serializers.DictField(allow_null=True)
+    content = serializers.DictField(required=False)
 
 
 class ChangeConsumer(JsonWebsocketConsumer):
@@ -241,14 +219,9 @@ class ChangeConsumer(JsonWebsocketConsumer):
         self.remove_all_subscriptions()
         logger.debug("Disconnecting with code %d", close_code)
 
-    def respond_request(self, response: ClientResponse) -> None:
+    def respond(self, response: ClientResponse) -> None:
         """Respond to a client request."""
         serializer = ClientResponseSerializer(instance=response)
-        self.send_json(serializer.data)
-
-    def send_change(self, response: Change) -> None:
-        """Update client with change."""
-        serializer = ChangeSerializer(instance=response)
         self.send_json(serializer.data)
 
     def receive_json(self, content: Any) -> None:
@@ -276,10 +249,9 @@ class ChangeConsumer(JsonWebsocketConsumer):
                     uuid,
                     resource,
                 )
-                self.respond_request(
+                self.respond(
                     {
-                        "status": 404,
-                        "kind": "response",
+                        "kind": "notFound",
                         "resource": resource,
                         "uuid": uuid,
                     }
@@ -289,10 +261,9 @@ class ChangeConsumer(JsonWebsocketConsumer):
                     "Not subscribed to uuid %s and resource %s", uuid, resource
                 )
             case "ok":
-                self.respond_request(
+                self.respond(
                     {
-                        "status": 200,
-                        "kind": "response",
+                        "kind": "subscribed",
                         "resource": resource,
                         "uuid": uuid,
                     }
@@ -315,23 +286,22 @@ class ChangeConsumer(JsonWebsocketConsumer):
         )
 
         if workspace is None:
-            self.send_change(
+            self.respond(
                 {
                     "kind": "gone",
                     "resource": "workspace",
-                    "uuid": event["uuid"],
-                    "content": None,
+                    "uuid": uuid,
                 }
             )
             return
 
         workspace.quota = workspace_get_all_quotas(workspace)
-        serialized = serialize(WorkspaceDetailSerializer, workspace, event)
-        self.send_change(
+        serialized = serialize(WorkspaceDetailSerializer, workspace)
+        self.respond(
             {
-                "kind": "change",
+                "kind": "changed",
                 "resource": "workspace",
-                "uuid": str(workspace.uuid),
+                "uuid": workspace.uuid,
                 "content": serialized,
             }
         )
@@ -349,22 +319,21 @@ class ChangeConsumer(JsonWebsocketConsumer):
         )
 
         if project is None:
-            self.send_change(
+            self.respond(
                 {
                     "kind": "gone",
                     "resource": "project",
-                    "uuid": event["uuid"],
-                    "content": None,
+                    "uuid": uuid,
                 }
             )
             return
 
-        serialized = serialize(ProjectDetailSerializer, project, event)
-        self.send_change(
+        serialized = serialize(ProjectDetailSerializer, project)
+        self.respond(
             {
-                "kind": "change",
+                "kind": "changed",
                 "resource": "project",
-                "uuid": str(project.uuid),
+                "uuid": project.uuid,
                 "content": serialized,
             }
         )
@@ -382,22 +351,21 @@ class ChangeConsumer(JsonWebsocketConsumer):
         )
 
         if task is None:
-            self.send_change(
+            self.respond(
                 {
                     "kind": "gone",
                     "resource": "task",
-                    "uuid": event["uuid"],
-                    "content": None,
+                    "uuid": uuid,
                 }
             )
             return
 
-        serialized = serialize(TaskDetailSerializer, task, event)
-        self.send_change(
+        serialized = serialize(TaskDetailSerializer, task)
+        self.respond(
             {
-                "kind": "change",
+                "kind": "changed",
                 "resource": "task",
-                "uuid": str(task.uuid),
+                "uuid": task.uuid,
                 "content": serialized,
             }
         )

@@ -47,8 +47,6 @@ from projectify.user.models import User
 from projectify.user.models.user_invite import UserInvite
 from projectify.user.services.internal import user_create
 from projectify.workspace.consumers import (
-    Change,
-    ChangeSerializer,
     ClientResponse,
     ClientResponseSerializer,
 )
@@ -227,32 +225,33 @@ async def expect_change(
         case Task():
             resource = "task"
     json = await communicator.receive_json_from()
-    serializer = ChangeSerializer(data=json)
+    serializer = ClientResponseSerializer(data=json)
     serializer.is_valid(raise_exception=True)
-    json_cast = cast(Change, serializer.validated_data)
+    json_cast = cast(ClientResponse, serializer.validated_data)
     logger.info("Received message %s for %s", json_cast["resource"], has_uuid)
     assert json_cast == {
-        "kind": "change",
+        "kind": "changed",
         "uuid": has_uuid.uuid,
         "resource": resource,
         "content": mock.ANY,
     }
+    content = json_cast.get("content")
+    assert content is not None, content
+    return content
 
-    return json_cast["content"]
 
-
-async def expect_gone(communicator: WebsocketCommunicator, resource: HasUuid
+async def expect_gone(
+    communicator: WebsocketCommunicator, resource: HasUuid
 ) -> None:
     """Test if gone response is received."""
     response = await communicator.receive_json_from()
-    serializer = ChangeSerializer(data=response)
+    serializer = ClientResponseSerializer(data=response)
     serializer.is_valid(raise_exception=True)
-    data = cast(Change, serializer.validated_data)
+    data = cast(ClientResponse, serializer.validated_data)
     assert data == {
         "kind": "gone",
         "uuid": resource.uuid,
         "resource": mock.ANY,
-        "content": None,
     }
 
 
@@ -294,13 +293,11 @@ async def make_communicator(
     serializer = ClientResponseSerializer(data=response)
     serializer.is_valid(raise_exception=True)
     data = cast(ClientResponse, serializer.validated_data)
-    if data["status"] != 200:
+    if data["kind"] != "subscribed":
         await clean_up_communicator(communicator)
-        raise Exception(f'Could not connect, {data["status"]}')
-    assert data["status"] == 200
+        raise Exception(f'Could not connect, {data["kind"]}')
     assert data == {
-        "kind": "response",
-        "status": 200,
+        "kind": "subscribed",
         "uuid": resource.uuid,
         "resource": resource_str,
     }, data
@@ -357,7 +354,7 @@ class TestWorkspace:
         assert e.match("Not connected: 403")
         with pytest.raises(Exception) as e:
             await make_communicator(workspace, other_user)
-        assert e.match("Could not connect, 404")
+        assert e.match("Could not connect, notFound")
 
     async def test_workspace_life_cycle(
         self,
@@ -446,7 +443,7 @@ class TestProject:
         assert e.match("Not connected: 403")
         with pytest.raises(Exception) as e:
             await make_communicator(project, other_user)
-        assert e.match("Could not connect, 404")
+        assert e.match("Could not connect, notFound")
 
     async def test_project_life_cycle(
         self,
@@ -569,7 +566,7 @@ class TestTask:
         assert e.match("Not connected: 403")
         with pytest.raises(Exception) as e:
             await make_communicator(task, other_user)
-        assert e.match("Could not connect, 404")
+        assert e.match("Could not connect, notFound")
 
     async def test_task_life_cycle(
         self,

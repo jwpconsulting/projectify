@@ -17,11 +17,8 @@
 """Shared type definitions in workspace app."""
 from dataclasses import dataclass
 from typing import (
-    Mapping,
     Optional,
-    Sequence,
     TypedDict,
-    Union,
 )
 
 from projectify.corporate.types import WorkspaceFeatures
@@ -33,15 +30,6 @@ class ConsumerEvent(TypedDict):
     type: str
     # TODO make UUID
     uuid: str
-
-
-class Message(TypedDict):
-    """Contains message to send to client."""
-
-    type: str
-    uuid: str
-    # TODO Sequence required here?
-    data: Optional[Union[Mapping[str, object], Sequence[object]]]
 
 
 @dataclass(frozen=True, kw_only=True)
