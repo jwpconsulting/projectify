@@ -23,7 +23,7 @@
     import type { SolutionsHeroContent } from "$lib/types/ui";
     import { toMarkdown } from "$lib/utils/markdown";
 
-    import HeroAccessibility from "./hero-accessibility.png";
+    import HeroAccessibility from "./hero-accessibility.png?enhanced";
 
     $: heroContent = {
         title: $_("accessibility.hero.title"),

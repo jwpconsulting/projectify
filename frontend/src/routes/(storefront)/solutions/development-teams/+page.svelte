@@ -21,9 +21,9 @@
     import SolutionsPage from "$lib/components/solutions/SolutionsPage.svelte";
     import type { SolutionsPageContent } from "$lib/types/ui";
 
-    import DevelopmentTeamsFilter from "../assets/development-teams-filter.png";
-    import DevelopmentTeamsTasks from "../assets/development-teams-tasks.png";
-    import HeroDevelopmentTeams from "../assets/hero-development-teams.png";
+    import DevelopmentTeamsFilter from "../assets/development-teams-filter.png?enhanced";
+    import DevelopmentTeamsTasks from "../assets/development-teams-tasks.png?enhanced";
+    import HeroDevelopmentTeams from "../assets/hero-development-teams.png?enhanced";
 
     $: pageContent = {
         heroContent: {

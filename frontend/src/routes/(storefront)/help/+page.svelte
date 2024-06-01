@@ -24,7 +24,7 @@
     import type { SolutionsHeroContent } from "$lib/types/ui";
     import { helpTopics as makeHelpTopics } from "$lib/utils/i18n";
 
-    import HeroHelp from "./hero-help.png";
+    import HeroHelp from "./hero-help.png?enhanced";
 
     $: heroContent = {
         title: $_("help.hero.header.text"),

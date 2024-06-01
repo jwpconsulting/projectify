@@ -21,10 +21,10 @@
     import SolutionsPage from "$lib/components/solutions/SolutionsPage.svelte";
     import type { SolutionsPageContent } from "$lib/types/ui";
 
-    import Filters from "../../assets/filters.png";
-    import HeroProjectManagement from "../assets/hero-project-management.png";
-    import ProjectManagementPermissions from "../assets/project-management-permissions.png";
-    import ProjectManagementTeamMember from "../assets/project-management-team-member.png";
+    import Filters from "../../assets/filters.png?enhanced";
+    import HeroProjectManagement from "../assets/hero-project-management.png?enhanced";
+    import ProjectManagementPermissions from "../assets/project-management-permissions.png?enhanced";
+    import ProjectManagementTeamMember from "../assets/project-management-team-member.png?enhanced";
 
     $: pageContent = {
         heroContent: {

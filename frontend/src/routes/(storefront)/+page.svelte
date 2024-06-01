@@ -23,12 +23,12 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
 
-    import Filters from "./assets/filters.png";
-    import OpenSource from "./assets/open-source.png";
-    import Privacy from "./assets/privacy.png";
-    import Responsive from "./assets/responsive.png";
-    import SubTask from "./assets/sub-task.png";
-    import TaskMenu from "./assets/task-menu.png";
+    import Filters from "./assets/filters.png?enhanced";
+    import OpenSource from "./assets/open-source.png?enhanced";
+    import Privacy from "./assets/privacy.png?enhanced";
+    import Responsive from "./assets/responsive.png?enhanced";
+    import SubTask from "./assets/sub-task.png?enhanced";
+    import TaskMenu from "./assets/task-menu.png?enhanced";
 </script>
 
 <svelte:head>
