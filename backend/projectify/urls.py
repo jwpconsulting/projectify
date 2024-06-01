@@ -35,25 +35,12 @@ Including another URLconf
 
 """
 from collections.abc import Sequence
-from typing import (
-    Union,
-)
+from typing import Union
 
-from django.conf import (
-    settings,
-)
-from django.conf.urls.static import (
-    static,
-)
-from django.contrib import (
-    admin,
-)
-from django.urls import (
-    URLPattern,
-    URLResolver,
-    include,
-    path,
-)
+from django.conf import settings
+from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import URLPattern, URLResolver, include, path
 
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -61,11 +48,7 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 
-from projectify.workspace.consumers import (
-    ProjectConsumer,
-    TaskConsumer,
-    WorkspaceConsumer,
-)
+from projectify.workspace.consumers import ChangeConsumer
 
 urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     # TODO may I use projectify.admin.admin.urls here?
@@ -117,7 +100,5 @@ if settings.SERVE_SPECTACULAR:
     )
 
 websocket_urlpatterns = (
-    path("ws/task/<uuid:uuid>/", TaskConsumer.as_asgi()),
-    path("ws/project/<uuid:uuid>/", ProjectConsumer.as_asgi()),
-    path("ws/workspace/<uuid:uuid>/", WorkspaceConsumer.as_asgi()),
+    path("ws/workspace/change", ChangeConsumer.as_asgi()),
 )

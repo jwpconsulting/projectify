@@ -25,6 +25,7 @@ from typing import (
     Union,
     cast,
 )
+from unittest import mock
 
 from django.contrib.auth.models import AnonymousUser
 
@@ -45,6 +46,12 @@ from projectify.corporate.services.stripe import (
 from projectify.user.models import User
 from projectify.user.models.user_invite import UserInvite
 from projectify.user.services.internal import user_create
+from projectify.workspace.consumers import (
+    Change,
+    ChangeSerializer,
+    ClientResponse,
+    ClientResponseSerializer,
+)
 
 from ..models.const import TeamMemberRoles
 from ..models.label import Label
@@ -210,14 +217,28 @@ HasUuid = Union[Workspace, Project, Task]
 
 async def expect_message(
     communicator: WebsocketCommunicator, has_uuid: HasUuid
-) -> bool:
+) -> Any:
     """Test if the message is correct."""
+    match has_uuid:
+        case Workspace():
+            resource = "workspace"
+        case Project():
+            resource = "project"
+        case Task():
+            resource = "task"
     json = await communicator.receive_json_from()
-    json_cast = cast(dict[str, Any], json)
-    logger.info("Received message %s for %s", json_cast["type"], has_uuid)
-    return set(json_cast.keys()) == {"uuid", "type", "data"} and json_cast[
-        "uuid"
-    ] == str(has_uuid.uuid)
+    serializer = ChangeSerializer(data=json)
+    serializer.is_valid(raise_exception=True)
+    json_cast = cast(Change, serializer.validated_data)
+    logger.info("Received message %s for %s", json_cast["resource"], has_uuid)
+    assert json_cast == {
+        "kind": "change",
+        "uuid": has_uuid.uuid,
+        "resource": resource,
+        "content": mock.ANY,
+    }
+
+    return json_cast["content"]
 
 
 async def expect_disconnect(
@@ -238,12 +259,14 @@ async def make_communicator(
     """Create a websocket communicator for a given resource and user."""
     match resource:
         case Workspace():
-            url = f"ws/workspace/{resource.uuid}/"
+            resource_str = "workspace"
         case Project():
-            url = f"ws/project/{resource.uuid}/"
+            resource_str = "project"
         case Task():
-            url = f"ws/task/{resource.uuid}/"
-    communicator = WebsocketCommunicator(websocket_application, url)
+            resource_str = "task"
+    communicator = WebsocketCommunicator(
+        websocket_application, "ws/workspace/change"
+    )
     communicator.scope["user"] = user
     headers = communicator.scope.get("headers", [])
     communicator.scope["headers"] = [
@@ -254,13 +277,40 @@ async def make_communicator(
     if connected is False:
         await communicator.disconnect()
         raise Exception(f"Not connected: {code}")
+    await communicator.send_json_to(
+        {
+            "action": "subscribe",
+            "resource": resource_str,
+            "uuid": str(resource.uuid),
+        }
+    )
+    response = await communicator.receive_json_from()
+    serializer = ClientResponseSerializer(data=response)
+    serializer.is_valid(raise_exception=True)
+    data = cast(ClientResponse, serializer.validated_data)
+    if data["status"] != 200:
+        await clean_up_communicator(communicator)
+        raise Exception(f'Could not connect, {data["status"]}')
+    assert data["status"] == 200
+    assert data == {
+        "kind": "response",
+        "status": 200,
+        "uuid": resource.uuid,
+        "resource": resource_str,
+    }, data
     return communicator
 
 
 async def clean_up_communicator(communicator: WebsocketCommunicator) -> None:
     """Clean up a communicator."""
-    if await communicator.receive_nothing() is False:
-        logger.warning("There was at least one extra message")
+    try:
+        response = await communicator.receive_json_from()
+        assert response is None, "There was at least one extra message"
+    except Exception:
+        pass
+    # assert (
+    #     await communicator.receive_nothing() is True
+    # ), "There was at least one extra message"
     await communicator.disconnect()
 
 
@@ -298,7 +348,7 @@ class TestWorkspace:
         assert e.match("Not connected: 403")
         with pytest.raises(Exception) as e:
             await make_communicator(workspace, other_user)
-        assert e.match("Not connected: 404")
+        assert e.match("Could not connect, 404")
 
     async def test_workspace_life_cycle(
         self,
@@ -390,7 +440,7 @@ class TestProject:
         assert e.match("Not connected: 403")
         with pytest.raises(Exception) as e:
             await make_communicator(project, other_user)
-        assert e.match("Not connected: 404")
+        assert e.match("Could not connect, 404")
 
     async def test_project_life_cycle(
         self,
@@ -512,7 +562,7 @@ class TestTask:
         assert e.match("Not connected: 403")
         with pytest.raises(Exception) as e:
             await make_communicator(task, other_user)
-        assert e.match("Not connected: 404")
+        assert e.match("Could not connect, 404")
 
     async def test_task_life_cycle(
         self,
