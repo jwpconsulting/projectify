@@ -55,7 +55,7 @@
         "svelte-eslint-parser": "~0.33.1",
         "svelte-language-server": "~0.15.22",
         "typescript-language-server": "~3.3.2",
-        "typescript-svelte-plugin": "~0.3.37"
+        "typescript-svelte-plugin": "~0.3.38"
     },
     "type": "module",
     "dependencies": {
