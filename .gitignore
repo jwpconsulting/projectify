@@ -12,6 +12,9 @@
 .env.*
 !.env.template
 
+# NPM
+node_modules/
+
 # Backend
 # =======
 /backend/.env
@@ -23,8 +26,6 @@
 
 # Frontend
 # ========
-/frontend/node_modules
-
 # SvelteKit
 # ---------
 /frontend/build
@@ -48,7 +49,6 @@
 
 # Frontend stories
 # ========
-/stories/node_modules
 /stories/.svelte-kit
 # Linters
 # -------
