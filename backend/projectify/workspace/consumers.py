@@ -134,21 +134,21 @@ class ClientResponseSerializer(serializers.Serializer):
 class Change(TypedDict):
     """An update to a resource."""
 
-    kind: Literal["change"]
+    kind: Literal["change", "gone"]
     resource: Literal["workspace", "project", "task"]
     uuid: str
-    content: object
+    content: Optional[object]
 
 
 class ChangeSerializer(serializers.Serializer):
     """Serializer for change."""
 
-    kind = serializers.ChoiceField(choices=["change"])
+    kind = serializers.ChoiceField(choices=["change", "gone"])
     resource = serializers.ChoiceField(
         choices=["workspace", "project", "task"]
     )
     uuid = serializers.UUIDField()
-    content = serializers.DictField()
+    content = serializers.DictField(allow_null=True)
 
 
 class ChangeConsumer(JsonWebsocketConsumer):
@@ -315,7 +315,14 @@ class ChangeConsumer(JsonWebsocketConsumer):
         )
 
         if workspace is None:
-            self.close(status.HTTP_410_GONE)
+            self.send_change(
+                {
+                    "kind": "gone",
+                    "resource": "workspace",
+                    "uuid": event["uuid"],
+                    "content": None,
+                }
+            )
             return
 
         workspace.quota = workspace_get_all_quotas(workspace)
@@ -342,7 +349,14 @@ class ChangeConsumer(JsonWebsocketConsumer):
         )
 
         if project is None:
-            self.close(status.HTTP_410_GONE)
+            self.send_change(
+                {
+                    "kind": "gone",
+                    "resource": "project",
+                    "uuid": event["uuid"],
+                    "content": None,
+                }
+            )
             return
 
         serialized = serialize(ProjectDetailSerializer, project, event)
@@ -368,7 +382,14 @@ class ChangeConsumer(JsonWebsocketConsumer):
         )
 
         if task is None:
-            self.close(status.HTTP_410_GONE)
+            self.send_change(
+                {
+                    "kind": "gone",
+                    "resource": "task",
+                    "uuid": event["uuid"],
+                    "content": None,
+                }
+            )
             return
 
         serialized = serialize(TaskDetailSerializer, task, event)

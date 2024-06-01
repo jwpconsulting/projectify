@@ -31,6 +31,7 @@ class ConsumerEvent(TypedDict):
     """Contains event data about what to send to client."""
 
     type: str
+    # TODO make UUID
     uuid: str
 
 
