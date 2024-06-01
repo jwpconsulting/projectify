@@ -57,18 +57,8 @@ def group_send(destination: str, event: ConsumerEvent) -> None:
     )
 
 
-# TODO accept workspace only
-def send_workspace_change_signal(instance: HasOrIsWorkspace) -> None:
+def send_workspace_change_signal(workspace: Workspace) -> None:
     """Send workspace.change signal to correct group."""
-    match instance:
-        case Workspace():
-            workspace = instance
-        case Label():
-            workspace = instance.workspace
-        case TeamMember():
-            workspace = instance.workspace
-        case Project():
-            workspace = instance.workspace
     uuid = str(workspace.uuid)
     group_send(
         f"workspace-{uuid}",
