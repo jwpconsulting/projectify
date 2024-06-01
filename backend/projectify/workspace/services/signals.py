@@ -17,7 +17,7 @@
 """Functions to handle signals."""
 from typing import (
     Any,
-    Union,
+    Literal,
     cast,
 )
 
@@ -26,10 +26,8 @@ from channels.layers import (
     get_channel_layer,
 )
 
-from ..models.label import Label
 from ..models.project import Project
 from ..models.task import Task
-from ..models.team_member import TeamMember
 from ..models.workspace import Workspace
 from ..types import ConsumerEvent
 
@@ -37,13 +35,6 @@ from ..types import ConsumerEvent
 # which we indirectly install with channels, which has not been
 # renewed in a while Justus 2023-05-19
 async_to_sync = cast(Any, _async_to_sync)
-
-HasOrIsWorkspace = Union[
-    Workspace,
-    Label,
-    TeamMember,
-    Project,
-]
 
 
 def group_send(destination: str, event: ConsumerEvent) -> None:
@@ -57,7 +48,9 @@ def group_send(destination: str, event: ConsumerEvent) -> None:
     )
 
 
-def send_workspace_change_signal(workspace: Workspace) -> None:
+def send_workspace_change_signal(
+    workspace: Workspace, kind: Literal["changed", "gone"] = "changed"
+) -> None:
     """Send workspace.change signal to correct group."""
     uuid = str(workspace.uuid)
     group_send(
@@ -65,12 +58,14 @@ def send_workspace_change_signal(workspace: Workspace) -> None:
         {
             "type": "workspace.change",
             "uuid": uuid,
+            "kind": kind,
         },
     )
 
 
 def send_project_change_signal(
     project: Project,
+    kind: Literal["changed", "gone"] = "changed",
 ) -> None:
     """Send project.change signal to correct group."""
     uuid = str(project.uuid)
@@ -79,11 +74,14 @@ def send_project_change_signal(
         {
             "type": "project.change",
             "uuid": uuid,
+            "kind": kind,
         },
     )
 
 
-def send_task_change_signal(task: Task) -> None:
+def send_task_change_signal(
+    task: Task, kind: Literal["changed", "gone"] = "changed"
+) -> None:
     """Send task.change signal to correct group."""
     uuid = str(task.uuid)
     group_send(
@@ -91,5 +89,6 @@ def send_task_change_signal(task: Task) -> None:
         {
             "type": "task.change",
             "uuid": uuid,
+            "kind": kind,
         },
     )

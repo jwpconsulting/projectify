@@ -274,6 +274,17 @@ class ChangeConsumer(JsonWebsocketConsumer):
         """Respond to project change event."""
         # Check if already subscribed
         uuid = UUID(event["uuid"])
+
+        if event["kind"] == "gone":
+            self.respond(
+                {
+                    "kind": "gone",
+                    "resource": "workspace",
+                    "uuid": uuid,
+                }
+            )
+            return
+
         workspace = self.workspace_subscriptions.get(uuid)
         if workspace is None:
             # This should be an error, probably...
@@ -309,6 +320,17 @@ class ChangeConsumer(JsonWebsocketConsumer):
     def project_change(self, event: ConsumerEvent) -> None:
         """Respond to project change event."""
         uuid = UUID(event["uuid"])
+
+        if event["kind"] == "gone":
+            self.respond(
+                {
+                    "kind": "gone",
+                    "resource": "project",
+                    "uuid": uuid,
+                }
+            )
+            return
+
         project = self.project_subscriptions.get(uuid)
         if project is None:
             # XXX This should be an error, probably
@@ -341,6 +363,17 @@ class ChangeConsumer(JsonWebsocketConsumer):
     def task_change(self, event: ConsumerEvent) -> None:
         """Respond to project change event."""
         uuid = UUID(event["uuid"])
+
+        if event["kind"] == "gone":
+            self.respond(
+                {
+                    "kind": "gone",
+                    "resource": "task",
+                    "uuid": uuid,
+                }
+            )
+            return
+
         task = self.task_subscriptions.get(uuid)
         if task is None:
             # XXX This should be an error, probably

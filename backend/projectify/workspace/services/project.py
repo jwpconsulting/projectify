@@ -84,7 +84,7 @@ def project_delete(*, who: User, project: Project) -> None:
     project.delete()
     # 1 + 1 query performance problem ?
     send_workspace_change_signal(project.workspace)
-    send_project_change_signal(project)
+    send_project_change_signal(project, "gone")
 
 
 # RPC

@@ -172,7 +172,7 @@ def task_delete(*, task: Task, who: User) -> None:
     validate_perm("workspace.delete_task", who, task.workspace)
     task.delete()
     send_project_change_signal(task.section.project)
-    send_task_change_signal(task)
+    send_task_change_signal(task, "gone")
 
 
 @transaction.atomic
