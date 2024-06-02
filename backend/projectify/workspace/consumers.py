@@ -145,13 +145,16 @@ class ClientResponseSerializer(serializers.Serializer):
     content = serializers.DictField(required=False)
 
 
+Resource = Literal["workspace", "project", "task"]
+
+
 class ChangeConsumer(JsonWebsocketConsumer):
     """Allow subscribing to changes to workspace resources."""
 
     user: User
-    workspace_subscriptions: dict[UUID, Workspace] = {}
-    project_subscriptions: dict[UUID, Project] = {}
-    task_subscriptions: dict[UUID, Task] = {}
+    workspace_subscriptions: dict[UUID, Workspace]
+    project_subscriptions: dict[UUID, Project]
+    task_subscriptions: dict[UUID, Task]
 
     def connect(self) -> None:
         """Handle connect."""
@@ -162,14 +165,25 @@ class ChangeConsumer(JsonWebsocketConsumer):
             self.close(status.HTTP_403_FORBIDDEN)
             return
 
+        self.workspace_subscriptions = {}
+        self.project_subscriptions = {}
+        self.task_subscriptions = {}
+
         self.accept()
 
     def add_subscription_for(
-        self, resource: Literal["workspace", "project", "task"], uuid: UUID
+        self, resource: Resource, uuid: UUID
     ) -> Literal["not_found", "subscribed", "already_subscribed"]:
         """Add a resource subscription."""
         match resource:
-            case "workspace" if uuid not in self.workspace_subscriptions:
+            case "workspace":
+                subscribed = uuid in self.workspace_subscriptions
+            case "project":
+                subscribed = uuid in self.project_subscriptions
+            case "task":
+                subscribed = uuid in self.task_subscriptions
+        match resource, subscribed:
+            case "workspace", False:
                 workspace = workspace_find_by_workspace_uuid(
                     who=self.user, workspace_uuid=uuid
                 )
@@ -177,7 +191,7 @@ class ChangeConsumer(JsonWebsocketConsumer):
                     return "not_found"
                 group_name = workspace_group_name(workspace)
                 self.workspace_subscriptions[uuid] = workspace
-            case "project" if uuid not in self.project_subscriptions:
+            case "project", False:
                 project = project_find_by_project_uuid(
                     who=self.user, project_uuid=uuid
                 )
@@ -185,7 +199,7 @@ class ChangeConsumer(JsonWebsocketConsumer):
                     return "not_found"
                 group_name = project_group_name(project)
                 self.project_subscriptions[uuid] = project
-            case "task" if uuid not in self.task_subscriptions:
+            case "task", False:
                 task = task_find_by_task_uuid(who=self.user, task_uuid=uuid)
                 if task is None:
                     return "not_found"
@@ -199,7 +213,7 @@ class ChangeConsumer(JsonWebsocketConsumer):
         return "subscribed"
 
     def remove_subscription_for(
-        self, resource: Literal["workspace", "project", "task"], uuid: UUID
+        self, resource: Resource, uuid: UUID
     ) -> Literal["not_subscribed", "unsubscribed"]:
         """Remove a resource subscription."""
         match resource:
@@ -207,16 +221,19 @@ class ChangeConsumer(JsonWebsocketConsumer):
                 workspace = self.workspace_subscriptions.get(uuid)
                 if workspace is None:
                     return "not_subscribed"
+                self.workspace_subscriptions.pop(uuid)
                 group_name = workspace_group_name(workspace)
             case "project":
                 project = self.project_subscriptions.get(uuid)
                 if project is None:
                     return "not_subscribed"
+                self.project_subscriptions.pop(uuid)
                 group_name = project_group_name(project)
             case "task":
                 task = self.task_subscriptions.get(uuid)
                 if task is None:
                     return "not_subscribed"
+                self.task_subscriptions.pop(uuid)
                 group_name = task_group_name(task)
         async_to_sync(self.channel_layer.group_discard)(
             group_name, self.channel_name
@@ -225,11 +242,11 @@ class ChangeConsumer(JsonWebsocketConsumer):
 
     def remove_all_subscriptions(self) -> None:
         """Remove all subscriptions, discard self from channel layer."""
-        for u in self.workspace_subscriptions:
+        for u in list(self.workspace_subscriptions.keys()):
             self.remove_subscription_for("workspace", u)
-        for u in self.project_subscriptions:
+        for u in list(self.project_subscriptions.keys()):
             self.remove_subscription_for("project", u)
-        for u in self.task_subscriptions:
+        for u in list(self.task_subscriptions.keys()):
             self.remove_subscription_for("task", u)
 
     def disconnect(self, close_code: int) -> None:
