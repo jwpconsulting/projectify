@@ -193,6 +193,15 @@ class ChangeConsumer(JsonWebsocketConsumer):
                     f"Type mismatch for sub {sub} with {uuid}, expected {resource}"
                 )
 
+    def pop_subscription(self, resource: Resource, uuid: UUID) -> None:
+        """Pop a subscription, but only after type checking."""
+        sub = self.find_subscription(resource, uuid)
+        if sub is None:
+            raise ValueError(
+                f"Can't pop, what has not been subscribed: {resource} {uuid}"
+            )
+        self.subscriptions.pop(uuid)
+
     def add_subscription_for(
         self, resource: Resource, uuid: UUID
     ) -> Literal["not_found", "subscribed", "already_subscribed"]:
@@ -329,83 +338,74 @@ class ChangeConsumer(JsonWebsocketConsumer):
         # Check if already subscribed
         uuid = UUID(event["uuid"])
         response: ClientResponse
-        match event["kind"], self.find_subscription(event["resource"], uuid):
+        sub = self.find_subscription(event["resource"], uuid)
+        result: Union[
+            Literal["gone", "not_found", "never_subscribed"],
+            serializers.Serializer,
+        ]
+        match event["kind"], sub:
             case "gone", _:
+                result = "gone"
+            case "changed", Workspace() as w:
+                workspace = workspace_find_by_workspace_uuid(
+                    who=self.user,
+                    workspace_uuid=w.uuid,
+                    qs=WorkspaceDetailQuerySet,
+                )
+                if workspace is not None:
+                    workspace.quota = workspace_get_all_quotas(workspace)
+                    result = WorkspaceDetailSerializer(workspace)
+                else:
+                    result = "not_found"
+            case "changed", Project() as p:
+                project = project_find_by_project_uuid(
+                    who=self.user,
+                    project_uuid=p.uuid,
+                    qs=ProjectDetailQuerySet,
+                )
+                if project is not None:
+                    result = ProjectDetailSerializer(project)
+                else:
+                    result = "not_found"
+            case "changed", Task() as t:
+                task = task_find_by_task_uuid(
+                    who=self.user, task_uuid=t.uuid, qs=TaskDetailQuerySet
+                )
+                if task is not None:
+                    result = TaskDetailSerializer(task)
+                else:
+                    result = "not_found"
+            case "changed", None:
+                result = "never_subscribed"
+
+        match result:
+            case "gone":
+                self.remove_subscription_for(event["resource"], uuid)
                 response = {
                     "kind": "gone",
                     "resource": event["resource"],
                     "uuid": uuid,
                 }
-            case _, Workspace() as sub:
-                workspace = workspace_find_by_workspace_uuid(
-                    who=self.user,
-                    workspace_uuid=sub.uuid,
-                    qs=WorkspaceDetailQuerySet,
-                )
-
-                if workspace is None:
-                    response = {
-                        "kind": "gone",
-                        "resource": "workspace",
-                        "uuid": uuid,
-                    }
-                else:
-                    workspace.quota = workspace_get_all_quotas(workspace)
-                    serialized = serialize(
-                        WorkspaceDetailSerializer, workspace
-                    )
-                    response = {
-                        "kind": "changed",
-                        "resource": "workspace",
-                        "uuid": workspace.uuid,
-                        "content": serialized,
-                    }
-            case _, Project() as sub:
-                project = project_find_by_project_uuid(
-                    who=self.user,
-                    project_uuid=sub.uuid,
-                    qs=ProjectDetailQuerySet,
-                )
-
-                if project is None:
-                    response = {
-                        "kind": "gone",
-                        "resource": "project",
-                        "uuid": uuid,
-                    }
-                else:
-                    serialized = serialize(ProjectDetailSerializer, project)
-                    response = {
-                        "kind": "changed",
-                        "resource": "project",
-                        "uuid": project.uuid,
-                        "content": serialized,
-                    }
-            case _, Task() as sub:
-                task = task_find_by_task_uuid(
-                    who=self.user, task_uuid=sub.uuid, qs=TaskDetailQuerySet
-                )
-
-                if task is None:
-                    response = {
-                        "kind": "gone",
-                        "resource": "task",
-                        "uuid": uuid,
-                    }
-                else:
-                    serialized = serialize(TaskDetailSerializer, task)
-                    response = {
-                        "kind": "changed",
-                        "resource": "task",
-                        "uuid": task.uuid,
-                        "content": serialized,
-                    }
-            case _, None:
+            case "not_found":
+                self.remove_subscription_for(event["resource"], uuid)
+                response = {
+                    "kind": "gone",
+                    "resource": event["resource"],
+                    "uuid": uuid,
+                }
+            case "never_subscribed":
                 logger.warn(
                     "Received update for resource %s and uuid %s"
-                    "despite never having subscribd",
+                    "despite never having subscribed",
                     event["resource"],
                     uuid,
                 )
                 return
+            case _:
+                response = {
+                    "kind": "changed",
+                    "resource": event["resource"],
+                    "uuid": uuid,
+                    "content": result.data,
+                }
         self.respond(response)

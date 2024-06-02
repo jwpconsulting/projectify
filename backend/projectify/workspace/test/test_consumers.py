@@ -482,8 +482,6 @@ class TestProject:
         await database_sync_to_async(project_delete)(
             who=team_member.user, project=project
         )
-        # This message is received twice, for some strange reason
-        await expect_gone(project_communicator, project)
         await expect_gone(project_communicator, project)
         assert await expect_change(workspace_communicator, workspace)
 
