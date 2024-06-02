@@ -177,7 +177,7 @@ export interface paths {
     };
     "/workspace/workspace/user-workspaces/": {
         /** @description Handle GET. */
-        get: operations["workspace_workspace_user_workspaces_retrieve"];
+        get: operations["workspace_workspace_user_workspaces_list"];
     };
 }
 
@@ -206,6 +206,11 @@ export interface components {
             uuid: string;
             text: string;
             author: components["schemas"]["TeamMemberBase"];
+        };
+        /** @description Accept email. */
+        InviteUserToWorkspace: {
+            /** Format: email */
+            email: string;
         };
         /** @description Label model serializer. */
         LabelBase: {
@@ -284,8 +289,34 @@ export interface components {
              * @description Archival timestamp of this workspace board.
              */
             archived: string | null;
-            sections: readonly components["schemas"]["Section"][];
+            sections: readonly components["schemas"]["ProjectDetailSection"][];
             workspace: components["schemas"]["WorkspaceBase"];
+        };
+        /** @description Reduced section serializer. */
+        ProjectDetailSection: {
+            /** Format: uuid */
+            uuid: string;
+            /** order */
+            _order: number;
+            title: string;
+            tasks: readonly components["schemas"]["ProjectDetailTask"][];
+            description: string | null;
+        };
+        /** @description Serialize all task details. */
+        ProjectDetailTask: {
+            title: string;
+            /** Format: uuid */
+            uuid: string;
+            /**
+             * Format: date-time
+             * @description Due date for this task
+             */
+            due_date: string | null;
+            number: number;
+            labels: readonly components["schemas"]["LabelBase"][];
+            assignee: components["schemas"]["TeamMemberBase"] | null;
+            sub_tasks: readonly components["schemas"]["SubTaskBase"][];
+            description: string | null;
         };
         /**
          * @description Serialize project and workspace containing it.
@@ -331,14 +362,35 @@ export interface components {
          * @enum {string}
          */
         RoleEnum: "OBSERVER" | "CONTRIBUTOR" | "MAINTAINER" | "OWNER";
-        /** @description Reduced section serializer. */
-        Section: {
+        /** @description Parse section creation input. */
+        SectionCreate: {
+            title: string;
+            description?: string | null;
             /** Format: uuid */
-            uuid: string;
+            project_uuid: string;
+        };
+        /**
+         * @description Section detail serializer.
+         *
+         * Goes both up (to workspace) and down (all tasks).
+         */
+        SectionDetail: {
+            /** Format: date-time */
+            created: string;
+            /** Format: date-time */
+            modified: string;
+            title: string;
+            description: string | null;
             /** order */
             _order: number;
-            title: string;
-            tasks: readonly components["schemas"]["Task"][];
+            /** Format: uuid */
+            uuid: string;
+            project: components["schemas"]["ProjectUp"];
+            tasks: readonly components["schemas"]["TaskWithSubTask"][];
+        };
+        /** @description Accept the desired position within project. */
+        SectionMove: {
+            order: number;
         };
         /** @description Serialize section up the hierarchy. */
         SectionUp: {
@@ -353,6 +405,11 @@ export interface components {
             /** Format: uuid */
             uuid: string;
             project: components["schemas"]["ProjectUp"];
+        };
+        /** @description Input serializer for PUT. */
+        SectionUpdate: {
+            title: string;
+            description?: string | null;
         };
         /** @description Take in email and password. */
         SignUp: {
@@ -369,6 +426,12 @@ export interface components {
             policies?: string[];
             tos_agreed?: string;
             privacy_policy_agreed?: string;
+        };
+        /** @description Serializer a single Quota dataclass. */
+        SingleQuota: {
+            current: number | null;
+            limit: number | null;
+            can_create_more: boolean;
         };
         /** @description SubTask model serializer. */
         SubTaskBase: {
@@ -393,21 +456,6 @@ export interface components {
             description?: string | null;
             /** @description Designate whether this sub task is done */
             done?: boolean;
-        };
-        /** @description Serialize all task details. */
-        Task: {
-            title: string;
-            /** Format: uuid */
-            uuid: string;
-            /**
-             * Format: date-time
-             * @description Due date for this task
-             */
-            due_date?: string | null;
-            number: number;
-            labels: readonly components["schemas"]["LabelBase"][];
-            assignee: components["schemas"]["TeamMemberBase"];
-            sub_tasks: readonly components["schemas"]["SubTaskBase"][];
         };
         /** @description Serializer for creating tasks. */
         TaskCreate: {
@@ -448,7 +496,7 @@ export interface components {
             number: number;
             sub_tasks: readonly components["schemas"]["SubTaskBase"][];
             labels: readonly components["schemas"]["LabelBase"][];
-            assignee: components["schemas"]["TeamMemberBase"];
+            assignee: components["schemas"]["TeamMemberBase"] | null;
             chat_messages: readonly components["schemas"]["ChatMessageBase"][];
             section: components["schemas"]["SectionUp"];
         };
@@ -465,6 +513,28 @@ export interface components {
             due_date: string | null;
             sub_tasks?: components["schemas"]["SubTaskCreateUpdate"][];
         };
+        /** @description Serialize all task details. */
+        TaskWithSubTask: {
+            /** Format: date-time */
+            created: string;
+            /** Format: date-time */
+            modified: string;
+            title: string;
+            description: string | null;
+            /** order */
+            _order: number;
+            /** Format: uuid */
+            uuid: string;
+            /**
+             * Format: date-time
+             * @description Due date for this task
+             */
+            due_date: string | null;
+            number: number;
+            sub_tasks: readonly components["schemas"]["SubTaskBase"][];
+            labels: readonly components["schemas"]["LabelBase"][];
+            assignee: components["schemas"]["TeamMemberBase"] | null;
+        };
         /** @description Team member serializer. */
         TeamMemberBase: {
             /** Format: date-time */
@@ -476,6 +546,18 @@ export interface components {
             uuid: string;
             role: components["schemas"]["RoleEnum"];
             job_title: string | null;
+        };
+        /** @description Serializer team member invites. */
+        TeamMemberInvite: {
+            /** Format: email */
+            email: string;
+            /** Format: date-time */
+            created: string;
+        };
+        /** @description Accept email. */
+        UninviteUserFromWorkspace: {
+            /** Format: email */
+            email: string;
         };
         /** @description User serializer. */
         User: {
@@ -502,6 +584,58 @@ export interface components {
             uuid: string;
             /** @description Return profile picture. */
             picture: string | null;
+        };
+        /** @description Accept title, description. */
+        WorkspaceCreate: {
+            title: string;
+            description?: string | null;
+        };
+        /**
+         * @description Workspace detail serializer.
+         *
+         * Serializers ws board as well, but not the sections and so forth that they
+         * contain.
+         */
+        WorkspaceDetail: {
+            /** Format: date-time */
+            created: string;
+            /** Format: date-time */
+            modified: string;
+            title: string;
+            description: string | null;
+            /** Format: uuid */
+            uuid: string;
+            /** @description Return profile picture. */
+            picture: string | null;
+            team_members: readonly components["schemas"]["TeamMemberBase"][];
+            team_member_invites: readonly components["schemas"]["TeamMemberInvite"][];
+            projects: readonly components["schemas"]["ProjectBase"][];
+            labels: readonly components["schemas"]["LabelBase"][];
+            quota: components["schemas"]["WorkspaceQuota"];
+        };
+        /** @description Serializer quota. */
+        WorkspaceQuota: {
+            workspace_status: components["schemas"]["WorkspaceStatusEnum"];
+            chat_messages: components["schemas"]["SingleQuota"];
+            labels: components["schemas"]["SingleQuota"];
+            sub_tasks: components["schemas"]["SingleQuota"];
+            tasks: components["schemas"]["SingleQuota"];
+            task_labels: components["schemas"]["SingleQuota"];
+            projects: components["schemas"]["SingleQuota"];
+            sections: components["schemas"]["SingleQuota"];
+            team_members_and_invites: components["schemas"]["SingleQuota"];
+        };
+        /**
+         * @description * `full` - full
+         * * `trial` - trial
+         * * `inactive` - inactive
+         * @enum {string}
+         */
+        WorkspaceStatusEnum: "full" | "trial" | "inactive";
+        /** @description Accept title, description. */
+        WorkspaceUpdate: {
+            title: string;
+            description?: string | null;
         };
     };
     responses: never;
@@ -883,9 +1017,25 @@ export interface operations {
     };
     /** @description Create a section. */
     workspace_section_create: {
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SectionCreate"];
+                "application/x-www-form-urlencoded": components["schemas"]["SectionCreate"];
+                "multipart/form-data": components["schemas"]["SectionCreate"];
+            };
+        };
         responses: {
+            201: {
+                content: {
+                    "application/json": components["schemas"]["SectionCreate"];
+                };
+            };
             /** @description No response body */
-            200: {
+            400: {
+                content: never;
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
@@ -898,8 +1048,13 @@ export interface operations {
             };
         };
         responses: {
-            /** @description No response body */
             200: {
+                content: {
+                    "application/json": components["schemas"]["SectionDetail"];
+                };
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
@@ -911,9 +1066,25 @@ export interface operations {
                 section_uuid: string;
             };
         };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SectionUpdate"];
+                "application/x-www-form-urlencoded": components["schemas"]["SectionUpdate"];
+                "multipart/form-data": components["schemas"]["SectionUpdate"];
+            };
+        };
         responses: {
-            /** @description No response body */
             200: {
+                content: {
+                    "application/json": components["schemas"]["SectionUpdate"];
+                };
+            };
+            /** @description No response body */
+            400: {
+                content: never;
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
@@ -930,6 +1101,10 @@ export interface operations {
             204: {
                 content: never;
             };
+            /** @description No response body */
+            404: {
+                content: never;
+            };
         };
     };
     /** @description Process request. */
@@ -939,9 +1114,24 @@ export interface operations {
                 section_uuid: string;
             };
         };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SectionMove"];
+                "application/x-www-form-urlencoded": components["schemas"]["SectionMove"];
+                "multipart/form-data": components["schemas"]["SectionMove"];
+            };
+        };
         responses: {
             /** @description No response body */
             200: {
+                content: never;
+            };
+            /** @description No response body */
+            400: {
+                content: never;
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
@@ -1098,9 +1288,21 @@ export interface operations {
     };
     /** @description Create the workspace and add this user. */
     workspace_workspace_create: {
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkspaceCreate"];
+                "application/x-www-form-urlencoded": components["schemas"]["WorkspaceCreate"];
+                "multipart/form-data": components["schemas"]["WorkspaceCreate"];
+            };
+        };
         responses: {
+            201: {
+                content: {
+                    "application/json": components["schemas"]["WorkspaceBase"];
+                };
+            };
             /** @description No response body */
-            200: {
+            400: {
                 content: never;
             };
         };
@@ -1113,8 +1315,13 @@ export interface operations {
             };
         };
         responses: {
-            /** @description No response body */
             200: {
+                content: {
+                    "application/json": components["schemas"]["WorkspaceDetail"];
+                };
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
@@ -1126,9 +1333,25 @@ export interface operations {
                 workspace_uuid: string;
             };
         };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkspaceUpdate"];
+                "application/x-www-form-urlencoded": components["schemas"]["WorkspaceUpdate"];
+                "multipart/form-data": components["schemas"]["WorkspaceUpdate"];
+            };
+        };
         responses: {
-            /** @description No response body */
             200: {
+                content: {
+                    "application/json": components["schemas"]["WorkspaceUpdate"];
+                };
+            };
+            /** @description No response body */
+            400: {
+                content: never;
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
@@ -1159,9 +1382,25 @@ export interface operations {
                 workspace_uuid: string;
             };
         };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InviteUserToWorkspace"];
+                "application/x-www-form-urlencoded": components["schemas"]["InviteUserToWorkspace"];
+                "multipart/form-data": components["schemas"]["InviteUserToWorkspace"];
+            };
+        };
         responses: {
+            201: {
+                content: {
+                    "application/json": components["schemas"]["InviteUserToWorkspace"];
+                };
+            };
             /** @description No response body */
-            200: {
+            400: {
+                content: never;
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
@@ -1175,7 +1414,15 @@ export interface operations {
         };
         responses: {
             /** @description No response body */
-            200: {
+            204: {
+                content: never;
+            };
+            /** @description No response body */
+            400: {
+                content: never;
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
@@ -1187,19 +1434,35 @@ export interface operations {
                 workspace_uuid: string;
             };
         };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UninviteUserFromWorkspace"];
+                "application/x-www-form-urlencoded": components["schemas"]["UninviteUserFromWorkspace"];
+                "multipart/form-data": components["schemas"]["UninviteUserFromWorkspace"];
+            };
+        };
         responses: {
             /** @description No response body */
-            200: {
+            204: {
+                content: never;
+            };
+            /** @description No response body */
+            400: {
+                content: never;
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
     };
     /** @description Handle GET. */
-    workspace_workspace_user_workspaces_retrieve: {
+    workspace_workspace_user_workspaces_list: {
         responses: {
-            /** @description No response body */
             200: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["WorkspaceBase"][];
+                };
             };
         };
     };

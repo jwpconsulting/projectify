@@ -26,18 +26,19 @@ import type {
     TasksPerUser,
     TeamMemberSelection,
 } from "$lib/types/ui";
-import type { Label, Task, SectionWithTasks } from "$lib/types/workspace";
+import type { Label, SectionWithTasks } from "$lib/types/workspace";
 
 interface CurrentFilter {
     labels: LabelSelection;
     teamMember: TeamMemberSelection;
-    sections: SectionWithTasks[];
+    sections: readonly SectionWithTasks[];
 }
 
 function filterSectionsTasks(
     currentFilter: CurrentFilter,
-): SectionWithTasks[] {
-    let sections: SectionWithTasks[] = currentFilter.sections;
+): readonly SectionWithTasks[] {
+    type Task = SectionWithTasks["tasks"][number];
+    let sections: readonly SectionWithTasks[] = currentFilter.sections;
     if (currentFilter.labels.kind === "noLabel") {
         // TODO filter by no label? Justus 2023-04-04
         // eslint-disable-next-line
@@ -88,7 +89,7 @@ function filterSectionsTasks(
 
 export const currentSections = derived<
     [typeof selectedLabels, typeof selectedTeamMember, typeof currentProject],
-    SectionWithTasks[] | undefined
+    readonly SectionWithTasks[] | undefined
 >(
     [selectedLabels, selectedTeamMember, currentProject],
     ([$selectedLabels, $selectedTeamMember, $currentProject], set) => {
@@ -109,11 +110,11 @@ export const currentSections = derived<
 );
 
 export const tasksPerUser: Readable<TasksPerUser> = derived<
-    Readable<SectionWithTasks[] | undefined>,
+    Readable<readonly SectionWithTasks[] | undefined>,
     TasksPerUser
 >(
     currentSections,
-    ($currentSections: SectionWithTasks[] | undefined, set) => {
+    ($currentSections: readonly SectionWithTasks[] | undefined, set) => {
         if ($currentSections === undefined) {
             return;
         }

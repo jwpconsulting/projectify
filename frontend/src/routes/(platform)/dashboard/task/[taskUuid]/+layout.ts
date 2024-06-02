@@ -16,12 +16,12 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import { currentTask, currentWorkspace } from "$lib/stores/dashboard";
-import type { TaskWithWorkspace } from "$lib/types/workspace";
+import type { TaskDetail } from "$lib/types/workspace";
 
 import type { LayoutLoadEvent } from "./$types";
 
 interface Data {
-    task: Promise<TaskWithWorkspace>;
+    task: Promise<TaskDetail>;
 }
 
 export function load({ params: { taskUuid }, fetch }: LayoutLoadEvent): Data {

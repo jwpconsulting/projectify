@@ -25,9 +25,12 @@ Up and down chevrons for task movement within a section
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { getTaskPosition, moveUp, moveDown } from "$lib/stores/modules";
-    import type { Task, SectionWithTasks } from "$lib/types/workspace";
+    import type {
+        SectionWithTasks,
+        ProjectDetailTask,
+    } from "$lib/types/workspace";
 
-    export let task: Task;
+    export let task: ProjectDetailTask;
     export let section: SectionWithTasks;
 
     let upDisabled = true;

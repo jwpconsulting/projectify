@@ -30,25 +30,22 @@ import type { Readable } from "svelte/store";
 
 import { can, type Resource, type Verb } from "$lib/rules/workspace";
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
-import type { Workspace, TeamMember } from "$lib/types/workspace";
+import type { TeamMember, WorkspaceDetail } from "$lib/types/workspace";
 
 import { currentUser } from "../user";
 
-// TODO make Readable<TeamMember[] | undefined>
-export type CurrentTeamMembers = Readable<TeamMember[]>;
+// TODO make Readable<readonly TeamMember[] | undefined>
+export type CurrentTeamMembers = Readable<readonly TeamMember[]>;
 
 export const currentTeamMembers: CurrentTeamMembers = derived<
     typeof currentWorkspace,
-    TeamMember[]
+    readonly TeamMember[]
     // Derived stores are initialized with undefined
 >(
     currentWorkspace,
-    ($currentWorkspace: Workspace | undefined, set) => {
+    ($currentWorkspace: WorkspaceDetail | undefined, set) => {
         if (!$currentWorkspace) {
             return;
-        }
-        if (!$currentWorkspace.team_members) {
-            throw new Error("Expected $currentWorkspace.team_members");
         }
         set($currentWorkspace.team_members);
     },

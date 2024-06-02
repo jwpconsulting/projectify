@@ -16,8 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import {
-    getWithCredentialsJson,
-    handle404,
+    openApiClient,
     postWithCredentialsJson,
     putWithCredentialsJson,
 } from "$lib/repository/util";
@@ -45,25 +44,36 @@ export async function createWorkspace(
 }
 // Read
 export async function getWorkspaces(
-    repositoryContext: RepositoryContext,
-): Promise<Workspace[] | undefined> {
-    return handle404(
-        await getWithCredentialsJson<Workspace[]>(
-            `/workspace/workspace/user-workspaces/`,
-            repositoryContext,
-        ),
+    _repositoryContext?: RepositoryContext,
+): Promise<Workspace[]> {
+    const { response, data } = await openApiClient.GET(
+        "/workspace/workspace/user-workspaces/",
+    );
+    if (data !== undefined) {
+        return data;
+    }
+    throw new Error(
+        `Could not retrieve workspaces ${JSON.stringify(
+            await response.json(),
+        )}`,
     );
 }
 
 export async function getWorkspace(
-    uuid: string,
-    repositoryContext: RepositoryContext,
+    workspace_uuid: string,
+    _repositoryContext?: RepositoryContext,
 ): Promise<WorkspaceDetail | undefined> {
-    return handle404(
-        await getWithCredentialsJson<WorkspaceDetail>(
-            `/workspace/workspace/${uuid}`,
-            repositoryContext,
-        ),
+    const { response, data } = await openApiClient.GET(
+        "/workspace/workspace/{workspace_uuid}",
+        { params: { path: { workspace_uuid } } },
+    );
+    if (data !== undefined) {
+        return data;
+    }
+    throw new Error(
+        `Could not retrieve workspace ${workspace_uuid}, ${JSON.stringify(
+            await response.json(),
+        )}`,
     );
 }
 
@@ -89,7 +99,7 @@ export async function updateWorkspace(
 
 // RPC
 export async function inviteUser(
-    { uuid }: Workspace,
+    { uuid }: Pick<Workspace, "uuid">,
     email: string,
     repositoryContext: RepositoryContext,
 ): Promise<ApiResponse<unknown, { email?: string }>> {
@@ -101,7 +111,7 @@ export async function inviteUser(
 }
 
 export async function uninviteUser(
-    { uuid }: Workspace,
+    { uuid }: Pick<Workspace, "uuid">,
     email: string,
     repositoryContext: RepositoryContext,
 ): Promise<ApiResponse<unknown, { email?: string }>> {

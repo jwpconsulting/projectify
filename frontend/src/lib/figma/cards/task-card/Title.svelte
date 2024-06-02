@@ -21,7 +21,7 @@
     import type { Task } from "$lib/types/workspace";
     import { getTaskUrl } from "$lib/urls";
 
-    export let task: Task;
+    export let task: Pick<Task, "uuid" | "number" | "title">;
 </script>
 
 <a

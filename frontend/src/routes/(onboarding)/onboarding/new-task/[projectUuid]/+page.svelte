@@ -52,9 +52,9 @@
         }
         const section = result.data;
         // Find ourselves
-        const assignee = workspace.team_members.find(
-            (w) => w.user.email === user.email,
-        );
+        const assignee =
+            workspace.team_members.find((w) => w.user.email === user.email) ??
+            null;
         const task = {
             title: taskTitle,
             description: null,
@@ -62,6 +62,7 @@
             section,
             assignee,
             due_date: null,
+            sub_tasks: [],
         };
         const { uuid } = await createTask(task);
         await goto(getNewLabelUrl(uuid));

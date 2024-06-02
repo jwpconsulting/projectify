@@ -24,11 +24,13 @@ import type { User } from "$lib/types/user";
 import type {
     Label,
     SubTask,
-    Task,
-    TaskWithSection,
     Project,
-    SectionWithTasks,
     TeamMember,
+    ProjectDetail,
+    SectionDetail,
+    WorkspaceDetail,
+    WorkspaceQuota,
+    TaskDetail,
 } from "$lib/types/workspace";
 import { getIndexFromLabelColor, labelColors } from "$lib/utils/colors";
 import type { LabelColor } from "$lib/utils/colors";
@@ -103,15 +105,46 @@ export const project: Project = {
     modified: "",
 };
 
-export const workspace = {
+const quota: WorkspaceQuota = {
+    workspace_status: "full",
+    chat_messages: { current: null, limit: null, can_create_more: false },
+    labels: { current: null, limit: null, can_create_more: false },
+    sub_tasks: { current: null, limit: null, can_create_more: false },
+    tasks: { current: null, limit: null, can_create_more: false },
+    task_labels: { current: null, limit: null, can_create_more: false },
+    projects: { current: null, limit: null, can_create_more: false },
+    sections: { current: null, limit: null, can_create_more: false },
+    team_members_and_invites: {
+        current: null,
+        limit: null,
+        can_create_more: false,
+    },
+};
+
+export const workspace: WorkspaceDetail = {
     uuid: nullUuid,
     title: "This is a workspace, the title is veeeeeryyy loooong",
     description: null,
-    created: "",
-    modified: "",
     picture: null,
     projects: [project],
     team_members: [teamMember],
+    created: "",
+    modified: "",
+    team_member_invites: [],
+    labels: [],
+    quota,
+};
+
+export const projectDetail: ProjectDetail = {
+    uuid: nullUuid,
+    sections: [],
+    workspace,
+    title: "Project with a long name, it is long",
+    description: null,
+    archived: null,
+    due_date: null,
+    created: "",
+    modified: "",
 };
 
 export const customer: Customer = {
@@ -142,57 +175,51 @@ export const subTask: SubTask = {
     _order: 0,
 };
 
-export const task: TaskWithSection = {
-    title: "This task has a very long name, yes, it's long, and as you know that will tell us whether we have overflow problems or not.",
+export const section: TaskDetail["section"] = {
+    title: "section name that is very very very very very very long",
     description: null,
+    uuid: nullUuid,
     created: "",
     modified: "",
+    project: projectDetail,
+    _order: 0,
+};
+
+export const task: TaskDetail = {
+    title: "This task has a very long name, yes, it's long, and as you know that will tell us whether we have overflow problems or not.",
+    description: null,
     uuid: nullUuid,
     due_date: "2022-08-01",
-    _order: 0,
     number: 1,
+    created: "",
+    modified: "",
+    _order: 0,
     labels: [...mappedLabels, ...mappedLabels],
     assignee: teamMember,
     sub_tasks: [subTask],
-    section: {
-        title: "section name that is long",
-        description: null,
-        created: "",
-        modified: "",
-        uuid: nullUuid,
-        _order: 0,
-        project: {
-            uuid: nullUuid,
-            title: "Project with a long name, it is long",
-            description: null,
-            archived: null,
-            due_date: null,
-            created: "",
-            modified: "",
-        },
-    },
+    section,
+    chat_messages: [],
 };
 
-const task2: Task = {
+const task2: TaskDetail = {
     title: "A second task, worthy of being a task, and having a wordy title",
     description: null,
     created: "",
     modified: "",
-    uuid: "00000000-0000-0000-0000-000000000001",
+    uuid: nullUuid,
     due_date: "2022-08-01",
     _order: 0,
     number: 1337,
     labels: mappedLabels.slice(4),
     assignee: teamMember,
     sub_tasks: [],
+    section,
+    chat_messages: [],
 };
 
-export const section: SectionWithTasks = {
-    title: "section name that is very very very very very very long",
-    description: null,
-    uuid: nullUuid,
+export const sectionDetail: SectionDetail = {
+    ...section,
     tasks: [task, task2],
-    _order: 0,
 };
 
 export const mobileParameters = {
@@ -206,7 +233,7 @@ const noop = console.error.bind(null, "noop");
 export const teamMemberAssignment: TeamMemberAssignment = {
     select: noop,
     deselect: noop,
-    subscribe: readable<TeamMember | undefined>(undefined).subscribe,
+    subscribe: readable<TeamMember | null>(null).subscribe,
     selected: writable({ kind: "unassigned" }),
 };
 

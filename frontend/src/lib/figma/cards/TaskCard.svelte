@@ -24,11 +24,11 @@
     import Title from "$lib/figma/cards/task-card/Title.svelte";
     import type {
         ProjectDetail,
+        ProjectDetailTask,
         SectionWithTasks,
-        Task,
     } from "$lib/types/workspace";
 
-    export let task: Task;
+    export let task: ProjectDetailTask;
     export let project: ProjectDetail;
     export let section: SectionWithTasks | undefined = undefined;
 </script>

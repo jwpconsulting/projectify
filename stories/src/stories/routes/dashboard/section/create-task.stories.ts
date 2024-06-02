@@ -16,8 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { project, section } from "$lib-stories/storybook";
-import type { SectionDetail } from "$lib/types/workspace";
+import { section } from "$lib-stories/storybook";
 import CreateTask from "$routes/(platform)/dashboard/section/[sectionUuid]/create-task/+page.svelte";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
@@ -25,12 +24,7 @@ const meta: Meta<CreateTask> = {
     component: CreateTask,
     args: {
         data: {
-            section: {
-                ...section,
-                project: project,
-                created: "",
-                modified: "",
-            } satisfies SectionDetail,
+            section,
         },
     },
 };

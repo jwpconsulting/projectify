@@ -25,8 +25,8 @@
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type {
-        SectionWithTasks,
         ProjectDetail,
+        ProjectDetailSection,
     } from "$lib/types/workspace";
 
     export let data: { injectProject?: ProjectDetail } | undefined = undefined;
@@ -36,7 +36,7 @@
 
     $: hasSections = project ? project.sections.length > 0 : false;
 
-    let sections: SectionWithTasks[];
+    let sections: readonly ProjectDetailSection[];
     $: sections = $currentSections ?? data?.injectProject?.sections ?? [];
 
     async function onAddNewSection() {

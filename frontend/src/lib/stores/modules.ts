@@ -22,7 +22,12 @@ import {
     moveTaskToSection,
 } from "$lib/repository/workspace";
 import type { RepositoryContext } from "$lib/types/repository";
-import type { Task, SectionWithTasks, Section } from "$lib/types/workspace";
+import type {
+    Task,
+    SectionWithTasks,
+    Section,
+    ProjectDetailTask,
+} from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
 
 type TaskPosition =
@@ -33,7 +38,7 @@ type TaskPosition =
 
 export function getTaskPosition(
     section: SectionWithTasks,
-    task: Task,
+    task: Pick<Task, "uuid">,
 ): TaskPosition {
     const { tasks } = section;
     const taskIndex = tasks.findIndex((t) => t.uuid == task.uuid);
@@ -60,7 +65,7 @@ export async function moveToTop(
 
 export async function moveToBottom(
     section: SectionWithTasks,
-    task: Task,
+    task: Pick<Task, "uuid">,
     repositoryContext: RepositoryContext,
 ) {
     const { tasks } = section;
@@ -73,7 +78,7 @@ export async function moveToBottom(
 
 export async function moveUp(
     section: SectionWithTasks,
-    task: Task,
+    task: ProjectDetailTask,
     repositoryContext: RepositoryContext,
 ) {
     const { tasks } = section;
@@ -90,7 +95,7 @@ export async function moveUp(
 
 export async function moveDown(
     section: SectionWithTasks,
-    task: Task,
+    task: ProjectDetailTask,
     repositoryContext: RepositoryContext,
 ) {
     const position = getTaskPosition(section, task);

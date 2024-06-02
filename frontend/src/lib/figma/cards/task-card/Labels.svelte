@@ -27,9 +27,9 @@
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { LabelAssignment } from "$lib/types/stores";
     import type { ContextMenuType } from "$lib/types/ui";
-    import type { Label, Task } from "$lib/types/workspace";
+    import type { ProjectDetailTask } from "$lib/types/workspace";
 
-    export let task: Task;
+    export let task: ProjectDetailTask;
 
     let labelPickerOpen = false;
 
@@ -75,7 +75,7 @@
         try {
             await openContextMenu(contextMenuType, anchor);
 
-            const labels: Label[] = $labelAssignment;
+            const labels = $labelAssignment;
             // TODO skip update when no changes detected
             await updateTask(
                 task,

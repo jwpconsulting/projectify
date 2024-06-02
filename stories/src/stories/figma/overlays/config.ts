@@ -24,6 +24,8 @@ import {
     teamMember,
     labelAssignment,
     makeStorybookSelect,
+    projectDetail,
+    sectionDetail,
 } from "$lib-stories/storybook";
 import type { ConstructiveOverlayType, ContextMenuType } from "$lib/types/ui";
 
@@ -49,14 +51,14 @@ export const contextMenus: Record<string, ContextMenuType> = {
     },
     "Section": {
         kind: "section" as const,
-        project,
-        section,
+        project: projectDetail,
+        section: sectionDetail,
     },
     "Task dashboard": {
         kind: "task" as const,
         task,
         location: "dashboard",
-        section,
+        section: sectionDetail,
         project: {
             ...project,
             sections: [],
@@ -132,7 +134,7 @@ export const constructiveOverlays =
         "Create project": { kind: "createProject", workspace },
         "Create section": {
             kind: "createSection",
-            project,
+            project: projectDetail,
         },
         "Update section": {
             kind: "updateSection",

@@ -27,12 +27,15 @@
         openConstructiveOverlay,
         openDestructiveOverlay,
     } from "$lib/stores/globalUi";
-    import type { Workspace, Project } from "$lib/types/workspace";
+    import type {
+        WorkspaceDetailProject,
+        WorkspaceDetail,
+    } from "$lib/types/workspace";
     import { getArchiveUrl } from "$lib/urls";
     import { openApiClient } from "$lib/repository/util";
 
-    export let workspace: Workspace;
-    export let project: Project;
+    export let workspace: WorkspaceDetail;
+    export let project: WorkspaceDetailProject;
 
     async function editProject() {
         await openConstructiveOverlay({

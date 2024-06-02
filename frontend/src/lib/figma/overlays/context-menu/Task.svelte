@@ -31,8 +31,7 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import { goto } from "$lib/navigation";
-    import { moveTaskToSection } from "$lib/repository/workspace";
-    import { deleteTask } from "$lib/stores/dashboard";
+    import { deleteTask, moveTaskToSection } from "$lib/repository/workspace";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
     import {
@@ -65,7 +64,7 @@
         moveToSectionOpened = !moveToSectionOpened;
     }
 
-    async function moveToSection(section: Section) {
+    async function moveToSection(section: Pick<Section, "uuid">) {
         await moveTaskToSection(kind.task, section, { fetch });
     }
 

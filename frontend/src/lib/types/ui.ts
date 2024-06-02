@@ -18,13 +18,16 @@
 import type { TeamMemberAssignment, LabelAssignment } from "$lib/types/stores";
 import type {
     Label,
-    Task,
     Workspace,
     Project,
     ProjectDetail,
     Section,
     SectionWithTasks,
     TeamMember,
+    TaskWithSection,
+    ProjectDetailTask,
+    WorkspaceDetail,
+    WorkspaceDetailProject,
 } from "$lib/types/workspace";
 
 // TODO rename LabelFilterInput
@@ -76,9 +79,9 @@ export type DestructiveOverlayType =
           kind: "deleteSection";
           section: SectionWithTasks;
       }
-    | { kind: "deleteTask"; task: Task }
+    | { kind: "deleteTask"; task: ProjectDetailTask }
     // XXX this is never used
-    | { kind: "deleteSelectedTasks"; tasks: Task[] }
+    | { kind: "deleteSelectedTasks"; tasks: readonly TaskWithSection[] }
     | { kind: "archiveProject"; project: Project }
     | { kind: "deleteProject"; project: Project };
 
@@ -113,25 +116,25 @@ export type MobileMenuState = Overlay<MobileMenuType>;
 export type ContextMenuType =
     | { kind: "profile" }
     | { kind: "workspace"; workspaces: Workspace[] }
-    | { kind: "sideNav"; workspace: Workspace }
+    | { kind: "sideNav"; workspace: WorkspaceDetail }
     | {
           kind: "project";
-          workspace: Workspace;
-          project: Project;
+          workspace: WorkspaceDetail;
+          project: WorkspaceDetailProject;
       }
     | {
           kind: "section";
-          project: Project;
+          project: ProjectDetail;
           section: SectionWithTasks;
       }
     | {
           kind: "task";
-          task: Task;
+          task: ProjectDetailTask;
           location: "task";
       }
     | {
           kind: "task";
-          task: Task;
+          task: ProjectDetailTask;
           location: "dashboard";
           // TODO remove this property?
           section: SectionWithTasks;
@@ -151,8 +154,8 @@ export type ContextMenuState = Overlay<ContextMenuType, HTMLElement>;
 
 export type ConstructiveOverlayType =
     | { kind: "updateProject"; project: Project }
-    | { kind: "createProject"; workspace: Workspace }
-    | { kind: "createSection"; project: Project }
+    | { kind: "createProject"; workspace: WorkspaceDetail }
+    | { kind: "createSection"; project: ProjectDetail }
     | {
           kind: "updateSection";
           section: Pick<Section, "uuid" | "title" | "description">;

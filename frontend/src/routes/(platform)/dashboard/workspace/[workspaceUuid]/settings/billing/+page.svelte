@@ -113,10 +113,8 @@
 
     // Paid user:
     let editBillingError: string | undefined = undefined;
-    $: quota = workspace.quota?.team_members_and_invites;
-    $: seatsRemaining = quota
-        ? (quota.current ?? 0) - (quota.limit ?? 0)
-        : $_("workspace-settings.billing.active.seats.unlimited");
+    $: quota = workspace.quota.team_members_and_invites;
+    $: seatsRemaining = (quota.current ?? 0) - (quota.limit ?? 0);
 </script>
 
 <svelte:head>
