@@ -354,7 +354,7 @@ class TestWorkspace:
         assert e.match("Not connected: 403")
         with pytest.raises(Exception) as e:
             await make_communicator(workspace, other_user)
-        assert e.match("Could not connect, notFound")
+        assert e.match("Could not connect, not_found")
 
     async def test_workspace_life_cycle(
         self,
@@ -443,7 +443,7 @@ class TestProject:
         assert e.match("Not connected: 403")
         with pytest.raises(Exception) as e:
             await make_communicator(project, other_user)
-        assert e.match("Could not connect, notFound")
+        assert e.match("Could not connect, not_found")
 
     async def test_project_life_cycle(
         self,
@@ -566,7 +566,7 @@ class TestTask:
         assert e.match("Not connected: 403")
         with pytest.raises(Exception) as e:
             await make_communicator(task, other_user)
-        assert e.match("Could not connect, notFound")
+        assert e.match("Could not connect, not_found")
 
     async def test_task_life_cycle(
         self,

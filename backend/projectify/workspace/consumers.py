@@ -113,9 +113,9 @@ class ClientResponse(TypedDict):
     kind: Literal[
         "subscribed",
         "unsubscribed",
-        "alreadySubscribed",
-        "notSubscribed",
-        "notFound",
+        "already_subscribed",
+        "not_subscribed",
+        "not_found",
         "changed",
         "gone",
     ]
@@ -131,9 +131,9 @@ class ClientResponseSerializer(serializers.Serializer):
         choices=[
             "subscribed",
             "unsubscribed",
-            "alreadySubscribed",
-            "notSubscribed",
-            "notFound",
+            "already_subscribed",
+            "not_subscribed",
+            "not_found",
             "changed",
             "gone",
         ]
@@ -158,16 +158,16 @@ class ChangeConsumer(JsonWebsocketConsumer):
 
     def connect(self) -> None:
         """Handle connect."""
+        self.workspace_subscriptions = {}
+        self.project_subscriptions = {}
+        self.task_subscriptions = {}
+
         self.user = self.scope["user"]
 
         if self.user.is_anonymous:
             logger.debug("Anonymous user tried to connect")
             self.close(status.HTTP_403_FORBIDDEN)
             return
-
-        self.workspace_subscriptions = {}
-        self.project_subscriptions = {}
-        self.task_subscriptions = {}
 
         self.accept()
 
@@ -283,6 +283,8 @@ class ChangeConsumer(JsonWebsocketConsumer):
             case "unsubscribe", resource:
                 result = self.remove_subscription_for(resource, uuid)
 
+        response: ClientResponse
+
         match result:
             case "already_subscribed":
                 logger.debug(
@@ -290,47 +292,44 @@ class ChangeConsumer(JsonWebsocketConsumer):
                     resource,
                     uuid,
                 )
-                self.respond(
-                    {
-                        "kind": "alreadySubscribed",
-                        "resource": resource,
-                        "uuid": uuid,
-                    }
-                )
+                response = {
+                    "kind": "already_subscribed",
+                    "resource": resource,
+                    "uuid": uuid,
+                }
             case "not_found":
                 logger.debug(
                     "No object found for uuid %s and resource %s",
                     uuid,
                     resource,
                 )
-                self.respond(
-                    {
-                        "kind": "notFound",
-                        "resource": resource,
-                        "uuid": uuid,
-                    }
-                )
+                response = {
+                    "kind": "not_found",
+                    "resource": resource,
+                    "uuid": uuid,
+                }
             case "not_subscribed":
                 logger.debug(
                     "Not subscribed to uuid %s and resource %s", uuid, resource
                 )
+                response = {
+                    "kind": "not_subscribed",
+                    "resource": resource,
+                    "uuid": uuid,
+                }
             case "unsubscribed":
-                self.respond(
-                    {
-                        "kind": "unsubscribed",
-                        "resource": resource,
-                        "uuid": uuid,
-                    }
-                )
-                pass
+                response = {
+                    "kind": "unsubscribed",
+                    "resource": resource,
+                    "uuid": uuid,
+                }
             case "subscribed":
-                self.respond(
-                    {
-                        "kind": "subscribed",
-                        "resource": resource,
-                        "uuid": uuid,
-                    }
-                )
+                response = {
+                    "kind": "subscribed",
+                    "resource": resource,
+                    "uuid": uuid,
+                }
+        self.respond(response)
 
     def workspace_change(self, event: ConsumerEvent) -> None:
         """Respond to project change event."""

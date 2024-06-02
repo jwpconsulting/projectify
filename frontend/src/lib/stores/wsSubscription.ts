@@ -46,9 +46,9 @@ type WsRequest =
 type WsResponse =
     | {
           kind:
-              | "alreadySubscribed"
-              | "notSubscribed"
-              | "notFound"
+              | "already_subscribed"
+              | "not_subscribed"
+              | "not_found"
               | "gone"
               | "subscribed"
               | "unsubscribed";
@@ -172,8 +172,8 @@ async function unsubscribeFromResource(resource: Resource) {
     sendWs({ action: "unsubscribe", ...resource });
     const done = new Promise<void>((resolve) => {
         const disconnectedCb = (response: WsResponse) => {
-            if (response.kind !== "unsubscribed") {
-                console.debug("Still receiving messages for", resource);
+            if (response.kind === "not_subscribed") {
+                console.warn("Never subscribed to", resource);
                 return;
             }
             console.debug("Unsubscribed from", resource);
@@ -182,7 +182,7 @@ async function unsubscribeFromResource(resource: Resource) {
         };
         const listener: Listener = {
             resource,
-            kind: ["unsubscribed"],
+            kind: ["unsubscribed", "not_subscribed"],
             callback: disconnectedCb,
             reconnect() {
                 console.warn("Reconnected while unsubscribing");
@@ -198,13 +198,13 @@ type Reconnector = () => void;
 async function subscribeToResource(
     resource: Resource,
     listener: EventListener,
-    onReconnect: Reconnector,
+    reconnect: Reconnector,
 ): Promise<Unsubscriber> {
     const messageListener: Listener = {
         resource,
         kind: ["changed"],
         callback: listener,
-        reconnect: onReconnect,
+        reconnect: reconnect,
     };
 
     const unsubscribe = async () => {
@@ -214,26 +214,26 @@ async function subscribeToResource(
     };
     const establishedConn = new Promise<Unsubscriber>((resolve, reject) => {
         const establishedConnectionCb = (response: WsResponse) => {
-            if (response.kind === "notFound") {
+            if (response.kind === "not_found") {
                 reject(
                     new Error(
                         `Resource ${JSON.stringify(resource)} not found`,
                     ),
                 );
+                return;
             }
-            if (response.kind === "alreadySubscribed") {
+            if (response.kind === "already_subscribed") {
                 console.warn("Already subscribed to", resource);
-            } else {
-                console.debug("Subscribed to", resource);
             }
 
+            console.debug("Subscribed to", resource);
             removeListener(subscribedListener);
             addListener(messageListener);
             resolve(unsubscribe);
         };
         const subscribedListener: Listener = {
             resource,
-            kind: ["notFound", "alreadySubscribed", "subscribed"],
+            kind: ["not_found", "already_subscribed", "subscribed"],
             callback: establishedConnectionCb,
             reconnect() {
                 console.warn("Reconnected while subscribing");
@@ -252,7 +252,7 @@ async function subscribeToResource(
  *  └─────┘             └─────┘ ◄─────────────┘ set(newValue)
  *                        ▲ │
  *                        │ │ loadUuid
- *                        │ │
+ *                        │ │ reconnect
  *                        └─┘
  *
  * This thing basically just passes on ws updates to subscribers, plus
@@ -291,7 +291,7 @@ export function createWsStore<T>(
         set(resp.content as T);
     };
 
-    const onReconnect: Reconnector = async () => {
+    const reconnect: Reconnector = async () => {
         if (state.kind !== "ready") {
             throw new Error("Trying to reconnect, despite not being ready");
         }
@@ -300,7 +300,7 @@ export function createWsStore<T>(
         const unsubscriber = await subscribeToResource(
             { resource, uuid },
             onMessage,
-            onReconnect,
+            reconnect,
         );
         console.debug("Reconnected");
         state = {
@@ -335,31 +335,32 @@ export function createWsStore<T>(
         // existing subscription.
         if (state.kind === "ready" && uuid === state.uuid) {
             set(newValue);
-        } else {
-            // On the other hand, if the uuid is changing, we need to unsubscribe
-            // and create a new sub, as follows:
-            // We need to unsubscribe from the old ws thing before adding
-            // a new subscription here, if we are already initalized.
-            if (state.kind === "ready") {
-                state.unsubscriber();
-            }
-            const unsubscriber = await subscribeToResource(
-                { resource: subscriptionType, uuid },
-                onMessage,
-                onReconnect,
-            );
-            // Since further reloads are independent of any fetch (the data comes
-            // from ws), we don't have to store the repositoryContext as part of
-            // the state. It's important that we don't reuse a user supplied
-            // fetch (aka repositoryContext) after page navigation, since in server
-            // side mode this is not guaranteed to work: SvelteKit might unload it.
-            state = {
-                ...state,
-                kind: "ready",
-                uuid,
-                unsubscriber,
-            };
+            return newValue;
         }
+
+        // On the other hand, if the uuid is changing, we need to unsubscribe
+        // and create a new sub, as follows:
+        // We need to unsubscribe from the old ws thing before adding
+        // a new subscription here, if we are already initalized.
+        if (state.kind === "ready") {
+            state.unsubscriber();
+        }
+        const unsubscriber = await subscribeToResource(
+            { resource: subscriptionType, uuid },
+            onMessage,
+            reconnect,
+        );
+        // Since further reloads are independent of any fetch (the data comes
+        // from ws), we don't have to store the repositoryContext as part of
+        // the state. It's important that we don't reuse a user supplied
+        // fetch (aka repositoryContext) after page navigation, since in server
+        // side mode this is not guaranteed to work: SvelteKit might unload it.
+        state = {
+            ...state,
+            kind: "ready",
+            uuid,
+            unsubscriber,
+        };
         set(newValue);
         // And the caller of this method is definitely waiting for their result
         return newValue;
