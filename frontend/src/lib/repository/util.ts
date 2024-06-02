@@ -70,10 +70,19 @@ const baseUrl = vars.API_ENDPOINT;
 
 // TODO consider adding content type and accept here? Perhaps based on
 // if GET or else
-export const openApiClient = createClient<paths>({
-    baseUrl,
-    credentials: "include",
-});
+
+export function overrideClient(fetch: typeof global.fetch) {
+    openApiClient = createClientCustom(fetch);
+}
+
+function createClientCustom(fetch?: typeof global.fetch) {
+    return createClient<paths>({
+        baseUrl,
+        credentials: "include",
+        fetch,
+    });
+}
+export let openApiClient = createClientCustom();
 
 const csrfMiddleWare: Middleware = {
     onRequest(request: Request) {

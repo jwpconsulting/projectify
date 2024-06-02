@@ -25,20 +25,19 @@ import { fetchUser } from "$lib/stores/user";
 import type { User } from "$lib/types/user";
 
 import { browser } from "$app/environment";
+import { overrideClient } from "$lib/repository/util";
+import type { LayoutLoadEvent } from "./$types";
 
 interface Data {
     user?: Promise<User | undefined>;
 }
 
-export async function load({
-    fetch,
-}: {
-    fetch: typeof window.fetch;
-}): Promise<Data> {
+export async function load({ fetch }: LayoutLoadEvent): Promise<Data> {
     if (browser) {
         await Promise.all([locale.set(window.navigator.language)]);
         return { user: fetchUser({ fetch }) };
     }
+    overrideClient(fetch);
     // TODO add waitLocale await here
     return {};
 }
