@@ -39,14 +39,10 @@ function makeAbsoluteUrl(url: string): string {
 }
 
 type EventListener = (resp: WsResponse) => void;
-type ChangeListener = (change: unknown) => void;
 
-let wsConnection: Sarus | undefined = undefined;
-
-type Resource = "workspace" | "project" | "task";
 type WsRequest =
-    | { action: "subscribe"; resource: Resource; uuid: string }
-    | { action: "unsubscribe"; resource: Resource; uuid: string };
+    | { action: "subscribe"; resource: SubscriptionType; uuid: string }
+    | { action: "unsubscribe"; resource: SubscriptionType; uuid: string };
 type WsResponse =
     | {
           kind:
@@ -56,18 +52,23 @@ type WsResponse =
               | "gone"
               | "subscribed"
               | "unsubscribed";
-          resource: Resource;
+          resource: SubscriptionType;
           uuid: string;
       }
-    | { kind: "changed"; resource: Resource; uuid: string; content: unknown };
+    | {
+          kind: "changed";
+          resource: SubscriptionType;
+          uuid: string;
+          content: unknown;
+      };
 
-function dispatchMessage(event: MessageEvent<string>) {
+function onMessage(event: MessageEvent<string>) {
     const message = JSON.parse(event.data) as WsResponse;
     const handled = [...listeners].some((listener) => {
-        if (message.resource !== listener.resource) {
+        if (message.resource !== listener.resource.resource) {
             return false;
         }
-        if (message.uuid !== listener.uuid) {
+        if (message.uuid !== listener.resource.uuid) {
             return false;
         }
         if (!listener.kind.includes(message.kind)) {
@@ -81,27 +82,69 @@ function dispatchMessage(event: MessageEvent<string>) {
     }
 }
 
-function sendWs(request: WsRequest) {
-    if (wsConnection === undefined) {
-        const url = makeAbsoluteUrl(`${vars.WS_ENDPOINT}/workspace/change`);
-        wsConnection = new Sarus({
-            url,
-            eventListeners: {
-                open: [() => console.debug("Connection opened to", url)],
-                close: [() => console.debug("Connection closed to", url)],
-                error: [() => console.error("Connection error for", url)],
-                message: [dispatchMessage],
-            },
+type ConnectionState =
+    | { kind: "undefined" }
+    | {
+          kind: "connecting" | "opened" | "closed" | "reopened" | "errored";
+          sarus: Sarus;
+      };
+
+let connectionState: ConnectionState = { kind: "undefined" };
+
+function onOpen(_event: Event) {
+    if (connectionState.kind === "connecting") {
+        console.debug("Connection opened");
+        connectionState.kind = "opened";
+    } else if (connectionState.kind === "closed") {
+        console.debug("Connection reopened");
+        connectionState.kind = "reopened";
+        const reconnectingListeners = [...listeners];
+        // We flush the listeners, since otherwise we'd try to unsubscribe
+        // the old "changed" listeners
+        listeners.clear();
+
+        reconnectingListeners.forEach((listener) => {
+            console.debug("Trying to reconnect", listener);
+            listener.reconnect();
         });
     }
-    wsConnection.send(JSON.stringify(request));
+}
+
+function onClose(_event: Event) {
+    console.debug("Connection closed");
+    connectionState.kind = "closed";
+}
+
+function onError(event: Event) {
+    console.error("Error", event);
+    connectionState.kind = "errored";
+}
+
+function sendWs(request: WsRequest) {
+    if (connectionState.kind === "undefined") {
+        const url = makeAbsoluteUrl(`${vars.WS_ENDPOINT}/workspace/change`);
+        const sarus = new Sarus({
+            url,
+            eventListeners: {
+                open: [onOpen],
+                close: [onClose],
+                error: [onError],
+                message: [onMessage],
+            },
+        });
+        connectionState = {
+            kind: "connecting",
+            sarus,
+        };
+    }
+    connectionState.sarus.send(JSON.stringify(request));
 }
 
 interface Listener {
     resource: Resource;
-    uuid: string;
     kind: WsResponse["kind"][];
     callback: EventListener;
+    reconnect: Reconnector;
 }
 
 const listeners = new Set<Listener>();
@@ -117,93 +160,88 @@ function removeListener(listener: Listener) {
         console.warn("Listener already removed:", listener);
     }
     listeners.delete(listener);
-};
+}
 
-async function unsubscribeFromCollection(resource: Resource, uuid: string) {
-    if (wsConnection === undefined) {
-        throw new Error("Expected wsConnection");
-    }
-    // TODO await confirmation
-    console.debug(`unsubscribing from ${resource} and ${uuid}`);
-    sendWs({ action: "unsubscribe", resource, uuid });
+interface Resource {
+    resource: SubscriptionType;
+    uuid: string;
+}
+
+async function unsubscribeFromResource(resource: Resource) {
+    console.debug("Unsubscribing from", resource);
+    sendWs({ action: "unsubscribe", ...resource });
     const done = new Promise<void>((resolve) => {
         const disconnectedCb = (response: WsResponse) => {
             if (response.kind !== "unsubscribed") {
-                console.debug("Still receiving messages for", resource, uuid);
+                console.debug("Still receiving messages for", resource);
                 return;
             }
-            console.debug("Unsubscribed from", resource, uuid);
+            console.debug("Unsubscribed from", resource);
             removeListener(listener);
             resolve();
         };
         const listener: Listener = {
             resource,
-            uuid,
             kind: ["unsubscribed"],
             callback: disconnectedCb,
+            reconnect() {
+                console.warn("Reconnected while unsubscribing");
+            },
         };
         addListener(listener);
     });
     return await done;
 }
 
-async function getSubscriptionForCollection(
+type Reconnector = () => void;
+
+async function subscribeToResource(
     resource: Resource,
-    uuid: string,
-    listener: ChangeListener,
+    listener: EventListener,
+    onReconnect: Reconnector,
 ): Promise<Unsubscriber> {
-    const passMessageToListener = (response: WsResponse) => {
-        if (response.kind === "changed") {
-            listener(response.content);
-        } else {
-            console.warn(
-                "Unhandled response when listening to subscription; ",
-                response,
-                `for resource ${resource} and uuid ${uuid}`,
-            );
-        }
+    const messageListener: Listener = {
+        resource,
+        kind: ["changed"],
+        callback: listener,
+        reconnect: onReconnect,
+    };
+
+    const unsubscribe = async () => {
+        console.debug("Cleaning up listener for", resource);
+        removeListener(messageListener);
+        await unsubscribeFromResource(resource);
     };
     const establishedConn = new Promise<Unsubscriber>((resolve, reject) => {
         const establishedConnectionCb = (response: WsResponse) => {
             if (response.kind === "notFound") {
-                reject(new Error(`${uuid} not found`));
+                reject(
+                    new Error(
+                        `Resource ${JSON.stringify(resource)} not found`,
+                    ),
+                );
             }
             if (response.kind === "alreadySubscribed") {
-                console.warn("Already subscribed to", resource, uuid);
-            } else if (response.kind !== "subscribed") {
-                console.warn("Don't know how to handle", response);
-                return;
+                console.warn("Already subscribed to", resource);
             } else {
-                console.debug("Subscribed to", resource, uuid);
+                console.debug("Subscribed to", resource);
             }
 
             removeListener(subscribedListener);
             addListener(messageListener);
-            resolve(async () => {
-                console.debug("Cleaning up listener for", resource, uuid);
-                removeListener(messageListener);
-                await unsubscribeFromCollection(resource, uuid);
-            });
+            resolve(unsubscribe);
         };
         const subscribedListener: Listener = {
             resource,
-            uuid,
             kind: ["notFound", "alreadySubscribed", "subscribed"],
             callback: establishedConnectionCb,
+            reconnect() {
+                console.warn("Reconnected while subscribing");
+            },
         };
-        const messageListener: Listener = {
-            resource,
-            uuid,
-            kind: ["changed"],
-            callback: passMessageToListener,
-        };
-        sendWs({
-            action: "subscribe",
-            resource,
-            uuid,
-        });
         addListener(subscribedListener);
     });
+    sendWs({ action: "subscribe", ...resource });
     return await establishedConn;
 }
 
@@ -223,31 +261,52 @@ async function getSubscriptionForCollection(
 
 type WsStoreState =
     | {
-          collection: SubscriptionType;
+          subscriptionType: SubscriptionType;
           kind: "start";
       }
     | {
-          collection: SubscriptionType;
+          subscriptionType: SubscriptionType;
           kind: "ready";
           uuid: string;
           unsubscriber: Unsubscriber;
       };
 
 export function createWsStore<T>(
-    collection: SubscriptionType,
+    subscriptionType: SubscriptionType,
     getter: RepoGetter<T>,
 ): WsResource<T> {
     type State = WsStoreState;
-    let state: State = { collection, kind: "start" };
+    let state: State = { subscriptionType, kind: "start" };
     const { subscribe: writeableSubscribe, set } = writable<T | undefined>(
         undefined,
     );
 
-    const onMessage: ChangeListener = (changed: unknown) => {
+    const onMessage: EventListener = (resp: WsResponse) => {
+        if (resp.kind !== "changed") {
+            throw new Error("resp.kind is not changed");
+        }
         if (state.kind === "start") {
             throw new Error("State.kind is start");
         }
-        set(changed as T);
+        set(resp.content as T);
+    };
+
+    const onReconnect: Reconnector = async () => {
+        if (state.kind !== "ready") {
+            throw new Error("Trying to reconnect, despite not being ready");
+        }
+        console.warn("Connection closed, reconnecting");
+        const { subscriptionType: resource, uuid } = state;
+        const unsubscriber = await subscribeToResource(
+            { resource, uuid },
+            onMessage,
+            onReconnect,
+        );
+        console.debug("Reconnected");
+        state = {
+            ...state,
+            unsubscriber,
+        };
     };
 
     const reset = () => {
@@ -256,7 +315,7 @@ export function createWsStore<T>(
             return;
         }
         state.unsubscriber();
-        state = { kind: "start", collection: state.collection };
+        state = { kind: "start", subscriptionType: state.subscriptionType };
     };
 
     const loadUuid = async (
@@ -284,10 +343,10 @@ export function createWsStore<T>(
             if (state.kind === "ready") {
                 state.unsubscriber();
             }
-            const unsubscriber = await getSubscriptionForCollection(
-                collection,
-                uuid,
+            const unsubscriber = await subscribeToResource(
+                { resource: subscriptionType, uuid },
                 onMessage,
+                onReconnect,
             );
             // Since further reloads are independent of any fetch (the data comes
             // from ws), we don't have to store the repositoryContext as part of
