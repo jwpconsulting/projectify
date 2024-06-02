@@ -18,7 +18,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import Loading from "$lib/components/loading.svelte";
+    import Loading from "$lib/components/Loading.svelte";
     import SectionC from "$lib/figma/cards/Section.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { currentProject, currentSections } from "$lib/stores/dashboard";

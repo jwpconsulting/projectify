@@ -18,7 +18,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import Loading from "$lib/components/loading.svelte";
+    import Loading from "$lib/components/Loading.svelte";
     import Full from "$lib/figma/navigation/side-nav/Full.svelte";
     import MobileMenu from "$lib/figma/overlays/MobileMenu.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";

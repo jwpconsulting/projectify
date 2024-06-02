@@ -19,7 +19,7 @@
     import { onMount } from "svelte";
     import { _, number } from "svelte-i18n";
 
-    import Loading from "$lib/components/loading.svelte";
+    import Loading from "$lib/components/Loading.svelte";
     import Breadcrumbs from "$lib/figma/screens/task/Breadcrumbs.svelte";
     import Form from "$lib/figma/screens/task/Form.svelte";
     import Layout from "$lib/figma/screens/task/Layout.svelte";
