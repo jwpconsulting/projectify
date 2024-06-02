@@ -24,19 +24,24 @@ import type { ArchivedProject } from "$lib/types/workspace";
 export const currentArchivedProjects = derived<
     typeof currentWorkspace,
     ArchivedProject[] | undefined
->(currentWorkspace, ($currentWorkspace, set) => {
-    const uuid = $currentWorkspace?.uuid;
-    if (!uuid) {
-        return;
-    }
-    // XXX this will not use { fetch } present in load() function
-    // Justus 2024-04-08
-    getArchivedProjects(uuid, { fetch })
-        .then(set)
-        .catch((error: Error) => {
-            console.error(
-                "An error happened when retrieving currentArchivedProjects",
-                { error },
-            );
-        });
-});
+>(
+    currentWorkspace,
+    ($currentWorkspace, set) => {
+        const uuid = $currentWorkspace?.uuid;
+        console.log("asd");
+        if (!uuid) {
+            return;
+        }
+        // XXX this will not use { fetch } present in load() function
+        // Justus 2024-04-08
+        getArchivedProjects(uuid, { fetch })
+            .then(set)
+            .catch((error: Error) => {
+                console.error(
+                    "An error happened when retrieving currentArchivedProjects",
+                    { error },
+                );
+            });
+    },
+    undefined,
+);

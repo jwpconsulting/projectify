@@ -16,12 +16,9 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import {
-    deleteWithCredentialsJson,
-    failOrOk,
     getWithCredentialsJson,
     handle404,
     postWithCredentialsJson,
-    putWithCredentialsJson,
 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
@@ -69,30 +66,6 @@ export async function getArchivedProjects(
     return handle404(
         await getWithCredentialsJson<ArchivedProject[]>(
             `/workspace/workspace/${workspace_uuid}/archived-projects/`,
-            repositoryContext,
-        ),
-    );
-}
-
-// Update
-export async function updateProject(
-    project: Pick<Project, "title" | "description" | "uuid">,
-    repositoryContext: RepositoryContext,
-): Promise<ApiResponse<void, unknown>> {
-    return await putWithCredentialsJson(
-        `/workspace/project/${project.uuid}`,
-        project,
-        repositoryContext,
-    );
-}
-// Delete
-export async function deleteProject(
-    { uuid }: Project,
-    repositoryContext: RepositoryContext,
-): Promise<void> {
-    failOrOk(
-        await deleteWithCredentialsJson(
-            `/workspace/project/${uuid}`,
             repositoryContext,
         ),
     );

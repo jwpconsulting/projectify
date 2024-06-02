@@ -20,13 +20,13 @@
     import { _ } from "svelte-i18n";
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import { deleteProject } from "$lib/repository/workspace/project";
     import { currentArchivedProjects } from "$lib/stores/dashboard";
     import {
         openConstructiveOverlay,
         openDestructiveOverlay,
     } from "$lib/stores/globalUi";
     import type { Project } from "$lib/types/workspace";
+    import { openApiClient } from "$lib/repository/util";
 
     $: archivedProjects = $currentArchivedProjects ?? [];
 
@@ -42,7 +42,9 @@
             kind: "deleteProject",
             project,
         });
-        await deleteProject(project, { fetch });
+        await openApiClient.DELETE("/workspace/project/{project_uuid}", {
+            params: { path: { project_uuid: project.uuid } },
+        });
     }
 </script>
 

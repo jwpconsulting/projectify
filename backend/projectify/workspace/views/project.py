@@ -100,6 +100,9 @@ class ProjectCreate(APIView):
 class ProjectReadUpdateDelete(APIView):
     """Project retrieve view."""
 
+    @extend_schema(
+        responses={200: ProjectDetailSerializer, 404: None},
+    )
     def get(self, request: Request, project_uuid: UUID) -> Response:
         """Handle GET."""
         project = project_find_by_project_uuid(
@@ -125,6 +128,14 @@ class ProjectReadUpdateDelete(APIView):
                 "due_date",
             )
 
+    @extend_schema(
+        request=ProjectUpdateSerializer,
+        responses={
+            200: ProjectUpdateSerializer,
+            # TODO specify format
+            400: None,
+        },
+    )
     def put(self, request: Request, project_uuid: UUID) -> Response:
         """Handle PUT."""
         project = project_find_by_project_uuid(
@@ -148,6 +159,9 @@ class ProjectReadUpdateDelete(APIView):
         )
         return Response(data, status.HTTP_200_OK)
 
+    @extend_schema(
+        responses={204: None, 404: None},
+    )
     def delete(self, request: Request, project_uuid: UUID) -> Response:
         """Handle DELETE."""
         project = project_find_by_project_uuid(

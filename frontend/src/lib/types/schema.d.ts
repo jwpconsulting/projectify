@@ -288,6 +288,16 @@ export interface components {
             archived: string | null;
             workspace: components["schemas"]["WorkspaceBase"];
         };
+        /** @description Serializer for PUT. */
+        ProjectUpdate: {
+            title: string;
+            description?: string | null;
+            /**
+             * Format: date-time
+             * @description Due date for this workspace board
+             */
+            due_date?: string | null;
+        };
         /**
          * @description * `OBSERVER` - Observer
          * * `CONTRIBUTOR` - Contributor
@@ -758,8 +768,13 @@ export interface operations {
             };
         };
         responses: {
-            /** @description No response body */
             200: {
+                content: {
+                    "application/json": components["schemas"]["ProjectDetail"];
+                };
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
@@ -771,9 +786,21 @@ export interface operations {
                 project_uuid: string;
             };
         };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjectUpdate"];
+                "application/x-www-form-urlencoded": components["schemas"]["ProjectUpdate"];
+                "multipart/form-data": components["schemas"]["ProjectUpdate"];
+            };
+        };
         responses: {
-            /** @description No response body */
             200: {
+                content: {
+                    "application/json": components["schemas"]["ProjectUpdate"];
+                };
+            };
+            /** @description No response body */
+            400: {
                 content: never;
             };
         };
@@ -788,6 +815,10 @@ export interface operations {
         responses: {
             /** @description No response body */
             204: {
+                content: never;
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };

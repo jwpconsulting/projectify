@@ -372,6 +372,12 @@ paths:
       - cookieAuth: []
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectDetail'
+          description: ''
+        '404':
           description: No response body
     put:
       operationId: workspace_project_update
@@ -385,10 +391,28 @@ paths:
         required: true
       tags:
       - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectUpdate'
+        required: true
       security:
       - cookieAuth: []
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectUpdate'
+          description: ''
+        '400':
           description: No response body
     delete:
       operationId: workspace_project_destroy
@@ -406,6 +430,8 @@ paths:
       - cookieAuth: []
       responses:
         '204':
+          description: No response body
+        '404':
           description: No response body
   /workspace/project/{project_uuid}/archive:
     post:
@@ -1034,6 +1060,23 @@ components:
       - title
       - uuid
       - workspace
+    ProjectUpdate:
+      type: object
+      description: Serializer for PUT.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        due_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Due date for this workspace board
+      required:
+      - title
     RoleEnum:
       enum:
       - OBSERVER
