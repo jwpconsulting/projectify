@@ -222,6 +222,46 @@ export interface components {
         PasswordPolicies: {
             policies: string[];
         };
+        /** @description Parse project creation input. */
+        ProjectCreate: {
+            title: string;
+            description?: string | null;
+            /** Format: uuid */
+            workspace_uuid: string;
+            /**
+             * Format: date-time
+             * @description Due date for this workspace board
+             */
+            due_date?: string | null;
+        };
+        /**
+         * @description Project serializer.
+         *
+         * Serializes in both directions, workspace and sections, including their
+         * tasks.
+         */
+        ProjectDetail: {
+            /** Format: date-time */
+            created: string;
+            /** Format: date-time */
+            modified: string;
+            title: string;
+            description: string | null;
+            /**
+             * Format: date-time
+             * @description Due date for this workspace board
+             */
+            due_date: string | null;
+            /** Format: uuid */
+            uuid: string;
+            /**
+             * Format: date-time
+             * @description Archival timestamp of this workspace board.
+             */
+            archived: string | null;
+            sections: readonly components["schemas"]["Section"][];
+            workspace: components["schemas"]["WorkspaceBase"];
+        };
         /**
          * @description Serialize project and workspace containing it.
          *
@@ -256,6 +296,15 @@ export interface components {
          * @enum {string}
          */
         RoleEnum: "OBSERVER" | "CONTRIBUTOR" | "MAINTAINER" | "OWNER";
+        /** @description Reduced section serializer. */
+        Section: {
+            /** Format: uuid */
+            uuid: string;
+            /** order */
+            _order: number;
+            title: string;
+            tasks: readonly components["schemas"]["Task"][];
+        };
         /** @description Serialize section up the hierarchy. */
         SectionUp: {
             /** Format: date-time */
@@ -309,6 +358,21 @@ export interface components {
             description?: string | null;
             /** @description Designate whether this sub task is done */
             done?: boolean;
+        };
+        /** @description Serialize all task details. */
+        Task: {
+            title: string;
+            /** Format: uuid */
+            uuid: string;
+            /**
+             * Format: date-time
+             * @description Due date for this task
+             */
+            due_date?: string | null;
+            number: number;
+            labels: readonly components["schemas"]["LabelBase"][];
+            assignee: components["schemas"]["TeamMemberBase"];
+            sub_tasks: readonly components["schemas"]["SubTaskBase"][];
         };
         /** @description Serializer for creating tasks. */
         TaskCreate: {
@@ -667,9 +731,21 @@ export interface operations {
     };
     /** @description Create a project. */
     workspace_project_create: {
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjectCreate"];
+                "application/x-www-form-urlencoded": components["schemas"]["ProjectCreate"];
+                "multipart/form-data": components["schemas"]["ProjectCreate"];
+            };
+        };
         responses: {
+            201: {
+                content: {
+                    "application/json": components["schemas"]["ProjectDetail"];
+                };
+            };
             /** @description No response body */
-            200: {
+            400: {
                 content: never;
             };
         };

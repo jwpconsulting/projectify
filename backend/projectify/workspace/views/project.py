@@ -19,6 +19,7 @@ from uuid import UUID
 
 from django.utils.translation import gettext_lazy as _
 
+from drf_spectacular.utils import extend_schema
 from rest_framework import serializers, status
 from rest_framework.exceptions import NotFound
 from rest_framework.request import Request
@@ -50,7 +51,7 @@ from projectify.workspace.services.project import (
 class ProjectCreate(APIView):
     """Create a project."""
 
-    class InputSerializer(serializers.ModelSerializer[Project]):
+    class ProjectCreateSerializer(serializers.ModelSerializer[Project]):
         """Parse project creation input."""
 
         workspace_uuid = serializers.UUIDField()
@@ -61,10 +62,18 @@ class ProjectCreate(APIView):
             model = Project
             fields = "title", "description", "workspace_uuid", "due_date"
 
+    @extend_schema(
+        request=ProjectCreateSerializer,
+        responses={
+            201: ProjectDetailSerializer,
+            # TODO specify error format here
+            400: None,
+        },
+    )
     def post(self, request: Request) -> Response:
         """Create a project."""
         user = request.user
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.ProjectCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         workspace_uuid: UUID = serializer.validated_data.pop("workspace_uuid")
         workspace = workspace_find_by_workspace_uuid(

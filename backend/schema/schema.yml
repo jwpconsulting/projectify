@@ -332,10 +332,28 @@ paths:
       description: Create a project.
       tags:
       - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectCreate'
+        required: true
       security:
       - cookieAuth: []
       responses:
-        '200':
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectDetail'
+          description: ''
+        '400':
           description: No response body
   /workspace/project/{project_uuid}:
     get:
@@ -892,6 +910,82 @@ components:
             type: string
       required:
       - policies
+    ProjectCreate:
+      type: object
+      description: Parse project creation input.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        workspace_uuid:
+          type: string
+          format: uuid
+        due_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Due date for this workspace board
+      required:
+      - title
+      - workspace_uuid
+    ProjectDetail:
+      type: object
+      description: |-
+        Project serializer.
+
+        Serializes in both directions, workspace and sections, including their
+        tasks.
+      properties:
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        due_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Due date for this workspace board
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        archived:
+          type: string
+          format: date-time
+          nullable: true
+          description: Archival timestamp of this workspace board.
+        sections:
+          type: array
+          items:
+            $ref: '#/components/schemas/Section'
+          readOnly: true
+        workspace:
+          allOf:
+          - $ref: '#/components/schemas/WorkspaceBase'
+          readOnly: true
+      required:
+      - archived
+      - created
+      - description
+      - due_date
+      - modified
+      - sections
+      - title
+      - uuid
+      - workspace
     ProjectUp:
       type: object
       description: |-
@@ -952,6 +1046,31 @@ components:
         * `CONTRIBUTOR` - Contributor
         * `MAINTAINER` - Maintainer
         * `OWNER` - Owner
+    Section:
+      type: object
+      description: Reduced section serializer.
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        _order:
+          type: integer
+          readOnly: true
+          title: ' order'
+        title:
+          type: string
+          maxLength: 255
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+          readOnly: true
+      required:
+      - _order
+      - tasks
+      - title
+      - uuid
     SectionUp:
       type: object
       description: Serialize section up the hierarchy.
@@ -1079,6 +1198,47 @@ components:
           description: Designate whether this sub task is done
       required:
       - title
+    Task:
+      type: object
+      description: Serialize all task details.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        due_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Due date for this task
+        number:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabelBase'
+          readOnly: true
+        assignee:
+          allOf:
+          - $ref: '#/components/schemas/TeamMemberBase'
+          readOnly: true
+        sub_tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubTaskBase'
+          readOnly: true
+      required:
+      - assignee
+      - labels
+      - number
+      - sub_tasks
+      - title
+      - uuid
     TaskCreate:
       type: object
       description: Serializer for creating tasks.
