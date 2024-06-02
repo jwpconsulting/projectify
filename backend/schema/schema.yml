@@ -789,7 +789,7 @@ paths:
           description: No response body
   /workspace/workspace/{workspace_uuid}/archived-projects/:
     get:
-      operationId: workspace_workspace_archived_projects_retrieve
+      operationId: workspace_workspace_archived_projects_list
       description: Get queryset.
       parameters:
       - in: path
@@ -804,6 +804,14 @@ paths:
       - cookieAuth: []
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectBase'
+          description: ''
+        '404':
           description: No response body
   /workspace/workspace/{workspace_uuid}/invite-team-member:
     post:
@@ -962,6 +970,46 @@ components:
           type: boolean
       required:
       - archived
+    ProjectBase:
+      type: object
+      description: Project base serializer.
+      properties:
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        due_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Due date for this workspace board
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        archived:
+          type: string
+          format: date-time
+          nullable: true
+          description: Archival timestamp of this workspace board.
+      required:
+      - archived
+      - created
+      - description
+      - due_date
+      - modified
+      - title
+      - uuid
     ProjectCreate:
       type: object
       description: Parse project creation input.

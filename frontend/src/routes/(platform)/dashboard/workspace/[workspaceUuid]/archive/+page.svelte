@@ -59,11 +59,12 @@
                     {project.title}
                 </p>
                 <div class="flex flex-row items-center justify-between">
-                    <!--TODO show the archival date here-->
                     <p>
                         {$_("project-archive.card.archived", {
                             values: {
-                                archived: parseISO(project.archived),
+                                archived:
+                                    project.archived &&
+                                    parseISO(project.archived),
                             },
                         })}
                     </p>

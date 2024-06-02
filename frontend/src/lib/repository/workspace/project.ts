@@ -21,12 +21,7 @@ import {
     postWithCredentialsJson,
 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
-import type {
-    ArchivedProject,
-    Workspace,
-    Project,
-    ProjectDetail,
-} from "$lib/types/workspace";
+import type { Workspace, Project, ProjectDetail } from "$lib/types/workspace";
 
 import type { ApiResponse } from "../types";
 
@@ -54,18 +49,6 @@ export async function getProject(
     return handle404(
         await getWithCredentialsJson<ProjectDetail>(
             `/workspace/project/${uuid}`,
-            repositoryContext,
-        ),
-    );
-}
-
-export async function getArchivedProjects(
-    workspace_uuid: string,
-    repositoryContext: RepositoryContext,
-): Promise<undefined | ArchivedProject[]> {
-    return handle404(
-        await getWithCredentialsJson<ArchivedProject[]>(
-            `/workspace/workspace/${workspace_uuid}/archived-projects/`,
             repositoryContext,
         ),
     );

@@ -161,7 +161,7 @@ export interface paths {
     };
     "/workspace/workspace/{workspace_uuid}/archived-projects/": {
         /** @description Get queryset. */
-        get: operations["workspace_workspace_archived_projects_retrieve"];
+        get: operations["workspace_workspace_archived_projects_list"];
     };
     "/workspace/workspace/{workspace_uuid}/invite-team-member": {
         /** @description Handle POST. */
@@ -225,6 +225,27 @@ export interface components {
         /** @description Accept the desired archival status. */
         ProjectArchive: {
             archived: boolean;
+        };
+        /** @description Project base serializer. */
+        ProjectBase: {
+            /** Format: date-time */
+            created: string;
+            /** Format: date-time */
+            modified: string;
+            title: string;
+            description: string | null;
+            /**
+             * Format: date-time
+             * @description Due date for this workspace board
+             */
+            due_date: string | null;
+            /** Format: uuid */
+            uuid: string;
+            /**
+             * Format: date-time
+             * @description Archival timestamp of this workspace board.
+             */
+            archived: string | null;
         };
         /** @description Parse project creation input. */
         ProjectCreate: {
@@ -1113,15 +1134,20 @@ export interface operations {
         };
     };
     /** @description Get queryset. */
-    workspace_workspace_archived_projects_retrieve: {
+    workspace_workspace_archived_projects_list: {
         parameters: {
             path: {
                 workspace_uuid: string;
             };
         };
         responses: {
-            /** @description No response body */
             200: {
+                content: {
+                    "application/json": components["schemas"]["ProjectBase"][];
+                };
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };

@@ -17,14 +17,14 @@
  */
 import { redirect } from "@sveltejs/kit";
 
-import { getArchivedProjects } from "$lib/repository/workspace/project";
 import { selectedProjectUuids } from "$lib/stores/dashboard";
 import { getArchiveUrl, getDashboardProjectUrl } from "$lib/urls";
 import { getNewProjectUrl } from "$lib/urls/onboarding";
 
 import type { PageLoadEvent } from "./$types";
+import { openApiClient } from "$lib/repository/util";
 
-export async function load({ parent, fetch }: PageLoadEvent): Promise<void> {
+export async function load({ parent }: PageLoadEvent): Promise<void> {
     // TODO call unsubscriber for selectedProjectUuids
     const [maybeProjectUuids, parentData] = await Promise.all([
         await new Promise<Map<string, string>>(
@@ -34,12 +34,12 @@ export async function load({ parent, fetch }: PageLoadEvent): Promise<void> {
         await parent(),
     ]);
 
-    const { uuid: workspaceUuid, projects } = parentData.workspace;
+    const { uuid: workspace_uuid, projects } = parentData.workspace;
 
     // We see if the user has selected a project UUID for this
     // workspace before (by referencing local storage above)
     // And if we have one ...
-    const maybeProjectUuid = maybeProjectUuids.get(workspaceUuid);
+    const maybeProjectUuid = maybeProjectUuids.get(workspace_uuid);
     if (
         maybeProjectUuid &&
         projects.map((b) => b.uuid).includes(maybeProjectUuid)
@@ -58,9 +58,10 @@ export async function load({ parent, fetch }: PageLoadEvent): Promise<void> {
 
     // Now we check if anything is archived and redirect to the archive in that
     // case
-    const archived = await getArchivedProjects(workspaceUuid, {
-        fetch,
-    });
+    const { data: archived } = await openApiClient.GET(
+        "/workspace/workspace/{workspace_uuid}/archived-projects/",
+        { params: { path: { workspace_uuid } } },
+    );
     if (archived && archived.length > 0) {
         // There are archived boards, so we redirect to the ws board archive
         // TODO show the user a notification in case of a redirect to here
@@ -68,5 +69,5 @@ export async function load({ parent, fetch }: PageLoadEvent): Promise<void> {
     }
     // TODO maybe throw in a nice notification to the user here that we have
     // not found any project for this workspace
-    redirect(302, getNewProjectUrl(workspaceUuid));
+    redirect(302, getNewProjectUrl(workspace_uuid));
 }

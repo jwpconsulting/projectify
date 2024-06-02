@@ -126,8 +126,6 @@ export type ProjectDetail = Project & {
     sections: SectionWithTasks[];
 };
 
-export type ArchivedProject = Project & { archived: string };
-
 export interface Quota {
     current: number | null;
     limit: number | null;

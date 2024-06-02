@@ -182,6 +182,10 @@ class ProjectReadUpdateDelete(APIView):
 class ProjectArchivedList(APIView):
     """List archived projects inside a workspace."""
 
+    @extend_schema(
+        request=None,
+        responses={200: ProjectBaseSerializer(many=True), 404: None},
+    )
     def get(self, request: Request, workspace_uuid: UUID) -> Response:
         """Get queryset."""
         workspace = workspace_find_by_workspace_uuid(
