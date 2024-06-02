@@ -35,7 +35,6 @@
         opacity: 1;
         border-radius: 50%;
         animation: ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-        animation-delay: 0.5s;
     }
     svg circle:nth-child(2) {
         animation-delay: 1s;
