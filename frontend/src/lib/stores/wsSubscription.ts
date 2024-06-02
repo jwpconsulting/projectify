@@ -203,7 +203,7 @@ async function subscribeToResource(
 ): Promise<AsyncUnsubscriber> {
     const messageListener: Listener = {
         resource,
-        kind: ["changed"],
+        kind: ["gone", "changed"],
         callback: listener,
         reconnect: reconnect,
     };
@@ -279,14 +279,41 @@ export function createWsStore<T>(
     type State = WsStoreState;
     let state: State = { subscriptionType, kind: "start" };
 
-    const onMessage: EventListener = (resp: WsResponse) => {
-        if (resp.kind !== "changed") {
-            throw new Error("resp.kind is not changed");
+    const reset = () => {
+        set(undefined);
+        state = { kind: "start", subscriptionType: state.subscriptionType };
+    };
+
+    const resetAndUnsubscribe = async () => {
+        if (state.kind === "start") {
+            console.warn("Already reset");
+            return;
         }
+        console.debug("Resetting");
+        await state.unsubscriber();
+        reset();
+    };
+
+    const stop = () => {
+        console.debug("Stopping");
+        resetAndUnsubscribe().catch((error) =>
+            console.error("Error when resetting", error),
+        );
+    };
+
+    const { subscribe, set } = writable<T | undefined>(undefined, () => stop);
+
+    const onMessage: EventListener = (resp: WsResponse) => {
         if (state.kind === "start") {
             throw new Error("State.kind is start");
         }
-        set(resp.content as T);
+        if (resp.kind === "gone") {
+            reset();
+        } else if (resp.kind === "changed") {
+            set(resp.content as T);
+        } else {
+            throw new Error("resp.kind is not changed");
+        }
     };
 
     const reconnect: Reconnector = async () => {
@@ -303,23 +330,6 @@ export function createWsStore<T>(
         console.debug("Reconnected");
         state = { ...state, unsubscriber };
     };
-
-    const reset = async () => {
-        if (state.kind === "start") {
-            console.warn("Already reset");
-            return;
-        }
-        console.debug("Resetting");
-        await state.unsubscriber();
-        state = { kind: "start", subscriptionType: state.subscriptionType };
-    };
-
-    const stop = () => {
-        console.debug("Stopping");
-        reset().catch((error) => console.error("Error when resetting", error));
-    };
-
-    const { subscribe, set } = writable<T | undefined>(undefined, () => stop);
 
     const loadUuid = async (
         uuid: string,
