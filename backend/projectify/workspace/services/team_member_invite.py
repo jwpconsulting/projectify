@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -33,7 +33,7 @@ from projectify.lib.auth import (
 from projectify.premail.email import EmailAddress
 from projectify.user.models import User, UserInvite
 from projectify.user.services.user_invite import user_invite_create
-from projectify.workspace.services.signals import send_workspace_change_signal
+from projectify.workspace.services.signals import send_change_signal
 
 from ..emails import TeamMemberInviteEmail
 from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
@@ -163,7 +163,7 @@ def team_member_invite_create(
     )
     email_to_send.send()
 
-    send_workspace_change_signal(workspace)
+    send_change_signal("changed", workspace)
     return team_member_invite
 
 
@@ -184,4 +184,4 @@ def team_member_invite_delete(
             )
         case TeamMemberInvite() as team_member_invite:
             team_member_invite.delete()
-    send_workspace_change_signal(workspace)
+    send_change_signal("changed", workspace)

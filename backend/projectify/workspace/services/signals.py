@@ -18,6 +18,7 @@
 from typing import (
     Any,
     Literal,
+    Union,
     cast,
 )
 
@@ -29,7 +30,7 @@ from channels.layers import (
 from ..models.project import Project
 from ..models.task import Task
 from ..models.workspace import Workspace
-from ..types import ConsumerEvent
+from ..types import ConsumerEvent, Resource
 
 # TODO AsyncToSync is typed in a newer (unreleased) version of asgiref
 # which we indirectly install with channels, which has not been
@@ -37,58 +38,28 @@ from ..types import ConsumerEvent
 async_to_sync = cast(Any, _async_to_sync)
 
 
-def group_send(destination: str, event: ConsumerEvent) -> None:
-    """Send message to a channels group."""
+def send_change_signal(
+    kind: Literal["changed", "gone"], object: Union[Workspace, Project, Task]
+) -> None:
+    """Send a change signal to the correct channels layer group."""
+    resource: Resource
+    match object:
+        case Workspace():
+            group = f"workspace-{object.uuid}"
+            resource = "workspace"
+        case Project():
+            group = f"project-{object.uuid}"
+            resource = "project"
+        case Task():
+            group = f"task-{object.uuid}"
+            resource = "task"
+    event: ConsumerEvent = {
+        "type": "change",
+        "resource": resource,
+        "uuid": str(object.uuid),
+        "kind": kind,
+    }
     channel_layer = get_channel_layer()
     if not channel_layer:
         raise Exception("Did not get channel layer")
-    async_to_sync(channel_layer.group_send)(
-        destination,
-        event,
-    )
-
-
-def send_workspace_change_signal(
-    workspace: Workspace, kind: Literal["changed", "gone"] = "changed"
-) -> None:
-    """Send workspace.change signal to correct group."""
-    uuid = str(workspace.uuid)
-    group_send(
-        f"workspace-{uuid}",
-        {
-            "type": "workspace.change",
-            "uuid": uuid,
-            "kind": kind,
-        },
-    )
-
-
-def send_project_change_signal(
-    project: Project,
-    kind: Literal["changed", "gone"] = "changed",
-) -> None:
-    """Send project.change signal to correct group."""
-    uuid = str(project.uuid)
-    group_send(
-        f"project-{uuid}",
-        {
-            "type": "project.change",
-            "uuid": uuid,
-            "kind": kind,
-        },
-    )
-
-
-def send_task_change_signal(
-    task: Task, kind: Literal["changed", "gone"] = "changed"
-) -> None:
-    """Send task.change signal to correct group."""
-    uuid = str(task.uuid)
-    group_send(
-        f"task-{uuid}",
-        {
-            "type": "task.change",
-            "uuid": uuid,
-            "kind": kind,
-        },
-    )
+    async_to_sync(channel_layer.group_send)(group, event)
