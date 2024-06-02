@@ -16,14 +16,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Workspace ws consumers."""
 import logging
-from abc import (
-    ABCMeta,
-    abstractmethod,
-)
 from typing import (
     Any,
-    Optional,
+    Literal,
+    NotRequired,
     Type,
+    TypedDict,
     TypeVar,
     cast,
 )
@@ -57,7 +55,7 @@ from .selectors.workspace import (
 from .serializers.project import ProjectDetailSerializer
 from .serializers.task_detail import TaskDetailSerializer
 from .serializers.workspace import WorkspaceDetailSerializer
-from .types import ConsumerEvent, Message
+from .types import ConsumerEvent
 
 logger = logging.getLogger(__name__)
 
@@ -69,150 +67,399 @@ M = TypeVar("M", bound=models.Model)
 
 def serialize(
     serializer: Type[serializers.ModelSerializer[M]],
-    instance: Optional[M],
-    event: ConsumerEvent,
-) -> Message:
+    instance: M,
+) -> object:
     """Serialize a django model instance and then render it to JSON."""
-    return {
-        "type": event["type"],
-        "uuid": event["uuid"],
-        # If the instance has been deleted, we return null / None
-        "data": serializer(instance).data if instance else None,
-    }
+    return serializer(instance).data
 
 
-class BaseConsumer(JsonWebsocketConsumer, metaclass=ABCMeta):
-    """Base class we use for all consumers below."""
+def workspace_group_name(workspace: Workspace) -> str:
+    """Return the channel layer group name for a workspace."""
+    return f"workspace-{workspace.uuid}"
+
+
+def project_group_name(project: Project) -> str:
+    """Return the channel layer group name for a project."""
+    return f"project-{project.uuid}"
+
+
+def task_group_name(task: Task) -> str:
+    """Return the channel layer group name for a task."""
+    return f"task-{task.uuid}"
+
+
+# The below duplications are clunky
+class ClientRequest(TypedDict):
+    """A message from a client to the ChangeConsumer."""
+
+    action: Literal["subscribe", "unsubscribe"]
+    resource: Literal["workspace", "project", "task"]
+    uuid: UUID
+
+
+class ClientRequestSerializer(serializers.Serializer):
+    """Serializer for ClientRequest."""
+
+    action = serializers.ChoiceField(choices=["subscribe", "unsubscribe"])
+    resource = serializers.ChoiceField(
+        choices=["workspace", "project", "task"]
+    )
+    uuid = serializers.UUIDField()
+
+
+class ClientResponse(TypedDict):
+    """An update to a resource."""
+
+    kind: Literal[
+        "subscribed",
+        "unsubscribed",
+        "already_subscribed",
+        "not_subscribed",
+        "not_found",
+        "changed",
+        "gone",
+    ]
+    resource: Literal["workspace", "project", "task"]
+    uuid: UUID
+    content: NotRequired[object]
+
+
+class ClientResponseSerializer(serializers.Serializer):
+    """Serializer for change."""
+
+    kind = serializers.ChoiceField(
+        choices=[
+            "subscribed",
+            "unsubscribed",
+            "already_subscribed",
+            "not_subscribed",
+            "not_found",
+            "changed",
+            "gone",
+        ]
+    )
+    resource = serializers.ChoiceField(
+        choices=["workspace", "project", "task"]
+    )
+    uuid = serializers.UUIDField()
+    content = serializers.DictField(required=False)
+
+
+Resource = Literal["workspace", "project", "task"]
+
+
+class ChangeConsumer(JsonWebsocketConsumer):
+    """Allow subscribing to changes to workspace resources."""
 
     user: User
-    uuid: UUID
+    workspace_subscriptions: dict[UUID, Workspace]
+    project_subscriptions: dict[UUID, Project]
+    task_subscriptions: dict[UUID, Task]
 
     def connect(self) -> None:
         """Handle connect."""
+        self.workspace_subscriptions = {}
+        self.project_subscriptions = {}
+        self.task_subscriptions = {}
+
         self.user = self.scope["user"]
-        self.uuid = self.scope["url_route"]["kwargs"]["uuid"]
 
         if self.user.is_anonymous:
-            logger.debug("Anonymous user tried to access %s", self.uuid)
+            logger.debug("Anonymous user tried to connect")
             self.close(status.HTTP_403_FORBIDDEN)
             return
 
-        if self.get_object(self.user, self.uuid) is None:
-            logger.debug("No object found for uuid %s", self.uuid)
-            self.close(status.HTTP_404_NOT_FOUND)
-            return
-
         self.accept()
+
+    def add_subscription_for(
+        self, resource: Resource, uuid: UUID
+    ) -> Literal["not_found", "subscribed", "already_subscribed"]:
+        """Add a resource subscription."""
+        match resource:
+            case "workspace":
+                subscribed = uuid in self.workspace_subscriptions
+            case "project":
+                subscribed = uuid in self.project_subscriptions
+            case "task":
+                subscribed = uuid in self.task_subscriptions
+        match resource, subscribed:
+            case "workspace", False:
+                workspace = workspace_find_by_workspace_uuid(
+                    who=self.user, workspace_uuid=uuid
+                )
+                if workspace is None:
+                    return "not_found"
+                group_name = workspace_group_name(workspace)
+                self.workspace_subscriptions[uuid] = workspace
+            case "project", False:
+                project = project_find_by_project_uuid(
+                    who=self.user, project_uuid=uuid
+                )
+                if project is None:
+                    return "not_found"
+                group_name = project_group_name(project)
+                self.project_subscriptions[uuid] = project
+            case "task", False:
+                task = task_find_by_task_uuid(who=self.user, task_uuid=uuid)
+                if task is None:
+                    return "not_found"
+                group_name = task_group_name(task)
+                self.task_subscriptions[uuid] = task
+            case _:
+                return "already_subscribed"
         async_to_sync(self.channel_layer.group_add)(
-            self.get_group_name(),
-            self.channel_name,
+            group_name, self.channel_name
         )
+        return "subscribed"
+
+    def remove_subscription_for(
+        self, resource: Resource, uuid: UUID
+    ) -> Literal["not_subscribed", "unsubscribed"]:
+        """Remove a resource subscription."""
+        match resource:
+            case "workspace":
+                workspace = self.workspace_subscriptions.get(uuid)
+                if workspace is None:
+                    return "not_subscribed"
+                self.workspace_subscriptions.pop(uuid)
+                group_name = workspace_group_name(workspace)
+            case "project":
+                project = self.project_subscriptions.get(uuid)
+                if project is None:
+                    return "not_subscribed"
+                self.project_subscriptions.pop(uuid)
+                group_name = project_group_name(project)
+            case "task":
+                task = self.task_subscriptions.get(uuid)
+                if task is None:
+                    return "not_subscribed"
+                self.task_subscriptions.pop(uuid)
+                group_name = task_group_name(task)
+        async_to_sync(self.channel_layer.group_discard)(
+            group_name, self.channel_name
+        )
+        return "unsubscribed"
+
+    def remove_all_subscriptions(self) -> None:
+        """Remove all subscriptions, discard self from channel layer."""
+        for u in list(self.workspace_subscriptions.keys()):
+            self.remove_subscription_for("workspace", u)
+        for u in list(self.project_subscriptions.keys()):
+            self.remove_subscription_for("project", u)
+        for u in list(self.task_subscriptions.keys()):
+            self.remove_subscription_for("task", u)
 
     def disconnect(self, close_code: int) -> None:
         """Handle disconnect."""
-        async_to_sync(self.channel_layer.group_discard)(
-            self.get_group_name(),
-            self.channel_name,
-        )
+        self.remove_all_subscriptions()
         logger.debug("Disconnecting with code %d", close_code)
 
-    def receive_json(self, content: object) -> None:
+    def respond(self, response: ClientResponse) -> None:
+        """Respond to a client request."""
+        serializer = ClientResponseSerializer(instance=response)
+        self.send_json(serializer.data)
+
+    def receive_json(self, content: Any) -> None:
         """Do nothing when receiving json."""
-        del content
-        logger.debug("Received message, but don't know what to do with it.")
+        serializer = ClientRequestSerializer(data=content)
+        if not serializer.is_valid():
+            self.close(status.HTTP_400_BAD_REQUEST)
+            return
+        data = cast(ClientRequest, serializer.validated_data)
+        resource = data["resource"]
+        uuid = data["uuid"]
 
-    @abstractmethod
-    def get_group_name(self) -> str:
-        """Return the name used for this group."""
-        ...
+        result: Literal[
+            "subscribed",
+            "not_found",
+            "not_subscribed",
+            "already_subscribed",
+            "unsubscribed",
+        ]
 
-    @abstractmethod
-    def get_object(self, user: User, uuid: UUID) -> Optional[object]:
-        """Attempt getting the object to ensure the user has access to it."""
-        ...
+        match data["action"], resource:
+            case "subscribe", resource:
+                result = self.add_subscription_for(resource, uuid)
+            case "unsubscribe", resource:
+                result = self.remove_subscription_for(resource, uuid)
 
+        response: ClientResponse
 
-class WorkspaceConsumer(BaseConsumer):
-    """Consumer for Workspace ws."""
-
-    def get_group_name(self) -> str:
-        """Return group name."""
-        uuid = self.scope["url_route"]["kwargs"]["uuid"]
-        return f"workspace-{uuid}"
-
-    def get_object(self, user: User, uuid: UUID) -> Optional[Workspace]:
-        """Find workspace belonging to this user."""
-        return workspace_find_by_workspace_uuid(who=user, workspace_uuid=uuid)
+        match result:
+            case "already_subscribed":
+                logger.debug(
+                    "Client was already subscribed to resource %s uuid %s",
+                    resource,
+                    uuid,
+                )
+                response = {
+                    "kind": "already_subscribed",
+                    "resource": resource,
+                    "uuid": uuid,
+                }
+            case "not_found":
+                logger.debug(
+                    "No object found for uuid %s and resource %s",
+                    uuid,
+                    resource,
+                )
+                response = {
+                    "kind": "not_found",
+                    "resource": resource,
+                    "uuid": uuid,
+                }
+            case "not_subscribed":
+                logger.debug(
+                    "Not subscribed to uuid %s and resource %s", uuid, resource
+                )
+                response = {
+                    "kind": "not_subscribed",
+                    "resource": resource,
+                    "uuid": uuid,
+                }
+            case "unsubscribed":
+                response = {
+                    "kind": "unsubscribed",
+                    "resource": resource,
+                    "uuid": uuid,
+                }
+            case "subscribed":
+                response = {
+                    "kind": "subscribed",
+                    "resource": resource,
+                    "uuid": uuid,
+                }
+        self.respond(response)
 
     def workspace_change(self, event: ConsumerEvent) -> None:
         """Respond to project change event."""
+        # Check if already subscribed
+        uuid = UUID(event["uuid"])
+
+        if event["kind"] == "gone":
+            self.respond(
+                {
+                    "kind": "gone",
+                    "resource": "workspace",
+                    "uuid": uuid,
+                }
+            )
+            return
+
+        workspace = self.workspace_subscriptions.get(uuid)
+        if workspace is None:
+            # This should be an error, probably...
+            logger.warn("Couldn't find workspace for uuid %s", uuid)
+            return
         workspace = workspace_find_by_workspace_uuid(
             who=self.user,
-            workspace_uuid=self.uuid,
+            workspace_uuid=workspace.uuid,
             qs=WorkspaceDetailQuerySet,
         )
 
         if workspace is None:
-            self.close(status.HTTP_410_GONE)
+            self.respond(
+                {
+                    "kind": "gone",
+                    "resource": "workspace",
+                    "uuid": uuid,
+                }
+            )
             return
 
         workspace.quota = workspace_get_all_quotas(workspace)
-        serialized = serialize(WorkspaceDetailSerializer, workspace, event)
-        self.send_json(serialized)
-
-
-class ProjectConsumer(BaseConsumer):
-    """Consumer for Project ws."""
-
-    def get_group_name(self) -> str:
-        """Return group name."""
-        uuid = self.scope["url_route"]["kwargs"]["uuid"]
-        return f"project-{uuid}"
-
-    def get_object(self, user: User, uuid: UUID) -> Optional[Project]:
-        """Get project."""
-        return project_find_by_project_uuid(
-            project_uuid=uuid,
-            who=user,
+        serialized = serialize(WorkspaceDetailSerializer, workspace)
+        self.respond(
+            {
+                "kind": "changed",
+                "resource": "workspace",
+                "uuid": workspace.uuid,
+                "content": serialized,
+            }
         )
 
     def project_change(self, event: ConsumerEvent) -> None:
         """Respond to project change event."""
+        uuid = UUID(event["uuid"])
+
+        if event["kind"] == "gone":
+            self.respond(
+                {
+                    "kind": "gone",
+                    "resource": "project",
+                    "uuid": uuid,
+                }
+            )
+            return
+
+        project = self.project_subscriptions.get(uuid)
+        if project is None:
+            # XXX This should be an error, probably
+            logger.warn("Couldn't find project for uuid %s", uuid)
+            return
         project = project_find_by_project_uuid(
-            who=self.user,
-            project_uuid=self.uuid,
-            qs=ProjectDetailQuerySet,
+            who=self.user, project_uuid=project.uuid, qs=ProjectDetailQuerySet
         )
 
         if project is None:
-            self.close(status.HTTP_410_GONE)
+            self.respond(
+                {
+                    "kind": "gone",
+                    "resource": "project",
+                    "uuid": uuid,
+                }
+            )
             return
 
-        serialized = serialize(ProjectDetailSerializer, project, event)
-        self.send_json(serialized)
-
-
-class TaskConsumer(BaseConsumer):
-    """Consumer for task ws events."""
-
-    def get_group_name(self) -> str:
-        """Return group name."""
-        uuid = self.scope["url_route"]["kwargs"]["uuid"]
-        return f"task-{uuid}"
-
-    def get_object(self, user: User, uuid: UUID) -> Optional[Task]:
-        """Get task."""
-        return task_find_by_task_uuid(who=user, task_uuid=uuid)
+        serialized = serialize(ProjectDetailSerializer, project)
+        self.respond(
+            {
+                "kind": "changed",
+                "resource": "project",
+                "uuid": project.uuid,
+                "content": serialized,
+            }
+        )
 
     def task_change(self, event: ConsumerEvent) -> None:
         """Respond to project change event."""
+        uuid = UUID(event["uuid"])
+
+        if event["kind"] == "gone":
+            self.respond(
+                {
+                    "kind": "gone",
+                    "resource": "task",
+                    "uuid": uuid,
+                }
+            )
+            return
+
+        task = self.task_subscriptions.get(uuid)
+        if task is None:
+            # XXX This should be an error, probably
+            logger.warn("Couldn't find task for uuid %s", uuid)
+            return
         task = task_find_by_task_uuid(
-            who=self.user, task_uuid=self.uuid, qs=TaskDetailQuerySet
+            who=self.user, task_uuid=task.uuid, qs=TaskDetailQuerySet
         )
 
         if task is None:
-            self.close(status.HTTP_410_GONE)
+            self.respond(
+                {
+                    "kind": "gone",
+                    "resource": "task",
+                    "uuid": uuid,
+                }
+            )
             return
 
-        serialized = serialize(TaskDetailSerializer, task, event)
-        self.send_json(serialized)
+        serialized = serialize(TaskDetailSerializer, task)
+        self.respond(
+            {
+                "kind": "changed",
+                "resource": "task",
+                "uuid": task.uuid,
+                "content": serialized,
+            }
+        )

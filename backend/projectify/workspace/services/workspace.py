@@ -120,7 +120,7 @@ def workspace_delete(
         workspace,
         count,
     )
-    send_workspace_change_signal(workspace)
+    send_workspace_change_signal(workspace, "gone")
     workspace.delete()
 
 

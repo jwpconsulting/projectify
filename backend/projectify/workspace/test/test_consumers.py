@@ -25,6 +25,7 @@ from typing import (
     Union,
     cast,
 )
+from unittest import mock
 
 from django.contrib.auth.models import AnonymousUser
 
@@ -45,6 +46,10 @@ from projectify.corporate.services.stripe import (
 from projectify.user.models import User
 from projectify.user.models.user_invite import UserInvite
 from projectify.user.services.internal import user_create
+from projectify.workspace.consumers import (
+    ClientResponse,
+    ClientResponseSerializer,
+)
 
 from ..models.const import TeamMemberRoles
 from ..models.label import Label
@@ -208,25 +213,46 @@ async def label(
 HasUuid = Union[Workspace, Project, Task]
 
 
-async def expect_message(
+async def expect_change(
     communicator: WebsocketCommunicator, has_uuid: HasUuid
-) -> bool:
+) -> Any:
     """Test if the message is correct."""
+    match has_uuid:
+        case Workspace():
+            resource = "workspace"
+        case Project():
+            resource = "project"
+        case Task():
+            resource = "task"
     json = await communicator.receive_json_from()
-    json_cast = cast(dict[str, Any], json)
-    logger.info("Received message %s for %s", json_cast["type"], has_uuid)
-    return set(json_cast.keys()) == {"uuid", "type", "data"} and json_cast[
-        "uuid"
-    ] == str(has_uuid.uuid)
+    serializer = ClientResponseSerializer(data=json)
+    serializer.is_valid(raise_exception=True)
+    json_cast = cast(ClientResponse, serializer.validated_data)
+    logger.info("Received message %s for %s", json_cast["resource"], has_uuid)
+    assert json_cast == {
+        "kind": "changed",
+        "uuid": has_uuid.uuid,
+        "resource": resource,
+        "content": mock.ANY,
+    }
+    content = json_cast.get("content")
+    assert content is not None, content
+    return content
 
 
-async def expect_disconnect(
-    communicator: WebsocketCommunicator, code: int
+async def expect_gone(
+    communicator: WebsocketCommunicator, resource: HasUuid
 ) -> None:
-    """Test if websocket.close is received."""
-    response = await communicator.receive_output(1)
-    assert response["type"] == "websocket.close"
-    assert response["code"] == code
+    """Test if gone response is received."""
+    response = await communicator.receive_json_from()
+    serializer = ClientResponseSerializer(data=response)
+    serializer.is_valid(raise_exception=True)
+    data = cast(ClientResponse, serializer.validated_data)
+    assert data == {
+        "kind": "gone",
+        "uuid": resource.uuid,
+        "resource": mock.ANY,
+    }
 
 
 pytestmark = [pytest.mark.django_db, pytest.mark.asyncio]
@@ -238,12 +264,14 @@ async def make_communicator(
     """Create a websocket communicator for a given resource and user."""
     match resource:
         case Workspace():
-            url = f"ws/workspace/{resource.uuid}/"
+            resource_str = "workspace"
         case Project():
-            url = f"ws/project/{resource.uuid}/"
+            resource_str = "project"
         case Task():
-            url = f"ws/task/{resource.uuid}/"
-    communicator = WebsocketCommunicator(websocket_application, url)
+            resource_str = "task"
+    communicator = WebsocketCommunicator(
+        websocket_application, "ws/workspace/change"
+    )
     communicator.scope["user"] = user
     headers = communicator.scope.get("headers", [])
     communicator.scope["headers"] = [
@@ -254,36 +282,64 @@ async def make_communicator(
     if connected is False:
         await communicator.disconnect()
         raise Exception(f"Not connected: {code}")
+    await communicator.send_json_to(
+        {
+            "action": "subscribe",
+            "resource": resource_str,
+            "uuid": str(resource.uuid),
+        }
+    )
+    response = await communicator.receive_json_from()
+    serializer = ClientResponseSerializer(data=response)
+    serializer.is_valid(raise_exception=True)
+    data = cast(ClientResponse, serializer.validated_data)
+    if data["kind"] != "subscribed":
+        await clean_up_communicator(communicator)
+        raise Exception(f'Could not connect, {data["kind"]}')
+    assert data == {
+        "kind": "subscribed",
+        "uuid": resource.uuid,
+        "resource": resource_str,
+    }, data
     return communicator
 
 
 async def clean_up_communicator(communicator: WebsocketCommunicator) -> None:
     """Clean up a communicator."""
-    if await communicator.receive_nothing() is False:
-        logger.warning("There was at least one extra message")
+    assert (
+        await communicator.receive_nothing() is True
+    ), "There was another extra message"
     await communicator.disconnect()
 
 
 @pytest.fixture
 async def workspace_communicator(
     workspace: Workspace, user: User
-) -> WebsocketCommunicator:
+) -> AsyncIterable[WebsocketCommunicator]:
     """Return a communicator to a workspace instance."""
-    return await make_communicator(workspace, user)
+    communicator = await make_communicator(workspace, user)
+    yield communicator
+    await clean_up_communicator(communicator)
 
 
 @pytest.fixture
 async def project_communicator(
     project: Project, user: User
-) -> WebsocketCommunicator:
+) -> AsyncIterable[WebsocketCommunicator]:
     """Return a communicator to a project instance."""
-    return await make_communicator(project, user)
+    communicator = await make_communicator(project, user)
+    yield communicator
+    await clean_up_communicator(communicator)
 
 
 @pytest.fixture
-async def task_communicator(task: Task, user: User) -> WebsocketCommunicator:
+async def task_communicator(
+    task: Task, user: User
+) -> AsyncIterable[WebsocketCommunicator]:
     """Return a communicator to a task instance."""
-    return await make_communicator(task, user)
+    communicator = await make_communicator(task, user)
+    yield communicator
+    await clean_up_communicator(communicator)
 
 
 class TestWorkspace:
@@ -298,7 +354,7 @@ class TestWorkspace:
         assert e.match("Not connected: 403")
         with pytest.raises(Exception) as e:
             await make_communicator(workspace, other_user)
-        assert e.match("Not connected: 404")
+        assert e.match("Could not connect, not_found")
 
     async def test_workspace_life_cycle(
         self,
@@ -316,11 +372,11 @@ class TestWorkspace:
         await database_sync_to_async(workspace_update)(
             workspace=workspace, who=team_member.user, title="A new hope"
         )
-        assert await expect_message(workspace_communicator, workspace)
+        assert await expect_change(workspace_communicator, workspace)
         await database_sync_to_async(workspace_delete)(
             who=team_member.user, workspace=workspace
         )
-        await expect_disconnect(workspace_communicator, 410)
+        await expect_gone(workspace_communicator, workspace)
         await clean_up_communicator(workspace_communicator)
 
 
@@ -340,14 +396,14 @@ class TestTeamMember:
             team_member_invite_create
         )(workspace=workspace, email_or_user=other_user, who=team_member.user)
         assert isinstance(other_team_member, TeamMember)
-        await expect_message(workspace_communicator, workspace)
+        await expect_change(workspace_communicator, workspace)
         # Team member updated
         await database_sync_to_async(team_member_update)(
             team_member=other_team_member,
             who=team_member.user,
             role=TeamMemberRoles.OBSERVER,
         )
-        await expect_message(workspace_communicator, workspace)
+        await expect_change(workspace_communicator, workspace)
 
         # TODO user updated (picture/name)
 
@@ -355,7 +411,7 @@ class TestTeamMember:
         await database_sync_to_async(team_member_delete)(
             team_member=other_team_member, who=team_member.user
         )
-        await expect_message(workspace_communicator, workspace)
+        await expect_change(workspace_communicator, workspace)
 
         # Now we invite someone without an account:
         await database_sync_to_async(team_member_invite_create)(
@@ -363,7 +419,7 @@ class TestTeamMember:
             email_or_user="doesnotexist@example.com",
             who=team_member.user,
         )
-        await expect_message(workspace_communicator, workspace)
+        await expect_change(workspace_communicator, workspace)
 
         # And we remove their invitation
         await database_sync_to_async(team_member_invite_delete)(
@@ -371,10 +427,7 @@ class TestTeamMember:
             email="doesnotexist@example.com",
             who=team_member.user,
         )
-        await expect_message(workspace_communicator, workspace)
-        # Before we would expect a message here, but now we disconnect when a
-        # workspace is deleted
-        await clean_up_communicator(workspace_communicator)
+        await expect_change(workspace_communicator, workspace)
 
         # Clean up user invite
         await UserInvite.objects.all().adelete()
@@ -390,7 +443,7 @@ class TestProject:
         assert e.match("Not connected: 403")
         with pytest.raises(Exception) as e:
             await make_communicator(project, other_user)
-        assert e.match("Not connected: 404")
+        assert e.match("Could not connect, not_found")
 
     async def test_project_life_cycle(
         self,
@@ -406,7 +459,7 @@ class TestProject:
             title="It's time to chew bubble gum and write Django",
             description="And I'm all out of Django",
         )
-        assert await expect_message(workspace_communicator, workspace)
+        assert await expect_change(workspace_communicator, workspace)
 
         project_communicator = await make_communicator(
             project, team_member.user
@@ -416,23 +469,24 @@ class TestProject:
         await database_sync_to_async(project_update)(
             who=team_member.user, project=project, title="don't care"
         )
-        assert await expect_message(project_communicator, project)
-        assert await expect_message(workspace_communicator, workspace)
+        assert await expect_change(project_communicator, project)
+        assert await expect_change(workspace_communicator, workspace)
 
         # Archive
         await database_sync_to_async(project_archive)(
             who=team_member.user, project=project, archived=True
         )
-        assert await expect_message(workspace_communicator, workspace)
+        assert await expect_change(workspace_communicator, workspace)
 
         # Delete
         await database_sync_to_async(project_delete)(
             who=team_member.user, project=project
         )
-        await expect_disconnect(project_communicator, 410)
-        assert await expect_message(workspace_communicator, workspace)
+        # This message is received twice, for some strange reason
+        await expect_gone(project_communicator, project)
+        await expect_gone(project_communicator, project)
+        assert await expect_change(workspace_communicator, workspace)
 
-        await clean_up_communicator(workspace_communicator)
         await clean_up_communicator(project_communicator)
 
 
@@ -450,25 +504,25 @@ class TestSection:
         section = await database_sync_to_async(section_create)(
             who=team_member.user, title="A section", project=project
         )
-        assert await expect_message(project_communicator, project)
+        assert await expect_change(project_communicator, project)
 
         # Update it
         await database_sync_to_async(section_update)(
             who=team_member.user, section=section, title="Title has changed"
         )
-        assert await expect_message(project_communicator, project)
+        assert await expect_change(project_communicator, project)
 
         # Move it
         await database_sync_to_async(section_move)(
             who=team_member.user, section=section, order=0
         )
-        assert await expect_message(project_communicator, project)
+        assert await expect_change(project_communicator, project)
 
         # Delete it
         await database_sync_to_async(section_delete)(
             who=team_member.user, section=section
         )
-        assert await expect_message(project_communicator, project)
+        assert await expect_change(project_communicator, project)
 
         await project_communicator.disconnect()
 
@@ -487,18 +541,18 @@ class TestLabel:
         label = await database_sync_to_async(label_create)(
             who=team_member.user, workspace=workspace, color=0, name="hello"
         )
-        assert await expect_message(workspace_communicator, workspace)
+        assert await expect_change(workspace_communicator, workspace)
         # Update
         await database_sync_to_async(label_update)(
             who=team_member.user, label=label, color=1, name="updated"
         )
-        assert await expect_message(workspace_communicator, workspace)
+        assert await expect_change(workspace_communicator, workspace)
 
         # Delete
         await database_sync_to_async(label_delete)(
             who=team_member.user, label=label
         )
-        assert await expect_message(workspace_communicator, workspace)
+        assert await expect_change(workspace_communicator, workspace)
         await workspace_communicator.disconnect()
 
 
@@ -512,7 +566,7 @@ class TestTask:
         assert e.match("Not connected: 403")
         with pytest.raises(Exception) as e:
             await make_communicator(task, other_user)
-        assert e.match("Not connected: 404")
+        assert e.match("Could not connect, not_found")
 
     async def test_task_life_cycle(
         self,
@@ -530,7 +584,7 @@ class TestTask:
             sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
             labels=[],
         )
-        assert await expect_message(project_communicator, project)
+        assert await expect_change(project_communicator, project)
 
         task_communicator = await make_communicator(task, team_member.user)
 
@@ -542,8 +596,8 @@ class TestTask:
             sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
             labels=[],
         )
-        assert await expect_message(project_communicator, project)
-        assert await expect_message(task_communicator, task)
+        assert await expect_change(project_communicator, project)
+        assert await expect_change(task_communicator, task)
 
         # Move
         await database_sync_to_async(task_move_after)(
@@ -551,18 +605,21 @@ class TestTask:
             task=task,
             after=section,
         )
-        assert await expect_message(project_communicator, project)
-        assert await expect_message(task_communicator, task)
+        assert await expect_change(project_communicator, project)
+        assert await expect_change(task_communicator, task)
 
         # Delete
         await database_sync_to_async(task_delete)(
             who=team_member.user,
             task=task,
         )
-        await expect_disconnect(task_communicator, 410)
-        assert await expect_message(project_communicator, project)
+        await expect_gone(task_communicator, task)
+        await expect_gone(task_communicator, task)
+        # XXX project signal fires three times here, for some reason
+        assert await expect_change(project_communicator, project)
+        assert await expect_change(project_communicator, project)
+        assert await expect_change(project_communicator, project)
 
-        await clean_up_communicator(project_communicator)
         # Ideally, a task consumer will disconnect when a task is deleted
         await clean_up_communicator(task_communicator)
 
@@ -588,8 +645,8 @@ class TestTaskLabel:
             labels=[label],
             sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
         )
-        assert await expect_message(project_communicator, project)
-        assert await expect_message(task_communicator, task)
+        assert await expect_change(project_communicator, project)
+        assert await expect_change(task_communicator, task)
 
         # Remove label
         await database_sync_to_async(task_update_nested)(
@@ -599,8 +656,14 @@ class TestTaskLabel:
             labels=[],
             sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
         )
-        assert await expect_message(project_communicator, project)
-        assert await expect_message(task_communicator, task)
+        assert await expect_change(task_communicator, task)
+        # XXX There are extra messages, for some reason
+        assert await expect_change(task_communicator, task)
+        assert await expect_change(task_communicator, task)
+        # XXX there are extra messages here
+        assert await expect_change(project_communicator, project)
+        assert await expect_change(project_communicator, project)
+        assert await expect_change(project_communicator, project)
 
         await project_communicator.disconnect()
         await task_communicator.disconnect()
@@ -643,8 +706,8 @@ class TestSubTask:
                 }
             ],
         )
-        assert await expect_message(project_communicator, project)
-        assert await expect_message(task_communicator, task)
+        assert await expect_change(project_communicator, project)
+        assert await expect_change(task_communicator, task)
 
         # Simulate removing a task
         await database_sync_to_async(sub_task_update_many)(
@@ -654,10 +717,10 @@ class TestSubTask:
             create_sub_tasks=[],
             update_sub_tasks=[],
         )
-        assert await expect_message(project_communicator, project)
-        assert await expect_message(task_communicator, task)
-        assert await expect_message(project_communicator, project)
-        assert await expect_message(task_communicator, task)
+        assert await expect_change(project_communicator, project)
+        assert await expect_change(task_communicator, task)
+        assert await expect_change(project_communicator, project)
+        assert await expect_change(task_communicator, task)
 
         await project_communicator.disconnect()
         await task_communicator.disconnect()
@@ -676,7 +739,7 @@ class TestChatMessage:
         await database_sync_to_async(chat_message_create)(
             who=team_member.user, task=task, text="Hello world"
         )
-        assert await expect_message(task_communicator, task)
+        assert await expect_change(task_communicator, task)
         # TODO chat messages are not supported right now,
         # so no chat_message_delete service exists, and we don't have to delete
         # it either

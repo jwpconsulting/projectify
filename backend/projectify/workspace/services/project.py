@@ -45,11 +45,10 @@ def project_create(
     """Create a project inside a given workspace."""
     validate_perm("workspace.create_project", who, workspace)
     project = workspace.project_set.create(
-        title=title,
-        description=description,
-        due_date=due_date,
+        title=title, description=description, due_date=due_date
     )
-    send_workspace_change_signal(project)
+    # 1+1 query?
+    send_workspace_change_signal(project.workspace)
     return project
 
 
@@ -71,48 +70,34 @@ def project_update(
         raise ValueError(f"tzinfo must be specified, got {due_date}")
     project.due_date = due_date
     project.save()
-    send_workspace_change_signal(project)
+    # 1 + 1 query performance problem ?
+    send_workspace_change_signal(project.workspace)
     send_project_change_signal(project)
     return project
 
 
 # Delete
 # TODO atomic
-def project_delete(
-    *,
-    who: User,
-    project: Project,
-) -> None:
+def project_delete(*, who: User, project: Project) -> None:
     """Delete a project."""
-    validate_perm(
-        "workspace.delete_project",
-        who,
-        project.workspace,
-    )
+    validate_perm("workspace.delete_project", who, project.workspace)
     project.delete()
-    send_workspace_change_signal(project)
-    send_project_change_signal(project)
+    # 1 + 1 query performance problem ?
+    send_workspace_change_signal(project.workspace)
+    send_project_change_signal(project, "gone")
 
 
 # RPC
 # TODO atomic
-def project_archive(
-    *,
-    who: User,
-    project: Project,
-    archived: bool,
-) -> Project:
+def project_archive(*, who: User, project: Project, archived: bool) -> Project:
     """Archive a project, or not."""
-    validate_perm(
-        "workspace.update_project",
-        who,
-        project.workspace,
-    )
+    validate_perm("workspace.update_project", who, project.workspace)
     if archived:
         project.archived = now()
     else:
         project.archived = None
     project.save()
-    send_workspace_change_signal(project)
+    # 1 + 1 query performance problem ?
+    send_workspace_change_signal(project.workspace)
     send_project_change_signal(project)
     return project
