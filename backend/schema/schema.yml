@@ -475,10 +475,30 @@ paths:
       description: Create a section.
       tags:
       - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SectionCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SectionCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SectionCreate'
+        required: true
       security:
       - cookieAuth: []
       responses:
-        '200':
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SectionCreate'
+          description: ''
+        '404':
+          description: No response body
+        '400':
           description: No response body
   /workspace/section/{section_uuid}:
     get:
@@ -497,6 +517,12 @@ paths:
       - cookieAuth: []
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SectionDetail'
+          description: ''
+        '404':
           description: No response body
     put:
       operationId: workspace_section_update
@@ -510,10 +536,30 @@ paths:
         required: true
       tags:
       - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SectionUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SectionUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SectionUpdate'
+        required: true
       security:
       - cookieAuth: []
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SectionUpdate'
+          description: ''
+        '400':
+          description: No response body
+        '404':
           description: No response body
     delete:
       operationId: workspace_section_destroy
@@ -532,6 +578,8 @@ paths:
       responses:
         '204':
           description: No response body
+        '404':
+          description: No response body
   /workspace/section/{section_uuid}/move:
     post:
       operationId: workspace_section_move_create
@@ -545,10 +593,26 @@ paths:
         required: true
       tags:
       - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SectionMove'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SectionMove'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SectionMove'
+        required: true
       security:
       - cookieAuth: []
       responses:
         '200':
+          description: No response body
+        '400':
+          description: No response body
+        '404':
           description: No response body
   /workspace/task/:
     post:
@@ -747,10 +811,28 @@ paths:
       description: Create the workspace and add this user.
       tags:
       - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WorkspaceCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WorkspaceCreate'
+        required: true
       security:
       - cookieAuth: []
       responses:
-        '200':
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceBase'
+          description: ''
+        '400':
           description: No response body
   /workspace/workspace/{workspace_uuid}:
     get:
@@ -769,6 +851,12 @@ paths:
       - cookieAuth: []
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceDetail'
+          description: ''
+        '404':
           description: No response body
     put:
       operationId: workspace_workspace_update
@@ -782,10 +870,30 @@ paths:
         required: true
       tags:
       - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WorkspaceUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WorkspaceUpdate'
+        required: true
       security:
       - cookieAuth: []
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceUpdate'
+          description: ''
+        '400':
+          description: No response body
+        '404':
           description: No response body
   /workspace/workspace/{workspace_uuid}/archived-projects/:
     get:
@@ -826,10 +934,30 @@ paths:
         required: true
       tags:
       - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InviteUserToWorkspace'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InviteUserToWorkspace'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InviteUserToWorkspace'
+        required: true
       security:
       - cookieAuth: []
       responses:
-        '200':
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InviteUserToWorkspace'
+          description: ''
+        '400':
+          description: No response body
+        '404':
           description: No response body
   /workspace/workspace/{workspace_uuid}/picture-upload:
     post:
@@ -847,7 +975,11 @@ paths:
       security:
       - cookieAuth: []
       responses:
-        '200':
+        '204':
+          description: No response body
+        '400':
+          description: No response body
+        '404':
           description: No response body
   /workspace/workspace/{workspace_uuid}/uninvite-team-member:
     post:
@@ -862,14 +994,30 @@ paths:
         required: true
       tags:
       - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UninviteUserFromWorkspace'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UninviteUserFromWorkspace'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UninviteUserFromWorkspace'
+        required: true
       security:
       - cookieAuth: []
       responses:
-        '200':
+        '204':
+          description: No response body
+        '400':
+          description: No response body
+        '404':
           description: No response body
   /workspace/workspace/user-workspaces/:
     get:
-      operationId: workspace_workspace_user_workspaces_retrieve
+      operationId: workspace_workspace_user_workspaces_list
       description: Handle GET.
       tags:
       - workspace
@@ -877,7 +1025,13 @@ paths:
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkspaceBase'
+          description: ''
 components:
   schemas:
     ChangePassword:
@@ -931,6 +1085,15 @@ components:
       - modified
       - text
       - uuid
+    InviteUserToWorkspace:
+      type: object
+      description: Accept email.
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+      - email
     LabelBase:
       type: object
       description: Label model serializer.
@@ -1070,7 +1233,7 @@ components:
         sections:
           type: array
           items:
-            $ref: '#/components/schemas/Section'
+            $ref: '#/components/schemas/ProjectDetailSection'
           readOnly: true
         workspace:
           allOf:
@@ -1086,6 +1249,82 @@ components:
       - title
       - uuid
       - workspace
+    ProjectDetailSection:
+      type: object
+      description: Reduced section serializer.
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        _order:
+          type: integer
+          readOnly: true
+          title: ' order'
+        title:
+          type: string
+          maxLength: 255
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectDetailTask'
+          readOnly: true
+        description:
+          type: string
+          nullable: true
+      required:
+      - _order
+      - description
+      - tasks
+      - title
+      - uuid
+    ProjectDetailTask:
+      type: object
+      description: Serialize all task details.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        due_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Due date for this task
+        number:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabelBase'
+          readOnly: true
+        assignee:
+          allOf:
+          - $ref: '#/components/schemas/TeamMemberBase'
+          readOnly: true
+          nullable: true
+        sub_tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubTaskBase'
+          readOnly: true
+        description:
+          type: string
+          nullable: true
+      required:
+      - assignee
+      - description
+      - due_date
+      - labels
+      - number
+      - sub_tasks
+      - title
+      - uuid
     ProjectUp:
       type: object
       description: |-
@@ -1163,31 +1402,77 @@ components:
         * `CONTRIBUTOR` - Contributor
         * `MAINTAINER` - Maintainer
         * `OWNER` - Owner
-    Section:
+    SectionCreate:
       type: object
-      description: Reduced section serializer.
+      description: Parse section creation input.
       properties:
-        uuid:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        project_uuid:
           type: string
           format: uuid
+      required:
+      - project_uuid
+      - title
+    SectionDetail:
+      type: object
+      description: |-
+        Section detail serializer.
+
+        Goes both up (to workspace) and down (all tasks).
+      properties:
+        created:
+          type: string
+          format: date-time
           readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
         _order:
           type: integer
           readOnly: true
           title: ' order'
-        title:
+        uuid:
           type: string
-          maxLength: 255
+          format: uuid
+          readOnly: true
+        project:
+          allOf:
+          - $ref: '#/components/schemas/ProjectUp'
+          readOnly: true
         tasks:
           type: array
           items:
-            $ref: '#/components/schemas/Task'
+            $ref: '#/components/schemas/TaskWithSubTask'
           readOnly: true
       required:
       - _order
+      - created
+      - description
+      - modified
+      - project
       - tasks
       - title
       - uuid
+    SectionMove:
+      type: object
+      description: Accept the desired position within project.
+      properties:
+        order:
+          type: integer
+      required:
+      - order
     SectionUp:
       type: object
       description: Serialize section up the hierarchy.
@@ -1226,6 +1511,18 @@ components:
       - project
       - title
       - uuid
+    SectionUpdate:
+      type: object
+      description: Input serializer for PUT.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+      required:
+      - title
     SignUp:
       type: object
       description: Take in email and password.
@@ -1260,6 +1557,22 @@ components:
           type: string
         privacy_policy_agreed:
           type: string
+    SingleQuota:
+      type: object
+      description: Serializer a single Quota dataclass.
+      properties:
+        current:
+          type: integer
+          nullable: true
+        limit:
+          type: integer
+          nullable: true
+        can_create_more:
+          type: boolean
+      required:
+      - can_create_more
+      - current
+      - limit
     SubTaskBase:
       type: object
       description: SubTask model serializer.
@@ -1315,47 +1628,6 @@ components:
           description: Designate whether this sub task is done
       required:
       - title
-    Task:
-      type: object
-      description: Serialize all task details.
-      properties:
-        title:
-          type: string
-          maxLength: 255
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        due_date:
-          type: string
-          format: date-time
-          nullable: true
-          description: Due date for this task
-        number:
-          type: integer
-          maximum: 2147483647
-          minimum: 0
-        labels:
-          type: array
-          items:
-            $ref: '#/components/schemas/LabelBase'
-          readOnly: true
-        assignee:
-          allOf:
-          - $ref: '#/components/schemas/TeamMemberBase'
-          readOnly: true
-        sub_tasks:
-          type: array
-          items:
-            $ref: '#/components/schemas/SubTaskBase'
-          readOnly: true
-      required:
-      - assignee
-      - labels
-      - number
-      - sub_tasks
-      - title
-      - uuid
     TaskCreate:
       type: object
       description: Serializer for creating tasks.
@@ -1445,6 +1717,7 @@ components:
           allOf:
           - $ref: '#/components/schemas/TeamMemberBase'
           readOnly: true
+          nullable: true
         chat_messages:
           type: array
           items:
@@ -1502,6 +1775,67 @@ components:
       - due_date
       - labels
       - title
+    TaskWithSubTask:
+      type: object
+      description: Serialize all task details.
+      properties:
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        _order:
+          type: integer
+          readOnly: true
+          title: ' order'
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        due_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Due date for this task
+        number:
+          type: integer
+          readOnly: true
+        sub_tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubTaskBase'
+          readOnly: true
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabelBase'
+          readOnly: true
+        assignee:
+          allOf:
+          - $ref: '#/components/schemas/TeamMemberBase'
+          readOnly: true
+          nullable: true
+      required:
+      - _order
+      - assignee
+      - created
+      - description
+      - due_date
+      - labels
+      - modified
+      - number
+      - sub_tasks
+      - title
+      - uuid
     TeamMemberBase:
       type: object
       description: Team member serializer.
@@ -1535,6 +1869,28 @@ components:
       - role
       - user
       - uuid
+    TeamMemberInvite:
+      type: object
+      description: Serializer team member invites.
+      properties:
+        email:
+          type: string
+          format: email
+        created:
+          type: string
+          format: date-time
+      required:
+      - created
+      - email
+    UninviteUserFromWorkspace:
+      type: object
+      description: Accept email.
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+      - email
     User:
       type: object
       description: User serializer.
@@ -1599,6 +1955,137 @@ components:
       - picture
       - title
       - uuid
+    WorkspaceCreate:
+      type: object
+      description: Accept title, description.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+      required:
+      - title
+    WorkspaceDetail:
+      type: object
+      description: |-
+        Workspace detail serializer.
+
+        Serializers ws board as well, but not the sections and so forth that they
+        contain.
+      properties:
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        picture:
+          type: string
+          nullable: true
+          description: Return profile picture.
+          readOnly: true
+        team_members:
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamMemberBase'
+          readOnly: true
+        team_member_invites:
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamMemberInvite'
+          readOnly: true
+        projects:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectBase'
+          readOnly: true
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/LabelBase'
+          readOnly: true
+        quota:
+          $ref: '#/components/schemas/WorkspaceQuota'
+      required:
+      - created
+      - description
+      - labels
+      - modified
+      - picture
+      - projects
+      - quota
+      - team_member_invites
+      - team_members
+      - title
+      - uuid
+    WorkspaceQuota:
+      type: object
+      description: Serializer quota.
+      properties:
+        workspace_status:
+          $ref: '#/components/schemas/WorkspaceStatusEnum'
+        chat_messages:
+          $ref: '#/components/schemas/SingleQuota'
+        labels:
+          $ref: '#/components/schemas/SingleQuota'
+        sub_tasks:
+          $ref: '#/components/schemas/SingleQuota'
+        tasks:
+          $ref: '#/components/schemas/SingleQuota'
+        task_labels:
+          $ref: '#/components/schemas/SingleQuota'
+        projects:
+          $ref: '#/components/schemas/SingleQuota'
+        sections:
+          $ref: '#/components/schemas/SingleQuota'
+        team_members_and_invites:
+          $ref: '#/components/schemas/SingleQuota'
+      required:
+      - chat_messages
+      - labels
+      - projects
+      - sections
+      - sub_tasks
+      - task_labels
+      - tasks
+      - team_members_and_invites
+      - workspace_status
+    WorkspaceStatusEnum:
+      enum:
+      - full
+      - trial
+      - inactive
+      type: string
+      description: |-
+        * `full` - full
+        * `trial` - trial
+        * `inactive` - inactive
+    WorkspaceUpdate:
+      type: object
+      description: Accept title, description.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+      required:
+      - title
   securitySchemes:
     cookieAuth:
       type: apiKey

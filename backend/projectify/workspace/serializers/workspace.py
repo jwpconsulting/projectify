@@ -30,8 +30,8 @@ class TeamMemberInviteSerializer(serializers.Serializer):
 class SingleQuotaSerializer(serializers.Serializer):
     """Serializer a single Quota dataclass."""
 
-    current = serializers.IntegerField(required=False)
-    limit = serializers.IntegerField(required=False)
+    current = serializers.IntegerField(allow_null=True)
+    limit = serializers.IntegerField(allow_null=True)
     can_create_more = serializers.BooleanField()
 
 
@@ -39,7 +39,9 @@ class WorkspaceQuotaSerializer(serializers.Serializer):
     """Serializer quota."""
 
     # full | trial | inactive
-    workspace_status = serializers.CharField()
+    workspace_status = serializers.ChoiceField(
+        choices=["full", "trial", "inactive"]
+    )
     chat_messages = SingleQuotaSerializer()
     labels = SingleQuotaSerializer()
     sub_tasks = SingleQuotaSerializer()

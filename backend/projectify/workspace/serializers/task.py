@@ -24,7 +24,7 @@ class TaskWithSubTaskSerializer(base.TaskBaseSerializer):
     """Serialize all task details."""
 
     labels = base.LabelBaseSerializer(many=True, read_only=True)
-    assignee = base.TeamMemberBaseSerializer(read_only=True)
+    assignee = base.TeamMemberBaseSerializer(read_only=True, allow_null=True)
     sub_tasks = base.SubTaskBaseSerializer(
         many=True, read_only=True, source="subtask_set"
     )

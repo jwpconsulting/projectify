@@ -21,6 +21,7 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
 from django_ratelimit.decorators import ratelimit
+from drf_spectacular.utils import extend_schema
 from rest_framework import (
     parsers,
     serializers,
@@ -71,7 +72,7 @@ from ..services.workspace import (
 class WorkspaceCreate(views.APIView):
     """Create a workspace."""
 
-    class InputSerializer(serializers.ModelSerializer[Workspace]):
+    class WorkspaceCreateSerializer(serializers.ModelSerializer[Workspace]):
         """Accept title, description."""
 
         class Meta:
@@ -80,9 +81,17 @@ class WorkspaceCreate(views.APIView):
             fields = "title", "description"
             model = Workspace
 
+    @extend_schema(
+        request=WorkspaceCreateSerializer,
+        responses={
+            201: WorkspaceBaseSerializer,
+            # TODO annotate 400
+            400: None,
+        },
+    )
     def post(self, request: Request) -> Response:
         """Create the workspace and add this user."""
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.WorkspaceCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         workspace = workspace_create(
@@ -98,6 +107,7 @@ class WorkspaceCreate(views.APIView):
 class UserWorkspaces(views.APIView):
     """List all workspaces for a user."""
 
+    @extend_schema(responses={200: WorkspaceBaseSerializer(many=True)})
     def get(self, request: Request) -> Response:
         """Handle GET."""
         workspaces = workspace_find_for_user(who=request.user)
@@ -109,6 +119,9 @@ class UserWorkspaces(views.APIView):
 class WorkspaceReadUpdate(views.APIView):
     """Workspace read and update view."""
 
+    @extend_schema(
+        responses={200: WorkspaceDetailSerializer, 404: None},
+    )
     def get(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle GET."""
         workspace = workspace_find_by_workspace_uuid(
@@ -122,7 +135,7 @@ class WorkspaceReadUpdate(views.APIView):
         serializer = WorkspaceDetailSerializer(instance=workspace)
         return Response(status=HTTP_200_OK, data=serializer.data)
 
-    class InputSerializer(serializers.ModelSerializer[Workspace]):
+    class WorkspaceUpdateSerializer(serializers.ModelSerializer[Workspace]):
         """Accept title, description."""
 
         class Meta:
@@ -131,6 +144,15 @@ class WorkspaceReadUpdate(views.APIView):
             fields = "title", "description"
             model = Workspace
 
+    @extend_schema(
+        request=WorkspaceUpdateSerializer,
+        responses={
+            200: WorkspaceUpdateSerializer,
+            # TODO annotate 400
+            400: None,
+            404: None,
+        },
+    )
     def put(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle PUT."""
         workspace = workspace_find_by_workspace_uuid(
@@ -141,7 +163,7 @@ class WorkspaceReadUpdate(views.APIView):
         if workspace is None:
             raise NotFound(_("Could not find workspace with this UUID"))
 
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.WorkspaceUpdateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         workspace_update(
             workspace=workspace,
@@ -161,6 +183,9 @@ class WorkspacePictureUploadView(views.APIView):
 
     parser_classes = (parsers.MultiPartParser,)
 
+    @extend_schema(
+        responses={204: None, 400: None, 404: None},
+    )
     def post(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle POST."""
         workspace = workspace_find_by_workspace_uuid(
@@ -183,11 +208,20 @@ class WorkspacePictureUploadView(views.APIView):
 class InviteUserToWorkspace(views.APIView):
     """Invite a user to a workspace."""
 
-    class InputSerializer(serializers.Serializer):
+    class InviteUserToWorkspaceSerializer(serializers.Serializer):
         """Accept email."""
 
         email = serializers.EmailField()
 
+    @extend_schema(
+        request=InviteUserToWorkspaceSerializer,
+        responses={
+            201: InviteUserToWorkspaceSerializer,
+            # TODO annotate 400
+            400: None,
+            404: None,
+        },
+    )
     @method_decorator(ratelimit(key="user", rate="5/h"))
     def post(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle POST."""
@@ -197,7 +231,7 @@ class InviteUserToWorkspace(views.APIView):
         if workspace is None:
             raise NotFound(_("No workspace found for this UUID"))
 
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.InviteUserToWorkspaceSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         email: str = serializer.validated_data["email"]
         try:
@@ -228,11 +262,20 @@ class InviteUserToWorkspace(views.APIView):
 class UninviteUserFromWorkspace(views.APIView):
     """Remove a user invitation."""
 
-    class InputSerializer(serializers.Serializer):
+    class UninviteUserFromWorkspaceSerializer(serializers.Serializer):
         """Accept email."""
 
         email = serializers.EmailField()
 
+    @extend_schema(
+        request=UninviteUserFromWorkspaceSerializer,
+        responses={
+            204: None,
+            # TODO annotate 400
+            400: None,
+            404: None,
+        },
+    )
     def post(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle POST."""
         workspace = workspace_find_by_workspace_uuid(
@@ -240,7 +283,9 @@ class UninviteUserFromWorkspace(views.APIView):
         )
         if workspace is None:
             raise NotFound(_("No workspace found for this UUID"))
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.UninviteUserFromWorkspaceSerializer(
+            data=request.data
+        )
         serializer.is_valid(raise_exception=True)
         team_member_invite_delete(
             workspace=workspace,

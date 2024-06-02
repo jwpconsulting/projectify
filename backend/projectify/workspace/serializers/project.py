@@ -29,11 +29,11 @@ from projectify.workspace.serializers.base import (
 )
 
 
-class TaskSerializer(serializers.ModelSerializer[Task]):
+class ProjectDetailTaskSerializer(serializers.ModelSerializer[Task]):
     """Serialize all task details."""
 
     labels = LabelBaseSerializer(many=True, read_only=True)
-    assignee = TeamMemberBaseSerializer(read_only=True)
+    assignee = TeamMemberBaseSerializer(read_only=True, allow_null=True)
     # TODO Justus 2024-04-09
     # This can be simplified as well, might only have to return completion
     # percentage
@@ -44,7 +44,7 @@ class TaskSerializer(serializers.ModelSerializer[Task]):
     class Meta:
         """Meta."""
 
-        # Leaving out created, updated, _order, and description
+        # Leaving out created, updated
         model = Task
         fields = (
             "title",
@@ -54,13 +54,25 @@ class TaskSerializer(serializers.ModelSerializer[Task]):
             "labels",
             "assignee",
             "sub_tasks",
+            # TODO
+            # We want to optimize description away in the future but for now,
+            # since we require a complete retransmission of a task in order for
+            # it to be updated, we need to hold a complete copy of it. Only
+            # this way we can perform updates from the FE dashboard.
+            "description",
         )
+        extra_kwargs = {
+            "description": {"required": True},
+            "due_date": {"required": True},
+        }
 
 
-class SectionSerializer(serializers.ModelSerializer[Section]):
+class ProjectDetailSectionSerializer(serializers.ModelSerializer[Section]):
     """Reduced section serializer."""
 
-    tasks = TaskSerializer(many=True, read_only=True, source="task_set")
+    tasks = ProjectDetailTaskSerializer(
+        many=True, read_only=True, source="task_set"
+    )
 
     class Meta:
         """Meta."""
@@ -71,7 +83,11 @@ class SectionSerializer(serializers.ModelSerializer[Section]):
             "_order",
             "title",
             "tasks",
+            "description",
         )
+        extra_kwargs = {
+            "description": {"required": True},
+        }
 
 
 class ProjectDetailSerializer(ProjectBaseSerializer):
@@ -82,7 +98,7 @@ class ProjectDetailSerializer(ProjectBaseSerializer):
     tasks.
     """
 
-    sections = SectionSerializer(
+    sections = ProjectDetailSectionSerializer(
         many=True, read_only=True, source="section_set"
     )
 
