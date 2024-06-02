@@ -70,15 +70,3 @@ export async function getArchivedProjects(
         ),
     );
 }
-
-export async function archiveProject(
-    { uuid }: Project,
-    archived: boolean,
-    repositoryContext: RepositoryContext,
-): Promise<ApiResponse<void, unknown>> {
-    return await postWithCredentialsJson(
-        `/workspace/project/${uuid}/archive`,
-        { archived },
-        repositoryContext,
-    );
-}

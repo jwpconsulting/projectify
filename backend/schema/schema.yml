@@ -446,10 +446,28 @@ paths:
         required: true
       tags:
       - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectArchive'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectArchive'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectArchive'
+        required: true
       security:
       - cookieAuth: []
       responses:
-        '200':
+        '204':
+          description: No response body
+        '404':
+          description: No response body
+        '403':
+          description: No response body
+        '400':
           description: No response body
   /workspace/section/:
     post:
@@ -936,6 +954,14 @@ components:
             type: string
       required:
       - policies
+    ProjectArchive:
+      type: object
+      description: Accept the desired archival status.
+      properties:
+        archived:
+          type: boolean
+      required:
+      - archived
     ProjectCreate:
       type: object
       description: Parse project creation input.

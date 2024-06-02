@@ -22,7 +22,6 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import { goto } from "$lib/navigation";
-    import { archiveProject as repoArchiveProject } from "$lib/repository/workspace/project";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import {
         openConstructiveOverlay,
@@ -30,6 +29,7 @@
     } from "$lib/stores/globalUi";
     import type { Workspace, Project } from "$lib/types/workspace";
     import { getArchiveUrl } from "$lib/urls";
+    import { openApiClient } from "$lib/repository/util";
 
     export let workspace: Workspace;
     export let project: Project;
@@ -134,7 +134,21 @@
             kind: "archiveProject",
             project,
         });
-        await repoArchiveProject(project, true, { fetch });
+        // await repoArchiveProject(project, true, { fetch });
+        const { response } = await openApiClient.POST(
+            "/workspace/project/{project_uuid}/archive",
+            {
+                params: { path: { project_uuid: project.uuid } },
+                body: { archived: true },
+            },
+        );
+        if (!response.ok) {
+            throw new Error(
+                `Could not archive project: ${JSON.stringify(
+                    await response.json(),
+                )}`,
+            );
+        }
         await goto(getArchiveUrl(workspace));
     }
 </script>

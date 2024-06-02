@@ -206,14 +206,24 @@ class ProjectArchivedList(APIView):
 class ProjectArchive(APIView):
     """Toggle the archived status of a board on or off."""
 
-    class InputSerializer(serializers.Serializer):
+    class ProjectArchiveSerializer(serializers.Serializer):
         """Accept the desired archival status."""
 
         archived = serializers.BooleanField()
 
+    @extend_schema(
+        request=ProjectArchiveSerializer,
+        responses={
+            204: None,
+            404: None,
+            403: None,
+            # TODO
+            400: None,
+        },
+    )
     def post(self, request: Request, project_uuid: UUID) -> Response:
         """Process request."""
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.ProjectArchiveSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         archived = serializer.validated_data["archived"]
         project = project_find_by_project_uuid(

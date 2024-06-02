@@ -222,6 +222,10 @@ export interface components {
         PasswordPolicies: {
             policies: string[];
         };
+        /** @description Accept the desired archival status. */
+        ProjectArchive: {
+            archived: boolean;
+        };
         /** @description Parse project creation input. */
         ProjectCreate: {
             title: string;
@@ -830,9 +834,28 @@ export interface operations {
                 project_uuid: string;
             };
         };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjectArchive"];
+                "application/x-www-form-urlencoded": components["schemas"]["ProjectArchive"];
+                "multipart/form-data": components["schemas"]["ProjectArchive"];
+            };
+        };
         responses: {
             /** @description No response body */
-            200: {
+            204: {
+                content: never;
+            };
+            /** @description No response body */
+            400: {
+                content: never;
+            };
+            /** @description No response body */
+            403: {
+                content: never;
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
