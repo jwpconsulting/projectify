@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import Sarus from "@anephenix/sarus";
-import type { Unsubscriber } from "svelte/store";
+import type { Invalidator, Subscriber, Unsubscriber } from "svelte/store";
 import { writable } from "svelte/store";
 
 import vars from "$lib/env";
@@ -38,8 +38,8 @@ function makeAbsoluteUrl(url: string): string {
     return `${wsProtocol}${host}${url}`;
 }
 
-type EventListener = (event: MessageEvent<string>) => void;
-type ChangeListener<T> = (changed: T) => void;
+type EventListener = (resp: WsResponse) => void;
+type ChangeListener = (change: unknown) => void;
 
 let wsConnection: Sarus | undefined = undefined;
 
@@ -47,13 +47,39 @@ type Resource = "workspace" | "project" | "task";
 type WsRequest =
     | { action: "subscribe"; resource: Resource; uuid: string }
     | { action: "unsubscribe"; resource: Resource; uuid: string };
-type WsResponse<T> =
+type WsResponse =
     | {
-          kind: "notSubscribed" | "notFound" | "gone" | "subscribed";
+          kind:
+              | "alreadySubscribed"
+              | "notSubscribed"
+              | "notFound"
+              | "gone"
+              | "subscribed"
+              | "unsubscribed";
           resource: Resource;
           uuid: string;
       }
-    | { kind: "changed"; resource: Resource; uuid: string; content: T };
+    | { kind: "changed"; resource: Resource; uuid: string; content: unknown };
+
+function dispatchMessage(event: MessageEvent<string>) {
+    const message = JSON.parse(event.data) as WsResponse;
+    const handled = [...listeners].some((listener) => {
+        if (message.resource !== listener.resource) {
+            return false;
+        }
+        if (message.uuid !== listener.uuid) {
+            return false;
+        }
+        if (!listener.kind.includes(message.kind)) {
+            return false;
+        }
+        listener.callback(message);
+        return true;
+    });
+    if (!handled) {
+        console.warn("Message not handled:", message);
+    }
+}
 
 function sendWs(request: WsRequest) {
     if (wsConnection === undefined) {
@@ -64,85 +90,121 @@ function sendWs(request: WsRequest) {
                 open: [() => console.debug("Connection opened to", url)],
                 close: [() => console.debug("Connection closed to", url)],
                 error: [() => console.error("Connection error for", url)],
-                message: [],
+                message: [dispatchMessage],
             },
         });
     }
     wsConnection.send(JSON.stringify(request));
 }
 
-function onMessage(attach: boolean, listener: EventListener) {
-    if (wsConnection === undefined) {
-        throw new Error("Expected wsConnection");
-    }
-    if (attach) {
-        wsConnection.on("message", listener);
-    } else {
-        wsConnection.off("message", listener);
-    }
+interface Listener {
+    resource: Resource;
+    uuid: string;
+    kind: WsResponse["kind"][];
+    callback: EventListener;
 }
 
-function unsubscribeFromCollection(resource: Resource, uuid: string) {
+const listeners = new Set<Listener>();
+
+function addListener(listener: Listener) {
+    if (listeners.has(listener)) {
+        console.warn("Listener already added", listener);
+    }
+    listeners.add(listener);
+}
+function removeListener(listener: Listener) {
+    if (!listeners.has(listener)) {
+        console.warn("Listener already removed:", listener);
+    }
+    listeners.delete(listener);
+};
+
+async function unsubscribeFromCollection(resource: Resource, uuid: string) {
     if (wsConnection === undefined) {
         throw new Error("Expected wsConnection");
     }
     // TODO await confirmation
+    console.debug(`unsubscribing from ${resource} and ${uuid}`);
     sendWs({ action: "unsubscribe", resource, uuid });
+    const done = new Promise<void>((resolve) => {
+        const disconnectedCb = (response: WsResponse) => {
+            if (response.kind !== "unsubscribed") {
+                console.debug("Still receiving messages for", resource, uuid);
+                return;
+            }
+            console.debug("Unsubscribed from", resource, uuid);
+            removeListener(listener);
+            resolve();
+        };
+        const listener: Listener = {
+            resource,
+            uuid,
+            kind: ["unsubscribed"],
+            callback: disconnectedCb,
+        };
+        addListener(listener);
+    });
+    return await done;
 }
 
-async function getSubscriptionForCollection<T>(
+async function getSubscriptionForCollection(
     resource: Resource,
     uuid: string,
-    listener: ChangeListener<T>,
+    listener: ChangeListener,
 ): Promise<Unsubscriber> {
-    const establishedConnectionPromise = new Promise<Unsubscriber>(
-        (resolve, reject) => {
-            const passMessageToListener = (event: MessageEvent<string>) => {
-                const message = JSON.parse(event.data) as WsResponse<T>;
-                if (message.resource !== resource) {
-                    return;
-                }
-                if (message.uuid !== uuid) {
-                    return;
-                }
-                if (message.kind === "changed") {
-                    listener(message.content);
-                } else {
-                    console.warn("Unhandled message", message);
-                }
-            };
-            const establishedConnectionCb = (event: MessageEvent<string>) => {
-                const message = JSON.parse(event.data) as WsResponse<T>;
-                if (message.resource !== resource) {
-                    return;
-                }
-                if (message.uuid !== uuid) {
-                    return;
-                }
-                if (message.kind === "notFound") {
-                    reject(new Error(`${uuid} not found`));
-                }
-                if (message.kind !== "subscribed") {
-                    console.warn("Don't know how to handle", message);
-                    return;
-                }
+    const passMessageToListener = (response: WsResponse) => {
+        if (response.kind === "changed") {
+            listener(response.content);
+        } else {
+            console.warn(
+                "Unhandled response when listening to subscription; ",
+                response,
+                `for resource ${resource} and uuid ${uuid}`,
+            );
+        }
+    };
+    const establishedConn = new Promise<Unsubscriber>((resolve, reject) => {
+        const establishedConnectionCb = (response: WsResponse) => {
+            if (response.kind === "notFound") {
+                reject(new Error(`${uuid} not found`));
+            }
+            if (response.kind === "alreadySubscribed") {
+                console.warn("Already subscribed to", resource, uuid);
+            } else if (response.kind !== "subscribed") {
+                console.warn("Don't know how to handle", response);
+                return;
+            } else {
+                console.debug("Subscribed to", resource, uuid);
+            }
 
-                onMessage(false, establishedConnectionCb);
-                onMessage(true, passMessageToListener);
-                resolve(() => {
-                    unsubscribeFromCollection(resource, uuid);
-                    onMessage(false, passMessageToListener);
-                });
-            };
-            sendWs({
-                action: "subscribe",
-                resource,
-                uuid,
+            removeListener(subscribedListener);
+            addListener(messageListener);
+            resolve(async () => {
+                console.debug("Cleaning up listener for", resource, uuid);
+                removeListener(messageListener);
+                await unsubscribeFromCollection(resource, uuid);
             });
-            onMessage(true, establishedConnectionCb);
-        },
-    );
-    return await establishedConnectionPromise;
+        };
+        const subscribedListener: Listener = {
+            resource,
+            uuid,
+            kind: ["notFound", "alreadySubscribed", "subscribed"],
+            callback: establishedConnectionCb,
+        };
+        const messageListener: Listener = {
+            resource,
+            uuid,
+            kind: ["changed"],
+            callback: passMessageToListener,
+        };
+        sendWs({
+            action: "subscribe",
+            resource,
+            uuid,
+        });
+        addListener(subscribedListener);
+    });
+    return await establishedConn;
 }
 
 /* Subscribable WS Store
@@ -177,13 +239,24 @@ export function createWsStore<T>(
 ): WsResource<T> {
     type State = WsStoreState;
     let state: State = { collection, kind: "start" };
-    const { subscribe, set } = writable<T | undefined>(undefined);
+    const { subscribe: writeableSubscribe, set } = writable<T | undefined>(
+        undefined,
+    );
 
-    const onMessage: ChangeListener<T> = (changed: T) => {
+    const onMessage: ChangeListener = (changed: unknown) => {
         if (state.kind === "start") {
             throw new Error("State.kind is start");
         }
-        set(changed);
+        set(changed as T);
+    };
+
+    const reset = () => {
+        if (state.kind === "start") {
+            console.warn("Already reset");
+            return;
+        }
+        state.unsubscriber();
+        state = { kind: "start", collection: state.collection };
     };
 
     const loadUuid = async (
@@ -231,6 +304,19 @@ export function createWsStore<T>(
         set(newValue);
         // And the caller of this method is definitely waiting for their result
         return newValue;
+    };
+
+    const subscribe = (
+        run: Subscriber<T | undefined>,
+        invalidate?: Invalidator<T | undefined> | undefined,
+    ) => {
+        const unsubscriber = writeableSubscribe(run, invalidate);
+        return () => {
+            if (state.kind === "ready") {
+                reset();
+            }
+            unsubscriber();
+        };
     };
 
     return { loadUuid, subscribe };
