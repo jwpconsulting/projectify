@@ -20,6 +20,7 @@ from uuid import UUID
 
 from django.utils.translation import gettext_lazy as _
 
+from drf_spectacular.utils import extend_schema
 from rest_framework import (
     exceptions,
     serializers,
@@ -42,6 +43,11 @@ logger = logging.getLogger(__name__)
 class WorkspaceCustomerRetrieve(APIView):
     """Retrieve customer for a workspace."""
 
+    @extend_schema(
+        responses={
+            200: CustomerSerializer,
+        },
+    )
     def get(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle GET."""
         user = request.user
@@ -61,20 +67,31 @@ class WorkspaceCustomerRetrieve(APIView):
 class WorkspaceCheckoutSessionCreate(APIView):
     """Create a checkout session given a workspace."""
 
-    class InputSerializer(serializers.Serializer):
+    class WorkspaceCheckoutSessionCreateInputSerializer(
+        serializers.Serializer
+    ):
         """Accept a number of seats to be added into checkout."""
 
-        seats = serializers.IntegerField(
-            min_value=1,
-        )
+        seats = serializers.IntegerField(min_value=1)
 
-    class OutputSerializer(serializers.Serializer):
+    class WorkspaceCheckoutSessionCreateOutputSerializer(
+        serializers.Serializer
+    ):
         """Return the url to a checkout session."""
 
         # The original GraphQL mutation would also return an id. I believe this
         # was only needed if a stripe url is constructed client side
         url = serializers.URLField()
 
+    @extend_schema(
+        request=WorkspaceCheckoutSessionCreateInputSerializer,
+        responses={
+            200: WorkspaceCheckoutSessionCreateOutputSerializer,
+            # TODO
+            400: None,
+            404: None,
+        },
+    )
     def post(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle POST."""
         customer = customer_find_by_workspace_uuid(
@@ -85,25 +102,40 @@ class WorkspaceCheckoutSessionCreate(APIView):
             raise exceptions.NotFound(
                 _("No customer found for this workspace uuid")
             )
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.WorkspaceCheckoutSessionCreateInputSerializer(
+            data=request.data
+        )
         serializer.is_valid(raise_exception=True)
         session = customer_create_stripe_checkout_session(
             customer=customer,
             who=request.user,
             seats=serializer.validated_data["seats"],
         )
-        output_serializer = self.OutputSerializer(instance=session)
+        output_serializer = (
+            self.WorkspaceCheckoutSessionCreateOutputSerializer(
+                instance=session
+            )
+        )
         return Response(data=output_serializer.data, status=HTTP_200_OK)
 
 
 class WorkspaceBillingPortalSessionCreate(APIView):
     """Create a billing portal session given a workspace."""
 
-    class OutputSerializer(serializers.Serializer):
+    class WorkspaceBillingPortalSessionCreateOutputSerializer(
+        serializers.Serializer
+    ):
         """Return the url to a billing portal session."""
 
         url = serializers.URLField()
 
+    @extend_schema(
+        request=None,
+        responses={
+            200: WorkspaceBillingPortalSessionCreateOutputSerializer,
+            404: None,
+        },
+    )
     def post(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle POST."""
         customer = customer_find_by_workspace_uuid(
@@ -116,5 +148,9 @@ class WorkspaceBillingPortalSessionCreate(APIView):
         session = create_billing_portal_session_for_customer(
             who=request.user, customer=customer
         )
-        output_serializer = self.OutputSerializer(instance=session)
+        output_serializer = (
+            self.WorkspaceBillingPortalSessionCreateOutputSerializer(
+                instance=session
+            )
+        )
         return Response(data=output_serializer.data, status=HTTP_200_OK)

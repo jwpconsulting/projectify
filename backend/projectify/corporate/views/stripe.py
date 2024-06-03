@@ -26,6 +26,7 @@ from django.views.decorators.csrf import (
 )
 
 import stripe
+from drf_spectacular.utils import extend_schema
 from rest_framework import serializers
 from rest_framework.decorators import (
     api_view,
@@ -297,6 +298,14 @@ def _handle_event(
     return "ok"
 
 
+@extend_schema(
+    # TODO?
+    request=None,
+    responses={
+        200: None,
+        400: None,
+    },
+)
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes([AllowAny])

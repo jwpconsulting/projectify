@@ -185,6 +185,10 @@ export type webhooks = Record<string, never>;
 
 export interface components {
     schemas: {
+        /** @description Serialize anonymous user. */
+        AnonymousUser: {
+            unauthenticated: components["schemas"]["UnauthenticatedEnum"];
+        };
         /** @description Accept old and new password. */
         ChangePassword: {
             current_password: string;
@@ -207,6 +211,27 @@ export interface components {
             text: string;
             author: components["schemas"]["TeamMemberBase"];
         };
+        /** @description Take email and password. */
+        ConfirmEmail: {
+            /** Format: email */
+            email: string;
+            token: string;
+        };
+        /** @description Accept new email. */
+        ConfirmEmailAddressUpdate: {
+            confirmation_token: string;
+        };
+        /** @description Serializer that takes in a Coupon's code. */
+        CouponRedeem: {
+            code: string;
+        };
+        /** @description Serializer for customer. */
+        Customer: {
+            seats?: number;
+            /** Format: uuid */
+            uuid: string;
+            subscription_status?: components["schemas"]["SubscriptionStatusEnum"];
+        };
         /** @description Accept email. */
         InviteUserToWorkspace: {
             /** Format: email */
@@ -223,9 +248,52 @@ export interface components {
             /** Format: uuid */
             uuid: string;
         };
+        /** @description Serializer for label creation. */
+        LabelCreate: {
+            name: string;
+            /**
+             * Format: int64
+             * @description Color index
+             */
+            color: number;
+            /** Format: uuid */
+            workspace_uuid: string;
+        };
+        /** @description Serializer for Label update. */
+        LabelUpdate: {
+            name: string;
+            /**
+             * Format: int64
+             * @description Color index
+             */
+            color: number;
+        };
+        /** @description Take email and password. */
+        LogIn: {
+            /** Format: email */
+            email: string;
+            password: string;
+        };
         /** @description Serialize password policies. */
         PasswordPolicies: {
             policies: string[];
+        };
+        /** @description Take email, token and a new password. */
+        PasswordResetConfirm: {
+            /** Format: email */
+            email: string;
+            token: string;
+            new_password: string;
+        };
+        /** @description Take an email address. */
+        PasswordResetRequest: {
+            /** Format: email */
+            email: string;
+        };
+        /** @description Deserialize picture upload. */
+        ProfilePictureUpload: {
+            /** Format: uri */
+            file?: string;
         };
         /** @description Accept the desired archival status. */
         ProjectArchive: {
@@ -354,6 +422,12 @@ export interface components {
              */
             due_date?: string | null;
         };
+        /** @description Accept new email. */
+        RequestEmailAddressUpdate: {
+            password: string;
+            /** Format: email */
+            new_email: string;
+        };
         /**
          * @description * `OBSERVER` - Observer
          * * `CONTRIBUTOR` - Contributor
@@ -457,6 +531,14 @@ export interface components {
             /** @description Designate whether this sub task is done */
             done?: boolean;
         };
+        /**
+         * @description * `ACTIVE` - Active
+         * * `UNPAID` - Unpaid
+         * * `CANCELLED` - Cancelled
+         * * `CUSTOM` - Custom subscription
+         * @enum {string}
+         */
+        SubscriptionStatusEnum: "ACTIVE" | "UNPAID" | "CANCELLED" | "CUSTOM";
         /** @description Serializer for creating tasks. */
         TaskCreate: {
             title: string;
@@ -499,6 +581,16 @@ export interface components {
             assignee: components["schemas"]["TeamMemberBase"] | null;
             chat_messages: readonly components["schemas"]["ChatMessageBase"][];
             section: components["schemas"]["SectionUp"];
+        };
+        /** @description Accept a task uuid after which this task should be moved. */
+        TaskMoveAfterTask: {
+            /** Format: uuid */
+            task_uuid: string;
+        };
+        /** @description Accept the target section uuid. */
+        TaskMoveToSection: {
+            /** Format: uuid */
+            section_uuid: string;
         };
         /** @description Serializer for updating tasks. */
         TaskUpdate: {
@@ -554,6 +646,16 @@ export interface components {
             /** Format: date-time */
             created: string;
         };
+        /** @description Serializer for PUT updates. */
+        TeamMemberUpdate: {
+            job_title?: string | null;
+            role?: components["schemas"]["RoleEnum"];
+        };
+        /**
+         * @description * `True` - True
+         * @enum {boolean}
+         */
+        UnauthenticatedEnum: true;
         /** @description Accept email. */
         UninviteUserFromWorkspace: {
             /** Format: email */
@@ -566,6 +668,10 @@ export interface components {
             preferred_name: string | null;
             /** @description Return profile picture. */
             profile_picture: string | null;
+        };
+        /** @description Take only preferred_name in. */
+        UserUpdate: {
+            preferred_name?: string | null;
         };
         /** @description Deserialize the UUID for a any object with a UUID. */
         UuidObject: {
@@ -584,6 +690,20 @@ export interface components {
             uuid: string;
             /** @description Return profile picture. */
             picture: string | null;
+        };
+        /** @description Return the url to a billing portal session. */
+        WorkspaceBillingPortalSessionCreateOutput: {
+            /** Format: uri */
+            url: string;
+        };
+        /** @description Accept a number of seats to be added into checkout. */
+        WorkspaceCheckoutSessionCreateInput: {
+            seats: number;
+        };
+        /** @description Return the url to a checkout session. */
+        WorkspaceCheckoutSessionCreateOutput: {
+            /** Format: uri */
+            url: string;
         };
         /** @description Accept title, description. */
         WorkspaceCreate: {
@@ -613,6 +733,11 @@ export interface components {
             labels: readonly components["schemas"]["LabelBase"][];
             quota: components["schemas"]["WorkspaceQuota"];
         };
+        /** @description Deserialize an image attachment. */
+        WorkspacePictureUpload: {
+            /** Format: uri */
+            file?: string;
+        };
         /** @description Serializer quota. */
         WorkspaceQuota: {
             workspace_status: components["schemas"]["WorkspaceStatusEnum"];
@@ -637,6 +762,9 @@ export interface components {
             title: string;
             description?: string | null;
         };
+        auth_info:
+            | components["schemas"]["User"]
+            | components["schemas"]["AnonymousUser"];
     };
     responses: never;
     parameters: never;
@@ -657,6 +785,10 @@ export interface operations {
             200: {
                 content: never;
             };
+            /** @description No response body */
+            400: {
+                content: never;
+            };
         };
     };
     /** @description Handle POST. */
@@ -667,8 +799,13 @@ export interface operations {
             };
         };
         responses: {
-            /** @description No response body */
             200: {
+                content: {
+                    "application/json": components["schemas"]["WorkspaceBillingPortalSessionCreateOutput"];
+                };
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
@@ -680,9 +817,25 @@ export interface operations {
                 workspace_uuid: string;
             };
         };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkspaceCheckoutSessionCreateInput"];
+                "application/x-www-form-urlencoded": components["schemas"]["WorkspaceCheckoutSessionCreateInput"];
+                "multipart/form-data": components["schemas"]["WorkspaceCheckoutSessionCreateInput"];
+            };
+        };
         responses: {
-            /** @description No response body */
             200: {
+                content: {
+                    "application/json": components["schemas"]["WorkspaceCheckoutSessionCreateOutput"];
+                };
+            };
+            /** @description No response body */
+            400: {
+                content: never;
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
@@ -695,9 +848,10 @@ export interface operations {
             };
         };
         responses: {
-            /** @description No response body */
             200: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["Customer"];
+                };
             };
         };
     };
@@ -708,9 +862,20 @@ export interface operations {
                 workspace_uuid: string;
             };
         };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CouponRedeem"];
+                "application/x-www-form-urlencoded": components["schemas"]["CouponRedeem"];
+                "multipart/form-data": components["schemas"]["CouponRedeem"];
+            };
+        };
         responses: {
             /** @description No response body */
-            200: {
+            204: {
+                content: never;
+            };
+            /** @description No response body */
+            400: {
                 content: never;
             };
         };
@@ -734,22 +899,48 @@ export interface operations {
                     "application/json": components["schemas"]["ChangePasswordError"];
                 };
             };
+            /** @description No response body */
+            429: {
+                content: never;
+            };
         };
     };
     /** @description Handle POST. */
     user_user_confirm_email_create: {
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConfirmEmail"];
+                "application/x-www-form-urlencoded": components["schemas"]["ConfirmEmail"];
+                "multipart/form-data": components["schemas"]["ConfirmEmail"];
+            };
+        };
         responses: {
             /** @description No response body */
-            200: {
+            204: {
+                content: never;
+            };
+            /** @description No response body */
+            400: {
                 content: never;
             };
         };
     };
     /** @description Handle POST. */
     user_user_confirm_password_reset_create: {
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PasswordResetConfirm"];
+                "application/x-www-form-urlencoded": components["schemas"]["PasswordResetConfirm"];
+                "multipart/form-data": components["schemas"]["PasswordResetConfirm"];
+            };
+        };
         responses: {
             /** @description No response body */
-            200: {
+            204: {
+                content: never;
+            };
+            /** @description No response body */
+            400: {
                 content: never;
             };
         };
@@ -757,44 +948,103 @@ export interface operations {
     /** @description Handle GET. */
     user_user_current_user_retrieve: {
         responses: {
-            /** @description No response body */
             200: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["auth_info"];
+                };
             };
         };
     };
     /** @description Update a user. */
     user_user_current_user_update: {
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["UserUpdate"];
+                "application/x-www-form-urlencoded": components["schemas"]["UserUpdate"];
+                "multipart/form-data": components["schemas"]["UserUpdate"];
+            };
+        };
         responses: {
-            /** @description No response body */
             200: {
+                content: {
+                    "application/json": components["schemas"]["User"];
+                };
+            };
+            /** @description No response body */
+            400: {
+                content: never;
+            };
+            /** @description No response body */
+            403: {
                 content: never;
             };
         };
     };
     /** @description Handle POST. */
     user_user_email_address_update_confirm_create: {
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConfirmEmailAddressUpdate"];
+                "application/x-www-form-urlencoded": components["schemas"]["ConfirmEmailAddressUpdate"];
+                "multipart/form-data": components["schemas"]["ConfirmEmailAddressUpdate"];
+            };
+        };
         responses: {
             /** @description No response body */
-            200: {
+            204: {
+                content: never;
+            };
+            /** @description No response body */
+            400: {
                 content: never;
             };
         };
     };
     /** @description Handle POST. */
     user_user_email_address_update_request_create: {
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestEmailAddressUpdate"];
+                "application/x-www-form-urlencoded": components["schemas"]["RequestEmailAddressUpdate"];
+                "multipart/form-data": components["schemas"]["RequestEmailAddressUpdate"];
+            };
+        };
         responses: {
             /** @description No response body */
-            200: {
+            204: {
+                content: never;
+            };
+            /** @description No response body */
+            400: {
+                content: never;
+            };
+            /** @description No response body */
+            429: {
                 content: never;
             };
         };
     };
     /** @description Handle POST. */
     user_user_log_in_create: {
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LogIn"];
+                "application/x-www-form-urlencoded": components["schemas"]["LogIn"];
+                "multipart/form-data": components["schemas"]["LogIn"];
+            };
+        };
         responses: {
-            /** @description No response body */
             200: {
+                content: {
+                    "application/json": components["schemas"]["User"];
+                };
+            };
+            /** @description No response body */
+            400: {
+                content: never;
+            };
+            /** @description No response body */
+            429: {
                 content: never;
             };
         };
@@ -803,7 +1053,7 @@ export interface operations {
     user_user_log_out_create: {
         responses: {
             /** @description No response body */
-            200: {
+            204: {
                 content: never;
             };
         };
@@ -820,18 +1070,42 @@ export interface operations {
     };
     /** @description Handle POST. */
     user_user_profile_picture_upload_create: {
+        requestBody?: {
+            content: {
+                "multipart/form-data": components["schemas"]["ProfilePictureUpload"];
+            };
+        };
         responses: {
             /** @description No response body */
-            200: {
+            204: {
+                content: never;
+            };
+            /** @description No response body */
+            400: {
                 content: never;
             };
         };
     };
     /** @description Handle POST. */
     user_user_request_password_reset_create: {
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PasswordResetRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["PasswordResetRequest"];
+                "multipart/form-data": components["schemas"]["PasswordResetRequest"];
+            };
+        };
         responses: {
             /** @description No response body */
-            200: {
+            204: {
+                content: never;
+            };
+            /** @description No response body */
+            400: {
+                content: never;
+            };
+            /** @description No response body */
+            429: {
                 content: never;
             };
         };
@@ -863,9 +1137,21 @@ export interface operations {
     };
     /** @description Create the label. */
     workspace_label_create: {
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LabelCreate"];
+                "application/x-www-form-urlencoded": components["schemas"]["LabelCreate"];
+                "multipart/form-data": components["schemas"]["LabelCreate"];
+            };
+        };
         responses: {
+            201: {
+                content: {
+                    "application/json": components["schemas"]["LabelBase"];
+                };
+            };
             /** @description No response body */
-            200: {
+            400: {
                 content: never;
             };
         };
@@ -877,9 +1163,25 @@ export interface operations {
                 label_uuid: string;
             };
         };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LabelUpdate"];
+                "application/x-www-form-urlencoded": components["schemas"]["LabelUpdate"];
+                "multipart/form-data": components["schemas"]["LabelUpdate"];
+            };
+        };
         responses: {
+            201: {
+                content: {
+                    "application/json": components["schemas"]["LabelBase"];
+                };
+            };
             /** @description No response body */
-            200: {
+            400: {
+                content: never;
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
@@ -894,6 +1196,10 @@ export interface operations {
         responses: {
             /** @description No response body */
             204: {
+                content: never;
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
@@ -1165,8 +1471,13 @@ export interface operations {
             };
         };
         responses: {
-            /** @description No response body */
             200: {
+                content: {
+                    "application/json": components["schemas"]["TaskDetail"];
+                };
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
@@ -1200,6 +1511,10 @@ export interface operations {
             400: {
                 content: never;
             };
+            /** @description No response body */
+            404: {
+                content: never;
+            };
         };
     };
     /** @description Delete task. */
@@ -1214,6 +1529,10 @@ export interface operations {
             204: {
                 content: never;
             };
+            /** @description No response body */
+            404: {
+                content: never;
+            };
         };
     };
     /** @description Process the request. */
@@ -1223,9 +1542,25 @@ export interface operations {
                 task_uuid: string;
             };
         };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TaskMoveAfterTask"];
+                "application/x-www-form-urlencoded": components["schemas"]["TaskMoveAfterTask"];
+                "multipart/form-data": components["schemas"]["TaskMoveAfterTask"];
+            };
+        };
         responses: {
-            /** @description No response body */
             200: {
+                content: {
+                    "application/json": components["schemas"]["TaskDetail"];
+                };
+            };
+            /** @description No response body */
+            400: {
+                content: never;
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
@@ -1237,9 +1572,25 @@ export interface operations {
                 task_uuid: string;
             };
         };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TaskMoveToSection"];
+                "application/x-www-form-urlencoded": components["schemas"]["TaskMoveToSection"];
+                "multipart/form-data": components["schemas"]["TaskMoveToSection"];
+            };
+        };
         responses: {
-            /** @description No response body */
             200: {
+                content: {
+                    "application/json": components["schemas"]["TaskDetail"];
+                };
+            };
+            /** @description No response body */
+            400: {
+                content: never;
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
@@ -1252,8 +1603,13 @@ export interface operations {
             };
         };
         responses: {
-            /** @description No response body */
             200: {
+                content: {
+                    "application/json": components["schemas"]["TeamMemberBase"];
+                };
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
@@ -1265,9 +1621,25 @@ export interface operations {
                 team_member_uuid: string;
             };
         };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["TeamMemberUpdate"];
+                "application/x-www-form-urlencoded": components["schemas"]["TeamMemberUpdate"];
+                "multipart/form-data": components["schemas"]["TeamMemberUpdate"];
+            };
+        };
         responses: {
-            /** @description No response body */
             200: {
+                content: {
+                    "application/json": components["schemas"]["TeamMemberUpdate"];
+                };
+            };
+            /** @description No response body */
+            400: {
+                content: never;
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
@@ -1282,6 +1654,10 @@ export interface operations {
         responses: {
             /** @description No response body */
             204: {
+                content: never;
+            };
+            /** @description No response body */
+            404: {
                 content: never;
             };
         };
@@ -1410,6 +1786,11 @@ export interface operations {
         parameters: {
             path: {
                 workspace_uuid: string;
+            };
+        };
+        requestBody?: {
+            content: {
+                "multipart/form-data": components["schemas"]["WorkspacePictureUpload"];
             };
         };
         responses: {

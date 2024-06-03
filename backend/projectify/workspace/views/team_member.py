@@ -19,6 +19,7 @@ from uuid import UUID
 
 from django.utils.translation import gettext_lazy as _
 
+from drf_spectacular.utils import extend_schema
 from rest_framework import (
     serializers,
     views,
@@ -47,6 +48,12 @@ from ..models.team_member import TeamMember
 class TeamMemberReadUpdateDelete(views.APIView):
     """Delete a team member."""
 
+    @extend_schema(
+        responses={
+            200: TeamMemberBaseSerializer,
+            404: None,
+        },
+    )
     def get(self, request: Request, team_member_uuid: UUID) -> Response:
         """Handle GET."""
         team_member = team_member_find_by_team_member_uuid(
@@ -59,7 +66,7 @@ class TeamMemberReadUpdateDelete(views.APIView):
 
         return Response(status=HTTP_200_OK, data=serializer.data)
 
-    class InputSerializer(serializers.ModelSerializer[TeamMember]):
+    class TeamMemberUpdateSerializer(serializers.ModelSerializer[TeamMember]):
         """Serializer for PUT updates."""
 
         class Meta:
@@ -68,6 +75,15 @@ class TeamMemberReadUpdateDelete(views.APIView):
             fields = "job_title", "role"
             model = TeamMember
 
+    @extend_schema(
+        request=TeamMemberUpdateSerializer,
+        responses={
+            200: TeamMemberUpdateSerializer,
+            # Annotate 400
+            400: None,
+            404: None,
+        },
+    )
     def put(self, request: Request, team_member_uuid: UUID) -> Response:
         """Handle PUT."""
         team_member = team_member_find_by_team_member_uuid(
@@ -76,7 +92,7 @@ class TeamMemberReadUpdateDelete(views.APIView):
         if team_member is None:
             raise NotFound(_("Could not find team member for given UUID"))
 
-        serializer = self.InputSerializer(
+        serializer = self.TeamMemberUpdateSerializer(
             data=request.data, instance=team_member
         )
         serializer.is_valid(raise_exception=True)
@@ -88,6 +104,9 @@ class TeamMemberReadUpdateDelete(views.APIView):
         )
         return Response(status=HTTP_200_OK, data=serializer.data)
 
+    @extend_schema(
+        responses={204: None, 404: None},
+    )
     def delete(self, request: Request, team_member_uuid: UUID) -> Response:
         """Handle DELETE."""
         team_member = team_member_find_by_team_member_uuid(
