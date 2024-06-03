@@ -15,34 +15,57 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Task services."""
+import logging
 from datetime import datetime
 from typing import Optional, Sequence, Union
 
 from django.db import transaction
+from django.utils.translation import gettext_lazy as _
+
+from rest_framework import serializers
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
-from projectify.workspace.models.label import Label
-from projectify.workspace.models.section import (
-    Section,
-)
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.services.signals import (
+
+from ..models.label import Label
+from ..models.section import Section
+from ..models.task import Task
+from ..models.team_member import TeamMember
+from ..services.signals import (
     send_project_change_signal,
     send_task_change_signal,
 )
-from projectify.workspace.services.sub_task import (
+from ..services.sub_task import (
     ValidatedData,
     sub_task_create_many,
     sub_task_update_many,
 )
 
+logger = logging.getLogger(__name__)
+
 
 # TODO hide this
 def task_assign_labels(*, task: Task, labels: Sequence[Label]) -> None:
     """Assign label uuids to the given task."""
-    task.set_labels(list(labels))
+    workspace = task.workspace
+    ws_labels = workspace.label_set
+    # We filter for labels as part of this workspace, to make sure we
+    # don't assign labels from another workspace
+    intersection_qs = ws_labels.filter(id__in=[label.id for label in labels])
+    with transaction.atomic():
+        intersection = list(intersection_qs)
+        if not len(intersection) == len(labels):
+            logger.warning(
+                "Some of the labels specified in %s are "
+                "not part of this workspace",
+                ", ".join(str(label.uuid) for label in labels),
+            )
+        task.labels.set(intersection)
+
+    # TODO maybe it makes more sense to fire signals from serializers,
+    # not manually patch things like the following...
+    # 2023-11-28: Now that I have a lot of success refactoring into
+    # services, this should be handled in a service
 
 
 # Create
@@ -63,6 +86,14 @@ def task_create(
     )
     # XXX Implicit N+1 here
     workspace = section.project.workspace
+    if assignee and assignee.workspace != workspace:
+        raise serializers.ValidationError(
+            {
+                "assignee": _(
+                    "The team member to be assigned belongs to a different workspace"
+                )
+            }
+        )
     return Task.objects.create(
         section=section,
         title=title,

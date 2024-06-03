@@ -19,7 +19,7 @@ set -e
 target="${1-.}"
 echo "Testing $target"
 
-if poetry run mypy "$target"
+if mypy "$target"
 then
     echo "mypy ran successfully"
 else
@@ -27,7 +27,7 @@ else
     exit 1
 fi
 
-if poetry run pyright "$target"
+if pyright "$target"
 then
     echo "pyright ran successfully"
 else
@@ -35,21 +35,21 @@ else
     exit 1
 fi
 
-if poetry run ruff format "$target"; then
+if ruff format "$target"; then
     echo "ruff format ran successfully"
 else
     echo "ruff format didn't finish successfully"
     exit 1
 fi
 
-if poetry run ruff --fix "$target"; then
+if ruff --fix "$target"; then
     echo "ruff ran successfully"
 else
     echo "ruff didn't finish successfully"
     exit 1
 fi
 
-if poetry run pytest -n auto --maxprocesses=8 --lf "$target"
+if pytest -n auto --maxprocesses=8 --lf "$target"
 then
     echo "pytest ran successfully"
 else
@@ -57,7 +57,7 @@ else
     exit 1
 fi
 
-if poetry run vulture .
+if vulture .
 then
     echo "Vulture did not find any issues"
 else

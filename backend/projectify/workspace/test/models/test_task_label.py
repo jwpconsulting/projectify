@@ -31,7 +31,8 @@ class TestLabelQuerySet:
         self, label: models.Label, task: models.Task
     ) -> None:
         """Test filter_by_task_pks."""
-        task_label = task.add_label(label)
+        task.labels.add(label)
+        task_label = models.TaskLabel.objects.get(task=task)
         qs = models.TaskLabel.objects.filter_by_task_pks([task.pk])
         task_labels = [task_label]
         assert list(qs) == task_labels

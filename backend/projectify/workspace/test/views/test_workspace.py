@@ -35,6 +35,7 @@ from rest_framework.test import (
 )
 
 from projectify.corporate.services.stripe import customer_cancel_subscription
+from projectify.user.models.user import User
 from projectify.workspace.services.team_member_invite import (
     team_member_invite_create,
 )
@@ -61,7 +62,7 @@ class TestWorkspaceCreate:
 
     def test_create(
         self,
-        user: AbstractBaseUser,
+        user: User,
         rest_user_client: APIClient,
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
@@ -82,7 +83,10 @@ class TestWorkspaceCreate:
         assert team_member.user == user
         assert team_member.role == TeamMemberRoles.OWNER
 
-        # Test also that we can submit with empty description
+    def test_create_empty_description(
+        self, rest_user_client: APIClient, resource_url: str
+    ) -> None:
+        """Test that we can submit with an empty description."""
         response = rest_user_client.post(resource_url, {"title": "blabla"})
         assert response.status_code == 201
 

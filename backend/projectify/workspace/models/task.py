@@ -20,36 +20,19 @@ import uuid
 from typing import (
     TYPE_CHECKING,
     Any,
-    ClassVar,
     Optional,
-    Self,
     cast,
 )
 
-from django.db import (
-    models,
-    transaction,
-)
-from django.db.models.signals import (
-    post_save,
-)
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 import pgtrigger
-from django_extensions.db.models import (
-    TitleDescriptionModel,
-)
+from django_extensions.db.models import TitleDescriptionModel
 
 from projectify.lib.models import BaseModel
 
-from .types import (
-    GetOrder,
-    Pks,
-    SetOrder,
-)
-from .workspace import (
-    Workspace,
-)
+from .types import GetOrder, SetOrder
 
 logger = logging.getLogger(__name__)
 
@@ -57,55 +40,22 @@ logger = logging.getLogger(__name__)
 if TYPE_CHECKING:
     from django.db.models.manager import RelatedManager  # noqa: F401
 
-    from . import (
+    from . import (  # noqa: F401
         ChatMessage,
         Label,
-        Project,
         Section,
         SubTask,
         TaskLabel,
         TeamMember,
+        Workspace,
     )
-
-
-class TaskQuerySet(models.QuerySet["Task"]):
-    """Manager for Task."""
-
-    # TODO use selector
-    def filter_by_workspace(self, workspace: Workspace) -> Self:
-        """Filter by workspace."""
-        return self.filter(
-            section__project__workspace=workspace,
-        )
-
-    # TODO use selector
-    def filter_by_assignee(self, assignee: "TeamMember") -> Self:
-        """Filter by assignee user."""
-        return self.filter(assignee=assignee)
-
-    # TODO use selector
-    def filter_by_section_pks(
-        self,
-        section_pks: Pks,
-    ) -> Self:
-        """Filter by section pks."""
-        return self.filter(
-            section__pk__in=section_pks,
-        )
-
-    # TODO use selector
-    def filter_by_project(self, project: "Project") -> Self:
-        """Filter by tasks contained in project."""
-        return self.filter(
-            section__project=project,
-        )
 
 
 class Task(TitleDescriptionModel, BaseModel):
     """Task, belongs to section."""
 
-    workspace = models.ForeignKey[Workspace](
-        Workspace,
+    workspace = models.ForeignKey["Workspace"](
+        "workspace.Workspace",
         on_delete=models.CASCADE,
     )
 
@@ -130,10 +80,6 @@ class Task(TitleDescriptionModel, BaseModel):
 
     number = models.PositiveIntegerField()
 
-    objects: ClassVar[TaskQuerySet] = cast(  # type: ignore[assignment]
-        TaskQuerySet, TaskQuerySet.as_manager()
-    )
-
     if TYPE_CHECKING:
         # Related fields
         subtask_set: RelatedManager["SubTask"]
@@ -146,87 +92,10 @@ class Task(TitleDescriptionModel, BaseModel):
         _order: int
         id: int
 
-    def assign_to(self, assignee: Optional["TeamMember"]) -> None:
-        """
-        Assign task to user.
-
-        Saves after done.
-        """
-        # XXX I suppose we can use a database trigger for validation here!
-        if assignee:
-            self.workspace.teammember_set.get(uuid=assignee.uuid)
-        self.assignee = assignee
-        self.save()
-
     def get_next_section(self) -> "Section":
         """Return instance of the next section."""
         next_section: "Section" = self.section.get_next_in_order()
         return next_section
-
-    def set_labels(self, labels: list["Label"]) -> None:
-        """Set labels. Remove if unset."""
-        workspace = self.workspace
-        ws_labels = workspace.label_set
-        # We filter for labels as part of this workspace, to make sure we
-        # don't assign labels from another workspace
-        intersection_qs = ws_labels.filter(
-            id__in=[label.id for label in labels]
-        )
-        with transaction.atomic():
-            intersection = list(intersection_qs)
-            if not len(intersection) == len(labels):
-                logger.warning(
-                    "Some of the labels specified in %s are "
-                    "not part of this workspace",
-                    ", ".join(str(label.uuid) for label in labels),
-                )
-            self.labels.set(intersection)
-
-        # TODO maybe it makes more sense to fire signals from serializers,
-        # not manually patch things like the following...
-        # 2023-11-28: Now that I have a lot of success refactoring into
-        # services, this should be handled in a service
-        post_save.send(sender=Task, instance=self)
-
-    # TODO refactor into service
-    def add_label(self, label: "Label") -> "TaskLabel":
-        """
-        Add a label to this task.
-
-        Returns task label.
-        """
-        from . import (
-            TaskLabel,
-        )
-
-        workspace = self.section.project.workspace
-
-        # XXX can this be a db constraint?
-        # Or done in the serializer?
-        assert label.workspace == workspace
-
-        current_labels = self.labels.all()
-        this_label = self.tasklabel_set.filter(label=label)
-
-        with transaction.atomic():
-            try:
-                return this_label.get()
-            except TaskLabel.DoesNotExist:
-                self.set_labels([*current_labels, label])
-                return self.tasklabel_set.get(label=label)
-
-    def remove_label(self, label: "Label") -> "Label":
-        """
-        Remove a label from this task. Is idempotent.
-
-        Returns label.
-        """
-        labels_without = list(self.labels.exclude(id=label.id))
-
-        with transaction.atomic():
-            self.set_labels(labels_without)
-
-        return label
 
     # TODO we can probably do better than any here
     def save(self, *args: Any, **kwargs: Any) -> None:

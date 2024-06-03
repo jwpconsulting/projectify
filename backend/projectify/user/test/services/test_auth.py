@@ -217,13 +217,24 @@ def test_request_password_reset(
     assert len(mailoutbox) == 1
 
 
-def test_confirm_password_reset(
-    user: User, password: str, faker: Faker
-) -> None:
-    """Test password reset confirmation."""
-    new_password = faker.password()
+@pytest.fixture
+def reset_token(user: User) -> Token:
+    """Create reset token for user."""
+    return user_make_token(user=user, kind="reset_password")
 
-    # First with right email, wrong token
+
+@pytest.fixture
+def new_password(password: str, faker: Faker) -> str:
+    """Return new password for user."""
+    new_password: str = faker.password()
+    assert password != new_password
+    return new_password
+
+
+def test_confirm_password_reset_wrong_token(
+    user: User, password: str, new_password: str
+) -> None:
+    """Test password reset confirmation with right email, wrong token."""
     with pytest.raises(ValidationError) as error:
         user_confirm_password_reset(
             email=user.email,
@@ -233,38 +244,62 @@ def test_confirm_password_reset(
     assert error.match("token is invalid")
     user.refresh_from_db()
     assert user.check_password(password)
-    assert not user.check_password(new_password)
 
-    # Then with right token, wrong email
-    token = user_make_token(user=user, kind="reset_password")
+
+def test_confirm_password_reset_wrong_email(
+    user: User,
+    password: str,
+    new_password: str,
+    faker: Faker,
+    reset_token: Token,
+) -> None:
+    """Test reset with right token, wrong email."""
     with pytest.raises(ValidationError) as error:
         user_confirm_password_reset(
             email=faker.email(),
             new_password=new_password,
-            token=token,
+            token=reset_token,
         )
     assert error.match("email is not recognized")
     user.refresh_from_db()
-    assert not user.check_password(new_password)
+    assert user.check_password(password)
 
-    # Then with right token, right email
+
+def test_confirm_password_reset_right_email(
+    user: User,
+    new_password: str,
+    reset_token: Token,
+) -> None:
+    """Test reset with right token, right email."""
     user_confirm_password_reset(
         email=user.email,
         new_password=new_password,
-        token=token,
+        token=reset_token,
     )
     user.refresh_from_db()
     assert user.check_password(new_password)
 
+
+def test_confirm_password_reset_reuse_token(
+    user: User,
+    new_password: str,
+    faker: Faker,
+    reset_token: Token,
+) -> None:
+    """Test reset when reusing old token."""
+    user_confirm_password_reset(
+        email=user.email,
+        new_password=new_password,
+        token=reset_token,
+    )
     # Then reuse old token, right email
     new_new_password = faker.password()
     with pytest.raises(ValidationError) as error:
         user_confirm_password_reset(
             email=user.email,
             new_password=new_new_password,
-            token=token,
+            token=reset_token,
         )
     assert error.match("token is invalid")
     user.refresh_from_db()
     assert user.check_password(new_password)
-    assert not user.check_password(new_new_password)

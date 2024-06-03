@@ -119,7 +119,8 @@ class TestWorkspace:
         user: User,
     ) -> None:
         """Assert that the user is removed when removing the team member."""
-        task.assign_to(team_member)
+        task.assignee = team_member
+        task.save()
         task.refresh_from_db()
         assert task.assignee == team_member
         workspace.remove_user(user)
