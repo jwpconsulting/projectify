@@ -26,7 +26,7 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
 from django_ratelimit.decorators import ratelimit
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import PolymorphicProxySerializer, extend_schema
 from rest_framework import (
     parsers,
     serializers,
@@ -55,15 +55,23 @@ class UserReadUpdate(views.APIView):
 
     permission_classes = (AllowAny,)
 
-    class UpdateInputSerializer(serializers.ModelSerializer[User]):
-        """Take only preferred_name in."""
+    class AnonymousUserSerializer(serializers.Serializer):
+        """Serialize anonymous user."""
 
-        class Meta:
-            """Meta."""
+        unauthenticated = serializers.ChoiceField(choices=[True])
 
-            fields = ("preferred_name",)
-            model = User
-
+    @extend_schema(
+        responses={
+            200: PolymorphicProxySerializer(
+                "auth_info",
+                [
+                    UserSerializer,
+                    AnonymousUserSerializer,
+                ],
+                None,
+            ),
+        }
+    )
     def get(self, request: Request) -> Response:
         """Handle GET."""
         user = cast(Union[User, AnonymousUser], request.user)
@@ -72,6 +80,24 @@ class UserReadUpdate(views.APIView):
         serializer = UserSerializer(instance=user)
         return Response(data=serializer.data)
 
+    class UserUpdateSerializer(serializers.ModelSerializer[User]):
+        """Take only preferred_name in."""
+
+        class Meta:
+            """Meta."""
+
+            fields = ("preferred_name",)
+            model = User
+
+    @extend_schema(
+        request=UserUpdateSerializer,
+        responses={
+            200: UserSerializer,
+            # TODO annotate
+            400: None,
+            403: None,
+        },
+    )
     def put(self, request: Request) -> Response:
         """Update a user."""
         user = cast(Union[User, AnonymousUser], request.user)
@@ -79,7 +105,7 @@ class UserReadUpdate(views.APIView):
             raise NotAuthenticated(
                 _("Must be authenticated in order to update a user")
             )
-        serializer = self.UpdateInputSerializer(data=request.data)
+        serializer = self.UserUpdateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         user = user_update(
@@ -101,9 +127,24 @@ class ProfilePictureUpload(views.APIView):
 
     parser_classes = (parsers.MultiPartParser,)
 
+    class ProfilePictureUploadSerializer(serializers.Serializer):
+        """Deserialize picture upload."""
+
+        file = serializers.ImageField(required=False)
+
+    @extend_schema(
+        request=ProfilePictureUploadSerializer,
+        responses={
+            204: None,
+            # TODO
+            400: None,
+        },
+    )
     def post(self, request: Request) -> Response:
         """Handle POST."""
-        file_obj = request.data.get("file", None)
+        serializer = self.ProfilePictureUploadSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        file_obj = serializer.validated_data.get("file", None)
         user = request.user
         if file_obj is None:
             user.profile_picture.delete()
@@ -136,6 +177,7 @@ class ChangePassword(views.APIView):
         responses={
             204: None,
             400: ChangePasswordErrorSerializer,
+            429: None,
         },
     )
     @method_decorator(ratelimit(key="user", rate="5/h"))
@@ -159,17 +201,28 @@ class ChangePassword(views.APIView):
 class RequestEmailAddressUpdate(views.APIView):
     """Request an email address update."""
 
-    class InputSerializer(serializers.Serializer):
+    class RequestEmailAddressUpdateSerializer(serializers.Serializer):
         """Accept new email."""
 
         password = serializers.CharField()
         new_email = serializers.EmailField()
 
+    @extend_schema(
+        request=RequestEmailAddressUpdateSerializer,
+        responses={
+            204: None,
+            # TODO
+            400: None,
+            429: None,
+        },
+    )
     @method_decorator(ratelimit(key="user", rate="5/h"))
     def post(self, request: Request) -> Response:
         """Handle POST."""
         user = request.user
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.RequestEmailAddressUpdateSerializer(
+            data=request.data
+        )
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         user_request_email_address_update(
@@ -183,15 +236,25 @@ class RequestEmailAddressUpdate(views.APIView):
 class ConfirmEmailAddressUpdate(views.APIView):
     """Confirm an email address update."""
 
-    class InputSerializer(serializers.Serializer):
+    class ConfirmEmailAddressUpdateSerializer(serializers.Serializer):
         """Accept new email."""
 
         confirmation_token = serializers.CharField()
 
+    @extend_schema(
+        request=ConfirmEmailAddressUpdateSerializer,
+        responses={
+            204: None,
+            # TODO
+            400: None,
+        },
+    )
     def post(self, request: Request) -> Response:
         """Handle POST."""
         user = request.user
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.ConfirmEmailAddressUpdateSerializer(
+            data=request.data
+        )
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         user_confirm_email_address_update(

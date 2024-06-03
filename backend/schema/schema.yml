@@ -16,6 +16,8 @@ paths:
       responses:
         '200':
           description: No response body
+        '400':
+          description: No response body
   /corporate/workspace/{workspace_uuid}/create-billing-portal-session:
     post:
       operationId: corporate_workspace_create_billing_portal_session_create
@@ -33,6 +35,12 @@ paths:
       - cookieAuth: []
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceBillingPortalSessionCreateOutput'
+          description: ''
+        '404':
           description: No response body
   /corporate/workspace/{workspace_uuid}/create-checkout-session:
     post:
@@ -47,10 +55,30 @@ paths:
         required: true
       tags:
       - corporate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceCheckoutSessionCreateInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WorkspaceCheckoutSessionCreateInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WorkspaceCheckoutSessionCreateInput'
+        required: true
       security:
       - cookieAuth: []
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceCheckoutSessionCreateOutput'
+          description: ''
+        '400':
+          description: No response body
+        '404':
           description: No response body
   /corporate/workspace/{workspace_uuid}/customer:
     get:
@@ -69,7 +97,11 @@ paths:
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+          description: ''
   /corporate/workspace/{workspace_uuid}/redeem-coupon:
     post:
       operationId: corporate_workspace_redeem_coupon_create
@@ -83,10 +115,24 @@ paths:
         required: true
       tags:
       - corporate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CouponRedeem'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CouponRedeem'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CouponRedeem'
+        required: true
       security:
       - cookieAuth: []
       responses:
-        '200':
+        '204':
+          description: No response body
+        '400':
           description: No response body
   /user/user/change-password:
     post:
@@ -117,17 +163,33 @@ paths:
               schema:
                 $ref: '#/components/schemas/ChangePasswordError'
           description: ''
+        '429':
+          description: No response body
   /user/user/confirm-email:
     post:
       operationId: user_user_confirm_email_create
       description: Handle POST.
       tags:
       - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmEmail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ConfirmEmail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ConfirmEmail'
+        required: true
       security:
       - cookieAuth: []
       - {}
       responses:
-        '200':
+        '204':
+          description: No response body
+        '400':
           description: No response body
   /user/user/confirm-password-reset:
     post:
@@ -135,11 +197,25 @@ paths:
       description: Handle POST.
       tags:
       - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+        required: true
       security:
       - cookieAuth: []
       - {}
       responses:
-        '200':
+        '204':
+          description: No response body
+        '400':
           description: No response body
   /user/user/current-user:
     get:
@@ -152,17 +228,40 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/auth_info'
+          description: ''
     put:
       operationId: user_user_current_user_update
       description: Update a user.
       tags:
       - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
       security:
       - cookieAuth: []
       - {}
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+        '400':
+          description: No response body
+        '403':
           description: No response body
   /user/user/email-address-update/confirm:
     post:
@@ -170,10 +269,24 @@ paths:
       description: Handle POST.
       tags:
       - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmEmailAddressUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ConfirmEmailAddressUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ConfirmEmailAddressUpdate'
+        required: true
       security:
       - cookieAuth: []
       responses:
-        '200':
+        '204':
+          description: No response body
+        '400':
           description: No response body
   /user/user/email-address-update/request:
     post:
@@ -181,10 +294,26 @@ paths:
       description: Handle POST.
       tags:
       - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestEmailAddressUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RequestEmailAddressUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RequestEmailAddressUpdate'
+        required: true
       security:
       - cookieAuth: []
       responses:
-        '200':
+        '204':
+          description: No response body
+        '400':
+          description: No response body
+        '429':
           description: No response body
   /user/user/log-in:
     post:
@@ -192,11 +321,31 @@ paths:
       description: Handle POST.
       tags:
       - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogIn'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LogIn'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LogIn'
+        required: true
       security:
       - cookieAuth: []
       - {}
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+        '400':
+          description: No response body
+        '429':
           description: No response body
   /user/user/log-out:
     post:
@@ -207,7 +356,7 @@ paths:
       security:
       - cookieAuth: []
       responses:
-        '200':
+        '204':
           description: No response body
   /user/user/password-policy:
     get:
@@ -231,10 +380,17 @@ paths:
       description: Handle POST.
       tags:
       - user
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProfilePictureUpload'
       security:
       - cookieAuth: []
       responses:
-        '200':
+        '204':
+          description: No response body
+        '400':
           description: No response body
   /user/user/request-password-reset:
     post:
@@ -242,11 +398,27 @@ paths:
       description: Handle POST.
       tags:
       - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordResetRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordResetRequest'
+        required: true
       security:
       - cookieAuth: []
       - {}
       responses:
-        '200':
+        '204':
+          description: No response body
+        '400':
+          description: No response body
+        '429':
           description: No response body
   /user/user/sign-up:
     post:
@@ -286,10 +458,28 @@ paths:
       description: Create the label.
       tags:
       - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LabelCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LabelCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LabelCreate'
+        required: true
       security:
       - cookieAuth: []
       responses:
-        '200':
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LabelBase'
+          description: ''
+        '400':
           description: No response body
   /workspace/label/{label_uuid}:
     put:
@@ -304,10 +494,30 @@ paths:
         required: true
       tags:
       - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LabelUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LabelUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LabelUpdate'
+        required: true
       security:
       - cookieAuth: []
       responses:
-        '200':
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LabelBase'
+          description: ''
+        '400':
+          description: No response body
+        '404':
           description: No response body
     delete:
       operationId: workspace_label_destroy
@@ -325,6 +535,8 @@ paths:
       - cookieAuth: []
       responses:
         '204':
+          description: No response body
+        '404':
           description: No response body
   /workspace/project/:
     post:
@@ -820,6 +1032,12 @@ paths:
       - cookieAuth: []
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamMemberBase'
+          description: ''
+        '404':
           description: No response body
     put:
       operationId: workspace_team_member_update
@@ -833,10 +1051,29 @@ paths:
         required: true
       tags:
       - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamMemberUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TeamMemberUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TeamMemberUpdate'
       security:
       - cookieAuth: []
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamMemberUpdate'
+          description: ''
+        '400':
+          description: No response body
+        '404':
           description: No response body
     delete:
       operationId: workspace_team_member_destroy
@@ -854,6 +1091,8 @@ paths:
       - cookieAuth: []
       responses:
         '204':
+          description: No response body
+        '404':
           description: No response body
   /workspace/workspace/:
     post:
@@ -1089,6 +1328,14 @@ paths:
           description: ''
 components:
   schemas:
+    AnonymousUser:
+      type: object
+      description: Serialize anonymous user.
+      properties:
+        unauthenticated:
+          $ref: '#/components/schemas/UnauthenticatedEnum'
+      required:
+      - unauthenticated
     ChangePassword:
       type: object
       description: Accept old and new password.
@@ -1140,6 +1387,50 @@ components:
       - modified
       - text
       - uuid
+    ConfirmEmail:
+      type: object
+      description: Take email and password.
+      properties:
+        email:
+          type: string
+          format: email
+        token:
+          type: string
+      required:
+      - email
+      - token
+    ConfirmEmailAddressUpdate:
+      type: object
+      description: Accept new email.
+      properties:
+        confirmation_token:
+          type: string
+      required:
+      - confirmation_token
+    CouponRedeem:
+      type: object
+      description: Serializer that takes in a Coupon's code.
+      properties:
+        code:
+          type: string
+      required:
+      - code
+    Customer:
+      type: object
+      description: Serializer for customer.
+      properties:
+        seats:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        subscription_status:
+          $ref: '#/components/schemas/SubscriptionStatusEnum'
+      required:
+      - uuid
     InviteUserToWorkspace:
       type: object
       description: Accept email.
@@ -1170,6 +1461,54 @@ components:
       - color
       - name
       - uuid
+    LabelCreate:
+      type: object
+      description: Serializer for label creation.
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        color:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Color index
+        workspace_uuid:
+          type: string
+          format: uuid
+      required:
+      - color
+      - name
+      - workspace_uuid
+    LabelUpdate:
+      type: object
+      description: Serializer for Label update.
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        color:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Color index
+      required:
+      - color
+      - name
+    LogIn:
+      type: object
+      description: Take email and password.
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required:
+      - email
+      - password
     PasswordPolicies:
       type: object
       description: Serialize password policies.
@@ -1180,6 +1519,37 @@ components:
             type: string
       required:
       - policies
+    PasswordResetConfirm:
+      type: object
+      description: Take email, token and a new password.
+      properties:
+        email:
+          type: string
+          format: email
+        token:
+          type: string
+        new_password:
+          type: string
+      required:
+      - email
+      - new_password
+      - token
+    PasswordResetRequest:
+      type: object
+      description: Take an email address.
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+      - email
+    ProfilePictureUpload:
+      type: object
+      description: Deserialize picture upload.
+      properties:
+        file:
+          type: string
+          format: uri
     ProjectArchive:
       type: object
       description: Accept the desired archival status.
@@ -1445,6 +1815,18 @@ components:
           description: Due date for this workspace board
       required:
       - title
+    RequestEmailAddressUpdate:
+      type: object
+      description: Accept new email.
+      properties:
+        password:
+          type: string
+        new_email:
+          type: string
+          format: email
+      required:
+      - new_email
+      - password
     RoleEnum:
       enum:
       - OBSERVER
@@ -1683,6 +2065,18 @@ components:
           description: Designate whether this sub task is done
       required:
       - title
+    SubscriptionStatusEnum:
+      enum:
+      - ACTIVE
+      - UNPAID
+      - CANCELLED
+      - CUSTOM
+      type: string
+      description: |-
+        * `ACTIVE` - Active
+        * `UNPAID` - Unpaid
+        * `CANCELLED` - Cancelled
+        * `CUSTOM` - Custom subscription
     TaskCreate:
       type: object
       description: Serializer for creating tasks.
@@ -1955,6 +2349,21 @@ components:
       required:
       - created
       - email
+    TeamMemberUpdate:
+      type: object
+      description: Serializer for PUT updates.
+      properties:
+        job_title:
+          type: string
+          nullable: true
+          maxLength: 255
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+    UnauthenticatedEnum:
+      enum:
+      - true
+      type: boolean
+      description: '* `True` - True'
     UninviteUserFromWorkspace:
       type: object
       description: Accept email.
@@ -1985,6 +2394,14 @@ components:
       - email
       - preferred_name
       - profile_picture
+    UserUpdate:
+      type: object
+      description: Take only preferred_name in.
+      properties:
+        preferred_name:
+          type: string
+          nullable: true
+          maxLength: 255
     UuidObject:
       type: object
       description: Deserialize the UUID for a any object with a UUID.
@@ -2028,6 +2445,33 @@ components:
       - picture
       - title
       - uuid
+    WorkspaceBillingPortalSessionCreateOutput:
+      type: object
+      description: Return the url to a billing portal session.
+      properties:
+        url:
+          type: string
+          format: uri
+      required:
+      - url
+    WorkspaceCheckoutSessionCreateInput:
+      type: object
+      description: Accept a number of seats to be added into checkout.
+      properties:
+        seats:
+          type: integer
+          minimum: 1
+      required:
+      - seats
+    WorkspaceCheckoutSessionCreateOutput:
+      type: object
+      description: Return the url to a checkout session.
+      properties:
+        url:
+          type: string
+          format: uri
+      required:
+      - url
     WorkspaceCreate:
       type: object
       description: Accept title, description.
@@ -2166,6 +2610,10 @@ components:
           nullable: true
       required:
       - title
+    auth_info:
+      oneOf:
+      - $ref: '#/components/schemas/User'
+      - $ref: '#/components/schemas/AnonymousUser'
   securitySchemes:
     cookieAuth:
       type: apiKey

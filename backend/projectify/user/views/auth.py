@@ -47,6 +47,12 @@ from projectify.user.services.auth import (
 class LogOut(views.APIView):
     """Log a user out."""
 
+    @extend_schema(
+        request=None,
+        responses={
+            204: None,
+        },
+    )
     def post(self, request: Request) -> Response:
         """Handle POST."""
         user_log_out(request=request)
@@ -130,15 +136,23 @@ class ConfirmEmail(views.APIView):
 
     permission_classes = (AllowAny,)
 
-    class InputSerializer(serializers.Serializer):
+    class ConfirmEmailSerializer(serializers.Serializer):
         """Take email and password."""
 
         email = serializers.EmailField()
         token = serializers.CharField()
 
+    @extend_schema(
+        request=ConfirmEmailSerializer,
+        responses={
+            204: None,
+            # TODO annotate
+            400: None,
+        },
+    )
     def post(self, request: Request) -> Response:
         """Handle POST."""
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.ConfirmEmailSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         user_confirm_email(
@@ -153,12 +167,20 @@ class LogIn(views.APIView):
 
     permission_classes = (AllowAny,)
 
-    class InputSerializer(serializers.Serializer):
+    class LogInSerializer(serializers.Serializer):
         """Take email and password."""
 
         email = serializers.EmailField()
         password = serializers.CharField()
 
+    @extend_schema(
+        request=LogInSerializer,
+        responses={
+            200: UserSerializer,
+            400: None,
+            429: None,
+        },
+    )
     @method_decorator(
         ratelimit(
             group="projectify.user.views.auth.login.post",
@@ -175,7 +197,7 @@ class LogIn(views.APIView):
     )
     def post(self, request: Request) -> Response:
         """Handle POST."""
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.LogInSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         try:
@@ -208,17 +230,26 @@ class PasswordResetRequest(views.APIView):
 
     permission_classes = (AllowAny,)
 
-    class InputSerializer(serializers.Serializer):
+    class PasswordResetRequestSerializer(serializers.Serializer):
         """Take an email address."""
 
         email = serializers.EmailField()
 
+    @extend_schema(
+        request=PasswordResetRequestSerializer,
+        responses={
+            204: None,
+            # TODO annotate
+            400: None,
+            429: None,
+        },
+    )
     @method_decorator(ratelimit(key="post:email", rate="5/h"))
     @method_decorator(ratelimit(key="ip", rate="5/h"))
     @method_decorator(ratelimit(key="ip", rate="1/m"))
     def post(self, request: Request) -> Response:
         """Handle POST."""
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.PasswordResetRequestSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         user_request_password_reset(email=data["email"])
@@ -230,16 +261,24 @@ class PasswordResetConfirm(views.APIView):
 
     permission_classes = (AllowAny,)
 
-    class InputSerializer(serializers.Serializer):
+    class PasswordResetConfirmSerializer(serializers.Serializer):
         """Take email, token and a new password."""
 
         email = serializers.EmailField()
         token = serializers.CharField()
         new_password = serializers.CharField()
 
+    @extend_schema(
+        request=PasswordResetConfirmSerializer,
+        responses={
+            204: None,
+            # TODO annotate
+            400: None,
+        },
+    )
     def post(self, request: Request) -> Response:
         """Handle POST."""
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.PasswordResetConfirmSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         user_confirm_password_reset(

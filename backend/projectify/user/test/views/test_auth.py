@@ -197,6 +197,7 @@ class TestLogIn:
         """Return URL to this view."""
         return reverse("user:auth:log-in")
 
+    # TODO test rate limiting
     def test_authenticated_user(
         self,
         rest_client: APIClient,

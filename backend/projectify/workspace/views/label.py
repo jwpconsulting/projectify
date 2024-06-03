@@ -20,10 +20,15 @@ from uuid import UUID
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 
+from drf_spectacular.utils import extend_schema
 from rest_framework import serializers
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
+from rest_framework.status import (
+    HTTP_200_OK,
+    HTTP_201_CREATED,
+    HTTP_204_NO_CONTENT,
+)
 from rest_framework.views import APIView
 
 from projectify.workspace.models.label import Label
@@ -42,7 +47,7 @@ from projectify.workspace.services.label import (
 class LabelCreate(APIView):
     """View for creating labels."""
 
-    class InputSerializer(serializers.ModelSerializer[Label]):
+    class LabelCreateSerializer(serializers.ModelSerializer[Label]):
         """Serializer for label creation."""
 
         workspace_uuid = serializers.UUIDField()
@@ -53,10 +58,18 @@ class LabelCreate(APIView):
             fields = "name", "color", "workspace_uuid"
             model = Label
 
+    @extend_schema(
+        request=LabelCreateSerializer,
+        responses={
+            201: LabelBaseSerializer,
+            # TODO
+            400: None,
+        },
+    )
     def post(self, request: Request) -> Response:
         """Create the label."""
         user = request.user
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.LabelCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         workspace_uuid: UUID = data["workspace_uuid"]
@@ -79,13 +92,21 @@ class LabelCreate(APIView):
             who=user,
         )
         output_serializer = LabelBaseSerializer(instance=label)
-        return Response(output_serializer.data, status=201)
+        return Response(output_serializer.data, status=HTTP_201_CREATED)
 
 
 class LabelUpdateDelete(APIView):
     """View for updating labels."""
 
-    class InputSerializer(serializers.ModelSerializer[Label]):
+    def get_label(self, request: Request, label_uuid: UUID) -> Label:
+        """Get the requested label."""
+        # TODO throw NotFound here
+        label_qs = Label.objects.filter_for_user_and_uuid(
+            user=request.user, uuid=label_uuid
+        )
+        return get_object_or_404(label_qs)
+
+    class LabelUpdateSerializer(serializers.ModelSerializer[Label]):
         """Serializer for Label update."""
 
         class Meta:
@@ -94,17 +115,19 @@ class LabelUpdateDelete(APIView):
             fields = "name", "color"
             model = Label
 
-    def get_label(self, request: Request, label_uuid: UUID) -> Label:
-        """Get the requested label."""
-        label_qs = Label.objects.filter_for_user_and_uuid(
-            user=request.user, uuid=label_uuid
-        )
-        return get_object_or_404(label_qs)
-
+    @extend_schema(
+        request=LabelUpdateSerializer,
+        responses={
+            201: LabelBaseSerializer,
+            # TODO
+            400: None,
+            404: None,
+        },
+    )
     def put(self, request: Request, label_uuid: UUID) -> Response:
         """Handle PUT."""
         label = self.get_label(request, label_uuid)
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.LabelUpdateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         label = label_update(
@@ -116,6 +139,12 @@ class LabelUpdateDelete(APIView):
         output_serializer = LabelBaseSerializer(instance=label)
         return Response(data=output_serializer.data, status=HTTP_200_OK)
 
+    @extend_schema(
+        responses={
+            204: None,
+            404: None,
+        },
+    )
     def delete(self, request: Request, label_uuid: UUID) -> Response:
         """Handle DELETE."""
         label = self.get_label(request, label_uuid)
