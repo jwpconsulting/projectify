@@ -17,14 +17,11 @@
  */
 import { readonly, writable } from "svelte/store";
 
-import {
-    getUser,
-    updateUser,
-    updateProfilePicture,
-} from "$lib/repository/user";
+import { updateUser, updateProfilePicture } from "$lib/repository/user";
 import * as userRepository from "$lib/repository/user";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { User } from "$lib/types/user";
+import { openApiClient } from "$lib/repository/util";
 
 const _user = writable<User | undefined>(undefined);
 export const currentUser = readonly(_user);
@@ -50,10 +47,15 @@ export async function logOut(repositoryContext: RepositoryContext) {
     _user.set(undefined);
 }
 
-export async function fetchUser(
-    repositoryContext: RepositoryContext,
-): Promise<User | undefined> {
-    const userData = await getUser(repositoryContext);
+export async function fetchUser(): Promise<User | undefined> {
+    const { response, data } = await openApiClient.GET(
+        "/user/user/current-user",
+    );
+    if (data === undefined) {
+        console.error(await response.json());
+        throw new Error("Could not load user");
+    }
+    const userData = "unauthenticated" in data ? undefined : data;
     _user.set(userData);
     return userData;
 }

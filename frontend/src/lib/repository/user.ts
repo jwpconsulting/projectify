@@ -17,8 +17,6 @@
  */
 import vars from "$lib/env";
 import {
-    failOrOk,
-    getWithCredentialsJson,
     postWithCredentialsJson,
     putWithCredentialsJson,
 } from "$lib/repository/util";
@@ -29,24 +27,6 @@ import { uploadImage } from "$lib/utils/file";
 import type { ApiResponse } from "./types";
 
 // Create
-// Read
-export async function getUser(
-    repositoryContext: RepositoryContext,
-): Promise<User | undefined> {
-    type CurrentUser = User | { unauthenticated: true };
-    const user = failOrOk(
-        await getWithCredentialsJson<CurrentUser>(
-            `/user/user/current-user`,
-            repositoryContext,
-        ),
-    );
-    // Perhaps we could include "unauthenticated": false
-    // for a logged in user as well
-    if ("unauthenticated" in user) {
-        return undefined;
-    }
-    return user;
-}
 // Update
 export async function updateUser(
     user: Pick<User, "preferred_name">,

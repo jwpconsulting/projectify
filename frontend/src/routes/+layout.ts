@@ -35,7 +35,7 @@ interface Data {
 export async function load({ fetch }: LayoutLoadEvent): Promise<Data> {
     if (browser) {
         await Promise.all([locale.set(window.navigator.language)]);
-        return { user: fetchUser({ fetch }) };
+        return { user: fetchUser() };
     }
     overrideClient(fetch);
     // TODO add waitLocale await here
