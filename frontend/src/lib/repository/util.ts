@@ -71,30 +71,33 @@ const baseUrl = vars.API_ENDPOINT;
 // TODO consider adding content type and accept here? Perhaps based on
 // if GET or else
 
+const csrfMiddleWare: Middleware = {
+    onRequest(request: Request) {
+        const csrftoken = getCookie("csrftoken");
+        if (csrftoken === undefined) {
+            console.warn("No csrf token found");
+            return request;
+        }
+        console.log(request);
+        request.headers.set("X-CSRFToken", csrftoken);
+        return request;
+    },
+};
+
 export function overrideClient(fetch: typeof global.fetch) {
     openApiClient = createClientCustom(fetch);
 }
 
 function createClientCustom(fetch?: typeof global.fetch) {
-    return createClient<paths>({
+    const client = createClient<paths>({
         baseUrl,
         credentials: "include",
         fetch,
     });
+    client.use(csrfMiddleWare);
+    return client;
 }
 export let openApiClient = createClientCustom();
-
-const csrfMiddleWare: Middleware = {
-    onRequest(request: Request) {
-        const csrftoken = getCookie("csrftoken");
-        if (csrftoken === undefined) {
-            return request;
-        }
-        request.headers.set("X-CSRFToken", csrftoken);
-        return request;
-    },
-};
-openApiClient.use(csrfMiddleWare);
 
 async function fetchResponse<T, E = unknown>(
     url: string,
