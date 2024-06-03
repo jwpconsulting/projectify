@@ -162,27 +162,6 @@ class TestTask:
         assert task.labels.count() == 0
         assert list(task.labels.values_list("id", flat=True)) == []
 
-    def test_add_label(self, task: models.Task, label: models.Label) -> None:
-        """Test adding a label."""
-        assert task.tasklabel_set.count() == 0
-        task.add_label(label)
-        assert task.tasklabel_set.count() == 1
-        # This is idempotent
-        task.add_label(label)
-        assert task.tasklabel_set.count() == 1
-
-    def test_remove_label(
-        self, task: models.Task, label: models.Label
-    ) -> None:
-        """Test removing a label."""
-        task.add_label(label)
-        assert task.tasklabel_set.count() == 1
-        task.remove_label(label)
-        assert task.tasklabel_set.count() == 0
-        # This is idempotent
-        task.remove_label(label)
-        assert task.tasklabel_set.count() == 0
-
     def test_task_number(
         self, task: models.Task, other_task: models.Task
     ) -> None:

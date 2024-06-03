@@ -147,46 +147,6 @@ class Task(TitleDescriptionModel, BaseModel):
         # services, this should be handled in a service
         post_save.send(sender=Task, instance=self)
 
-    # TODO refactor into service
-    def add_label(self, label: "Label") -> "TaskLabel":
-        """
-        Add a label to this task.
-
-        Returns task label.
-        """
-        from . import (
-            TaskLabel,
-        )
-
-        workspace = self.section.project.workspace
-
-        # XXX can this be a db constraint?
-        # Or done in the serializer?
-        assert label.workspace == workspace
-
-        current_labels = self.labels.all()
-        this_label = self.tasklabel_set.filter(label=label)
-
-        with transaction.atomic():
-            try:
-                return this_label.get()
-            except TaskLabel.DoesNotExist:
-                self.set_labels([*current_labels, label])
-                return self.tasklabel_set.get(label=label)
-
-    def remove_label(self, label: "Label") -> "Label":
-        """
-        Remove a label from this task. Is idempotent.
-
-        Returns label.
-        """
-        labels_without = list(self.labels.exclude(id=label.id))
-
-        with transaction.atomic():
-            self.set_labels(labels_without)
-
-        return label
-
     # TODO we can probably do better than any here
     def save(self, *args: Any, **kwargs: Any) -> None:
         """Override save to add task number."""

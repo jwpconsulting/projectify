@@ -388,7 +388,8 @@ def labels(workspace: Workspace, team_member: TeamMember) -> list[Label]:
 def task_label(task: models.Task, label: models.Label) -> models.TaskLabel:
     """Return a label."""
     # TODO we will use a task_add_label service here in the future
-    return task.add_label(label)
+    task.labels.add(label)
+    return models.TaskLabel.objects.get(task=task)
 
 
 @pytest.fixture
