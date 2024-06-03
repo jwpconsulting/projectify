@@ -660,6 +660,12 @@ paths:
       - cookieAuth: []
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDetail'
+          description: ''
+        '404':
           description: No response body
     put:
       operationId: workspace_task_update
@@ -700,6 +706,8 @@ paths:
           description: ''
         '400':
           description: No response body
+        '404':
+          description: No response body
     delete:
       operationId: workspace_task_destroy
       description: Delete task.
@@ -717,6 +725,8 @@ paths:
       responses:
         '204':
           description: No response body
+        '404':
+          description: No response body
   /workspace/task/{task_uuid}/move-after-task:
     post:
       operationId: workspace_task_move_after_task_create
@@ -730,10 +740,30 @@ paths:
         required: true
       tags:
       - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskMoveAfterTask'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TaskMoveAfterTask'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TaskMoveAfterTask'
+        required: true
       security:
       - cookieAuth: []
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDetail'
+          description: ''
+        '400':
+          description: No response body
+        '404':
           description: No response body
   /workspace/task/{task_uuid}/move-to-section:
     post:
@@ -748,10 +778,30 @@ paths:
         required: true
       tags:
       - workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskMoveToSection'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TaskMoveToSection'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TaskMoveToSection'
+        required: true
       security:
       - cookieAuth: []
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDetail'
+          description: ''
+        '400':
+          description: No response body
+        '404':
           description: No response body
   /workspace/team-member/{team_member_uuid}:
     get:
@@ -972,6 +1022,11 @@ paths:
         required: true
       tags:
       - workspace
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WorkspacePictureUpload'
       security:
       - cookieAuth: []
       responses:
@@ -1741,6 +1796,24 @@ components:
       - sub_tasks
       - title
       - uuid
+    TaskMoveAfterTask:
+      type: object
+      description: Accept a task uuid after which this task should be moved.
+      properties:
+        task_uuid:
+          type: string
+          format: uuid
+      required:
+      - task_uuid
+    TaskMoveToSection:
+      type: object
+      description: Accept the target section uuid.
+      properties:
+        section_uuid:
+          type: string
+          format: uuid
+      required:
+      - section_uuid
     TaskUpdate:
       type: object
       description: Serializer for updating tasks.
@@ -2032,6 +2105,13 @@ components:
       - team_members
       - title
       - uuid
+    WorkspacePictureUpload:
+      type: object
+      description: Deserialize an image attachment.
+      properties:
+        file:
+          type: string
+          format: uri
     WorkspaceQuota:
       type: object
       description: Serializer quota.

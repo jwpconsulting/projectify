@@ -125,6 +125,12 @@ class TaskCreate(APIView):
 class TaskRetrieveUpdateDelete(APIView):
     """Retrieve a task."""
 
+    @extend_schema(
+        responses={
+            200: TaskDetailSerializer,
+            404: None,
+        },
+    )
     def get(self, request: Request, task_uuid: UUID) -> Response:
         """Handle GET."""
         instance = get_object(request, task_uuid)
@@ -137,6 +143,7 @@ class TaskRetrieveUpdateDelete(APIView):
             200: TaskDetailSerializer,
             # TODO specify error format here
             400: None,
+            404: None,
         },
     )
     def put(self, request: Request, task_uuid: UUID) -> Response:
@@ -185,6 +192,12 @@ class TaskRetrieveUpdateDelete(APIView):
             status=status.HTTP_200_OK, data=response_serializer.data
         )
 
+    @extend_schema(
+        responses={
+            204: None,
+            404: None,
+        },
+    )
     def delete(self, request: Request, task_uuid: UUID) -> Response:
         """Delete task."""
         instance = get_object(request, task_uuid)
@@ -196,15 +209,24 @@ class TaskRetrieveUpdateDelete(APIView):
 class TaskMoveToSection(APIView):
     """Move a task to the beginning of a section."""
 
-    class InputSerializer(serializers.Serializer):
+    class TaskMoveToSectionSerializer(serializers.Serializer):
         """Accept the target section uuid."""
 
         section_uuid = serializers.UUIDField()
 
+    @extend_schema(
+        request=TaskMoveToSectionSerializer,
+        responses={
+            200: TaskDetailSerializer,
+            # TODO annotate error
+            400: None,
+            404: None,
+        },
+    )
     def post(self, request: Request, task_uuid: UUID) -> Response:
         """Process the request."""
         user = request.user
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.TaskMoveToSectionSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         task = task_find_by_task_uuid(who=user, task_uuid=task_uuid)
@@ -231,15 +253,24 @@ class TaskMoveToSection(APIView):
 class TaskMoveAfterTask(APIView):
     """Move a task right behind another task."""
 
-    class InputSerializer(serializers.Serializer):
+    class TaskMoveAfterTaskSerializer(serializers.Serializer):
         """Accept a task uuid after which this task should be moved."""
 
         task_uuid = serializers.UUIDField()
 
+    @extend_schema(
+        request=TaskMoveAfterTaskSerializer,
+        responses={
+            200: TaskDetailSerializer,
+            # TODO annotate error
+            400: None,
+            404: None,
+        },
+    )
     def post(self, request: Request, task_uuid: UUID) -> Response:
         """Process the request."""
         user = request.user
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.TaskMoveAfterTaskSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         task = task_find_by_task_uuid(who=user, task_uuid=task_uuid)

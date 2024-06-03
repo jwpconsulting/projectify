@@ -183,7 +183,13 @@ class WorkspacePictureUploadView(views.APIView):
 
     parser_classes = (parsers.MultiPartParser,)
 
+    class WorkspacePictureUploadSerializer(serializers.Serializer):
+        """Deserialize an image attachment."""
+
+        file = serializers.ImageField(required=False)
+
     @extend_schema(
+        request=WorkspacePictureUploadSerializer,
         responses={204: None, 400: None, 404: None},
     )
     def post(self, request: Request, workspace_uuid: UUID) -> Response:
@@ -196,7 +202,9 @@ class WorkspacePictureUploadView(views.APIView):
                 _("Could not find workspace with UUID for picture upload")
             )
 
-        file_obj = request.data.get("file")
+        serializer = self.WorkspacePictureUploadSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        file_obj = serializer.validated_data.get("file")
         if file_obj is None:
             workspace.picture.delete()
         else:
