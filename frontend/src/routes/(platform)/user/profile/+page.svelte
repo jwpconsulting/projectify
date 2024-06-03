@@ -30,42 +30,48 @@
     import type { PageData } from "./$types";
 
     import { beforeNavigate } from "$app/navigation";
+    import { openApiClient } from "$lib/repository/util";
 
     export let data: PageData;
 
     let { user } = data;
-    let preferredName = user.preferred_name ?? undefined;
-
-    $: hasProfilePicture =
-        imageFile !== undefined || user.profile_picture !== null;
+    let preferred_name = user.preferred_name;
 
     let state: "viewing" | "editing" | "saving" = "viewing";
-    let imageFile: File | undefined = undefined;
+    let picture:
+        | { kind: "keep" }
+        | { kind: "clear" }
+        | { kind: "update"; file: File; src: string } = { kind: "keep" };
 
     function fileSelected(file: File, src: string) {
         startEditing();
-        imageFile = file;
-        user.profile_picture = src;
+        picture = { kind: "update", file, src };
     }
 
     async function save() {
         state = "saving";
-        const picture =
-            imageFile !== undefined
-                ? { kind: "update" as const, imageFile }
-                : user.profile_picture === null
-                ? { kind: "clear" as const }
-                : { kind: "keep" as const };
+        if (picture.kind !== "keep") {
+            const formData = new FormData();
+            if (picture.kind === "update") {
+                formData.append("file", picture.file);
+            }
+            const { response, error } = await openApiClient.POST(
+                "/user/user/profile-picture/upload",
+                { body: {}, bodySerializer: () => formData },
+            );
+            if (!response.ok) {
+                console.error(error);
+                throw new Error("Error when upload picture");
+            }
+        }
         // TODO handle validation errors
-        user = await updateUserProfile(preferredName, picture, { fetch });
-        imageFile = undefined;
+        user = await updateUserProfile(preferred_name);
         finishEditing();
     }
 
     function removePicture() {
         startEditing();
-        user.profile_picture = null;
-        imageFile = undefined;
+        picture = { kind: "clear" };
     }
 
     function startEditing() {
@@ -75,13 +81,17 @@
     function finishEditing() {
         // TODO show confirmation flash when saving complete Justus
         // 2023-08-03
-        state = "viewing";
+        resetForm();
     }
 
     function cancelEditing() {
+        resetForm();
+    }
+
+    function resetForm() {
         state = "viewing";
-        preferredName = user.preferred_name ?? undefined;
-        user = data.user;
+        picture = { kind: "keep" };
+        preferred_name = user.preferred_name;
     }
 
     beforeNavigate((navigation: BeforeNavigate) => {
@@ -94,12 +104,32 @@
             }
         }
     });
+
+    $: renderProfilePicture = {
+        ...user,
+        preferred_name,
+        profile_picture:
+            picture.kind === "keep"
+                ? user.profile_picture
+                : picture.kind === "clear"
+                ? null
+                : picture.src,
+    };
+
+    $: console.log(renderProfilePicture);
+
+    $: canRemoveProfilePicture =
+        user.profile_picture !== null &&
+        ["keep", "update"].includes(picture.kind);
 </script>
 
 <form class="flex flex-col gap-10" on:submit|preventDefault={save}>
     <figure class="flex flex-col items-center gap-7">
         <div class="relative flex w-max flex-col">
-            <AvatarVariant size="large" content={{ kind: "single", user }} />
+            <AvatarVariant
+                size="large"
+                content={{ kind: "single", user: renderProfilePicture }}
+            />
             <div class="absolute -bottom-1/4 -right-1/4">
                 <UploadAvatar
                     {fileSelected}
@@ -117,7 +147,7 @@
         action={{
             kind: "button",
             action: removePicture,
-            disabled: !hasProfilePicture || state === "saving",
+            disabled: !canRemoveProfilePicture,
         }}
         size="medium"
         color="blue"
@@ -150,7 +180,7 @@
                 "user-account-settings.overview.preferred-name.placeholder",
             )}
             name="preferred-name"
-            bind:value={preferredName}
+            bind:value={preferred_name}
             style={{ inputType: "text" }}
             readonly={state !== "editing"}
             onClick={startEditing}

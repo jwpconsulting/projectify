@@ -28,11 +28,12 @@
 
     export let data: PageData;
 
-    let preferredName: string | undefined =
-        ($currentUser ?? data.user).preferred_name ?? undefined;
+    let preferredName: PageData["user"]["preferred_name"] = (
+        $currentUser ?? data.user
+    ).preferred_name;
 
     async function submit() {
-        await updateUserProfile(preferredName, { kind: "keep" }, { fetch });
+        await updateUserProfile(preferredName);
         await goto(newWorkspaceUrl);
     }
 </script>
@@ -58,7 +59,7 @@
         <h1
             class="w-full overflow-hidden text-ellipsis text-center text-4xl font-bold"
         >
-            {#if preferredName !== undefined && preferredName !== ""}
+            {#if preferredName !== null && preferredName !== ""}
                 {$_("onboarding.about-you.greeting.with-name", {
                     values: { name: preferredName },
                 })}

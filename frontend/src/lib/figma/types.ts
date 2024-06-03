@@ -26,7 +26,7 @@ export type AvatarStateSize = "medium" | "large";
 
 export interface AvatarVariantContent {
     kind: "single";
-    user?: User;
+    user?: Pick<User, "email" | "preferred_name" | "profile_picture">;
 }
 
 // TODO rename me LabelContent Justus 2023-03-07

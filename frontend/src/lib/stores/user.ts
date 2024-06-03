@@ -17,7 +17,6 @@
  */
 import { readonly, writable } from "svelte/store";
 
-import { updateUser, updateProfilePicture } from "$lib/repository/user";
 import * as userRepository from "$lib/repository/user";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { User } from "$lib/types/user";
@@ -61,31 +60,23 @@ export async function fetchUser(): Promise<User | undefined> {
 }
 
 export async function updateUserProfile(
-    preferredName: string | undefined,
-    picture:
-        | { kind: "keep" }
-        | { kind: "update"; imageFile: File }
-        | { kind: "clear" },
-    repositoryContext: RepositoryContext,
-    // TODO Promise<ApiResponse<User, ...>>
+    preferredName: string | null,
 ): Promise<User> {
-    if (picture.kind === "update") {
-        await updateProfilePicture(picture.imageFile);
-    } else if (picture.kind === "clear") {
-        await updateProfilePicture(undefined);
-    }
-    const response = await updateUser(
+    const { data, response } = await openApiClient.PUT(
+        "/user/user/current-user",
         {
-            // Kind of confusing logic here, tbh
-            // All we want to do is to clear the preferred name when it's empty
-            preferred_name:
-                preferredName === "" ? null : preferredName ?? null,
+            body: {
+                preferred_name:
+                    preferredName === "" ? null : preferredName ?? null,
+            },
         },
-        repositoryContext,
     );
     if (!response.ok) {
         throw new Error("Expected response.ok");
     }
-    _user.set(response.data);
-    return response.data;
+    if (data === undefined) {
+        throw new Error("Expected data");
+    }
+    _user.set(data);
+    return data;
 }
