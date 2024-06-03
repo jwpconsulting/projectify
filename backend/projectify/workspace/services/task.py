@@ -19,20 +19,22 @@ from datetime import datetime
 from typing import Optional, Sequence, Union
 
 from django.db import transaction
+from django.utils.translation import gettext_lazy as _
+
+from rest_framework import serializers
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
-from projectify.workspace.models.label import Label
-from projectify.workspace.models.section import (
-    Section,
-)
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.services.signals import (
+
+from ..models.label import Label
+from ..models.section import Section
+from ..models.task import Task
+from ..models.team_member import TeamMember
+from ..services.signals import (
     send_project_change_signal,
     send_task_change_signal,
 )
-from projectify.workspace.services.sub_task import (
+from ..services.sub_task import (
     ValidatedData,
     sub_task_create_many,
     sub_task_update_many,
@@ -63,6 +65,14 @@ def task_create(
     )
     # XXX Implicit N+1 here
     workspace = section.project.workspace
+    if assignee and assignee.workspace != workspace:
+        raise serializers.ValidationError(
+            {
+                "assignee": _(
+                    "The team member to be assigned belongs to a different workspace"
+                )
+            }
+        )
     return Task.objects.create(
         section=section,
         title=title,

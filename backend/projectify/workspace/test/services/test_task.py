@@ -18,6 +18,7 @@
 from datetime import datetime
 
 import pytest
+from rest_framework import exceptions
 
 from projectify.workspace.models import Project
 from projectify.workspace.models.label import Label
@@ -41,24 +42,42 @@ pytestmark = pytest.mark.django_db
 def test_create_task(
     section: Section,
     team_member: TeamMember,
+    other_team_member: TeamMember,
 ) -> None:
     """Test adding tasks to a project."""
-    assert section.task_set.count() == 0
+    count = section.task_set.count()
     task = task_create(
         who=team_member.user,
         section=section,
         title="foo",
         description="bar",
     )
-    assert section.task_set.count() == 1
+    assert section.task_set.count() == count + 1
     task2 = task_create(
         who=team_member.user,
         section=section,
         title="foo",
         description="bar",
+        assignee=other_team_member,
     )
-    assert section.task_set.count() == 2
+    assert section.task_set.count() == count + 2
     assert list(section.task_set.all()) == [task, task2]
+
+
+def test_create_task_unrelated_teammember(
+    section: Section,
+    team_member: TeamMember,
+    unrelated_team_member: TeamMember,
+) -> None:
+    """Test adding tasks to a project."""
+    with pytest.raises(exceptions.ValidationError) as e:
+        task_create(
+            who=team_member.user,
+            section=section,
+            title="foo",
+            assignee=unrelated_team_member,
+        )
+    assert e.match("belongs to a different workspace")
 
 
 def test_task_create_nested(

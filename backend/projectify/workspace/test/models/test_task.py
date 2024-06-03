@@ -18,9 +18,6 @@
 from django import (
     db,
 )
-from django.contrib.auth.models import (
-    AbstractUser,
-)
 
 import pytest
 
@@ -38,72 +35,10 @@ from ... import (
 class TestTask:
     """Test Task."""
 
-    def test_factory(
-        self,
-        section: models.Section,
-        team_member: models.TeamMember,
-        task: models.Task,
-        user: AbstractUser,
-    ) -> None:
+    def test_factory(self, section: models.Section, task: models.Task) -> None:
         """Test that section is assigned correctly."""
         assert task.section == section
         assert task.due_date is not None
-
-    def test_assign_to(
-        self,
-        workspace: models.Workspace,
-        task: models.Task,
-        other_team_member: models.TeamMember,
-    ) -> None:
-        """Test assigning to a different workspace's user."""
-        task.assign_to(other_team_member)
-        assert task.assignee == other_team_member
-
-    def test_assign_then_delete_user(
-        self, task: models.Task, team_member: models.TeamMember
-    ) -> None:
-        """Assert that nothing happens to the task if the user is gone."""
-        task.assign_to(team_member)
-        team_member.user.delete()
-        task.refresh_from_db()
-        assert task.assignee is None
-
-    def test_assign_outside_of_workspace(
-        self,
-        workspace: models.Workspace,
-        task: models.Task,
-        unrelated_team_member: models.TeamMember,
-    ) -> None:
-        """Test assigning to a different workspace's user."""
-        # This time do not create a team_member
-        with pytest.raises(models.TeamMember.DoesNotExist):
-            task.assign_to(unrelated_team_member)
-
-    def test_assign_none(
-        self,
-        workspace: models.Workspace,
-        task: models.Task,
-        team_member: models.TeamMember,
-    ) -> None:
-        """Test assigning to no user."""
-        task.assign_to(team_member)
-        task.assign_to(None)
-        task.refresh_from_db()
-        assert task.assignee is None
-
-    def test_assign_remove_team_member(
-        self,
-        user: AbstractUser,
-        workspace: models.Workspace,
-        team_member: models.TeamMember,
-        task: models.Task,
-    ) -> None:
-        """Test what happens if a team member is removed."""
-        task.assignee = team_member
-        task.save()
-        workspace.remove_user(user)
-        task.refresh_from_db()
-        assert task.assignee is None
 
     def test_get_next_section(
         self,
