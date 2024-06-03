@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Task services."""
+import logging
 from datetime import datetime
 from typing import Optional, Sequence, Union
 
@@ -40,11 +41,31 @@ from ..services.sub_task import (
     sub_task_update_many,
 )
 
+logger = logging.getLogger(__name__)
+
 
 # TODO hide this
 def task_assign_labels(*, task: Task, labels: Sequence[Label]) -> None:
     """Assign label uuids to the given task."""
-    task.set_labels(list(labels))
+    workspace = task.workspace
+    ws_labels = workspace.label_set
+    # We filter for labels as part of this workspace, to make sure we
+    # don't assign labels from another workspace
+    intersection_qs = ws_labels.filter(id__in=[label.id for label in labels])
+    with transaction.atomic():
+        intersection = list(intersection_qs)
+        if not len(intersection) == len(labels):
+            logger.warning(
+                "Some of the labels specified in %s are "
+                "not part of this workspace",
+                ", ".join(str(label.uuid) for label in labels),
+            )
+        task.labels.set(intersection)
+
+    # TODO maybe it makes more sense to fire signals from serializers,
+    # not manually patch things like the following...
+    # 2023-11-28: Now that I have a lot of success refactoring into
+    # services, this should be handled in a service
 
 
 # Create

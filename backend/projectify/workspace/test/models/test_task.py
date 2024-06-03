@@ -21,11 +21,6 @@ from django import (
 
 import pytest
 
-from projectify.workspace.models.label import Label
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.services.label import label_create
-
 from ... import (
     models,
 )
@@ -55,47 +50,6 @@ class TestTask:
         """Test getting the next section when there is none."""
         with pytest.raises(models.Section.DoesNotExist):
             task.get_next_section()
-
-    def test_set_labels(
-        self,
-        workspace: Workspace,
-        task: models.Task,
-        labels: list[Label],
-        team_member: TeamMember,
-        unrelated_workspace: Workspace,
-        unrelated_team_member: TeamMember,
-    ) -> None:
-        """Test setting labels."""
-        assert task.labels.count() == 0
-        a, b, c, d, e = labels
-        task.set_labels([a, b])
-        assert task.labels.count() == 2
-        # The order is inverted since we are not actually sorting by the
-        # TaskLabel creation but the default ordering of the label itself
-        # Furthermore, we work independently of the service layer, so it is
-        # questionable how useful this code is to the application
-        # TODO refactor
-        assert list(task.labels.values_list("id", flat=True)) == [b.id, a.id]
-        task.set_labels([c, d, e])
-        assert task.labels.count() == 3
-        assert list(task.labels.values_list("id", flat=True)) == [
-            e.id,
-            d.id,
-            c.id,
-        ]
-        task.set_labels([])
-        assert task.labels.count() == 0
-        assert list(task.labels.values_list("id", flat=True)) == []
-
-        unrelated = label_create(
-            workspace=unrelated_workspace,
-            who=unrelated_team_member.user,
-            color=0,
-            name="don't care",
-        )
-        task.set_labels([unrelated])
-        assert task.labels.count() == 0
-        assert list(task.labels.values_list("id", flat=True)) == []
 
     def test_task_number(
         self, task: models.Task, other_task: models.Task

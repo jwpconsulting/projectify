@@ -20,15 +20,17 @@ from datetime import datetime
 import pytest
 from rest_framework import exceptions
 
-from projectify.workspace.models import Project
-from projectify.workspace.models.label import Label
-from projectify.workspace.models.section import (
-    Section,
-)
-from projectify.workspace.models.sub_task import SubTask
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.services.task import (
+from projectify.workspace.services.label import label_create
+
+from ...models import Project
+from ...models.label import Label
+from ...models.section import Section
+from ...models.sub_task import SubTask
+from ...models.task import Task
+from ...models.team_member import TeamMember
+from ...models.workspace import Workspace
+from ...services.task import (
+    task_assign_labels,
     task_create,
     task_create_nested,
     task_move_after,
@@ -36,6 +38,45 @@ from projectify.workspace.services.task import (
 )
 
 pytestmark = pytest.mark.django_db
+
+
+def test_set_labels(
+    task: Task,
+    labels: list[Label],
+    unrelated_workspace: Workspace,
+    unrelated_team_member: TeamMember,
+) -> None:
+    """Test setting labels."""
+    assert task.labels.count() == 0
+    a, b, c, d, e = labels
+    task_assign_labels(task=task, labels=[a, b])
+    assert task.labels.count() == 2
+    # The order is inverted since we are not actually sorting by the
+    # TaskLabel creation but the default ordering of the label itself
+    # Furthermore, we work independently of the service layer, so it is
+    # questionable how useful this code is to the application
+    # TODO refactor
+    assert list(task.labels.values_list("id", flat=True)) == [b.id, a.id]
+    task_assign_labels(task=task, labels=[c, d, e])
+    assert task.labels.count() == 3
+    assert list(task.labels.values_list("id", flat=True)) == [
+        e.id,
+        d.id,
+        c.id,
+    ]
+    task_assign_labels(task=task, labels=[])
+    assert task.labels.count() == 0
+    assert list(task.labels.values_list("id", flat=True)) == []
+
+    unrelated = label_create(
+        workspace=unrelated_workspace,
+        who=unrelated_team_member.user,
+        color=0,
+        name="don't care",
+    )
+    task_assign_labels(task=task, labels=[unrelated])
+    assert task.labels.count() == 0
+    assert list(task.labels.values_list("id", flat=True)) == []
 
 
 # Create

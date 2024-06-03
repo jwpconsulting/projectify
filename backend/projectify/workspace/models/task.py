@@ -24,29 +24,15 @@ from typing import (
     cast,
 )
 
-from django.db import (
-    models,
-    transaction,
-)
-from django.db.models.signals import (
-    post_save,
-)
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 import pgtrigger
-from django_extensions.db.models import (
-    TitleDescriptionModel,
-)
+from django_extensions.db.models import TitleDescriptionModel
 
 from projectify.lib.models import BaseModel
 
-from .types import (
-    GetOrder,
-    SetOrder,
-)
-from .workspace import (
-    Workspace,
-)
+from .types import GetOrder, SetOrder
 
 logger = logging.getLogger(__name__)
 
@@ -54,21 +40,22 @@ logger = logging.getLogger(__name__)
 if TYPE_CHECKING:
     from django.db.models.manager import RelatedManager  # noqa: F401
 
-    from . import (
+    from . import (  # noqa: F401
         ChatMessage,
         Label,
         Section,
         SubTask,
         TaskLabel,
         TeamMember,
+        Workspace,
     )
 
 
 class Task(TitleDescriptionModel, BaseModel):
     """Task, belongs to section."""
 
-    workspace = models.ForeignKey[Workspace](
-        Workspace,
+    workspace = models.ForeignKey["Workspace"](
+        "workspace.Workspace",
         on_delete=models.CASCADE,
     )
 
@@ -121,31 +108,6 @@ class Task(TitleDescriptionModel, BaseModel):
         """Return instance of the next section."""
         next_section: "Section" = self.section.get_next_in_order()
         return next_section
-
-    def set_labels(self, labels: list["Label"]) -> None:
-        """Set labels. Remove if unset."""
-        workspace = self.workspace
-        ws_labels = workspace.label_set
-        # We filter for labels as part of this workspace, to make sure we
-        # don't assign labels from another workspace
-        intersection_qs = ws_labels.filter(
-            id__in=[label.id for label in labels]
-        )
-        with transaction.atomic():
-            intersection = list(intersection_qs)
-            if not len(intersection) == len(labels):
-                logger.warning(
-                    "Some of the labels specified in %s are "
-                    "not part of this workspace",
-                    ", ".join(str(label.uuid) for label in labels),
-                )
-            self.labels.set(intersection)
-
-        # TODO maybe it makes more sense to fire signals from serializers,
-        # not manually patch things like the following...
-        # 2023-11-28: Now that I have a lot of success refactoring into
-        # services, this should be handled in a service
-        post_save.send(sender=Task, instance=self)
 
     # TODO we can probably do better than any here
     def save(self, *args: Any, **kwargs: Any) -> None:
