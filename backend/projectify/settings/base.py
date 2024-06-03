@@ -90,6 +90,11 @@ class Base(Configuration):
     CORS_ALLOW_CREDENTIALS = True
     CORS_ALLOWED_ORIGINS: Optional[Sequence[str]]
 
+    # HSTS
+    SECURE_HSTS_SECONDS = 3600
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+
     # Installed applications
     # Applications from Django project
     INSTALLED_APPS_DJANGO = (
