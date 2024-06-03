@@ -35,22 +35,6 @@ from ... import (
 
 
 @pytest.mark.django_db
-class TestTaskManager:
-    """Test TaskManager."""
-
-    def test_filter_by_section_pks(
-        self,
-        section: models.Section,
-        task: models.Task,
-    ) -> None:
-        """Test filter_by_section_pks."""
-        qs = models.Task.objects.filter_by_section_pks(
-            [section.pk],
-        )
-        assert list(qs) == [task]
-
-
-@pytest.mark.django_db
 class TestTask:
     """Test Task."""
 

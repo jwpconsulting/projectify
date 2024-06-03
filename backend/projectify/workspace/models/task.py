@@ -20,9 +20,7 @@ import uuid
 from typing import (
     TYPE_CHECKING,
     Any,
-    ClassVar,
     Optional,
-    Self,
     cast,
 )
 
@@ -44,7 +42,6 @@ from projectify.lib.models import BaseModel
 
 from .types import (
     GetOrder,
-    Pks,
     SetOrder,
 )
 from .workspace import (
@@ -60,45 +57,11 @@ if TYPE_CHECKING:
     from . import (
         ChatMessage,
         Label,
-        Project,
         Section,
         SubTask,
         TaskLabel,
         TeamMember,
     )
-
-
-class TaskQuerySet(models.QuerySet["Task"]):
-    """Manager for Task."""
-
-    # TODO use selector
-    def filter_by_workspace(self, workspace: Workspace) -> Self:
-        """Filter by workspace."""
-        return self.filter(
-            section__project__workspace=workspace,
-        )
-
-    # TODO use selector
-    def filter_by_assignee(self, assignee: "TeamMember") -> Self:
-        """Filter by assignee user."""
-        return self.filter(assignee=assignee)
-
-    # TODO use selector
-    def filter_by_section_pks(
-        self,
-        section_pks: Pks,
-    ) -> Self:
-        """Filter by section pks."""
-        return self.filter(
-            section__pk__in=section_pks,
-        )
-
-    # TODO use selector
-    def filter_by_project(self, project: "Project") -> Self:
-        """Filter by tasks contained in project."""
-        return self.filter(
-            section__project=project,
-        )
 
 
 class Task(TitleDescriptionModel, BaseModel):
@@ -129,10 +92,6 @@ class Task(TitleDescriptionModel, BaseModel):
     )  # type: models.ManyToManyField["Label", "TaskLabel"]
 
     number = models.PositiveIntegerField()
-
-    objects: ClassVar[TaskQuerySet] = cast(  # type: ignore[assignment]
-        TaskQuerySet, TaskQuerySet.as_manager()
-    )
 
     if TYPE_CHECKING:
         # Related fields

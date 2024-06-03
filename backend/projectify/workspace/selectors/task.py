@@ -19,13 +19,14 @@
 from typing import Optional
 from uuid import UUID
 
-from django.db.models import Prefetch
+from django.db.models import Prefetch, QuerySet
 
 from projectify.user.models import User
-from projectify.workspace.models.chat_message import ChatMessage
-from projectify.workspace.models.task import Task, TaskQuerySet
 
-TaskDetailQuerySet: TaskQuerySet = (
+from ..models.chat_message import ChatMessage
+from ..models.task import Task
+
+TaskDetailQuerySet: QuerySet[Task] = (
     Task.objects.select_related(
         "section__project__workspace",
         "assignee",
@@ -48,7 +49,7 @@ TaskDetailQuerySet: TaskQuerySet = (
 
 
 def task_find_by_task_uuid(
-    *, task_uuid: UUID, who: User, qs: Optional[TaskQuerySet] = None
+    *, task_uuid: UUID, who: User, qs: Optional[QuerySet[Task]] = None
 ) -> Optional[Task]:
     """Find a task given a user and uuid."""
     # Special care is needed, one can't write qs or Task.objects since that
