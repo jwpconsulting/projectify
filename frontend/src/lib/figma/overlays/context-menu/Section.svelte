@@ -39,33 +39,32 @@
         openDestructiveOverlay,
     } from "$lib/stores/globalUi";
     import type {
-        Project,
-        Section,
-        SectionWithTasks,
+        ProjectDetail,
+        ProjectDetailSection,
     } from "$lib/types/workspace";
 
-    export let project: Project;
-    export let section: SectionWithTasks;
+    export let project: ProjectDetail;
+    export let section: ProjectDetailSection;
 
     let closed: boolean;
     $: {
         closed = $sectionClosed.has(section.uuid);
     }
 
-    let sections: Section[] = [];
-    $: sections = project.sections ?? [];
+    let sections: readonly ProjectDetailSection[] = [];
+    $: sections = project.sections;
 
     // TODO this might have to be refactored to check if previous or next section exists
 
     let sectionIndex: number | undefined;
     let previousIndex: number | undefined;
     let nextIndex: number | undefined;
-    let previousSection: Section | undefined;
-    let nextSection: Section | undefined;
+    let previousSection: ProjectDetailSection | undefined;
+    let nextSection: ProjectDetailSection | undefined;
 
     $: {
         sectionIndex = sections.findIndex(
-            (s: Section) => s.uuid == section.uuid,
+            (s: ProjectDetailSection) => s.uuid == section.uuid,
         );
         previousIndex = sectionIndex > 0 ? sectionIndex - 1 : undefined;
         nextIndex =

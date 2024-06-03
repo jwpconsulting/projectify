@@ -19,7 +19,11 @@ import { derived, writable } from "svelte/store";
 import type { Readable } from "svelte/store";
 
 import type { SubTaskAssignment } from "$lib/types/stores";
-import type { CreateUpdateSubTask, SubTask, Task } from "$lib/types/workspace";
+import type {
+    CreateUpdateSubTask,
+    SubTask,
+    TaskDetail,
+} from "$lib/types/workspace";
 
 function filterSubTasks(
     subTasks: Partial<CreateUpdateSubTask>[],
@@ -48,7 +52,7 @@ function filterSubTasks(
     return filtered;
 }
 
-export function createSubTaskAssignment(task?: Task): SubTaskAssignment {
+export function createSubTaskAssignment(task?: TaskDetail): SubTaskAssignment {
     const existingSubTasks: SubTask[] = [...(task?.sub_tasks ?? [])];
     const { subscribe, set, update } =
         writable<Partial<CreateUpdateSubTask>[]>(existingSubTasks);

@@ -16,20 +16,18 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import {
-    putWithCredentialsJson,
-    getWithCredentialsJson,
     postWithCredentialsJson,
-    handle404,
     failOrOk,
     deleteWithCredentialsJson,
     openApiClient,
 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
+import type { components } from "$lib/types/schema";
 import type {
     CreateUpdateSubTask,
     Label,
     Task,
-    TaskWithWorkspace,
+    TaskDetail,
     Section,
     TeamMember,
 } from "$lib/types/workspace";
@@ -43,18 +41,18 @@ export async function createTask(
         description: string | null;
         // TODO this has to be optional in the backend -> undefined means unset
         // labels
-        labels: Pick<Label, "uuid">[];
+        labels: readonly Pick<Label, "uuid">[];
         // TODO this has to be optional in the backend -> undefined means unset
         // assignee
-        assignee?: Pick<TeamMember, "uuid">;
+        assignee: Pick<TeamMember, "uuid"> | null;
         section: Pick<Section, "uuid">;
         // TODO dueDate plz
         due_date: string | null;
-        sub_tasks?: CreateUpdateSubTask[];
+        sub_tasks: CreateUpdateSubTask[];
     },
     // TODO allow adding fetch reference here again
     // repositoryContext: RepositoryContext,
-): Promise<Task> {
+): Promise<TaskDetail> {
     const body = {
         ...data,
         section: {
@@ -83,15 +81,20 @@ export async function createTask(
 
 // Read
 export async function getTask(
-    uuid: string,
-    repositoryContext: RepositoryContext,
-): Promise<TaskWithWorkspace | undefined> {
-    return handle404(
-        await getWithCredentialsJson<TaskWithWorkspace>(
-            `/workspace/task/${uuid}`,
-            repositoryContext,
-        ),
+    task_uuid: string,
+    _repositoryContext?: RepositoryContext,
+): Promise<TaskDetail | undefined> {
+    const { response, data } = await openApiClient.GET(
+        "/workspace/task/{task_uuid}",
+        { params: { path: { task_uuid } } },
     );
+    if (response.ok) {
+        return data;
+    }
+    if (response.status === 404) {
+        return undefined;
+    }
+    throw new Error("uncaught");
 }
 
 // Update
@@ -101,7 +104,7 @@ export async function getTask(
 // incl. labels and so on
 export async function updateTask(
     task: Pick<Task, "uuid">,
-    data: {
+    updateData: {
         title: string;
         description: string | null;
         // TODO this has to be optional in the backend -> undefined means unset
@@ -109,32 +112,33 @@ export async function updateTask(
         labels: readonly Pick<Label, "uuid">[];
         // TODO this has to be optional in the backend -> undefined means unset
         // assignee
-        assignee?: Pick<TeamMember, "uuid">;
+        assignee: Pick<TeamMember, "uuid"> | null;
         // TODO dueDate plz
         due_date: string | null;
-        sub_tasks?: readonly CreateUpdateSubTask[];
+        sub_tasks: readonly CreateUpdateSubTask[];
     },
-    repositoryContext: RepositoryContext,
-): Promise<Task | undefined> {
-    const { uuid } = task;
-    const response = await putWithCredentialsJson<Task>(
-        `/workspace/task/${uuid}`,
-        {
-            ...data,
-            assignee: data.assignee ? { uuid: data.assignee.uuid } : null,
-            labels: data.labels.map((l) => {
+    _repositoryContext?: RepositoryContext,
+): Promise<components["schemas"]["TaskDetail"]> {
+    const { uuid: task_uuid } = task;
+    const body: components["schemas"]["TaskUpdate"] = {
+        ...updateData,
+        sub_tasks: [...updateData.sub_tasks],
+        assignee: updateData.assignee
+            ? { uuid: updateData.assignee.uuid }
+            : null,
+        labels: [
+            ...updateData.labels.map((l) => {
                 return { uuid: l.uuid };
             }),
-        },
-        repositoryContext,
-    );
-    if (response.ok) {
-        return response.data;
-    } else if (response.kind === "badRequest") {
-        // TODO handle 400
-        console.error("Bad request");
+        ],
+    };
+    const { data } = await openApiClient.PUT("/workspace/task/{task_uuid}", {
+        params: { path: { task_uuid } },
+        body,
+    });
+    if (data !== undefined) {
+        return data;
     }
-    console.error(response.error);
     throw new Error();
 }
 

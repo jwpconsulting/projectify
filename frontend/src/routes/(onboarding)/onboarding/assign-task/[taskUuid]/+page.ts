@@ -21,19 +21,19 @@ import { getProject } from "$lib/repository/workspace/project";
 import { currentTask } from "$lib/stores/dashboard";
 import type {
     Label,
-    Task,
     Workspace,
     ProjectDetail,
-    Section,
     TeamMember,
+    TaskDetail,
+    ProjectDetailSection,
 } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
 
 import type { PageLoadEvent } from "./$types";
 
 interface returnType {
-    task: Task;
-    section: Section;
+    task: TaskDetail;
+    section: ProjectDetailSection;
     project: ProjectDetail;
     workspace: Workspace;
     label: Label;
@@ -48,13 +48,21 @@ export async function load({
         // TODO find out if we can i18n this?
         error(404, `No task could be found for task UUID '${taskUuid}'.`);
     }
-    const section = task.section;
-    const projectUuid = section.project.uuid;
+    const {
+        section: {
+            uuid: sectionUuid,
+            project: { uuid: projectUuid },
+        },
+    } = task;
     const project = await getProject(projectUuid, {
         fetch,
     });
     if (!project) {
         throw new Error("Expected project");
+    }
+    const section = project.sections.find((s) => s.uuid === sectionUuid);
+    if (!section) {
+        throw new Error("Expected section");
     }
     const { workspace } = project;
     const label = unwrap(task.labels.at(0), "Expected label");

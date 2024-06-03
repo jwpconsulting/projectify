@@ -28,7 +28,7 @@ import type {
     LabelAssignmentInput,
     LabelAssignmentState,
 } from "$lib/types/ui";
-import type { Label, Task } from "$lib/types/workspace";
+import type { Label, ProjectDetailTask } from "$lib/types/workspace";
 
 import { currentWorkspaceLabels } from "./label";
 
@@ -39,7 +39,9 @@ function evaluateLabelAssignment(state: LabelAssignmentState): string[] {
     return [...state.labelUuids];
 }
 
-export function createLabelAssignment(task?: Task): LabelAssignment {
+export function createLabelAssignment(
+    task?: ProjectDetailTask,
+): LabelAssignment {
     const maybeLabels: readonly Label[] = task?.labels ?? [];
     const selection: LabelAssignmentState =
         maybeLabels.length > 0

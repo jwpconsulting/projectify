@@ -26,14 +26,14 @@ import type {
     TaskWithSection,
     Workspace,
     ProjectDetail,
-    Section,
+    ProjectDetailSection,
 } from "$lib/types/workspace";
 
 import type { PageLoadEvent } from "./$types";
 
 interface returnType {
     task: TaskWithSection;
-    section: Section;
+    section: ProjectDetailSection;
     project: ProjectDetail;
     workspace: Workspace;
 }
@@ -46,13 +46,19 @@ export async function load({
     if (!task) {
         error(404, `No task could found for UUID ${taskUuid}.`);
     }
-    const { section: section } = task;
-    const projectUuid = task.section.project.uuid;
-    const project = await getProject(projectUuid, {
-        fetch,
-    });
+    const {
+        section: {
+            uuid: sectionUuid,
+            project: { uuid: projectUuid },
+        },
+    } = task;
+    const project = await getProject(projectUuid);
     if (!project) {
         throw new Error("Expected project");
+    }
+    const section = project.sections.find((s) => s.uuid == sectionUuid);
+    if (!section) {
+        throw new Error("Expected section");
     }
     const { workspace } = project;
     return { task, section, project, workspace };

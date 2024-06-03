@@ -16,11 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Shared type definitions in workspace app."""
 from dataclasses import dataclass
-from typing import (
-    Literal,
-    Optional,
-    TypedDict,
-)
+from typing import Literal, Optional, TypedDict
 
 from projectify.corporate.types import WorkspaceFeatures
 
@@ -28,7 +24,8 @@ from projectify.corporate.types import WorkspaceFeatures
 class ConsumerEvent(TypedDict):
     """Contains event data about what to send to client."""
 
-    type: Literal["workspace.change", "project.change", "task.change"]
+    type: Literal["change"]
+    resource: Literal["workspace", "project", "task"]
     uuid: str
     kind: Literal["changed", "gone"]
 
@@ -57,3 +54,6 @@ class WorkspaceQuota:
     projects: Quota
     sections: Quota
     team_members_and_invites: Quota
+
+
+Resource = Literal["workspace", "project", "task"]

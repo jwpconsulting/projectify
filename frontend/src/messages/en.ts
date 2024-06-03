@@ -906,7 +906,6 @@ const messages: MessageDirectory = {
                 "seats": {
                     title: "Number of seats:",
                     status: "{seats} seats in total, {seatsRemaining} {seatsRemaining, plural, one {seat} other {seats}} remaining",
-                    unlimited: "unlimited",
                 },
                 "edit-billing-details": "Edit billing details",
             },

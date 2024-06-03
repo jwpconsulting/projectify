@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2023-2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -15,8 +15,6 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { error } from "@sveltejs/kit";
-
 import { getWorkspaces } from "$lib/repository/workspace";
 import type { Workspace } from "$lib/types/workspace";
 
@@ -26,10 +24,6 @@ export async function load({
     fetch,
 }: PageLoadEvent): Promise<{ workspace?: Workspace }> {
     const workspaces = await getWorkspaces({ fetch });
-    if (!workspaces) {
-        // Undefined workspaces is unrecoverable
-        error(500);
-    }
     const workspace = workspaces.at(0);
     return { workspace };
 }

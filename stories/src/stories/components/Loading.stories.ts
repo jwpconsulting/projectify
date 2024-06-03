@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Loading from "$lib/components/loading.svelte";
+import Loading from "$lib/components/Loading.svelte";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<Loading> = {

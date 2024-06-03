@@ -31,13 +31,13 @@
     import { currentUser } from "$lib/stores/user";
     import type {
         Label,
-        Task,
         Workspace,
-        Section,
         ProjectDetail,
         TeamMember,
         WorkspaceDetail,
         WorkspaceQuota,
+        ProjectDetailSection,
+        ProjectDetailTask,
     } from "$lib/types/workspace";
     import Dashboard from "$routes/(platform)/dashboard/project/[projectUuid]/+page.svelte";
 
@@ -69,24 +69,22 @@
         archived: null,
         workspace: workspaceFallback,
     };
-    const sectionFallback: Section = {
+    const sectionFallback: ProjectDetailSection = {
         title: "",
         description: null,
-        modified: "",
-        created: "",
         uuid: "",
         _order: 0,
+        tasks: [],
     };
-    const taskFallback: Task = {
+    const taskFallback: ProjectDetailTask = {
         title: "",
         description: null,
-        modified: "",
-        created: "",
+        assignee: null,
         uuid: "",
         due_date: null,
+        sub_tasks: [],
         number: 1,
         labels: [],
-        _order: 0,
     };
     const labelFallback: Label = {
         name: "",
@@ -132,16 +130,16 @@
               kind: "new-label";
               workspace: Workspace;
               project: ProjectDetail;
-              section: Section;
-              task: Task;
+              section: ProjectDetailSection;
+              task: ProjectDetailTask;
               title: string;
           }
         | {
               kind: "assign-task";
               workspace: Workspace;
               project: ProjectDetail;
-              section: Section;
-              task: Task;
+              section: ProjectDetailSection;
+              task: ProjectDetailTask;
               label: Label;
               assignee: TeamMember;
           };

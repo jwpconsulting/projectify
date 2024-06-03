@@ -18,15 +18,15 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import Loading from "$lib/components/loading.svelte";
+    import Loading from "$lib/components/Loading.svelte";
     import SectionC from "$lib/figma/cards/Section.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { currentProject, currentSections } from "$lib/stores/dashboard";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type {
-        SectionWithTasks,
         ProjectDetail,
+        ProjectDetailSection,
     } from "$lib/types/workspace";
 
     export let data: { injectProject?: ProjectDetail } | undefined = undefined;
@@ -36,7 +36,7 @@
 
     $: hasSections = project ? project.sections.length > 0 : false;
 
-    let sections: SectionWithTasks[];
+    let sections: readonly ProjectDetailSection[];
     $: sections = $currentSections ?? data?.injectProject?.sections ?? [];
 
     async function onAddNewSection() {

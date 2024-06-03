@@ -23,11 +23,11 @@
     import type { ContextMenuType } from "$lib/types/ui";
     import type {
         ProjectDetail,
+        ProjectDetailTask,
         SectionWithTasks,
-        Task,
     } from "$lib/types/workspace";
 
-    export let task: Task;
+    export let task: ProjectDetailTask;
     // this is only ever needed for the dashboard, not when a task is part
     // of search results... time for another ADT?
     export let project: ProjectDetail;

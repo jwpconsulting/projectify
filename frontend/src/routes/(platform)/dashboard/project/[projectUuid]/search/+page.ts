@@ -17,30 +17,29 @@
  */
 import { searchTasks } from "$lib/stores/dashboard";
 import type { SearchInput } from "$lib/types/base";
-import type { ProjectDetail, TaskWithSection } from "$lib/types/workspace";
+import type { TaskWithSection } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
 
 import type { PageLoadEvent } from "./$types";
 
 interface Data {
-    tasks: Promise<TaskWithSection[]>;
+    tasks: Promise<readonly TaskWithSection[]>;
     search: SearchInput;
 }
 export function load({ url, parent }: PageLoadEvent): Data {
     const search: SearchInput = url.searchParams.get("search") ?? undefined;
-    const awaitProject = new Promise<ProjectDetail | undefined>((resolve) =>
-        parent().then(({ project }) => resolve(project)),
-    );
-    const tasks = awaitProject.then((project) => {
+    const tasks = (async () => {
+        const data = await parent();
+        const project = await data.project;
         if (project === undefined) {
             throw new Error("Expected project");
         }
-        const { sections: sections } = project;
+        const { sections } = project;
         const tasks = searchTasks(
             unwrap(sections, "Expected sections"),
             search,
         );
         return tasks;
-    });
+    })();
     return { tasks, search };
 }

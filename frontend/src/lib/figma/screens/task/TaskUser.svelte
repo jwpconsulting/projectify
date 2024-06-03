@@ -27,7 +27,7 @@
 
     // Either a user has been assigned, or if not we should ask the user
     // to assign a user
-    export let teamMember: TeamMember | undefined;
+    export let teamMember: TeamMember | null;
     export let onInteract: ((anchor: HTMLElement) => void) | undefined =
         undefined;
     export let readonly = false;

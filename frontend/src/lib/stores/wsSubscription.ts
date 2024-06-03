@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2023-2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -16,7 +16,6 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import Sarus from "@anephenix/sarus";
-import type { Invalidator, Subscriber, Unsubscriber } from "svelte/store";
 import { writable } from "svelte/store";
 
 import vars from "$lib/env";
@@ -195,14 +194,16 @@ async function unsubscribeFromResource(resource: Resource) {
 
 type Reconnector = () => void;
 
+type AsyncUnsubscriber = () => Promise<void>;
+
 async function subscribeToResource(
     resource: Resource,
     listener: EventListener,
     reconnect: Reconnector,
-): Promise<Unsubscriber> {
+): Promise<AsyncUnsubscriber> {
     const messageListener: Listener = {
         resource,
-        kind: ["changed"],
+        kind: ["gone", "changed"],
         callback: listener,
         reconnect: reconnect,
     };
@@ -212,7 +213,7 @@ async function subscribeToResource(
         removeListener(messageListener);
         await unsubscribeFromResource(resource);
     };
-    const establishedConn = new Promise<Unsubscriber>((resolve, reject) => {
+    const established = new Promise<AsyncUnsubscriber>((resolve, reject) => {
         const establishedConnectionCb = (response: WsResponse) => {
             if (response.kind === "not_found") {
                 reject(
@@ -242,7 +243,7 @@ async function subscribeToResource(
         addListener(subscribedListener);
     });
     sendWs({ action: "subscribe", ...resource });
-    return await establishedConn;
+    return await established;
 }
 
 /* Subscribable WS Store
@@ -268,7 +269,7 @@ type WsStoreState =
           subscriptionType: SubscriptionType;
           kind: "ready";
           uuid: string;
-          unsubscriber: Unsubscriber;
+          unsubscriber: AsyncUnsubscriber;
       };
 
 export function createWsStore<T>(
@@ -277,18 +278,42 @@ export function createWsStore<T>(
 ): WsResource<T> {
     type State = WsStoreState;
     let state: State = { subscriptionType, kind: "start" };
-    const { subscribe: writeableSubscribe, set } = writable<T | undefined>(
-        undefined,
-    );
+
+    const reset = () => {
+        set(undefined);
+        state = { kind: "start", subscriptionType: state.subscriptionType };
+    };
+
+    const resetAndUnsubscribe = async () => {
+        if (state.kind === "start") {
+            console.warn("Already reset");
+            return;
+        }
+        console.debug("Resetting");
+        await state.unsubscriber();
+        reset();
+    };
+
+    const stop = () => {
+        console.debug("Stopping");
+        resetAndUnsubscribe().catch((error) =>
+            console.error("Error when resetting", error),
+        );
+    };
+
+    const { subscribe, set } = writable<T | undefined>(undefined, () => stop);
 
     const onMessage: EventListener = (resp: WsResponse) => {
-        if (resp.kind !== "changed") {
-            throw new Error("resp.kind is not changed");
-        }
         if (state.kind === "start") {
             throw new Error("State.kind is start");
         }
-        set(resp.content as T);
+        if (resp.kind === "gone") {
+            reset();
+        } else if (resp.kind === "changed") {
+            set(resp.content as T);
+        } else {
+            throw new Error("resp.kind is not changed");
+        }
     };
 
     const reconnect: Reconnector = async () => {
@@ -303,19 +328,7 @@ export function createWsStore<T>(
             reconnect,
         );
         console.debug("Reconnected");
-        state = {
-            ...state,
-            unsubscriber,
-        };
-    };
-
-    const reset = () => {
-        if (state.kind === "start") {
-            console.warn("Already reset");
-            return;
-        }
-        state.unsubscriber();
-        state = { kind: "start", subscriptionType: state.subscriptionType };
+        state = { ...state, unsubscriber };
     };
 
     const loadUuid = async (
@@ -343,7 +356,8 @@ export function createWsStore<T>(
         // We need to unsubscribe from the old ws thing before adding
         // a new subscription here, if we are already initalized.
         if (state.kind === "ready") {
-            state.unsubscriber();
+            console.log("Unsubscribing", state);
+            await state.unsubscriber();
         }
         const unsubscriber = await subscribeToResource(
             { resource: subscriptionType, uuid },
@@ -364,19 +378,6 @@ export function createWsStore<T>(
         set(newValue);
         // And the caller of this method is definitely waiting for their result
         return newValue;
-    };
-
-    const subscribe = (
-        run: Subscriber<T | undefined>,
-        invalidate?: Invalidator<T | undefined> | undefined,
-    ) => {
-        const unsubscriber = writeableSubscribe(run, invalidate);
-        return () => {
-            if (state.kind === "ready") {
-                reset();
-            }
-            unsubscriber();
-        };
     };
 
     return { loadUuid, subscribe };

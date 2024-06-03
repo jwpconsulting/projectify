@@ -22,7 +22,6 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { goto } from "$lib/navigation";
-    import { createProject } from "$lib/repository/workspace/project";
     import {
         rejectConstructiveOverlay,
         resolveConstructiveOverlay,
@@ -30,6 +29,7 @@
     import type { FormViewState } from "$lib/types/ui";
     import type { Workspace } from "$lib/types/workspace";
     import { getDashboardProjectUrl } from "$lib/urls";
+    import { openApiClient } from "$lib/repository/util";
 
     export let workspace: Workspace;
 
@@ -42,20 +42,25 @@
         if (!title) {
             throw new Error("Not valid");
         }
-        const result = await createProject(
-            workspace,
+        const { response, data } = await openApiClient.POST(
+            "/workspace/project/",
             {
-                title,
-                description: "TODO",
+                body: {
+                    workspace_uuid: workspace.uuid,
+                    title,
+                    description: null,
+                },
             },
-            { fetch },
         );
-        if (result.ok) {
-            await goto(getDashboardProjectUrl(result.data));
+        if (data !== undefined) {
+            await goto(getDashboardProjectUrl(data));
             resolveConstructiveOverlay();
         } else {
             // TODO format error
-            state = { kind: "error", message: JSON.stringify(result.error) };
+            state = {
+                kind: "error",
+                message: JSON.stringify(await response.json()),
+            };
         }
     }
 </script>

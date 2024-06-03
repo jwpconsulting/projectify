@@ -15,10 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import {
-    getTask,
-    deleteTask as repositoryDeleteTask,
-} from "$lib/repository/workspace";
+import { getTask } from "$lib/repository/workspace";
 import { selectedLabels } from "$lib/stores/dashboard/labelFilter";
 import { currentProject } from "$lib/stores/dashboard/project";
 import { filterByTeamMember } from "$lib/stores/dashboard/teamMemberFilter";
@@ -26,11 +23,10 @@ import { searchAmong } from "$lib/stores/util";
 import { createWsStore } from "$lib/stores/wsSubscription";
 import type { SearchInput } from "$lib/types/base";
 import type {
-    Task,
     // XXX only use TaskWithWorkspace
     TaskWithSection,
-    TaskWithWorkspace,
-    Section,
+    TaskDetail,
+    SectionWithTasks,
 } from "$lib/types/workspace";
 
 // Clear on project change
@@ -43,11 +39,12 @@ currentProject.subscribe((_$currentProject) => {
 });
 
 export function searchTasks(
-    sections: Section[],
+    sections: readonly SectionWithTasks[],
     searchText: SearchInput,
-): TaskWithSection[] {
-    const sectionTasks: TaskWithSection[][] = sections.map((section) =>
-        (section.tasks ?? []).map((task: Task) => {
+): readonly TaskWithSection[] {
+    type Task = SectionWithTasks["tasks"][number];
+    const sectionTasks = sections.map((section) =>
+        section.tasks.map((task: Task) => {
             return { ...task, section };
         }),
     );
@@ -59,8 +56,4 @@ export function searchTasks(
     );
 }
 
-export const currentTask = createWsStore<TaskWithWorkspace>("task", getTask);
-
-export async function deleteTask(task: Task) {
-    await repositoryDeleteTask(task);
-}
+export const currentTask = createWsStore<TaskDetail>("task", getTask);

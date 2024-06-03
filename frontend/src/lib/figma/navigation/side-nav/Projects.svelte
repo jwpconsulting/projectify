@@ -19,7 +19,6 @@
     import { Folder, Plus } from "@steeze-ui/heroicons";
     import { _ } from "svelte-i18n";
 
-    import Loading from "$lib/components/loading.svelte";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import SelectProject from "$lib/figma/navigation/side-nav/SelectProject.svelte";
@@ -30,17 +29,16 @@
         toggleProjectExpandOpen,
     } from "$lib/stores/dashboard/ui";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
-    import type { Workspace } from "$lib/types/workspace";
+    import type { WorkspaceDetail } from "$lib/types/workspace";
     import { getArchiveUrl } from "$lib/urls";
 
-    export let workspace: Workspace;
+    export let workspace: WorkspaceDetail;
 
     async function openCreateProject() {
-        const target = {
-            kind: "createProject" as const,
+        await openConstructiveOverlay({
+            kind: "createProject",
             workspace,
-        };
-        await openConstructiveOverlay(target);
+        });
     }
 </script>
 
@@ -54,9 +52,7 @@
 {#if $projectExpandOpen}
     <!-- TODO evaluate revmoing this shrink class here -->
     <div class="flex shrink flex-col">
-        {#if workspace.projects === undefined}
-            <Loading />
-        {:else if workspace.projects.length === 0}
+        {#if workspace.projects.length === 0}
             <div class="flex flex-col gap-2 p-4">
                 <p>
                     {$_("dashboard.side-nav.projects.empty.message")}

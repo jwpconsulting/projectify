@@ -19,6 +19,7 @@ from uuid import UUID
 
 from django.utils.translation import gettext_lazy as _
 
+from drf_spectacular.utils import extend_schema
 from rest_framework import serializers, status
 from rest_framework.exceptions import NotFound
 from rest_framework.request import Request
@@ -49,7 +50,7 @@ from projectify.workspace.services.section import (
 class SectionCreate(APIView):
     """Create a section."""
 
-    class InputSerializer(serializers.ModelSerializer[Section]):
+    class SectionCreateSerializer(serializers.ModelSerializer[Section]):
         """Parse section creation input."""
 
         project_uuid = serializers.UUIDField()
@@ -60,10 +61,19 @@ class SectionCreate(APIView):
             model = Section
             fields = "title", "description", "project_uuid"
 
+    @extend_schema(
+        request=SectionCreateSerializer,
+        responses={
+            201: SectionCreateSerializer,
+            404: None,
+            # TODO annotate 400
+            400: None,
+        },
+    )
     def post(self, request: Request) -> Response:
         """Create a section."""
         user = request.user
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.SectionCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         project_uuid: UUID = data["project_uuid"]
@@ -92,6 +102,12 @@ class SectionCreate(APIView):
 class SectionReadUpdateDelete(APIView):
     """Project retrieve view."""
 
+    @extend_schema(
+        responses={
+            200: SectionDetailSerializer,
+            404: None,
+        },
+    )
     def get(self, request: Request, section_uuid: UUID) -> Response:
         """Handle GET."""
         section = section_find_for_user_and_uuid(
@@ -104,7 +120,7 @@ class SectionReadUpdateDelete(APIView):
         serializer = SectionDetailSerializer(instance=section)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
-    class InputSerializer(serializers.ModelSerializer[Section]):
+    class SectionUpdateSerializer(serializers.ModelSerializer[Section]):
         """Input serializer for PUT."""
 
         class Meta:
@@ -113,6 +129,15 @@ class SectionReadUpdateDelete(APIView):
             fields = "title", "description"
             model = Section
 
+    @extend_schema(
+        request=SectionUpdateSerializer,
+        responses={
+            200: SectionUpdateSerializer,
+            # TODO annotate 400
+            400: None,
+            404: None,
+        },
+    )
     def put(self, request: Request, section_uuid: UUID) -> Response:
         """Update section."""
         section = section_find_for_user_and_uuid(
@@ -123,7 +148,7 @@ class SectionReadUpdateDelete(APIView):
         if section is None:
             raise NotFound(_("Section not found for this UUID"))
 
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.SectionUpdateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         section_update(
@@ -134,6 +159,12 @@ class SectionReadUpdateDelete(APIView):
         )
         return Response(data=serializer.validated_data)
 
+    @extend_schema(
+        responses={
+            204: None,
+            404: None,
+        },
+    )
     def delete(self, request: Request, section_uuid: UUID) -> Response:
         """Handle DELETE."""
         section = section_find_for_user_and_uuid(
@@ -154,14 +185,23 @@ class SectionReadUpdateDelete(APIView):
 class SectionMove(APIView):
     """Insert a section at a given position."""
 
-    class InputSerializer(serializers.Serializer):
+    class SectionMoveSerializer(serializers.Serializer):
         """Accept the desired position within project."""
 
         order = serializers.IntegerField()
 
+    @extend_schema(
+        request=SectionMoveSerializer,
+        responses={
+            200: None,
+            # TODO annotate 400
+            400: None,
+            404: None,
+        },
+    )
     def post(self, request: Request, section_uuid: UUID) -> Response:
         """Process request."""
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.SectionMoveSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         user = request.user

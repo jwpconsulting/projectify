@@ -19,13 +19,13 @@ import { error } from "@sveltejs/kit";
 
 import { getWorkspaceCustomer } from "$lib/repository/corporate";
 import type { Customer } from "$lib/types/corporate";
-import type { Workspace } from "$lib/types/workspace";
+import type { WorkspaceDetail } from "$lib/types/workspace";
 
 import type { PageLoadEvent } from "./$types";
 
 interface Data {
     customer: Customer;
-    workspace: Workspace;
+    workspace: WorkspaceDetail;
 }
 
 export async function load({

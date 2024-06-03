@@ -21,10 +21,10 @@
     import TabElement from "$lib/figma/buttons/TabElement.svelte";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import type { SettingKind } from "$lib/types/dashboard";
-    import type { Workspace } from "$lib/types/workspace";
+    import type { WorkspaceDetail } from "$lib/types/workspace";
     import { getSettingsUrl } from "$lib/urls";
 
-    export let workspace: Workspace;
+    export let workspace: WorkspaceDetail;
     export let activeSetting: SettingKind;
 </script>
 

@@ -21,7 +21,6 @@
     import Layout from "$lib/figma/overlays/constructive/Layout.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { goto } from "$lib/navigation";
-    import { archiveProject } from "$lib/repository/workspace/project";
     import {
         rejectConstructiveOverlay,
         resolveConstructiveOverlay,
@@ -29,6 +28,7 @@
     import type { FormViewState } from "$lib/types/ui";
     import type { Project } from "$lib/types/workspace";
     import { getDashboardProjectUrl } from "$lib/urls";
+    import { openApiClient } from "$lib/repository/util";
 
     export let project: Project;
 
@@ -36,20 +36,24 @@
 
     async function onSubmit() {
         state = { kind: "submitting" };
-        const result = await archiveProject(project, false, {
-            fetch,
-        });
-        if (result.ok) {
+        const { response } = await openApiClient.POST(
+            "/workspace/project/{project_uuid}/archive",
+            {
+                params: { path: { project_uuid: project.uuid } },
+                body: { archived: false },
+            },
+        );
+        if (response.ok) {
             resolveConstructiveOverlay();
             await goto(getDashboardProjectUrl(project));
-            return;
+        } else {
+            state = {
+                kind: "error",
+                message: $_("overlay.constructive.recover-project.error", {
+                    values: { details: JSON.stringify(await response.json()) },
+                }),
+            };
         }
-        state = {
-            kind: "error",
-            message: $_("overlay.constructive.recover-project.error", {
-                values: { details: JSON.stringify(result.error) },
-            }),
-        };
     }
 </script>
 

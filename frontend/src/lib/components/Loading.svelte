@@ -15,9 +15,6 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
-<script>
-</script>
-
 <div class="h-20 w-20 text-primary">
     <svg viewBox="-50 -50 100 100" fill="none">
         <circle cx="0" cy="0" />
@@ -38,7 +35,6 @@
         opacity: 1;
         border-radius: 50%;
         animation: ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-        animation-delay: 0.5s;
     }
     svg circle:nth-child(2) {
         animation-delay: 1s;

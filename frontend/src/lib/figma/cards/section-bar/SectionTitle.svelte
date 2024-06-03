@@ -26,10 +26,13 @@
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
-    import type { Project, SectionWithTasks } from "$lib/types/workspace";
+    import type {
+        ProjectDetail,
+        SectionWithTasks,
+    } from "$lib/types/workspace";
     import { getNewTaskUrl } from "$lib/urls";
 
-    export let project: Project;
+    export let project: ProjectDetail;
     export let section: SectionWithTasks;
     export let open: boolean;
 

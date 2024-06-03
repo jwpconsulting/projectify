@@ -24,13 +24,16 @@
     import { currentProject, selectProjectUuid } from "$lib/stores/dashboard";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openContextMenu } from "$lib/stores/globalUi";
-    import type { Workspace, Project } from "$lib/types/workspace";
+    import type {
+        WorkspaceDetail,
+        WorkspaceDetailProject,
+    } from "$lib/types/workspace";
     import { getDashboardProjectUrl } from "$lib/urls";
 
     $: currentProjectUuid = $currentProject?.uuid;
 
-    export let project: Project;
-    export let workspace: Workspace;
+    export let project: WorkspaceDetailProject;
+    export let workspace: WorkspaceDetail;
 
     let buttonRef: HTMLElement;
     let contextMenuOpen = false;

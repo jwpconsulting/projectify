@@ -21,13 +21,13 @@
     import Layout from "$lib/figma/overlays/constructive/Layout.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
-    import { updateProject } from "$lib/repository/workspace/project";
     import {
         rejectConstructiveOverlay,
         resolveConstructiveOverlay,
     } from "$lib/stores/globalUi";
     import type { FormViewState } from "$lib/types/ui";
     import type { Project } from "$lib/types/workspace";
+    import { openApiClient } from "$lib/repository/util";
 
     export let project: Project;
 
@@ -37,18 +37,21 @@
 
     async function onSubmit() {
         state = { kind: "submitting" };
-        const updatedProject = {
-            ...project,
-            title,
-        };
-        const result = await updateProject(updatedProject, {
-            fetch,
-        });
-        if (!result.ok) {
-            state = { kind: "error", message: JSON.stringify(result.error) };
-            throw result.error;
+        const { response, data } = await openApiClient.PUT(
+            "/workspace/project/{project_uuid}",
+            {
+                params: { path: { project_uuid: project.uuid } },
+                body: { ...project, title },
+            },
+        );
+        if (data === undefined) {
+            state = {
+                kind: "error",
+                message: JSON.stringify(await response.json()),
+            };
+        } else {
+            resolveConstructiveOverlay();
         }
-        resolveConstructiveOverlay();
     }
 </script>
 

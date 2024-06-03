@@ -23,7 +23,7 @@
     import type { SubTask } from "$lib/types/workspace";
     import { getSubTaskProgress } from "$lib/utils/workspace";
 
-    export let subTasks: SubTask[] | undefined;
+    export let subTasks: readonly SubTask[] | undefined;
     export let onInteract: () => void;
 
     $: progress = subTasks && getSubTaskProgress(subTasks);

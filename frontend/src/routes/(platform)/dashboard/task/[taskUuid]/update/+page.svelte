@@ -19,7 +19,7 @@
     import { onMount } from "svelte";
     import { _, number } from "svelte-i18n";
 
-    import Loading from "$lib/components/loading.svelte";
+    import Loading from "$lib/components/Loading.svelte";
     import Breadcrumbs from "$lib/figma/screens/task/Breadcrumbs.svelte";
     import Form from "$lib/figma/screens/task/Form.svelte";
     import Layout from "$lib/figma/screens/task/Layout.svelte";
@@ -35,10 +35,7 @@
         SubTaskAssignment,
         TeamMemberAssignment,
     } from "$lib/types/stores";
-    import type {
-        TaskWithSection,
-        TaskWithWorkspace,
-    } from "$lib/types/workspace";
+    import type { TaskWithSection, TaskDetail } from "$lib/types/workspace";
     import {
         getDashboardSectionUrl,
         getDashboardProjectUrl,
@@ -85,7 +82,7 @@
     type State = FormViewState | { kind: "done" };
     let state: State = { kind: "start" };
 
-    async function action(task: TaskWithWorkspace, continueEditing: boolean) {
+    async function action(task: TaskDetail, continueEditing: boolean) {
         if (title === undefined) {
             throw new Error("Expected title");
         }
@@ -106,9 +103,9 @@
                     title,
                     description,
                     due_date: dueDate,
-                    assignee: $teamMemberAssignment,
+                    assignee: $teamMemberAssignment ?? null,
                     labels: $labelAssignment,
-                    sub_tasks: $subTasks,
+                    sub_tasks: $subTasks ?? [],
                 },
                 { fetch },
             );

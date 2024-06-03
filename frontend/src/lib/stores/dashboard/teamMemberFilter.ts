@@ -42,7 +42,7 @@ type TeamMemberSearch = Writable<SearchInput>;
 const createTeamMemberFilter = () => writable<SearchInput>(undefined);
 
 function searchTeamMembers(
-    teamMembers: TeamMember[],
+    teamMembers: readonly TeamMember[],
     searchInput: SearchInput,
 ) {
     return searchAmong(
@@ -52,7 +52,7 @@ function searchTeamMembers(
     );
 }
 
-type TeamMemberSearchResults = Readable<TeamMember[]>;
+type TeamMemberSearchResults = Readable<readonly TeamMember[]>;
 
 function createTeamMemberSearchResults(
     currentTeamMembers: CurrentTeamMembers,
@@ -60,7 +60,7 @@ function createTeamMemberSearchResults(
 ): TeamMemberSearchResults {
     return derived<
         [typeof currentTeamMembers, typeof teamMemberSearch],
-        TeamMember[]
+        readonly TeamMember[]
     >(
         [currentTeamMembers, teamMemberSearch],
         ([$currentTeamMembers, $teamMemberSearch], set) => {

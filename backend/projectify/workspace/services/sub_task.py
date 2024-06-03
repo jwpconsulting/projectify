@@ -24,10 +24,7 @@ from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 from projectify.workspace.models.sub_task import SubTask
 from projectify.workspace.models.task import Task
-from projectify.workspace.services.signals import (
-    send_project_change_signal,
-    send_task_change_signal,
-)
+from projectify.workspace.services.signals import send_change_signal
 
 
 class ValidatedDatum(TypedDict):
@@ -57,8 +54,8 @@ class ValidatedData(TypedDict):
 
 def _sub_task_changed(task: Task) -> None:
     """Broadcast changes upon sub task save/delete."""
-    send_project_change_signal(task.section.project)
-    send_task_change_signal(task)
+    send_change_signal("changed", task.section.project)
+    send_change_signal("changed", task)
 
 
 @transaction.atomic

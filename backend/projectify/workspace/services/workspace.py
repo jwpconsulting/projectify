@@ -30,11 +30,11 @@ from rest_framework import serializers
 from projectify.corporate.services.customer import customer_create
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
+from projectify.workspace.services.signals import send_change_signal
 
 from ..models.const import TeamMemberRoles
 from ..models.team_member import TeamMember
 from ..models.workspace import Workspace
-from ..services.signals import send_workspace_change_signal
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +79,7 @@ def workspace_update(
     workspace.title = title
     workspace.description = description
     workspace.save()
-    send_workspace_change_signal(workspace)
+    send_change_signal("changed", workspace)
     return workspace
 
 
@@ -120,7 +120,7 @@ def workspace_delete(
         workspace,
         count,
     )
-    send_workspace_change_signal(workspace, "gone")
+    send_change_signal("gone", workspace)
     workspace.delete()
 
 
@@ -134,5 +134,5 @@ def workspace_add_user(
 ) -> TeamMember:
     """Add user to workspace. Return new team member."""
     team_member = workspace.teammember_set.create(user=user, role=role)
-    send_workspace_change_signal(workspace)
+    send_change_signal("changed", workspace)
     return team_member

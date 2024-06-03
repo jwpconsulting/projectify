@@ -21,8 +21,7 @@
 import {
     deleteWithCredentialsJson,
     failOrOk,
-    getWithCredentialsJson,
-    handle404,
+    openApiClient,
     postWithCredentialsJson,
     putWithCredentialsJson,
 } from "$lib/repository/util";
@@ -46,15 +45,21 @@ export async function createSection(
 
 // Read
 export async function getSection(
-    uuid: string,
-    repositoryContext: RepositoryContext,
+    section_uuid: string,
+    _repositoryContext?: RepositoryContext,
 ): Promise<SectionDetail | undefined> {
-    return handle404(
-        await getWithCredentialsJson(
-            `/workspace/section/${uuid}`,
-            repositoryContext,
-        ),
+    const { response, data } = await openApiClient.GET(
+        "/workspace/section/{section_uuid}",
+        { params: { path: { section_uuid } } },
     );
+    if (response.status === 404) {
+        return undefined;
+    }
+    if (response.ok) {
+        return data;
+    }
+    console.error(await response.json());
+    throw new Error("Could not fetch section");
 }
 
 // Update

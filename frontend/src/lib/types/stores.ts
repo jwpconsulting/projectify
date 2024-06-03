@@ -32,15 +32,15 @@ import type {
 
 import type { RepositoryContext } from "./repository";
 
-export interface TeamMemberAssignment
-    extends Readable<TeamMember | undefined> {
+export interface TeamMemberAssignment extends Readable<TeamMember | null> {
     select: (selection: TeamMemberAssignmentInput) => unknown;
     deselect: (selection: TeamMemberAssignmentInput) => unknown;
     // Might even completely remove this:
     selected: Readable<TeamMemberAssignmentState>;
 }
 
-export interface LabelAssignment extends Readable<Label[] | undefined> {
+export interface LabelAssignment
+    extends Readable<readonly Label[] | undefined> {
     select: (selection: LabelAssignmentInput) => unknown;
     deselect: (selection: LabelAssignmentInput) => unknown;
     // TODO Might even completely remove this:

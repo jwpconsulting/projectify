@@ -77,9 +77,9 @@
             description,
             section: section,
             labels: $labelAssignment,
-            assignee: $teamMemberAssignment,
+            assignee: $teamMemberAssignment ?? null,
             due_date: dueDate,
-            sub_tasks: $subTasks,
+            sub_tasks: $subTasks ?? [],
         };
         state = { kind: "submitting" };
         try {

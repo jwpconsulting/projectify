@@ -20,14 +20,12 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import { number } from "svelte-i18n";
 
-    import type { Task } from "$lib/types/workspace";
+    import type { ProjectDetailTask } from "$lib/types/workspace";
     import { getSubTaskProgress } from "$lib/utils/workspace";
 
-    export let task: Task;
+    export let task: ProjectDetailTask;
     let subTaskCompletionPercentage: number | undefined = undefined;
-    $: subTaskCompletionPercentage = task.sub_tasks
-        ? getSubTaskProgress(task.sub_tasks)
-        : undefined;
+    $: subTaskCompletionPercentage = getSubTaskProgress(task.sub_tasks);
 </script>
 
 <div class="flex shrink-0 flex-row items-center gap-2 px-2 py-1">

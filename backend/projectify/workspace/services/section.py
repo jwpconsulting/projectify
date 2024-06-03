@@ -22,9 +22,7 @@ from django.db import transaction
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 from projectify.workspace.models import Project, Section
-from projectify.workspace.services.signals import (
-    send_project_change_signal,
-)
+from projectify.workspace.services.signals import send_change_signal
 
 
 # Create
@@ -44,7 +42,7 @@ def section_create(
     )
     section = Section(title=title, description=description, project=project)
     section.save()
-    send_project_change_signal(project)
+    send_change_signal("changed", project)
     return section
 
 
@@ -66,7 +64,7 @@ def section_update(
     section.title = title
     section.description = description
     section.save()
-    send_project_change_signal(section.project)
+    send_change_signal("changed", section.project)
     return section
 
 
@@ -84,7 +82,7 @@ def section_delete(
         section.project.workspace,
     )
     section.delete()
-    send_project_change_signal(section.project)
+    send_change_signal("changed", section.project)
 
 
 # RPC
@@ -119,4 +117,4 @@ def section_move(
     # Set new order
     project.set_section_order(order_list)
     project.save()
-    send_project_change_signal(section.project)
+    send_change_signal("changed", section.project)

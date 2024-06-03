@@ -22,9 +22,11 @@ import type {
     TeamMemberAssignmentInput,
     TeamMemberAssignmentState,
 } from "$lib/types/ui";
-import type { Task, TeamMember } from "$lib/types/workspace";
+import type { ProjectDetailTask, TeamMember } from "$lib/types/workspace";
 
-export function createTeamMemberAssignment(task?: Task): TeamMemberAssignment {
+export function createTeamMemberAssignment(
+    task?: ProjectDetailTask,
+): TeamMemberAssignment {
     const maybeSelected: TeamMemberAssignmentState = task?.assignee
         ? {
               kind: "teamMember",
@@ -34,11 +36,11 @@ export function createTeamMemberAssignment(task?: Task): TeamMemberAssignment {
               kind: "unassigned",
           };
     const selected = writable<TeamMemberAssignmentState>(maybeSelected);
-    const { subscribe } = derived<typeof selected, TeamMember | undefined>(
+    const { subscribe } = derived<typeof selected, TeamMember | null>(
         selected,
         ($selected, set) => {
             if ($selected.kind == "unassigned") {
-                set(undefined);
+                set(null);
             } else {
                 const { teamMember } = $selected;
                 set(teamMember);

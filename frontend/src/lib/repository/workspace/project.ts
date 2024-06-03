@@ -15,21 +15,9 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import {
-    deleteWithCredentialsJson,
-    failOrOk,
-    getWithCredentialsJson,
-    handle404,
-    postWithCredentialsJson,
-    putWithCredentialsJson,
-} from "$lib/repository/util";
+import { openApiClient, postWithCredentialsJson } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
-import type {
-    ArchivedProject,
-    Workspace,
-    Project,
-    ProjectDetail,
-} from "$lib/types/workspace";
+import type { Workspace, Project, ProjectDetail } from "$lib/types/workspace";
 
 import type { ApiResponse } from "../types";
 
@@ -51,61 +39,15 @@ export async function createProject(
 
 // Read
 export async function getProject(
-    uuid: string,
-    repositoryContext: RepositoryContext,
+    project_uuid: string,
+    _repositoryContext?: RepositoryContext,
 ): Promise<ProjectDetail | undefined> {
-    return handle404(
-        await getWithCredentialsJson<ProjectDetail>(
-            `/workspace/project/${uuid}`,
-            repositoryContext,
-        ),
+    const { data, response } = await openApiClient.GET(
+        "/workspace/project/{project_uuid}",
+        { params: { path: { project_uuid } } },
     );
-}
-
-export async function getArchivedProjects(
-    workspace_uuid: string,
-    repositoryContext: RepositoryContext,
-): Promise<undefined | ArchivedProject[]> {
-    return handle404(
-        await getWithCredentialsJson<ArchivedProject[]>(
-            `/workspace/workspace/${workspace_uuid}/archived-projects/`,
-            repositoryContext,
-        ),
-    );
-}
-
-// Update
-export async function updateProject(
-    project: Pick<Project, "title" | "description" | "uuid">,
-    repositoryContext: RepositoryContext,
-): Promise<ApiResponse<void, unknown>> {
-    return await putWithCredentialsJson(
-        `/workspace/project/${project.uuid}`,
-        project,
-        repositoryContext,
-    );
-}
-// Delete
-export async function deleteProject(
-    { uuid }: Project,
-    repositoryContext: RepositoryContext,
-): Promise<void> {
-    failOrOk(
-        await deleteWithCredentialsJson(
-            `/workspace/project/${uuid}`,
-            repositoryContext,
-        ),
-    );
-}
-
-export async function archiveProject(
-    { uuid }: Project,
-    archived: boolean,
-    repositoryContext: RepositoryContext,
-): Promise<ApiResponse<void, unknown>> {
-    return await postWithCredentialsJson(
-        `/workspace/project/${uuid}/archive`,
-        { archived },
-        repositoryContext,
-    );
+    if (response.ok) {
+        return data;
+    }
+    return undefined;
 }
