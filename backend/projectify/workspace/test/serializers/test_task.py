@@ -87,7 +87,8 @@ class TestTaskCreateSerializer:
     ) -> None:
         """Check that fields are actually readonly by trying a few."""
         assert task.subtask_set.count() == 1
-        task.assign_to(team_member)
+        task.assignee = team_member
+        task.save()
         serializer = TaskCreateSerializer(
             task,
             data={

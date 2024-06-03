@@ -92,18 +92,6 @@ class Task(TitleDescriptionModel, BaseModel):
         _order: int
         id: int
 
-    def assign_to(self, assignee: Optional["TeamMember"]) -> None:
-        """
-        Assign task to user.
-
-        Saves after done.
-        """
-        # XXX I suppose we can use a database trigger for validation here!
-        if assignee:
-            self.workspace.teammember_set.get(uuid=assignee.uuid)
-        self.assignee = assignee
-        self.save()
-
     def get_next_section(self) -> "Section":
         """Return instance of the next section."""
         next_section: "Section" = self.section.get_next_in_order()
