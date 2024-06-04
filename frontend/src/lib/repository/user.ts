@@ -15,60 +15,16 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import vars from "$lib/env";
-import {
-    failOrOk,
-    getWithCredentialsJson,
-    postWithCredentialsJson,
-    putWithCredentialsJson,
-} from "$lib/repository/util";
+import { postWithCredentialsJson } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { User } from "$lib/types/user";
-import { uploadImage } from "$lib/utils/file";
 
 import type { ApiResponse } from "./types";
 
 // Create
-// Read
-export async function getUser(
-    repositoryContext: RepositoryContext,
-): Promise<User | undefined> {
-    type CurrentUser = User | { unauthenticated: true };
-    const user = failOrOk(
-        await getWithCredentialsJson<CurrentUser>(
-            `/user/user/current-user`,
-            repositoryContext,
-        ),
-    );
-    // Perhaps we could include "unauthenticated": false
-    // for a logged in user as well
-    if ("unauthenticated" in user) {
-        return undefined;
-    }
-    return user;
-}
 // Update
-export async function updateUser(
-    user: Pick<User, "preferred_name">,
-    repositoryContext: RepositoryContext,
-): Promise<ApiResponse<User, { preferred_name?: string }>> {
-    return await putWithCredentialsJson(
-        `/user/user/current-user`,
-        user,
-        repositoryContext,
-    );
-}
-
 // Delete
 // RPC
-export async function updateProfilePicture(
-    imageFile: File | undefined,
-): Promise<void> {
-    await uploadImage(
-        imageFile,
-        vars.API_ENDPOINT + "/user/user/profile-picture/upload",
-    );
-}
 
 export async function requestEmailAddressUpdate(
     password: string,

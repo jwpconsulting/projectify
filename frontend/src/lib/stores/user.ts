@@ -17,14 +17,10 @@
  */
 import { readonly, writable } from "svelte/store";
 
-import {
-    getUser,
-    updateUser,
-    updateProfilePicture,
-} from "$lib/repository/user";
 import * as userRepository from "$lib/repository/user";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { User } from "$lib/types/user";
+import { openApiClient } from "$lib/repository/util";
 
 const _user = writable<User | undefined>(undefined);
 export const currentUser = readonly(_user);
@@ -50,40 +46,37 @@ export async function logOut(repositoryContext: RepositoryContext) {
     _user.set(undefined);
 }
 
-export async function fetchUser(
-    repositoryContext: RepositoryContext,
-): Promise<User | undefined> {
-    const userData = await getUser(repositoryContext);
+export async function fetchUser(): Promise<User | undefined> {
+    const { response, data } = await openApiClient.GET(
+        "/user/user/current-user",
+    );
+    if (data === undefined) {
+        console.error(await response.json());
+        throw new Error("Could not load user");
+    }
+    const userData = "unauthenticated" in data ? undefined : data;
     _user.set(userData);
     return userData;
 }
 
 export async function updateUserProfile(
-    preferredName: string | undefined,
-    picture:
-        | { kind: "keep" }
-        | { kind: "update"; imageFile: File }
-        | { kind: "clear" },
-    repositoryContext: RepositoryContext,
-    // TODO Promise<ApiResponse<User, ...>>
+    preferredName: string | null,
 ): Promise<User> {
-    if (picture.kind === "update") {
-        await updateProfilePicture(picture.imageFile);
-    } else if (picture.kind === "clear") {
-        await updateProfilePicture(undefined);
-    }
-    const response = await updateUser(
+    const { data, response } = await openApiClient.PUT(
+        "/user/user/current-user",
         {
-            // Kind of confusing logic here, tbh
-            // All we want to do is to clear the preferred name when it's empty
-            preferred_name:
-                preferredName === "" ? null : preferredName ?? null,
+            body: {
+                preferred_name:
+                    preferredName === "" ? null : preferredName ?? null,
+            },
         },
-        repositoryContext,
     );
     if (!response.ok) {
         throw new Error("Expected response.ok");
     }
-    _user.set(response.data);
-    return response.data;
+    if (data === undefined) {
+        throw new Error("Expected data");
+    }
+    _user.set(data);
+    return data;
 }
