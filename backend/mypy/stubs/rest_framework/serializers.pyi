@@ -5,6 +5,7 @@ from collections.abc import (
 from typing import (
     Any,
     Generic,
+    Literal,
     Optional,
     TypeVar,
     Union,
@@ -86,6 +87,8 @@ class Serializer(BaseSerializer):
 
 class ListSerializer(Generic[M], BaseSerializer):
     child: Optional[ModelSerializer[M]]
+    many: Literal[True]
+
     initial_data: Optional[Sequence[SerializerData]]
     instance: Optional[Sequence[M]]
 
