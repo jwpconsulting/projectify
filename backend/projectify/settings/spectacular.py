@@ -31,6 +31,9 @@ class SpectacularSettings:
         "SWAGGER_UI_DIST": "SIDECAR",  # shorthand to use the sidecar instead
         "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
         "REDOC_DIST": "SIDECAR",
+        "PREPROCESSING_HOOKS": (
+            "projectify.lib.error_serializer.preprocess_bad_request_serializers",
+        ),
     }
 
     SERVE_SPECTACULAR = True

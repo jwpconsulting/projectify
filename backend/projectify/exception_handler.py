@@ -58,6 +58,29 @@ HandledException = Union[
     Exception,
 ]
 
+# TODO add error serializer here, format should be
+
+# {
+# "error": {
+# "code": 400,
+# "details": {
+# "kind": "object",
+# "content": {
+# "preferred_name": {kind: "list", content: ["too long", "invalid chars"]},
+# "email": {kind: "string", content: "too awesome"},
+# "sub_task": {kind: "object", content: {kind: "array", content: [kind:
+# "string", content: "already created"]}}
+# }
+# }
+# }
+# }
+# like so:
+# interface error { error: {code: int, details: ErrorContent} }
+# type ErrorContent =
+# | { kind: "string", content: string }
+# | { kind: "array", content: ErrorContent }
+# | { kind: "object", content: Record<str, ErrorContent> }
+
 
 # TODO find out what ctx is
 def exception_handler(
