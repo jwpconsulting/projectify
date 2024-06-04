@@ -52,6 +52,9 @@ class BaseSerializer:
     parent: Optional[Serializer]
     fields: Mapping[str, Union[BaseSerializer, Field]]
 
+    child: Optional[Serializer]
+    many: bool
+
     def __init__(
         self,
         instance: Optional[object] = None,
@@ -85,6 +88,8 @@ class Serializer(BaseSerializer):
     errors: Errors
     validated_data: ValidatedData
 
+    def get_fields(self) -> Mapping[str, Union[Serializer, Field]]: ...
+
 class ListSerializer(Generic[M], BaseSerializer):
     child: Optional[ModelSerializer[M]]
     many: Literal[True]
@@ -112,4 +117,7 @@ class ModelSerializer(Generic[M], Serializer):
     def create(self, validated_data: ValidatedData) -> M: ...
     def save(self, **kwargs: Any) -> M: ...
 
-__all__ = ("ValidationError",)
+__all__ = (
+    "Field",
+    "ValidationError",
+)

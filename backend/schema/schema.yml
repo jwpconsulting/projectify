@@ -216,7 +216,31 @@ paths:
         '204':
           description: No response body
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Errors for PasswordResetConfirmSerializer
+                properties:
+                  email:
+                    oneOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                  token:
+                    oneOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                  new_password:
+                    oneOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+          description: ''
   /user/user/current-user:
     get:
       operationId: user_user_current_user_retrieve
