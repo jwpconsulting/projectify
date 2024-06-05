@@ -1293,7 +1293,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SectionCreate'
+                $ref: '#/components/schemas/SectionDetail'
           description: ''
         '400':
           content:
@@ -1330,8 +1330,6 @@ paths:
                 - general
                 - status
           description: ''
-        '404':
-          description: No response body
   /workspace/section/{section_uuid}:
     get:
       operationId: workspace_section_retrieve

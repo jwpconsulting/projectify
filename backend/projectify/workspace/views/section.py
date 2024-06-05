@@ -64,7 +64,7 @@ class SectionCreate(APIView):
 
     @extend_schema(
         request=SectionCreateSerializer,
-        responses={201: SectionCreateSerializer, 400: DeriveSchema, 404: None},
+        responses={201: SectionDetailSerializer, 400: DeriveSchema},
     )
     def post(self, request: Request) -> Response:
         """Create a section."""
