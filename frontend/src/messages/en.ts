@@ -645,8 +645,10 @@ const messages: MessageDirectory = {
             error: {
                 title: "Error while confirming email address",
                 message:
-                    "Unfortunately your email address could not be confirmed. The error code from the API was:",
+                    "Unfortunately your email address could not be confirmed.",
                 continue: "Contact support",
+                email: "Error with email address: {error}",
+                token: "Error with token: {error}",
             },
         },
     },

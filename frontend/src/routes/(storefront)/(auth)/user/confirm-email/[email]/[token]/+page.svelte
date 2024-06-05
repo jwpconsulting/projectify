@@ -25,11 +25,11 @@
 
     export let data: PageData;
 
-    const { response } = data;
+    const { error } = data;
 </script>
 
 <section class="flex flex-col gap-4 px-8 py-4">
-    {#if response.ok}
+    {#if error === undefined}
         <h1 class="text-2xl font-bold">
             {$_("auth.confirm-email.success.title")}
         </h1>
@@ -49,9 +49,20 @@
         <p>
             {$_("auth.confirm-email.error.message")}
         </p>
-        <p>
-            {JSON.stringify(response.error)}
-        </p>
+        {#if error.details.email}
+            <p>
+                {$_("auth.confirm-email.error.email", {
+                    values: { error: error.details.email },
+                })}
+            </p>
+        {/if}
+        {#if error.details.token}
+            <p>
+                {$_("auth.confirm-email.error.token", {
+                    values: { error: error.details.token },
+                })}
+            </p>
+        {/if}
         <Anchor
             size="normal"
             label={$_("auth.confirm-email.error.continue")}

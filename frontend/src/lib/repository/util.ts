@@ -78,7 +78,6 @@ const csrfMiddleWare: Middleware = {
             console.warn("No csrf token found");
             return request;
         }
-        console.log(request);
         request.headers.set("X-CSRFToken", csrftoken);
         return request;
     },

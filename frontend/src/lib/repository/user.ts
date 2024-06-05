@@ -24,18 +24,6 @@ import type { ApiResponse } from "./types";
 // Update
 // Delete
 // Auth
-export async function confirmEmail(
-    email: string,
-    token: string,
-    repositoryContext: RepositoryContext,
-): Promise<ApiResponse<unknown, unknown>> {
-    return await postWithCredentialsJson(
-        "/user/user/confirm-email",
-        { email, token },
-        repositoryContext,
-    );
-}
-
 export async function requestPasswordReset(
     email: string,
     repositoryContext: RepositoryContext,
