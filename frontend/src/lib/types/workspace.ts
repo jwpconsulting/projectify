@@ -28,12 +28,6 @@ export type SubTask = components["schemas"]["SubTaskBase"];
 
 export type CreateUpdateSubTask = components["schemas"]["SubTaskCreateUpdate"];
 
-type ChatMessage = {
-    author: TeamMember;
-    uuid: string;
-    text: string;
-} & TimestampedType;
-
 // All the info we can receive from the API
 export type Task = {
     title: string;
@@ -47,7 +41,6 @@ export type Task = {
     assignee?: TeamMember;
     section?: Section;
     sub_tasks?: readonly SubTask[];
-    chat_messages?: readonly ChatMessage[];
 } & TimestampedType;
 
 export type TaskDetail = components["schemas"]["TaskDetail"];
