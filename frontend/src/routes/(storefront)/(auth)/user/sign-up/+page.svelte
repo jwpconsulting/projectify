@@ -78,32 +78,29 @@
             };
             return;
         }
-        const { error, response } = await openApiClient.POST(
-            "/user/user/sign-up",
-            {
-                body: {
-                    email,
-                    password,
-                    tos_agreed: tosAgreed,
-                    privacy_policy_agreed: privacyPolicyAgreed,
-                },
-                fetch,
+        const { error } = await openApiClient.POST("/user/user/sign-up", {
+            body: {
+                email,
+                password,
+                tos_agreed: tosAgreed,
+                privacy_policy_agreed: privacyPolicyAgreed,
             },
-        );
+            fetch,
+        });
         if (error === undefined) {
             await goto(sentEmailConfirmationLinkUrl);
             return;
         }
-        const { details } = error;
-        emailValidation = undefined;
-        passwordValidation = undefined;
-        if (response.status === 429) {
+        if (error.code === 429) {
             state = {
                 kind: "error",
                 message: $_("auth.sign-up.error.too-many-requests"),
             };
             return;
         }
+        const { details } = error;
+        emailValidation = undefined;
+        passwordValidation = undefined;
         if (details.email) {
             emailValidation = { ok: false, error: details.email };
         } else {
