@@ -18,11 +18,7 @@
 import type { TimestampedType } from "$lib/types/base";
 import type { components } from "./schema";
 
-export type TeamMemberRole =
-    | "OBSERVER"
-    | "CONTRIBUTOR"
-    | "MAINTAINER"
-    | "OWNER";
+export type TeamMemberRole = components["schemas"]["RoleEnum"];
 
 export type TeamMember = components["schemas"]["TeamMemberBase"];
 
