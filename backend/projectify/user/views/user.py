@@ -163,20 +163,11 @@ class ChangePassword(views.APIView):
         current_password = serializers.CharField()
         new_password = serializers.CharField()
 
-    class ChangePasswordErrorSerializer(serializers.Serializer):
-        """These fields may be populated in a 400 response."""
-
-        current_password = serializers.CharField(required=False)
-        new_password = serializers.CharField(required=False)
-        policies = serializers.ListField(
-            child=serializers.CharField(), required=False
-        )
-
     @extend_schema(
         request=ChangePasswordSerializer,
         responses={
             204: None,
-            400: ChangePasswordErrorSerializer,
+            400: None,
             429: None,
         },
     )

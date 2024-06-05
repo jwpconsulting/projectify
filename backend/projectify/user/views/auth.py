@@ -76,22 +76,11 @@ class SignUp(views.APIView):
         tos_agreed = serializers.BooleanField()
         privacy_policy_agreed = serializers.BooleanField()
 
-    class SignUpErrorSerializer(serializers.Serializer):
-        """Hint for drf-spectacular."""
-
-        email = serializers.CharField(required=False)
-        password = serializers.CharField(required=False)
-        policies = serializers.ListField(
-            child=serializers.CharField(), required=False
-        )
-        tos_agreed = serializers.CharField(required=False)
-        privacy_policy_agreed = serializers.CharField(required=False)
-
     @extend_schema(
         request=SignUpSerializer,
         responses={
             204: None,
-            400: SignUpErrorSerializer,
+            400: None,
             429: None,
         },
     )

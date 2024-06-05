@@ -215,7 +215,32 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ChangePasswordError'
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for ChangePasswordSerializer
+                    properties:
+                      current_password:
+                        type: string
+                      new_password:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
         '429':
           description: No response body
@@ -728,7 +753,36 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SignUpError'
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for SignUpSerializer
+                    properties:
+                      email:
+                        type: string
+                      password:
+                        type: string
+                      tos_agreed:
+                        type: string
+                      privacy_policy_agreed:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
         '429':
           description: No response body
@@ -2211,18 +2265,6 @@ components:
       required:
       - current_password
       - new_password
-    ChangePasswordError:
-      type: object
-      description: These fields may be populated in a 400 response.
-      properties:
-        current_password:
-          type: string
-        new_password:
-          type: string
-        policies:
-          type: array
-          items:
-            type: string
     ChatMessageBase:
       type: object
       description: ChatMessage model serializer.
@@ -2842,22 +2884,6 @@ components:
       - password
       - privacy_policy_agreed
       - tos_agreed
-    SignUpError:
-      type: object
-      description: Hint for drf-spectacular.
-      properties:
-        email:
-          type: string
-        password:
-          type: string
-        policies:
-          type: array
-          items:
-            type: string
-        tos_agreed:
-          type: string
-        privacy_policy_agreed:
-          type: string
     SingleQuota:
       type: object
       description: Serializer a single Quota dataclass.
