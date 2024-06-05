@@ -94,6 +94,7 @@
             await goto(sentEmailConfirmationLinkUrl);
             return;
         }
+        const { details } = error;
         emailValidation = undefined;
         passwordValidation = undefined;
         if (response.status === 429) {
@@ -103,20 +104,16 @@
             };
             return;
         }
-        if (error.email) {
-            emailValidation = { ok: false, error: error.email };
+        if (details.email) {
+            emailValidation = { ok: false, error: details.email };
         } else {
             emailValidation = {
                 ok: true,
                 result: $_("auth.sign-up.email.valid"),
             };
         }
-        if (error.policies !== undefined || error.password !== undefined) {
-            const errors = [
-                ...(error.policies ?? []),
-                ...(error.password ? [error.password] : []),
-            ];
-            passwordValidation = { ok: false, error: errors.join(", ") };
+        if (details.password !== undefined) {
+            passwordValidation = { ok: false, error: details.password };
         } else {
             passwordValidation = {
                 ok: true,

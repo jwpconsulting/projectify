@@ -81,10 +81,11 @@
             await goto(changedPasswordUrl);
             return;
         }
-        if (error.current_password !== undefined) {
+        const { details } = error;
+        if (details.current_password !== undefined) {
             currentPasswordValidation = {
                 ok: false,
-                error: error.current_password,
+                error: details.current_password,
             };
         } else {
             currentPasswordValidation = {
@@ -94,12 +95,8 @@
                 ),
             };
         }
-        if (error.policies !== undefined || error.new_password !== undefined) {
-            const errors = [
-                ...(error.policies ?? []),
-                ...(error.new_password ? [error.new_password] : []),
-            ];
-            newPasswordValidation = { ok: false, error: errors.join(", ") };
+        if (details.new_password !== undefined) {
+            newPasswordValidation = { ok: false, error: details.new_password };
         } else {
             newPasswordValidation = {
                 ok: true,

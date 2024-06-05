@@ -194,12 +194,6 @@ export interface components {
             current_password: string;
             new_password: string;
         };
-        /** @description These fields may be populated in a 400 response. */
-        ChangePasswordError: {
-            current_password?: string;
-            new_password?: string;
-            policies?: string[];
-        };
         /** @description ChatMessage model serializer. */
         ChatMessageBase: {
             /** Format: date-time */
@@ -492,14 +486,6 @@ export interface components {
             password: string;
             tos_agreed: boolean;
             privacy_policy_agreed: boolean;
-        };
-        /** @description Hint for drf-spectacular. */
-        SignUpError: {
-            email?: string;
-            password?: string;
-            policies?: string[];
-            tos_agreed?: string;
-            privacy_policy_agreed?: string;
         };
         /** @description Serializer a single Quota dataclass. */
         SingleQuota: {
@@ -916,7 +902,17 @@ export interface operations {
             };
             400: {
                 content: {
-                    "application/json": components["schemas"]["ChangePasswordError"];
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for ChangePasswordSerializer */
+                        details: {
+                            current_password?: string;
+                            new_password?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
                 };
             };
             /** @description No response body */
@@ -1231,7 +1227,19 @@ export interface operations {
             };
             400: {
                 content: {
-                    "application/json": components["schemas"]["SignUpError"];
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for SignUpSerializer */
+                        details: {
+                            email?: string;
+                            password?: string;
+                            tos_agreed?: string;
+                            privacy_policy_agreed?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
                 };
             };
             /** @description No response body */
