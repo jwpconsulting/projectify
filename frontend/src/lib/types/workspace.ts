@@ -38,13 +38,7 @@ export interface Label {
     uuid: string;
 }
 
-export type SubTask = {
-    uuid: string;
-    done: boolean;
-    _order: number;
-    title: string;
-    description: string | null;
-} & TimestampedType;
+export type SubTask = components["schemas"]["SubTaskBase"];
 
 export type CreateUpdateSubTask = components["schemas"]["SubTaskCreateUpdate"];
 
