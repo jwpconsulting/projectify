@@ -81,14 +81,29 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for WorkspaceCheckoutSessionCreateInputSerializer
+                description: Error schema
                 properties:
-                  seats:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for WorkspaceCheckoutSessionCreateInputSerializer
+                    properties:
+                      seats:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
         '404':
           description: No response body
@@ -149,14 +164,29 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for CouponRedeemSerializer
+                description: Error schema
                 properties:
                   code:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for CouponRedeemSerializer
+                    properties:
+                      code:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
   /user/user/change-password:
     post:
@@ -218,20 +248,31 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for ConfirmEmailSerializer
+                description: Error schema
                 properties:
-                  email:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for ConfirmEmailSerializer
+                    properties:
+                      email:
                         type: string
-                  token:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                      token:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
   /user/user/confirm-password-reset:
     post:
@@ -262,26 +303,33 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for PasswordResetConfirmSerializer
+                description: Error schema
                 properties:
-                  email:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for PasswordResetConfirmSerializer
+                    properties:
+                      email:
                         type: string
-                  token:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                      token:
                         type: string
-                  new_password:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                      new_password:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
   /user/user/current-user:
     get:
@@ -330,14 +378,29 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for UserUpdateSerializer
+                description: Error schema
                 properties:
-                  preferred_name:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for UserUpdateSerializer
+                    properties:
+                      preferred_name:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
         '403':
           description: No response body
@@ -369,14 +432,29 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for ConfirmEmailAddressUpdateSerializer
+                description: Error schema
                 properties:
-                  confirmation_token:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for ConfirmEmailAddressUpdateSerializer
+                    properties:
+                      confirmation_token:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
   /user/user/email-address-update/request:
     post:
@@ -406,20 +484,31 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for RequestEmailAddressUpdateSerializer
+                description: Error schema
                 properties:
-                  password:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for RequestEmailAddressUpdateSerializer
+                    properties:
+                      password:
                         type: string
-                  new_email:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                      new_email:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
         '429':
           description: No response body
@@ -456,20 +545,31 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for LogInSerializer
+                description: Error schema
                 properties:
-                  email:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for LogInSerializer
+                    properties:
+                      email:
                         type: string
-                  password:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                      password:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
         '429':
           description: No response body
@@ -521,14 +621,29 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for ProfilePictureUploadSerializer
+                description: Error schema
                 properties:
-                  file:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for ProfilePictureUploadSerializer
+                    properties:
+                      file:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
   /user/user/request-password-reset:
     post:
@@ -559,14 +674,29 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for PasswordResetRequestSerializer
+                description: Error schema
                 properties:
-                  email:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for PasswordResetRequestSerializer
+                    properties:
+                      email:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
         '429':
           description: No response body
@@ -634,26 +764,33 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for LabelCreateSerializer
+                description: Error schema
                 properties:
-                  name:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for LabelCreateSerializer
+                    properties:
+                      name:
                         type: string
-                  color:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                      color:
                         type: string
-                  workspace_uuid:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                      workspace_uuid:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
   /workspace/label/{label_uuid}:
     put:
@@ -694,20 +831,31 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for LabelUpdateSerializer
+                description: Error schema
                 properties:
-                  name:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for LabelUpdateSerializer
+                    properties:
+                      name:
                         type: string
-                  color:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                      color:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
         '404':
           description: No response body
@@ -762,32 +910,35 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for ProjectCreateSerializer
+                description: Error schema
                 properties:
-                  title:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for ProjectCreateSerializer
+                    properties:
+                      title:
                         type: string
-                  description:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                      description:
                         type: string
-                  workspace_uuid:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                      workspace_uuid:
                         type: string
-                  due_date:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                      due_date:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
   /workspace/project/{project_uuid}:
     get:
@@ -851,26 +1002,33 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for ProjectUpdateSerializer
+                description: Error schema
                 properties:
-                  title:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for ProjectUpdateSerializer
+                    properties:
+                      title:
                         type: string
-                  description:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                      description:
                         type: string
-                  due_date:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                      due_date:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
     delete:
       operationId: workspace_project_destroy
@@ -930,14 +1088,29 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for ProjectArchiveSerializer
+                description: Error schema
                 properties:
-                  archived:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for ProjectArchiveSerializer
+                    properties:
+                      archived:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
   /workspace/section/:
     post:
@@ -973,26 +1146,33 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for SectionCreateSerializer
+                description: Error schema
                 properties:
-                  title:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for SectionCreateSerializer
+                    properties:
+                      title:
                         type: string
-                  description:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                      description:
                         type: string
-                  project_uuid:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                      project_uuid:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
   /workspace/section/{section_uuid}:
     get:
@@ -1056,20 +1236,31 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for SectionUpdateSerializer
+                description: Error schema
                 properties:
-                  title:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for SectionUpdateSerializer
+                    properties:
+                      title:
                         type: string
-                  description:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                      description:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
         '404':
           description: No response body
@@ -1127,14 +1318,29 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for SectionMoveSerializer
+                description: Error schema
                 properties:
-                  order:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for SectionMoveSerializer
+                    properties:
+                      order:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
         '404':
           description: No response body
@@ -1170,88 +1376,67 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for TaskCreateSerializer
+                description: Error schema
                 properties:
-                  title:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
-                        type: string
-                  description:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
-                        type: string
-                  assignee:
+                  code:
+                    type: integer
+                  details:
                     type: object
-                    description: Errors for UuidObjectSerializer
+                    description: Errors for TaskCreateSerializer
                     properties:
-                      uuid:
-                        oneOf:
-                        - type: string
-                        - type: array
-                          items:
+                      title:
+                        type: string
+                      description:
+                        type: string
+                      assignee:
+                        type: object
+                        description: Errors for UuidObjectSerializer
+                        properties:
+                          uuid:
                             type: string
-                  labels:
+                      labels:
+                        type: array
+                        items:
+                          type: object
+                          description: Errors for UuidObjectSerializer
+                          properties:
+                            uuid:
+                              type: string
+                      due_date:
+                        type: string
+                      sub_tasks:
+                        type: array
+                        items:
+                          type: object
+                          description: Errors for SubTaskCreateUpdateSerializer
+                          properties:
+                            uuid:
+                              type: string
+                            title:
+                              type: string
+                            description:
+                              type: string
+                            done:
+                              type: string
+                      section:
+                        type: object
+                        description: Errors for UuidObjectSerializer
+                        properties:
+                          uuid:
+                            type: string
+                  general:
                     type: array
                     items:
-                      type: object
-                      description: Errors for UuidObjectSerializer
-                      properties:
-                        uuid:
-                          oneOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                  due_date:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
-                        type: string
-                  sub_tasks:
-                    type: array
-                    items:
-                      type: object
-                      description: Errors for SubTaskCreateUpdateSerializer
-                      properties:
-                        uuid:
-                          oneOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                        title:
-                          oneOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                        description:
-                          oneOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                        done:
-                          oneOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                  section:
-                    type: object
-                    description: Errors for UuidObjectSerializer
-                    properties:
-                      uuid:
-                        oneOf:
-                        - type: string
-                        - type: array
-                          items:
-                            type: string
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
   /workspace/task/{task_uuid}:
     get:
@@ -1319,78 +1504,61 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for TaskUpdateSerializer
+                description: Error schema
                 properties:
-                  title:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
-                        type: string
-                  description:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
-                        type: string
-                  assignee:
+                  code:
+                    type: integer
+                  details:
                     type: object
-                    description: Errors for UuidObjectSerializer
+                    description: Errors for TaskUpdateSerializer
                     properties:
-                      uuid:
-                        oneOf:
-                        - type: string
-                        - type: array
-                          items:
-                            type: string
-                  labels:
-                    type: array
-                    items:
-                      type: object
-                      description: Errors for UuidObjectSerializer
-                      properties:
-                        uuid:
-                          oneOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                  due_date:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                      title:
                         type: string
-                  sub_tasks:
+                      description:
+                        type: string
+                      assignee:
+                        type: object
+                        description: Errors for UuidObjectSerializer
+                        properties:
+                          uuid:
+                            type: string
+                      labels:
+                        type: array
+                        items:
+                          type: object
+                          description: Errors for UuidObjectSerializer
+                          properties:
+                            uuid:
+                              type: string
+                      due_date:
+                        type: string
+                      sub_tasks:
+                        type: array
+                        items:
+                          type: object
+                          description: Errors for SubTaskCreateUpdateSerializer
+                          properties:
+                            uuid:
+                              type: string
+                            title:
+                              type: string
+                            description:
+                              type: string
+                            done:
+                              type: string
+                  general:
                     type: array
                     items:
-                      type: object
-                      description: Errors for SubTaskCreateUpdateSerializer
-                      properties:
-                        uuid:
-                          oneOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                        title:
-                          oneOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                        description:
-                          oneOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                        done:
-                          oneOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
         '404':
           description: No response body
@@ -1452,14 +1620,29 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for TaskMoveAfterTaskSerializer
+                description: Error schema
                 properties:
-                  task_uuid:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for TaskMoveAfterTaskSerializer
+                    properties:
+                      task_uuid:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
         '404':
           description: No response body
@@ -1502,14 +1685,29 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for TaskMoveToSectionSerializer
+                description: Error schema
                 properties:
-                  section_uuid:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for TaskMoveToSectionSerializer
+                    properties:
+                      section_uuid:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
         '404':
           description: No response body
@@ -1574,20 +1772,31 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for TeamMemberUpdateSerializer
+                description: Error schema
                 properties:
-                  job_title:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for TeamMemberUpdateSerializer
+                    properties:
+                      job_title:
                         type: string
-                  role:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                      role:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
         '404':
           description: No response body
@@ -1642,20 +1851,31 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for WorkspaceCreateSerializer
+                description: Error schema
                 properties:
-                  title:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for WorkspaceCreateSerializer
+                    properties:
+                      title:
                         type: string
-                  description:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                      description:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
   /workspace/workspace/{workspace_uuid}:
     get:
@@ -1719,20 +1939,31 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for WorkspaceUpdateSerializer
+                description: Error schema
                 properties:
-                  title:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for WorkspaceUpdateSerializer
+                    properties:
+                      title:
                         type: string
-                  description:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                      description:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
         '404':
           description: No response body
@@ -1801,14 +2032,29 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for InviteUserToWorkspaceSerializer
+                description: Error schema
                 properties:
-                  email:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for InviteUserToWorkspaceSerializer
+                    properties:
+                      email:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
         '404':
           description: No response body
@@ -1840,14 +2086,29 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for WorkspacePictureUploadSerializer
+                description: Error schema
                 properties:
-                  file:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for WorkspacePictureUploadSerializer
+                    properties:
+                      file:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
         '404':
           description: No response body
@@ -1886,14 +2147,29 @@ paths:
             application/json:
               schema:
                 type: object
-                description: Errors for UninviteUserFromWorkspaceSerializer
+                description: Error schema
                 properties:
-                  email:
-                    oneOf:
-                    - type: string
-                    - type: array
-                      items:
+                  code:
+                    type: integer
+                  details:
+                    type: object
+                    description: Errors for UninviteUserFromWorkspaceSerializer
+                    properties:
+                      email:
                         type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
         '404':
           description: No response body
