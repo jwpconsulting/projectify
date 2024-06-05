@@ -830,9 +830,19 @@ export interface operations {
                     "application/json": components["schemas"]["WorkspaceCheckoutSessionCreateOutput"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for WorkspaceCheckoutSessionCreateInputSerializer */
+                        details: {
+                            seats?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
             /** @description No response body */
             404: {
@@ -874,9 +884,19 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for CouponRedeemSerializer */
+                        details: {
+                            code?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
         };
     };
@@ -919,9 +939,20 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for ConfirmEmailSerializer */
+                        details: {
+                            email?: string;
+                            token?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
         };
     };
@@ -939,9 +970,21 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for PasswordResetConfirmSerializer */
+                        details: {
+                            email?: string;
+                            token?: string;
+                            new_password?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
         };
     };
@@ -970,9 +1013,19 @@ export interface operations {
                     "application/json": components["schemas"]["User"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for UserUpdateSerializer */
+                        details: {
+                            preferred_name?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
             /** @description No response body */
             403: {
@@ -994,9 +1047,19 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for ConfirmEmailAddressUpdateSerializer */
+                        details: {
+                            confirmation_token?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
         };
     };
@@ -1014,9 +1077,20 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for RequestEmailAddressUpdateSerializer */
+                        details: {
+                            password?: string;
+                            new_email?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
             /** @description No response body */
             429: {
@@ -1039,9 +1113,20 @@ export interface operations {
                     "application/json": components["schemas"]["User"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for LogInSerializer */
+                        details: {
+                            email?: string;
+                            password?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
             /** @description No response body */
             429: {
@@ -1080,9 +1165,19 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for ProfilePictureUploadSerializer */
+                        details: {
+                            file?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
         };
     };
@@ -1100,9 +1195,19 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for PasswordResetRequestSerializer */
+                        details: {
+                            email?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
             /** @description No response body */
             429: {
@@ -1150,9 +1255,21 @@ export interface operations {
                     "application/json": components["schemas"]["LabelBase"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for LabelCreateSerializer */
+                        details: {
+                            name?: string;
+                            color?: string;
+                            workspace_uuid?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
         };
     };
@@ -1176,9 +1293,20 @@ export interface operations {
                     "application/json": components["schemas"]["LabelBase"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for LabelUpdateSerializer */
+                        details: {
+                            name?: string;
+                            color?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
             /** @description No response body */
             404: {
@@ -1219,9 +1347,22 @@ export interface operations {
                     "application/json": components["schemas"]["ProjectDetail"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for ProjectCreateSerializer */
+                        details: {
+                            title?: string;
+                            description?: string;
+                            workspace_uuid?: string;
+                            due_date?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
         };
     };
@@ -1264,9 +1405,21 @@ export interface operations {
                     "application/json": components["schemas"]["ProjectUpdate"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for ProjectUpdateSerializer */
+                        details: {
+                            title?: string;
+                            description?: string;
+                            due_date?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
         };
     };
@@ -1307,9 +1460,19 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for ProjectArchiveSerializer */
+                        details: {
+                            archived?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
             /** @description No response body */
             403: {
@@ -1336,9 +1499,21 @@ export interface operations {
                     "application/json": components["schemas"]["SectionCreate"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for SectionCreateSerializer */
+                        details: {
+                            title?: string;
+                            description?: string;
+                            project_uuid?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
             /** @description No response body */
             404: {
@@ -1385,9 +1560,20 @@ export interface operations {
                     "application/json": components["schemas"]["SectionUpdate"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for SectionUpdateSerializer */
+                        details: {
+                            title?: string;
+                            description?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
             /** @description No response body */
             404: {
@@ -1432,9 +1618,19 @@ export interface operations {
             200: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for SectionMoveSerializer */
+                        details: {
+                            order?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
             /** @description No response body */
             404: {
@@ -1457,9 +1653,38 @@ export interface operations {
                     "application/json": components["schemas"]["TaskDetail"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for TaskCreateSerializer */
+                        details: {
+                            title?: string;
+                            description?: string;
+                            /** @description Errors for UuidObjectSerializer */
+                            assignee?: {
+                                uuid?: string;
+                            };
+                            labels?: {
+                                uuid?: string;
+                            }[];
+                            due_date?: string;
+                            sub_tasks?: {
+                                uuid?: string;
+                                title?: string;
+                                description?: string;
+                                done?: string;
+                            }[];
+                            /** @description Errors for UuidObjectSerializer */
+                            section?: {
+                                uuid?: string;
+                            };
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
         };
     };
@@ -1507,9 +1732,34 @@ export interface operations {
                     "application/json": components["schemas"]["TaskDetail"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for TaskUpdateSerializer */
+                        details: {
+                            title?: string;
+                            description?: string;
+                            /** @description Errors for UuidObjectSerializer */
+                            assignee?: {
+                                uuid?: string;
+                            };
+                            labels?: {
+                                uuid?: string;
+                            }[];
+                            due_date?: string;
+                            sub_tasks?: {
+                                uuid?: string;
+                                title?: string;
+                                description?: string;
+                                done?: string;
+                            }[];
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
             /** @description No response body */
             404: {
@@ -1555,9 +1805,19 @@ export interface operations {
                     "application/json": components["schemas"]["TaskDetail"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for TaskMoveAfterTaskSerializer */
+                        details: {
+                            task_uuid?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
             /** @description No response body */
             404: {
@@ -1585,9 +1845,19 @@ export interface operations {
                     "application/json": components["schemas"]["TaskDetail"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for TaskMoveToSectionSerializer */
+                        details: {
+                            section_uuid?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
             /** @description No response body */
             404: {
@@ -1634,9 +1904,20 @@ export interface operations {
                     "application/json": components["schemas"]["TeamMemberUpdate"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for TeamMemberUpdateSerializer */
+                        details: {
+                            job_title?: string;
+                            role?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
             /** @description No response body */
             404: {
@@ -1677,9 +1958,20 @@ export interface operations {
                     "application/json": components["schemas"]["WorkspaceBase"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for WorkspaceCreateSerializer */
+                        details: {
+                            title?: string;
+                            description?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
         };
     };
@@ -1722,9 +2014,20 @@ export interface operations {
                     "application/json": components["schemas"]["WorkspaceUpdate"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for WorkspaceUpdateSerializer */
+                        details: {
+                            title?: string;
+                            description?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
             /** @description No response body */
             404: {
@@ -1771,9 +2074,19 @@ export interface operations {
                     "application/json": components["schemas"]["InviteUserToWorkspace"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for InviteUserToWorkspaceSerializer */
+                        details: {
+                            email?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
             /** @description No response body */
             404: {
@@ -1798,9 +2111,19 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for WorkspacePictureUploadSerializer */
+                        details: {
+                            file?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
             /** @description No response body */
             404: {
@@ -1827,9 +2150,19 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        code: number;
+                        /** @description Errors for UninviteUserFromWorkspaceSerializer */
+                        details: {
+                            email?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
             /** @description No response body */
             404: {

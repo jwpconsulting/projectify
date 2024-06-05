@@ -22,12 +22,12 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import { goto } from "$lib/navigation";
-    import { requestEmailAddressUpdate } from "$lib/repository/user";
     import type { FormViewState } from "$lib/types/ui";
     import { getProfileUrl } from "$lib/urls";
     import { requestedEmailAddressUpdateUrl } from "$lib/urls/user";
 
     import type { PageData } from "./$types";
+    import { openApiClient } from "$lib/repository/util";
 
     export let data: PageData;
 
@@ -39,40 +39,40 @@
 
     let newEmail: string | undefined = undefined;
     let newEmailValidation: InputFieldValidation | undefined = undefined;
-    let currentPassword: string | undefined = undefined;
-    let currentPasswordValidation: InputFieldValidation | undefined =
-        undefined;
+    let password: string | undefined = undefined;
+    let passwordValidation: InputFieldValidation | undefined = undefined;
 
     async function submit() {
         if (newEmail === undefined) {
             throw new Error("Expected newEmail");
         }
-        if (currentPassword === undefined) {
+        if (password === undefined) {
             throw new Error("Expected currentPassword");
         }
-        const response = await requestEmailAddressUpdate(
-            currentPassword,
-            newEmail,
-            { fetch },
+        const { error } = await openApiClient.POST(
+            "/user/user/email-address-update/request",
+            { body: { new_email: newEmail, password } },
         );
-        if (response.ok) {
+
+        if (error === undefined) {
             await goto(requestedEmailAddressUpdateUrl);
             return;
         }
-        if (response.error.password === undefined) {
-            currentPasswordValidation = {
+        const { details } = error;
+        if (details.password === undefined) {
+            passwordValidation = {
                 ok: true,
                 result: $_(
                     "user-account-settings.update-email-address.current-password.valid",
                 ),
             };
         } else {
-            currentPasswordValidation = {
+            passwordValidation = {
                 ok: false,
-                error: response.error.password,
+                error: details.password,
             };
         }
-        if (response.error.new_email === undefined) {
+        if (details.new_email === undefined) {
             newEmailValidation = {
                 ok: true,
                 result: $_(
@@ -82,10 +82,10 @@
         } else {
             newEmailValidation = {
                 ok: false,
-                error: response.error.new_email,
+                error: details.new_email,
             };
         }
-        if (currentPasswordValidation.ok && newEmailValidation.ok) {
+        if (passwordValidation.ok && newEmailValidation.ok) {
             state = {
                 kind: "error",
                 message: $_(
@@ -135,8 +135,8 @@
             )}
             name="current-password"
             style={{ inputType: "password" }}
-            bind:value={currentPassword}
-            validation={currentPasswordValidation}
+            bind:value={password}
+            validation={passwordValidation}
             required
         />
         {#if state.kind === "error"}
