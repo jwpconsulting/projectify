@@ -72,20 +72,6 @@
                 warning = $_("overlay.destructive.delete-task.warning");
                 buttonLabel = $_("overlay.destructive.delete-task.button");
                 break;
-            case "deleteSelectedTasks":
-                title = $_("overlay.destructive.delete-selected-tasks.title");
-                // XXX not used, and even if, we should show all task titles
-                // instead of just a count
-                body = $_("overlay.destructive.delete-selected-tasks.body", {
-                    values: { count: target.tasks.length.toString() },
-                });
-                warning = $_(
-                    "overlay.destructive.delete-selected-tasks.warning",
-                );
-                buttonLabel = $_(
-                    "overlay.destructive.delete-selected-tasks.button",
-                );
-                break;
             case "archiveProject":
                 title = $_("overlay.destructive.archive-project.title");
                 body = $_("overlay.destructive.archive-project.body", {

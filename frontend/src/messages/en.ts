@@ -129,12 +129,6 @@ const messages: MessageDirectory = {
                 warning: "This action cannot be undone.",
                 button: "Delete",
             },
-            "delete-selected-tasks": {
-                title: "Delete selected tasks",
-                body: "Would you like to delete {count, number} selected tasks?",
-                warning: "This action cannot be undone.",
-                button: "Delete",
-            },
             "archive-project": {
                 title: "Archive project",
                 body: "Would you like to archive this ''{project}'' project? You will be redirected to the project archive page after archival has finished.",

@@ -24,7 +24,6 @@ import type {
     Section,
     SectionWithTasks,
     TeamMember,
-    TaskWithSection,
     ProjectDetailTask,
     WorkspaceDetail,
     WorkspaceDetailProject,
@@ -80,8 +79,6 @@ export type DestructiveOverlayType =
           section: SectionWithTasks;
       }
     | { kind: "deleteTask"; task: ProjectDetailTask }
-    // XXX this is never used
-    | { kind: "deleteSelectedTasks"; tasks: readonly TaskWithSection[] }
     | { kind: "archiveProject"; project: Project }
     | { kind: "deleteProject"; project: Project };
 
