@@ -17,7 +17,6 @@
  */
 import { postWithCredentialsJson } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
-import type { User } from "$lib/types/user";
 
 import type { ApiResponse } from "./types";
 
@@ -33,28 +32,6 @@ export async function confirmEmail(
     return await postWithCredentialsJson(
         "/user/user/confirm-email",
         { email, token },
-        repositoryContext,
-    );
-}
-
-export async function logIn(
-    email: string,
-    password: string,
-    repositoryContext: RepositoryContext,
-): Promise<ApiResponse<User, { email?: string; password?: string }>> {
-    return await postWithCredentialsJson(
-        "/user/user/log-in",
-        { email, password },
-        repositoryContext,
-    );
-}
-
-export async function logOut(
-    repositoryContext: RepositoryContext,
-): Promise<ApiResponse<void, void>> {
-    return await postWithCredentialsJson(
-        "/user/user/log-out",
-        undefined,
         repositoryContext,
     );
 }

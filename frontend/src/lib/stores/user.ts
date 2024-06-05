@@ -17,7 +17,6 @@
  */
 import { readonly, writable } from "svelte/store";
 
-import * as userRepository from "$lib/repository/user";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { User } from "$lib/types/user";
 import { openApiClient } from "$lib/repository/util";
@@ -28,21 +27,27 @@ export const currentUser = readonly(_user);
 export async function logIn(
     email: string,
     password: string,
-    repositoryContext: RepositoryContext,
+    _repositoryContext: RepositoryContext,
 ) {
-    const response = await userRepository.logIn(
-        email,
-        password,
-        repositoryContext,
+    const { response, data, error } = await openApiClient.POST(
+        "/user/user/log-in",
+        {
+            body: { email, password },
+        },
     );
-    if (response.ok) {
-        _user.set(response.data);
+    if (data) {
+        _user.set(data);
+    } else {
+        console.error(error);
     }
-    return response;
+    return { data, error, response };
 }
 
-export async function logOut(repositoryContext: RepositoryContext) {
-    await userRepository.logOut(repositoryContext);
+export async function logOut(_repositoryContext: RepositoryContext) {
+    const { response } = await openApiClient.POST("/user/user/log-out");
+    if (!response.ok) {
+        throw new Error("Could not log out");
+    }
     _user.set(undefined);
 }
 
