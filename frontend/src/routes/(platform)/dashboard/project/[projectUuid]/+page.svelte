@@ -21,13 +21,14 @@
     import Loading from "$lib/components/Loading.svelte";
     import SectionC from "$lib/figma/cards/Section.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import { currentProject, currentSections } from "$lib/stores/dashboard";
+    import { currentProject } from "$lib/stores/dashboard";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type {
         ProjectDetail,
         ProjectDetailSection,
     } from "$lib/types/workspace";
+    import { currentSections } from "$lib/stores/dashboard/section";
 
     export let data: { injectProject?: ProjectDetail } | undefined = undefined;
 

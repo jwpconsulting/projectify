@@ -22,7 +22,7 @@
 
     import FilterTeamMember from "$lib/figma/select-controls/FilterTeamMember.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
-    import { tasksPerUser } from "$lib/stores/dashboard";
+    import { tasksPerUser } from "$lib/stores/dashboard/section";
     import {
         filterByTeamMember,
         selectedTeamMember,
