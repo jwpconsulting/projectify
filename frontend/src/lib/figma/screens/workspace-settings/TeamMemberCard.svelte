@@ -22,10 +22,7 @@
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
-    import {
-        deleteTeamMember,
-        updateTeamMember,
-    } from "$lib/repository/workspace/teamMember";
+    import { updateTeamMember } from "$lib/repository/workspace/teamMember";
     import {
         currentTeamMember,
         currentTeamMemberCan,
@@ -36,6 +33,7 @@
     import { getDisplayName } from "$lib/types/user";
     import type { TeamMember, TeamMemberRole } from "$lib/types/workspace";
     import { getMessageNameForRole } from "$lib/utils/i18n";
+    import { openApiClient } from "$lib/repository/util";
 
     export let teamMember: TeamMember;
 
@@ -57,8 +55,13 @@
             kind: "deleteTeamMember",
             teamMember,
         });
-        // TODO: Do something with the result
-        await deleteTeamMember(teamMember, { fetch });
+        const { error } = await openApiClient.DELETE(
+            "/workspace/team-member/{team_member_uuid}",
+            { params: { path: { team_member_uuid: teamMember.uuid } } },
+        );
+        if (error) {
+            throw new Error("Could not remove user");
+        }
     }
 
     function startEdit() {

@@ -15,12 +15,11 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { Result } from "$lib/types/base";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { TeamMember } from "$lib/types/workspace";
 
 import type { ApiResponse } from "../types";
-import { deleteWithCredentialsJson, putWithCredentialsJson } from "../util";
+import { putWithCredentialsJson } from "../util";
 
 // Create
 // Read
@@ -34,25 +33,4 @@ export async function updateTeamMember(
         teamMember,
         repositoryContext,
     );
-}
-
-// Delete
-interface DeleteError {
-    teamMember: string;
-}
-export async function deleteTeamMember(
-    teamMember: TeamMember,
-    repositoryContext: RepositoryContext,
-): Promise<Result<undefined, DeleteError>> {
-    const result = await deleteWithCredentialsJson(
-        `/workspace/team-member/${teamMember.uuid}`,
-        repositoryContext,
-    );
-    if (result.kind === "ok") {
-        return { ok: true, result: undefined };
-    } else if (result.kind === "badRequest") {
-        return { ok: false, error: result.error as DeleteError };
-    }
-    console.error(result);
-    throw new Error("Unrecoverable");
 }
