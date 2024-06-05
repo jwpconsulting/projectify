@@ -58,9 +58,7 @@
             };
             return;
         }
-        const { response, data, error } = await logIn(email, password, {
-            fetch,
-        });
+        const { data, error } = await logIn(email, password, { fetch });
         if (data !== undefined) {
             // TODO redirect to `/{redirectTo}` instead
             // To prevent users not being redirected to third parties
@@ -72,7 +70,7 @@
         } else if (error === undefined) {
             state = { kind: "error", message: $_("auth.log-in.error.other") };
             return;
-        } else if (response.status === 429) {
+        } else if (error.code === 429) {
             state = {
                 kind: "error",
                 message: $_("auth.log-in.error.rate-limit"),

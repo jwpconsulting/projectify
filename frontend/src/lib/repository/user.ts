@@ -24,17 +24,6 @@ import type { ApiResponse } from "./types";
 // Update
 // Delete
 // Auth
-export async function requestPasswordReset(
-    email: string,
-    repositoryContext: RepositoryContext,
-): Promise<ApiResponse<void, { email?: string }>> {
-    return await postWithCredentialsJson(
-        "/user/user/request-password-reset",
-        { email },
-        repositoryContext,
-    );
-}
-
 export async function confirmPasswordReset(
     email: string,
     token: string,

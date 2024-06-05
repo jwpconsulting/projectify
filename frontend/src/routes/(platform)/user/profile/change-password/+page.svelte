@@ -81,6 +81,9 @@
             await goto(changedPasswordUrl);
             return;
         }
+        if (error.code === 429) {
+            throw new Error("Too many request");
+        }
         const { details } = error;
         if (details.current_password !== undefined) {
             currentPasswordValidation = {

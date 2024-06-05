@@ -58,6 +58,9 @@
             await goto(requestedEmailAddressUpdateUrl);
             return;
         }
+        if (error.code === 429) {
+            throw new Error("Too many request");
+        }
         const { details } = error;
         if (details.password === undefined) {
             passwordValidation = {
