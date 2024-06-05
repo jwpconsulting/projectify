@@ -15,7 +15,10 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { getWorkspace, getWorkspaces } from "$lib/repository/workspace";
+import {
+    getWorkspace,
+    getWorkspaces,
+} from "$lib/repository/workspace/workspace";
 import { createHttpStore } from "$lib/stores/httpSubscription";
 import { createWsStore } from "$lib/stores/wsSubscription";
 import type { Workspace } from "$lib/types/workspace";

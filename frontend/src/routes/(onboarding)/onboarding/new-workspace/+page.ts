@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { getWorkspaces } from "$lib/repository/workspace";
+import { getWorkspaces } from "$lib/repository/workspace/workspace";
 import type { Workspace } from "$lib/types/workspace";
 
 import type { PageLoadEvent } from "./$types";

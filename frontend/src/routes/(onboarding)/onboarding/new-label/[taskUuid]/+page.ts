@@ -20,7 +20,6 @@
 // onboarding/task/[taskUuid]/new-label/
 import { error } from "@sveltejs/kit";
 
-import { getTask } from "$lib/repository/workspace";
 import { getProject } from "$lib/repository/workspace/project";
 import type {
     TaskWithSection,
@@ -30,6 +29,7 @@ import type {
 } from "$lib/types/workspace";
 
 import type { PageLoadEvent } from "./$types";
+import { openApiClient } from "$lib/repository/util";
 
 interface returnType {
     task: TaskWithSection;
@@ -41,8 +41,11 @@ interface returnType {
 export async function load({
     params: { taskUuid },
 }: PageLoadEvent): Promise<returnType> {
-    const task = await getTask(taskUuid);
-    if (!task) {
+    const { error: e, data: task } = await openApiClient.GET(
+        "/workspace/task/{task_uuid}",
+        { params: { path: { task_uuid: taskUuid } } },
+    );
+    if (e) {
         error(404, `No task could found for UUID ${taskUuid}.`);
     }
     const {

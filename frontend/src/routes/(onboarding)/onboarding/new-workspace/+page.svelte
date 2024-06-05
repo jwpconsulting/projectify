@@ -23,7 +23,7 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
-    import { createWorkspace } from "$lib/repository/workspace";
+    import { createWorkspace } from "$lib/repository/workspace/workspace";
     import { currentUser } from "$lib/stores/user";
     import { getNewProjectUrl } from "$lib/urls/onboarding";
 

@@ -31,21 +31,32 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import { goto } from "$lib/navigation";
-    import { moveTaskToSection } from "$lib/repository/workspace";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
-    import {
-        moveToTop,
-        moveToBottom,
-        getTaskPosition,
-    } from "$lib/stores/modules";
+    import { moveToBottom, getTaskPosition } from "$lib/stores/modules";
     import type { ContextMenuType } from "$lib/types/ui";
-    import type { Section } from "$lib/types/workspace";
     import { getTaskUrl, getDashboardSectionUrl } from "$lib/urls";
     import { copyToClipboard } from "$lib/utils/clipboard";
     import { openApiClient } from "$lib/repository/util";
+    import type { Section } from "$lib/types/workspace";
 
     export let kind: ContextMenuType & { kind: "task" };
+
+    async function moveTaskToSection({
+        uuid,
+    }: Pick<Section, "uuid">): Promise<void> {
+        const { error } = await openApiClient.POST(
+            "/workspace/task/{task_uuid}/move-to-section",
+            {
+                params: { path: { task_uuid: kind.task.uuid } },
+                body: { section_uuid: uuid },
+            },
+        );
+        if (error === undefined) {
+            return;
+        }
+        throw new Error("Could not move task to section");
+    }
 
     async function promptDeleteTask() {
         if (kind.location !== "dashboard") {
@@ -71,10 +82,6 @@
 
     function toggleMoveToSection() {
         moveToSectionOpened = !moveToSectionOpened;
-    }
-
-    async function moveToSection(section: Pick<Section, "uuid">) {
-        await moveTaskToSection(kind.task, section);
     }
 
     $: taskPosition =
@@ -118,7 +125,7 @@
                     label={section.title}
                     kind={{
                         kind: "button",
-                        action: moveToSection.bind(null, section),
+                        action: moveTaskToSection.bind(null, section),
                     }}
                 />
             {/each}
@@ -127,7 +134,7 @@
             <ContextMenuButton
                 kind={{
                     kind: "button",
-                    action: moveToTop.bind(null, kind.section, kind.task),
+                    action: moveTaskToSection.bind(null, kind.section),
                 }}
                 label={$_("overlay.context-menu.task.move-to-top")}
                 icon={SortAscending}

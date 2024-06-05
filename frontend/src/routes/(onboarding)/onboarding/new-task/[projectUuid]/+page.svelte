@@ -22,7 +22,7 @@
     import Onboarding from "$lib/components/Onboarding.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { goto } from "$lib/navigation";
-    import { createTask } from "$lib/repository/workspace";
+    import { createTask } from "$lib/repository/workspace/task";
     import { createSection } from "$lib/repository/workspace/section";
     import { getNewLabelUrl } from "$lib/urls/onboarding";
 

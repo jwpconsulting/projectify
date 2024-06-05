@@ -17,14 +17,10 @@
  */
 // TODO consider putting this either in repository or make it part of the
 // task store file
-import {
-    moveTaskAfterTask,
-    moveTaskToSection,
-} from "$lib/repository/workspace";
+import { openApiClient } from "$lib/repository/util";
 import type {
     Task,
     SectionWithTasks,
-    Section,
     ProjectDetailTask,
 } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
@@ -54,11 +50,21 @@ export function getTaskPosition(
     }
 }
 
-export async function moveToTop(
-    section: Pick<Section, "uuid">,
+async function moveTaskAfterTask(
     task: Pick<Task, "uuid">,
-) {
-    await moveTaskToSection(task, section);
+    { uuid }: Pick<Task, "uuid">,
+): Promise<void> {
+    const { error } = await openApiClient.POST(
+        "/workspace/task/{task_uuid}/move-after-task",
+        {
+            params: { path: { task_uuid: task.uuid } },
+            body: { task_uuid: uuid },
+        },
+    );
+    if (error === undefined) {
+        return;
+    }
+    throw new Error("Could not move task after task");
 }
 
 export async function moveToBottom(

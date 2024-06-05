@@ -24,7 +24,10 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { inviteUser, uninviteUser } from "$lib/repository/workspace";
+    import {
+        inviteUser,
+        uninviteUser,
+    } from "$lib/repository/workspace/workspace";
     import { currentWorkspace } from "$lib/stores/dashboard";
     import {
         currentTeamMemberCan,

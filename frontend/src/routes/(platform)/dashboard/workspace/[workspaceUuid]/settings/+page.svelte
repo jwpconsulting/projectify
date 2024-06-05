@@ -24,7 +24,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { updateWorkspace } from "$lib/repository/workspace";
+    import { updateWorkspace } from "$lib/repository/workspace/workspace";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import type { EditableViewState } from "$lib/types/ui";
     import { uploadImage } from "$lib/utils/file";

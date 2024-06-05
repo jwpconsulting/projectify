@@ -23,7 +23,7 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import { goto } from "$lib/navigation";
-    import { updateTask } from "$lib/repository/workspace";
+    import { updateTask } from "$lib/repository/workspace/task";
     import { createLabel } from "$lib/repository/workspace/label";
     import type { FormViewState } from "$lib/types/ui";
     import { getAssignTaskUrl, getNewTaskUrl } from "$lib/urls/onboarding";

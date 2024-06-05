@@ -19,7 +19,7 @@
     import { _ } from "svelte-i18n";
 
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
-    import { updateTask } from "$lib/repository/workspace";
+    import { updateTask } from "$lib/repository/workspace/task";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { createTeamMemberAssignment } from "$lib/stores/dashboard/teamMemberAssignment";
     import { openContextMenu } from "$lib/stores/globalUi";

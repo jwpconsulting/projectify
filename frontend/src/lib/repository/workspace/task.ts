@@ -69,23 +69,6 @@ export async function createTask(data: {
     return content;
 }
 
-// Read
-export async function getTask(
-    task_uuid: string,
-): Promise<TaskDetail | undefined> {
-    const { response, data } = await openApiClient.GET(
-        "/workspace/task/{task_uuid}",
-        { params: { path: { task_uuid } } },
-    );
-    if (response.ok) {
-        return data;
-    }
-    if (response.status === 404) {
-        return undefined;
-    }
-    throw new Error("uncaught");
-}
-
 // Update
 // TODO change me to accept CreateOrUpdateTaskData directly
 // Then we don't have to pass task, labels, ws user separately
@@ -128,38 +111,4 @@ export async function updateTask(
         return data;
     }
     throw new Error();
-}
-
-export async function moveTaskToSection(
-    task: Pick<Task, "uuid">,
-    { uuid }: Pick<Section, "uuid">,
-): Promise<void> {
-    const { error } = await openApiClient.POST(
-        "/workspace/task/{task_uuid}/move-to-section",
-        {
-            params: { path: { task_uuid: task.uuid } },
-            body: { section_uuid: uuid },
-        },
-    );
-    if (error === undefined) {
-        return;
-    }
-    throw new Error("Could not move task to section");
-}
-
-export async function moveTaskAfterTask(
-    task: Pick<Task, "uuid">,
-    { uuid }: Pick<Task, "uuid">,
-): Promise<void> {
-    const { error } = await openApiClient.POST(
-        "/workspace/task/{task_uuid}/move-after-task",
-        {
-            params: { path: { task_uuid: task.uuid } },
-            body: { task_uuid: uuid },
-        },
-    );
-    if (error === undefined) {
-        return;
-    }
-    throw new Error("Could not move task after task");
 }
