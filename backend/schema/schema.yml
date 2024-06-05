@@ -85,6 +85,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for WorkspaceCheckoutSessionCreateInputSerializer
@@ -107,6 +109,25 @@ paths:
           description: ''
         '404':
           description: No response body
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - status
+          description: ''
   /corporate/workspace/{workspace_uuid}/customer:
     get:
       operationId: corporate_workspace_customer_retrieve
@@ -168,6 +189,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for CouponRedeemSerializer
@@ -186,6 +209,25 @@ paths:
                 - code
                 - details
                 - general
+                - status
+          description: ''
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
                 - status
           description: ''
   /user/user/change-password:
@@ -220,6 +262,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for ChangePasswordSerializer
@@ -243,7 +287,24 @@ paths:
                 - status
           description: ''
         '429':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - status
+          description: ''
   /user/user/confirm-email:
     post:
       operationId: user_user_confirm_email_create
@@ -277,6 +338,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for ConfirmEmailSerializer
@@ -297,6 +360,25 @@ paths:
                 - code
                 - details
                 - general
+                - status
+          description: ''
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
                 - status
           description: ''
   /user/user/confirm-password-reset:
@@ -332,6 +414,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for PasswordResetConfirmSerializer
@@ -354,6 +438,25 @@ paths:
                 - code
                 - details
                 - general
+                - status
+          description: ''
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
                 - status
           description: ''
   /user/user/current-user:
@@ -407,6 +510,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for UserUpdateSerializer
@@ -429,6 +534,25 @@ paths:
           description: ''
         '403':
           description: No response body
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - status
+          description: ''
   /user/user/email-address-update/confirm:
     post:
       operationId: user_user_email_address_update_confirm_create
@@ -461,6 +585,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for ConfirmEmailAddressUpdateSerializer
@@ -479,6 +605,25 @@ paths:
                 - code
                 - details
                 - general
+                - status
+          description: ''
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
                 - status
           description: ''
   /user/user/email-address-update/request:
@@ -513,6 +658,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for RequestEmailAddressUpdateSerializer
@@ -536,7 +683,24 @@ paths:
                 - status
           description: ''
         '429':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - status
+          description: ''
   /user/user/log-in:
     post:
       operationId: user_user_log_in_create
@@ -574,6 +738,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for LogInSerializer
@@ -597,7 +763,24 @@ paths:
                 - status
           description: ''
         '429':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - status
+          description: ''
   /user/user/log-out:
     post:
       operationId: user_user_log_out_create
@@ -650,6 +833,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for ProfilePictureUploadSerializer
@@ -668,6 +853,25 @@ paths:
                 - code
                 - details
                 - general
+                - status
+          description: ''
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
                 - status
           description: ''
   /user/user/request-password-reset:
@@ -703,6 +907,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for PasswordResetRequestSerializer
@@ -724,7 +930,24 @@ paths:
                 - status
           description: ''
         '429':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - status
+          description: ''
   /user/user/sign-up:
     post:
       operationId: user_user_sign_up_create
@@ -758,6 +981,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for SignUpSerializer
@@ -785,7 +1010,24 @@ paths:
                 - status
           description: ''
         '429':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - status
+          description: ''
   /workspace/label/:
     post:
       operationId: workspace_label_create
@@ -822,6 +1064,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for LabelCreateSerializer
@@ -844,6 +1088,25 @@ paths:
                 - code
                 - details
                 - general
+                - status
+          description: ''
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
                 - status
           description: ''
   /workspace/label/{label_uuid}:
@@ -889,6 +1152,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for LabelUpdateSerializer
@@ -913,6 +1178,25 @@ paths:
           description: ''
         '404':
           description: No response body
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - status
+          description: ''
     delete:
       operationId: workspace_label_destroy
       description: Handle DELETE.
@@ -968,6 +1252,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for ProjectCreateSerializer
@@ -992,6 +1278,25 @@ paths:
                 - code
                 - details
                 - general
+                - status
+          description: ''
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
                 - status
           description: ''
   /workspace/project/{project_uuid}:
@@ -1060,6 +1365,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for ProjectUpdateSerializer
@@ -1082,6 +1389,25 @@ paths:
                 - code
                 - details
                 - general
+                - status
+          description: ''
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
                 - status
           description: ''
     delete:
@@ -1146,6 +1472,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for ProjectArchiveSerializer
@@ -1164,6 +1492,25 @@ paths:
                 - code
                 - details
                 - general
+                - status
+          description: ''
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
                 - status
           description: ''
   /workspace/section/:
@@ -1204,6 +1551,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for SectionCreateSerializer
@@ -1226,6 +1575,25 @@ paths:
                 - code
                 - details
                 - general
+                - status
+          description: ''
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
                 - status
           description: ''
   /workspace/section/{section_uuid}:
@@ -1294,6 +1662,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for SectionUpdateSerializer
@@ -1318,6 +1688,25 @@ paths:
           description: ''
         '404':
           description: No response body
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - status
+          description: ''
     delete:
       operationId: workspace_section_destroy
       description: Handle DELETE.
@@ -1376,6 +1765,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for SectionMoveSerializer
@@ -1398,6 +1789,25 @@ paths:
           description: ''
         '404':
           description: No response body
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - status
+          description: ''
   /workspace/task/:
     post:
       operationId: workspace_task_create
@@ -1434,6 +1844,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for TaskCreateSerializer
@@ -1490,6 +1902,25 @@ paths:
                 - code
                 - details
                 - general
+                - status
+          description: ''
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
                 - status
           description: ''
   /workspace/task/{task_uuid}:
@@ -1562,6 +1993,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for TaskUpdateSerializer
@@ -1616,6 +2049,25 @@ paths:
           description: ''
         '404':
           description: No response body
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - status
+          description: ''
     delete:
       operationId: workspace_task_destroy
       description: Delete task.
@@ -1678,6 +2130,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for TaskMoveAfterTaskSerializer
@@ -1700,6 +2154,25 @@ paths:
           description: ''
         '404':
           description: No response body
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - status
+          description: ''
   /workspace/task/{task_uuid}/move-to-section:
     post:
       operationId: workspace_task_move_to_section_create
@@ -1743,6 +2216,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for TaskMoveToSectionSerializer
@@ -1765,6 +2240,25 @@ paths:
           description: ''
         '404':
           description: No response body
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - status
+          description: ''
   /workspace/team-member/{team_member_uuid}:
     get:
       operationId: workspace_team_member_retrieve
@@ -1830,6 +2324,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for TeamMemberUpdateSerializer
@@ -1854,6 +2350,25 @@ paths:
           description: ''
         '404':
           description: No response body
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - status
+          description: ''
     delete:
       operationId: workspace_team_member_destroy
       description: Handle DELETE.
@@ -1909,6 +2424,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for WorkspaceCreateSerializer
@@ -1929,6 +2446,25 @@ paths:
                 - code
                 - details
                 - general
+                - status
+          description: ''
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
                 - status
           description: ''
   /workspace/workspace/{workspace_uuid}:
@@ -1997,6 +2533,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for WorkspaceUpdateSerializer
@@ -2021,6 +2559,25 @@ paths:
           description: ''
         '404':
           description: No response body
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - status
+          description: ''
   /workspace/workspace/{workspace_uuid}/archived-projects/:
     get:
       operationId: workspace_workspace_archived_projects_list
@@ -2090,6 +2647,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for InviteUserToWorkspaceSerializer
@@ -2112,6 +2671,25 @@ paths:
           description: ''
         '404':
           description: No response body
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - status
+          description: ''
   /workspace/workspace/{workspace_uuid}/picture-upload:
     post:
       operationId: workspace_workspace_picture_upload_create
@@ -2144,6 +2722,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for WorkspacePictureUploadSerializer
@@ -2166,6 +2746,25 @@ paths:
           description: ''
         '404':
           description: No response body
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - status
+          description: ''
   /workspace/workspace/{workspace_uuid}/uninvite-team-member:
     post:
       operationId: workspace_workspace_uninvite_team_member_create
@@ -2205,6 +2804,8 @@ paths:
                 properties:
                   code:
                     type: integer
+                    enum:
+                    - 400
                   details:
                     type: object
                     description: Errors for UninviteUserFromWorkspaceSerializer
@@ -2227,6 +2828,25 @@ paths:
           description: ''
         '404':
           description: No response body
+        '429':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Too many requests
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 429
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - status
+          description: ''
   /workspace/workspace/user-workspaces/:
     get:
       operationId: workspace_workspace_user_workspaces_list

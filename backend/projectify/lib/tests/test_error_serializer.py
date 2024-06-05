@@ -71,7 +71,7 @@ def test_make_schema_simple(simple_serializer: Serializer) -> None:
                 },
             },
             "status": {"type": "string", "enum": ["error"]},
-            "code": {"type": "integer"},
+            "code": {"type": "integer", "enum": [400]},
             "general": {"type": "array", "items": {"type": "string"}},
         },
         "required": [
@@ -115,7 +115,7 @@ def test_make_schema_complex(complex_serializer: Serializer) -> None:
                 },
             },
             "status": {"type": "string", "enum": ["error"]},
-            "code": {"type": "integer"},
+            "code": {"type": "integer", "enum": [400]},
             "general": {"type": "array", "items": {"type": "string"}},
         },
         "required": [

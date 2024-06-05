@@ -26,6 +26,10 @@ from drf_spectacular.plumbing import (
 )
 from drf_spectacular.utils import OpenApiResponse, _SchemaType
 from rest_framework import fields, serializers
+from rest_framework.status import (
+    HTTP_400_BAD_REQUEST,
+    HTTP_429_TOO_MANY_REQUESTS,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -85,7 +89,7 @@ def make_schema(instance: serializers.Serializer) -> _SchemaType:
     schema = build_object_type(
         description="Error schema",
         properties={
-            "code": {"type": "integer"},
+            "code": {"type": "integer", "enum": [400]},
             "details": make_schema_nested(instance),
             "general": {"type": "array", "items": {"type": "string"}},
             "status": {"type": "string", "enum": ["error"]},
@@ -111,6 +115,21 @@ def derive_bad_request_serializer(
     schema = make_schema(instance)
     response = OpenApiResponse(response=schema)
     return response
+
+
+TooManyRequestsSchema = OpenApiResponse(
+    build_object_type(
+        description="Too many requests",
+        properties={
+            "code": {"type": "integer", "enum": [429]},
+            "status": {"type": "string", "enum": ["error"]},
+        },
+        required=[
+            "code",
+            "status",
+        ],
+    )
+)
 
 
 # More methods than you ever asked for
@@ -176,29 +195,31 @@ def preprocess_bad_request_serializers(endpoints: Endpoint) -> Endpoint:
         )
         request: RequestAnnotation = request_nonlocals["request"]
         responses: ResponseAnnotation = responses_nonlocals["responses"]
-        match request, responses:
-            case (
-                None
-                | fields.empty,
-                None
-                | fields.empty
-                | OpenApiResponse()
-                | serializers.Serializer()
-                | dict(),
-            ):
+        match responses:
+            case dict() as responses_dict:
+                pass
+            case _:
                 continue
-            case (
-                type()
-                | serializers.Serializer() as ser_inst,
-                dict() as responses,
-            ):
-                http_400_response = responses.get(400)
-                if http_400_response is not None:
-                    continue
-                responses[400] = derive_bad_request_serializer(ser_inst)
+        match request:
+            case None | fields.empty:
+                continue
+            case type() | serializers.Serializer() as ser_inst:
+                http_400_response = responses_dict.get(
+                    HTTP_400_BAD_REQUEST, None
+                )
+                if http_400_response is None:
+                    responses_dict[
+                        HTTP_400_BAD_REQUEST
+                    ] = derive_bad_request_serializer(ser_inst)
             case _:
                 raise ValueError(
                     f"Don't know what to do with {path} {method_name}"
                     f"Request: {request}, responses: {responses}"
                 )
+        http_429_response = responses_dict.get(
+            HTTP_429_TOO_MANY_REQUESTS, None
+        )
+        if http_429_response is not None:
+            continue
+        responses_dict[HTTP_429_TOO_MANY_REQUESTS] = TooManyRequestsSchema
     return endpoints
