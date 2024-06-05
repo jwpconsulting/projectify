@@ -419,8 +419,18 @@ const messages: MessageDirectory = {
             "prompt": "You can create and manage numerous workspaces",
             "has-workspace":
                 "It looks like you already have a workspace, would you like to create a project?",
-            "label": "Workspace name",
-            "placeholder": "e.g. the name of your company",
+            "fields": {
+                title: {
+                    label: "Workspace name",
+                    placeholder: "e.g. the name of your company",
+                    valid: "This ia a valid workspace name",
+                },
+            },
+            "errors": {
+                general:
+                    "Something went wrong when trying to create this workspace",
+                fields: "Please check the above errors and try creating your workspace again",
+            },
             "default-name": "Your workspace",
         },
         "new-project": {

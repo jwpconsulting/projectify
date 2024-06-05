@@ -23,16 +23,20 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
-    import { createWorkspace } from "$lib/repository/workspace/workspace";
     import { currentUser } from "$lib/stores/user";
     import { getNewProjectUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
+    import { openApiClient } from "$lib/repository/util";
+    import type { InputFieldValidation } from "$lib/funabashi/types";
+    import type { FormViewState } from "$lib/types/ui";
 
     export let data: PageData;
     const { workspace } = data;
 
+    let state: FormViewState = { kind: "start" };
     let workspaceTitle: string | undefined = undefined;
+    let workspaceTitleValidation: InputFieldValidation | undefined = undefined;
 
     $: disabled = workspaceTitle === undefined;
 
@@ -42,12 +46,36 @@
         if (!workspaceTitle) {
             throw new Error("Exepcted workspaceTitle");
         }
-        const { uuid } = await createWorkspace(workspaceTitle, undefined, {
-            fetch,
-        });
+        state = { kind: "submitting" };
 
-        const nextStep = getNewProjectUrl(uuid);
-        await goto(nextStep);
+        const { data, error } = await openApiClient.POST(
+            "/workspace/workspace/",
+            { body: { title: workspaceTitle } },
+        );
+        if (error === undefined) {
+            const { uuid } = data;
+
+            const nextStep = getNewProjectUrl(uuid);
+            await goto(nextStep);
+            return;
+        }
+        workspaceTitleValidation = error.details.title
+            ? { ok: false, error: error.details.title }
+            : {
+                  ok: true,
+                  result: $_("onboarding.new-workspace.fields.title.valid"),
+              };
+        if (workspaceTitleValidation.ok) {
+            state = {
+                kind: "error",
+                message: $_("onboarding.new-workspace.errors.general"),
+            };
+        } else {
+            state = {
+                kind: "error",
+                message: $_("onboarding.new-workspace.errors.fields"),
+            };
+        }
     }
 </script>
 
@@ -79,11 +107,15 @@
         <InputField
             style={{ inputType: "text" }}
             name="workspaceTitle"
-            label={$_("onboarding.new-workspace.label")}
-            placeholder={$_("onboarding.new-workspace.placeholder")}
+            label={$_("onboarding.new-workspace.fields.title.label")}
+            placeholder={$_(
+                "onboarding.new-workspace.fields.title.placeholder",
+            )}
             bind:value={workspaceTitle}
             required
+            validation={workspaceTitleValidation}
         />
+        {#if state.kind === "error"}<p>{state.message}</p>{/if}
     </svelte:fragment>
     <DashboardPlaceholder
         slot="content"

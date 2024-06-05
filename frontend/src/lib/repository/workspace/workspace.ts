@@ -21,23 +21,6 @@ import type { Workspace, WorkspaceDetail } from "$lib/types/workspace";
 
 import type { ApiResponse } from "../types";
 
-// Create
-export async function createWorkspace(
-    title: string,
-    description: string | undefined,
-    repositoryContext: RepositoryContext,
-): Promise<Workspace> {
-    const response = await postWithCredentialsJson<Workspace>(
-        `/workspace/workspace/`,
-        { title, description },
-        repositoryContext,
-    );
-    if (response.kind !== "ok") {
-        console.error("TODO handle", response);
-        throw new Error("Error while creating workspace");
-    }
-    return response.data;
-}
 // Read
 export async function getWorkspaces(
     _repositoryContext?: RepositoryContext,
