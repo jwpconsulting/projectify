@@ -23,13 +23,6 @@ import createClient, { type Middleware } from "openapi-fetch";
 import type { ApiResponse } from "./types";
 import type { paths } from "$lib/types/schema";
 
-const getOptions: RequestInit = {
-    credentials: "include",
-    headers: {
-        Accept: "application/json",
-    },
-};
-
 function putPostDeleteOptions<T>(
     method: "POST" | "PUT" | "DELETE",
     data?: T,
@@ -143,13 +136,6 @@ async function fetchResponse<T, E = unknown>(
     }
 }
 
-export async function getWithCredentialsJson<T, E = unknown>(
-    url: string,
-    repositoryContext: RepositoryContext,
-): Promise<ApiResponse<T, E>> {
-    return await fetchResponse<T, E>(url, getOptions, repositoryContext);
-}
-
 export async function postWithCredentialsJson<T, E = unknown>(
     url: string,
     data: unknown,
@@ -188,19 +174,6 @@ export async function deleteWithCredentialsJson<T, E = unknown>(
 /*
  * Convenience method for callers that only care about 404 or not
  */
-export function handle404<T>(result: ApiResponse<T, unknown>): T | undefined {
-    if (result.kind === "notFound") {
-        return undefined;
-    } else if (result.kind === "ok") {
-        return result.data;
-    } else if (result.kind === "badRequest") {
-        console.error("Bad request:", result.error);
-        throw new Error("Bad request");
-    } else {
-        throw new Error(`Error: ${JSON.stringify(result.error)}`);
-    }
-}
-
 export function failOrOk<T>(result: ApiResponse<T, unknown>): T {
     if (result.ok) {
         return result.data;

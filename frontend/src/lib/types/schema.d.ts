@@ -221,10 +221,10 @@ export interface components {
         };
         /** @description Serializer for customer. */
         Customer: {
-            seats?: number;
+            seats: number;
             /** Format: uuid */
             uuid: string;
-            subscription_status?: components["schemas"]["SubscriptionStatusEnum"];
+            subscription_status: components["schemas"]["SubscriptionStatusEnum"];
         };
         /** @description Accept email. */
         InviteUserToWorkspace: {
@@ -268,6 +268,17 @@ export interface components {
             email: string;
             password: string;
         };
+        /** @description Serialize 404 not found error. */
+        NotFound: {
+            /** @default error */
+            status?: components["schemas"]["StatusEnum"];
+            code: components["schemas"]["NotFoundCodeEnum"];
+        };
+        /**
+         * @description * `404` - 404
+         * @enum {integer}
+         */
+        NotFoundCodeEnum: 404;
         /** @description Serialize password policies. */
         PasswordPolicies: {
             policies: string[];
@@ -493,6 +504,11 @@ export interface components {
             limit: number | null;
             can_create_more: boolean;
         };
+        /**
+         * @description * `error` - error
+         * @enum {string}
+         */
+        StatusEnum: "error";
         /** @description SubTask model serializer. */
         SubTaskBase: {
             /** Format: date-time */
@@ -637,6 +653,17 @@ export interface components {
             job_title?: string | null;
             role?: components["schemas"]["RoleEnum"];
         };
+        /** @description Serialize 429 too many requests error. */
+        TooManyRequests: {
+            /** @default error */
+            status?: components["schemas"]["StatusEnum"];
+            code: components["schemas"]["TooManyRequestsCodeEnum"];
+        };
+        /**
+         * @description * `429` - 429
+         * @enum {integer}
+         */
+        TooManyRequestsCodeEnum: 429;
         /**
          * @description * `True` - True
          * @enum {boolean}
@@ -794,9 +821,10 @@ export interface operations {
                     "application/json": components["schemas"]["WorkspaceBillingPortalSessionCreateOutput"];
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -835,9 +863,10 @@ export interface operations {
                     };
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -852,6 +881,11 @@ export interface operations {
             200: {
                 content: {
                     "application/json": components["schemas"]["Customer"];
+                };
+            };
+            404: {
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
                 };
             };
         };
@@ -875,9 +909,25 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for CouponRedeemSerializer */
+                        details: {
+                            code?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
+            };
+            404: {
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -913,12 +963,7 @@ export interface operations {
             };
             429: {
                 content: {
-                    "application/json": {
-                        /** @enum {integer} */
-                        code: 429;
-                        /** @enum {string} */
-                        status: "error";
-                    };
+                    "application/json": components["schemas"]["TooManyRequests"];
                 };
             };
         };
@@ -1097,12 +1142,7 @@ export interface operations {
             };
             429: {
                 content: {
-                    "application/json": {
-                        /** @enum {integer} */
-                        code: 429;
-                        /** @enum {string} */
-                        status: "error";
-                    };
+                    "application/json": components["schemas"]["TooManyRequests"];
                 };
             };
         };
@@ -1140,12 +1180,7 @@ export interface operations {
             };
             429: {
                 content: {
-                    "application/json": {
-                        /** @enum {integer} */
-                        code: 429;
-                        /** @enum {string} */
-                        status: "error";
-                    };
+                    "application/json": components["schemas"]["TooManyRequests"];
                 };
             };
         };
@@ -1229,12 +1264,7 @@ export interface operations {
             };
             429: {
                 content: {
-                    "application/json": {
-                        /** @enum {integer} */
-                        code: 429;
-                        /** @enum {string} */
-                        status: "error";
-                    };
+                    "application/json": components["schemas"]["TooManyRequests"];
                 };
             };
         };
@@ -1273,12 +1303,7 @@ export interface operations {
             };
             429: {
                 content: {
-                    "application/json": {
-                        /** @enum {integer} */
-                        code: 429;
-                        /** @enum {string} */
-                        status: "error";
-                    };
+                    "application/json": components["schemas"]["TooManyRequests"];
                 };
             };
         };
@@ -1353,9 +1378,10 @@ export interface operations {
                     };
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1369,10 +1395,6 @@ export interface operations {
         responses: {
             /** @description No response body */
             204: {
-                content: never;
-            };
-            /** @description No response body */
-            404: {
                 content: never;
             };
         };
@@ -1425,9 +1447,10 @@ export interface operations {
                     "application/json": components["schemas"]["ProjectDetail"];
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1468,6 +1491,11 @@ export interface operations {
                     };
                 };
             };
+            404: {
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
+            };
         };
     };
     /** @description Handle DELETE. */
@@ -1480,10 +1508,6 @@ export interface operations {
         responses: {
             /** @description No response body */
             204: {
-                content: never;
-            };
-            /** @description No response body */
-            404: {
                 content: never;
             };
         };
@@ -1526,9 +1550,10 @@ export interface operations {
             403: {
                 content: never;
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1583,9 +1608,10 @@ export interface operations {
                     "application/json": components["schemas"]["SectionDetail"];
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1625,9 +1651,10 @@ export interface operations {
                     };
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1641,10 +1668,6 @@ export interface operations {
         responses: {
             /** @description No response body */
             204: {
-                content: never;
-            };
-            /** @description No response body */
-            404: {
                 content: never;
             };
         };
@@ -1753,9 +1776,10 @@ export interface operations {
                     "application/json": components["schemas"]["TaskDetail"];
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1814,9 +1838,10 @@ export interface operations {
                     };
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1830,10 +1855,6 @@ export interface operations {
         responses: {
             /** @description No response body */
             204: {
-                content: never;
-            };
-            /** @description No response body */
-            404: {
                 content: never;
             };
         };
@@ -1873,9 +1894,10 @@ export interface operations {
                     };
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1914,9 +1936,10 @@ export interface operations {
                     };
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1933,9 +1956,10 @@ export interface operations {
                     "application/json": components["schemas"]["TeamMemberBase"];
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1975,9 +1999,10 @@ export interface operations {
                     };
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1991,10 +2016,6 @@ export interface operations {
         responses: {
             /** @description No response body */
             204: {
-                content: never;
-            };
-            /** @description No response body */
-            404: {
                 content: never;
             };
         };
@@ -2087,9 +2108,10 @@ export interface operations {
                     };
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -2106,9 +2128,10 @@ export interface operations {
                     "application/json": components["schemas"]["ProjectBase"][];
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -2147,9 +2170,10 @@ export interface operations {
                     };
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -2185,9 +2209,10 @@ export interface operations {
                     };
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
