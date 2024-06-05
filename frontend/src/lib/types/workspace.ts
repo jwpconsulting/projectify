@@ -32,11 +32,7 @@ export type TeamMember = {
     role: TeamMemberRole;
 } & TimestampedType;
 
-export interface Label {
-    name: string;
-    color: number;
-    uuid: string;
-}
+export type Label = components["schemas"]["LabelBase"];
 
 export type SubTask = components["schemas"]["SubTaskBase"];
 
