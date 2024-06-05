@@ -2483,6 +2483,8 @@ components:
         subscription_status:
           $ref: '#/components/schemas/SubscriptionStatusEnum'
       required:
+      - seats
+      - subscription_status
       - uuid
     InviteUserToWorkspace:
       type: object

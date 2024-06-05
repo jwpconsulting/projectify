@@ -48,6 +48,7 @@ class WorkspaceCustomerRetrieve(APIView):
     @extend_schema(
         responses={
             200: CustomerSerializer,
+            404: None,
         },
     )
     def get(self, request: Request, workspace_uuid: UUID) -> Response:
