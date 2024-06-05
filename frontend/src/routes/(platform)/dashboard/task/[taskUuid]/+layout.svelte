@@ -19,7 +19,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import { currentTask } from "$lib/stores/dashboard";
+    import { currentTask } from "$lib/stores/dashboard/task";
 
     import type { LayoutData } from "./$types";
 

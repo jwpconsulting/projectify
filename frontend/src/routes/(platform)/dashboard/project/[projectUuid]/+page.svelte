@@ -21,7 +21,7 @@
     import Loading from "$lib/components/Loading.svelte";
     import SectionC from "$lib/figma/cards/Section.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import { currentProject } from "$lib/stores/dashboard";
+    import { currentProject } from "$lib/stores/dashboard/project";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type {

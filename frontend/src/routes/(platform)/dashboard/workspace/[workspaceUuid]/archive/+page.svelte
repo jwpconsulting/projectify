@@ -20,7 +20,7 @@
     import { _ } from "svelte-i18n";
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import { currentArchivedProjects } from "$lib/stores/dashboard";
+    import { currentArchivedProjects } from "$lib/stores/dashboard/archive";
     import {
         openConstructiveOverlay,
         openDestructiveOverlay,

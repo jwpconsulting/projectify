@@ -18,7 +18,7 @@
 import { redirect, error } from "@sveltejs/kit";
 import { get } from "svelte/store";
 
-import { currentWorkspaces } from "$lib/stores/dashboard";
+import { currentWorkspaces } from "$lib/stores/dashboard/workspace";
 import { currentUser } from "$lib/stores/user";
 import type { User } from "$lib/types/user";
 import { getLogInWithNextUrl } from "$lib/urls/user";

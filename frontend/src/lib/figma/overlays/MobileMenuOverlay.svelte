@@ -22,7 +22,7 @@
     import Full from "$lib/figma/navigation/side-nav/Full.svelte";
     import MobileMenu from "$lib/figma/overlays/MobileMenu.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import { currentWorkspace } from "$lib/stores/dashboard";
+    import { currentWorkspace } from "$lib/stores/dashboard/workspace";
     import { closeMobileMenu } from "$lib/stores/globalUi";
     import type { MobileMenuType } from "$lib/types/ui";
     import { dashboardUrl } from "$lib/urls/dashboard";

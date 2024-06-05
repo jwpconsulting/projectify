@@ -31,7 +31,7 @@
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
-    import { currentTask } from "$lib/stores/dashboard";
+    import { currentTask } from "$lib/stores/dashboard/task";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openContextMenu } from "$lib/stores/globalUi";
     import {

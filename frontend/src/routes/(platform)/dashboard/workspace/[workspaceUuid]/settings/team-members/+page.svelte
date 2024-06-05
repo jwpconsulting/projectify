@@ -24,7 +24,7 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { currentWorkspace } from "$lib/stores/dashboard";
+    import { currentWorkspace } from "$lib/stores/dashboard/workspace";
     import {
         currentTeamMemberCan,
         currentTeamMembers,

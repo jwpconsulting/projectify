@@ -18,7 +18,7 @@
 import { error } from "@sveltejs/kit";
 
 import { getSection } from "$lib/repository/workspace/section";
-import { currentWorkspace } from "$lib/stores/dashboard";
+import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 import type { SectionDetail } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
 

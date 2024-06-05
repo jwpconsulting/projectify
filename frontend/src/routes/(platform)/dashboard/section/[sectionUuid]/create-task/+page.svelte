@@ -25,7 +25,6 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { goto } from "$lib/navigation";
     import { createTask as createTaskFn } from "$lib/repository/workspace/task";
-    import { createSubTaskAssignment } from "$lib/stores/dashboard";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createTeamMemberAssignment } from "$lib/stores/dashboard/teamMemberAssignment";
     import {
@@ -39,6 +38,7 @@
     import { beforeNavigate } from "$app/navigation";
     import type { BeforeNavigate } from "@sveltejs/kit";
     import type { FormViewState } from "$lib/types/ui";
+    import { createSubTaskAssignment } from "$lib/stores/dashboard/subTaskAssignment";
 
     export let data: PageData;
 

@@ -24,7 +24,7 @@
     import ConstructiveOverlay from "$lib/figma/overlays/constructive/ConstructiveOverlay.svelte";
     import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
     import MobileMenuOverlay from "$lib/figma/overlays/MobileMenuOverlay.svelte";
-    import { currentWorkspace } from "$lib/stores/dashboard";
+    import { currentWorkspace } from "$lib/stores/dashboard/workspace";
     import {
         mobileMenuState,
         resolveConstructiveOverlay,

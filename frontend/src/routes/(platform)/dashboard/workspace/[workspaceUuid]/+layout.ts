@@ -17,13 +17,11 @@
  */
 import { error } from "@sveltejs/kit";
 
-import {
-    clearSelectedWorkspaceUuidIfMatch,
-    currentWorkspace,
-} from "$lib/stores/dashboard";
+import { clearSelectedWorkspaceUuidIfMatch } from "$lib/stores/dashboard/ui";
 import type { WorkspaceDetail } from "$lib/types/workspace";
 
 import type { LayoutLoadEvent } from "./$types";
+import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 
 interface Data {
     workspace: WorkspaceDetail;

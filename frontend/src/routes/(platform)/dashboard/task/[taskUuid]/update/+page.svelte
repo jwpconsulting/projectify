@@ -27,7 +27,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { goto } from "$lib/navigation";
     import { updateTask as performUpdateTask } from "$lib/repository/workspace/task";
-    import { createSubTaskAssignment } from "$lib/stores/dashboard";
+    import { createSubTaskAssignment } from "$lib/stores/dashboard/subTaskAssignment";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createTeamMemberAssignment } from "$lib/stores/dashboard/teamMemberAssignment";
     import type {

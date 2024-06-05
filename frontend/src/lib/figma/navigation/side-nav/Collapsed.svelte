@@ -22,7 +22,7 @@
     import FilterTeamMembersClosed from "$lib/figma/navigation/side-nav/FilterTeamMembersClosed.svelte";
     import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
-    import { selectProjectUuid, showFilters } from "$lib/stores/dashboard";
+    import { selectProjectUuid, showFilters } from "$lib/stores/dashboard/ui";
     import type { WorkspaceDetail } from "$lib/types/workspace";
     import { getDashboardProjectUrl } from "$lib/urls";
 

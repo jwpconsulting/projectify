@@ -21,7 +21,7 @@
     import SectionTitle from "$lib/figma/cards/section-bar/SectionTitle.svelte";
     import TaskCard from "$lib/figma/cards/TaskCard.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { sectionClosed } from "$lib/stores/dashboard";
+    import { sectionClosed } from "$lib/stores/dashboard/ui";
     import type {
         ProjectDetail,
         SectionWithTasks,

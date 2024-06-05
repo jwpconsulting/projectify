@@ -17,14 +17,12 @@
  */
 import { error, redirect } from "@sveltejs/kit";
 
-import {
-    currentWorkspaces,
-    selectedWorkspaceUuid,
-} from "$lib/stores/dashboard";
+import { currentWorkspaces } from "$lib/stores/dashboard/workspace";
 import { getDashboardWorkspaceUrl } from "$lib/urls";
 import { startUrl } from "$lib/urls/onboarding";
 
 import type { PageLoadEvent } from "./$types";
+import { selectedWorkspaceUuid } from "$lib/stores/dashboard/ui";
 
 export async function load({ fetch }: PageLoadEvent): Promise<void> {
     const maybeWorkspaceUuid: string | null = await new Promise(

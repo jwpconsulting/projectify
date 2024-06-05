@@ -28,7 +28,10 @@
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
-    import { toggleSectionOpen, sectionClosed } from "$lib/stores/dashboard";
+    import {
+        toggleSectionOpen,
+        sectionClosed,
+    } from "$lib/stores/dashboard/ui";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import {
         openConstructiveOverlay,

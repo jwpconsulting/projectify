@@ -23,7 +23,7 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { currentCustomer } from "$lib/stores/dashboard";
+    import { currentCustomer } from "$lib/stores/dashboard/customer";
 
     import type { PageData } from "./$types";
 
