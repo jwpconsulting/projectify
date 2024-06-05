@@ -15,11 +15,9 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { openApiClient, postWithCredentialsJson } from "$lib/repository/util";
+import { openApiClient } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { Workspace, WorkspaceDetail } from "$lib/types/workspace";
-
-import type { ApiResponse } from "../types";
 
 // Read
 export async function getWorkspaces(
@@ -28,7 +26,7 @@ export async function getWorkspaces(
     const { response, data } = await openApiClient.GET(
         "/workspace/workspace/user-workspaces/",
     );
-    if (data !== undefined) {
+    if (data) {
         return data;
     }
     throw new Error(
@@ -41,42 +39,17 @@ export async function getWorkspaces(
 export async function getWorkspace(
     workspace_uuid: string,
     _repositoryContext?: RepositoryContext,
-): Promise<WorkspaceDetail | undefined> {
+): Promise<WorkspaceDetail> {
     const { response, data } = await openApiClient.GET(
         "/workspace/workspace/{workspace_uuid}",
         { params: { path: { workspace_uuid } } },
     );
-    if (data !== undefined) {
+    if (data) {
         return data;
     }
     throw new Error(
         `Could not retrieve workspace ${workspace_uuid}, ${JSON.stringify(
             await response.json(),
         )}`,
-    );
-}
-
-// RPC
-export async function inviteUser(
-    { uuid }: Pick<Workspace, "uuid">,
-    email: string,
-    repositoryContext: RepositoryContext,
-): Promise<ApiResponse<unknown, { email?: string }>> {
-    return await postWithCredentialsJson(
-        `/workspace/workspace/${uuid}/invite-team-member`,
-        { email },
-        repositoryContext,
-    );
-}
-
-export async function uninviteUser(
-    { uuid }: Pick<Workspace, "uuid">,
-    email: string,
-    repositoryContext: RepositoryContext,
-): Promise<ApiResponse<unknown, { email?: string }>> {
-    return await postWithCredentialsJson(
-        `/workspace/workspace/${uuid}/uninvite-team-member`,
-        { email },
-        repositoryContext,
     );
 }

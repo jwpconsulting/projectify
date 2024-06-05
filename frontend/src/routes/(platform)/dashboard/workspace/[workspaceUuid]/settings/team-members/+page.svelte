@@ -24,10 +24,6 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import {
-        inviteUser,
-        uninviteUser,
-    } from "$lib/repository/workspace/workspace";
     import { currentWorkspace } from "$lib/stores/dashboard";
     import {
         currentTeamMemberCan,
@@ -37,17 +33,24 @@
     import { coerceIsoDate } from "$lib/utils/date";
 
     import type { PageData } from "./$types";
+    import { openApiClient } from "$lib/repository/util";
 
     export let data: PageData;
 
     $: workspace = $currentWorkspace ?? data.workspace;
 
     async function uninvite(email: string) {
-        const result = await uninviteUser(workspace, email, { fetch });
-        if (result.ok) {
-            return;
+        const { error } = await openApiClient.POST(
+            "/workspace/workspace/{workspace_uuid}/uninvite-team-member",
+            {
+                params: { path: { workspace_uuid: workspace.uuid } },
+                body: { email },
+            },
+        );
+        if (error) {
+            console.error(error);
+            throw new Error("Could not uninvite user");
         }
-        throw Error(JSON.stringify(result.error));
     }
 
     // Invite form
@@ -61,38 +64,46 @@
             throw new Error("No email");
         }
         state = { kind: "submitting" };
-        const result = await inviteUser(workspace, inviteEmail, { fetch });
-        if (result.ok) {
+        const { error, data } = await openApiClient.POST(
+            "/workspace/workspace/{workspace_uuid}/invite-team-member",
+            {
+                params: { path: { workspace_uuid: workspace.uuid } },
+                body: { email: inviteEmail },
+            },
+        );
+        if (data) {
             state = { kind: "start" };
             inviteEmail = undefined;
             inviteEmailValidation = undefined;
             return;
         }
-        if (result.error.email === undefined) {
-            inviteEmailValidation = {
-                ok: true,
-                result: $_(
-                    "workspace-settings.team-members.invite.form.email.validation.ok",
-                ),
-            };
+        if (error.code !== 400) {
             state = {
                 kind: "error",
                 message: $_(
                     "workspace-settings.team-members.invite.error.general",
                 ),
             };
-        } else {
-            inviteEmailValidation = {
-                ok: false,
-                error: result.error.email,
-            };
-            state = {
-                kind: "error",
-                message: $_(
-                    "workspace-settings.team-members.invite.error.field",
-                ),
-            };
+            return;
         }
+        const { details } = error;
+        inviteEmailValidation = details.email
+            ? {
+                  ok: false,
+                  error: details.email,
+              }
+            : {
+                  ok: true,
+                  result: $_(
+                      "workspace-settings.team-members.invite.form.email.validation.ok",
+                  ),
+              };
+        state = {
+            kind: "error",
+            message: inviteEmailValidation.ok
+                ? $_("workspace-settings.team-members.invite.error.general")
+                : $_("workspace-settings.team-members.invite.error.field"),
+        };
     }
 </script>
 
