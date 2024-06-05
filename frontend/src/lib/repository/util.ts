@@ -170,14 +170,3 @@ export async function deleteWithCredentialsJson<T, E = unknown>(
         repositoryContext,
     );
 }
-
-/*
- * Convenience method for callers that only care about 404 or not
- */
-export function failOrOk<T>(result: ApiResponse<T, unknown>): T {
-    if (result.ok) {
-        return result.data;
-    }
-    console.error("Request error:", result.error);
-    throw new Error("Request failed");
-}

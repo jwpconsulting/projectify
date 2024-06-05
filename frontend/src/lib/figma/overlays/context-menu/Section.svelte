@@ -28,10 +28,6 @@
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
-    import {
-        moveSection,
-        deleteSection as repoDeleteSection,
-    } from "$lib/repository/workspace/section";
     import { toggleSectionOpen, sectionClosed } from "$lib/stores/dashboard";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import {
@@ -42,9 +38,24 @@
         ProjectDetail,
         ProjectDetailSection,
     } from "$lib/types/workspace";
+    import { openApiClient } from "$lib/repository/util";
 
     export let project: ProjectDetail;
     export let section: ProjectDetailSection;
+
+    // RPC
+    async function moveSection(
+        { uuid: section_uuid }: ProjectDetailSection,
+        order: number,
+    ) {
+        const { error } = await openApiClient.POST(
+            "/workspace/section/{section_uuid}/move",
+            { params: { path: { section_uuid } }, body: { order } },
+        );
+        if (error) {
+            throw new Error("Could not move section");
+        }
+    }
 
     let closed: boolean;
     $: {
@@ -75,19 +86,6 @@
             nextIndex !== undefined ? sections[nextIndex] : undefined;
     }
 
-    async function switchWithPreviousSection() {
-        if (!previousSection) {
-            throw new Error("Expected previousSection");
-        }
-        await moveSection(section, previousSection._order, { fetch });
-    }
-    async function switchWithNextSection() {
-        if (!nextSection) {
-            throw new Error("Expected nextSection");
-        }
-        await moveSection(section, nextSection._order, { fetch });
-    }
-
     async function updateSection() {
         await openConstructiveOverlay({
             kind: "updateSection",
@@ -100,9 +98,13 @@
             kind: "deleteSection",
             section,
         });
-        await repoDeleteSection(section, {
-            fetch,
-        });
+        const { error } = await openApiClient.DELETE(
+            "/workspace/section/{section_uuid}",
+            { params: { path: { section_uuid: section.uuid } } },
+        );
+        if (error) {
+            throw new Error("Could not move section");
+        }
     }
 </script>
 
@@ -122,7 +124,11 @@
             <ContextMenuButton
                 kind={{
                     kind: "button",
-                    action: switchWithPreviousSection,
+                    action: moveSection.bind(
+                        null,
+                        section,
+                        previousSection._order,
+                    ),
                 }}
                 label={$_("overlay.context-menu.section.switch-previous")}
                 icon={ArrowUp}
@@ -132,7 +138,11 @@
             <ContextMenuButton
                 kind={{
                     kind: "button",
-                    action: switchWithNextSection,
+                    action: moveSection.bind(
+                        null,
+                        section,
+                        nextSection._order,
+                    ),
                 }}
                 label={$_("overlay.context-menu.section.switch-next")}
                 icon={ArrowDown}

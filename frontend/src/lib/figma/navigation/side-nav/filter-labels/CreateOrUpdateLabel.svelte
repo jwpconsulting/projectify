@@ -86,21 +86,20 @@
         chosenColorValidation = undefined;
 
         const color = getIndexFromLabelColor(chosenColor);
-        const response = await createLabel(
-            $currentWorkspace,
-            { name: labelName, color },
-            { fetch },
-        );
-        if (response.ok) {
+        const { error, data } = await createLabel($currentWorkspace, {
+            name: labelName,
+            color,
+        });
+        if (data) {
             editState = { kind: "start" };
             onFinished();
             return;
         }
-        if (response.error.name !== undefined) {
-            labelNameValidation = { ok: false, error: response.error.name };
+        if (error.details.name !== undefined) {
+            labelNameValidation = { ok: false, error: error.details.name };
         }
-        if (response.error.color !== undefined) {
-            chosenColorValidation = { ok: false, error: response.error.color };
+        if (error.details.color !== undefined) {
+            chosenColorValidation = { ok: false, error: error.details.color };
         }
         editState = {
             kind: "error",
@@ -124,20 +123,24 @@
         chosenColorValidation = undefined;
 
         const color = getIndexFromLabelColor(chosenColor);
-        const response = await updateLabel(
-            { ...state.label, name: labelName, color },
-            { fetch },
-        );
-        if (response.ok) {
+        const { error, data } = await updateLabel({
+            ...state.label,
+            name: labelName,
+            color,
+        });
+        if (data) {
             editState = { kind: "start" };
             onFinished();
             return;
         }
-        if (response.error.name !== undefined) {
-            labelNameValidation = { ok: false, error: response.error.name };
+        if (error.code !== 400) {
+            throw new Error("Error when updating label");
         }
-        if (response.error.color !== undefined) {
-            chosenColorValidation = { ok: false, error: response.error.color };
+        if (error.details.name !== undefined) {
+            labelNameValidation = { ok: false, error: error.details.name };
+        }
+        if (error.details.color !== undefined) {
+            chosenColorValidation = { ok: false, error: error.details.color };
         }
         editState = {
             kind: "error",

@@ -31,7 +31,7 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import { goto } from "$lib/navigation";
-    import { deleteTask, moveTaskToSection } from "$lib/repository/workspace";
+    import { moveTaskToSection } from "$lib/repository/workspace";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
     import {
@@ -43,6 +43,7 @@
     import type { Section } from "$lib/types/workspace";
     import { getTaskUrl, getDashboardSectionUrl } from "$lib/urls";
     import { copyToClipboard } from "$lib/utils/clipboard";
+    import { openApiClient } from "$lib/repository/util";
 
     export let kind: ContextMenuType & { kind: "task" };
 
@@ -54,7 +55,15 @@
             kind: "deleteTask" as const,
             task: kind.task,
         });
-        await deleteTask(kind.task);
+        const { error } = await openApiClient.DELETE(
+            "/workspace/task/{task_uuid}",
+            {
+                params: { path: { task_uuid: kind.task.uuid } },
+            },
+        );
+        if (error !== undefined) {
+            throw new Error("Could not delete task");
+        }
         await goto(getDashboardSectionUrl(kind.section));
     }
 
@@ -65,7 +74,7 @@
     }
 
     async function moveToSection(section: Pick<Section, "uuid">) {
-        await moveTaskToSection(kind.task, section, { fetch });
+        await moveTaskToSection(kind.task, section);
     }
 
     $: taskPosition =
@@ -118,9 +127,7 @@
             <ContextMenuButton
                 kind={{
                     kind: "button",
-                    action: moveToTop.bind(null, kind.section, kind.task, {
-                        fetch,
-                    }),
+                    action: moveToTop.bind(null, kind.section, kind.task),
                 }}
                 label={$_("overlay.context-menu.task.move-to-top")}
                 icon={SortAscending}
@@ -130,9 +137,7 @@
             <ContextMenuButton
                 kind={{
                     kind: "button",
-                    action: moveToBottom.bind(null, kind.section, kind.task, {
-                        fetch,
-                    }),
+                    action: moveToBottom.bind(null, kind.section, kind.task),
                 }}
                 label={$_("overlay.context-menu.task.move-to-bottom")}
                 icon={SortDescending}

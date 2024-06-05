@@ -97,18 +97,14 @@
         };
         state = { kind: "submitting" };
         try {
-            await performUpdateTask(
-                submitTask,
-                {
-                    title,
-                    description,
-                    due_date: dueDate,
-                    assignee: $teamMemberAssignment ?? null,
-                    labels: $labelAssignment,
-                    sub_tasks: $subTasks ?? [],
-                },
-                { fetch },
-            );
+            await performUpdateTask(submitTask, {
+                title,
+                description,
+                due_date: dueDate,
+                assignee: $teamMemberAssignment ?? null,
+                labels: $labelAssignment,
+                sub_tasks: $subTasks ?? [],
+            });
             state = { kind: "done" };
             if (continueEditing) {
                 await goto(getTaskUrl(task));

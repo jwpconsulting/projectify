@@ -77,13 +77,7 @@
 
             const labels = $labelAssignment;
             // TODO skip update when no changes detected
-            await updateTask(
-                task,
-                { ...task, labels },
-                {
-                    fetch,
-                },
-            );
+            await updateTask(task, { ...task, labels });
         } finally {
             labelPickerOpen = false;
         }

@@ -21,7 +21,6 @@ import {
     moveTaskAfterTask,
     moveTaskToSection,
 } from "$lib/repository/workspace";
-import type { RepositoryContext } from "$lib/types/repository";
 import type {
     Task,
     SectionWithTasks,
@@ -58,28 +57,25 @@ export function getTaskPosition(
 export async function moveToTop(
     section: Pick<Section, "uuid">,
     task: Pick<Task, "uuid">,
-    repositoryContext: RepositoryContext,
 ) {
-    await moveTaskToSection(task, section, repositoryContext);
+    await moveTaskToSection(task, section);
 }
 
 export async function moveToBottom(
     section: SectionWithTasks,
     task: Pick<Task, "uuid">,
-    repositoryContext: RepositoryContext,
 ) {
     const { tasks } = section;
     const lastTask = tasks[tasks.length - 1];
     if (lastTask === undefined) {
         throw new Error("Expected lastTask");
     }
-    await moveTaskAfterTask(task, lastTask, repositoryContext);
+    await moveTaskAfterTask(task, lastTask);
 }
 
 export async function moveUp(
     section: SectionWithTasks,
     task: ProjectDetailTask,
-    repositoryContext: RepositoryContext,
 ) {
     const { tasks } = section;
     const position = getTaskPosition(section, task);
@@ -90,13 +86,12 @@ export async function moveUp(
         tasks.at(position.position - 1),
         "Expected prevTask",
     );
-    await moveTaskAfterTask(task, prevTask, repositoryContext);
+    await moveTaskAfterTask(task, prevTask);
 }
 
 export async function moveDown(
     section: SectionWithTasks,
     task: ProjectDetailTask,
-    repositoryContext: RepositoryContext,
 ) {
     const position = getTaskPosition(section, task);
     if (!(position.kind === "start" || position.kind === "within")) {
@@ -107,5 +102,5 @@ export async function moveDown(
         tasks.at(position.position + 1),
         "Expected nextTask",
     );
-    await moveTaskAfterTask(task, nextTask, repositoryContext);
+    await moveTaskAfterTask(task, nextTask);
 }

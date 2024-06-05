@@ -39,10 +39,9 @@ interface returnType {
 }
 
 export async function load({
-    fetch,
     params: { taskUuid },
 }: PageLoadEvent): Promise<returnType> {
-    const task = await getTask(taskUuid, { fetch });
+    const task = await getTask(taskUuid);
     if (!task) {
         error(404, `No task could found for UUID ${taskUuid}.`);
     }

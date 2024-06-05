@@ -48,29 +48,33 @@
         }
 
         state = { kind: "submitting" };
-        const result = await createLabel(
-            workspace,
-            { name: labelTitle, color: 0 },
-            { fetch },
-        );
+        const { error, data } = await createLabel(workspace, {
+            name: labelTitle,
+            color: 0,
+        });
         labelTitleValidation = undefined;
-        if (!result.ok) {
-            if (result.error.name) {
-                labelTitleValidation = { ok: false, error: result.error.name };
+        if (error?.code === 400) {
+            if (error.details.name) {
+                labelTitleValidation = {
+                    ok: false,
+                    error: error.details.name,
+                };
             }
             state = {
                 kind: "error",
                 message: $_("onboarding.new-label.error"),
             };
             return;
+        } else if (error) {
+            throw new Error("No data returned");
         }
 
-        const label = result.data;
-        await updateTask(
-            task,
-            { ...task, labels: [label], assignee: task.assignee },
-            { fetch },
-        );
+        const label = data;
+        await updateTask(task, {
+            ...task,
+            labels: [label],
+            assignee: task.assignee,
+        });
         // TODO handle if label with this name already exists
         await goto(getAssignTaskUrl(task.uuid));
     }

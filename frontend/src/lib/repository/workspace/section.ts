@@ -18,13 +18,7 @@
 /*
  * Repository functions for sections
  */
-import {
-    deleteWithCredentialsJson,
-    failOrOk,
-    openApiClient,
-    postWithCredentialsJson,
-    putWithCredentialsJson,
-} from "$lib/repository/util";
+import { openApiClient, postWithCredentialsJson } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { Project, Section, SectionDetail } from "$lib/types/workspace";
 
@@ -60,44 +54,4 @@ export async function getSection(
     }
     console.error(await response.json());
     throw new Error("Could not fetch section");
-}
-
-// Update
-export async function updateSection(
-    section: Pick<Section, "uuid" | "title" | "description">,
-    repositoryContext: RepositoryContext,
-): Promise<ApiResponse<void, unknown>> {
-    return await putWithCredentialsJson(
-        `/workspace/section/${section.uuid}`,
-        section,
-        repositoryContext,
-    );
-}
-
-// Delete
-export async function deleteSection(
-    { uuid }: Pick<Section, "uuid">,
-    repositoryContext: RepositoryContext,
-): Promise<void> {
-    return failOrOk(
-        await deleteWithCredentialsJson(
-            `/workspace/section/${uuid}`,
-            repositoryContext,
-        ),
-    );
-}
-
-// RPC
-export async function moveSection(
-    { uuid }: Pick<Section, "uuid">,
-    order: number,
-    repositoryContext: RepositoryContext,
-) {
-    return failOrOk(
-        await postWithCredentialsJson(
-            `/workspace/section/${uuid}/move`,
-            { order },
-            repositoryContext,
-        ),
-    );
 }

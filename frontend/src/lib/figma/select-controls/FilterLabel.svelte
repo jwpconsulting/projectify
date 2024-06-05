@@ -21,9 +21,9 @@
     import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
     import type { SelectLabel } from "$lib/figma/types";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
-    import { deleteLabel } from "$lib/repository/workspace/label";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
+    import { openApiClient } from "$lib/repository/util";
 
     export let label: SelectLabel;
     export let checked: boolean;
@@ -47,9 +47,18 @@
         if (label.kind !== "label") {
             throw new Error("Expected label");
         }
-        const l = label.label;
+        const {
+            label: l,
+            label: { uuid: label_uuid },
+        } = label;
         await openDestructiveOverlay({ kind: "deleteLabel", label: l });
-        await deleteLabel(l, { fetch });
+        const { error } = await openApiClient.DELETE(
+            "/workspace/label/{label_uuid}",
+            { params: { path: { label_uuid } } },
+        );
+        if (error) {
+            throw new Error("Could not delete label");
+        }
     }
 </script>
 

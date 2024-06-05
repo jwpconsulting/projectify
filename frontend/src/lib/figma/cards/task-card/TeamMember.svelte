@@ -45,13 +45,7 @@
         // XXX need to investigate what happens when sub tasks change while
         // the user picker is open. Possibly, a sub task can be deleted if
         // it is added
-        await updateTask(
-            task,
-            { ...task, assignee: teamMember },
-            {
-                fetch,
-            },
-        );
+        await updateTask(task, { ...task, assignee: teamMember });
     }
 
     $: canUpdate = $currentTeamMemberCan("update", "task");

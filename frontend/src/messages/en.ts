@@ -75,10 +75,16 @@ const messages: MessageDirectory = {
                     title: {
                         label: "Section title",
                         placeholder: "Enter new section title",
+                        valid: "This is a valid title",
                     },
                 },
                 cancel: "Cancel",
                 update: "Save",
+                errors: {
+                    field: "Please check the input fields above and try again",
+                    general:
+                        "An unknown error happened. Please try again later. {error}",
+                },
             },
             "recover-project": {
                 title: "Recover project ''{title}''?",

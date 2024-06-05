@@ -1397,6 +1397,11 @@ export interface operations {
             204: {
                 content: never;
             };
+            404: {
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
+            };
         };
     };
     /** @description Create a project. */
@@ -1509,6 +1514,11 @@ export interface operations {
             /** @description No response body */
             204: {
                 content: never;
+            };
+            404: {
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1669,6 +1679,11 @@ export interface operations {
             /** @description No response body */
             204: {
                 content: never;
+            };
+            404: {
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1857,6 +1872,11 @@ export interface operations {
             204: {
                 content: never;
             };
+            404: {
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
+            };
         };
     };
     /** @description Process the request. */
@@ -2017,6 +2037,11 @@ export interface operations {
             /** @description No response body */
             204: {
                 content: never;
+            };
+            404: {
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };

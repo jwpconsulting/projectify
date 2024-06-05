@@ -18,63 +18,26 @@
 /*
  * Repository functions for label
  */
-
-import type { RepositoryContext } from "$lib/types/repository";
 import type { Label, Workspace } from "$lib/types/workspace";
 
-import type { ApiResponse } from "../types";
-import {
-    deleteWithCredentialsJson,
-    postWithCredentialsJson,
-    putWithCredentialsJson,
-} from "../util";
+import { openApiClient } from "../util";
 
 // Create
 export async function createLabel(
-    workspace: Workspace,
+    { uuid: workspace_uuid }: Workspace,
     { name, color }: Pick<Label, "name" | "color">,
-    repositoryContext: RepositoryContext,
-): Promise<
-    ApiResponse<
-        Label,
-        { workspace_uuid?: string; name?: string; color?: string }
-    >
-> {
-    return await postWithCredentialsJson(
-        `/workspace/label/`,
-        { workspace_uuid: workspace.uuid, name, color },
-        repositoryContext,
-    );
+) {
+    return await openApiClient.POST("/workspace/label/", {
+        body: { workspace_uuid, name, color },
+    });
 }
 
 // Read
 // Update
 // TODO not sure if we can return Label here
-export async function updateLabel(
-    label: Label,
-    repositoryContext: RepositoryContext,
-): Promise<
-    ApiResponse<unknown, { uuid?: string; name?: string; color?: string }>
-> {
-    return await putWithCredentialsJson(
-        `/workspace/label/${label.uuid}`,
-        label,
-        repositoryContext,
-    );
-}
-
-// Delete
-export async function deleteLabel(
-    label: Label,
-    repositoryContext: RepositoryContext,
-) {
-    const response = await deleteWithCredentialsJson<Label>(
-        `/workspace/label/${label.uuid}`,
-        repositoryContext,
-    );
-    if (response.kind !== "ok") {
-        console.error("TODO handle", response);
-        throw new Error("Error while creating label");
-    }
-    return response.data;
+export async function updateLabel({ uuid: label_uuid, name, color }: Label) {
+    return await openApiClient.PUT("/workspace/label/{label_uuid}", {
+        params: { path: { label_uuid } },
+        body: { name, color },
+    });
 }
