@@ -18,20 +18,19 @@
 import inspect
 import logging
 from collections.abc import Sequence
-from typing import Any, Literal, Union
+from typing import Any, Literal, Optional, Union
 
 from drf_spectacular.plumbing import (
     build_array_type,
     build_object_type,
 )
 from drf_spectacular.utils import OpenApiResponse, _SchemaType
-from rest_framework import fields, serializers
-from rest_framework.status import (
-    HTTP_400_BAD_REQUEST,
-    HTTP_429_TOO_MANY_REQUESTS,
-)
+from rest_framework import fields, serializers, status
 
-from projectify.exception_handler import TooManyRequestsSerializer
+from projectify.exception_handler import (
+    NotFoundSerializer,
+    TooManyRequestsSerializer,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -134,7 +133,7 @@ Method = Literal[
 # and add "cls" attribute
 SchemaAnnotatedCallable = Any
 # path, path_regex, method, callback
-Endpoint = Sequence[tuple[str, str, Method, SchemaAnnotatedCallable]]
+Endpoints = Sequence[tuple[str, str, Method, SchemaAnnotatedCallable]]
 RequestAnnotation = Union[
     None,
     serializers.Serializer,
@@ -149,7 +148,12 @@ ResponseAnnotation = Union[
     fields.empty,
     dict[int, "ResponseAnnotation"],
 ]
+ResponsesDict = dict[int, "ResponseAnnotation"]
 MaybeSerializer = Union[None, Any, dict[int, serializers.Serializer]]
+
+SerializerClassOrInstance = Union[
+    type[serializers.Serializer], serializers.Serializer
+]
 
 
 DeriveSchema = object()
@@ -157,7 +161,7 @@ DeriveSchema = object()
 
 def get_request_serializer(
     annotation: RequestAnnotation,
-) -> Union[None, type[serializers.Serializer], serializers.Serializer]:
+) -> Optional[SerializerClassOrInstance]:
     """Extract a Serializer instance or constructor from request annot."""
     match annotation:
         case None | fields.empty:
@@ -168,7 +172,28 @@ def get_request_serializer(
             raise ValueError(f"Don't know what to do with {annotation}")
 
 
-def preprocess_derive_error_schemas(endpoints: Endpoint) -> Endpoint:
+def maybe_annotate_400(d: ResponsesDict, s: SerializerClassOrInstance) -> None:
+    """Annotate 404."""
+    if d.get(status.HTTP_400_BAD_REQUEST) is not DeriveSchema:
+        return
+    d[status.HTTP_400_BAD_REQUEST] = derive_bad_request_serializer(s)
+
+
+def maybe_annotate_404(d: ResponsesDict) -> None:
+    """Annotate 404."""
+    if status.HTTP_404_NOT_FOUND in d:
+        return
+    d[status.HTTP_404_NOT_FOUND] = NotFoundSerializer
+
+
+def maybe_annotate_429(d: ResponsesDict) -> None:
+    """Annotate 429."""
+    if d.get(status.HTTP_429_TOO_MANY_REQUESTS) is not DeriveSchema:
+        return
+    d[status.HTTP_429_TOO_MANY_REQUESTS] = TooManyRequestsSerializer
+
+
+def preprocess_derive_error_schemas(endpoints: Endpoints) -> Endpoints:
     """Process drf-spectactular schema and add missing HTTP error schemas."""
     method_names = ["POST", "PUT"]
     # These are the functions we want to annotate
@@ -205,21 +230,17 @@ def preprocess_derive_error_schemas(endpoints: Endpoint) -> Endpoint:
             case _:
                 continue
         request_serializer = get_request_serializer(request)
-        http_400_response = responses_dict.get(HTTP_400_BAD_REQUEST, None)
+        http_400_response = responses_dict.get(
+            status.HTTP_400_BAD_REQUEST, None
+        )
         if http_400_response is DeriveSchema:
             if request_serializer is None:
                 raise ValueError(
                     f"Trying to create 400 response schema, but no "
                     f"request serializer was provided in {_path}"
                 )
-            responses_dict[
-                HTTP_400_BAD_REQUEST
-            ] = derive_bad_request_serializer(request_serializer)
-        http_429_response = responses_dict.get(
-            HTTP_429_TOO_MANY_REQUESTS, None
-        )
-        if http_429_response is DeriveSchema:
-            responses_dict[
-                HTTP_429_TOO_MANY_REQUESTS
-            ] = TooManyRequestsSerializer
+            maybe_annotate_400(responses_dict, request_serializer)
+        maybe_annotate_404(responses_dict)
+        maybe_annotate_429(responses_dict)
+
     return endpoints

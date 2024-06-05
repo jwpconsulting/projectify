@@ -99,10 +99,7 @@ class SectionReadUpdateDelete(APIView):
     """Project retrieve view."""
 
     @extend_schema(
-        responses={
-            200: SectionDetailSerializer,
-            404: None,
-        },
+        responses={200: SectionDetailSerializer},
     )
     def get(self, request: Request, section_uuid: UUID) -> Response:
         """Handle GET."""
@@ -127,7 +124,7 @@ class SectionReadUpdateDelete(APIView):
 
     @extend_schema(
         request=SectionUpdateSerializer,
-        responses={200: SectionUpdateSerializer, 400: DeriveSchema, 404: None},
+        responses={200: SectionUpdateSerializer, 400: DeriveSchema},
     )
     def put(self, request: Request, section_uuid: UUID) -> Response:
         """Update section."""
@@ -151,10 +148,7 @@ class SectionReadUpdateDelete(APIView):
         return Response(data=serializer.validated_data)
 
     @extend_schema(
-        responses={
-            204: None,
-            404: None,
-        },
+        responses={204: None},
     )
     def delete(self, request: Request, section_uuid: UUID) -> Response:
         """Handle DELETE."""

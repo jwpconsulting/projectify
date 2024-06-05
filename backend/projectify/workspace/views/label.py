@@ -114,7 +114,7 @@ class LabelUpdateDelete(APIView):
 
     @extend_schema(
         request=LabelUpdateSerializer,
-        responses={201: LabelBaseSerializer, 400: DeriveSchema, 404: None},
+        responses={201: LabelBaseSerializer, 400: DeriveSchema},
     )
     def put(self, request: Request, label_uuid: UUID) -> Response:
         """Handle PUT."""
@@ -132,10 +132,7 @@ class LabelUpdateDelete(APIView):
         return Response(data=output_serializer.data, status=HTTP_200_OK)
 
     @extend_schema(
-        responses={
-            204: None,
-            404: None,
-        },
+        responses={204: None},
     )
     def delete(self, request: Request, label_uuid: UUID) -> Response:
         """Handle DELETE."""

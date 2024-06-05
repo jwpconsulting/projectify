@@ -98,7 +98,7 @@ class ProjectReadUpdateDelete(APIView):
     """Project retrieve view."""
 
     @extend_schema(
-        responses={200: ProjectDetailSerializer, 404: None},
+        responses={200: ProjectDetailSerializer},
     )
     def get(self, request: Request, project_uuid: UUID) -> Response:
         """Handle GET."""
@@ -153,7 +153,7 @@ class ProjectReadUpdateDelete(APIView):
         return Response(data, status.HTTP_200_OK)
 
     @extend_schema(
-        responses={204: None, 404: None},
+        responses={204: None},
     )
     def delete(self, request: Request, project_uuid: UUID) -> Response:
         """Handle DELETE."""
@@ -177,7 +177,7 @@ class ProjectArchivedList(APIView):
 
     @extend_schema(
         request=None,
-        responses={200: ProjectBaseSerializer(many=True), 404: None},
+        responses={200: ProjectBaseSerializer(many=True)},
     )
     def get(self, request: Request, workspace_uuid: UUID) -> Response:
         """Get queryset."""
@@ -210,7 +210,7 @@ class ProjectArchive(APIView):
 
     @extend_schema(
         request=ProjectArchiveSerializer,
-        responses={204: None, 404: None, 403: None, 400: DeriveSchema},
+        responses={204: None, 403: None, 400: DeriveSchema},
     )
     def post(self, request: Request, project_uuid: UUID) -> Response:
         """Process request."""

@@ -46,10 +46,7 @@ class WorkspaceCustomerRetrieve(APIView):
     """Retrieve customer for a workspace."""
 
     @extend_schema(
-        responses={
-            200: CustomerSerializer,
-            404: None,
-        },
+        responses={200: CustomerSerializer},
     )
     def get(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle GET."""
@@ -91,7 +88,6 @@ class WorkspaceCheckoutSessionCreate(APIView):
         responses={
             200: WorkspaceCheckoutSessionCreateOutputSerializer,
             400: DeriveSchema,
-            404: None,
         },
     )
     def post(self, request: Request, workspace_uuid: UUID) -> Response:
@@ -133,10 +129,7 @@ class WorkspaceBillingPortalSessionCreate(APIView):
 
     @extend_schema(
         request=None,
-        responses={
-            200: WorkspaceBillingPortalSessionCreateOutputSerializer,
-            404: None,
-        },
+        responses={200: WorkspaceBillingPortalSessionCreateOutputSerializer},
     )
     def post(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle POST."""

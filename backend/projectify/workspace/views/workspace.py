@@ -143,11 +143,7 @@ class WorkspaceReadUpdate(views.APIView):
 
     @extend_schema(
         request=WorkspaceUpdateSerializer,
-        responses={
-            200: WorkspaceUpdateSerializer,
-            400: DeriveSchema,
-            404: None,
-        },
+        responses={200: WorkspaceUpdateSerializer, 400: DeriveSchema},
     )
     def put(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle PUT."""
@@ -186,7 +182,7 @@ class WorkspacePictureUploadView(views.APIView):
 
     @extend_schema(
         request=WorkspacePictureUploadSerializer,
-        responses={204: None, 400: DeriveSchema, 404: None},
+        responses={204: None, 400: DeriveSchema},
     )
     def post(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle POST."""
@@ -219,11 +215,7 @@ class InviteUserToWorkspace(views.APIView):
 
     @extend_schema(
         request=InviteUserToWorkspaceSerializer,
-        responses={
-            201: InviteUserToWorkspaceSerializer,
-            400: DeriveSchema,
-            404: None,
-        },
+        responses={201: InviteUserToWorkspaceSerializer, 400: DeriveSchema},
     )
     @method_decorator(ratelimit(key="user", rate="5/h"))
     def post(self, request: Request, workspace_uuid: UUID) -> Response:

@@ -50,10 +50,7 @@ class TeamMemberReadUpdateDelete(views.APIView):
     """Delete a team member."""
 
     @extend_schema(
-        responses={
-            200: TeamMemberBaseSerializer,
-            404: None,
-        },
+        responses={200: TeamMemberBaseSerializer},
     )
     def get(self, request: Request, team_member_uuid: UUID) -> Response:
         """Handle GET."""
@@ -78,11 +75,7 @@ class TeamMemberReadUpdateDelete(views.APIView):
 
     @extend_schema(
         request=TeamMemberUpdateSerializer,
-        responses={
-            200: TeamMemberUpdateSerializer,
-            400: DeriveSchema,
-            404: None,
-        },
+        responses={200: TeamMemberUpdateSerializer, 400: DeriveSchema},
     )
     def put(self, request: Request, team_member_uuid: UUID) -> Response:
         """Handle PUT."""
@@ -105,7 +98,7 @@ class TeamMemberReadUpdateDelete(views.APIView):
         return Response(status=HTTP_200_OK, data=serializer.data)
 
     @extend_schema(
-        responses={204: None, 404: None},
+        responses={204: None},
     )
     def delete(self, request: Request, team_member_uuid: UUID) -> Response:
         """Handle DELETE."""

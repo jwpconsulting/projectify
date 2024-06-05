@@ -34,21 +34,11 @@ import logging
 from collections.abc import Mapping, Sequence
 from typing import Literal, Optional, TypedDict, Union
 
-from django.core.exceptions import (
-    NON_FIELD_ERRORS,
-    PermissionDenied,
-)
-from django.core.exceptions import (
-    ValidationError as DjangoValidationError,
-)
-from django.http import Http404
+from django import http as dj_http
+from django.core import exceptions as dj_exceptions
 
+from rest_framework import exceptions as drf_exceptions
 from rest_framework import serializers, status
-from rest_framework.exceptions import (
-    APIException,
-    ErrorDetail,
-    Throttled,
-)
 from rest_framework.response import Response
 from rest_framework.serializers import as_serializer_error
 from rest_framework.views import exception_handler as drf_exception_handler
@@ -62,8 +52,8 @@ logger = logging.getLogger(__name__)
 # Subclasses of APIException raised inside REST framework.
 # Django's Http404 exception.
 # Django's PermissionDenied exception.
-DRFError = APIException
-DjangoError = Union[Http404, PermissionDenied]
+DRFError = drf_exceptions.APIException
+DjangoError = Union[dj_http.Http404, drf_exceptions.PermissionDenied]
 # We create a union for the above,
 DrfHandledException = Union[DRFError, DjangoError]
 # and then we add Django's ValidationError to it as well.
@@ -72,7 +62,7 @@ DrfHandledException = Union[DRFError, DjangoError]
 HandledException = Union[
     DRFError,
     DjangoError,
-    DjangoValidationError,
+    dj_exceptions.ValidationError,
     # Here be dragons
     Exception,
 ]
@@ -94,8 +84,8 @@ HandledException = Union[
 
 # What we get from DRF:
 SerializerErrorField = Union[
-    tuple[ErrorDetail],
-    list[ErrorDetail],
+    tuple[drf_exceptions.ErrorDetail],
+    list[drf_exceptions.ErrorDetail],
     list["SerializerErrorField"],
     dict[str, "SerializerErrorField"],
 ]
@@ -148,13 +138,13 @@ def serialize_error_list(
 ) -> Optional[ErrorContent]:
     """Serialize a list containing validation error details."""
     match field:
-        case (ErrorDetail() as s,):
+        case (drf_exceptions.ErrorDetail() as s,):
             return str(s)
         case list() as l:
             # Clunky type casting
             result: list[Mapping[str, ErrorContent]] = []
             for i in l:
-                if isinstance(i, ErrorDetail):
+                if isinstance(i, drf_exceptions.ErrorDetail):
                     logger.warning("Dropping single ErrorDetail %s", i)
                     continue
                 ser = serialize_error_dict(i)
@@ -172,13 +162,13 @@ settings = get_settings()
 
 
 def serialize_validation_error(
-    error: Union[DjangoValidationError, serializers.ValidationError],
+    error: Union[dj_exceptions.ValidationError, serializers.ValidationError],
 ) -> ErrorRoot:
     """Serialize a validation error."""
     details = as_serializer_error(error)
     # In Django, (not DRF!) check constraints end up as "__all__", so we put
     # them somewhere more useful
-    django_non_field_errors = details.pop(NON_FIELD_ERRORS, None)
+    django_non_field_errors = details.pop(dj_exceptions.NON_FIELD_ERRORS, None)
     # drf_general is set in projectify/settings/base.py
     drf_non_field_errors = details.pop("drf_general", None)
 
@@ -194,7 +184,7 @@ def serialize_validation_error(
     match general:
         case []:
             general_str = None
-        case [[ErrorDetail() as e], *rest]:
+        case [[drf_exceptions.ErrorDetail() as e], *rest]:
             if rest:
                 logger.warning("Could not serialize errors %s", rest)
             general_str = str(e)
@@ -216,6 +206,13 @@ class TooManyRequestsSerializer(serializers.Serializer):
     code = serializers.ChoiceField(choices=[429], source="status_code")
 
 
+class NotFoundSerializer(serializers.Serializer):
+    """Serialize 404 not found error."""
+
+    status = serializers.ChoiceField(choices=["error"], default="error")
+    code = serializers.ChoiceField(choices=[404], source="status_code")
+
+
 # TODO find out what ctx is
 def exception_handler(
     exception: HandledException, ctx: object
@@ -229,22 +226,27 @@ def exception_handler(
     """
     result: HandledException
     match exception:
-        case DjangoValidationError() | serializers.ValidationError():
+        case dj_exceptions.ValidationError() | serializers.ValidationError():
             data = serialize_validation_error(exception)
             return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
-        case PermissionDenied():
+        case dj_exceptions.PermissionDenied():
             logger.error("Permission denied: %s", exception)
             result = exception
-        case Throttled():
-            serializer = TooManyRequestsSerializer(exception)
+        case drf_exceptions.NotFound():
+            serialized = NotFoundSerializer(exception).data
+            return Response(status=status.HTTP_404_NOT_FOUND, data=serialized)
+        case dj_http.Http404():
+            serialized = NotFoundSerializer(
+                {"status_code": status.HTTP_404_NOT_FOUND}
+            ).data
+            return Response(status=status.HTTP_404_NOT_FOUND, data=serialized)
+        case drf_exceptions.Throttled():
+            serialized = TooManyRequestsSerializer(exception).data
             return Response(
-                status=status.HTTP_429_TOO_MANY_REQUESTS, data=serializer.data
+                status=status.HTTP_429_TOO_MANY_REQUESTS, data=serialized
             )
-        case APIException():
+        case drf_exceptions.APIException():
             logger.error("DRF API Exception: %s", exception)
-            result = exception
-        case Http404():
-            logger.error("404: %s", exception)
             result = exception
         case Exception():
             logger.error("Unhandleable exception: %s", exception)

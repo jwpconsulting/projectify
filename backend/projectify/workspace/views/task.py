@@ -123,10 +123,7 @@ class TaskRetrieveUpdateDelete(APIView):
     """Retrieve a task."""
 
     @extend_schema(
-        responses={
-            200: TaskDetailSerializer,
-            404: None,
-        },
+        responses={200: TaskDetailSerializer},
     )
     def get(self, request: Request, task_uuid: UUID) -> Response:
         """Handle GET."""
@@ -136,7 +133,7 @@ class TaskRetrieveUpdateDelete(APIView):
 
     @extend_schema(
         request=TaskUpdateSerializer,
-        responses={200: TaskDetailSerializer, 400: DeriveSchema, 404: None},
+        responses={200: TaskDetailSerializer, 400: DeriveSchema},
     )
     def put(self, request: Request, task_uuid: UUID) -> Response:
         """
@@ -185,10 +182,7 @@ class TaskRetrieveUpdateDelete(APIView):
         )
 
     @extend_schema(
-        responses={
-            204: None,
-            404: None,
-        },
+        responses={204: None},
     )
     def delete(self, request: Request, task_uuid: UUID) -> Response:
         """Delete task."""
@@ -208,7 +202,7 @@ class TaskMoveToSection(APIView):
 
     @extend_schema(
         request=TaskMoveToSectionSerializer,
-        responses={200: TaskDetailSerializer, 400: DeriveSchema, 404: None},
+        responses={200: TaskDetailSerializer, 400: DeriveSchema},
     )
     def post(self, request: Request, task_uuid: UUID) -> Response:
         """Process the request."""
@@ -247,7 +241,7 @@ class TaskMoveAfterTask(APIView):
 
     @extend_schema(
         request=TaskMoveAfterTaskSerializer,
-        responses={200: TaskDetailSerializer, 400: DeriveSchema, 404: None},
+        responses={200: TaskDetailSerializer, 400: DeriveSchema},
     )
     def post(self, request: Request, task_uuid: UUID) -> Response:
         """Process the request."""
