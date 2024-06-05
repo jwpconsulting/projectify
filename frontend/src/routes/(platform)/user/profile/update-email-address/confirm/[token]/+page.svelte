@@ -24,13 +24,13 @@
 
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
-    import { confirmEmailAddressUpdate } from "$lib/repository/user";
     import {
         confirmedEmailAddressUpdateUrl,
         updateEmailAddressUrl,
     } from "$lib/urls/user";
 
     import type { PageData } from "./$types";
+    import { openApiClient } from "$lib/repository/util";
 
     export let data: PageData;
     const { token } = data;
@@ -43,17 +43,21 @@
     };
 
     onMount(async () => {
-        const response = await confirmEmailAddressUpdate(token, { fetch });
-        if (response.ok) {
+        const { error } = await openApiClient.POST(
+            "/user/user/email-address-update/confirm",
+            { body: { confirmation_token: token } },
+        );
+        if (error === undefined) {
             await goto(confirmedEmailAddressUpdateUrl);
             return;
         }
-        if (response.error.confirmation_token) {
+        const { details } = error;
+        if (details.confirmation_token) {
             state = {
                 kind: "token-error",
                 message: $_(
                     "user-account-settings.update-email-address.confirm.error.confirmation-token",
-                    { values: { error: response.error.confirmation_token } },
+                    { values: { error: details.confirmation_token } },
                 ),
             };
         } else {

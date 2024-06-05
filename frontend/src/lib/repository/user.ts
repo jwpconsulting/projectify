@@ -24,18 +24,6 @@ import type { ApiResponse } from "./types";
 // Create
 // Update
 // Delete
-// RPC
-export async function confirmEmailAddressUpdate(
-    confirmation_token: string,
-    repositoryContext: RepositoryContext,
-): Promise<ApiResponse<void, { confirmation_token?: string }>> {
-    return await postWithCredentialsJson(
-        "/user/user/email-address-update/confirm",
-        { confirmation_token },
-        repositoryContext,
-    );
-}
-
 // Auth
 export async function confirmEmail(
     email: string,
