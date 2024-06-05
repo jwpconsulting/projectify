@@ -16,7 +16,6 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import type { TimestampedType } from "$lib/types/base";
-import type { User } from "$lib/types/user";
 import type { components } from "./schema";
 
 export type TeamMemberRole =
@@ -25,12 +24,7 @@ export type TeamMemberRole =
     | "MAINTAINER"
     | "OWNER";
 
-export type TeamMember = {
-    user: User;
-    uuid: string;
-    job_title: string | null;
-    role: TeamMemberRole;
-} & TimestampedType;
+export type TeamMember = components["schemas"]["TeamMemberBase"];
 
 export type Label = components["schemas"]["LabelBase"];
 
