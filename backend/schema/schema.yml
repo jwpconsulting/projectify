@@ -164,7 +164,36 @@ paths:
         '204':
           description: No response body
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for CouponRedeemSerializer
+                    properties:
+                      code:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - error
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
   /user/user/change-password:
     post:
       operationId: user_user_change_password_create
