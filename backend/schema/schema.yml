@@ -147,6 +147,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Customer'
           description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /corporate/workspace/{workspace_uuid}/redeem-coupon:
     post:
       operationId: corporate_workspace_redeem_coupon_create
@@ -425,6 +431,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/auth_info'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
           description: ''
     put:
       operationId: user_user_current_user_update
@@ -724,6 +736,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PasswordPolicies'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
           description: ''
   /user/user/profile-picture/upload:
     post:
@@ -1168,6 +1186,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProjectDetail'
           description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
     put:
       operationId: workspace_project_update
       description: Handle PUT.
@@ -1413,6 +1437,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SectionDetail'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
           description: ''
     put:
       operationId: workspace_section_update
@@ -1689,6 +1719,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TaskDetail'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
           description: ''
     put:
       operationId: workspace_task_update
@@ -1977,6 +2013,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/TeamMemberBase'
           description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
     put:
       operationId: workspace_team_member_update
       description: Handle PUT.
@@ -2251,6 +2293,12 @@ paths:
                 items:
                   $ref: '#/components/schemas/ProjectBase'
           description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /workspace/workspace/{workspace_uuid}/invite-team-member:
     post:
       operationId: workspace_workspace_invite_team_member_create
@@ -2461,6 +2509,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/WorkspaceBase'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
           description: ''
 components:
   schemas:
