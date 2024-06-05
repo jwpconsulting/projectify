@@ -15,11 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import {
-    openApiClient,
-    postWithCredentialsJson,
-    putWithCredentialsJson,
-} from "$lib/repository/util";
+import { openApiClient, postWithCredentialsJson } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { Workspace, WorkspaceDetail } from "$lib/types/workspace";
 
@@ -76,26 +72,6 @@ export async function getWorkspace(
         )}`,
     );
 }
-
-// Update
-export async function updateWorkspace(
-    // TODO take workspace type instead of uuid string
-    uuid: string,
-    title: string,
-    description: string | null,
-    repositoryContext: RepositoryContext,
-): Promise<Workspace> {
-    const response = await putWithCredentialsJson<Workspace>(
-        `/workspace/workspace/${uuid}`,
-        { title, description },
-        repositoryContext,
-    );
-    if (response.kind !== "ok") {
-        throw new Error("Error while updating workspace");
-    }
-    return response.data;
-}
-// Delete
 
 // RPC
 export async function inviteUser(

@@ -147,15 +147,3 @@ export async function postWithCredentialsJson<T, E = unknown>(
         repositoryContext,
     );
 }
-
-export async function putWithCredentialsJson<T, E = unknown>(
-    url: string,
-    data: unknown,
-    repositoryContext: RepositoryContext,
-): Promise<ApiResponse<T, E>> {
-    return await fetchResponse<T, E>(
-        url,
-        putPostDeleteOptions("PUT", data),
-        repositoryContext,
-    );
-}
