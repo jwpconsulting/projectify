@@ -15,7 +15,6 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { TimestampedType } from "$lib/types/base";
 import type { components } from "./schema";
 
 export type TeamMemberRole = components["schemas"]["RoleEnum"];
@@ -29,20 +28,7 @@ export type SubTask = components["schemas"]["SubTaskBase"];
 export type CreateUpdateSubTask = components["schemas"]["SubTaskCreateUpdate"];
 
 // All the info we can receive from the API
-export type Task = {
-    title: string;
-    description: string | null;
-    _order: number;
-    uuid: string;
-    // TODO the following should be a Date
-    due_date: string | null;
-    number: number;
-    labels: readonly Label[];
-    assignee?: TeamMember;
-    section?: Section;
-    sub_tasks?: readonly SubTask[];
-} & TimestampedType;
-
+export type Task = components["schemas"]["TaskWithSubTask"];
 export type TaskDetail = components["schemas"]["TaskDetail"];
 
 export type Section = TaskDetail["section"];

@@ -15,11 +15,6 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-export interface TimestampedType {
-    created: string;
-    modified: string;
-}
-
 export type SearchInput = string | undefined;
 
 // https://stackoverflow.com/questions/65332597/typescript-is-there-a-recursive-keyof/65334052#65334052
