@@ -133,6 +133,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Customer'
           description: ''
+        '404':
+          description: No response body
   /corporate/workspace/{workspace_uuid}/redeem-coupon:
     post:
       operationId: corporate_workspace_redeem_coupon_create
@@ -254,20 +256,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                description: Too many requests
-                properties:
-                  code:
-                    type: integer
-                    enum:
-                    - 429
-                  status:
-                    type: string
-                    enum:
-                    - error
-                required:
-                - code
-                - status
+                $ref: '#/components/schemas/TooManyRequests'
           description: ''
   /user/user/confirm-email:
     post:
@@ -574,20 +563,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                description: Too many requests
-                properties:
-                  code:
-                    type: integer
-                    enum:
-                    - 429
-                  status:
-                    type: string
-                    enum:
-                    - error
-                required:
-                - code
-                - status
+                $ref: '#/components/schemas/TooManyRequests'
           description: ''
   /user/user/log-in:
     post:
@@ -654,20 +630,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                description: Too many requests
-                properties:
-                  code:
-                    type: integer
-                    enum:
-                    - 429
-                  status:
-                    type: string
-                    enum:
-                    - error
-                required:
-                - code
-                - status
+                $ref: '#/components/schemas/TooManyRequests'
           description: ''
   /user/user/log-out:
     post:
@@ -802,20 +765,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                description: Too many requests
-                properties:
-                  code:
-                    type: integer
-                    enum:
-                    - 429
-                  status:
-                    type: string
-                    enum:
-                    - error
-                required:
-                - code
-                - status
+                $ref: '#/components/schemas/TooManyRequests'
           description: ''
   /user/user/sign-up:
     post:
@@ -882,20 +832,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                description: Too many requests
-                properties:
-                  code:
-                    type: integer
-                    enum:
-                    - 429
-                  status:
-                    type: string
-                    enum:
-                    - error
-                required:
-                - code
-                - status
+                $ref: '#/components/schemas/TooManyRequests'
           description: ''
   /workspace/label/:
     post:
@@ -2440,6 +2377,11 @@ components:
       - modified
       - text
       - uuid
+    CodeEnum:
+      enum:
+      - 429
+      type: integer
+      description: '* `429` - 429'
     ConfirmEmail:
       type: object
       description: Take email and password.
@@ -3049,6 +2991,11 @@ components:
       - can_create_more
       - current
       - limit
+    StatusEnum:
+      enum:
+      - error
+      type: string
+      description: '* `error` - error'
     SubTaskBase:
       type: object
       description: SubTask model serializer.
@@ -3398,6 +3345,18 @@ components:
           maxLength: 255
         role:
           $ref: '#/components/schemas/RoleEnum'
+    TooManyRequests:
+      type: object
+      description: Serialize 429 too many requests error.
+      properties:
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          default: error
+        code:
+          $ref: '#/components/schemas/CodeEnum'
+      required:
+      - code
     UnauthenticatedEnum:
       enum:
       - true

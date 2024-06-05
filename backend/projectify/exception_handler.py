@@ -43,12 +43,11 @@ from django.core.exceptions import (
 )
 from django.http import Http404
 
+from rest_framework import serializers, status
 from rest_framework.exceptions import (
     APIException,
     ErrorDetail,
-)
-from rest_framework.exceptions import (
-    ValidationError as DrfValidationError,
+    Throttled,
 )
 from rest_framework.response import Response
 from rest_framework.serializers import as_serializer_error
@@ -105,15 +104,23 @@ SerializerError = dict[str, SerializerErrorField]
 
 # What we produce:
 ErrorContent = Union[str, Sequence[Mapping[str, "ErrorContent"]]]
-ErrorRoot = TypedDict(
-    "ErrorRoot",
+ErrorRootBadRequest = TypedDict(
+    "ErrorRootBadRequest",
     {
         "status": Literal["error"],
-        "code": int,
+        "code": Literal[400],
         "details": Mapping[str, ErrorContent],
         "general": Optional[str],
     },
 )
+ErrorRootTooManyRequests = TypedDict(
+    "ErrorRootTooManyRequests",
+    {
+        "status": Literal["error"],
+        "code": Literal[429],
+    },
+)
+ErrorRoot = Union[ErrorRootBadRequest, ErrorRootTooManyRequests]
 
 
 def serialize_error_dict(
@@ -165,7 +172,7 @@ settings = get_settings()
 
 
 def serialize_validation_error(
-    error: Union[DjangoValidationError, DrfValidationError],
+    error: Union[DjangoValidationError, serializers.ValidationError],
 ) -> ErrorRoot:
     """Serialize a validation error."""
     details = as_serializer_error(error)
@@ -202,6 +209,13 @@ def serialize_validation_error(
     }
 
 
+class TooManyRequestsSerializer(serializers.Serializer):
+    """Serialize 429 too many requests error."""
+
+    status = serializers.ChoiceField(choices=["error"], default="error")
+    code = serializers.ChoiceField(choices=[429], source="status_code")
+
+
 # TODO find out what ctx is
 def exception_handler(
     exception: HandledException, ctx: object
@@ -215,12 +229,17 @@ def exception_handler(
     """
     result: HandledException
     match exception:
-        case DjangoValidationError() | DrfValidationError():
+        case DjangoValidationError() | serializers.ValidationError():
             data = serialize_validation_error(exception)
-            return Response(status=400, data=data)
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
         case PermissionDenied():
             logger.error("Permission denied: %s", exception)
             result = exception
+        case Throttled():
+            serializer = TooManyRequestsSerializer(exception)
+            return Response(
+                status=status.HTTP_429_TOO_MANY_REQUESTS, data=serializer.data
+            )
         case APIException():
             logger.error("DRF API Exception: %s", exception)
             result = exception

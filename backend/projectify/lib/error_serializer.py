@@ -31,6 +31,8 @@ from rest_framework.status import (
     HTTP_429_TOO_MANY_REQUESTS,
 )
 
+from projectify.exception_handler import TooManyRequestsSerializer
+
 logger = logging.getLogger(__name__)
 
 SerializerField = Union[
@@ -113,21 +115,6 @@ def derive_bad_request_serializer(
     schema = make_schema(instance)
     response = OpenApiResponse(response=schema)
     return response
-
-
-TooManyRequestsSchema = OpenApiResponse(
-    build_object_type(
-        description="Too many requests",
-        properties={
-            "code": {"type": "integer", "enum": [429]},
-            "status": {"type": "string", "enum": ["error"]},
-        },
-        required=[
-            "code",
-            "status",
-        ],
-    )
-)
 
 
 # More methods than you ever asked for
@@ -232,5 +219,7 @@ def preprocess_derive_error_schemas(endpoints: Endpoint) -> Endpoint:
             HTTP_429_TOO_MANY_REQUESTS, None
         )
         if http_429_response is DeriveSchema:
-            responses_dict[HTTP_429_TOO_MANY_REQUESTS] = TooManyRequestsSchema
+            responses_dict[
+                HTTP_429_TOO_MANY_REQUESTS
+            ] = TooManyRequestsSerializer
     return endpoints
