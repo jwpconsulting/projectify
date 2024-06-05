@@ -130,6 +130,13 @@ class TestUserReadUpdate:
             resource_url, data={"preferred_name": "google.com"}
         )
         assert response.status_code == HTTP_400_BAD_REQUEST, response.data
+        assert response.data == {
+            "status": "error",
+            "code": 400,
+            "details": {},
+            "general": "Preferred name can only contain '.' or ':' if "
+            "followed by whitespace or if located at the end.",
+        }
         user.refresh_from_db()
         # Canary in the mines
         assert user.preferred_name == name

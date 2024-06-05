@@ -19,6 +19,7 @@ from django.db.models import (
 )
 
 from .exceptions import (
+    ErrorDetail,
     ValidationError,
 )
 from .fields import *  # noqa: F403
@@ -75,9 +76,18 @@ class BaseSerializer:
     def save(self, **kwargs: Any) -> Any: ...
     def is_valid(self, *_: Any, raise_exception: bool = False) -> bool: ...
 
+# Inferred by inspecting rest_framework/serializers.py:as_serializer_error
+SerializerErrorField = Union[
+    tuple[ErrorDetail],
+    list[ErrorDetail],
+    list["SerializerErrorField"],
+    dict[str, "SerializerErrorField"],
+]
+SerializerError = dict[str, SerializerErrorField]
+
 def as_serializer_error(
     exc: Union[ValidationError, DjangoValidationError],
-) -> Mapping[str, Any]: ...
+) -> SerializerError: ...
 
 T = TypeVar("T")
 M = TypeVar("M", bound=Model)

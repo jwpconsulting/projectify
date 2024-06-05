@@ -22,10 +22,8 @@ from typing import Any, Literal, Union
 
 from drf_spectacular.plumbing import (
     build_array_type,
-    build_basic_type,
     build_object_type,
 )
-from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiResponse, _SchemaType
 from rest_framework import fields, serializers
 
@@ -43,9 +41,6 @@ logger = logging.getLogger(__name__)
 
 def field_to_type(field: SerializerField) -> _SchemaType:
     """Map a serializer field to an OpenApi schema type."""
-    str_type = build_basic_type(OpenApiTypes.STR)
-    assert str_type is not None
-    str_array = build_array_type(str_type)
     match field:
         case serializers.ListSerializer() as instance:
             child_serializer = instance.child
@@ -54,11 +49,11 @@ def field_to_type(field: SerializerField) -> _SchemaType:
                     f".child for ListSerializer {instance} was None"
                 )
 
-            schema = make_schema(child_serializer)
+            schema = make_schema_nested(child_serializer)
             return build_array_type(schema)
         case serializers.Serializer() as instance:
             many = getattr(instance, "many", False)
-            schema = make_schema(instance)
+            schema = make_schema_nested(instance)
             if many:
                 return build_array_type(schema)
             else:
@@ -70,12 +65,10 @@ def field_to_type(field: SerializerField) -> _SchemaType:
             schema = field_to_type(child_field)
             return build_array_type(schema)
         case serializers.Field() as instance:
-            return {"oneOf": [str_type, str_array]}
+            return {"type": "string"}
 
 
-def make_schema(
-    instance: serializers.Serializer,
-) -> _SchemaType:
+def make_schema_nested(instance: serializers.Serializer) -> _SchemaType:
     """Derive a schema for a serializer instance."""
     fields: dict[str, _SchemaType] = {
         name: field_to_type(field)
@@ -85,6 +78,26 @@ def make_schema(
     description = f"Errors for {instance_doc}"
     result = build_object_type(properties=fields, description=description)
     return result
+
+
+def make_schema(instance: serializers.Serializer) -> _SchemaType:
+    """Derive a schema for a serializer instance."""
+    schema = build_object_type(
+        description="Error schema",
+        properties={
+            "code": {"type": "integer"},
+            "details": make_schema_nested(instance),
+            "general": {"type": "array", "items": {"type": "string"}},
+            "status": {"type": "string", "enum": ["error"]},
+        },
+        required=[
+            "code",
+            "details",
+            "general",
+            "status",
+        ],
+    )
+    return schema
 
 
 def derive_bad_request_serializer(

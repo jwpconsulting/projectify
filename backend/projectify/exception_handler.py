@@ -14,11 +14,28 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Override DRF's default exception handling."""
+"""
+Override DRF's default exception handling.
+
+Serialize validation errors into something we can handle with types in the
+frontend.
+
+Reject errors that we can't serialize with a logger warning and return None
+for that error.
+
+Is it OK to deal with errors like that? Validation errors are part of the
+UI and if we can't render them correctly, then that's a bug.
+
+Other errors in the 500 category we don't show to the user anyway, and the
+purpose of a 400 error is to give the user the opportunity to correct the
+error itself.
+"""
 import logging
-from typing import Optional, Union
+from collections.abc import Mapping, Sequence
+from typing import Literal, Optional, TypedDict, Union
 
 from django.core.exceptions import (
+    NON_FIELD_ERRORS,
     PermissionDenied,
 )
 from django.core.exceptions import (
@@ -28,6 +45,7 @@ from django.http import Http404
 
 from rest_framework.exceptions import (
     APIException,
+    ErrorDetail,
 )
 from rest_framework.exceptions import (
     ValidationError as DrfValidationError,
@@ -35,6 +53,8 @@ from rest_framework.exceptions import (
 from rest_framework.response import Response
 from rest_framework.serializers import as_serializer_error
 from rest_framework.views import exception_handler as drf_exception_handler
+
+from projectify.lib.settings import get_settings
 
 logger = logging.getLogger(__name__)
 
@@ -58,28 +78,128 @@ HandledException = Union[
     Exception,
 ]
 
-# TODO add error serializer here, format should be
-
-# {
-# "error": {
-# "code": 400,
-# "details": {
-# "kind": "object",
-# "content": {
-# "preferred_name": {kind: "list", content: ["too long", "invalid chars"]},
-# "email": {kind: "string", content: "too awesome"},
-# "sub_task": {kind: "object", content: {kind: "array", content: [kind:
-# "string", content: "already created"]}}
+# The below is somewhat like this:
+# interface error {
+#   status: "error";
+#   code: int;
+#   details?: ErrorContent;
+#   general?: ErrorContent;
 # }
-# }
-# }
-# }
-# like so:
-# interface error { error: {code: int, details: ErrorContent} }
 # type ErrorContent =
-# | { kind: "string", content: string }
-# | { kind: "array", content: ErrorContent }
-# | { kind: "object", content: Record<str, ErrorContent> }
+# | ["string", string]
+# | ["list", ErrorContent]
+# | ["dict", Record<str, ErrorContent>]
+
+# This is designed with nested serializers in mind
+
+
+# What we get from DRF:
+SerializerErrorField = Union[
+    tuple[ErrorDetail],
+    list[ErrorDetail],
+    list["SerializerErrorField"],
+    dict[str, "SerializerErrorField"],
+]
+SerializerError = dict[str, SerializerErrorField]
+
+
+# What we produce:
+ErrorContent = Union[str, Sequence[Mapping[str, "ErrorContent"]]]
+ErrorRoot = TypedDict(
+    "ErrorRoot",
+    {
+        "status": Literal["error"],
+        "code": int,
+        "details": Mapping[str, ErrorContent],
+        "general": Optional[str],
+    },
+)
+
+
+def serialize_error_dict(
+    field: SerializerErrorField,
+) -> Optional[Mapping[str, ErrorContent]]:
+    """Serialize a dict containing validation error details."""
+    match field:
+        case dict() as d:
+            return {
+                k: v
+                for k, v in (
+                    (k, serialize_error_list(v)) for k, v in d.items()
+                )
+                if v
+            }
+        case _:
+            logger.warning(
+                "Don't know how to serialize single error list %s", field
+            )
+            return None
+
+
+def serialize_error_list(
+    field: SerializerErrorField,
+) -> Optional[ErrorContent]:
+    """Serialize a list containing validation error details."""
+    match field:
+        case (ErrorDetail() as s,):
+            return str(s)
+        case list() as l:
+            # Clunky type casting
+            result: list[Mapping[str, ErrorContent]] = []
+            for i in l:
+                if isinstance(i, ErrorDetail):
+                    logger.warning("Dropping single ErrorDetail %s", i)
+                    continue
+                ser = serialize_error_dict(i)
+                if ser is None:
+                    logger.warning("Dropping item %s.", i)
+                    continue
+                result.append(ser)
+            return result
+        case _:
+            logger.warning("Don't know how to serialize error list %s", field)
+            return None
+
+
+settings = get_settings()
+
+
+def serialize_validation_error(
+    error: Union[DjangoValidationError, DrfValidationError],
+) -> ErrorRoot:
+    """Serialize a validation error."""
+    details = as_serializer_error(error)
+    # In Django, (not DRF!) check constraints end up as "__all__", so we put
+    # them somewhere more useful
+    django_non_field_errors = details.pop(NON_FIELD_ERRORS, None)
+    # drf_general is set in projectify/settings/base.py
+    drf_non_field_errors = details.pop("drf_general", None)
+
+    serialized = serialize_error_dict(details)
+
+    general: list[SerializerErrorField] = []
+    if django_non_field_errors is not None:
+        general.append(django_non_field_errors)
+    if drf_non_field_errors is not None:
+        general.append(drf_non_field_errors)
+
+    general_str: Optional[str]
+    match general:
+        case []:
+            general_str = None
+        case [[ErrorDetail() as e], *rest]:
+            if rest:
+                logger.warning("Could not serialize errors %s", rest)
+            general_str = str(e)
+        case _:
+            logger.warning("Could not serialize errors %s", general)
+            general_str = None
+    return {
+        "status": "error",
+        "code": 400,
+        "details": serialized or {},
+        "general": general_str,
+    }
 
 
 # TODO find out what ctx is
@@ -95,8 +215,9 @@ def exception_handler(
     """
     result: HandledException
     match exception:
-        case DjangoValidationError():
-            result = DrfValidationError(as_serializer_error(exception))
+        case DjangoValidationError() | DrfValidationError():
+            data = serialize_validation_error(exception)
+            return Response(status=400, data=data)
         case PermissionDenied():
             logger.error("Permission denied: %s", exception)
             result = exception

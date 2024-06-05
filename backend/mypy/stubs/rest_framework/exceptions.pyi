@@ -9,6 +9,9 @@ from typing import (
 ErrorMessage = Union[str, Sequence[ErrorMessage], Mapping[str, ErrorMessage]]
 Code = str
 
+class ErrorDetail(str):
+    code: Union[str, int, None]
+
 class APIException(Exception):
     status_code: int
     default_detail: str

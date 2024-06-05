@@ -60,21 +60,26 @@ def test_make_schema_simple(simple_serializer: Serializer) -> None:
     """Test make_schema with simple serializer."""
     assert make_schema(simple_serializer) == {
         "type": "object",
-        "description": "Errors for SimpleSerializer",
+        "description": "Error schema",
         "properties": {
-            "text": {
-                "oneOf": [
-                    {"type": "string"},
-                    {"type": "array", "items": {"type": "string"}},
-                ]
+            "details": {
+                "type": "object",
+                "description": "Errors for SimpleSerializer",
+                "properties": {
+                    "text": {"type": "string"},
+                    "number": {"type": "string"},
+                },
             },
-            "number": {
-                "oneOf": [
-                    {"type": "string"},
-                    {"type": "array", "items": {"type": "string"}},
-                ]
-            },
+            "status": {"type": "string", "enum": ["error"]},
+            "code": {"type": "integer"},
+            "general": {"type": "array", "items": {"type": "string"}},
         },
+        "required": [
+            "code",
+            "details",
+            "general",
+            "status",
+        ],
     }
 
 
@@ -82,55 +87,41 @@ def test_make_schema_complex(complex_serializer: Serializer) -> None:
     """Test make_schema with complex serializer."""
     assert make_schema(complex_serializer) == {
         "type": "object",
-        "description": "Errors for ComplexSerializer",
+        "description": "Error schema",
         "properties": {
-            "nested_plural": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "description": "Errors for NestedSerializer",
-                    "properties": {
-                        "text": {
-                            "oneOf": [
-                                {"type": "string"},
-                                {"type": "array", "items": {"type": "string"}},
-                            ]
-                        }
-                    },
-                },
-            },
-            "nested_singular": {
+            "details": {
                 "type": "object",
-                "description": "Errors for NestedSerializer",
+                "description": "Errors for ComplexSerializer",
                 "properties": {
-                    "text": {
-                        "oneOf": [
-                            {"type": "string"},
-                            {"type": "array", "items": {"type": "string"}},
-                        ]
-                    }
+                    "nested_plural": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "description": "Errors for NestedSerializer",
+                            "properties": {"text": {"type": "string"}},
+                        },
+                    },
+                    "nested_singular": {
+                        "type": "object",
+                        "description": "Errors for NestedSerializer",
+                        "properties": {"text": {"type": "string"}},
+                    },
+                    "text_list": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "dict_field": {"type": "string"},
+                    "text": {"type": "string"},
                 },
             },
-            "text_list": {
-                "type": "array",
-                "items": {
-                    "oneOf": [
-                        {"type": "string"},
-                        {"type": "array", "items": {"type": "string"}},
-                    ]
-                },
-            },
-            "dict_field": {
-                "oneOf": [
-                    {"type": "string"},
-                    {"type": "array", "items": {"type": "string"}},
-                ]
-            },
-            "text": {
-                "oneOf": [
-                    {"type": "string"},
-                    {"type": "array", "items": {"type": "string"}},
-                ]
-            },
+            "status": {"type": "string", "enum": ["error"]},
+            "code": {"type": "integer"},
+            "general": {"type": "array", "items": {"type": "string"}},
         },
+        "required": [
+            "code",
+            "details",
+            "general",
+            "status",
+        ],
     }

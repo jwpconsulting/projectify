@@ -139,21 +139,28 @@ class TestSignUp:
         rest_client: APIClient,
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
-        faker: Faker,
     ) -> None:
         """Test signing up a new user."""
         with django_assert_num_queries(1):
             response = rest_client.post(
                 resource_url,
                 data={
-                    "email": "hello@localhost",
+                    "email": "password@localhost",
                     "password": "password",
                     "tos_agreed": True,
                     "privacy_policy_agreed": True,
                 },
             )
             assert response.status_code == 400, response.data
-        assert response.data == {"policies": ["This password is too common."]}
+        assert response.data == {
+            "status": "error",
+            "code": 400,
+            "details": {
+                "password": "The password is too similar to the Email. "
+                "This password is too common."
+            },
+            "general": None,
+        }
 
 
 class TestConfirmEmail:

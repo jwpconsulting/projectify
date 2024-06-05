@@ -184,6 +184,12 @@ class TestWorkspaceCheckoutSessionCreate:
                 data={"seats": 1337},
             )
             assert response.status_code == 400, response.data
+        assert response.data == {
+            "status": "error",
+            "code": 400,
+            "details": {},
+            "general": "This customer already activated a subscription before",
+        }
 
 
 class TestWorkspaceBillingPortalSessionCreate:
