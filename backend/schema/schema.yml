@@ -20,12 +20,6 @@ paths:
           description: No response body
         '500':
           description: No response body
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
-          description: ''
   /corporate/workspace/{workspace_uuid}/create-billing-portal-session:
     post:
       operationId: corporate_workspace_create_billing_portal_session_create
@@ -282,12 +276,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/TooManyRequests'
           description: ''
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
-          description: ''
   /user/user/confirm-email:
     post:
       operationId: user_user_confirm_email_create
@@ -344,12 +332,6 @@ paths:
                 - details
                 - general
                 - status
-          description: ''
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
           description: ''
   /user/user/confirm-password-reset:
     post:
@@ -410,12 +392,6 @@ paths:
                 - general
                 - status
           description: ''
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
-          description: ''
   /user/user/current-user:
     get:
       operationId: user_user_current_user_retrieve
@@ -431,12 +407,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/auth_info'
-          description: ''
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
           description: ''
     put:
       operationId: user_user_current_user_update
@@ -497,12 +467,6 @@ paths:
           description: ''
         '403':
           description: No response body
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
-          description: ''
   /user/user/email-address-update/confirm:
     post:
       operationId: user_user_email_address_update_confirm_create
@@ -556,12 +520,6 @@ paths:
                 - details
                 - general
                 - status
-          description: ''
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
           description: ''
   /user/user/email-address-update/request:
     post:
@@ -624,12 +582,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TooManyRequests'
-          description: ''
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
           description: ''
   /user/user/log-in:
     post:
@@ -698,12 +650,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/TooManyRequests'
           description: ''
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
-          description: ''
   /user/user/log-out:
     post:
       operationId: user_user_log_out_create
@@ -715,12 +661,6 @@ paths:
       responses:
         '204':
           description: No response body
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
-          description: ''
   /user/user/password-policy:
     get:
       operationId: user_user_password_policy_retrieve
@@ -736,12 +676,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PasswordPolicies'
-          description: ''
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
           description: ''
   /user/user/profile-picture/upload:
     post:
@@ -789,12 +723,6 @@ paths:
                 - details
                 - general
                 - status
-          description: ''
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
           description: ''
   /user/user/request-password-reset:
     post:
@@ -856,12 +784,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TooManyRequests'
-          description: ''
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
           description: ''
   /user/user/sign-up:
     post:
@@ -930,12 +852,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/TooManyRequests'
           description: ''
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
-          description: ''
   /workspace/label/:
     post:
       operationId: workspace_label_create
@@ -997,12 +913,6 @@ paths:
                 - details
                 - general
                 - status
-          description: ''
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
           description: ''
   /workspace/label/{label_uuid}:
     put:
@@ -1094,6 +1004,12 @@ paths:
       responses:
         '204':
           description: No response body
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /workspace/project/:
     post:
       operationId: workspace_project_create
@@ -1157,12 +1073,6 @@ paths:
                 - details
                 - general
                 - status
-          description: ''
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
           description: ''
   /workspace/project/{project_uuid}:
     get:
@@ -1283,6 +1193,12 @@ paths:
       responses:
         '204':
           description: No response body
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /workspace/project/{project_uuid}/archive:
     post:
       operationId: workspace_project_archive_create
@@ -1533,6 +1449,12 @@ paths:
       responses:
         '204':
           description: No response body
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /workspace/section/{section_uuid}/move:
     post:
       operationId: workspace_section_move_create
@@ -1692,12 +1614,6 @@ paths:
                 - general
                 - status
           description: ''
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
-          description: ''
   /workspace/task/{task_uuid}:
     get:
       operationId: workspace_task_retrieve
@@ -1849,6 +1765,12 @@ paths:
       responses:
         '204':
           description: No response body
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /workspace/task/{task_uuid}/move-after-task:
     post:
       operationId: workspace_task_move_after_task_create
@@ -2107,6 +2029,12 @@ paths:
       responses:
         '204':
           description: No response body
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /workspace/workspace/:
     post:
       operationId: workspace_workspace_create
@@ -2166,12 +2094,6 @@ paths:
                 - details
                 - general
                 - status
-          description: ''
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
           description: ''
   /workspace/workspace/{workspace_uuid}:
     get:
@@ -2509,12 +2431,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/WorkspaceBase'
-          description: ''
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
           description: ''
 components:
   schemas:

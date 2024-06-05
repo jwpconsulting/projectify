@@ -17,7 +17,7 @@
 """Functionality for building error serializers."""
 import inspect
 import logging
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from typing import Any, Literal, Optional, Union
 
 from drf_spectacular.plumbing import (
@@ -193,19 +193,38 @@ def maybe_annotate_429(d: ResponsesDict) -> None:
     d[status.HTTP_429_TOO_MANY_REQUESTS] = TooManyRequestsSerializer
 
 
+def has_view_args(c: Callable[..., Any]) -> bool:
+    """Return True if a view function takes UUID or other args."""
+    sig = inspect.signature(c)
+    params = list(sig.parameters.values())
+    match params:
+        # APIView with at least one extra arg
+        case [
+            inspect.Parameter(name="self"),
+            inspect.Parameter(name="request"),
+            _,
+            *_,
+        ]:
+            return True
+        # @api_view is not supported well, since rest_framework decorators
+        # don't anntoate __wrapped__
+        case _:
+            return False
+
+
 def preprocess_derive_error_schemas(endpoints: Endpoints) -> Endpoints:
     """Process drf-spectactular schema and add missing HTTP error schemas."""
-    method_names = ["GET", "POST", "PUT"]
+    method_names = ["GET", "POST", "PUT", "DELETE"]
     # These are the functions we want to annotate
     # https://github.com/tfranzel/drf-spectacular/blob/b1a34b05230316ca6c6d6724f2b9bb970a8dbe79/drf_spectacular/utils.py#L549
     endpoints_edit = (
-        (path, method_name, callback)
-        for path, _, method_name, callback in endpoints
+        (path, path_regex, method_name, callback)
+        for path, path_regex, method_name, callback in endpoints
         if method_name in method_names
         and callable(callback)
         and hasattr(callback, "cls")
     )
-    for _path, method_name, callback in endpoints_edit:
+    for _path, _path_regex, method_name, callback in endpoints_edit:
         assert hasattr(callback, "cls")
         method = getattr(callback.cls, method_name.lower())
         schema = method.kwargs["schema"]
@@ -240,7 +259,8 @@ def preprocess_derive_error_schemas(endpoints: Endpoints) -> Endpoints:
                     f"request serializer was provided in {_path}"
                 )
             maybe_annotate_400(responses_dict, request_serializer)
-        maybe_annotate_404(responses_dict)
+        if has_view_args(method):
+            maybe_annotate_404(responses_dict)
         maybe_annotate_429(responses_dict)
 
     return endpoints
