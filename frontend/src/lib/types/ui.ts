@@ -197,7 +197,10 @@ export type EditableViewState =
     // TODO add error state
     | { kind: "saving" };
 
-// TODO rename FormViewState
+/**
+ * This is used for forms that are always editable and do not have to be
+ * made editable by clicking a button or similar
+ */
 export type FormViewState =
     | { kind: "start" }
     | { kind: "submitting" }

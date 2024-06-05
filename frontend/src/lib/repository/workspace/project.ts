@@ -15,28 +15,11 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { openApiClient, postWithCredentialsJson } from "$lib/repository/util";
+import { openApiClient } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
-import type { Workspace, Project, ProjectDetail } from "$lib/types/workspace";
-
-import type { ApiResponse } from "../types";
+import type { ProjectDetail } from "$lib/types/workspace";
 
 // Project CRUD
-// Create
-export async function createProject(
-    workspace: Workspace,
-    project: Pick<Project, "title" | "description">,
-    repositoryContext: RepositoryContext,
-): Promise<ApiResponse<Project, unknown>> {
-    const { uuid: workspace_uuid } = workspace;
-    const response = await postWithCredentialsJson<Project>(
-        `/workspace/project/`,
-        { ...project, workspace_uuid },
-        repositoryContext,
-    );
-    return response;
-}
-
 // Read
 export async function getProject(
     project_uuid: string,

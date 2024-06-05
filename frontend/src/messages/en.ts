@@ -429,9 +429,17 @@ const messages: MessageDirectory = {
                 "You can create unlimited project per workspace.",
                 "They help you to focus on different projects you may be working on.",
             ],
-            "input": {
-                label: "Project title",
-                placeholder: "Release spring Aug 2023",
+            "fields": {
+                title: {
+                    label: "Project title",
+                    placeholder: "Release spring Aug 2023",
+                    valid: "This is a valid project title",
+                },
+            },
+            "errors": {
+                general:
+                    "An error occured while trying to create this project.",
+                field: "Please check the above error messages and try creating the project again.",
             },
             "default-name": "Your project",
             "project-exists": {
