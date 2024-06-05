@@ -29,6 +29,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
+from projectify.lib.error_serializer import DeriveSchema
 from projectify.workspace.selectors.team_member import (
     team_member_find_by_team_member_uuid,
 )
@@ -79,8 +80,7 @@ class TeamMemberReadUpdateDelete(views.APIView):
         request=TeamMemberUpdateSerializer,
         responses={
             200: TeamMemberUpdateSerializer,
-            # Annotate 400
-            400: None,
+            400: DeriveSchema,
             404: None,
         },
     )

@@ -23,19 +23,14 @@ from django.utils.decorators import method_decorator
 from django_ratelimit.core import get_usage
 from django_ratelimit.decorators import ratelimit
 from drf_spectacular.utils import extend_schema
-from rest_framework import (
-    serializers,
-    views,
-)
+from rest_framework import serializers, views
 from rest_framework.exceptions import Throttled
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
-from projectify.lib.error_serializer import (
-    derive_bad_request_serializer,
-)
+from projectify.lib.error_serializer import DeriveSchema
 from projectify.user.serializers import UserSerializer
 from projectify.user.services.auth import (
     user_confirm_email,
@@ -78,11 +73,7 @@ class SignUp(views.APIView):
 
     @extend_schema(
         request=SignUpSerializer,
-        responses={
-            204: None,
-            400: None,
-            429: None,
-        },
+        responses={204: None, 400: DeriveSchema, 429: DeriveSchema},
     )
     @method_decorator(ratelimit(key="ip", rate="60/h"))
     def post(self, request: Request) -> Response:
@@ -136,11 +127,7 @@ class ConfirmEmail(views.APIView):
 
     @extend_schema(
         request=ConfirmEmailSerializer,
-        responses={
-            204: None,
-            # TODO annotate
-            400: None,
-        },
+        responses={204: None, 400: DeriveSchema},
     )
     def post(self, request: Request) -> Response:
         """Handle POST."""
@@ -167,11 +154,7 @@ class LogIn(views.APIView):
 
     @extend_schema(
         request=LogInSerializer,
-        responses={
-            200: UserSerializer,
-            400: None,
-            429: None,
-        },
+        responses={200: UserSerializer, 400: DeriveSchema, 429: DeriveSchema},
     )
     @method_decorator(
         ratelimit(
@@ -229,12 +212,7 @@ class PasswordResetRequest(views.APIView):
 
     @extend_schema(
         request=PasswordResetRequestSerializer,
-        responses={
-            204: None,
-            # TODO annotate
-            400: None,
-            429: None,
-        },
+        responses={204: None, 400: DeriveSchema, 429: DeriveSchema},
     )
     @method_decorator(ratelimit(key="post:email", rate="5/h"))
     @method_decorator(ratelimit(key="ip", rate="5/h"))
@@ -262,11 +240,7 @@ class PasswordResetConfirm(views.APIView):
 
     @extend_schema(
         request=PasswordResetConfirmSerializer,
-        responses={
-            204: None,
-            # TODO annotate
-            400: derive_bad_request_serializer(PasswordResetConfirmSerializer),
-        },
+        responses={204: None, 400: DeriveSchema},
     )
     def post(self, request: Request) -> Response:
         """Handle POST."""

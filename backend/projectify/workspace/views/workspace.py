@@ -40,6 +40,7 @@ from rest_framework.status import (
     HTTP_204_NO_CONTENT,
 )
 
+from projectify.lib.error_serializer import DeriveSchema
 from projectify.workspace.selectors.quota import workspace_get_all_quotas
 
 from ..exceptions import (
@@ -83,11 +84,7 @@ class WorkspaceCreate(views.APIView):
 
     @extend_schema(
         request=WorkspaceCreateSerializer,
-        responses={
-            201: WorkspaceBaseSerializer,
-            # TODO annotate 400
-            400: None,
-        },
+        responses={201: WorkspaceBaseSerializer, 400: DeriveSchema},
     )
     def post(self, request: Request) -> Response:
         """Create the workspace and add this user."""
@@ -148,8 +145,7 @@ class WorkspaceReadUpdate(views.APIView):
         request=WorkspaceUpdateSerializer,
         responses={
             200: WorkspaceUpdateSerializer,
-            # TODO annotate 400
-            400: None,
+            400: DeriveSchema,
             404: None,
         },
     )
@@ -190,7 +186,7 @@ class WorkspacePictureUploadView(views.APIView):
 
     @extend_schema(
         request=WorkspacePictureUploadSerializer,
-        responses={204: None, 400: None, 404: None},
+        responses={204: None, 400: DeriveSchema, 404: None},
     )
     def post(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle POST."""
@@ -225,8 +221,7 @@ class InviteUserToWorkspace(views.APIView):
         request=InviteUserToWorkspaceSerializer,
         responses={
             201: InviteUserToWorkspaceSerializer,
-            # TODO annotate 400
-            400: None,
+            400: DeriveSchema,
             404: None,
         },
     )
@@ -277,12 +272,7 @@ class UninviteUserFromWorkspace(views.APIView):
 
     @extend_schema(
         request=UninviteUserFromWorkspaceSerializer,
-        responses={
-            204: None,
-            # TODO annotate 400
-            400: None,
-            404: None,
-        },
+        responses={204: None, 400: DeriveSchema, 404: None},
     )
     def post(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle POST."""

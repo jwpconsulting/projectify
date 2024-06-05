@@ -38,6 +38,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
+from projectify.lib.error_serializer import DeriveSchema
 from projectify.user.models import User
 from projectify.user.serializers import UserSerializer
 from projectify.user.services.user import (
@@ -93,8 +94,7 @@ class UserReadUpdate(views.APIView):
         request=UserUpdateSerializer,
         responses={
             200: UserSerializer,
-            # TODO annotate
-            400: None,
+            400: DeriveSchema,
             403: None,
         },
     )
@@ -136,8 +136,7 @@ class ProfilePictureUpload(views.APIView):
         request=ProfilePictureUploadSerializer,
         responses={
             204: None,
-            # TODO
-            400: None,
+            400: DeriveSchema,
         },
     )
     def post(self, request: Request) -> Response:
@@ -165,11 +164,7 @@ class ChangePassword(views.APIView):
 
     @extend_schema(
         request=ChangePasswordSerializer,
-        responses={
-            204: None,
-            400: None,
-            429: None,
-        },
+        responses={204: None, 400: DeriveSchema, 429: DeriveSchema},
     )
     @method_decorator(ratelimit(key="user", rate="5/h"))
     def post(self, request: Request) -> Response:
@@ -200,12 +195,7 @@ class RequestEmailAddressUpdate(views.APIView):
 
     @extend_schema(
         request=RequestEmailAddressUpdateSerializer,
-        responses={
-            204: None,
-            # TODO
-            400: None,
-            429: None,
-        },
+        responses={204: None, 400: DeriveSchema, 429: DeriveSchema},
     )
     @method_decorator(ratelimit(key="user", rate="5/h"))
     def post(self, request: Request) -> Response:
@@ -236,8 +226,7 @@ class ConfirmEmailAddressUpdate(views.APIView):
         request=ConfirmEmailAddressUpdateSerializer,
         responses={
             204: None,
-            # TODO
-            400: None,
+            400: DeriveSchema,
         },
     )
     def post(self, request: Request) -> Response:

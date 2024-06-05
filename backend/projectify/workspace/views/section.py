@@ -26,6 +26,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from projectify.lib.error_serializer import DeriveSchema
 from projectify.workspace.models import (
     Section,
 )
@@ -63,12 +64,7 @@ class SectionCreate(APIView):
 
     @extend_schema(
         request=SectionCreateSerializer,
-        responses={
-            201: SectionCreateSerializer,
-            404: None,
-            # TODO annotate 400
-            400: None,
-        },
+        responses={201: SectionCreateSerializer, 400: DeriveSchema, 404: None},
     )
     def post(self, request: Request) -> Response:
         """Create a section."""
@@ -131,12 +127,7 @@ class SectionReadUpdateDelete(APIView):
 
     @extend_schema(
         request=SectionUpdateSerializer,
-        responses={
-            200: SectionUpdateSerializer,
-            # TODO annotate 400
-            400: None,
-            404: None,
-        },
+        responses={200: SectionUpdateSerializer, 400: DeriveSchema, 404: None},
     )
     def put(self, request: Request, section_uuid: UUID) -> Response:
         """Update section."""
@@ -192,12 +183,7 @@ class SectionMove(APIView):
 
     @extend_schema(
         request=SectionMoveSerializer,
-        responses={
-            200: None,
-            # TODO annotate 400
-            400: None,
-            404: None,
-        },
+        responses={200: None, 400: DeriveSchema, 404: None},
     )
     def post(self, request: Request, section_uuid: UUID) -> Response:
         """Process request."""

@@ -30,6 +30,8 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
 
+from projectify.lib.error_serializer import DeriveSchema
+
 from ..selectors.customer import customer_find_by_workspace_uuid
 from ..serializers import CustomerSerializer
 from ..services.customer import (
@@ -87,8 +89,7 @@ class WorkspaceCheckoutSessionCreate(APIView):
         request=WorkspaceCheckoutSessionCreateInputSerializer,
         responses={
             200: WorkspaceCheckoutSessionCreateOutputSerializer,
-            # TODO
-            400: None,
+            400: DeriveSchema,
             404: None,
         },
     )

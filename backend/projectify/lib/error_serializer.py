@@ -40,8 +40,6 @@ SerializerField = Union[
     serializers.Serializer,
 ]
 
-logger = logging.getLogger(__name__)
-
 
 def field_to_type(field: SerializerField) -> _SchemaType:
     """Map a serializer field to an OpenApi schema type."""
@@ -167,8 +165,24 @@ ResponseAnnotation = Union[
 MaybeSerializer = Union[None, Any, dict[int, serializers.Serializer]]
 
 
-def preprocess_bad_request_serializers(endpoints: Endpoint) -> Endpoint:
-    """Process drf-spectactular schema and add missing HTTP 400 schemas."""
+DeriveSchema = object()
+
+
+def get_request_serializer(
+    annotation: RequestAnnotation,
+) -> Union[None, type[serializers.Serializer], serializers.Serializer]:
+    """Extract a Serializer instance or constructor from request annot."""
+    match annotation:
+        case None | fields.empty:
+            return None
+        case type() | serializers.Serializer() as ser_inst:
+            return ser_inst
+        case _:
+            raise ValueError(f"Don't know what to do with {annotation}")
+
+
+def preprocess_derive_error_schemas(endpoints: Endpoint) -> Endpoint:
+    """Process drf-spectactular schema and add missing HTTP error schemas."""
     method_names = ["POST", "PUT"]
     # These are the functions we want to annotate
     # https://github.com/tfranzel/drf-spectacular/blob/b1a34b05230316ca6c6d6724f2b9bb970a8dbe79/drf_spectacular/utils.py#L549
@@ -179,10 +193,11 @@ def preprocess_bad_request_serializers(endpoints: Endpoint) -> Endpoint:
         and callable(callback)
         and hasattr(callback, "cls")
     )
-    for path, method_name, callback in endpoints_edit:
+    for _path, method_name, callback in endpoints_edit:
         assert hasattr(callback, "cls")
         method = getattr(callback.cls, method_name.lower())
         schema = method.kwargs["schema"]
+        # XXX HAXXX
         # Unfortunately we can't just call get_response_serializers. It expects
         # a complicated dance with a view and request instance, and will
         # blow up. Instead, we just peek inside and find what extend_schema
@@ -193,33 +208,29 @@ def preprocess_bad_request_serializers(endpoints: Endpoint) -> Endpoint:
         responses_nonlocals, _, _, _ = inspect.getclosurevars(
             schema.get_response_serializers
         )
-        request: RequestAnnotation = request_nonlocals["request"]
-        responses: ResponseAnnotation = responses_nonlocals["responses"]
+        request: RequestAnnotation = request_nonlocals.get("request", None)
+        responses: ResponseAnnotation = responses_nonlocals.get(
+            "responses", None
+        )
         match responses:
             case dict() as responses_dict:
                 pass
             case _:
                 continue
-        match request:
-            case None | fields.empty:
-                continue
-            case type() | serializers.Serializer() as ser_inst:
-                http_400_response = responses_dict.get(
-                    HTTP_400_BAD_REQUEST, None
-                )
-                if http_400_response is None:
-                    responses_dict[
-                        HTTP_400_BAD_REQUEST
-                    ] = derive_bad_request_serializer(ser_inst)
-            case _:
+        request_serializer = get_request_serializer(request)
+        http_400_response = responses_dict.get(HTTP_400_BAD_REQUEST, None)
+        if http_400_response is DeriveSchema:
+            if request_serializer is None:
                 raise ValueError(
-                    f"Don't know what to do with {path} {method_name}"
-                    f"Request: {request}, responses: {responses}"
+                    f"Trying to create 400 response schema, but no "
+                    f"request serializer was provided in {_path}"
                 )
+            responses_dict[
+                HTTP_400_BAD_REQUEST
+            ] = derive_bad_request_serializer(request_serializer)
         http_429_response = responses_dict.get(
             HTTP_429_TOO_MANY_REQUESTS, None
         )
-        if http_429_response is not None:
-            continue
-        responses_dict[HTTP_429_TOO_MANY_REQUESTS] = TooManyRequestsSchema
+        if http_429_response is DeriveSchema:
+            responses_dict[HTTP_429_TOO_MANY_REQUESTS] = TooManyRequestsSchema
     return endpoints
