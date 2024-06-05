@@ -72,11 +72,6 @@ export type Task = {
 
 export type TaskDetail = components["schemas"]["TaskDetail"];
 
-export interface CreateSection {
-    title: string;
-    description: string | null;
-}
-
 export type Section = TaskDetail["section"];
 
 export type SectionDetail = components["schemas"]["SectionDetail"];

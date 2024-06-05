@@ -1579,7 +1579,7 @@ export interface operations {
         responses: {
             201: {
                 content: {
-                    "application/json": components["schemas"]["SectionCreate"];
+                    "application/json": components["schemas"]["SectionDetail"];
                 };
             };
             400: {
@@ -1598,10 +1598,6 @@ export interface operations {
                         status: "error";
                     };
                 };
-            };
-            /** @description No response body */
-            404: {
-                content: never;
             };
         };
     };

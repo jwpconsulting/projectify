@@ -64,10 +64,16 @@ const messages: MessageDirectory = {
                     title: {
                         label: "New section name",
                         placeholder: "New section name",
+                        valid: "This section name is valid",
                     },
                 },
                 "cancel": "Cancel",
                 "create-section": "Create",
+                "errors": {
+                    general:
+                        "Something went wrong when trying to create a section. Please try again later.",
+                    fields: "Please check the fields above and click 'Create' again.",
+                },
             },
             "update-section": {
                 title: "Edit section",
