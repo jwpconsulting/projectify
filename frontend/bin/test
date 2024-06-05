@@ -1,7 +1,7 @@
 #!/bin/bash
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Check and format code
-# Copyright (C) 2023, 2024 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -25,54 +25,41 @@
 
 npm run sync-types || exit
 
-if npm run check:schema
-then
+if npm run check:schema; then
     echo "npm run check:schema successful"
 else
     echo "npm run check:schema didn't exit cleanly, continuing..."
 fi
 
-if npm run format
-then
+if npm run format; then
     echo "npm run format successful"
 else
-    echo "Couldn't format"
+    echo "npm run did not exit cleanly"
     exit 1
 fi
 
-echo "Fixing with eslint, then formatting"
-if npm run fix:eslint && npm run format; then
-    echo "Trying to check one more time"
-    if npm run check:eslint
-    then
-        echo "All good now"
-    else
-        echo "Still didn't work"
-        exit 1
-    fi
+if npm run fix:eslint; then
+    echo "npm run fix:eslint successful"
 else
-    echo "Couldn't fix"
+    echo "npm run fix:eslint did not exit cleanly"
     exit 1
 fi
 
-if npm run check:svelte-check
-then
+if npm run check:svelte-check; then
     echo "npm run svelte-check successful"
 else
     echo "svelte-check didn't exit cleanly"
     exit 1
 fi
 
-if npm run check:knip
-then
+if npm run check:knip; then
     echo "npm run knip successful"
 else
     echo "knip didn't exit cleanly"
     exit 1
 fi
 
-if bin/check-i18n
-then
+if bin/check-i18n; then
     echo "bin/check-i18n successful"
 else
     echo "bin/check-i18n didn't exit cleanly"
