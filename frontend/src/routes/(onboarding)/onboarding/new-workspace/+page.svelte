@@ -79,14 +79,18 @@
     }
 </script>
 
+<svelte:head>
+    <title>{$_("onboarding.new-workspace.title")}</title>
+</svelte:head>
+
 <Onboarding nextAction={{ kind: "submit", disabled, submit }}>
     <svelte:fragment slot="title">
         {#if who}
-            {$_("onboarding.new-workspace.title.with-name", {
+            {$_("onboarding.new-workspace.prompt.with-name", {
                 values: { who },
             })}
         {:else}
-            {$_("onboarding.new-workspace.title.without-name", {})}
+            {$_("onboarding.new-workspace.prompt.without-name", {})}
         {/if}
     </svelte:fragment>
     <svelte:fragment slot="prompt">
@@ -100,7 +104,7 @@
                 />
             </p>
         {:else}
-            <p>{$_("onboarding.new-workspace.prompt")}</p>
+            <p>{$_("onboarding.new-workspace.explanation")}</p>
         {/if}
     </svelte:fragment>
     <svelte:fragment slot="inputs">

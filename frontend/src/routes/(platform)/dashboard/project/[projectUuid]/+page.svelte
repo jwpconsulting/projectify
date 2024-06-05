@@ -52,13 +52,11 @@
 </script>
 
 <svelte:head>
-    {#if project}
-        <title
+    {#if project && data?.injectProject === undefined}<title
             >{$_("dashboard.title", {
                 values: { title: project.title },
             })}</title
-        >
-    {/if}
+        >{/if}
 </svelte:head>
 
 <!-- Sections -->

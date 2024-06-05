@@ -412,11 +412,12 @@ const messages: MessageDirectory = {
             },
         },
         "new-workspace": {
-            "title": {
+            "title": "Create a new workspace - Projectify",
+            "prompt": {
                 "with-name": "Let’s set up your first workspace, {who}.",
                 "without-name": "Let's set up your first workspace.",
             },
-            "prompt": "You can create and manage numerous workspaces",
+            "explanation": "You can create and manage numerous workspaces",
             "has-workspace":
                 "It looks like you already have a workspace, would you like to create a project?",
             "fields": {
