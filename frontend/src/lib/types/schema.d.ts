@@ -775,6 +775,10 @@ export interface operations {
             400: {
                 content: never;
             };
+            /** @description No response body */
+            500: {
+                content: never;
+            };
         };
     };
     /** @description Handle POST. */
@@ -819,7 +823,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for WorkspaceCheckoutSessionCreateInputSerializer */
                         details: {
                             seats?: string;
@@ -870,19 +875,9 @@ export interface operations {
             204: {
                 content: never;
             };
+            /** @description No response body */
             400: {
-                content: {
-                    "application/json": {
-                        code: number;
-                        /** @description Errors for CouponRedeemSerializer */
-                        details: {
-                            code?: string;
-                        };
-                        general: string[];
-                        /** @enum {string} */
-                        status: "error";
-                    };
-                };
+                content: never;
             };
         };
     };
@@ -903,7 +898,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for ChangePasswordSerializer */
                         details: {
                             current_password?: string;
@@ -915,9 +911,15 @@ export interface operations {
                     };
                 };
             };
-            /** @description No response body */
             429: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 429;
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
         };
     };
@@ -938,7 +940,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for ConfirmEmailSerializer */
                         details: {
                             email?: string;
@@ -969,7 +972,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for PasswordResetConfirmSerializer */
                         details: {
                             email?: string;
@@ -1012,7 +1016,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for UserUpdateSerializer */
                         details: {
                             preferred_name?: string;
@@ -1046,7 +1051,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for ConfirmEmailAddressUpdateSerializer */
                         details: {
                             confirmation_token?: string;
@@ -1076,7 +1082,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for RequestEmailAddressUpdateSerializer */
                         details: {
                             password?: string;
@@ -1088,9 +1095,15 @@ export interface operations {
                     };
                 };
             };
-            /** @description No response body */
             429: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 429;
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
         };
     };
@@ -1112,7 +1125,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for LogInSerializer */
                         details: {
                             email?: string;
@@ -1124,9 +1138,15 @@ export interface operations {
                     };
                 };
             };
-            /** @description No response body */
             429: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 429;
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
         };
     };
@@ -1164,7 +1184,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for ProfilePictureUploadSerializer */
                         details: {
                             file?: string;
@@ -1194,7 +1215,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for PasswordResetRequestSerializer */
                         details: {
                             email?: string;
@@ -1205,9 +1227,15 @@ export interface operations {
                     };
                 };
             };
-            /** @description No response body */
             429: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 429;
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
         };
     };
@@ -1228,7 +1256,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for SignUpSerializer */
                         details: {
                             email?: string;
@@ -1242,9 +1271,15 @@ export interface operations {
                     };
                 };
             };
-            /** @description No response body */
             429: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 429;
+                        /** @enum {string} */
+                        status: "error";
+                    };
+                };
             };
         };
     };
@@ -1266,7 +1301,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for LabelCreateSerializer */
                         details: {
                             name?: string;
@@ -1304,7 +1340,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for LabelUpdateSerializer */
                         details: {
                             name?: string;
@@ -1358,7 +1395,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for ProjectCreateSerializer */
                         details: {
                             title?: string;
@@ -1416,7 +1454,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for ProjectUpdateSerializer */
                         details: {
                             title?: string;
@@ -1471,7 +1510,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for ProjectArchiveSerializer */
                         details: {
                             archived?: string;
@@ -1510,7 +1550,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for SectionCreateSerializer */
                         details: {
                             title?: string;
@@ -1571,7 +1612,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for SectionUpdateSerializer */
                         details: {
                             title?: string;
@@ -1629,7 +1671,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for SectionMoveSerializer */
                         details: {
                             order?: string;
@@ -1664,7 +1707,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for TaskCreateSerializer */
                         details: {
                             title?: string;
@@ -1743,7 +1787,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for TaskUpdateSerializer */
                         details: {
                             title?: string;
@@ -1816,7 +1861,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for TaskMoveAfterTaskSerializer */
                         details: {
                             task_uuid?: string;
@@ -1856,7 +1902,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for TaskMoveToSectionSerializer */
                         details: {
                             section_uuid?: string;
@@ -1915,7 +1962,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for TeamMemberUpdateSerializer */
                         details: {
                             job_title?: string;
@@ -1969,7 +2017,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for WorkspaceCreateSerializer */
                         details: {
                             title?: string;
@@ -2025,7 +2074,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for WorkspaceUpdateSerializer */
                         details: {
                             title?: string;
@@ -2085,7 +2135,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for InviteUserToWorkspaceSerializer */
                         details: {
                             email?: string;
@@ -2122,7 +2173,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for WorkspacePictureUploadSerializer */
                         details: {
                             file?: string;
@@ -2161,7 +2213,8 @@ export interface operations {
             400: {
                 content: {
                     "application/json": {
-                        code: number;
+                        /** @enum {integer} */
+                        code: 400;
                         /** @description Errors for UninviteUserFromWorkspaceSerializer */
                         details: {
                             email?: string;
