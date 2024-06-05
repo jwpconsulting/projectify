@@ -65,22 +65,14 @@ export async function fetchUser(): Promise<User | undefined> {
 }
 
 export async function updateUserProfile(
-    preferredName: string | null,
+    preferred_name: string | null,
 ): Promise<User> {
-    const { data, response } = await openApiClient.PUT(
+    const { data, error } = await openApiClient.PUT(
         "/user/user/current-user",
-        {
-            body: {
-                preferred_name:
-                    preferredName === "" ? null : preferredName ?? null,
-            },
-        },
+        { body: { preferred_name } },
     );
-    if (!response.ok) {
+    if (error) {
         throw new Error("Expected response.ok");
-    }
-    if (data === undefined) {
-        throw new Error("Expected data");
     }
     _user.set(data);
     return data;

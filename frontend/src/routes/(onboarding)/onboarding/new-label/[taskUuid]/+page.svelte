@@ -80,6 +80,14 @@
     }
 </script>
 
+<svelte:head>
+    <title
+        >{$_("onboarding.new-label.title", {
+            values: { taskTitle },
+        })}</title
+    >
+</svelte:head>
+
 <Onboarding
     stepCount={5}
     step={4}
@@ -87,7 +95,7 @@
     nextAction={{ kind: "submit", disabled, submit }}
 >
     <svelte:fragment slot="title"
-        >{$_("onboarding.new-label.title", {
+        >{$_("onboarding.new-label.heading", {
             values: { taskTitle },
         })}</svelte:fragment
     >

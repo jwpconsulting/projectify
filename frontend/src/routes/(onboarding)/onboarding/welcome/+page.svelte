@@ -25,9 +25,11 @@
     $: promptLines = $json("onboarding.welcome.prompt") as string[];
 </script>
 
+<svelte:head><title>{$_("onboarding.welcome.title")}</title></svelte:head>
+
 <Onboarding nextAction={{ kind: "a", href: aboutYouUrl }}>
     <svelte:fragment slot="title"
-        >{$_("onboarding.welcome.title")}</svelte:fragment
+        >{$_("onboarding.welcome.heading")}</svelte:fragment
     >
     <svelte:fragment slot="prompt">
         {#each promptLines as promptLine}

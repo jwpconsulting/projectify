@@ -389,7 +389,8 @@ const messages: MessageDirectory = {
         "continue": "Continue",
         "back": "Back",
         "welcome": {
-            title: "Welcome",
+            title: "Onboarding - Projectify",
+            heading: "Welcome",
             prompt: [
                 "In the following steps you will create a new workspace and create your first task.",
                 "You can use the workspace in trial mode at the beginning, and upgrade to a paid version anytime by going to the workspace settings.",
@@ -400,7 +401,8 @@ const messages: MessageDirectory = {
             },
         },
         "about-you": {
-            title: "About you",
+            title: "About you - Projectify",
+            heading: "About you",
             input: {
                 label: "Preferred name (optional)",
                 placeholder: "Your preferred name",
@@ -435,7 +437,8 @@ const messages: MessageDirectory = {
             "default-name": "Your workspace",
         },
         "new-project": {
-            "title": "Add your first project",
+            "title": "Add your first project - Projectify",
+            "heading": "Add your first project",
             "prompt": [
                 "You can create unlimited project per workspace.",
                 "They help you to focus on different projects you may be working on.",
@@ -460,7 +463,8 @@ const messages: MessageDirectory = {
             },
         },
         "new-task": {
-            "title": "What is a task you’d like to complete?",
+            "title": "Create your first task - Projectify",
+            "heading": "What is a task you’d like to complete?",
             "section-title": "To do",
             "default-name": "Your task",
             "prompt": {
@@ -476,7 +480,8 @@ const messages: MessageDirectory = {
             },
         },
         "new-label": {
-            "title": 'Create a label for "{taskTitle}"',
+            "title": 'Create a label for "{taskTitle}" - Projectify',
+            "heading": 'Create a label for "{taskTitle}"',
             "prompt": "Labels help you to filter between the types of tasks.",
             "input": {
                 placeholder: "e.g., Bug",
@@ -487,7 +492,9 @@ const messages: MessageDirectory = {
             "default-name": "Your label",
         },
         "assign-task": {
-            "title": 'Task "{taskTitle}" has been assigned to you!',
+            "title":
+                'Task "{taskTitle}" has been assigned to you - Projectify',
+            "heading": 'Task "{taskTitle}" has been assigned to you!',
             "continue": "Get started",
             "prompt": {
                 "finished": "You’re all set!",

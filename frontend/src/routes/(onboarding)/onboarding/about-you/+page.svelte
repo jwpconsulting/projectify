@@ -38,9 +38,11 @@
     }
 </script>
 
+<svelte:head><title>{$_("onboarding.about-you.title")}</title></svelte:head>
+
 <Onboarding nextAction={{ kind: "submit", submit }}>
     <svelte:fragment slot="title"
-        >{$_("onboarding.about-you.title")}</svelte:fragment
+        >{$_("onboarding.about-you.heading")}</svelte:fragment
     >
     <svelte:fragment slot="prompt">
         {$_("onboarding.about-you.prompt")}

@@ -73,13 +73,17 @@
     }
 </script>
 
+<svelte:head>
+    <title>{$_("onboarding.new-task.title")}</title>
+</svelte:head>
+
 <Onboarding
     stepCount={5}
     step={2}
     nextAction={{ kind: "submit", disabled, submit }}
 >
     <svelte:fragment slot="title"
-        >{$_("onboarding.new-task.title")}</svelte:fragment
+        >{$_("onboarding.new-task.heading")}</svelte:fragment
     >
     <svelte:fragment slot="prompt">
         <div class="flex flex-col gap-4">

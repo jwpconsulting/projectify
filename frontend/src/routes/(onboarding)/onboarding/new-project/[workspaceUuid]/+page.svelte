@@ -85,6 +85,8 @@
     $: prompts = $json("onboarding.new-project.prompt") as string[];
 </script>
 
+<svelte:head><title>{$_("onboarding.new-project.title")}</title></svelte:head>
+
 <Onboarding
     stepCount={5}
     step={1}
@@ -95,7 +97,7 @@
     }}
 >
     <svelte:fragment slot="title"
-        >{$_("onboarding.new-project.title")}</svelte:fragment
+        >{$_("onboarding.new-project.heading")}</svelte:fragment
     >
     <svelte:fragment slot="prompt">
         <div class="flex flex-col gap-8">
