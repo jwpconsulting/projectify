@@ -194,21 +194,27 @@ def serialize_validation_error(
 class ForbiddenSerializer(serializers.Serializer):
     """Serialize 403 forbidden error."""
 
-    status = serializers.ChoiceField(choices=["error"], default="error")
+    status = serializers.ChoiceField(
+        choices=["permission_denied"], source="default_code"
+    )
     code = serializers.ChoiceField(choices=[403], source="status_code")
 
 
 class NotFoundSerializer(serializers.Serializer):
     """Serialize 404 not found error."""
 
-    status = serializers.ChoiceField(choices=["error"], default="error")
+    status = serializers.ChoiceField(
+        choices=["not_found"], source="default_code"
+    )
     code = serializers.ChoiceField(choices=[404], source="status_code")
 
 
 class TooManyRequestsSerializer(serializers.Serializer):
     """Serialize 429 too many requests error."""
 
-    status = serializers.ChoiceField(choices=["error"], default="error")
+    status = serializers.ChoiceField(
+        choices=["throttled"], source="default_code"
+    )
     code = serializers.ChoiceField(choices=[429], source="status_code")
 
 
@@ -225,22 +231,31 @@ def exception_handler(
     """
     result: HandledException
     match exception:
-        case dj_exceptions.ValidationError() | serializers.ValidationError():
+        case dj_exceptions.ValidationError():
+            logger.warning("Django ValidationError: %s", exception)
+            data = serialize_validation_error(exception)
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
+        case serializers.ValidationError():
+            logger.warning("DRF ValidationError: %s", exception)
             data = serialize_validation_error(exception)
             return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
         case dj_exceptions.PermissionDenied():
-            serialized = ForbiddenSerializer({"status_code": 403}).data
-            return Response(status=status.HTTP_403_FORBIDDEN, data=serialized)
-        case drf_exceptions.PermissionDenied():
+            logger.warning("Django PermissionDenied: %s", exception)
+            exception = drf_exceptions.PermissionDenied()
             serialized = ForbiddenSerializer(exception).data
             return Response(status=status.HTTP_403_FORBIDDEN, data=serialized)
-        case drf_exceptions.NotFound():
+        case drf_exceptions.PermissionDenied():
+            logger.warning("DRF PermissionDenied: %s", exception)
+            serialized = ForbiddenSerializer(exception).data
+            return Response(status=status.HTTP_403_FORBIDDEN, data=serialized)
+        case dj_http.Http404():
+            logger.warning("Django Http404: %s", exception)
+            exception = drf_exceptions.NotFound()
             serialized = NotFoundSerializer(exception).data
             return Response(status=status.HTTP_404_NOT_FOUND, data=serialized)
-        case dj_http.Http404():
-            serialized = NotFoundSerializer(
-                {"status_code": status.HTTP_404_NOT_FOUND}
-            ).data
+        case drf_exceptions.NotFound():
+            logger.warning("DRF NotFound: %s", exception)
+            serialized = NotFoundSerializer(exception).data
             return Response(status=status.HTTP_404_NOT_FOUND, data=serialized)
         case drf_exceptions.Throttled():
             serialized = TooManyRequestsSerializer(exception).data
