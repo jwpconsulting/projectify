@@ -56,17 +56,36 @@ class UserReadUpdate(views.APIView):
 
     permission_classes = (AllowAny,)
 
+    class LoggedInUserSerializer(UserSerializer):
+        """Serialize logged in user."""
+
+        kind = serializers.ChoiceField(
+            choices=["authenticated"],
+            read_only=True,
+            default="authenticated",
+        )
+
+        class Meta(UserSerializer.Meta):
+            """Copy meta from UserSerializer."""
+
+            fields = (
+                "email",
+                "kind",
+                "preferred_name",
+                "profile_picture",
+            )
+
     class AnonymousUserSerializer(serializers.Serializer):
         """Serialize anonymous user."""
 
-        unauthenticated = serializers.ChoiceField(choices=[True])
+        kind = serializers.ChoiceField(choices=["unauthenticated"])
 
     @extend_schema(
         responses={
             200: PolymorphicProxySerializer(
                 "auth_info",
                 [
-                    UserSerializer,
+                    LoggedInUserSerializer,
                     AnonymousUserSerializer,
                 ],
                 None,
@@ -77,8 +96,8 @@ class UserReadUpdate(views.APIView):
         """Handle GET."""
         user = cast(Union[User, AnonymousUser], request.user)
         if user.is_anonymous:
-            return Response(data={"unauthenticated": True})
-        serializer = UserSerializer(instance=user)
+            return Response(data={"kind": "unauthenticated"})
+        serializer = self.LoggedInUserSerializer(instance=user)
         return Response(data=serializer.data)
 
     class UserUpdateSerializer(serializers.ModelSerializer[User]):

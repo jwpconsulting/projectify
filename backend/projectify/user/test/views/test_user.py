@@ -68,7 +68,7 @@ class TestUserReadUpdate:
         """Assert that we get 200 back even if not logged in."""
         response = rest_client.get(resource_url)
         assert response.status_code == 200, response.data
-        assert response.data == {"unauthenticated": True}
+        assert response.data == {"kind": "unauthenticated"}
 
     def test_authenticated(
         self,
@@ -79,7 +79,12 @@ class TestUserReadUpdate:
         """Assert we can post to this view this while being logged in."""
         response = rest_user_client.get(resource_url)
         assert response.status_code == 200, response.data
-        assert response.data["preferred_name"] == user.preferred_name
+        assert response.data == {
+            "kind": "authenticated",
+            "email": user.email,
+            "preferred_name": user.preferred_name,
+            "profile_picture": None,
+        }
 
     def test_update(
         self,

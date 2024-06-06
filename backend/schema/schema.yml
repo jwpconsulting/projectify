@@ -2666,10 +2666,15 @@ components:
       type: object
       description: Serialize anonymous user.
       properties:
-        unauthenticated:
-          $ref: '#/components/schemas/UnauthenticatedEnum'
+        kind:
+          $ref: '#/components/schemas/AnonymousUserKindEnum'
       required:
+      - kind
+    AnonymousUserKindEnum:
+      enum:
       - unauthenticated
+      type: string
+      description: '* `unauthenticated` - unauthenticated'
     ChangePassword:
       type: object
       description: Accept old and new password.
@@ -2850,6 +2855,38 @@ components:
       required:
       - email
       - password
+    LoggedInUser:
+      type: object
+      description: Serialize logged in user.
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        kind:
+          allOf:
+          - $ref: '#/components/schemas/LoggedInUserKindEnum'
+          readOnly: true
+          default: authenticated
+        preferred_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        profile_picture:
+          type: string
+          nullable: true
+          description: Return profile picture.
+          readOnly: true
+      required:
+      - email
+      - kind
+      - preferred_name
+      - profile_picture
+    LoggedInUserKindEnum:
+      enum:
+      - authenticated
+      type: string
+      description: '* `authenticated` - authenticated'
     NotFound:
       type: object
       description: Serialize 404 not found error.
@@ -3723,11 +3760,6 @@ components:
       - 429
       type: integer
       description: '* `429` - 429'
-    UnauthenticatedEnum:
-      enum:
-      - true
-      type: boolean
-      description: '* `True` - True'
     UninviteUserFromWorkspace:
       type: object
       description: Accept email.
@@ -3976,7 +4008,7 @@ components:
       - title
     auth_info:
       oneOf:
-      - $ref: '#/components/schemas/User'
+      - $ref: '#/components/schemas/LoggedInUser'
       - $ref: '#/components/schemas/AnonymousUser'
   securitySchemes:
     cookieAuth:

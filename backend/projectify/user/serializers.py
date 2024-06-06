@@ -17,6 +17,7 @@
 """User app serializers."""
 from typing import (
     Optional,
+    Sequence,
 )
 
 from rest_framework import (
@@ -45,7 +46,7 @@ class UserSerializer(serializers.ModelSerializer[models.User]):
         """Meta."""
 
         model = models.User
-        fields = (
+        fields: Sequence[str] = (
             "email",
             "preferred_name",
             "profile_picture",
