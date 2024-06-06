@@ -27,12 +27,8 @@ from django.utils.translation import gettext_lazy as _
 
 from django_ratelimit.decorators import ratelimit
 from drf_spectacular.utils import PolymorphicProxySerializer, extend_schema
-from rest_framework import (
-    parsers,
-    serializers,
-    views,
-)
-from rest_framework.exceptions import NotAuthenticated
+from rest_framework import parsers, serializers, views
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -100,7 +96,7 @@ class UserReadUpdate(views.APIView):
         """Update a user."""
         user = cast(Union[User, AnonymousUser], request.user)
         if not isinstance(user, User):
-            raise NotAuthenticated(
+            raise PermissionDenied(
                 _("Must be authenticated in order to update a user")
             )
         serializer = self.UserUpdateSerializer(data=request.data)
@@ -132,10 +128,7 @@ class ProfilePictureUpload(views.APIView):
 
     @extend_schema(
         request=ProfilePictureUploadSerializer,
-        responses={
-            204: None,
-            400: DeriveSchema,
-        },
+        responses={204: None, 400: DeriveSchema},
     )
     def post(self, request: Request) -> Response:
         """Handle POST."""

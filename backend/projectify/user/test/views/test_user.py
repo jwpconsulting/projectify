@@ -25,9 +25,6 @@ from typing import (
 from django.core.files import (
     File,
 )
-from django.test import (
-    Client,
-)
 from django.urls import (
     reverse,
 )
@@ -169,20 +166,20 @@ class TestProfilePictureUploadView:
 
     def test_unauthenticated(
         self,
-        client: Client,
+        rest_client: APIClient,
         resource_url: str,
         headers: Headers,
         uploaded_file: File,
     ) -> None:
-        """Assert we can't view this while being logged out."""
-        response = client.post(
+        """Assert we can't post to this view."""
+        response = rest_client.post(
             resource_url,
             {"file": uploaded_file},
             format="multipart",
             **headers,
         )
 
-        assert response.status_code == 403, response.content
+        assert response.status_code == 403, response.data
 
     def test_authenticated(
         self,

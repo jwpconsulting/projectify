@@ -239,6 +239,12 @@ def exception_handler(
             logger.warning("DRF ValidationError: %s", exception)
             data = serialize_validation_error(exception)
             return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
+        case drf_exceptions.NotAuthenticated():
+            # Unconditionally report 401 errors as 403, see DRF:
+            # https://github.com/encode/django-rest-framework/blob/fbdab09c776d5ceef041793a7acd1c9e91695e5d/rest_framework/views.py#L455
+            logger.warning("DRF NotAuthenticated: %s", exception)
+            serialized = ForbiddenSerializer(exception).data
+            return Response(status=status.HTTP_403_FORBIDDEN, data=serialized)
         case dj_exceptions.PermissionDenied():
             logger.warning("Django PermissionDenied: %s", exception)
             exception = drf_exceptions.PermissionDenied()
