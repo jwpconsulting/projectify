@@ -30,7 +30,6 @@ module.exports = {
     ],
     plugins: [
         "@typescript-eslint",
-        "unused-imports",
         "import",
         "eslint-plugin-tsdoc",
     ],
@@ -92,7 +91,6 @@ module.exports = {
     },
     rules: {
         "prefer-const": "error",
-        "unused-imports/no-unused-imports": "error",
         "import/no-unresolved": "off",
         "import/first": "error",
         "import/newline-after-import": "error",
