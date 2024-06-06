@@ -226,6 +226,17 @@ export interface components {
             uuid: string;
             subscription_status: components["schemas"]["SubscriptionStatusEnum"];
         };
+        /** @description Serialize 403 forbidden error. */
+        Forbidden: {
+            /** @default error */
+            status?: components["schemas"]["StatusEnum"];
+            code: components["schemas"]["ForbiddenCodeEnum"];
+        };
+        /**
+         * @description * `403` - 403
+         * @enum {integer}
+         */
+        ForbiddenCodeEnum: 403;
         /** @description Accept email. */
         InviteUserToWorkspace: {
             /** Format: email */
@@ -821,6 +832,11 @@ export interface operations {
                     "application/json": components["schemas"]["WorkspaceBillingPortalSessionCreateOutput"];
                 };
             };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
@@ -863,6 +879,11 @@ export interface operations {
                     };
                 };
             };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
@@ -881,6 +902,11 @@ export interface operations {
             200: {
                 content: {
                     "application/json": components["schemas"]["Customer"];
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
                 };
             };
             404: {
@@ -924,6 +950,11 @@ export interface operations {
                     };
                 };
             };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
@@ -959,6 +990,11 @@ export interface operations {
                         /** @enum {string} */
                         status: "error";
                     };
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
                 };
             };
             429: {
@@ -1073,10 +1109,6 @@ export interface operations {
                     };
                 };
             };
-            /** @description No response body */
-            403: {
-                content: never;
-            };
         };
     };
     /** @description Handle POST. */
@@ -1106,6 +1138,11 @@ export interface operations {
                         /** @enum {string} */
                         status: "error";
                     };
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
                 };
             };
         };
@@ -1138,6 +1175,11 @@ export interface operations {
                         /** @enum {string} */
                         status: "error";
                     };
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
                 };
             };
             429: {
@@ -1192,6 +1234,11 @@ export interface operations {
             204: {
                 content: never;
             };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
         };
     };
     /** @description Return all information about current password policy. */
@@ -1229,6 +1276,11 @@ export interface operations {
                         /** @enum {string} */
                         status: "error";
                     };
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
                 };
             };
         };
@@ -1340,6 +1392,11 @@ export interface operations {
                     };
                 };
             };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
         };
     };
     /** @description Handle PUT. */
@@ -1378,6 +1435,11 @@ export interface operations {
                     };
                 };
             };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
@@ -1396,6 +1458,11 @@ export interface operations {
             /** @description No response body */
             204: {
                 content: never;
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
             };
             404: {
                 content: {
@@ -1437,6 +1504,11 @@ export interface operations {
                     };
                 };
             };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
         };
     };
     /** @description Handle GET. */
@@ -1450,6 +1522,11 @@ export interface operations {
             200: {
                 content: {
                     "application/json": components["schemas"]["ProjectDetail"];
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
                 };
             };
             404: {
@@ -1496,6 +1573,11 @@ export interface operations {
                     };
                 };
             };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
@@ -1514,6 +1596,11 @@ export interface operations {
             /** @description No response body */
             204: {
                 content: never;
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
             };
             404: {
                 content: {
@@ -1556,9 +1643,10 @@ export interface operations {
                     };
                 };
             };
-            /** @description No response body */
             403: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
             };
             404: {
                 content: {
@@ -1599,6 +1687,11 @@ export interface operations {
                     };
                 };
             };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
         };
     };
     /** @description Handle GET. */
@@ -1612,6 +1705,11 @@ export interface operations {
             200: {
                 content: {
                     "application/json": components["schemas"]["SectionDetail"];
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
                 };
             };
             404: {
@@ -1657,6 +1755,11 @@ export interface operations {
                     };
                 };
             };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
@@ -1675,6 +1778,11 @@ export interface operations {
             /** @description No response body */
             204: {
                 content: never;
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
             };
             404: {
                 content: {
@@ -1715,6 +1823,11 @@ export interface operations {
                         /** @enum {string} */
                         status: "error";
                     };
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
                 };
             };
             /** @description No response body */
@@ -1772,6 +1885,11 @@ export interface operations {
                     };
                 };
             };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
         };
     };
     /** @description Handle GET. */
@@ -1785,6 +1903,11 @@ export interface operations {
             200: {
                 content: {
                     "application/json": components["schemas"]["TaskDetail"];
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
                 };
             };
             404: {
@@ -1849,6 +1972,11 @@ export interface operations {
                     };
                 };
             };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
@@ -1867,6 +1995,11 @@ export interface operations {
             /** @description No response body */
             204: {
                 content: never;
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
             };
             404: {
                 content: {
@@ -1908,6 +2041,11 @@ export interface operations {
                         /** @enum {string} */
                         status: "error";
                     };
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
                 };
             };
             404: {
@@ -1952,6 +2090,11 @@ export interface operations {
                     };
                 };
             };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
@@ -1970,6 +2113,11 @@ export interface operations {
             200: {
                 content: {
                     "application/json": components["schemas"]["TeamMemberBase"];
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
                 };
             };
             404: {
@@ -2015,6 +2163,11 @@ export interface operations {
                     };
                 };
             };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
@@ -2033,6 +2186,11 @@ export interface operations {
             /** @description No response body */
             204: {
                 content: never;
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
             };
             404: {
                 content: {
@@ -2072,6 +2230,11 @@ export interface operations {
                     };
                 };
             };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
         };
     };
     /** @description Handle GET. */
@@ -2085,6 +2248,11 @@ export interface operations {
             200: {
                 content: {
                     "application/json": components["schemas"]["WorkspaceDetail"];
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
                 };
             };
             /** @description No response body */
@@ -2129,6 +2297,11 @@ export interface operations {
                     };
                 };
             };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
@@ -2147,6 +2320,11 @@ export interface operations {
             200: {
                 content: {
                     "application/json": components["schemas"]["ProjectBase"][];
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
                 };
             };
             404: {
@@ -2191,6 +2369,11 @@ export interface operations {
                     };
                 };
             };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
@@ -2228,6 +2411,11 @@ export interface operations {
                         /** @enum {string} */
                         status: "error";
                     };
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
                 };
             };
             404: {
@@ -2271,6 +2459,11 @@ export interface operations {
                     };
                 };
             };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             /** @description No response body */
             404: {
                 content: never;
@@ -2283,6 +2476,11 @@ export interface operations {
             200: {
                 content: {
                     "application/json": components["schemas"]["WorkspaceBase"][];
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
                 };
             };
         };
