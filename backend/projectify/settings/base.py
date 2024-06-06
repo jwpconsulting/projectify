@@ -266,7 +266,7 @@ class Base(Configuration):
         "DEFAULT_PERMISSION_CLASSES": (
             "rest_framework.permissions.IsAuthenticated",
         ),
-        "EXCEPTION_HANDLER": "projectify.exception_handler.exception_handler",
+        "EXCEPTION_HANDLER": "projectify.lib.exception_handler.exception_handler",
         "NON_FIELD_ERRORS_KEY": "drf_general",
     }
 

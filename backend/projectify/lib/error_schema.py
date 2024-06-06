@@ -28,7 +28,7 @@ from drf_spectacular.utils import OpenApiResponse, _SchemaType
 from rest_framework import fields, permissions, serializers, status
 from rest_framework.views import APIView
 
-from projectify.exception_handler import (
+from projectify.lib.exception_handler import (
     ForbiddenSerializer,
     NotFoundSerializer,
     TooManyRequestsSerializer,
