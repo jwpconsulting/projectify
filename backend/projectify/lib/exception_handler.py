@@ -237,6 +237,9 @@ def exception_handler(
             data = serialize_validation_error(exception)
             return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
         case dj_exceptions.PermissionDenied():
+            serialized = ForbiddenSerializer({"status_code": 403}).data
+            return Response(status=status.HTTP_403_FORBIDDEN, data=serialized)
+        case drf_exceptions.PermissionDenied():
             serialized = ForbiddenSerializer(exception).data
             return Response(status=status.HTTP_403_FORBIDDEN, data=serialized)
         case drf_exceptions.NotFound():
@@ -253,7 +256,11 @@ def exception_handler(
                 status=status.HTTP_429_TOO_MANY_REQUESTS, data=serialized
             )
         case drf_exceptions.APIException():
-            logger.error("DRF API Exception: %s", exception)
+            logger.error(
+                "DRF API Exception: %s with type %s not yet handled",
+                exception,
+                type(exception),
+            )
             result = exception
         case Exception():
             logger.error("Unhandleable exception: %s", exception)
