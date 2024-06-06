@@ -296,7 +296,7 @@ export function createWsStore<T>(
 
     const stop = () => {
         console.debug("Stopping");
-        resetAndUnsubscribe().catch((error) =>
+        resetAndUnsubscribe().catch((error: unknown) =>
             console.error("Error when resetting", error),
         );
     };

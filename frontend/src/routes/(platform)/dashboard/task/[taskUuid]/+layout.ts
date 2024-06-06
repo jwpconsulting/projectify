@@ -43,9 +43,10 @@ export function load({ params: { taskUuid }, fetch }: LayoutLoadEvent): Data {
         .then((task) => {
             currentWorkspace
                 .loadUuid(task.section.project.workspace.uuid, { fetch })
-                .catch((error) =>
+                .catch((error: unknown) =>
                     console.error(
-                        `Error when fetching currentWorkspace for task ${taskUuid}: ${error}`,
+                        "Error when fetching currentWorkspace for task ${taskUuid}",
+                        error,
                     ),
                 );
             return task;

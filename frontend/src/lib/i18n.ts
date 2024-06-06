@@ -33,7 +33,7 @@ function initializeI18n() {
         return;
     }
 
-    initialization.catch((error) => {
+    initialization.catch((error: unknown) => {
         console.error("Something went wrong when adding messages:", error);
     });
 }

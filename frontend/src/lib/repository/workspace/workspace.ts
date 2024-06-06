@@ -23,17 +23,13 @@ import type { Workspace } from "$lib/types/workspace";
 export async function getWorkspaces(
     _repositoryContext?: RepositoryContext,
 ): Promise<Workspace[]> {
-    const { response, data } = await openApiClient.GET(
+    const { error, data } = await openApiClient.GET(
         "/workspace/workspace/user-workspaces/",
     );
     if (data) {
         return data;
     }
-    throw new Error(
-        `Could not retrieve workspaces ${JSON.stringify(
-            await response.json(),
-        )}`,
-    );
+    throw new Error(`Could not retrieve workspaces ${JSON.stringify(error)}`);
 }
 
 export async function getWorkspace(
@@ -51,7 +47,7 @@ export async function getWorkspace(
     }
     if (error) {
         throw new Error(
-            `Error when retrieving workspace {workspace_uuid} ${JSON.stringify(
+            `Error when retrieving workspace ${workspace_uuid} ${JSON.stringify(
                 error,
             )}`,
         );

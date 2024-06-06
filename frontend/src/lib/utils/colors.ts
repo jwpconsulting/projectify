@@ -39,7 +39,7 @@ export type LabelColor = (typeof labelColors)[number];
 export function getLabelColorFromIndex(index: number): LabelColor | null {
     const color = labelColors[index];
     if (color === undefined) {
-        console.error(`Expected color for ${index}`);
+        console.error(`Expected color for ${index.toString()}`);
         return null;
     }
     return color;

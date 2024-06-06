@@ -34,7 +34,9 @@ const _user = writable<CurrentUser>({ kind: "start" }, (set) => {
             }
             set(data);
         })
-        .catch((error) => console.error("Error when loading user", error));
+        .catch((error: unknown) =>
+            console.error("Error when loading user", error),
+        );
 });
 export const currentUser = readonly(_user);
 
