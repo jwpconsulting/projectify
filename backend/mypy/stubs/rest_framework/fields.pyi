@@ -18,6 +18,7 @@ class Field:
         allow_null: bool = False,
         required: bool = True,
         source: Optional[str] = None,
+        default: Optional[Any] = None,
     ) -> None: ...
 
 class BooleanField(Field): ...

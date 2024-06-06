@@ -40,7 +40,10 @@ from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
 from projectify.lib.error_schema import DeriveSchema
 from projectify.user.models import User
-from projectify.user.serializers import UserSerializer
+from projectify.user.serializers import (
+    AnonymousUserSerializer,
+    LoggedInUserSerializer,
+)
 from projectify.user.services.user import (
     user_change_password,
     user_confirm_email_address_update,
@@ -55,30 +58,6 @@ class UserReadUpdate(views.APIView):
     """Read or update user."""
 
     permission_classes = (AllowAny,)
-
-    class LoggedInUserSerializer(UserSerializer):
-        """Serialize logged in user."""
-
-        kind = serializers.ChoiceField(
-            choices=["authenticated"],
-            read_only=True,
-            default="authenticated",
-        )
-
-        class Meta(UserSerializer.Meta):
-            """Copy meta from UserSerializer."""
-
-            fields = (
-                "email",
-                "kind",
-                "preferred_name",
-                "profile_picture",
-            )
-
-    class AnonymousUserSerializer(serializers.Serializer):
-        """Serialize anonymous user."""
-
-        kind = serializers.ChoiceField(choices=["unauthenticated"])
 
     @extend_schema(
         responses={
@@ -95,9 +74,13 @@ class UserReadUpdate(views.APIView):
     def get(self, request: Request) -> Response:
         """Handle GET."""
         user = cast(Union[User, AnonymousUser], request.user)
+        serializer: serializers.Serializer
         if user.is_anonymous:
-            return Response(data={"kind": "unauthenticated"})
-        serializer = self.LoggedInUserSerializer(instance=user)
+            serializer = AnonymousUserSerializer(
+                instance={"kind": "unauthenticated"}
+            )
+        else:
+            serializer = LoggedInUserSerializer(instance=user)
         return Response(data=serializer.data)
 
     class UserUpdateSerializer(serializers.ModelSerializer[User]):
@@ -111,7 +94,7 @@ class UserReadUpdate(views.APIView):
 
     @extend_schema(
         request=UserUpdateSerializer,
-        responses={200: UserSerializer, 400: DeriveSchema},
+        responses={200: LoggedInUserSerializer, 400: DeriveSchema},
     )
     def put(self, request: Request) -> Response:
         """Update a user."""
@@ -128,7 +111,7 @@ class UserReadUpdate(views.APIView):
             user=user,
             preferred_name=data.get("preferred_name"),
         )
-        output_serializer = UserSerializer(instance=user)
+        output_serializer = LoggedInUserSerializer(instance=user)
         return Response(data=output_serializer.data, status=HTTP_200_OK)
 
 

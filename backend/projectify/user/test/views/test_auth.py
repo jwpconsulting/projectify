@@ -65,6 +65,7 @@ class TestLogOut:
         with django_assert_num_queries(4):
             response = rest_client.post(resource_url)
             assert response.status_code == 204, response.data
+        assert response.data == {"kind": "unauthenticated"}
         # Now that we are logged out, logging out another time is not allowed
         response = rest_client.post(resource_url)
         assert response.status_code == 403, response.data
@@ -221,6 +222,7 @@ class TestLogIn:
             )
             assert response.status_code == 200, response.data
         assert response.data == {
+            "kind": "authenticated",
             "email": user.email,
             "profile_picture": None,
             "preferred_name": user.preferred_name,

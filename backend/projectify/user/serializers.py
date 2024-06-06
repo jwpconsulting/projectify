@@ -52,3 +52,32 @@ class UserSerializer(serializers.ModelSerializer[models.User]):
             "profile_picture",
         )
         extra_kwargs = {"preferred_name": {"required": True}}
+
+
+class LoggedInUserSerializer(UserSerializer):
+    """Serialize logged in user."""
+
+    kind = serializers.ChoiceField(
+        choices=["authenticated"],
+        read_only=True,
+        default="authenticated",
+    )
+
+    class Meta(UserSerializer.Meta):
+        """Copy meta from UserSerializer."""
+
+        fields = (
+            "email",
+            "kind",
+            "preferred_name",
+            "profile_picture",
+        )
+
+
+class AnonymousUserSerializer(serializers.Serializer):
+    """Serialize anonymous user."""
+
+    kind = serializers.ChoiceField(
+        choices=["unauthenticated"],
+        required=True,
+    )

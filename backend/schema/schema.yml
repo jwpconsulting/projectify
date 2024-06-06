@@ -462,7 +462,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/LoggedInUser'
           description: ''
         '400':
           content:
@@ -649,7 +649,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/LoggedInUser'
           description: ''
         '400':
           content:
@@ -700,7 +700,11 @@ paths:
       - cookieAuth: []
       responses:
         '204':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnonymousUser'
+          description: ''
         '403':
           content:
             application/json:
