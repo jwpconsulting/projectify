@@ -58,7 +58,7 @@ class TestCouponRedeem:
             )
             assert response.status_code == 400, response.data
         assert response.data == {
-            "status": "error",
+            "status": "invalid",
             "code": 400,
             "details": {"code": "No coupon is available for this code"},
             "general": None,

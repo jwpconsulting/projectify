@@ -49,7 +49,7 @@ def test_errors(factory: APIRequestFactory) -> None:
     """Test the various errors we can serialize."""
     request = factory.get("")
     assert get(request, 400, "drf").data == {
-        "status": "error",
+        "status": "invalid",
         "code": 400,
         "details": {},
         "general": "Invalid input.",
@@ -58,7 +58,7 @@ def test_errors(factory: APIRequestFactory) -> None:
     assert get(request, 404, "drf").data == {"status": "error", "code": 404}
     assert get(request, 429, "drf").data == {"status": "error", "code": 429}
     assert get(request, 400, "django").data == {
-        "status": "error",
+        "status": "invalid",
         "code": 400,
         "details": {},
         "general": "Woops",

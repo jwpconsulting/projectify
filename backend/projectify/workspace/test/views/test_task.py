@@ -106,7 +106,7 @@ class TestTaskCreate(UnauthenticatedTestMixin):
         # matter.
         assert response.status_code == 400, response.data
         assert response.data == {
-            "status": "error",
+            "status": "invalid",
             "code": 400,
             "details": {"section": "Section does not exist"},
             "general": None,
@@ -166,7 +166,7 @@ class TestTaskCreate(UnauthenticatedTestMixin):
         )
         assert response.status_code == 400, response.data
         assert response.data == {
-            "status": "error",
+            "status": "invalid",
             "code": 400,
             "details": {
                 "sub_tasks": [

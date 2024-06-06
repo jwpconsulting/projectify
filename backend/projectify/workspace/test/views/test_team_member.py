@@ -88,7 +88,7 @@ class TestTeamMemberReadUpdateDelete:
         response = rest_user_client.delete(resource_url)
         assert response.status_code == 400, response.data
         assert response.data == {
-            "status": "error",
+            "status": "invalid",
             "code": 400,
             "details": {"team_member": "Can't delete own team member"},
             "general": None,

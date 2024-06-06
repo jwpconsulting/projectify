@@ -136,7 +136,7 @@ class TestUserReadUpdate:
         )
         assert response.status_code == HTTP_400_BAD_REQUEST, response.data
         assert response.data == {
-            "status": "error",
+            "status": "invalid",
             "code": 400,
             "details": {},
             "general": "Preferred name can only contain '.' or ':' if "

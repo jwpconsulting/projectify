@@ -154,7 +154,7 @@ class TestSignUp:
             )
             assert response.status_code == 400, response.data
         assert response.data == {
-            "status": "error",
+            "status": "invalid",
             "code": 400,
             "details": {
                 "password": "The password is too similar to the Email. "

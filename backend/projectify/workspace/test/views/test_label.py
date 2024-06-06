@@ -87,7 +87,7 @@ class TestLabelCreate:
         )
         assert response.status_code == 400, response.data
         assert response.data == {
-            "status": "error",
+            "status": "invalid",
             "code": 400,
             "details": {},
             "general": "Label with this Workspace and Name already exists.",

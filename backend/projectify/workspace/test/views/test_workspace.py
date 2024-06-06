@@ -415,7 +415,7 @@ class TestInviteUserToWorkspace:
         )
         assert response.status_code == 400, response.data
         assert response.data == {
-            "status": "error",
+            "status": "invalid",
             "code": 400,
             "details": {"email": "User with this email was never invited"},
             "general": None,
@@ -449,7 +449,7 @@ class TestInviteUserToWorkspace:
         )
         assert response.status_code == 400, response.data
         assert response.data == {
-            "status": "error",
+            "status": "invalid",
             "code": 400,
             "details": {
                 "email": f"User with email {team_member.user.email} has "
@@ -471,7 +471,7 @@ class TestInviteUserToWorkspace:
         )
         assert response.status_code == 400, response.data
         assert response.data == {
-            "status": "error",
+            "status": "invalid",
             "code": 400,
             "details": {
                 "email": "User with email hello@example.com has already been "
@@ -489,7 +489,7 @@ class TestInviteUserToWorkspace:
         )
         assert response.status_code == 400, response.data
         assert response.data == {
-            "status": "error",
+            "status": "invalid",
             "code": 400,
             "details": {"email": "User with this email was never invited"},
             "general": None,
@@ -507,7 +507,7 @@ class TestInviteUserToWorkspace:
         )
         assert response.status_code == 400, response.data
         assert response.data == {
-            "status": "error",
+            "status": "invalid",
             "code": 400,
             "details": {"email": "User with this email was never invited"},
             "general": None,

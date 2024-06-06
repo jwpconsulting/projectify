@@ -185,7 +185,7 @@ class TestWorkspaceCheckoutSessionCreate:
             )
             assert response.status_code == 400, response.data
         assert response.data == {
-            "status": "error",
+            "status": "invalid",
             "code": 400,
             "details": {},
             "general": "This customer already activated a subscription before",
@@ -219,7 +219,7 @@ class TestWorkspaceBillingPortalSessionCreate:
             response = rest_user_client.post(resource_url)
             assert response.status_code == 400, response.data
         assert response.data == {
-            "status": "error",
+            "status": "invalid",
             "code": 400,
             "details": {},
             "general": "Can not create billing portal session because no subscription is active. If you believe this is an error, please contact support.",

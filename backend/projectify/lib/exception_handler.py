@@ -94,23 +94,15 @@ SerializerError = dict[str, SerializerErrorField]
 
 # What we produce:
 ErrorContent = Union[str, Sequence[Mapping[str, "ErrorContent"]]]
-ErrorRootBadRequest = TypedDict(
-    "ErrorRootBadRequest",
+ErrorRoot = TypedDict(
+    "ErrorRoot",
     {
-        "status": Literal["error"],
+        "status": Literal["invalid"],
         "code": Literal[400],
         "details": Mapping[str, ErrorContent],
         "general": Optional[str],
     },
 )
-ErrorRootTooManyRequests = TypedDict(
-    "ErrorRootTooManyRequests",
-    {
-        "status": Literal["error"],
-        "code": Literal[429],
-    },
-)
-ErrorRoot = Union[ErrorRootBadRequest, ErrorRootTooManyRequests]
 
 
 def serialize_error_dict(
@@ -192,7 +184,7 @@ def serialize_validation_error(
             logger.warning("Could not serialize errors %s", general)
             general_str = None
     return {
-        "status": "error",
+        "status": "invalid",
         "code": 400,
         "details": serialized or {},
         "general": general_str,
