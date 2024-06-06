@@ -63,10 +63,12 @@ export const currentTask = createWsStore<TaskDetail>(
             "/workspace/task/{task_uuid}",
             { params: { path: { task_uuid } } },
         );
-        if (error === undefined) {
+        if (error?.code === 500) {
+            throw new Error("Server error 500");
+        }
+        if (data) {
             return data;
         }
-        console.error(error);
         return undefined;
     },
 );

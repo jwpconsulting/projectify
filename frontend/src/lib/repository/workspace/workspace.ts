@@ -26,6 +26,10 @@ export async function getWorkspaces(
     const { error, data } = await openApiClient.GET(
         "/workspace/workspace/user-workspaces/",
     );
+    if (error?.code === 500) {
+        console.error("Could not retrieve workspaces, retrying");
+        throw new Error();
+    }
     if (data) {
         return data;
     }

@@ -19,20 +19,20 @@ import { readonly, writable } from "svelte/store";
 
 import type { RepositoryContext } from "$lib/types/repository";
 import type { CurrentUser, User } from "$lib/types/user";
-import { openApiClient } from "$lib/repository/util";
+import { dataOrThrow, openApiClient } from "$lib/repository/util";
 import { browser } from "$app/environment";
+import { backOff } from "exponential-backoff";
+
+const fetchUserBackOff = () =>
+    backOff(() => dataOrThrow(openApiClient.GET("/user/user/current-user")));
 
 const _user = writable<CurrentUser>({ kind: "start" }, (set) => {
     if (!browser) {
         return;
     }
-    openApiClient
-        .GET("/user/user/current-user")
-        .then(({ data }) => {
-            if (data === undefined) {
-                throw new Error("Could not load user");
-            }
-            set(data);
+    fetchUserBackOff()
+        .then(({ data: user }) => {
+            set(user);
         })
         .catch((error: unknown) =>
             console.error("Error when loading user", error),

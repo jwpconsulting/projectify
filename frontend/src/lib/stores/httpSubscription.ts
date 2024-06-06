@@ -23,6 +23,7 @@ import { writable } from "svelte/store";
 import type { Readable } from "svelte/store";
 
 import type { RepositoryContext } from "$lib/types/repository";
+import { backOff } from "exponential-backoff";
 
 // TODO This could be RepoGetter, except that RepoGetter takes a uuid
 type HttpStore<T> = Readable<T | undefined> & {
@@ -45,7 +46,7 @@ export function createHttpStore<T>(
             console.debug(`Skipping loading this resource`);
             return value;
         }
-        value = await getter(context);
+        value = await backOff(() => getter(context));
         set(value);
         return value;
     };

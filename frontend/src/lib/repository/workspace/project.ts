@@ -25,11 +25,14 @@ export async function getProject(
     project_uuid: string,
     _repositoryContext?: RepositoryContext,
 ): Promise<ProjectDetail | undefined> {
-    const { data, response } = await openApiClient.GET(
+    const { error, data } = await openApiClient.GET(
         "/workspace/project/{project_uuid}",
         { params: { path: { project_uuid } } },
     );
-    if (response.ok) {
+    if (error?.code === 500) {
+        throw new Error("Unrecoverable server error");
+    }
+    if (data) {
         return data;
     }
     return undefined;
