@@ -29,6 +29,9 @@
     import type { Project } from "$lib/types/workspace";
     import { openApiClient } from "$lib/repository/util";
     import type { InputFieldValidation } from "$lib/funabashi/types";
+    import { getDashboardProjectUrl } from "$lib/urls";
+    import { goto } from "$lib/navigation";
+    import { getLogInWithNextUrl } from "$lib/urls/user";
 
     export let project: Project;
 
@@ -47,6 +50,10 @@
         });
         if (error === undefined) {
             resolveConstructiveOverlay();
+            return;
+        }
+        if (error.code === 403) {
+            await goto(getLogInWithNextUrl(getDashboardProjectUrl(project)));
             return;
         }
 

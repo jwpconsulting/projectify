@@ -26,6 +26,7 @@
     import { goto } from "$lib/navigation";
     import {
         confirmedEmailAddressUpdateUrl,
+        getLogInWithNextUrl,
         updateEmailAddressUrl,
     } from "$lib/urls/user";
 
@@ -49,6 +50,10 @@
         );
         if (error === undefined) {
             await goto(confirmedEmailAddressUpdateUrl);
+            return;
+        }
+        if (error.code === 403) {
+            await goto(getLogInWithNextUrl(window.location.href));
             return;
         }
         const { details } = error;

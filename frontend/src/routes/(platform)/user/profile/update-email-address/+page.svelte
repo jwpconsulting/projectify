@@ -24,7 +24,11 @@
     import { goto } from "$lib/navigation";
     import type { FormViewState } from "$lib/types/ui";
     import { getProfileUrl } from "$lib/urls";
-    import { requestedEmailAddressUpdateUrl } from "$lib/urls/user";
+    import {
+        getLogInWithNextUrl,
+        requestedEmailAddressUpdateUrl,
+        updateEmailAddressUrl,
+    } from "$lib/urls/user";
 
     import type { PageData } from "./$types";
     import { openApiClient } from "$lib/repository/util";
@@ -60,6 +64,10 @@
         }
         if (error.code === 429) {
             throw new Error("Too many request");
+        }
+        if (error.code === 403) {
+            await goto(getLogInWithNextUrl(updateEmailAddressUrl));
+            return;
         }
         const { details } = error;
         if (details.password === undefined) {

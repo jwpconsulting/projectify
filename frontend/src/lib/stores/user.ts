@@ -18,10 +18,24 @@
 import { readonly, writable } from "svelte/store";
 
 import type { RepositoryContext } from "$lib/types/repository";
-import type { User } from "$lib/types/user";
+import type { CurrentUser, User } from "$lib/types/user";
 import { openApiClient } from "$lib/repository/util";
+import { browser } from "$app/environment";
 
-const _user = writable<User | undefined>(undefined);
+const _user = writable<CurrentUser>({ kind: "start" }, (set) => {
+    if (!browser) {
+        return;
+    }
+    openApiClient
+        .GET("/user/user/current-user")
+        .then(({ data }) => {
+            if (data === undefined) {
+                throw new Error("Could not load user");
+            }
+            set(data);
+        })
+        .catch((error) => console.error("Error when loading user", error));
+});
 export const currentUser = readonly(_user);
 
 export async function logIn(
@@ -36,7 +50,9 @@ export async function logIn(
         },
     );
     if (data) {
-        _user.set(data);
+        _user.update(($user) => {
+            return { ...$user, ...data };
+        });
     } else {
         console.error(error);
     }
@@ -44,24 +60,11 @@ export async function logIn(
 }
 
 export async function logOut(_repositoryContext: RepositoryContext) {
-    const { response } = await openApiClient.POST("/user/user/log-out");
-    if (!response.ok) {
-        throw new Error("Could not log out");
+    const { error, data } = await openApiClient.POST("/user/user/log-out");
+    if (error) {
+        throw new Error("Error when logging out");
     }
-    _user.set(undefined);
-}
-
-export async function fetchUser(): Promise<User | undefined> {
-    const { response, data } = await openApiClient.GET(
-        "/user/user/current-user",
-    );
-    if (data === undefined) {
-        console.error(await response.json());
-        throw new Error("Could not load user");
-    }
-    const userData = "unauthenticated" in data ? undefined : data;
-    _user.set(userData);
-    return userData;
+    _user.set(data);
 }
 
 export async function updateUserProfile(

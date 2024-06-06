@@ -42,7 +42,7 @@ otherwise the footer will be placed inside the dashboard.
 TODO evaluate whether grow is still necessary. Seems that with grow set, we wouldn't need min-h-screen, really.
 -->
 <div class="flex min-h-screen grow flex-col">
-    {#if $currentUser}
+    {#if $currentUser.kind === "authenticated"}
         <HeaderDashboard user={$currentUser} />
     {/if}
     {#if $mobileMenuState.kind === "visible"}

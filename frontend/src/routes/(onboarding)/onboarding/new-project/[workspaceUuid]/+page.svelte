@@ -23,12 +23,13 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
-    import { getNewTaskUrl } from "$lib/urls/onboarding";
+    import { getNewProjectUrl, getNewTaskUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import { openApiClient } from "$lib/repository/util";
     import type { FormViewState } from "$lib/types/ui";
+    import { getLogInWithNextUrl } from "$lib/urls/user";
 
     export let data: PageData;
 
@@ -61,6 +62,10 @@
             const { uuid } = data;
             const nextStep = getNewTaskUrl(uuid);
             await goto(nextStep);
+            return;
+        }
+        if (error.code === 403) {
+            await goto(getLogInWithNextUrl(getNewProjectUrl(workspace.uuid)));
             return;
         }
         titleValidation = error.details.title

@@ -24,12 +24,13 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
     import { currentUser } from "$lib/stores/user";
-    import { getNewProjectUrl } from "$lib/urls/onboarding";
+    import { getNewProjectUrl, newWorkspaceUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
     import { openApiClient } from "$lib/repository/util";
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import type { FormViewState } from "$lib/types/ui";
+    import { getLogInWithNextUrl } from "$lib/urls/user";
 
     export let data: PageData;
     const { workspace } = data;
@@ -40,7 +41,10 @@
 
     $: disabled = workspaceTitle === undefined;
 
-    $: who = $currentUser?.preferred_name ?? data.user.preferred_name;
+    $: who =
+        $currentUser.kind === "authenticated"
+            ? $currentUser.preferred_name
+            : data.user.preferred_name;
 
     async function submit() {
         if (!workspaceTitle) {
@@ -57,6 +61,10 @@
 
             const nextStep = getNewProjectUrl(uuid);
             await goto(nextStep);
+            return;
+        }
+        if (error.code === 403) {
+            await goto(getLogInWithNextUrl(newWorkspaceUrl));
             return;
         }
         workspaceTitleValidation = error.details.title

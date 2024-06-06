@@ -21,26 +21,19 @@ import "$lib/i18n";
 
 import { locale } from "svelte-i18n";
 
-import { fetchUser } from "$lib/stores/user";
-import type { User } from "$lib/types/user";
-
 import { browser } from "$app/environment";
 import { overrideClient } from "$lib/repository/util";
 import type { LayoutLoadEvent } from "./$types";
 
-interface Data {
-    user?: Promise<User | undefined>;
-}
-
-export async function load({ fetch }: LayoutLoadEvent): Promise<Data> {
+export async function load({ fetch }: LayoutLoadEvent) {
     overrideClient(fetch);
 
     if (browser) {
         await Promise.all([locale.set(window.navigator.language)]);
-        return { user: fetchUser() };
+        return;
     }
     // TODO add waitLocale await here
-    return {};
+    return;
 }
 
 export const prerender = true;

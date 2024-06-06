@@ -28,9 +28,10 @@
 
     export let data: PageData;
 
-    let preferredName: PageData["user"]["preferred_name"] = (
-        $currentUser ?? data.user
-    ).preferred_name;
+    let preferredName: PageData["user"]["preferred_name"] =
+        $currentUser.kind === "authenticated"
+            ? $currentUser.preferred_name
+            : data.user.preferred_name;
 
     async function submit() {
         await updateUserProfile(preferredName);

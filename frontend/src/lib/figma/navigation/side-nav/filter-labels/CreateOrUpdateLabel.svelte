@@ -34,6 +34,9 @@
     } from "$lib/utils/colors";
 
     import LabelRadio from "./LabelRadio.svelte";
+    import { getLogInWithNextUrl } from "$lib/urls/user";
+    import { getDashboardWorkspaceUrl } from "$lib/urls";
+    import { goto } from "$lib/navigation";
 
     export let state: { kind: "create" } | { kind: "update"; label: Label };
     export let onFinished: () => void;
@@ -93,6 +96,14 @@
         if (data) {
             editState = { kind: "start" };
             onFinished();
+            return;
+        }
+        if (error.code === 403) {
+            await goto(
+                getLogInWithNextUrl(
+                    getDashboardWorkspaceUrl($currentWorkspace),
+                ),
+            );
             return;
         }
         if (error.details.name !== undefined) {

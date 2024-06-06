@@ -24,7 +24,11 @@
     import { goto } from "$lib/navigation";
     import type { FormViewState } from "$lib/types/ui";
     import { getProfileUrl } from "$lib/urls";
-    import { changedPasswordUrl } from "$lib/urls/user";
+    import {
+        changePasswordUrl,
+        changedPasswordUrl,
+        getLogInWithNextUrl,
+    } from "$lib/urls/user";
     import { openApiClient } from "$lib/repository/util";
     import { onMount } from "svelte";
 
@@ -82,7 +86,12 @@
             return;
         }
         if (error.code === 429) {
+            // TODO handle this
             throw new Error("Too many request");
+        }
+        if (error.code === 403) {
+            await goto(getLogInWithNextUrl(changePasswordUrl));
+            return;
         }
         const { details } = error;
         if (details.current_password !== undefined) {

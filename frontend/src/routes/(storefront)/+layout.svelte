@@ -24,7 +24,7 @@
 </script>
 
 <div class="flex grow flex-col">
-    {#if $currentUser}
+    {#if $currentUser.kind === "authenticated"}
         <Continue />
     {:else}
         <Landing />

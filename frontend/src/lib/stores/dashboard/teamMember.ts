@@ -63,7 +63,10 @@ export const currentTeamMember: CurrentTeamMember = derived<
 >(
     [currentUser, currentWorkspace],
     ([$user, $currentWorkspace], set) => {
-        if ($user === undefined || $currentWorkspace === undefined) {
+        if (
+            $user.kind !== "authenticated" ||
+            $currentWorkspace === undefined
+        ) {
             set(undefined);
             return;
         }

@@ -187,8 +187,13 @@ export interface components {
     schemas: {
         /** @description Serialize anonymous user. */
         AnonymousUser: {
-            unauthenticated: components["schemas"]["UnauthenticatedEnum"];
+            kind: components["schemas"]["AnonymousUserKindEnum"];
         };
+        /**
+         * @description * `unauthenticated` - unauthenticated
+         * @enum {string}
+         */
+        AnonymousUserKindEnum: "unauthenticated";
         /** @description Accept old and new password. */
         ChangePassword: {
             current_password: string;
@@ -228,8 +233,7 @@ export interface components {
         };
         /** @description Serialize 403 forbidden error. */
         Forbidden: {
-            /** @default error */
-            status?: components["schemas"]["StatusEnum"];
+            status: components["schemas"]["ForbiddenStatusEnum"];
             code: components["schemas"]["ForbiddenCodeEnum"];
         };
         /**
@@ -237,6 +241,11 @@ export interface components {
          * @enum {integer}
          */
         ForbiddenCodeEnum: 403;
+        /**
+         * @description * `permission_denied` - permission_denied
+         * @enum {string}
+         */
+        ForbiddenStatusEnum: "permission_denied";
         /** @description Accept email. */
         InviteUserToWorkspace: {
             /** Format: email */
@@ -279,10 +288,24 @@ export interface components {
             email: string;
             password: string;
         };
+        /** @description Serialize logged in user. */
+        LoggedInUser: {
+            /** Format: email */
+            email: string;
+            /** @default authenticated */
+            kind: components["schemas"]["LoggedInUserKindEnum"];
+            preferred_name: string | null;
+            /** @description Return profile picture. */
+            profile_picture: string | null;
+        };
+        /**
+         * @description * `authenticated` - authenticated
+         * @enum {string}
+         */
+        LoggedInUserKindEnum: "authenticated";
         /** @description Serialize 404 not found error. */
         NotFound: {
-            /** @default error */
-            status?: components["schemas"]["StatusEnum"];
+            status: components["schemas"]["NotFoundStatusEnum"];
             code: components["schemas"]["NotFoundCodeEnum"];
         };
         /**
@@ -290,6 +313,11 @@ export interface components {
          * @enum {integer}
          */
         NotFoundCodeEnum: 404;
+        /**
+         * @description * `not_found` - not_found
+         * @enum {string}
+         */
+        NotFoundStatusEnum: "not_found";
         /** @description Serialize password policies. */
         PasswordPolicies: {
             policies: string[];
@@ -515,11 +543,6 @@ export interface components {
             limit: number | null;
             can_create_more: boolean;
         };
-        /**
-         * @description * `error` - error
-         * @enum {string}
-         */
-        StatusEnum: "error";
         /** @description SubTask model serializer. */
         SubTaskBase: {
             /** Format: date-time */
@@ -666,8 +689,7 @@ export interface components {
         };
         /** @description Serialize 429 too many requests error. */
         TooManyRequests: {
-            /** @default error */
-            status?: components["schemas"]["StatusEnum"];
+            status: components["schemas"]["TooManyRequestsStatusEnum"];
             code: components["schemas"]["TooManyRequestsCodeEnum"];
         };
         /**
@@ -676,10 +698,10 @@ export interface components {
          */
         TooManyRequestsCodeEnum: 429;
         /**
-         * @description * `True` - True
-         * @enum {boolean}
+         * @description * `throttled` - throttled
+         * @enum {string}
          */
-        UnauthenticatedEnum: true;
+        TooManyRequestsStatusEnum: "throttled";
         /** @description Accept email. */
         UninviteUserFromWorkspace: {
             /** Format: email */
@@ -787,7 +809,7 @@ export interface components {
             description?: string | null;
         };
         auth_info:
-            | components["schemas"]["User"]
+            | components["schemas"]["LoggedInUser"]
             | components["schemas"]["AnonymousUser"];
     };
     responses: never;
@@ -875,7 +897,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -946,7 +968,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -988,7 +1010,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -1030,7 +1052,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -1063,7 +1085,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -1091,7 +1113,7 @@ export interface operations {
         responses: {
             200: {
                 content: {
-                    "application/json": components["schemas"]["User"];
+                    "application/json": components["schemas"]["LoggedInUser"];
                 };
             };
             400: {
@@ -1105,7 +1127,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -1136,7 +1158,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -1173,7 +1195,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -1201,7 +1223,7 @@ export interface operations {
         responses: {
             200: {
                 content: {
-                    "application/json": components["schemas"]["User"];
+                    "application/json": components["schemas"]["LoggedInUser"];
                 };
             };
             400: {
@@ -1216,7 +1238,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -1230,9 +1252,10 @@ export interface operations {
     /** @description Handle POST. */
     user_user_log_out_create: {
         responses: {
-            /** @description No response body */
             204: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["AnonymousUser"];
+                };
             };
             403: {
                 content: {
@@ -1274,7 +1297,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -1310,7 +1333,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -1349,7 +1372,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -1388,7 +1411,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -1431,7 +1454,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -1500,7 +1523,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -1569,7 +1592,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -1639,7 +1662,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -1683,7 +1706,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -1751,7 +1774,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -1821,7 +1844,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -1881,7 +1904,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -1968,7 +1991,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -2039,7 +2062,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -2086,7 +2109,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -2159,7 +2182,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -2226,7 +2249,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -2293,7 +2316,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -2365,7 +2388,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -2409,7 +2432,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };
@@ -2455,7 +2478,7 @@ export interface operations {
                         };
                         general: string[];
                         /** @enum {string} */
-                        status: "error";
+                        status: "invalid";
                     };
                 };
             };

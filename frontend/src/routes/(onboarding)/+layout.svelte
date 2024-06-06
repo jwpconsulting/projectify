@@ -15,7 +15,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
-<script>
+<script lang="ts">
     import ConnectionStatus from "$lib/components/ConnectionStatus.svelte";
     import ContextMenuContainer from "$lib/components/ContextMenuContainer.svelte";
     import HeaderDashboard from "$lib/figma/navigation/header/Dashboard.svelte";
@@ -23,7 +23,7 @@
 </script>
 
 <div class="flex grow flex-col overflow-y-auto">
-    {#if $currentUser}
+    {#if $currentUser.kind === "authenticated"}
         <HeaderDashboard user={$currentUser} />
     {/if}
     <slot />
