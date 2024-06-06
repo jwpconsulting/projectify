@@ -2014,9 +2014,10 @@ export interface operations {
                     "application/json": components["schemas"]["Forbidden"];
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
             500: {
                 content: {
@@ -2494,9 +2495,10 @@ export interface operations {
                     "application/json": components["schemas"]["Forbidden"];
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
             500: {
                 content: {
@@ -2728,9 +2730,10 @@ export interface operations {
                     "application/json": components["schemas"]["Forbidden"];
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
             500: {
                 content: {
