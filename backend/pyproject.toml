@@ -107,7 +107,7 @@ exclude = [
     "projectify/premail/test/test_views.py",
     "projectify/premail/test/test_emails.py",
     # TODO typing for spectacular is underspecified
-    "projectify/lib/error_serializer.py",
+    "projectify/lib/error_schema.py",
 ]
 # Mypy doesn't complain about these, so it's fine
 reportUnknownParameterType = true

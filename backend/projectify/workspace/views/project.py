@@ -26,7 +26,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from projectify.lib.error_serializer import DeriveSchema
+from projectify.lib.error_schema import DeriveSchema
 from projectify.workspace.models import Project
 from projectify.workspace.selectors.project import (
     ProjectDetailQuerySet,

@@ -33,7 +33,7 @@ from rest_framework.response import (
 )
 from rest_framework.views import APIView
 
-from projectify.lib.error_serializer import DeriveSchema
+from projectify.lib.error_schema import DeriveSchema
 from projectify.workspace.models.section import (
     Section,
 )

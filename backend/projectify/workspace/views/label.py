@@ -31,7 +31,7 @@ from rest_framework.status import (
 )
 from rest_framework.views import APIView
 
-from projectify.lib.error_serializer import DeriveSchema
+from projectify.lib.error_schema import DeriveSchema
 from projectify.workspace.models.label import Label
 from projectify.workspace.selectors.workspace import (
     workspace_find_by_workspace_uuid,

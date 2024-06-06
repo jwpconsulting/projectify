@@ -30,7 +30,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
 
-from projectify.lib.error_serializer import DeriveSchema
+from projectify.lib.error_schema import DeriveSchema
 
 from ..selectors.customer import customer_find_by_workspace_uuid
 from ..serializers import CustomerSerializer

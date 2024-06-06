@@ -14,12 +14,12 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Test error serializers."""
+"""Test error schema generation."""
 import pytest
 from rest_framework import serializers
 from rest_framework.serializers import Serializer
 
-from projectify.lib.error_serializer import make_schema
+from projectify.lib.error_schema import make_schema
 
 
 @pytest.fixture

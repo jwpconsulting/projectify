@@ -26,7 +26,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from projectify.corporate.services.coupon import coupon_redeem
-from projectify.lib.error_serializer import DeriveSchema
+from projectify.lib.error_schema import DeriveSchema
 from projectify.workspace.selectors.workspace import (
     workspace_find_by_workspace_uuid,
 )

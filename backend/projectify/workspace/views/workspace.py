@@ -40,7 +40,7 @@ from rest_framework.status import (
     HTTP_204_NO_CONTENT,
 )
 
-from projectify.lib.error_serializer import DeriveSchema
+from projectify.lib.error_schema import DeriveSchema
 from projectify.workspace.selectors.quota import workspace_get_all_quotas
 
 from ..exceptions import (
