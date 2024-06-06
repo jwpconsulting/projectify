@@ -213,7 +213,7 @@ def maybe_annotate_404(method: ViewMethod, d: ResponsesDict) -> None:
     if not has_view_args(method):
         return
     if status.HTTP_404_NOT_FOUND in d:
-        return
+        raise ValueError(f"404 serializer was already specified in {method}")
     d[status.HTTP_404_NOT_FOUND] = NotFoundSerializer
 
 

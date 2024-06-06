@@ -1818,13 +1818,17 @@ paths:
                 - general
                 - status
           description: ''
-        '404':
-          description: No response body
         '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Forbidden'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
           description: ''
         '500':
           content:
@@ -2551,13 +2555,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/WorkspaceDetail'
           description: ''
-        '404':
-          description: No response body
         '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Forbidden'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
           description: ''
         '500':
           content:
@@ -2907,13 +2915,17 @@ paths:
                 - general
                 - status
           description: ''
-        '404':
-          description: No response body
         '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Forbidden'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
           description: ''
         '500':
           content:

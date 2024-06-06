@@ -117,7 +117,7 @@ class WorkspaceReadUpdate(views.APIView):
     """Workspace read and update view."""
 
     @extend_schema(
-        responses={200: WorkspaceDetailSerializer, 404: None},
+        responses={200: WorkspaceDetailSerializer},
     )
     def get(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle GET."""
@@ -264,7 +264,7 @@ class UninviteUserFromWorkspace(views.APIView):
 
     @extend_schema(
         request=UninviteUserFromWorkspaceSerializer,
-        responses={204: None, 400: DeriveSchema, 404: None},
+        responses={204: None, 400: DeriveSchema},
     )
     def post(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle POST."""
