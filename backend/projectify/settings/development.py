@@ -41,6 +41,7 @@ def add_dev_middleware(middleware: Sequence[str]) -> Iterable[str]:
             yield m
             yield "debug_toolbar.middleware.DebugToolbarMiddleware"
             yield "projectify.middleware.microsloth"
+            yield "projectify.middleware.errorsloth"
         else:
             yield m
 
@@ -151,6 +152,7 @@ class Development(SpectacularSettings, Base):
 
     # Settings for slow connection emulation
     SLEEP_MIN_MAX_MS = 500, 1500
+    ERROR_RATE_PCT = 25
 
     @classmethod
     def pre_setup(cls) -> None:
