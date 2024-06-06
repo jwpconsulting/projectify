@@ -40,8 +40,7 @@ export async function getWorkspace(
     workspace_uuid: string,
     _repositoryContext?: RepositoryContext,
 ) {
-    return await openApiClient.GET(
-        "/workspace/workspace/{workspace_uuid}",
-        { params: { path: { workspace_uuid } } },
-    );
+    return await openApiClient.GET("/workspace/workspace/{workspace_uuid}", {
+        params: { path: { workspace_uuid } },
+    });
 }

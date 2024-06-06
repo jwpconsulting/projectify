@@ -30,7 +30,7 @@ export async function load({
     workspace: Workspace;
     project?: ProjectDetail;
 }> {
-    const {error, data } = await getWorkspace(workspaceUuid, { fetch });
+    const { error, data } = await getWorkspace(workspaceUuid, { fetch });
     if (error?.code === 404) {
         error(404, `No workspace could be found for UUID '${workspaceUuid}'`);
     }
