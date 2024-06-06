@@ -22,11 +22,9 @@ export async function load({
 }: {
     params: { email: string; token: string };
 }) {
-    const { error } = await openApiClient.POST("/user/user/confirm-email", {
+    const result = await openApiClient.POST("/user/user/confirm-email", {
         body: { email, token },
     });
-    if (error) {
-        return { error };
-    }
-    return { error: undefined };
+    const error: (typeof result)["error"] = result.error;
+    return { error };
 }

@@ -24,12 +24,10 @@
     import type { PageData } from "./$types";
 
     export let data: PageData;
-
-    const { error } = data;
 </script>
 
 <section class="flex flex-col gap-4 px-8 py-4">
-    {#if error === undefined}
+    {#if data.error === undefined}
         <h1 class="text-2xl font-bold">
             {$_("auth.confirm-email.success.title")}
         </h1>
@@ -42,24 +40,26 @@
             label={$_("auth.confirm-email.success.continue")}
             href={logInUrl}
         />
-    {:else if error.code === 400}
+    {:else if data.error.code === 500}
+        <p>{$_("auth.confirm-email.error.try-again")}</p>
+    {:else if data.error.code === 400}
         <h1 class="text-2xl font-bold">
             {$_("auth.confirm-email.error.title")}
         </h1>
         <p>
             {$_("auth.confirm-email.error.message")}
         </p>
-        {#if error.details.email}
+        {#if data.error?.details?.email}
             <p>
                 {$_("auth.confirm-email.error.email", {
-                    values: { error: error.details.email },
+                    values: { error: data.error.details.email },
                 })}
             </p>
         {/if}
-        {#if error.details.token}
+        {#if data.error.details.token}
             <p>
                 {$_("auth.confirm-email.error.token", {
-                    values: { error: error.details.token },
+                    values: { error: data.error.details.token },
                 })}
             </p>
         {/if}
@@ -68,7 +68,5 @@
             label={$_("auth.confirm-email.error.continue")}
             href="/contact-us"
         />
-    {:else if error.code === 500}
-        <p>{$_("auth.confirm-email.error.try-again")}</p>
     {/if}
 </section>

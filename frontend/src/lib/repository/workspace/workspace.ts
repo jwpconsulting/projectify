@@ -17,7 +17,7 @@
  */
 import { openApiClient } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
-import type { Workspace, WorkspaceDetail } from "$lib/types/workspace";
+import type { Workspace } from "$lib/types/workspace";
 
 // Read
 export async function getWorkspaces(
@@ -40,7 +40,21 @@ export async function getWorkspace(
     workspace_uuid: string,
     _repositoryContext?: RepositoryContext,
 ) {
-    return await openApiClient.GET("/workspace/workspace/{workspace_uuid}", {
-        params: { path: { workspace_uuid } },
-    });
+    const { error, data } = await openApiClient.GET(
+        "/workspace/workspace/{workspace_uuid}",
+        {
+            params: { path: { workspace_uuid } },
+        },
+    );
+    if (error?.code === 404) {
+        return undefined;
+    }
+    if (error) {
+        throw new Error(
+            `Error when retrieving workspace {workspace_uuid} ${JSON.stringify(
+                error,
+            )}`,
+        );
+    }
+    return data;
 }
