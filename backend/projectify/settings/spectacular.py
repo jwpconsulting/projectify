@@ -32,7 +32,7 @@ class SpectacularSettings:
         "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
         "REDOC_DIST": "SIDECAR",
         "PREPROCESSING_HOOKS": (
-            "projectify.lib.error_serializer.preprocess_derive_error_schemas",
+            "projectify.lib.error_schema.preprocess_derive_error_schemas",
         ),
     }
 
