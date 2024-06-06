@@ -33,12 +33,16 @@
     export let section: SectionWithTasks | undefined = undefined;
 </script>
 
-<section
-    class="flex w-full grid-cols-[8fr_5fr_4fr] flex-col items-center items-center gap-1 rounded-lg border border-border p-3 lg:grid lg:p-2"
+<tr
+    class="flex w-full flex-col items-center items-center gap-1 rounded-lg border border-border p-3 lg:contents"
 >
-    <Title {task} />
-    <Labels {task} />
-    <div class="flex flex-row items-center justify-end gap-2 self-end">
+    <td class="contents">
+        <Title {task} />
+    </td>
+    <td class="contents">
+        <Labels {task} />
+    </td>
+    <td class="flex flex-row items-center justify-end gap-2 self-end">
         <SubTaskProgress {task} />
         <div class="flex flex-row items-center gap-2">
             <TeamMember {task} />
@@ -49,5 +53,5 @@
                 <MenuButton {task} {project} {section} />
             </div>
         </div>
-    </div>
-</section>
+    </td>
+</tr>

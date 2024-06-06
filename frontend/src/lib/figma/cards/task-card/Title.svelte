@@ -28,14 +28,13 @@
     href={getTaskUrl(task)}
     class="flex flex-row items-start items-center gap-1 self-start sm:gap-6 lg:self-center"
 >
-    <div class="shrink-0 font-bold">
-        {$_("dashboard.task-card.task-number", {
+    <span class="shrink-0 font-bold"
+        >{$_("dashboard.task-card.task-number", {
             values: { number: task.number },
-        })}
-    </div>
-    <div
-        class="line-clamp-3 justify-self-start hover:text-primary lg:line-clamp-1 lg:h-6"
+        })}</span
     >
-        {task.title}
-    </div>
+    <span
+        class="line-clamp-3 justify-self-start hover:text-primary lg:line-clamp-1 lg:h-6"
+        >{task.title}</span
+    >
 </a>
