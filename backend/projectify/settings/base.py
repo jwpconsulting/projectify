@@ -309,6 +309,9 @@ class Base(Configuration):
     # drf-spectacular
     SERVE_SPECTACULAR = False
 
+    # simulate slow connections
+    SLEEP_MIN_MAX_MS: Optional[tuple[int, int]] = None
+
     @classmethod
     def post_setup(cls) -> None:
         """Warn if FRONTEND_URL ends on '/'."""

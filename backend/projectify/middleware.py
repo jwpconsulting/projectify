@@ -15,26 +15,29 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Projectify middlewares."""
-# https://stackoverflow.com/a/47888695
-from typing import (
-    Callable,
-    Optional,
-)
+
+import asyncio
+import random
+from collections.abc import Awaitable
+from typing import Callable, Optional
 
 from django.core.exceptions import ImproperlyConfigured
 from django.core.handlers.asgi import ASGIHandler
-from django.http import (
-    HttpRequest,
-    HttpResponse,
-)
+from django.http import HttpRequest, HttpResponse
+from django.utils.decorators import async_only_middleware
 
 from channels.security.websocket import OriginValidator
 
 from projectify.lib.settings import get_settings
 
 GetResponse = Callable[[HttpRequest], HttpResponse]
+AsyncGetResponse = Callable[[HttpRequest], Awaitable[HttpResponse]]
 
 
+settings = get_settings()
+
+
+# https://stackoverflow.com/a/47888695
 class DisableCSRFMiddleware:
     """Dangerous CSRF disable middleware."""
 
@@ -98,3 +101,20 @@ def CsrfTrustedOriginsOriginValidator(application: ASGIHandler) -> ASGIHandler:
             "Need to specify CSRF_TRUSTED_ORIGINS in settings"
         )
     return OriginValidator(application, origins)
+
+
+@async_only_middleware
+def microsloth(get_response: AsyncGetResponse) -> AsyncGetResponse:
+    """Simulate a slow connection."""
+
+    async def process_request(request: HttpRequest) -> HttpResponse:
+        """Process the request."""
+        response = await get_response(request)
+        if settings.SLEEP_MIN_MAX_MS is None:
+            return response
+        min, max = settings.SLEEP_MIN_MAX_MS
+        sleep_dur = random.randrange(min, max) / 1000
+        await asyncio.sleep(sleep_dur)
+        return response
+
+    return process_request
