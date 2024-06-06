@@ -217,8 +217,13 @@ class TestWorkspaceBillingPortalSessionCreate:
         )
         with django_assert_num_queries(3):
             response = rest_user_client.post(resource_url)
-            assert response.status_code == 403, response.data
-        assert "no subscription is active" in response.data["detail"]
+            assert response.status_code == 400, response.data
+        assert response.data == {
+            "status": "error",
+            "code": 400,
+            "details": {},
+            "general": "Can not create billing portal session because no subscription is active. If you believe this is an error, please contact support.",
+        }
 
     def test_with_paying_customer(
         self,
