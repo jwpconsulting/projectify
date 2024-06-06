@@ -33,7 +33,7 @@ const config = {
             pages: "build",
             assets: "build",
             fallback: "fallback.html",
-            precompress: false,
+            precompress: true,
             strict: true,
         }),
         csp: {
