@@ -172,15 +172,27 @@ def get_request_serializer(
             raise ValueError(f"Don't know what to do with {annotation}")
 
 
-def maybe_annotate_400(d: ResponsesDict, s: SerializerClassOrInstance) -> None:
+def maybe_annotate_400(
+    path: str, d: ResponsesDict, s: Optional[SerializerClassOrInstance]
+) -> None:
     """Annotate 404."""
     if d.get(status.HTTP_400_BAD_REQUEST) is not DeriveSchema:
         return
+    if s is None:
+        raise ValueError(
+            f"Trying to create 400 response schema, but no "
+            f"request serializer was provided in {path}"
+        )
     d[status.HTTP_400_BAD_REQUEST] = derive_bad_request_serializer(s)
 
 
-def maybe_annotate_404(d: ResponsesDict) -> None:
+ViewMethod = Callable[..., Any]
+
+
+def maybe_annotate_404(method: ViewMethod, d: ResponsesDict) -> None:
     """Annotate 404."""
+    if not has_view_args(method):
+        return
     if status.HTTP_404_NOT_FOUND in d:
         return
     d[status.HTTP_404_NOT_FOUND] = NotFoundSerializer
@@ -193,7 +205,7 @@ def maybe_annotate_429(d: ResponsesDict) -> None:
     d[status.HTTP_429_TOO_MANY_REQUESTS] = TooManyRequestsSerializer
 
 
-def has_view_args(c: Callable[..., Any]) -> bool:
+def has_view_args(c: ViewMethod) -> bool:
     """Return True if a view function takes UUID or other args."""
     sig = inspect.signature(c)
     params = list(sig.parameters.values())
@@ -224,7 +236,7 @@ def preprocess_derive_error_schemas(endpoints: Endpoints) -> Endpoints:
         and callable(callback)
         and hasattr(callback, "cls")
     )
-    for _path, _path_regex, method_name, callback in endpoints_edit:
+    for _path, _, method_name, callback in endpoints_edit:
         assert hasattr(callback, "cls")
         method = getattr(callback.cls, method_name.lower())
         schema = method.kwargs["schema"]
@@ -249,18 +261,8 @@ def preprocess_derive_error_schemas(endpoints: Endpoints) -> Endpoints:
             case _:
                 continue
         request_serializer = get_request_serializer(request)
-        http_400_response = responses_dict.get(
-            status.HTTP_400_BAD_REQUEST, None
-        )
-        if http_400_response is DeriveSchema:
-            if request_serializer is None:
-                raise ValueError(
-                    f"Trying to create 400 response schema, but no "
-                    f"request serializer was provided in {_path}"
-                )
-            maybe_annotate_400(responses_dict, request_serializer)
-        if has_view_args(method):
-            maybe_annotate_404(responses_dict)
+        maybe_annotate_400(_path, responses_dict, request_serializer)
+        maybe_annotate_404(method, responses_dict)
         maybe_annotate_429(responses_dict)
 
     return endpoints
