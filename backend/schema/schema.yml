@@ -42,6 +42,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/WorkspaceBillingPortalSessionCreateOutput'
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
           content:
             application/json:
@@ -113,6 +119,12 @@ paths:
                 - general
                 - status
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
           content:
             application/json:
@@ -140,6 +152,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Customer'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
           description: ''
         '404':
           content:
@@ -208,6 +226,12 @@ paths:
                 - general
                 - status
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
           content:
             application/json:
@@ -275,6 +299,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TooManyRequests'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
           description: ''
   /user/user/confirm-email:
     post:
@@ -465,8 +495,6 @@ paths:
                 - general
                 - status
           description: ''
-        '403':
-          description: No response body
   /user/user/email-address-update/confirm:
     post:
       operationId: user_user_email_address_update_confirm_create
@@ -520,6 +548,12 @@ paths:
                 - details
                 - general
                 - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
           description: ''
   /user/user/email-address-update/request:
     post:
@@ -582,6 +616,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TooManyRequests'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
           description: ''
   /user/user/log-in:
     post:
@@ -661,6 +701,12 @@ paths:
       responses:
         '204':
           description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /user/user/password-policy:
     get:
       operationId: user_user_password_policy_retrieve
@@ -723,6 +769,12 @@ paths:
                 - details
                 - general
                 - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
           description: ''
   /user/user/request-password-reset:
     post:
@@ -914,6 +966,12 @@ paths:
                 - general
                 - status
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /workspace/label/{label_uuid}:
     put:
       operationId: workspace_label_update
@@ -981,6 +1039,12 @@ paths:
                 - general
                 - status
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
           content:
             application/json:
@@ -1004,6 +1068,12 @@ paths:
       responses:
         '204':
           description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
           content:
             application/json:
@@ -1074,6 +1144,12 @@ paths:
                 - general
                 - status
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /workspace/project/{project_uuid}:
     get:
       operationId: workspace_project_retrieve
@@ -1095,6 +1171,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProjectDetail'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
           description: ''
         '404':
           content:
@@ -1170,6 +1252,12 @@ paths:
                 - general
                 - status
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
           content:
             application/json:
@@ -1193,6 +1281,12 @@ paths:
       responses:
         '204':
           description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
           content:
             application/json:
@@ -1229,8 +1323,6 @@ paths:
       responses:
         '204':
           description: No response body
-        '403':
-          description: No response body
         '400':
           content:
             application/json:
@@ -1261,6 +1353,12 @@ paths:
                 - details
                 - general
                 - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
           description: ''
         '404':
           content:
@@ -1330,6 +1428,12 @@ paths:
                 - general
                 - status
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /workspace/section/{section_uuid}:
     get:
       operationId: workspace_section_retrieve
@@ -1351,6 +1455,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SectionDetail'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
           description: ''
         '404':
           content:
@@ -1424,6 +1534,12 @@ paths:
                 - general
                 - status
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
           content:
             application/json:
@@ -1447,6 +1563,12 @@ paths:
       responses:
         '204':
           description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
           content:
             application/json:
@@ -1516,6 +1638,12 @@ paths:
           description: ''
         '404':
           description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /workspace/task/:
     post:
       operationId: workspace_task_create
@@ -1612,6 +1740,12 @@ paths:
                 - general
                 - status
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /workspace/task/{task_uuid}:
     get:
       operationId: workspace_task_retrieve
@@ -1633,6 +1767,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TaskDetail'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
           description: ''
         '404':
           content:
@@ -1740,6 +1880,12 @@ paths:
                 - general
                 - status
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
           content:
             application/json:
@@ -1763,6 +1909,12 @@ paths:
       responses:
         '204':
           description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
           content:
             application/json:
@@ -1833,6 +1985,12 @@ paths:
                 - details
                 - general
                 - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
           description: ''
         '404':
           content:
@@ -1905,6 +2063,12 @@ paths:
                 - general
                 - status
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
           content:
             application/json:
@@ -1932,6 +2096,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TeamMemberBase'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
           description: ''
         '404':
           content:
@@ -2004,6 +2174,12 @@ paths:
                 - general
                 - status
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
           content:
             application/json:
@@ -2027,6 +2203,12 @@ paths:
       responses:
         '204':
           description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
           content:
             application/json:
@@ -2093,6 +2275,12 @@ paths:
                 - general
                 - status
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /workspace/workspace/{workspace_uuid}:
     get:
       operationId: workspace_workspace_retrieve
@@ -2117,6 +2305,12 @@ paths:
           description: ''
         '404':
           description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
     put:
       operationId: workspace_workspace_update
       description: Handle PUT.
@@ -2183,6 +2377,12 @@ paths:
                 - general
                 - status
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
           content:
             application/json:
@@ -2212,6 +2412,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProjectBase'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
           description: ''
         '404':
           content:
@@ -2284,6 +2490,12 @@ paths:
                 - general
                 - status
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
           content:
             application/json:
@@ -2343,6 +2555,12 @@ paths:
                 - details
                 - general
                 - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
           description: ''
         '404':
           content:
@@ -2413,6 +2631,12 @@ paths:
           description: ''
         '404':
           description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /workspace/workspace/user-workspaces/:
     get:
       operationId: workspace_workspace_user_workspaces_list
@@ -2429,6 +2653,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/WorkspaceBase'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
           description: ''
 components:
   schemas:
@@ -2525,6 +2755,23 @@ components:
       - seats
       - subscription_status
       - uuid
+    Forbidden:
+      type: object
+      description: Serialize 403 forbidden error.
+      properties:
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          default: error
+        code:
+          $ref: '#/components/schemas/ForbiddenCodeEnum'
+      required:
+      - code
+    ForbiddenCodeEnum:
+      enum:
+      - 403
+      type: integer
+      description: '* `403` - 403'
     InviteUserToWorkspace:
       type: object
       description: Accept email.

@@ -92,11 +92,7 @@ class UserReadUpdate(views.APIView):
 
     @extend_schema(
         request=UserUpdateSerializer,
-        responses={
-            200: UserSerializer,
-            400: DeriveSchema,
-            403: None,
-        },
+        responses={200: UserSerializer, 400: DeriveSchema},
     )
     def put(self, request: Request) -> Response:
         """Update a user."""

@@ -199,11 +199,11 @@ def serialize_validation_error(
     }
 
 
-class TooManyRequestsSerializer(serializers.Serializer):
-    """Serialize 429 too many requests error."""
+class ForbiddenSerializer(serializers.Serializer):
+    """Serialize 403 forbidden error."""
 
     status = serializers.ChoiceField(choices=["error"], default="error")
-    code = serializers.ChoiceField(choices=[429], source="status_code")
+    code = serializers.ChoiceField(choices=[403], source="status_code")
 
 
 class NotFoundSerializer(serializers.Serializer):
@@ -211,6 +211,13 @@ class NotFoundSerializer(serializers.Serializer):
 
     status = serializers.ChoiceField(choices=["error"], default="error")
     code = serializers.ChoiceField(choices=[404], source="status_code")
+
+
+class TooManyRequestsSerializer(serializers.Serializer):
+    """Serialize 429 too many requests error."""
+
+    status = serializers.ChoiceField(choices=["error"], default="error")
+    code = serializers.ChoiceField(choices=[429], source="status_code")
 
 
 # TODO find out what ctx is
@@ -230,8 +237,8 @@ def exception_handler(
             data = serialize_validation_error(exception)
             return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
         case dj_exceptions.PermissionDenied():
-            logger.error("Permission denied: %s", exception)
-            result = exception
+            serialized = ForbiddenSerializer(exception).data
+            return Response(status=status.HTTP_403_FORBIDDEN, data=serialized)
         case drf_exceptions.NotFound():
             serialized = NotFoundSerializer(exception).data
             return Response(status=status.HTTP_404_NOT_FOUND, data=serialized)

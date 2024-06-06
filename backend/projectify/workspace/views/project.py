@@ -210,7 +210,7 @@ class ProjectArchive(APIView):
 
     @extend_schema(
         request=ProjectArchiveSerializer,
-        responses={204: None, 403: None, 400: DeriveSchema},
+        responses={204: None, 400: DeriveSchema},
     )
     def post(self, request: Request, project_uuid: UUID) -> Response:
         """Process request."""

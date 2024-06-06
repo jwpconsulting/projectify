@@ -25,9 +25,11 @@ from drf_spectacular.plumbing import (
     build_object_type,
 )
 from drf_spectacular.utils import OpenApiResponse, _SchemaType
-from rest_framework import fields, serializers, status
+from rest_framework import fields, permissions, serializers, status
+from rest_framework.views import APIView
 
 from projectify.exception_handler import (
+    ForbiddenSerializer,
     NotFoundSerializer,
     TooManyRequestsSerializer,
 )
@@ -186,6 +188,22 @@ def maybe_annotate_400(
     d[status.HTTP_400_BAD_REQUEST] = derive_bad_request_serializer(s)
 
 
+def maybe_annotate_403(v: type[APIView], d: ResponsesDict) -> None:
+    """Annotate 403 for methods without AllowAny."""
+    match v.permission_classes:
+        case (permissions.AllowAny,):
+            return
+        case (permissions.IsAuthenticated,):
+            pass
+        case _:
+            raise ValueError(
+                f"Permission classes in {v} {v.permission_classes} not supported"
+            )
+    if status.HTTP_403_FORBIDDEN in d:
+        raise ValueError(f"403 has already been annotated in {v}")
+    d[status.HTTP_403_FORBIDDEN] = ForbiddenSerializer
+
+
 ViewMethod = Callable[..., Any]
 
 
@@ -237,8 +255,12 @@ def preprocess_derive_error_schemas(endpoints: Endpoints) -> Endpoints:
         and hasattr(callback, "cls")
     )
     for _path, _, method_name, callback in endpoints_edit:
-        assert hasattr(callback, "cls")
-        method = getattr(callback.cls, method_name.lower())
+        view_class = getattr(callback, "cls", None)
+        if view_class is None:
+            continue
+        if not issubclass(view_class, APIView):
+            continue
+        method = getattr(view_class, method_name.lower())
         schema = method.kwargs["schema"]
         # XXX HAXXX
         # Unfortunately we can't just call get_response_serializers. It expects
@@ -262,6 +284,7 @@ def preprocess_derive_error_schemas(endpoints: Endpoints) -> Endpoints:
                 continue
         request_serializer = get_request_serializer(request)
         maybe_annotate_400(_path, responses_dict, request_serializer)
+        maybe_annotate_403(view_class, responses_dict)
         maybe_annotate_404(method, responses_dict)
         maybe_annotate_429(responses_dict)
 
