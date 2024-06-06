@@ -93,6 +93,16 @@
             await goto(getLogInWithNextUrl(changePasswordUrl));
             return;
         }
+        if (error.code === 500) {
+            state = {
+                kind: "error",
+                message: $_(
+                    "user-account-settings.change-password.validation.general-error",
+                    { values: { details: JSON.stringify(error) } },
+                ),
+            };
+            return;
+        }
         const { details } = error;
         if (details.current_password !== undefined) {
             currentPasswordValidation = {
@@ -117,22 +127,12 @@
                 ),
             };
         }
-        if (currentPasswordValidation.ok && newPasswordValidation.ok) {
-            state = {
-                kind: "error",
-                message: $_(
-                    "user-account-settings.change-password.validation.general-error",
-                    { values: { details: JSON.stringify(error) } },
-                ),
-            };
-        } else {
-            state = {
-                kind: "error",
-                message: $_(
-                    "user-account-settings.change-password.validation.field-errors",
-                ),
-            };
-        }
+        state = {
+            kind: "error",
+            message: $_(
+                "user-account-settings.change-password.validation.field-errors",
+            ),
+        };
     }
 </script>
 

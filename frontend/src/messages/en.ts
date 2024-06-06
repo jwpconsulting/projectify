@@ -329,6 +329,8 @@ const messages: MessageDirectory = {
                 "errors": {
                     create: "The label could not be created. Please make sure you entered a valid name and color and try again.",
                     update: "The label could not be updated. Please make sure you entered a valid name and color and try again.",
+                    general:
+                        "The server responded with a 500 error. Please try again.",
                 },
                 "save": "Save",
                 "cancel": "Cancel",
@@ -637,6 +639,7 @@ const messages: MessageDirectory = {
                 validation: {
                     "no-match":
                         "The password entered here must match the password entered under 'Confirm new password'",
+                    "valid": "New password is valid",
                 },
             },
             "password-2": {
@@ -656,8 +659,11 @@ const messages: MessageDirectory = {
                 submitting: "Resetting password...",
                 error: "Reset password (try again)",
             },
-            "error":
-                "Your password could not be reset. Please try again. If you have previously reset your password using this form, please try requesting a password reset one more time using the link below.",
+            "errors": {
+                general:
+                    "Your password could not be reset. Please try again. If you have previously reset your password using this form, please try requesting a password reset one more time using the link below.",
+                field: "Please check the above errors and try again",
+            },
             "request-password-reset": "Request password reset again",
         },
         "reset-password": {
@@ -675,12 +681,13 @@ const messages: MessageDirectory = {
                 continue: "Continue to log in",
             },
             error: {
-                title: "Error while confirming email address",
-                message:
+                "title": "Error while confirming email address",
+                "message":
                     "Unfortunately your email address could not be confirmed.",
-                continue: "Contact support",
-                email: "Error with email address: {error}",
-                token: "Error with token: {error}",
+                "continue": "Contact support",
+                "email": "Error with email address: {error}",
+                "token": "Error with token: {error}",
+                "try-again": "Please try again",
             },
         },
     },

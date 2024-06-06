@@ -39,17 +39,9 @@ export async function getWorkspaces(
 export async function getWorkspace(
     workspace_uuid: string,
     _repositoryContext?: RepositoryContext,
-): Promise<WorkspaceDetail> {
-    const { response, data } = await openApiClient.GET(
+) {
+    return await openApiClient.GET(
         "/workspace/workspace/{workspace_uuid}",
         { params: { path: { workspace_uuid } } },
-    );
-    if (data) {
-        return data;
-    }
-    throw new Error(
-        `Could not retrieve workspace ${workspace_uuid}, ${JSON.stringify(
-            await response.json(),
-        )}`,
     );
 }

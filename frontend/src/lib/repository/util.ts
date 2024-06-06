@@ -17,7 +17,8 @@
  */
 import vars from "$lib/env";
 import { getCookie } from "$lib/utils/cookie";
-import createClient, { type Middleware } from "openapi-fetch";
+import createClient from "openapi-fetch";
+import type { Middleware } from "openapi-fetch";
 
 import type { paths } from "$lib/types/schema";
 

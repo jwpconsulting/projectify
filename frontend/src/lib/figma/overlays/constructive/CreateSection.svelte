@@ -56,6 +56,15 @@
             await goto(getLogInWithNextUrl(getDashboardProjectUrl(project)));
             return;
         }
+        if (error.code === 500) {
+            state = {
+                kind: "error",
+                message: $_(
+                    "overlay.constructive.create-section.errors.general",
+                ),
+            };
+            return;
+        }
 
         titleValidation = error.details.title
             ? { ok: false, error: error.details.title }
@@ -65,21 +74,10 @@
                       "overlay.constructive.create-section.form.title.valid",
                   ),
               };
-        if (titleValidation.ok) {
-            state = {
-                kind: "error",
-                message: $_(
-                    "overlay.constructive.create-section.errors.general",
-                ),
-            };
-        } else {
-            state = {
-                kind: "error",
-                message: $_(
-                    "overlay.constructive.create-section.errors.fields",
-                ),
-            };
-        }
+        state = {
+            kind: "error",
+            message: $_("overlay.constructive.create-section.errors.fields"),
+        };
     }
 </script>
 

@@ -68,23 +68,23 @@
             await goto(getLogInWithNextUrl(getNewProjectUrl(workspace.uuid)));
             return;
         }
+        if (error.code === 500) {
+            state = {
+                kind: "error",
+                message: $_("onboarding.new-project.errors.general"),
+            };
+            return;
+        }
         titleValidation = error.details.title
             ? { ok: false, error: error.details.title }
             : {
                   ok: true,
                   result: $_("onboarding.new-project.fields.title.valid"),
               };
-        if (titleValidation.ok) {
-            state = {
-                kind: "error",
-                message: $_("onboarding.new-project.errors.general"),
-            };
-        } else {
-            state = {
-                kind: "error",
-                message: $_("onboarding.new-project.errors.field"),
-            };
-        }
+        state = {
+            kind: "error",
+            message: $_("onboarding.new-project.errors.field"),
+        };
     }
 
     $: prompts = $json("onboarding.new-project.prompt") as string[];
@@ -142,6 +142,7 @@
             placeholder={$_("onboarding.new-project.fields.title.placeholder")}
             bind:value={title}
             required
+            validation={titleValidation}
         />
         {#if state.kind === "error"}
             <p>{state.message}</p>

@@ -42,7 +42,7 @@
             label={$_("auth.confirm-email.success.continue")}
             href={logInUrl}
         />
-    {:else}
+    {:else if error.code === 400}
         <h1 class="text-2xl font-bold">
             {$_("auth.confirm-email.error.title")}
         </h1>
@@ -68,5 +68,7 @@
             label={$_("auth.confirm-email.error.continue")}
             href="/contact-us"
         />
+    {:else if error.code === 500}
+        <p>{$_("auth.confirm-email.error.try-again")}</p>
     {/if}
 </section>

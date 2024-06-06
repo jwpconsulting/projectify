@@ -67,23 +67,23 @@
             await goto(getLogInWithNextUrl(newWorkspaceUrl));
             return;
         }
+        if (error.code === 500) {
+            state = {
+                kind: "error",
+                message: $_("onboarding.new-workspace.errors.general"),
+            };
+            return;
+        }
         workspaceTitleValidation = error.details.title
             ? { ok: false, error: error.details.title }
             : {
                   ok: true,
                   result: $_("onboarding.new-workspace.fields.title.valid"),
               };
-        if (workspaceTitleValidation.ok) {
-            state = {
-                kind: "error",
-                message: $_("onboarding.new-workspace.errors.general"),
-            };
-        } else {
-            state = {
-                kind: "error",
-                message: $_("onboarding.new-workspace.errors.fields"),
-            };
-        }
+        state = {
+            kind: "error",
+            message: $_("onboarding.new-workspace.errors.fields"),
+        };
     }
 </script>
 

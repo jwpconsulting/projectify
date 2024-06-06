@@ -58,8 +58,8 @@
             };
             return;
         }
-        const { data, error } = await logIn(email, password, { fetch });
-        if (data !== undefined) {
+        const { error } = await logIn(email, password, { fetch });
+        if (error === undefined) {
             // TODO redirect to `/{redirectTo}` instead
             // To prevent users not being redirected to third parties
             // SvelteKit's goto sort of addresses this already, it would just
@@ -67,36 +67,30 @@
             // destination restriction
             await goto(redirectTo ?? dashboardUrl);
             return;
-        } else if (error === undefined) {
-            state = { kind: "error", message: $_("auth.log-in.error.other") };
-            return;
         } else if (error.code === 429) {
             state = {
                 kind: "error",
                 message: $_("auth.log-in.error.rate-limit"),
             };
             return;
+        } else if (error.code === 500) {
+            state = { kind: "error", message: $_("auth.log-in.error.other") };
+            return;
         }
         state = {
             kind: "error",
             message: $_("auth.log-in.error.credentials"),
         };
-        emailValidation = undefined;
-        passwordValidation = undefined;
         const { details } = error;
-        if (details.email) {
-            emailValidation = { ok: false, error: details.email };
-        } else {
-            emailValidation = {
-                ok: true,
-                result: $_("auth.log-in.email.valid"),
-            };
-        }
-        if (details.password) {
-            passwordValidation = { ok: false, error: details.password };
-        } else {
-            passwordValidation = { ok: true, result: "" };
-        }
+        emailValidation = details.email
+            ? { ok: false, error: details.email }
+            : (emailValidation = {
+                  ok: true,
+                  result: $_("auth.log-in.email.valid"),
+              });
+        passwordValidation = details.password
+            ? { ok: false, error: details.password }
+            : (passwordValidation = { ok: true, result: "" });
     }
 </script>
 
