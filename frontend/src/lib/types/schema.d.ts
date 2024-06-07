@@ -1328,7 +1328,7 @@ export interface operations {
   /** @description Handle POST. */
   user_user_log_out_create: {
     responses: {
-      204: {
+      200: {
         content: {
           "application/json": components["schemas"]["AnonymousUser"];
         };

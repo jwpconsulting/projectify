@@ -572,9 +572,13 @@ const messages: MessageDirectory = {
             "back-to-homepage": "Back to homepage",
         },
         "logout": {
+            "title": "Log out - Projectify",
             "success": "You have been logged out",
+            "already-logged-out": "You are already logged out",
+            "logging-out": "Logging you out...",
             "log-back-in": "Log in again",
             "landing": "Go to landing",
+            "error": "Could not log you out successfully",
         },
         "log-in": {
             "title": "Log in - Projectify",

@@ -22,6 +22,7 @@ import type { CurrentUser, User } from "$lib/types/user";
 import { dataOrThrow, openApiClient } from "$lib/repository/util";
 import { browser } from "$app/environment";
 import { backOff } from "exponential-backoff";
+import { currentWorkspaces } from "./dashboard/workspace";
 
 const fetchUserBackOff = () =>
     backOff(() => dataOrThrow(openApiClient.GET("/user/user/current-user")));
@@ -61,12 +62,26 @@ export async function logIn(
     return { data, error, response };
 }
 
-export async function logOut(_repositoryContext: RepositoryContext) {
-    const { error, data } = await openApiClient.POST("/user/user/log-out");
-    if (error) {
-        throw new Error("Error when logging out");
+async function _logOut() {
+    const promise = openApiClient.POST("/user/user/log-out");
+    const { data, error } = await promise;
+    if (error?.code === 403) {
+        return { error, data: undefined };
     }
-    _user.set(data);
+    if (error) {
+        throw new Error("Couldn't log out");
+    }
+    return { data, error: undefined };
+}
+
+export async function logOut() {
+    const { data, error } = await backOff(_logOut);
+    // In the future we'd like want to test for 401 here
+    if (data) {
+        _user.set(data);
+    }
+    currentWorkspaces.reset();
+    return { data, error };
 }
 
 export async function updateUserProfile(

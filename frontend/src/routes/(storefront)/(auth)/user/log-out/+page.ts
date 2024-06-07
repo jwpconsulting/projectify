@@ -15,16 +15,21 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { currentWorkspaces } from "$lib/stores/dashboard/workspace";
+import { browser } from "$app/environment";
 import { logOut } from "$lib/stores/user";
 
-import type { PageLoadEvent } from "./$types";
-
-export async function load({ fetch }: PageLoadEvent): Promise<void> {
-    await logOut({ fetch });
-    currentWorkspaces.reset();
+interface Data {
+    result:
+        | "not-browser"
+        | Promise<{
+              error?: { status: "permission_denied"; code: 403 };
+              data?: { kind: "unauthenticated" };
+          }>;
 }
 
-// we can't log out server side
-export const ssr = false;
-export const prerender = false;
+export function load(): Data {
+    if (!browser) {
+        return { result: "not-browser" };
+    }
+    return { result: logOut() };
+}
