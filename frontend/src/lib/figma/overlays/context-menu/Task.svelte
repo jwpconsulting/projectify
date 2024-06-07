@@ -33,7 +33,7 @@
     import { goto } from "$lib/navigation";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
-    import { canMoveTask, moveTask } from "$lib/stores/modules";
+    import { canMoveTask, moveTask } from "$lib/repository/workspace/task";
     import type { ContextMenuType } from "$lib/types/ui";
     import { getTaskUrl, getDashboardSectionUrl } from "$lib/urls";
     import { copyToClipboard } from "$lib/utils/clipboard";

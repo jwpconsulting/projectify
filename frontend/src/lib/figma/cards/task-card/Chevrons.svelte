@@ -24,7 +24,7 @@ Up and down chevrons for task movement within a section
 
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
-    import { moveTask, canMoveTask } from "$lib/stores/modules";
+    import { moveTask, canMoveTask } from "$lib/repository/workspace/task";
     import type {
         SectionWithTasks,
         ProjectDetailTask,
