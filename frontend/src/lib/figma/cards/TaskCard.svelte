@@ -34,7 +34,7 @@
 </script>
 
 <tr
-    class="flex w-full flex-col items-center items-center gap-1 rounded-lg border border-border p-3 lg:contents"
+    class="flex w-full flex-col items-center gap-1 rounded-lg border border-border p-3 lg:contents"
 >
     <td class="contents">
         <Title {task} />

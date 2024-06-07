@@ -26,14 +26,15 @@
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { LabelAssignment } from "$lib/types/stores";
-    import type { ContextMenuType } from "$lib/types/ui";
+    import type { ContextMenuType, FormViewState } from "$lib/types/ui";
     import type { ProjectDetailTask } from "$lib/types/workspace";
 
     export let task: ProjectDetailTask;
 
+    let state: FormViewState = { kind: "start" };
     let labelPickerOpen = false;
-
     let labelAssignment: LabelAssignment;
+
     $: {
         if (!labelPickerOpen) {
             labelAssignment = createLabelAssignment(task);
@@ -77,7 +78,16 @@
 
             const labels = $labelAssignment;
             // TODO skip update when no changes detected
-            await updateTask(task, { ...task, labels });
+            state = { kind: "submitting" };
+            const { error } = await updateTask(task, { ...task, labels });
+            if (error) {
+                state = {
+                    kind: "error",
+                    message: $_("dashboard.task-card.add-label.error"),
+                };
+            } else {
+                state = { kind: "start" };
+            }
         } finally {
             labelPickerOpen = false;
         }
@@ -88,7 +98,9 @@
     $: canUpdate = $currentTeamMemberCan("update", "taskLabel");
 </script>
 
-{#if labels.length}
+{#if state.kind === "submitting"}
+    {$_("dashboard.task-card.add-label.saving")}
+{:else if labels.length}
     <div
         class="flex w-full flex-row items-center justify-start gap-1 self-start overflow-x-auto"
     >
@@ -104,7 +116,7 @@
         class="flex flex-row items-center self-start rounded-full px-4 py-1 font-bold text-primary outline-dashed outline-1 outline-primary focus:outline focus:outline-inherit"
         on:click|preventDefault={openLabelPicker}
     >
-        {$_("dashboard.task-card.add-label")}</button
+        {$_("dashboard.task-card.add-label.label")}</button
     >
 {:else}
     <span />

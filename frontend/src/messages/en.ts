@@ -200,7 +200,11 @@ const messages: MessageDirectory = {
         },
         "task-card": {
             "saving": "Saving",
-            "add-label": "Assign label",
+            "add-label": {
+                label: "Assign label",
+                saving: "Saving",
+                error: "An error happened while saving labels for this task",
+            },
             "assign-team-member": {
                 "assigned":
                     "Currently assigned {name}. Activate to assign to new team member.",
