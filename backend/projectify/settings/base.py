@@ -279,8 +279,22 @@ class Base(Configuration):
     LOGGING = {
         "version": 1,
         "disable_existing_loggers": False,
-        "root": {
-            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+        "formatters": {
+            "like_gunicorn": {
+                "format": "%(levelname)-s [%(module)s] ~ %(message)s",
+            },
+        },
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+                "formatter": "like_gunicorn",
+            },
+        },
+        "loggers": {
+            "": {
+                "handlers": ["console"],
+                "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+            },
         },
     }
 
