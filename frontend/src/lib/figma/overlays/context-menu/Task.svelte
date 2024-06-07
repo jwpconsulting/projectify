@@ -33,30 +33,13 @@
     import { goto } from "$lib/navigation";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
-    import { moveToBottom, getTaskPosition } from "$lib/stores/modules";
+    import { canMoveTask, moveTask } from "$lib/repository/workspace/task";
     import type { ContextMenuType } from "$lib/types/ui";
     import { getTaskUrl, getDashboardSectionUrl } from "$lib/urls";
     import { copyToClipboard } from "$lib/utils/clipboard";
     import { openApiClient } from "$lib/repository/util";
-    import type { Section } from "$lib/types/workspace";
 
     export let kind: ContextMenuType & { kind: "task" };
-
-    async function moveTaskToSection({
-        uuid,
-    }: Pick<Section, "uuid">): Promise<void> {
-        const { error } = await openApiClient.POST(
-            "/workspace/task/{task_uuid}/move-to-section",
-            {
-                params: { path: { task_uuid: kind.task.uuid } },
-                body: { section_uuid: uuid },
-            },
-        );
-        if (error === undefined) {
-            return;
-        }
-        throw new Error("Could not move task to section");
-    }
 
     async function promptDeleteTask() {
         if (kind.location !== "dashboard") {
@@ -84,23 +67,11 @@
         moveToSectionOpened = !moveToSectionOpened;
     }
 
-    $: taskPosition =
-        kind.location === "dashboard"
-            ? getTaskPosition(kind.section, kind.task)
-            : undefined;
-    $: canMoveTask = $currentTeamMemberCan("update", "task");
-    $: showMoveTop =
-        taskPosition && taskPosition.kind !== "start" && canMoveTask;
-    $: showMoveBottom =
-        taskPosition &&
-        (taskPosition.kind === "start"
-            ? !taskPosition.isOnly
-            : taskPosition.kind !== "end") &&
-        canMoveTask;
+    $: canMove = $currentTeamMemberCan("update", "task");
 </script>
 
 <Layout>
-    {#if kind.location === "dashboard" && canMoveTask}
+    {#if kind.location === "dashboard" && canMove}
         <ContextMenuButton
             kind={{
                 kind: "a",
@@ -125,26 +96,35 @@
                     label={section.title}
                     kind={{
                         kind: "button",
-                        action: moveTaskToSection.bind(null, section),
+                        action: moveTask.bind(null, kind.task, {
+                            kind: "section",
+                            section,
+                        }),
                     }}
                 />
             {/each}
         {/if}
-        {#if showMoveTop}
+        {#if canMoveTask( kind.task, { kind: "top", section: kind.section }, ) && canMove}
             <ContextMenuButton
                 kind={{
                     kind: "button",
-                    action: moveTaskToSection.bind(null, kind.section),
+                    action: moveTask.bind(null, kind.task, {
+                        kind: "top",
+                        section: kind.section,
+                    }),
                 }}
                 label={$_("overlay.context-menu.task.move-to-top")}
                 icon={SortAscending}
             />
         {/if}
-        {#if showMoveBottom}
+        {#if canMoveTask( kind.task, { kind: "bottom", section: kind.section }, ) && canMove}
             <ContextMenuButton
                 kind={{
                     kind: "button",
-                    action: moveToBottom.bind(null, kind.section, kind.task),
+                    action: moveTask.bind(null, kind.task, {
+                        kind: "bottom",
+                        section: kind.section,
+                    }),
                 }}
                 label={$_("overlay.context-menu.task.move-to-bottom")}
                 icon={SortDescending}

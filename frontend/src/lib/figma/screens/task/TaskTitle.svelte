@@ -32,7 +32,7 @@
     style={{ inputType: "text" }}
     bind:value={title}
     label={undefined}
-    placeholder={$_("task-screen.new-task-name")}
+    placeholder={$_("task-screen.form.title.placeholder")}
     onClick={onInteract}
     {readonly}
     required

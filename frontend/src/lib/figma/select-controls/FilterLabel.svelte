@@ -34,15 +34,6 @@
 
     const id = self.crypto.randomUUID();
 
-    function click() {
-        checked = !checked;
-        if (checked) {
-            onCheck();
-        } else {
-            onUncheck();
-        }
-    }
-
     async function onDelete() {
         if (label.kind !== "label") {
             throw new Error("Expected label");
@@ -62,9 +53,8 @@
     }
 </script>
 
-<button
-    class="group flex w-full flex-row items-center justify-between px-5 hover:bg-base-200"
-    on:click={click}
+<div
+    class="group flex w-full flex-row items-center justify-between px-5 hover:bg-background"
 >
     <div class="flex min-w-0 flex-row items-center gap-2">
         <SelectLabelCheckBox
@@ -108,4 +98,4 @@
             />
         {/if}
     </div>
-</button>
+</div>

@@ -15,8 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Projectify middlewares."""
-
 import asyncio
+import logging
 import random
 from collections.abc import Awaitable
 from typing import Callable, Optional
@@ -105,6 +105,9 @@ def CsrfTrustedOriginsOriginValidator(application: ASGIHandler) -> ASGIHandler:
     return OriginValidator(application, origins)
 
 
+logger = logging.getLogger(__name__)
+
+
 @async_only_middleware
 def microsloth(get_response: AsyncGetResponse) -> AsyncGetResponse:
     """Simulate a slow connection."""
@@ -129,12 +132,13 @@ def errorsloth(get_response: GetResponse) -> GetResponse:
         """Process the request."""
         if settings.ERROR_RATE_PCT is None:
             return get_response(request)
-        if 0 <= random.randint(0, 100) <= settings.ERROR_RATE_PCT:
+        if random.randint(1, 100) <= settings.ERROR_RATE_PCT:
             response = exception_handler(
                 exceptions.APIException("You have been slothed"),
                 {},
             )
             assert response
+            logger.info("Returning error error")
             return JsonResponse(
                 data=response.data, status=response.status_code
             )
@@ -142,3 +146,34 @@ def errorsloth(get_response: GetResponse) -> GetResponse:
         return get_response(request)
 
     return process_request
+
+
+class ErrorChannelator(ASGIHandler):
+    """
+    Randomly interrupt requests while they are running.
+
+    Useful for interrupting long websocket connections.
+    """
+
+    application: ASGIHandler
+
+    def __init__(self, application: ASGIHandler):
+        """Initialize with application."""
+        self.application = application
+
+    async def __call__(
+        self, scope: object, receive: object, send: object
+    ) -> None:
+        """Wait a few seconds, then crash."""
+        if settings.CHANNEL_ERROR is None:
+            return await self.application(scope, receive, send)
+        timeout, pct = settings.CHANNEL_ERROR
+        crash = random.randint(1, 100) <= pct
+        if not crash:
+            return await self.application(scope, receive, send)
+        try:
+            return await asyncio.wait_for(
+                self.application(scope, receive, send), timeout=timeout
+            )
+        except TimeoutError:
+            logger.info("Crashing channel")

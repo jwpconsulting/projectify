@@ -15,7 +15,6 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 import Accessiblity from "./en/accessibility.md?raw";
 import BasicsHelpPage from "./en/help/basics.md?raw";
 import BillingHelpPage from "./en/help/billing.md?raw";
@@ -199,16 +198,25 @@ const messages: MessageDirectory = {
             "add-section": "Add section",
         },
         "task-card": {
-            "add-label": "Assign label",
+            "saving": "Saving",
+            "add-label": {
+                label: "Assign label",
+                saving: "Saving",
+                error: "An error happened while saving labels for this task",
+            },
             "assign-team-member": {
                 "assigned":
                     "Currently assigned {name}. Activate to assign to new team member.",
                 "not-assigned":
-                    "Currently not assigned. Activate to assign to team meber.",
+                    "Currently not assigned. Activate to assign to team member.",
+                "error":
+                    "An error happened while saving the team member assignment.",
+                "saving": "Saving",
             },
             "task-number": "#{number}",
             "move-up": "Move task up",
             "move-down": "Move task down",
+            "move-error": "Could not move task",
             "open-context-menu": "Open context menu",
         },
         "search": {
@@ -696,6 +704,11 @@ const messages: MessageDirectory = {
         "update": {
             "update": "Update task",
             "update-continue-editing": "Update task and stay",
+            "errors": {
+                general:
+                    "The server returned an error when updating this task",
+                field: "Please check the fields for any errors and try updating again.",
+            },
         },
         "create": {
             "create": "Create task",
@@ -711,6 +724,9 @@ const messages: MessageDirectory = {
             "add-sub-task": {
                 button: "Add sub task",
             },
+            "valid": "Sub tasks look good",
+            "invalid":
+                "There has been a problem with these sub tasks: {error}",
             "move-up": "Move sub task up",
             "move-down": "Move sub task down",
             "remove": "Remove sub task",
@@ -718,15 +734,34 @@ const messages: MessageDirectory = {
             "enter-a-subtask": "Enter a subtask",
         },
         "new-task-breadcrumb": "New task (currently creating)",
-        // TODO organize this as "form": {} with labels and placeholders
-        "new-task-name": "New task name",
-        "description": "Description",
-        "labels": "Labels",
-        "select-due-date": "Select due date",
-        "due-date": "Due date",
+        "form": {
+            "title": {
+                label: "Task title",
+                placeholder: "Task title",
+                valid: "Valid title",
+            },
+            "description": {
+                label: "Description",
+                placeholder: "Enter a description for your task",
+                valid: "Description is valid",
+            },
+            "labels": {
+                label: "Labels",
+                valid: "Labels are valid",
+                invalid: "Invalid labels: {error}",
+            },
+            "due-date": {
+                label: "Due date",
+                placeholder: "Select due date",
+                valid: "Valid due date",
+            },
+            "assignee": {
+                label: "Assignee",
+                valid: "Valid assignee",
+                invalid: "Invalid assignee: {error}",
+            },
+        },
         "edit": "Edit",
-        "task-title": "Task title",
-        "assignee": "Assignee",
         "confirm-navigate-away": {
             create: "You are editing an unsaved new task. Are you sure you want to navigate away and discard your changes?",
             update: "You are editing a task. Are you sure you want to navigate away and discard your changes?",

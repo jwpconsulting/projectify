@@ -23,13 +23,14 @@
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { createTeamMemberAssignment } from "$lib/stores/dashboard/teamMemberAssignment";
     import { openContextMenu } from "$lib/stores/globalUi";
-    import type { ContextMenuType } from "$lib/types/ui";
+    import type { ContextMenuType, FormViewState } from "$lib/types/ui";
     import { getDisplayName } from "$lib/types/user";
     import type { ProjectDetailTask } from "$lib/types/workspace";
 
     export let task: ProjectDetailTask;
 
     let userPickerBtnRef: HTMLElement;
+    let state: FormViewState = { kind: "start" };
 
     $: teamMemberAssignment = createTeamMemberAssignment(task);
 
@@ -45,27 +46,43 @@
         // XXX need to investigate what happens when sub tasks change while
         // the user picker is open. Possibly, a sub task can be deleted if
         // it is added
-        await updateTask(task, { ...task, assignee: teamMember });
+        state = { kind: "submitting" };
+        const { error } = await updateTask(task, {
+            ...task,
+            assignee: teamMember,
+        });
+        if (error) {
+            state = {
+                kind: "error",
+                message: $_("dashboard.task-card.assign-team-member.error"),
+            };
+        } else {
+            state = { kind: "start" };
+        }
     }
 
     $: canUpdate = $currentTeamMemberCan("update", "task");
 </script>
 
-<button
-    bind:this={userPickerBtnRef}
-    on:click|preventDefault={canUpdate ? openUserPicker : undefined}
->
-    <AvatarVariant
-        content={{ kind: "single", user: assignee?.user }}
-        size="medium"
-    />
-    <div class="sr-only">
-        {#if assignee}
-            {$_("dashboard.task-card.assign-team-member.assigned", {
-                values: { name: getDisplayName(assignee.user) },
-            })}
-        {:else}
-            {$_("dashboard.task-card.assign-team-member.not-assigned")}
-        {/if}
-    </div>
-</button>
+{#if state.kind === "submitting"}
+    {$_("dashboard.task-card.assign-team-member.saving")}
+{:else}
+    <button
+        bind:this={userPickerBtnRef}
+        on:click|preventDefault={canUpdate ? openUserPicker : undefined}
+    >
+        <AvatarVariant
+            content={{ kind: "single", user: assignee?.user }}
+            size="medium"
+        />
+        <div class="sr-only">
+            {#if assignee}
+                {$_("dashboard.task-card.assign-team-member.assigned", {
+                    values: { name: getDisplayName(assignee.user) },
+                })}
+            {:else}
+                {$_("dashboard.task-card.assign-team-member.not-assigned")}
+            {/if}
+        </div>
+    </button>
+{/if}

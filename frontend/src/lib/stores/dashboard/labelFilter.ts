@@ -32,7 +32,6 @@ export const selectedLabels = writable<LabelSelection>({ kind: "allLabels" });
 
 export function filterByLabel(selection: LabelSelectionInput) {
     selectedLabels.update((selectedLabels) => {
-        console.log(selection, selectedLabels);
         if (selection.kind == "label") {
             if (selectedLabels.kind === "labels") {
                 selectedLabels.labelUuids.add(selection.labelUuid);

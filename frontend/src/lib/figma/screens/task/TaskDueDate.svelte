@@ -32,7 +32,7 @@
     <InputField
         bind:value={dueDate}
         label={undefined}
-        placeholder={$_("task-screen.select-due-date")}
+        placeholder={$_("task-screen.form.due-date.placeholder")}
         name="due-date"
         style={{ inputType: "date" }}
         onClick={onInteract}

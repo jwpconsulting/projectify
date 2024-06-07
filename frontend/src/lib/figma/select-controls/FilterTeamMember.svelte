@@ -16,7 +16,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    // TODO rename FilterTeamMember
     import { _ } from "svelte-i18n";
 
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
@@ -31,21 +30,11 @@
     export let onSelect: () => void;
     export let onDeselect: () => void;
 
-    function click() {
-        active = !active;
-        if (active) {
-            onSelect();
-        } else {
-            onDeselect();
-        }
-    }
-
     const id = self.crypto.randomUUID();
 </script>
 
-<button
+<div
     class="group flex w-full flex-row justify-between px-5 py-2 hover:bg-background"
-    on:click={click}
 >
     <div class="flex min-w-0 flex-row items-center gap-2">
         <div class="shrink-0">
@@ -91,4 +80,4 @@
     >
         {count}
     </div>
-</button>
+</div>
