@@ -15,7 +15,10 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+import { redirect } from "@sveltejs/kit";
 import type { LayoutLoadEvent } from "./$types";
+import { currentUserAwaitable } from "$lib/stores/user";
+import { dashboardUrl } from "$lib/urls/dashboard";
 
 interface Data {
     redirectTo: string | undefined;
@@ -24,8 +27,13 @@ interface Data {
 export const prerender = false;
 export const ssr = false;
 
-export function load({ url }: LayoutLoadEvent): Data {
+export async function load({ url }: LayoutLoadEvent): Promise<Data> {
+    // TODO might want to default to dashboardUrl here with redirectTo
     const redirectTo = url.searchParams.get("next") ?? undefined;
+    const user = await currentUserAwaitable();
+    if (user.kind === "authenticated") {
+        redirect(302, redirectTo ?? dashboardUrl);
+    }
     return {
         redirectTo,
     };

@@ -22,6 +22,7 @@ import { dataOrThrow, openApiClient } from "$lib/repository/util";
 import { browser } from "$app/environment";
 import { backOff } from "exponential-backoff";
 import { currentWorkspaces } from "./dashboard/workspace";
+import type { Unsubscriber } from "svelte/motion";
 
 const fetchUserBackOff = () =>
     backOff(() => dataOrThrow(openApiClient.GET("/user/user/current-user")));
@@ -44,12 +45,15 @@ export const currentUser = readonly(_user);
  */
 export const currentUserAwaitable = () =>
     new Promise<CurrentUser>((resolve) => {
-        const unsub = currentUser.subscribe((user) => {
+        let unsub: Unsubscriber | undefined = undefined;
+        unsub = currentUser.subscribe((user) => {
             if (user.kind === "start") {
                 return;
             }
             resolve(user);
+            if (unsub) {
             unsub();
+            }
         });
     });
 
