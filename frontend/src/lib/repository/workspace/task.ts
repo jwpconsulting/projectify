@@ -144,18 +144,14 @@ function getTaskPosition(
 async function moveTaskAfterTask(
     task: Pick<Task, "uuid">,
     { uuid }: Pick<Task, "uuid">,
-): Promise<void> {
-    const { error } = await openApiClient.POST(
+) {
+    return await openApiClient.POST(
         "/workspace/task/{task_uuid}/move-after-task",
         {
             params: { path: { task_uuid: task.uuid } },
             body: { task_uuid: uuid },
         },
     );
-    if (error === undefined) {
-        return;
-    }
-    throw new Error("Could not move task after task");
 }
 
 async function moveToBottom(
@@ -167,7 +163,7 @@ async function moveToBottom(
     if (lastTask === undefined) {
         throw new Error("Expected lastTask");
     }
-    await moveTaskAfterTask(task, lastTask);
+    return await moveTaskAfterTask(task, lastTask);
 }
 
 async function moveUp(
@@ -183,7 +179,7 @@ async function moveUp(
         tasks.at(position.position - 1),
         "Expected prevTask",
     );
-    await moveTaskAfterTask(task, prevTask);
+    return await moveTaskAfterTask(task, prevTask);
 }
 
 async function moveDown(
@@ -199,24 +195,20 @@ async function moveDown(
         tasks.at(position.position + 1),
         "Expected nextTask",
     );
-    await moveTaskAfterTask(task, nextTask);
+    return await moveTaskAfterTask(task, nextTask);
 }
 
 async function moveTaskToSection(
     { uuid }: Pick<Section, "uuid">,
     task: Pick<Task, "uuid">,
-): Promise<void> {
-    const { error } = await openApiClient.POST(
+) {
+    return await openApiClient.POST(
         "/workspace/task/{task_uuid}/move-to-section",
         {
             params: { path: { task_uuid: task.uuid } },
             body: { section_uuid: uuid },
         },
     );
-    if (error === undefined) {
-        return;
-    }
-    throw new Error("Could not move task to section");
 }
 
 type MoveTaskWhere =

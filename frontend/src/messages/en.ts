@@ -199,6 +199,7 @@ const messages: MessageDirectory = {
             "add-section": "Add section",
         },
         "task-card": {
+            "saving": "Saving",
             "add-label": "Assign label",
             "assign-team-member": {
                 "assigned":
@@ -209,6 +210,7 @@ const messages: MessageDirectory = {
             "task-number": "#{number}",
             "move-up": "Move task up",
             "move-down": "Move task down",
+            "move-error": "Could not move task",
             "open-context-menu": "Open context menu",
         },
         "search": {
