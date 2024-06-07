@@ -27,16 +27,16 @@ export async function getSection(
     section_uuid: string,
     _repositoryContext?: RepositoryContext,
 ): Promise<SectionDetail | undefined> {
-    const { response, data } = await openApiClient.GET(
+    const { error, data } = await openApiClient.GET(
         "/workspace/section/{section_uuid}",
         { params: { path: { section_uuid } } },
     );
-    if (response.status === 404) {
+    if (error?.code === 404) {
         return undefined;
     }
-    if (response.ok) {
+    if (data) {
         return data;
     }
-    console.error(await response.json());
+    console.error(error);
     throw new Error("Could not fetch section");
 }

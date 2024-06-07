@@ -37,17 +37,18 @@
 
     async function onSubmit() {
         state = { kind: "submitting" };
-        const { response, data } = await openApiClient.PUT(
+        const { error } = await openApiClient.PUT(
             "/workspace/project/{project_uuid}",
             {
                 params: { path: { project_uuid: project.uuid } },
                 body: { ...project, title },
             },
         );
-        if (data === undefined) {
+        if (error) {
+            // TODO format error
             state = {
                 kind: "error",
-                message: JSON.stringify(await response.json()),
+                message: JSON.stringify(error),
             };
         } else {
             resolveConstructiveOverlay();
