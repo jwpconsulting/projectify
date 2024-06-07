@@ -39,6 +39,19 @@ const _user = writable<CurrentUser>({ kind: "start" }, (set) => {
         );
 });
 export const currentUser = readonly(_user);
+/**
+ * This will never resolve when not run in browser
+ */
+export const currentUserAwaitable = () =>
+    new Promise<CurrentUser>((resolve) => {
+        const unsub = currentUser.subscribe((user) => {
+            if (user.kind === "start") {
+                return;
+            }
+            resolve(user);
+            unsub();
+        });
+    });
 
 export async function logIn(email: string, password: string) {
     const { response, data, error } = await openApiClient.POST(
