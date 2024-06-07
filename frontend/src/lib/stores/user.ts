@@ -17,8 +17,7 @@
  */
 import { readonly, writable } from "svelte/store";
 
-import type { RepositoryContext } from "$lib/types/repository";
-import type { CurrentUser, User } from "$lib/types/user";
+import type { CurrentUser } from "$lib/types/user";
 import { dataOrThrow, openApiClient } from "$lib/repository/util";
 import { browser } from "$app/environment";
 import { backOff } from "exponential-backoff";
@@ -41,11 +40,7 @@ const _user = writable<CurrentUser>({ kind: "start" }, (set) => {
 });
 export const currentUser = readonly(_user);
 
-export async function logIn(
-    email: string,
-    password: string,
-    _repositoryContext: RepositoryContext,
-) {
+export async function logIn(email: string, password: string) {
     const { response, data, error } = await openApiClient.POST(
         "/user/user/log-in",
         {
@@ -84,9 +79,7 @@ export async function logOut() {
     return { data, error };
 }
 
-export async function updateUserProfile(
-    preferred_name: string | null,
-): Promise<User> {
+export async function updateUserProfile(preferred_name: string | null) {
     const { data, error } = await openApiClient.PUT(
         "/user/user/current-user",
         { body: { preferred_name } },
