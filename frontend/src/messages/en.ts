@@ -209,7 +209,10 @@ const messages: MessageDirectory = {
                 "assigned":
                     "Currently assigned {name}. Activate to assign to new team member.",
                 "not-assigned":
-                    "Currently not assigned. Activate to assign to team meber.",
+                    "Currently not assigned. Activate to assign to team member.",
+                "error":
+                    "An error happened while saving the team member assignment.",
+                "saving": "Saving",
             },
             "task-number": "#{number}",
             "move-up": "Move task up",
