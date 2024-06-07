@@ -22,16 +22,17 @@ import type {
     Task,
     SectionWithTasks,
     ProjectDetailTask,
+    Section,
 } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
 
 type TaskPosition =
-    | { kind: "start"; position: 0; isOnly: boolean }
-    | { kind: "within"; position: number }
-    | { kind: "end"; position: number }
-    | { kind: "outside" };
+    | { kind: "top"; position: 0; isOnly: boolean }
+    | { kind: "within"; position: number; isOnly: false }
+    | { kind: "bottom"; position: number; isOnly: false }
+    | { kind: "outside"; isOnly: undefined };
 
-export function getTaskPosition(
+function getTaskPosition(
     section: SectionWithTasks,
     task: Pick<Task, "uuid">,
 ): TaskPosition {
@@ -40,13 +41,13 @@ export function getTaskPosition(
     const lastIndex = tasks.length - 1;
     switch (taskIndex) {
         case -1:
-            return { kind: "outside" };
+            return { kind: "outside", isOnly: undefined };
         case 0:
-            return { kind: "start", position: 0, isOnly: tasks.length === 1 };
+            return { kind: "top", position: 0, isOnly: tasks.length === 1 };
         case lastIndex:
-            return { kind: "end", position: lastIndex };
+            return { kind: "bottom", position: lastIndex, isOnly: false };
         default:
-            return { kind: "within", position: taskIndex };
+            return { kind: "within", position: taskIndex, isOnly: false };
     }
 }
 
@@ -67,7 +68,7 @@ async function moveTaskAfterTask(
     throw new Error("Could not move task after task");
 }
 
-export async function moveToBottom(
+async function moveToBottom(
     section: SectionWithTasks,
     task: Pick<Task, "uuid">,
 ) {
@@ -79,14 +80,14 @@ export async function moveToBottom(
     await moveTaskAfterTask(task, lastTask);
 }
 
-export async function moveUp(
+async function moveUp(
     section: SectionWithTasks,
-    task: ProjectDetailTask,
+    task: Pick<ProjectDetailTask, "uuid">,
 ) {
     const { tasks } = section;
     const position = getTaskPosition(section, task);
-    if (!(position.kind === "within" || position.kind === "end")) {
-        throw new Error("Expected task to be within or at end");
+    if (!(position.kind === "within" || position.kind === "bottom")) {
+        throw new Error("Expected task to be within or at bottom");
     }
     const prevTask = unwrap(
         tasks.at(position.position - 1),
@@ -95,13 +96,13 @@ export async function moveUp(
     await moveTaskAfterTask(task, prevTask);
 }
 
-export async function moveDown(
+async function moveDown(
     section: SectionWithTasks,
-    task: ProjectDetailTask,
+    task: Pick<ProjectDetailTask, "uuid">,
 ) {
     const position = getTaskPosition(section, task);
-    if (!(position.kind === "start" || position.kind === "within")) {
-        throw new Error("Expected task to be at start or within");
+    if (!(position.kind === "top" || position.kind === "within")) {
+        throw new Error("Expected task to be at top or within");
     }
     const tasks = unwrap(section.tasks, "Expected tasks");
     const nextTask = unwrap(
@@ -109,4 +110,67 @@ export async function moveDown(
         "Expected nextTask",
     );
     await moveTaskAfterTask(task, nextTask);
+}
+
+async function moveTaskToSection(
+    { uuid }: Pick<Section, "uuid">,
+    task: Pick<Task, "uuid">,
+): Promise<void> {
+    const { error } = await openApiClient.POST(
+        "/workspace/task/{task_uuid}/move-to-section",
+        {
+            params: { path: { task_uuid: task.uuid } },
+            body: { section_uuid: uuid },
+        },
+    );
+    if (error === undefined) {
+        return;
+    }
+    throw new Error("Could not move task to section");
+}
+
+type MoveTaskWhere =
+    | { kind: "top"; section: SectionWithTasks }
+    | { kind: "up"; section: SectionWithTasks }
+    | { kind: "down"; section: SectionWithTasks }
+    | { kind: "bottom"; section: SectionWithTasks }
+    | { kind: "section"; section: SectionWithTasks };
+
+export function canMoveTask(
+    task: Pick<Task, "uuid">,
+    { kind, section }: MoveTaskWhere,
+) {
+    if (kind === "section") {
+        return true;
+    }
+    const pos = getTaskPosition(section, task);
+    if (pos.isOnly) {
+        return false;
+    }
+    switch (kind) {
+        case "top":
+        case "up":
+            return pos.kind !== "top";
+        case "down":
+        case "bottom":
+            return pos.kind !== "bottom";
+    }
+}
+
+export async function moveTask(
+    task: Pick<Task, "uuid">,
+    { kind, section }: MoveTaskWhere,
+) {
+    switch (kind) {
+        case "top":
+            return await moveTaskToSection(section, task);
+        case "up":
+            return await moveUp(section, task);
+        case "down":
+            return await moveDown(section, task);
+        case "bottom":
+            return await moveToBottom(section, task);
+        case "section":
+            return await moveTaskToSection(section, task);
+    }
 }

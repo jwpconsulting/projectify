@@ -24,7 +24,7 @@ Up and down chevrons for task movement within a section
 
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
-    import { getTaskPosition, moveUp, moveDown } from "$lib/stores/modules";
+    import { moveTask, canMoveTask } from "$lib/stores/modules";
     import type {
         SectionWithTasks,
         ProjectDetailTask,
@@ -33,18 +33,7 @@ Up and down chevrons for task movement within a section
     export let task: ProjectDetailTask;
     export let section: SectionWithTasks;
 
-    let upDisabled = true;
-    let downDisabled = true;
     $: canMove = $currentTeamMemberCan("update", "task");
-    $: {
-        const position = getTaskPosition(section, task);
-        upDisabled = position.kind === "start" || !canMove;
-        // If we are the only task, we don't want to show the down chevron.
-        downDisabled =
-            (position.kind === "start"
-                ? position.isOnly
-                : position.kind === "end") || !canMove;
-    }
 </script>
 
 <div class="flex flex-row items-center gap-1">
@@ -53,8 +42,8 @@ Up and down chevrons for task movement within a section
         icon="up"
         action={{
             kind: "button",
-            action: () => moveUp(section, task),
-            disabled: upDisabled,
+            action: () => moveTask(task, { kind: "up", section }),
+            disabled: !canMoveTask(task, { kind: "up", section }) || !canMove,
         }}
         ariaLabel={$_("dashboard.task-card.move-up")}
     />
@@ -63,8 +52,9 @@ Up and down chevrons for task movement within a section
         icon="down"
         action={{
             kind: "button",
-            action: () => moveDown(section, task),
-            disabled: downDisabled,
+            action: () => moveTask(task, { kind: "down", section }),
+            disabled:
+                !canMoveTask(task, { kind: "down", section }) || !canMove,
         }}
         ariaLabel={$_("dashboard.task-card.move-down")}
     />

@@ -151,8 +151,8 @@ class Development(SpectacularSettings, Base):
     }
 
     # Settings for slow connection emulation
-    SLEEP_MIN_MAX_MS = 500, 1500
-    ERROR_RATE_PCT = 25
+    SLEEP_MIN_MAX_MS = 200, 500
+    ERROR_RATE_PCT = 50
 
     @classmethod
     def pre_setup(cls) -> None:
