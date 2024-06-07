@@ -23,7 +23,7 @@ executors:
           POSTGRES_PASSWORD: projectify
   node:
     docker:
-       - image: cimg/node:20.11.0
+       - image: cimg/node:20.14.0
          environment:
            VITE_PROJECTIFY_DOMAIN: "https://www.projectifyapp.com/"
 commands:

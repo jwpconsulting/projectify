@@ -38,7 +38,9 @@
 <section class="flex flex-col">
     <SectionTitle {project} {section} {open} />
     {#if open}
-        <div class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4">
+        <table
+            class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4 lg:grid lg:grid-cols-[8fr_3fr_max-content] lg:gap-4"
+        >
             {#each section.tasks as task (task.uuid)}
                 <TaskCard {project} {task} {section} />
             {:else}
@@ -51,6 +53,6 @@
                     />
                 </p>
             {/each}
-        </div>
+        </table>
     {/if}
 </section>

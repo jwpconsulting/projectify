@@ -50,8 +50,8 @@ export async function load({
                     error(500, "Unable to fetch workspaces");
                 }
             })
-            .catch((error) =>
-                console.error(`Error when fetching workspaces: ${error}`),
+            .catch((error: unknown) =>
+                console.error("Error when fetching workspaces:", error),
             );
 
         return { user };

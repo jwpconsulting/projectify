@@ -17,39 +17,44 @@
  */
 import { openApiClient } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
-import type { Workspace, WorkspaceDetail } from "$lib/types/workspace";
+import type { Workspace } from "$lib/types/workspace";
 
 // Read
 export async function getWorkspaces(
     _repositoryContext?: RepositoryContext,
 ): Promise<Workspace[]> {
-    const { response, data } = await openApiClient.GET(
+    const { error, data } = await openApiClient.GET(
         "/workspace/workspace/user-workspaces/",
     );
+    if (error?.code === 500) {
+        console.error("Could not retrieve workspaces, retrying");
+        throw new Error();
+    }
     if (data) {
         return data;
     }
-    throw new Error(
-        `Could not retrieve workspaces ${JSON.stringify(
-            await response.json(),
-        )}`,
-    );
+    throw new Error(`Could not retrieve workspaces ${JSON.stringify(error)}`);
 }
 
 export async function getWorkspace(
     workspace_uuid: string,
     _repositoryContext?: RepositoryContext,
-): Promise<WorkspaceDetail> {
-    const { response, data } = await openApiClient.GET(
+) {
+    const { error, data } = await openApiClient.GET(
         "/workspace/workspace/{workspace_uuid}",
-        { params: { path: { workspace_uuid } } },
+        {
+            params: { path: { workspace_uuid } },
+        },
     );
-    if (data) {
-        return data;
+    if (error?.code === 404) {
+        return undefined;
     }
-    throw new Error(
-        `Could not retrieve workspace ${workspace_uuid}, ${JSON.stringify(
-            await response.json(),
-        )}`,
-    );
+    if (error) {
+        throw new Error(
+            `Error when retrieving workspace ${workspace_uuid} ${JSON.stringify(
+                error,
+            )}`,
+        );
+    }
+    return data;
 }

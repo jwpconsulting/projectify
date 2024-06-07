@@ -53,7 +53,7 @@ export function keepFocusInside(inside: HTMLElement): () => void {
         } else if (following) {
             first.focus();
         } else {
-            throw new Error(`Unexpected position ${position}`);
+            throw new Error(`Unexpected position ${position.toString()}`);
         }
     };
     document.addEventListener("focusin", listener);

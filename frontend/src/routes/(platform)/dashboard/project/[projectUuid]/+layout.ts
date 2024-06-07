@@ -58,9 +58,11 @@ export function load({
                         );
                     }
                 })
-                .catch((error) =>
+                .catch((error: unknown) =>
                     console.error(
-                        `Something went very wrong when fetching workspace ${workspaceUuid}: ${error}`,
+                        "Something went very wrong when fetching workspace",
+                        workspaceUuid,
+                        error,
                     ),
                 );
             return project;

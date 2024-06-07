@@ -98,6 +98,13 @@
             };
             return;
         }
+        if (error.code === 500) {
+            state = {
+                kind: "error",
+                message: $_("auth.sign-up.error.generic"),
+            };
+            return;
+        }
         const { details } = error;
         emailValidation = undefined;
         passwordValidation = undefined;
@@ -117,17 +124,10 @@
                 result: $_("auth.sign-up.password.valid"),
             };
         }
-        if (emailValidation.ok && passwordValidation.ok) {
-            state = {
-                kind: "error",
-                message: $_("auth.sign-up.error.generic"),
-            };
-        } else {
-            state = {
-                kind: "error",
-                message: $_("auth.sign-up.error.field"),
-            };
-        }
+        state = {
+            kind: "error",
+            message: $_("auth.sign-up.error.field"),
+        };
     }
 </script>
 

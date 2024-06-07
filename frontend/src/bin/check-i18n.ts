@@ -32,9 +32,9 @@ import type { Message, MessageCollection } from "$messages/types";
 function buildMessageStrings(collection: MessageCollection): string[] {
     const concatenateStrings = (parent: string, msg: Message): string[] => {
         if (typeof msg === "string") {
-            return [`${parent}`];
+            return [parent];
         } else if (Array.isArray(msg)) {
-            return [`${parent}`];
+            return [parent];
         } else {
             return Object.entries(msg).flatMap(([subParent, v]) =>
                 concatenateStrings(`${parent}.${subParent}`, v),

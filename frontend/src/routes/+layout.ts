@@ -19,20 +19,12 @@ import "$lib/stores/globalUi";
 
 import "$lib/i18n";
 
-import { locale } from "svelte-i18n";
-
-import { browser } from "$app/environment";
 import { overrideClient } from "$lib/repository/util";
 import type { LayoutLoadEvent } from "./$types";
 
-export async function load({ fetch }: LayoutLoadEvent) {
+export function load({ fetch }: LayoutLoadEvent) {
     overrideClient(fetch);
 
-    if (browser) {
-        await Promise.all([locale.set(window.navigator.language)]);
-        return;
-    }
-    // TODO add waitLocale await here
     return;
 }
 

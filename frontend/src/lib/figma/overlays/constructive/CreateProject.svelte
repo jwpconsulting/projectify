@@ -42,7 +42,7 @@
         if (!title) {
             throw new Error("Not valid");
         }
-        const { response, data } = await openApiClient.POST(
+        const { data, error } = await openApiClient.POST(
             "/workspace/project/",
             {
                 body: {
@@ -52,14 +52,14 @@
                 },
             },
         );
-        if (data !== undefined) {
+        if (data) {
             await goto(getDashboardProjectUrl(data));
             resolveConstructiveOverlay();
         } else {
             // TODO format error
             state = {
                 kind: "error",
-                message: JSON.stringify(await response.json()),
+                message: JSON.stringify(error),
             };
         }
     }

@@ -76,15 +76,36 @@
             await goto(resetPasswordUrl);
             return;
         }
-        if (error.details.new_password) {
-            password1Validation = {
-                ok: false,
-                error: error.details.new_password,
+        if (error.code === 500) {
+            state = {
+                kind: "error",
+                message: $_("auth.confirm-password-reset.errors.general"),
             };
+            return;
+        }
+        const { details } = error;
+        password1Validation = password2Validation = details.new_password
+            ? {
+                  ok: false,
+                  error: details.new_password,
+              }
+            : {
+                  ok: true,
+                  result: $_(
+                      "auth.confirm-password-reset.password-1.validation.valid",
+                  ),
+              };
+        // TODO polish this error
+        if (details.token) {
+            throw new Error("Token was incorrect");
+        }
+        // TODO polish this error
+        if (details.email) {
+            throw new Error("Email was incorrect");
         }
         state = {
             kind: "error",
-            message: $_("auth.confirm-password-reset.error"),
+            message: $_("auth.confirm-password-reset.errors.field"),
         };
     }
 </script>

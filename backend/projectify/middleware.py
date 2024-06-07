@@ -23,11 +23,13 @@ from typing import Callable, Optional
 
 from django.core.exceptions import ImproperlyConfigured
 from django.core.handlers.asgi import ASGIHandler
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.utils.decorators import async_only_middleware
 
 from channels.security.websocket import OriginValidator
+from rest_framework import exceptions
 
+from projectify.lib.exception_handler import exception_handler
 from projectify.lib.settings import get_settings
 
 GetResponse = Callable[[HttpRequest], HttpResponse]
@@ -116,5 +118,27 @@ def microsloth(get_response: AsyncGetResponse) -> AsyncGetResponse:
         sleep_dur = random.randrange(min, max) / 1000
         await asyncio.sleep(sleep_dur)
         return response
+
+    return process_request
+
+
+def errorsloth(get_response: GetResponse) -> GetResponse:
+    """Simulate an unreliable connection. Trigger error before response."""
+
+    def process_request(request: HttpRequest) -> HttpResponse:
+        """Process the request."""
+        if settings.ERROR_RATE_PCT is None:
+            return get_response(request)
+        if 0 <= random.randint(0, 100) <= settings.ERROR_RATE_PCT:
+            response = exception_handler(
+                exceptions.APIException("You have been slothed"),
+                {},
+            )
+            assert response
+            return JsonResponse(
+                data=response.data, status=response.status_code
+            )
+
+        return get_response(request)
 
     return process_request

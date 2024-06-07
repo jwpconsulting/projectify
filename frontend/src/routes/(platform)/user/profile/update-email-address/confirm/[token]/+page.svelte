@@ -56,23 +56,23 @@
             await goto(getLogInWithNextUrl(window.location.href));
             return;
         }
-        const { details } = error;
-        if (details.confirmation_token) {
-            state = {
-                kind: "token-error",
-                message: $_(
-                    "user-account-settings.update-email-address.confirm.error.confirmation-token",
-                    { values: { error: details.confirmation_token } },
-                ),
-            };
-        } else {
+        if (error.code === 500) {
             state = {
                 kind: "error",
                 message: $_(
                     "user-account-settings.update-email-address.confirm.error.general",
                 ),
             };
+            return;
         }
+        const { details } = error;
+        state = {
+            kind: "token-error",
+            message: $_(
+                "user-account-settings.update-email-address.confirm.error.confirmation-token",
+                { values: { error: details.confirmation_token } },
+            ),
+        };
     });
 </script>
 

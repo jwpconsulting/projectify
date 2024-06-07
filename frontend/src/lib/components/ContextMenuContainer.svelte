@@ -192,8 +192,8 @@
             contextMenuLeft,
             contextMenuTop,
         });
-        contextMenu.style.left = `${contextMenuLeft}px`;
-        contextMenu.style.top = `${contextMenuTop}px`;
+        contextMenu.style.left = `${contextMenuLeft.toString()}px`;
+        contextMenu.style.top = `${contextMenuTop.toString()}px`;
     }
 </script>
 

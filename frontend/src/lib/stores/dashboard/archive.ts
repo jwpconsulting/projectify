@@ -46,7 +46,7 @@ export const currentArchivedProjects = derived<
                 }
                 set(data);
             })
-            .catch((error: Error) => {
+            .catch((error: unknown) => {
                 console.error(
                     "An error happened when retrieving currentArchivedProjects",
                     { error },

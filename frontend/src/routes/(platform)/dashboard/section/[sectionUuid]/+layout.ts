@@ -45,11 +45,13 @@ export async function load({
         project.workspace,
         "Expected workspace",
     );
-    currentWorkspace.loadUuid(workspaceUuid, { fetch }).catch((reason) => {
-        console.error(
-            "Tried to load currentWorkspace in background, but failed with",
-            reason,
-        );
-    });
+    currentWorkspace
+        .loadUuid(workspaceUuid, { fetch })
+        .catch((reason: unknown) => {
+            console.error(
+                "Tried to load currentWorkspace in background, but failed with",
+                reason,
+            );
+        });
     return { section };
 }

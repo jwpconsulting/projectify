@@ -69,6 +69,15 @@
             await goto(getLogInWithNextUrl(updateEmailAddressUrl));
             return;
         }
+        if (error.code === 500) {
+            state = {
+                kind: "error",
+                message: $_(
+                    "user-account-settings.update-email-address.error.general",
+                ),
+            };
+            return;
+        }
         const { details } = error;
         if (details.password === undefined) {
             passwordValidation = {
@@ -96,21 +105,12 @@
                 error: details.new_email,
             };
         }
-        if (passwordValidation.ok && newEmailValidation.ok) {
-            state = {
-                kind: "error",
-                message: $_(
-                    "user-account-settings.update-email-address.error.general",
-                ),
-            };
-        } else {
-            state = {
-                kind: "error",
-                message: $_(
-                    "user-account-settings.update-email-address.error.field",
-                ),
-            };
-        }
+        state = {
+            kind: "error",
+            message: $_(
+                "user-account-settings.update-email-address.error.field",
+            ),
+        };
     }
 </script>
 

@@ -218,6 +218,13 @@ class TooManyRequestsSerializer(serializers.Serializer):
     code = serializers.ChoiceField(choices=[429], source="status_code")
 
 
+class InternalServerErrorSerializer(serializers.Serializer):
+    """Serialize 429 too many requests error."""
+
+    status = serializers.ChoiceField(choices=["error"], source="default_code")
+    code = serializers.ChoiceField(choices=[500], source="status_code")
+
+
 # TODO find out what ctx is
 def exception_handler(
     exception: HandledException, ctx: object
@@ -269,12 +276,10 @@ def exception_handler(
                 status=status.HTTP_429_TOO_MANY_REQUESTS, data=serialized
             )
         case drf_exceptions.APIException():
-            logger.error(
-                "DRF API Exception: %s with type %s not yet handled",
-                exception,
-                type(exception),
+            serialized = InternalServerErrorSerializer(exception).data
+            return Response(
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR, data=serialized
             )
-            result = exception
         case Exception():
             logger.error("Unhandleable exception: %s", exception)
             result = exception

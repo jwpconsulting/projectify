@@ -246,6 +246,21 @@ export interface components {
          * @enum {string}
          */
         ForbiddenStatusEnum: "permission_denied";
+        /** @description Serialize 429 too many requests error. */
+        InternalServerError: {
+            status: components["schemas"]["InternalServerErrorStatusEnum"];
+            code: components["schemas"]["InternalServerErrorCodeEnum"];
+        };
+        /**
+         * @description * `500` - 500
+         * @enum {integer}
+         */
+        InternalServerErrorCodeEnum: 500;
+        /**
+         * @description * `error` - error
+         * @enum {string}
+         */
+        InternalServerErrorStatusEnum: "error";
         /** @description Accept email. */
         InviteUserToWorkspace: {
             /** Format: email */
@@ -835,9 +850,10 @@ export interface operations {
             400: {
                 content: never;
             };
-            /** @description No response body */
             500: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
             };
         };
     };
@@ -862,6 +878,11 @@ export interface operations {
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
                 };
             };
         };
@@ -911,6 +932,11 @@ export interface operations {
                     "application/json": components["schemas"]["NotFound"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Handle GET. */
@@ -934,6 +960,11 @@ export interface operations {
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
                 };
             };
         };
@@ -982,6 +1013,11 @@ export interface operations {
                     "application/json": components["schemas"]["NotFound"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Handle POST. */
@@ -1024,6 +1060,11 @@ export interface operations {
                     "application/json": components["schemas"]["TooManyRequests"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Handle POST. */
@@ -1054,6 +1095,11 @@ export interface operations {
                         /** @enum {string} */
                         status: "invalid";
                     };
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
                 };
             };
         };
@@ -1089,6 +1135,11 @@ export interface operations {
                     };
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Handle GET. */
@@ -1097,6 +1148,11 @@ export interface operations {
             200: {
                 content: {
                     "application/json": components["schemas"]["auth_info"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
                 };
             };
         };
@@ -1129,6 +1185,11 @@ export interface operations {
                         /** @enum {string} */
                         status: "invalid";
                     };
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
                 };
             };
         };
@@ -1165,6 +1226,11 @@ export interface operations {
             403: {
                 content: {
                     "application/json": components["schemas"]["Forbidden"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
                 };
             };
         };
@@ -1209,6 +1275,11 @@ export interface operations {
                     "application/json": components["schemas"]["TooManyRequests"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Handle POST. */
@@ -1247,6 +1318,11 @@ export interface operations {
                     "application/json": components["schemas"]["TooManyRequests"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Handle POST. */
@@ -1262,6 +1338,11 @@ export interface operations {
                     "application/json": components["schemas"]["Forbidden"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Return all information about current password policy. */
@@ -1270,6 +1351,11 @@ export interface operations {
             200: {
                 content: {
                     "application/json": components["schemas"]["PasswordPolicies"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
                 };
             };
         };
@@ -1306,6 +1392,11 @@ export interface operations {
                     "application/json": components["schemas"]["Forbidden"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Handle POST. */
@@ -1340,6 +1431,11 @@ export interface operations {
             429: {
                 content: {
                     "application/json": components["schemas"]["TooManyRequests"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
                 };
             };
         };
@@ -1381,6 +1477,11 @@ export interface operations {
                     "application/json": components["schemas"]["TooManyRequests"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Create the label. */
@@ -1418,6 +1519,11 @@ export interface operations {
             403: {
                 content: {
                     "application/json": components["schemas"]["Forbidden"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
                 };
             };
         };
@@ -1468,6 +1574,11 @@ export interface operations {
                     "application/json": components["schemas"]["NotFound"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Handle DELETE. */
@@ -1490,6 +1601,11 @@ export interface operations {
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
                 };
             };
         };
@@ -1532,6 +1648,11 @@ export interface operations {
                     "application/json": components["schemas"]["Forbidden"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Handle GET. */
@@ -1555,6 +1676,11 @@ export interface operations {
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
                 };
             };
         };
@@ -1606,6 +1732,11 @@ export interface operations {
                     "application/json": components["schemas"]["NotFound"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Handle DELETE. */
@@ -1628,6 +1759,11 @@ export interface operations {
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
                 };
             };
         };
@@ -1676,6 +1812,11 @@ export interface operations {
                     "application/json": components["schemas"]["NotFound"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Create a section. */
@@ -1715,6 +1856,11 @@ export interface operations {
                     "application/json": components["schemas"]["Forbidden"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Handle GET. */
@@ -1738,6 +1884,11 @@ export interface operations {
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
                 };
             };
         };
@@ -1788,6 +1939,11 @@ export interface operations {
                     "application/json": components["schemas"]["NotFound"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Handle DELETE. */
@@ -1810,6 +1966,11 @@ export interface operations {
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
                 };
             };
         };
@@ -1853,9 +2014,15 @@ export interface operations {
                     "application/json": components["schemas"]["Forbidden"];
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
             };
         };
     };
@@ -1913,6 +2080,11 @@ export interface operations {
                     "application/json": components["schemas"]["Forbidden"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Handle GET. */
@@ -1936,6 +2108,11 @@ export interface operations {
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
                 };
             };
         };
@@ -2005,6 +2182,11 @@ export interface operations {
                     "application/json": components["schemas"]["NotFound"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Delete task. */
@@ -2027,6 +2209,11 @@ export interface operations {
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
                 };
             };
         };
@@ -2076,6 +2263,11 @@ export interface operations {
                     "application/json": components["schemas"]["NotFound"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Process the request. */
@@ -2123,6 +2315,11 @@ export interface operations {
                     "application/json": components["schemas"]["NotFound"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Handle GET. */
@@ -2146,6 +2343,11 @@ export interface operations {
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
                 };
             };
         };
@@ -2196,6 +2398,11 @@ export interface operations {
                     "application/json": components["schemas"]["NotFound"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Handle DELETE. */
@@ -2218,6 +2425,11 @@ export interface operations {
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
                 };
             };
         };
@@ -2258,6 +2470,11 @@ export interface operations {
                     "application/json": components["schemas"]["Forbidden"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Handle GET. */
@@ -2278,9 +2495,15 @@ export interface operations {
                     "application/json": components["schemas"]["Forbidden"];
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
             };
         };
     };
@@ -2330,6 +2553,11 @@ export interface operations {
                     "application/json": components["schemas"]["NotFound"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Get queryset. */
@@ -2353,6 +2581,11 @@ export interface operations {
             404: {
                 content: {
                     "application/json": components["schemas"]["NotFound"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
                 };
             };
         };
@@ -2402,6 +2635,11 @@ export interface operations {
                     "application/json": components["schemas"]["NotFound"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Handle POST. */
@@ -2446,6 +2684,11 @@ export interface operations {
                     "application/json": components["schemas"]["NotFound"];
                 };
             };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
+            };
         };
     };
     /** @description Handle POST. */
@@ -2487,9 +2730,15 @@ export interface operations {
                     "application/json": components["schemas"]["Forbidden"];
                 };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
+                };
             };
         };
     };
@@ -2504,6 +2753,11 @@ export interface operations {
             403: {
                 content: {
                     "application/json": components["schemas"]["Forbidden"];
+                };
+            };
+            500: {
+                content: {
+                    "application/json": components["schemas"]["InternalServerError"];
                 };
             };
         };

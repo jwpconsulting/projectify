@@ -36,21 +36,21 @@
 
     async function onSubmit() {
         state = { kind: "submitting" };
-        const { response } = await openApiClient.POST(
+        const { error } = await openApiClient.POST(
             "/workspace/project/{project_uuid}/archive",
             {
                 params: { path: { project_uuid: project.uuid } },
                 body: { archived: false },
             },
         );
-        if (response.ok) {
+        if (error === undefined) {
             resolveConstructiveOverlay();
             await goto(getDashboardProjectUrl(project));
         } else {
             state = {
                 kind: "error",
                 message: $_("overlay.constructive.recover-project.error", {
-                    values: { details: JSON.stringify(await response.json()) },
+                    values: { details: JSON.stringify(error) },
                 }),
             };
         }

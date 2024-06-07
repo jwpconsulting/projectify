@@ -177,7 +177,7 @@ class SectionMove(APIView):
 
     @extend_schema(
         request=SectionMoveSerializer,
-        responses={200: None, 400: DeriveSchema, 404: None},
+        responses={200: None, 400: DeriveSchema},
     )
     def post(self, request: Request, section_uuid: UUID) -> Response:
         """Process request."""

@@ -56,19 +56,22 @@
             };
             return;
         }
-        const { details } = error;
-        if (details.email) {
-            emailValidation = { ok: false, error: details.email };
-            state = {
-                kind: "error",
-                message: $_("auth.request-password-reset.error.validation"),
-            };
-        } else {
+        if (error.code === 500) {
             state = {
                 kind: "error",
                 message: $_("auth.request-password-reset.error.generic"),
             };
+            return;
         }
+        const { details } = error;
+        emailValidation = details.email
+            ? { ok: false, error: details.email }
+            : undefined;
+
+        state = {
+            kind: "error",
+            message: $_("auth.request-password-reset.error.validation"),
+        };
     }
 </script>
 

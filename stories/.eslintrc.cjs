@@ -28,12 +28,7 @@ module.exports = {
         "plugin:storybook/recommended",
         "plugin:@typescript-eslint/recommended",
     ],
-    plugins: [
-        "@typescript-eslint",
-        "unused-imports",
-        "import",
-        "eslint-plugin-tsdoc",
-    ],
+    plugins: ["@typescript-eslint", "import", "eslint-plugin-tsdoc"],
     parser: "@typescript-eslint/parser",
     parserOptions: {
         project: ["./tsconfig.json"],
@@ -92,7 +87,6 @@ module.exports = {
     },
     rules: {
         "prefer-const": "error",
-        "unused-imports/no-unused-imports": "error",
         "import/no-unresolved": "off",
         "import/first": "error",
         "import/newline-after-import": "error",

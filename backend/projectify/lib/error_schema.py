@@ -30,6 +30,7 @@ from rest_framework.views import APIView
 
 from projectify.lib.exception_handler import (
     ForbiddenSerializer,
+    InternalServerErrorSerializer,
     NotFoundSerializer,
     TooManyRequestsSerializer,
 )
@@ -212,7 +213,7 @@ def maybe_annotate_404(method: ViewMethod, d: ResponsesDict) -> None:
     if not has_view_args(method):
         return
     if status.HTTP_404_NOT_FOUND in d:
-        return
+        raise ValueError(f"404 serializer was already specified in {method}")
     d[status.HTTP_404_NOT_FOUND] = NotFoundSerializer
 
 
@@ -221,6 +222,13 @@ def maybe_annotate_429(d: ResponsesDict) -> None:
     if d.get(status.HTTP_429_TOO_MANY_REQUESTS) is not DeriveSchema:
         return
     d[status.HTTP_429_TOO_MANY_REQUESTS] = TooManyRequestsSerializer
+
+
+def annotate_500(d: ResponsesDict) -> None:
+    """Annotate 500."""
+    if status.HTTP_500_INTERNAL_SERVER_ERROR in d:
+        raise ValueError("Must not specify 500 serializer")
+    d[status.HTTP_500_INTERNAL_SERVER_ERROR] = InternalServerErrorSerializer
 
 
 def has_view_args(c: ViewMethod) -> bool:
@@ -287,5 +295,6 @@ def preprocess_derive_error_schemas(endpoints: Endpoints) -> Endpoints:
         maybe_annotate_403(view_class, responses_dict)
         maybe_annotate_404(method, responses_dict)
         maybe_annotate_429(responses_dict)
+        annotate_500(responses_dict)
 
     return endpoints

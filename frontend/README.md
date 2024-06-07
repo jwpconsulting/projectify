@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- Node >= v20.11.1
+- Node >= v20.14.0
 
 ## Quickstart
 

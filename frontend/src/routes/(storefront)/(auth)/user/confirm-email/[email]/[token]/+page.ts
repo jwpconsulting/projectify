@@ -17,11 +17,14 @@
  */
 import { openApiClient } from "$lib/repository/util";
 
-import type { PageLoadEvent } from "./$types";
-
-export async function load({ params: { email, token } }: PageLoadEvent) {
-    const { error } = await openApiClient.POST("/user/user/confirm-email", {
+export async function load({
+    params: { email, token },
+}: {
+    params: { email: string; token: string };
+}) {
+    const result = await openApiClient.POST("/user/user/confirm-email", {
         body: { email, token },
     });
+    const error: (typeof result)["error"] = result.error;
     return { error };
 }

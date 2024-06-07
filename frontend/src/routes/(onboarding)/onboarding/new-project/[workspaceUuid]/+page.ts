@@ -30,7 +30,9 @@ export async function load({
     workspace: Workspace;
     project?: ProjectDetail;
 }> {
-    const workspace = await getWorkspace(workspaceUuid, { fetch });
+    const workspace = await getWorkspace(workspaceUuid, {
+        fetch,
+    });
     if (!workspace) {
         error(404, `No workspace could be found for UUID '${workspaceUuid}'`);
     }

@@ -17,7 +17,8 @@
  */
 import vars from "$lib/env";
 import { getCookie } from "$lib/utils/cookie";
-import createClient, { type Middleware } from "openapi-fetch";
+import createClient from "openapi-fetch";
+import type { Middleware } from "openapi-fetch";
 
 import type { paths } from "$lib/types/schema";
 
@@ -51,4 +52,32 @@ function createClientCustom(fetch?: typeof global.fetch) {
     client.use(csrfMiddleWare);
     return client;
 }
-export let openApiClient = createClientCustom();
+
+type Client = ReturnType<typeof createClient<paths>>;
+
+export let openApiClient: Client = createClientCustom();
+
+// https://github.com/drwpow/openapi-typescript/issues/1687
+// thx
+export async function dataOrThrow<TData, TResponse, TError>(
+    apiResponse: Promise<{
+        response: TResponse;
+        data?: TData;
+        error?: TError;
+    }>,
+): Promise<{
+    data: TData;
+}> {
+    const { data, error } = await apiResponse;
+    if (error !== undefined || data === undefined) {
+        console.error("hit error", error);
+        const exc = error
+            ? new Error(JSON.stringify(error))
+            : new Error("No data");
+        throw exc;
+    }
+
+    return {
+        data: data,
+    };
+}

@@ -106,4 +106,6 @@
     >
         {$_("dashboard.task-card.add-label")}</button
     >
+{:else}
+    <span />
 {/if}

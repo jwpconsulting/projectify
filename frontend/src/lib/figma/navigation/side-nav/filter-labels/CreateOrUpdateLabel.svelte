@@ -106,12 +106,20 @@
             );
             return;
         }
-        if (error.details.name !== undefined) {
-            labelNameValidation = { ok: false, error: error.details.name };
+        if (error.code === 500) {
+            editState = {
+                kind: "error",
+                message: $_("dashboard.side-nav.filter-labels.errors.general"),
+            };
+            return;
         }
-        if (error.details.color !== undefined) {
-            chosenColorValidation = { ok: false, error: error.details.color };
-        }
+        const { details } = error;
+        labelNameValidation = details.name
+            ? { ok: false, error: details.name }
+            : undefined;
+        chosenColorValidation = details.color
+            ? { ok: false, error: details.color }
+            : undefined;
         editState = {
             kind: "error",
             message: $_("dashboard.side-nav.filter-labels.errors.create"),

@@ -137,19 +137,17 @@
             kind: "archiveProject",
             project,
         });
-        // await repoArchiveProject(project, true, { fetch });
-        const { response } = await openApiClient.POST(
+        const { error } = await openApiClient.POST(
             "/workspace/project/{project_uuid}/archive",
             {
                 params: { path: { project_uuid: project.uuid } },
                 body: { archived: true },
             },
         );
-        if (!response.ok) {
+        if (error) {
+            // TODO error handling
             throw new Error(
-                `Could not archive project: ${JSON.stringify(
-                    await response.json(),
-                )}`,
+                `Could not archive project: ${JSON.stringify(error)}`,
             );
         }
         await goto(getArchiveUrl(workspace));

@@ -75,7 +75,7 @@
                 .then((mod) => {
                     pikaday = mod.default;
                 })
-                .catch(console.error);
+                .catch((error: unknown) => console.error(error));
         }
     });
     onMount(() => {

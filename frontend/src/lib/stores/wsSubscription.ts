@@ -27,6 +27,7 @@ import type {
 } from "$lib/types/stores";
 
 import { browser } from "$app/environment";
+import { backOff } from "exponential-backoff";
 
 function makeAbsoluteUrl(url: string): string {
     if (!url.startsWith("/")) {
@@ -296,7 +297,7 @@ export function createWsStore<T>(
 
     const stop = () => {
         console.debug("Stopping");
-        resetAndUnsubscribe().catch((error) =>
+        resetAndUnsubscribe().catch((error: unknown) =>
             console.error("Error when resetting", error),
         );
     };
@@ -342,7 +343,7 @@ export function createWsStore<T>(
             set(undefined);
         }
         // Fetch value early, since we need it either way
-        const newValue = await getter(uuid, repositoryContext);
+        const newValue = await backOff(() => getter(uuid, repositoryContext));
         // Then, when we find out we have already initialized for this uuid,
         // we can skip the queue and return early without cleaning up an
         // existing subscription.

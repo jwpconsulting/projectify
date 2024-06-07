@@ -46,7 +46,7 @@ export const currentCustomer: CurrentCustomer = derived<
             }
             set(data);
         })
-        .catch((error: Error) => {
+        .catch((error: unknown) => {
             console.error(
                 "An error happened when fetching the currentCustomer",
                 { error },

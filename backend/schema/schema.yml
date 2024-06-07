@@ -19,7 +19,11 @@ paths:
         '400':
           description: No response body
         '500':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
   /corporate/workspace/{workspace_uuid}/create-billing-portal-session:
     post:
       operationId: corporate_workspace_create_billing_portal_session_create
@@ -53,6 +57,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
   /corporate/workspace/{workspace_uuid}/create-checkout-session:
     post:
@@ -131,6 +141,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFound'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
   /corporate/workspace/{workspace_uuid}/customer:
     get:
       operationId: corporate_workspace_customer_retrieve
@@ -164,6 +180,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
   /corporate/workspace/{workspace_uuid}/redeem-coupon:
     post:
@@ -238,6 +260,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFound'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
   /user/user/change-password:
     post:
       operationId: user_user_change_password_create
@@ -306,6 +334,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Forbidden'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
   /user/user/confirm-email:
     post:
       operationId: user_user_confirm_email_create
@@ -362,6 +396,12 @@ paths:
                 - details
                 - general
                 - status
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
   /user/user/confirm-password-reset:
     post:
@@ -422,6 +462,12 @@ paths:
                 - general
                 - status
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
   /user/user/current-user:
     get:
       operationId: user_user_current_user_retrieve
@@ -437,6 +483,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/auth_info'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
     put:
       operationId: user_user_current_user_update
@@ -494,6 +546,12 @@ paths:
                 - details
                 - general
                 - status
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
   /user/user/email-address-update/confirm:
     post:
@@ -554,6 +612,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Forbidden'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
   /user/user/email-address-update/request:
     post:
@@ -623,6 +687,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Forbidden'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
   /user/user/log-in:
     post:
       operationId: user_user_log_in_create
@@ -690,6 +760,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/TooManyRequests'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
   /user/user/log-out:
     post:
       operationId: user_user_log_out_create
@@ -711,6 +787,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Forbidden'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
   /user/user/password-policy:
     get:
       operationId: user_user_password_policy_retrieve
@@ -726,6 +808,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PasswordPolicies'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
   /user/user/profile-picture/upload:
     post:
@@ -779,6 +867,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Forbidden'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
   /user/user/request-password-reset:
     post:
@@ -840,6 +934,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TooManyRequests'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
   /user/user/sign-up:
     post:
@@ -908,6 +1008,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/TooManyRequests'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
   /workspace/label/:
     post:
       operationId: workspace_label_create
@@ -975,6 +1081,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Forbidden'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
   /workspace/label/{label_uuid}:
     put:
@@ -1055,6 +1167,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFound'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
     delete:
       operationId: workspace_label_destroy
       description: Handle DELETE.
@@ -1083,6 +1201,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
   /workspace/project/:
     post:
@@ -1154,6 +1278,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Forbidden'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
   /workspace/project/{project_uuid}:
     get:
       operationId: workspace_project_retrieve
@@ -1187,6 +1317,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
     put:
       operationId: workspace_project_update
@@ -1268,6 +1404,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFound'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
     delete:
       operationId: workspace_project_destroy
       description: Handle DELETE.
@@ -1296,6 +1438,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
   /workspace/project/{project_uuid}/archive:
     post:
@@ -1370,6 +1518,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFound'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
   /workspace/section/:
     post:
       operationId: workspace_section_create
@@ -1438,6 +1592,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Forbidden'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
   /workspace/section/{section_uuid}:
     get:
       operationId: workspace_section_retrieve
@@ -1471,6 +1631,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
     put:
       operationId: workspace_section_update
@@ -1550,6 +1716,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFound'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
     delete:
       operationId: workspace_section_destroy
       description: Handle DELETE.
@@ -1578,6 +1750,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
   /workspace/section/{section_uuid}/move:
     post:
@@ -1640,13 +1818,23 @@ paths:
                 - general
                 - status
           description: ''
-        '404':
-          description: No response body
         '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Forbidden'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
   /workspace/task/:
     post:
@@ -1750,6 +1938,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Forbidden'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
   /workspace/task/{task_uuid}:
     get:
       operationId: workspace_task_retrieve
@@ -1783,6 +1977,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
     put:
       operationId: workspace_task_update
@@ -1896,6 +2096,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFound'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
     delete:
       operationId: workspace_task_destroy
       description: Delete task.
@@ -1924,6 +2130,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
   /workspace/task/{task_uuid}/move-after-task:
     post:
@@ -2002,6 +2214,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFound'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
   /workspace/task/{task_uuid}/move-to-section:
     post:
       operationId: workspace_task_move_to_section_create
@@ -2079,6 +2297,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFound'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
   /workspace/team-member/{team_member_uuid}:
     get:
       operationId: workspace_team_member_retrieve
@@ -2112,6 +2336,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
     put:
       operationId: workspace_team_member_update
@@ -2190,6 +2420,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFound'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
     delete:
       operationId: workspace_team_member_destroy
       description: Handle DELETE.
@@ -2218,6 +2454,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
   /workspace/workspace/:
     post:
@@ -2285,6 +2527,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Forbidden'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
   /workspace/workspace/{workspace_uuid}:
     get:
       operationId: workspace_workspace_retrieve
@@ -2307,13 +2555,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/WorkspaceDetail'
           description: ''
-        '404':
-          description: No response body
         '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Forbidden'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
     put:
       operationId: workspace_workspace_update
@@ -2393,6 +2651,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFound'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
   /workspace/workspace/{workspace_uuid}/archived-projects/:
     get:
       operationId: workspace_workspace_archived_projects_list
@@ -2428,6 +2692,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
   /workspace/workspace/{workspace_uuid}/invite-team-member:
     post:
@@ -2506,6 +2776,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFound'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
   /workspace/workspace/{workspace_uuid}/picture-upload:
     post:
       operationId: workspace_workspace_picture_upload_create
@@ -2572,6 +2848,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFound'
           description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          description: ''
   /workspace/workspace/{workspace_uuid}/uninvite-team-member:
     post:
       operationId: workspace_workspace_uninvite_team_member_create
@@ -2633,13 +2915,23 @@ paths:
                 - general
                 - status
           description: ''
-        '404':
-          description: No response body
         '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Forbidden'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
   /workspace/workspace/user-workspaces/:
     get:
@@ -2663,6 +2955,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Forbidden'
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
           description: ''
 components:
   schemas:
@@ -2785,6 +3083,27 @@ components:
       - permission_denied
       type: string
       description: '* `permission_denied` - permission_denied'
+    InternalServerError:
+      type: object
+      description: Serialize 429 too many requests error.
+      properties:
+        status:
+          $ref: '#/components/schemas/InternalServerErrorStatusEnum'
+        code:
+          $ref: '#/components/schemas/InternalServerErrorCodeEnum'
+      required:
+      - code
+      - status
+    InternalServerErrorCodeEnum:
+      enum:
+      - 500
+      type: integer
+      description: '* `500` - 500'
+    InternalServerErrorStatusEnum:
+      enum:
+      - error
+      type: string
+      description: '* `error` - error'
     InviteUserToWorkspace:
       type: object
       description: Accept email.
