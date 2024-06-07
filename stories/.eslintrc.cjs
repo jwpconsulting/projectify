@@ -28,11 +28,7 @@ module.exports = {
         "plugin:storybook/recommended",
         "plugin:@typescript-eslint/recommended",
     ],
-    plugins: [
-        "@typescript-eslint",
-        "import",
-        "eslint-plugin-tsdoc",
-    ],
+    plugins: ["@typescript-eslint", "import", "eslint-plugin-tsdoc"],
     parser: "@typescript-eslint/parser",
     parserOptions: {
         project: ["./tsconfig.json"],
