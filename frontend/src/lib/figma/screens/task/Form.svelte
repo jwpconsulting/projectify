@@ -16,12 +16,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import { _ } from "svelte-i18n";
     import Fields from "$lib/figma/screens/task/Fields.svelte";
-    import TaskDescription from "$lib/figma/screens/task/TaskDescription.svelte";
-    import TaskDueDate from "$lib/figma/screens/task/TaskDueDate.svelte";
     import TaskLabel from "$lib/figma/screens/task/TaskLabel.svelte";
-    import TaskTitle from "$lib/figma/screens/task/TaskTitle.svelte";
     import TaskUser from "$lib/figma/screens/task/TaskUser.svelte";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import type { InputFieldValidation } from "$lib/funabashi/types";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type {
         LabelAssignment,
@@ -34,12 +34,18 @@
     export let action: () => void;
 
     export let title: string | undefined;
+    export let titleValidation: InputFieldValidation | undefined;
     export let description: string | null;
+    export let descriptionValidation: string | undefined;
     export let dueDate: string | null;
+    export let dueDateValidation: InputFieldValidation | undefined;
 
     export let teamMemberAssignment: TeamMemberAssignment;
+    export let teamMemberAssignmentValidation: string | undefined;
     export let labelAssignment: LabelAssignment;
+    export let labelAssignmentValidation: string | undefined;
     export let subTaskAssignment: SubTaskAssignment;
+    export let subTaskAssignmentValidation: string | undefined;
 
     async function showUpdateTeamMember(anchor: HTMLElement) {
         await openContextMenu(
@@ -64,19 +70,58 @@
 <form on:submit|preventDefault={action} id="task-form">
     <input type="submit" class="hidden" />
     <Fields>
-        <TaskTitle slot="title" bind:title />
-        <TaskUser
-            slot="assignee"
-            onInteract={showUpdateTeamMember}
-            teamMember={$teamMemberAssignment}
+        <InputField
+            slot="title"
+            name="title"
+            style={{ inputType: "text" }}
+            bind:value={title}
+            label={undefined}
+            placeholder={$_("task-screen.form.title.placeholder")}
+            required
+            validation={titleValidation}
         />
-        <TaskLabel
-            slot="labels"
-            onInteract={showUpdateLabel}
-            labels={$labelAssignment ?? []}
-        />
-        <TaskDueDate slot="due-date" bind:dueDate />
-        <TaskDescription slot="description" bind:description />
+        <svelte:fragment slot="assignee">
+            <TaskUser
+                onInteract={showUpdateTeamMember}
+                teamMember={$teamMemberAssignment}
+            />
+            {#if teamMemberAssignmentValidation}<p>
+                    {teamMemberAssignmentValidation}
+                </p>{/if}
+        </svelte:fragment>
+        <svelte:fragment slot="labels">
+            <TaskLabel
+                onInteract={showUpdateLabel}
+                labels={$labelAssignment ?? []}
+            />
+            {#if labelAssignmentValidation}<p>
+                    {labelAssignmentValidation}
+                </p>{/if}
+        </svelte:fragment>
+        <svelte:fragment slot="due-date">
+            <div class="flex flex-row items-center gap-4">
+                <InputField
+                    bind:value={dueDate}
+                    label={undefined}
+                    placeholder={$_("task-screen.form.due-date.placeholder")}
+                    name="due-date"
+                    style={{ inputType: "date" }}
+                    validation={dueDateValidation}
+                />
+            </div>
+        </svelte:fragment>
+        <svelte:fragment slot="description">
+            <textarea
+                class="w-full rounded-lg border border-border p-2"
+                rows="5"
+                name="description"
+                id="description"
+                bind:value={description}
+                placeholder={$_("task-screen.form.description.placeholder")}
+            />
+            {#if descriptionValidation}<p>{descriptionValidation}</p>{/if}
+        </svelte:fragment>
     </Fields>
+    {#if subTaskAssignmentValidation}<p>{subTaskAssignmentValidation}</p>{/if}
     <UpdateSubTasks {subTaskAssignment} />
 </form>

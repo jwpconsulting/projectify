@@ -35,7 +35,7 @@ It would be best if we use regular InputFields with labels. TODO
         <tr class={rowClass}>
             <th scope="row" class={leftSideClass}>
                 <label for="title">
-                    {$_("task-screen.task-title")}
+                    {$_("task-screen.form.title.label")}
                 </label>
             </th>
             <td class={rightSideClass}>
@@ -45,7 +45,7 @@ It would be best if we use regular InputFields with labels. TODO
         <tr class={rowClass}>
             <th scope="row" class={leftSideClass}>
                 <label for="assignee">
-                    {$_("task-screen.assignee")}
+                    {$_("task-screen.form.assignee.label")}
                 </label>
             </th>
             <td class={rightSideClass}>
@@ -54,9 +54,9 @@ It would be best if we use regular InputFields with labels. TODO
         </tr>
         <tr class={rowClass}>
             <th scope="row" class={leftSideClass}>
-                <label for="labels">
-                    {$_("task-screen.labels")}
-                </label>
+                <label for="labels"
+                    >{$_("task-screen.form.labels.label")}</label
+                >
             </th>
             <td class={rightSideClass}>
                 <slot name="labels" />
@@ -64,9 +64,9 @@ It would be best if we use regular InputFields with labels. TODO
         </tr>
         <tr class={rowClass}>
             <th scope="row" class={leftSideClass}>
-                <label for="due-date">
-                    {$_("task-screen.due-date")}
-                </label>
+                <label for="due-date"
+                    >{$_("task-screen.form.due-date.label")}</label
+                >
             </th>
             <td class={rightSideClass}>
                 <slot name="due-date" />
@@ -75,7 +75,7 @@ It would be best if we use regular InputFields with labels. TODO
         <tr class={rowClass}>
             <th scope="row" class={leftSideClass}>
                 <label for="description">
-                    {$_("task-screen.description")}
+                    {$_("task-screen.form.description.label")}
                 </label>
             </th>
             <td class={rightSideClass}>

@@ -32,7 +32,7 @@
         name="description"
         id="description"
         bind:value={description}
-        placeholder={$_("task-screen.description")}
+        placeholder={$_("task-screen.form.description.placeholder")}
         {readonly}
     />
     {#if readonly}

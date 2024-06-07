@@ -168,11 +168,17 @@
         <Form
             action={action.bind(null, false)}
             {teamMemberAssignment}
+            teamMemberAssignmentValidation={undefined}
             {labelAssignment}
+            labelAssignmentValidation={undefined}
             {subTaskAssignment}
+            subTaskAssignmentValidation={undefined}
             bind:title
+            titleValidation={undefined}
             bind:dueDate
+            dueDateValidation={undefined}
             bind:description
+            descriptionValidation={undefined}
         />
     </svelte:fragment>
 </Layout>
