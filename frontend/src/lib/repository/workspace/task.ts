@@ -92,7 +92,7 @@ export async function updateTask(
         due_date: string | null;
         sub_tasks: readonly CreateUpdateSubTask[];
     },
-): Promise<components["schemas"]["TaskDetail"]> {
+) {
     const { uuid: task_uuid } = task;
     const body: components["schemas"]["TaskUpdate"] = {
         ...updateData,
@@ -106,14 +106,10 @@ export async function updateTask(
             }),
         ],
     };
-    const { data } = await openApiClient.PUT("/workspace/task/{task_uuid}", {
+    return await openApiClient.PUT("/workspace/task/{task_uuid}", {
         params: { path: { task_uuid } },
         body,
     });
-    if (data !== undefined) {
-        return data;
-    }
-    throw new Error();
 }
 
 type TaskPosition =

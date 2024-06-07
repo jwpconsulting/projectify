@@ -26,7 +26,7 @@
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { goto } from "$lib/navigation";
-    import { updateTask as performUpdateTask } from "$lib/repository/workspace/task";
+    import { updateTask } from "$lib/repository/workspace/task";
     import { createSubTaskAssignment } from "$lib/stores/dashboard/subTaskAssignment";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createTeamMemberAssignment } from "$lib/stores/dashboard/teamMemberAssignment";
@@ -97,7 +97,7 @@
         };
         state = { kind: "submitting" };
         try {
-            await performUpdateTask(submitTask, {
+            await updateTask(submitTask, {
                 title,
                 description,
                 due_date: dueDate,
