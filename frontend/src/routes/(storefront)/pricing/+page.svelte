@@ -19,6 +19,9 @@
     import { _, json } from "svelte-i18n";
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import { currentUser } from "$lib/stores/user";
+    import { signUpUrl } from "$lib/urls/user";
+    import { helpUrl } from "$lib/urls/help";
 
     $: features = $json("pricing.features.list") as string[];
     $: limitations = $json("pricing.trial-mode.limitations.list") as string[];
@@ -62,13 +65,23 @@
                     {$_("pricing.plan.price", { values: { price: 8 } })}
                 </strong>
             </div>
-            <Button
-                action={{ kind: "a", href: "/user/sign-up" }}
-                size="medium"
-                color="blue"
-                style={{ kind: "primary" }}
-                label={$_("pricing.plan.cta")}
-            />
+            {#if $currentUser.kind === "authenticated"}
+                <Button
+                    action={{ kind: "a", href: helpUrl("billing") }}
+                    size="medium"
+                    color="blue"
+                    style={{ kind: "primary" }}
+                    label={$_("pricing.plan.cta-logged-in")}
+                />
+            {:else}
+                <Button
+                    action={{ kind: "a", href: signUpUrl }}
+                    size="medium"
+                    color="blue"
+                    style={{ kind: "primary" }}
+                    label={$_("pricing.plan.cta")}
+                />
+            {/if}
         </section>
         <!-- explain trial mode -->
         <section id="trial-mode" class="flex flex-col gap-2">

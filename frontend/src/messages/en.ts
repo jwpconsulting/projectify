@@ -1075,10 +1075,11 @@ const messages: MessageDirectory = {
     "index": {
         title: "Projectify",
         hero: {
-            header: "Manage projects the right way.",
-            text: "Warp drive your way to success with software that helps you to collaborate on and manage projects efficiently, with speed.",
-            button: "Start a free trial",
-            alt: "An illustration showing the look and feel of tasks in Projectify's user interface",
+            "header": "Manage projects the right way.",
+            "text": "Warp drive your way to success with software that helps you to collaborate on and manage projects efficiently, with speed.",
+            "button": "Start a free trial",
+            "continue-to-dashboard": "Continue to dashboard",
+            "alt": "An illustration showing the look and feel of tasks in Projectify's user interface",
         },
         trust: {
             header: 'Everything you need to <span class="text-primary">stay organized</span> and <span class="text-primary">deliver faster</span>',
@@ -1146,9 +1147,10 @@ const messages: MessageDirectory = {
             subtitle: "One plan. One price. All features.",
         },
         "plan": {
-            title: "Universal Plan",
-            price: "{price, number, ::currency/USD} / seat per month",
-            cta: "Start a free trial",
+            "title": "Universal Plan",
+            "price": "{price, number, ::currency/USD} / seat per month",
+            "cta": "Start a free trial",
+            "cta-logged-in": "Learn more",
         },
         "features": {
             title: "What's included?",
