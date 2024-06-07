@@ -5,6 +5,7 @@ from collections.abc import (
 from typing import (
     Any,
     Generic,
+    Literal,
     Optional,
     TypeVar,
     Union,
@@ -18,6 +19,7 @@ from django.db.models import (
 )
 
 from .exceptions import (
+    ErrorDetail,
     ValidationError,
 )
 from .fields import *  # noqa: F403
@@ -51,6 +53,9 @@ class BaseSerializer:
     parent: Optional[Serializer]
     fields: Mapping[str, Union[BaseSerializer, Field]]
 
+    child: Optional[Serializer]
+    many: bool
+
     def __init__(
         self,
         instance: Optional[object] = None,
@@ -71,9 +76,18 @@ class BaseSerializer:
     def save(self, **kwargs: Any) -> Any: ...
     def is_valid(self, *_: Any, raise_exception: bool = False) -> bool: ...
 
+# Inferred by inspecting rest_framework/serializers.py:as_serializer_error
+SerializerErrorField = Union[
+    tuple[ErrorDetail],
+    list[ErrorDetail],
+    list["SerializerErrorField"],
+    dict[str, "SerializerErrorField"],
+]
+SerializerError = dict[str, SerializerErrorField]
+
 def as_serializer_error(
     exc: Union[ValidationError, DjangoValidationError],
-) -> Mapping[str, Any]: ...
+) -> SerializerError: ...
 
 T = TypeVar("T")
 M = TypeVar("M", bound=Model)
@@ -84,8 +98,12 @@ class Serializer(BaseSerializer):
     errors: Errors
     validated_data: ValidatedData
 
+    def get_fields(self) -> Mapping[str, Union[Serializer, Field]]: ...
+
 class ListSerializer(Generic[M], BaseSerializer):
     child: Optional[ModelSerializer[M]]
+    many: Literal[True]
+
     initial_data: Optional[Sequence[SerializerData]]
     instance: Optional[Sequence[M]]
 
@@ -109,4 +127,7 @@ class ModelSerializer(Generic[M], Serializer):
     def create(self, validated_data: ValidatedData) -> M: ...
     def save(self, **kwargs: Any) -> M: ...
 
-__all__ = ("ValidationError",)
+__all__ = (
+    "Field",
+    "ValidationError",
+)

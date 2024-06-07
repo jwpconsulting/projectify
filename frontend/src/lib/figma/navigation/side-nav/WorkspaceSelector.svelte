@@ -22,7 +22,7 @@
 
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
-    import { currentWorkspaces } from "$lib/stores/dashboard";
+    import { currentWorkspaces } from "$lib/stores/dashboard/workspace";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { WorkspaceDetail } from "$lib/types/workspace";
 

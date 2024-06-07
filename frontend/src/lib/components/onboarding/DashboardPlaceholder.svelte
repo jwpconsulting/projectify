@@ -27,7 +27,7 @@
         toggleLabelDropdownClosedNavOpen,
         toggleUserExpandOpen,
         userExpandOpen,
-    } from "$lib/stores/dashboard";
+    } from "$lib/stores/dashboard/ui";
     import { currentUser } from "$lib/stores/user";
     import type {
         Label,

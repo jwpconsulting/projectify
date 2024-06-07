@@ -18,7 +18,7 @@
 import { error } from "@sveltejs/kit";
 
 import { getProject } from "$lib/repository/workspace/project";
-import { currentTask } from "$lib/stores/dashboard";
+import { currentTask } from "$lib/stores/dashboard/task";
 import type {
     Label,
     Workspace,

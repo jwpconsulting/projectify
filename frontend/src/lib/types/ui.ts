@@ -24,7 +24,6 @@ import type {
     Section,
     SectionWithTasks,
     TeamMember,
-    TaskWithSection,
     ProjectDetailTask,
     WorkspaceDetail,
     WorkspaceDetailProject,
@@ -80,8 +79,6 @@ export type DestructiveOverlayType =
           section: SectionWithTasks;
       }
     | { kind: "deleteTask"; task: ProjectDetailTask }
-    // XXX this is never used
-    | { kind: "deleteSelectedTasks"; tasks: readonly TaskWithSection[] }
     | { kind: "archiveProject"; project: Project }
     | { kind: "deleteProject"; project: Project };
 
@@ -197,9 +194,13 @@ export interface SolutionsPageContent {
 export type EditableViewState =
     | { kind: "viewing" }
     | { kind: "editing" }
+    // TODO add error state
     | { kind: "saving" };
 
-// TODO rename FormViewState
+/**
+ * This is used for forms that are always editable and do not have to be
+ * made editable by clicking a button or similar
+ */
 export type FormViewState =
     | { kind: "start" }
     | { kind: "submitting" }

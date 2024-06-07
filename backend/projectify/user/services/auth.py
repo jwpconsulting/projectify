@@ -16,6 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """User auth services."""
 import logging
+from collections.abc import Sequence
 from typing import Optional
 
 from django.contrib.auth import authenticate, login, logout
@@ -41,6 +42,21 @@ from projectify.user.services.internal import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+# Might be locale dependent, i.e., different languages requiring different
+# concatenations.
+def _concat_errors(errors: Sequence[str]) -> str:
+    return " ".join(errors)
+
+
+def _validate_password(email: str, password: str) -> None:
+    try:
+        validate_password(password=password, user=User(email=email))
+    except DjangoValidationError as e:
+        raise serializers.ValidationError(
+            {"password": _concat_errors(e.messages)}
+        )
 
 
 def user_sign_up(
@@ -69,10 +85,7 @@ def user_sign_up(
             {"privacy_policy_agreed": _("Must agree to privacy policy")}
         )
 
-    try:
-        validate_password(password=password, user=User(email=email))
-    except DjangoValidationError as e:
-        raise serializers.ValidationError({"policies": e.messages})
+    _validate_password(email, password)
 
     agreement_dt = timezone.now()
 

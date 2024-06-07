@@ -23,7 +23,7 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import { goto } from "$lib/navigation";
-    import { updateTask } from "$lib/repository/workspace";
+    import { updateTask } from "$lib/repository/workspace/task";
     import { createLabel } from "$lib/repository/workspace/label";
     import type { FormViewState } from "$lib/types/ui";
     import { getAssignTaskUrl, getNewTaskUrl } from "$lib/urls/onboarding";
@@ -48,33 +48,45 @@
         }
 
         state = { kind: "submitting" };
-        const result = await createLabel(
-            workspace,
-            { name: labelTitle, color: 0 },
-            { fetch },
-        );
+        const { error, data } = await createLabel(workspace, {
+            name: labelTitle,
+            color: 0,
+        });
         labelTitleValidation = undefined;
-        if (!result.ok) {
-            if (result.error.name) {
-                labelTitleValidation = { ok: false, error: result.error.name };
+        if (error?.code === 400) {
+            if (error.details.name) {
+                labelTitleValidation = {
+                    ok: false,
+                    error: error.details.name,
+                };
             }
             state = {
                 kind: "error",
                 message: $_("onboarding.new-label.error"),
             };
             return;
+        } else if (error) {
+            throw new Error("No data returned");
         }
 
-        const label = result.data;
-        await updateTask(
-            task,
-            { ...task, labels: [label], assignee: task.assignee },
-            { fetch },
-        );
+        const label = data;
+        await updateTask(task, {
+            ...task,
+            labels: [label],
+            assignee: task.assignee,
+        });
         // TODO handle if label with this name already exists
         await goto(getAssignTaskUrl(task.uuid));
     }
 </script>
+
+<svelte:head>
+    <title
+        >{$_("onboarding.new-label.title", {
+            values: { taskTitle },
+        })}</title
+    >
+</svelte:head>
 
 <Onboarding
     stepCount={5}
@@ -83,7 +95,7 @@
     nextAction={{ kind: "submit", disabled, submit }}
 >
     <svelte:fragment slot="title"
-        >{$_("onboarding.new-label.title", {
+        >{$_("onboarding.new-label.heading", {
             values: { taskTitle },
         })}</svelte:fragment
     >

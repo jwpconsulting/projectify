@@ -86,6 +86,12 @@ class TestLabelCreate:
             data=payload,
         )
         assert response.status_code == 400, response.data
+        assert response.data == {
+            "status": "invalid",
+            "code": 400,
+            "details": {},
+            "general": "Label with this Workspace and Name already exists.",
+        }
 
 
 @pytest.mark.django_db

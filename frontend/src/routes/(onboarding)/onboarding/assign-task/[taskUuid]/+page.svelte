@@ -32,6 +32,12 @@
     const taskTitle = task.title;
 </script>
 
+<svelte:head
+    ><title
+        >{$_("onboarding.assign-task.title", { values: { taskTitle } })}</title
+    ></svelte:head
+>
+
 <Onboarding
     stepCount={5}
     step={5}
@@ -42,7 +48,7 @@
     }}
 >
     <svelte:fragment slot="title"
-        >{$_("onboarding.assign-task.title", {
+        >{$_("onboarding.assign-task.heading", {
             values: { taskTitle },
         })}</svelte:fragment
     >

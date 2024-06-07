@@ -7,8 +7,8 @@ from django.contrib.auth.models import (
     AbstractBaseUser,
 )
 from django.test.client import Client as DjangoClient
-from django.test.client import RequestFactory as DjangoRequestFactory
 
+from rest_framework.request import Request
 from rest_framework.response import (
     Response,
 )
@@ -16,7 +16,15 @@ from rest_framework.response import (
 # TODO would be cool if we could have data be the same SerializerData thing
 # from serializers.pyi
 
-class APIRequestFactory(DjangoRequestFactory): ...
+# We ignore that APIRequestFactory inherits from DjangoRequestFactory,
+# otherwise we'd get into Liskov trouble
+class APIRequestFactory:
+    def get(self, *args: Any, **kwargs: Any) -> Request: ...
+    def post(self, *args: Any, **kwargs: Any) -> Request: ...
+    def put(self, *args: Any, **kwargs: Any) -> Request: ...
+    def patch(self, *args: Any, **kwargs: Any) -> Request: ...
+    def options(self, *args: Any, **kwargs: Any) -> Request: ...
+    def delete(self, *args: Any, **kwargs: Any) -> Request: ...
 
 class APIClient(APIRequestFactory, DjangoClient):
     def force_authenticate(
@@ -34,6 +42,14 @@ class APIClient(APIRequestFactory, DjangoClient):
         **extra: object,
     ) -> Response: ...
     def post(  # type: ignore[override]
+        self,
+        path: str,
+        data: Optional[Any] = None,
+        format: Optional[str] = None,
+        content_type: Optional[str] = None,
+        **extra: object,
+    ) -> Response: ...
+    def patch(  # type: ignore[override]
         self,
         path: str,
         data: Optional[Any] = None,

@@ -23,7 +23,7 @@
     import Projects from "$lib/figma/navigation/side-nav/Projects.svelte";
     import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { showFilters } from "$lib/stores/dashboard";
+    import { showFilters } from "$lib/stores/dashboard/ui";
     import type { WorkspaceDetail } from "$lib/types/workspace";
 
     export let workspace: WorkspaceDetail | undefined;

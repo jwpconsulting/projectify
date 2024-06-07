@@ -23,7 +23,7 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import { createLabel, updateLabel } from "$lib/repository/workspace/label";
-    import { currentWorkspace } from "$lib/stores/dashboard";
+    import { currentWorkspace } from "$lib/stores/dashboard/workspace";
     import type { FormViewState } from "$lib/types/ui";
     import type { Label } from "$lib/types/workspace";
     import {
@@ -34,6 +34,9 @@
     } from "$lib/utils/colors";
 
     import LabelRadio from "./LabelRadio.svelte";
+    import { getLogInWithNextUrl } from "$lib/urls/user";
+    import { getDashboardWorkspaceUrl } from "$lib/urls";
+    import { goto } from "$lib/navigation";
 
     export let state: { kind: "create" } | { kind: "update"; label: Label };
     export let onFinished: () => void;
@@ -86,21 +89,28 @@
         chosenColorValidation = undefined;
 
         const color = getIndexFromLabelColor(chosenColor);
-        const response = await createLabel(
-            $currentWorkspace,
-            { name: labelName, color },
-            { fetch },
-        );
-        if (response.ok) {
+        const { error, data } = await createLabel($currentWorkspace, {
+            name: labelName,
+            color,
+        });
+        if (data) {
             editState = { kind: "start" };
             onFinished();
             return;
         }
-        if (response.error.name !== undefined) {
-            labelNameValidation = { ok: false, error: response.error.name };
+        if (error.code === 403) {
+            await goto(
+                getLogInWithNextUrl(
+                    getDashboardWorkspaceUrl($currentWorkspace),
+                ),
+            );
+            return;
         }
-        if (response.error.color !== undefined) {
-            chosenColorValidation = { ok: false, error: response.error.color };
+        if (error.details.name !== undefined) {
+            labelNameValidation = { ok: false, error: error.details.name };
+        }
+        if (error.details.color !== undefined) {
+            chosenColorValidation = { ok: false, error: error.details.color };
         }
         editState = {
             kind: "error",
@@ -124,20 +134,24 @@
         chosenColorValidation = undefined;
 
         const color = getIndexFromLabelColor(chosenColor);
-        const response = await updateLabel(
-            { ...state.label, name: labelName, color },
-            { fetch },
-        );
-        if (response.ok) {
+        const { error, data } = await updateLabel({
+            ...state.label,
+            name: labelName,
+            color,
+        });
+        if (data) {
             editState = { kind: "start" };
             onFinished();
             return;
         }
-        if (response.error.name !== undefined) {
-            labelNameValidation = { ok: false, error: response.error.name };
+        if (error.code !== 400) {
+            throw new Error("Error when updating label");
         }
-        if (response.error.color !== undefined) {
-            chosenColorValidation = { ok: false, error: response.error.color };
+        if (error.details.name !== undefined) {
+            labelNameValidation = { ok: false, error: error.details.name };
+        }
+        if (error.details.color !== undefined) {
+            chosenColorValidation = { ok: false, error: error.details.color };
         }
         editState = {
             kind: "error",

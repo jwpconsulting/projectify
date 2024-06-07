@@ -395,26 +395,32 @@ class TestInviteUserToWorkspace:
         uninvite_url: str,
     ) -> None:
         """Test with a new, unregistered user."""
-        assert workspace.teammemberinvite_set.count() == 0
+        count = workspace.teammemberinvite_set.count()
         response = rest_user_client.post(
             resource_url, {"email": "taro@yamamoto.jp"}
         )
         assert response.status_code == 201, response.data
-        assert workspace.teammemberinvite_set.count() == 1
+        assert workspace.teammemberinvite_set.count() == count + 1
 
         # Then uninvite them
         response = rest_user_client.post(
             uninvite_url, {"email": "taro@yamamoto.jp"}
         )
         assert response.status_code == 204, response.data
-        assert workspace.teammemberinvite_set.count() == 0
+        assert workspace.teammemberinvite_set.count() == count
 
         # Can't uninvite twice
         response = rest_user_client.post(
             uninvite_url, {"email": "taro@yamamoto.jp"}
         )
         assert response.status_code == 400, response.data
-        assert workspace.teammemberinvite_set.count() == 0
+        assert response.data == {
+            "status": "invalid",
+            "code": 400,
+            "details": {"email": "User with this email was never invited"},
+            "general": None,
+        }
+        assert workspace.teammemberinvite_set.count() == count
 
     def test_existing_user(
         self,
@@ -442,7 +448,15 @@ class TestInviteUserToWorkspace:
             resource_url, {"email": team_member.user.email}
         )
         assert response.status_code == 400, response.data
-        assert "already been added" in response.data["email"], response.data
+        assert response.data == {
+            "status": "invalid",
+            "code": 400,
+            "details": {
+                "email": f"User with email {team_member.user.email} has "
+                "already been added to this workspace."
+            },
+            "general": None,
+        }
 
     def test_existing_invitation(
         self, resource_url: str, rest_user_client: APIClient
@@ -456,7 +470,15 @@ class TestInviteUserToWorkspace:
             resource_url, {"email": "hello@example.com"}
         )
         assert response.status_code == 400, response.data
-        assert "already been invited" in response.data["email"], response.data
+        assert response.data == {
+            "status": "invalid",
+            "code": 400,
+            "details": {
+                "email": "User with email hello@example.com has already been "
+                "invited to this workspace."
+            },
+            "general": None,
+        }
 
     def test_uninvite_non_existing(
         self, uninvite_url: str, rest_user_client: APIClient
@@ -466,6 +488,12 @@ class TestInviteUserToWorkspace:
             uninvite_url, {"email": "hello@example.com"}
         )
         assert response.status_code == 400, response.data
+        assert response.data == {
+            "status": "invalid",
+            "code": 400,
+            "details": {"email": "User with this email was never invited"},
+            "general": None,
+        }
 
     def test_uninvite_existing_user(
         self,
@@ -473,8 +501,14 @@ class TestInviteUserToWorkspace:
         rest_user_client: APIClient,
         team_member: TeamMember,
     ) -> None:
-        """Assert nothing weird happens when uninviting an invalid email."""
+        """Assert nothing weird happens when uninviting an existing user."""
         response = rest_user_client.post(
             uninvite_url, {"email": team_member.user.email}
         )
         assert response.status_code == 400, response.data
+        assert response.data == {
+            "status": "invalid",
+            "code": 400,
+            "details": {"email": "User with this email was never invited"},
+            "general": None,
+        }

@@ -17,6 +17,7 @@
 """User app serializers."""
 from typing import (
     Optional,
+    Sequence,
 )
 
 from rest_framework import (
@@ -45,9 +46,38 @@ class UserSerializer(serializers.ModelSerializer[models.User]):
         """Meta."""
 
         model = models.User
-        fields = (
+        fields: Sequence[str] = (
             "email",
             "preferred_name",
             "profile_picture",
         )
         extra_kwargs = {"preferred_name": {"required": True}}
+
+
+class LoggedInUserSerializer(UserSerializer):
+    """Serialize logged in user."""
+
+    kind = serializers.ChoiceField(
+        choices=["authenticated"],
+        read_only=True,
+        default="authenticated",
+    )
+
+    class Meta(UserSerializer.Meta):
+        """Copy meta from UserSerializer."""
+
+        fields = (
+            "email",
+            "kind",
+            "preferred_name",
+            "profile_picture",
+        )
+
+
+class AnonymousUserSerializer(serializers.Serializer):
+    """Serialize anonymous user."""
+
+    kind = serializers.ChoiceField(
+        choices=["unauthenticated"],
+        required=True,
+    )

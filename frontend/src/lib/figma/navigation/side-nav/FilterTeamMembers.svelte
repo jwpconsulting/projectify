@@ -24,7 +24,7 @@
     import {
         userExpandOpen,
         toggleUserExpandOpen,
-    } from "$lib/stores/dashboard";
+    } from "$lib/stores/dashboard/ui";
     import { selectedTeamMember } from "$lib/stores/dashboard/teamMemberFilter";
 </script>
 

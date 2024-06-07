@@ -15,67 +15,21 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { TimestampedType } from "$lib/types/base";
-import type { User } from "$lib/types/user";
 import type { components } from "./schema";
 
-export type TeamMemberRole =
-    | "OBSERVER"
-    | "CONTRIBUTOR"
-    | "MAINTAINER"
-    | "OWNER";
+export type TeamMemberRole = components["schemas"]["RoleEnum"];
 
-export type TeamMember = {
-    user: User;
-    uuid: string;
-    job_title: string | null;
-    role: TeamMemberRole;
-} & TimestampedType;
+export type TeamMember = components["schemas"]["TeamMemberBase"];
 
-export interface Label {
-    name: string;
-    color: number;
-    uuid: string;
-}
+export type Label = components["schemas"]["LabelBase"];
 
-export type SubTask = {
-    uuid: string;
-    done: boolean;
-    _order: number;
-    title: string;
-    description: string | null;
-} & TimestampedType;
+export type SubTask = components["schemas"]["SubTaskBase"];
 
 export type CreateUpdateSubTask = components["schemas"]["SubTaskCreateUpdate"];
 
-type ChatMessage = {
-    author: TeamMember;
-    uuid: string;
-    text: string;
-} & TimestampedType;
-
 // All the info we can receive from the API
-export type Task = {
-    title: string;
-    description: string | null;
-    _order: number;
-    uuid: string;
-    // TODO the following should be a Date
-    due_date: string | null;
-    number: number;
-    labels: readonly Label[];
-    assignee?: TeamMember;
-    section?: Section;
-    sub_tasks?: readonly SubTask[];
-    chat_messages?: readonly ChatMessage[];
-} & TimestampedType;
-
+export type Task = components["schemas"]["TaskWithSubTask"];
 export type TaskDetail = components["schemas"]["TaskDetail"];
-
-export interface CreateSection {
-    title: string;
-    description: string | null;
-}
 
 export type Section = TaskDetail["section"];
 

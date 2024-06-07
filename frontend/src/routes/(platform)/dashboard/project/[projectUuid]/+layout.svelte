@@ -21,7 +21,7 @@
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
-    import { currentProject } from "$lib/stores/dashboard";
+    import { currentProject } from "$lib/stores/dashboard/project";
     import type { SectionWithTasks } from "$lib/types/workspace";
     import { getProjectSearchUrl } from "$lib/urls/dashboard";
 

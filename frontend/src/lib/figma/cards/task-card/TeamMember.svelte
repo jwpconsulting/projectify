@@ -19,7 +19,7 @@
     import { _ } from "svelte-i18n";
 
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
-    import { updateTask } from "$lib/repository/workspace";
+    import { updateTask } from "$lib/repository/workspace/task";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { createTeamMemberAssignment } from "$lib/stores/dashboard/teamMemberAssignment";
     import { openContextMenu } from "$lib/stores/globalUi";
@@ -45,13 +45,7 @@
         // XXX need to investigate what happens when sub tasks change while
         // the user picker is open. Possibly, a sub task can be deleted if
         // it is added
-        await updateTask(
-            task,
-            { ...task, assignee: teamMember },
-            {
-                fetch,
-            },
-        );
+        await updateTask(task, { ...task, assignee: teamMember });
     }
 
     $: canUpdate = $currentTeamMemberCan("update", "task");

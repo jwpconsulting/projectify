@@ -15,13 +15,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Corporate app serializers."""
-from rest_framework import (
-    serializers,
-)
+from rest_framework import serializers
 
-from . import (
-    models,
-)
+from . import models
 
 
 class CustomerSerializer(serializers.ModelSerializer[models.Customer]):
@@ -36,3 +32,7 @@ class CustomerSerializer(serializers.ModelSerializer[models.Customer]):
             "uuid",
             "subscription_status",
         )
+        extra_kwargs = {
+            "seats": {"required": True},
+            "subscription_status": {"required": True},
+        }

@@ -23,11 +23,11 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { requestPasswordReset } from "$lib/repository/user";
     import type { FormViewState } from "$lib/types/ui";
     import { requestedPasswordResetUrl } from "$lib/urls/user";
 
     import { goto } from "$app/navigation";
+    import { openApiClient } from "$lib/repository/util";
 
     let email: string | undefined = undefined;
     let emailValidation: InputFieldValidation | undefined = undefined;
@@ -39,23 +39,29 @@
             throw new Error("Expected email");
         }
         state = { kind: "submitting" };
-        const response = await requestPasswordReset(email, { fetch });
-        if (response.ok) {
+        const { error } = await openApiClient.POST(
+            "/user/user/request-password-reset",
+            { body: { email } },
+        );
+        if (error === undefined) {
             await goto(requestedPasswordResetUrl);
             return;
         }
-        if (response.error.email) {
-            emailValidation = { ok: false, error: response.error.email };
-            state = {
-                kind: "error",
-                message: $_("auth.request-password-reset.error.validation"),
-            };
-        } else if (response.kind === "tooManyRequests") {
+        if (error.code === 429) {
             state = {
                 kind: "error",
                 message: $_(
                     "auth.request-password-reset.error.too-many-requests",
                 ),
+            };
+            return;
+        }
+        const { details } = error;
+        if (details.email) {
+            emailValidation = { ok: false, error: details.email };
+            state = {
+                kind: "error",
+                message: $_("auth.request-password-reset.error.validation"),
             };
         } else {
             state = {

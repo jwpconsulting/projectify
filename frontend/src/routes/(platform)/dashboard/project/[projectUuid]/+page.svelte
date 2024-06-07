@@ -21,13 +21,14 @@
     import Loading from "$lib/components/Loading.svelte";
     import SectionC from "$lib/figma/cards/Section.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import { currentProject, currentSections } from "$lib/stores/dashboard";
+    import { currentProject } from "$lib/stores/dashboard/project";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type {
         ProjectDetail,
         ProjectDetailSection,
     } from "$lib/types/workspace";
+    import { currentSections } from "$lib/stores/dashboard/section";
 
     export let data: { injectProject?: ProjectDetail } | undefined = undefined;
 
@@ -51,13 +52,11 @@
 </script>
 
 <svelte:head>
-    {#if project}
-        <title
+    {#if project && data?.injectProject === undefined}<title
             >{$_("dashboard.title", {
                 values: { title: project.title },
             })}</title
-        >
-    {/if}
+        >{/if}
 </svelte:head>
 
 <!-- Sections -->

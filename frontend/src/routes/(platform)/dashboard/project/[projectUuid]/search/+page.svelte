@@ -21,7 +21,7 @@
     import Loading from "$lib/components/Loading.svelte";
     import TaskCard from "$lib/figma/cards/TaskCard.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { currentProject } from "$lib/stores/dashboard";
+    import { currentProject } from "$lib/stores/dashboard/project";
     import { getDashboardProjectUrl } from "$lib/urls";
 
     import type { PageData } from "./$types";

@@ -24,7 +24,6 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { updateWorkspace } from "$lib/repository/workspace";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import type { EditableViewState } from "$lib/types/ui";
     import { uploadImage } from "$lib/utils/file";
@@ -32,6 +31,7 @@
     import type { PageData } from "./$types";
 
     import { beforeNavigate } from "$app/navigation";
+    import { openApiClient } from "$lib/repository/util";
 
     export let data: PageData;
 
@@ -75,13 +75,19 @@
             imageFile,
             vars.API_ENDPOINT + `/workspace/workspace/${uuid}/picture-upload`,
         );
-        const result = await updateWorkspace(uuid, title, description, {
-            fetch,
-        });
-        workspace = {
-            ...workspace,
-            ...result,
-        };
+        const { data, error } = await openApiClient.PUT(
+            "/workspace/workspace/{workspace_uuid}",
+            {
+                params: { path: { workspace_uuid: workspace.uuid } },
+                body: {
+                    title,
+                    description,
+                },
+            },
+        );
+        if (error === undefined) {
+            workspace = { ...workspace, ...data };
+        }
         resetForm();
         state = { kind: "viewing" };
     }

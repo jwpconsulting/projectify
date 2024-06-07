@@ -26,6 +26,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from projectify.lib.error_schema import DeriveSchema
 from projectify.workspace.models import Project
 from projectify.workspace.selectors.project import (
     ProjectDetailQuerySet,
@@ -64,11 +65,7 @@ class ProjectCreate(APIView):
 
     @extend_schema(
         request=ProjectCreateSerializer,
-        responses={
-            201: ProjectDetailSerializer,
-            # TODO specify error format here
-            400: None,
-        },
+        responses={201: ProjectDetailSerializer, 400: DeriveSchema},
     )
     def post(self, request: Request) -> Response:
         """Create a project."""
@@ -101,7 +98,7 @@ class ProjectReadUpdateDelete(APIView):
     """Project retrieve view."""
 
     @extend_schema(
-        responses={200: ProjectDetailSerializer, 404: None},
+        responses={200: ProjectDetailSerializer},
     )
     def get(self, request: Request, project_uuid: UUID) -> Response:
         """Handle GET."""
@@ -130,11 +127,7 @@ class ProjectReadUpdateDelete(APIView):
 
     @extend_schema(
         request=ProjectUpdateSerializer,
-        responses={
-            200: ProjectUpdateSerializer,
-            # TODO specify format
-            400: None,
-        },
+        responses={200: ProjectUpdateSerializer, 400: DeriveSchema},
     )
     def put(self, request: Request, project_uuid: UUID) -> Response:
         """Handle PUT."""
@@ -160,7 +153,7 @@ class ProjectReadUpdateDelete(APIView):
         return Response(data, status.HTTP_200_OK)
 
     @extend_schema(
-        responses={204: None, 404: None},
+        responses={204: None},
     )
     def delete(self, request: Request, project_uuid: UUID) -> Response:
         """Handle DELETE."""
@@ -184,7 +177,7 @@ class ProjectArchivedList(APIView):
 
     @extend_schema(
         request=None,
-        responses={200: ProjectBaseSerializer(many=True), 404: None},
+        responses={200: ProjectBaseSerializer(many=True)},
     )
     def get(self, request: Request, workspace_uuid: UUID) -> Response:
         """Get queryset."""
@@ -217,13 +210,7 @@ class ProjectArchive(APIView):
 
     @extend_schema(
         request=ProjectArchiveSerializer,
-        responses={
-            204: None,
-            404: None,
-            403: None,
-            # TODO
-            400: None,
-        },
+        responses={204: None, 400: DeriveSchema},
     )
     def post(self, request: Request, project_uuid: UUID) -> Response:
         """Process request."""

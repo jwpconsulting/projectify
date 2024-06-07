@@ -17,65 +17,65 @@
  */
 import { readonly, writable } from "svelte/store";
 
-import * as userRepository from "$lib/repository/user";
 import type { RepositoryContext } from "$lib/types/repository";
-import type { User } from "$lib/types/user";
+import type { CurrentUser, User } from "$lib/types/user";
 import { openApiClient } from "$lib/repository/util";
+import { browser } from "$app/environment";
 
-const _user = writable<User | undefined>(undefined);
+const _user = writable<CurrentUser>({ kind: "start" }, (set) => {
+    if (!browser) {
+        return;
+    }
+    openApiClient
+        .GET("/user/user/current-user")
+        .then(({ data }) => {
+            if (data === undefined) {
+                throw new Error("Could not load user");
+            }
+            set(data);
+        })
+        .catch((error) => console.error("Error when loading user", error));
+});
 export const currentUser = readonly(_user);
 
 export async function logIn(
     email: string,
     password: string,
-    repositoryContext: RepositoryContext,
+    _repositoryContext: RepositoryContext,
 ) {
-    const response = await userRepository.logIn(
-        email,
-        password,
-        repositoryContext,
+    const { response, data, error } = await openApiClient.POST(
+        "/user/user/log-in",
+        {
+            body: { email, password },
+        },
     );
-    if (response.ok) {
-        _user.set(response.data);
+    if (data) {
+        _user.update(($user) => {
+            return { ...$user, ...data };
+        });
+    } else {
+        console.error(error);
     }
-    return response;
+    return { data, error, response };
 }
 
-export async function logOut(repositoryContext: RepositoryContext) {
-    await userRepository.logOut(repositoryContext);
-    _user.set(undefined);
-}
-
-export async function fetchUser(): Promise<User | undefined> {
-    const { response, data } = await openApiClient.GET(
-        "/user/user/current-user",
-    );
-    if (data === undefined) {
-        console.error(await response.json());
-        throw new Error("Could not load user");
+export async function logOut(_repositoryContext: RepositoryContext) {
+    const { error, data } = await openApiClient.POST("/user/user/log-out");
+    if (error) {
+        throw new Error("Error when logging out");
     }
-    const userData = "unauthenticated" in data ? undefined : data;
-    _user.set(userData);
-    return userData;
+    _user.set(data);
 }
 
 export async function updateUserProfile(
-    preferredName: string | null,
+    preferred_name: string | null,
 ): Promise<User> {
-    const { data, response } = await openApiClient.PUT(
+    const { data, error } = await openApiClient.PUT(
         "/user/user/current-user",
-        {
-            body: {
-                preferred_name:
-                    preferredName === "" ? null : preferredName ?? null,
-            },
-        },
+        { body: { preferred_name } },
     );
-    if (!response.ok) {
+    if (error) {
         throw new Error("Expected response.ok");
-    }
-    if (data === undefined) {
-        throw new Error("Expected data");
     }
     _user.set(data);
     return data;

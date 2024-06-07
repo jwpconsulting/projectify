@@ -15,13 +15,14 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { currentWorkspace, currentProject } from "$lib/stores/dashboard";
 import type { ProjectDetail } from "$lib/types/workspace";
 import { dashboardUrl } from "$lib/urls/dashboard";
 
 import type { LayoutLoadEvent } from "./$types";
 
 import { goto } from "$app/navigation";
+import { currentProject } from "$lib/stores/dashboard/project";
+import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 
 interface Data {
     project: Promise<ProjectDetail | undefined>;

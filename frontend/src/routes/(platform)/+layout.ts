@@ -16,39 +16,46 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import { redirect, error } from "@sveltejs/kit";
-import { get } from "svelte/store";
 
-import { currentWorkspaces } from "$lib/stores/dashboard";
+import { currentWorkspaces } from "$lib/stores/dashboard/workspace";
 import { currentUser } from "$lib/stores/user";
-import type { User } from "$lib/types/user";
+import type { CurrentUser, User } from "$lib/types/user";
 import { getLogInWithNextUrl } from "$lib/urls/user";
 
 import type { LayoutLoadEvent } from "./$types";
 
 export async function load({
-    parent,
     url,
     fetch,
 }: LayoutLoadEvent): Promise<{ user: User }> {
-    const data = await parent();
-    const user = get(currentUser) ?? (await data.user);
-    if (user === undefined) {
+    const user: CurrentUser = await new Promise((resolve) => {
+        currentUser.subscribe((user) => {
+            if (user.kind === "start") {
+                return;
+            }
+            resolve(user);
+        });
+    });
+    if (user.kind === "start") {
+        error(500, "User was not loaded correctly");
+    } else if (user.kind === "unauthenticated") {
         const next = getLogInWithNextUrl(url.pathname);
         console.log("Not logged in, redirecting to", next);
         redirect(302, next);
-    }
-    currentWorkspaces
-        .load({ fetch })
-        .then((workspaces) => {
-            if (!workspaces) {
-                error(500, "Unable to fetch workspaces");
-            }
-        })
-        .catch((error) =>
-            console.error(`Error when fetching workspaces: ${error}`),
-        );
+    } else {
+        currentWorkspaces
+            .load({ fetch })
+            .then((workspaces) => {
+                if (!workspaces) {
+                    error(500, "Unable to fetch workspaces");
+                }
+            })
+            .catch((error) =>
+                console.error(`Error when fetching workspaces: ${error}`),
+            );
 
-    return { user };
+        return { user };
+    }
 }
 // Could we set one of the following to true here?
 // Prerender: This page is completely prerenderable, there is no user data here

@@ -26,6 +26,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from projectify.corporate.services.coupon import coupon_redeem
+from projectify.lib.error_schema import DeriveSchema
 from projectify.workspace.selectors.workspace import (
     workspace_find_by_workspace_uuid,
 )
@@ -43,8 +44,7 @@ class CouponRedeem(APIView):
         request=CouponRedeemSerializer,
         responses={
             204: None,
-            # TODO annotate
-            400: None,
+            400: DeriveSchema,
         },
     )
     def post(self, request: Request, workspace_uuid: UUID) -> Response:

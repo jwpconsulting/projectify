@@ -299,12 +299,9 @@ def _handle_event(
 
 
 @extend_schema(
-    # TODO?
+    # TODO request schema
     request=None,
-    responses={
-        200: None,
-        400: None,
-    },
+    responses={200: None, 400: None, 500: None},
 )
 @csrf_exempt
 @api_view(["POST"])

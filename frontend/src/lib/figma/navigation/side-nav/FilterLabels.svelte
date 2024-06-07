@@ -26,7 +26,7 @@
     import {
         labelExpandOpen,
         toggleLabelDropdownClosedNavOpen,
-    } from "$lib/stores/dashboard";
+    } from "$lib/stores/dashboard/ui";
     import { selectedLabels } from "$lib/stores/dashboard/labelFilter";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import type { Label } from "$lib/types/workspace";

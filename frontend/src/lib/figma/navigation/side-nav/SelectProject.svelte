@@ -21,7 +21,7 @@
     import { _ } from "svelte-i18n";
 
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
-    import { currentProject, selectProjectUuid } from "$lib/stores/dashboard";
+    import { currentProject } from "$lib/stores/dashboard/project";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type {
@@ -29,6 +29,7 @@
         WorkspaceDetailProject,
     } from "$lib/types/workspace";
     import { getDashboardProjectUrl } from "$lib/urls";
+    import { selectProjectUuid } from "$lib/stores/dashboard/ui";
 
     $: currentProjectUuid = $currentProject?.uuid;
 

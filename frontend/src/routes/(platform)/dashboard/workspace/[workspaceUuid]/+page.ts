@@ -17,7 +17,7 @@
  */
 import { redirect } from "@sveltejs/kit";
 
-import { selectedProjectUuids } from "$lib/stores/dashboard";
+import { selectedProjectUuids } from "$lib/stores/dashboard/ui";
 import { getArchiveUrl, getDashboardProjectUrl } from "$lib/urls";
 import { getNewProjectUrl } from "$lib/urls/onboarding";
 

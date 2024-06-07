@@ -64,10 +64,16 @@ const messages: MessageDirectory = {
                     title: {
                         label: "New section name",
                         placeholder: "New section name",
+                        valid: "This section name is valid",
                     },
                 },
                 "cancel": "Cancel",
                 "create-section": "Create",
+                "errors": {
+                    general:
+                        "Something went wrong when trying to create a section. Please try again later.",
+                    fields: "Please check the fields above and click 'Create' again.",
+                },
             },
             "update-section": {
                 title: "Edit section",
@@ -75,10 +81,16 @@ const messages: MessageDirectory = {
                     title: {
                         label: "Section title",
                         placeholder: "Enter new section title",
+                        valid: "This is a valid title",
                     },
                 },
                 cancel: "Cancel",
                 update: "Save",
+                errors: {
+                    field: "Please check the input fields above and try again",
+                    general:
+                        "An unknown error happened. Please try again later. {error}",
+                },
             },
             "recover-project": {
                 title: "Recover project ''{title}''?",
@@ -114,12 +126,6 @@ const messages: MessageDirectory = {
             "delete-task": {
                 title: "Delete task",
                 body: "Would you like to delete the ''{task}'' task?",
-                warning: "This action cannot be undone.",
-                button: "Delete",
-            },
-            "delete-selected-tasks": {
-                title: "Delete selected tasks",
-                body: "Would you like to delete {count, number} selected tasks?",
                 warning: "This action cannot be undone.",
                 button: "Delete",
             },
@@ -383,7 +389,8 @@ const messages: MessageDirectory = {
         "continue": "Continue",
         "back": "Back",
         "welcome": {
-            title: "Welcome",
+            title: "Onboarding - Projectify",
+            heading: "Welcome",
             prompt: [
                 "In the following steps you will create a new workspace and create your first task.",
                 "You can use the workspace in trial mode at the beginning, and upgrade to a paid version anytime by going to the workspace settings.",
@@ -394,7 +401,8 @@ const messages: MessageDirectory = {
             },
         },
         "about-you": {
-            title: "About you",
+            title: "About you - Projectify",
+            heading: "About you",
             input: {
                 label: "Preferred name (optional)",
                 placeholder: "Your preferred name",
@@ -406,26 +414,46 @@ const messages: MessageDirectory = {
             },
         },
         "new-workspace": {
-            "title": {
+            "title": "Create a new workspace - Projectify",
+            "prompt": {
                 "with-name": "Let’s set up your first workspace, {who}.",
                 "without-name": "Let's set up your first workspace.",
             },
-            "prompt": "You can create and manage numerous workspaces",
+            "explanation": "You can create and manage numerous workspaces",
             "has-workspace":
                 "It looks like you already have a workspace, would you like to create a project?",
-            "label": "Workspace name",
-            "placeholder": "e.g. the name of your company",
+            "fields": {
+                title: {
+                    label: "Workspace name",
+                    placeholder: "e.g. the name of your company",
+                    valid: "This ia a valid workspace name",
+                },
+            },
+            "errors": {
+                general:
+                    "Something went wrong when trying to create this workspace",
+                fields: "Please check the above errors and try creating your workspace again",
+            },
             "default-name": "Your workspace",
         },
         "new-project": {
-            "title": "Add your first project",
+            "title": "Add your first project - Projectify",
+            "heading": "Add your first project",
             "prompt": [
                 "You can create unlimited project per workspace.",
                 "They help you to focus on different projects you may be working on.",
             ],
-            "input": {
-                label: "Project title",
-                placeholder: "Release spring Aug 2023",
+            "fields": {
+                title: {
+                    label: "Project title",
+                    placeholder: "Release spring Aug 2023",
+                    valid: "This is a valid project title",
+                },
+            },
+            "errors": {
+                general:
+                    "An error occured while trying to create this project.",
+                field: "Please check the above error messages and try creating the project again.",
             },
             "default-name": "Your project",
             "project-exists": {
@@ -435,7 +463,8 @@ const messages: MessageDirectory = {
             },
         },
         "new-task": {
-            "title": "What is a task you’d like to complete?",
+            "title": "Create your first task - Projectify",
+            "heading": "What is a task you’d like to complete?",
             "section-title": "To do",
             "default-name": "Your task",
             "prompt": {
@@ -451,7 +480,8 @@ const messages: MessageDirectory = {
             },
         },
         "new-label": {
-            "title": 'Create a label for "{taskTitle}"',
+            "title": 'Create a label for "{taskTitle}" - Projectify',
+            "heading": 'Create a label for "{taskTitle}"',
             "prompt": "Labels help you to filter between the types of tasks.",
             "input": {
                 placeholder: "e.g., Bug",
@@ -462,7 +492,9 @@ const messages: MessageDirectory = {
             "default-name": "Your label",
         },
         "assign-task": {
-            "title": 'Task "{taskTitle}" has been assigned to you!',
+            "title":
+                'Task "{taskTitle}" has been assigned to you - Projectify',
+            "heading": 'Task "{taskTitle}" has been assigned to you!',
             "continue": "Get started",
             "prompt": {
                 "finished": "You’re all set!",
@@ -645,8 +677,10 @@ const messages: MessageDirectory = {
             error: {
                 title: "Error while confirming email address",
                 message:
-                    "Unfortunately your email address could not be confirmed. The error code from the API was:",
+                    "Unfortunately your email address could not be confirmed.",
                 continue: "Contact support",
+                email: "Error with email address: {error}",
+                token: "Error with token: {error}",
             },
         },
     },

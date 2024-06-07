@@ -53,7 +53,7 @@ Up and down chevrons for task movement within a section
         icon="up"
         action={{
             kind: "button",
-            action: () => moveUp(section, task, { fetch }),
+            action: () => moveUp(section, task),
             disabled: upDisabled,
         }}
         ariaLabel={$_("dashboard.task-card.move-up")}
@@ -63,7 +63,7 @@ Up and down chevrons for task movement within a section
         icon="down"
         action={{
             kind: "button",
-            action: () => moveDown(section, task, { fetch }),
+            action: () => moveDown(section, task),
             disabled: downDisabled,
         }}
         ariaLabel={$_("dashboard.task-card.move-down")}

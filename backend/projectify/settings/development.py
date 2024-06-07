@@ -33,13 +33,14 @@ from .spectacular import SpectacularSettings
 logger = logging.getLogger(__name__)
 
 
-def add_debug_middleware(middleware: Sequence[str]) -> Iterable[str]:
+def add_dev_middleware(middleware: Sequence[str]) -> Iterable[str]:
     """Add the debug toolbar to debug middleware."""
     gzip_middleware = "django.middleware.gzip.GZipMiddleware"
     for m in middleware:
         if m == gzip_middleware:
             yield m
             yield "debug_toolbar.middleware.DebugToolbarMiddleware"
+            yield "projectify.middleware.microsloth"
         else:
             yield m
 
@@ -69,7 +70,7 @@ class Development(SpectacularSettings, Base):
         "drf_spectacular_sidecar",
     )
 
-    MIDDLEWARE = list(add_debug_middleware(Base.MIDDLEWARE))
+    MIDDLEWARE = list(add_dev_middleware(Base.MIDDLEWARE))
 
     # Debug
     DEBUG = True
@@ -147,6 +148,9 @@ class Development(SpectacularSettings, Base):
         **Base.REST_FRAMEWORK,
         "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     }
+
+    # Settings for slow connection emulation
+    SLEEP_MIN_MAX_MS = 500, 1500
 
     @classmethod
     def pre_setup(cls) -> None:

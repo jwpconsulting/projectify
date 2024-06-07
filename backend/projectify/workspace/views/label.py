@@ -31,6 +31,7 @@ from rest_framework.status import (
 )
 from rest_framework.views import APIView
 
+from projectify.lib.error_schema import DeriveSchema
 from projectify.workspace.models.label import Label
 from projectify.workspace.selectors.workspace import (
     workspace_find_by_workspace_uuid,
@@ -60,11 +61,7 @@ class LabelCreate(APIView):
 
     @extend_schema(
         request=LabelCreateSerializer,
-        responses={
-            201: LabelBaseSerializer,
-            # TODO
-            400: None,
-        },
+        responses={201: LabelBaseSerializer, 400: DeriveSchema},
     )
     def post(self, request: Request) -> Response:
         """Create the label."""
@@ -117,12 +114,7 @@ class LabelUpdateDelete(APIView):
 
     @extend_schema(
         request=LabelUpdateSerializer,
-        responses={
-            201: LabelBaseSerializer,
-            # TODO
-            400: None,
-            404: None,
-        },
+        responses={201: LabelBaseSerializer, 400: DeriveSchema},
     )
     def put(self, request: Request, label_uuid: UUID) -> Response:
         """Handle PUT."""
@@ -140,10 +132,7 @@ class LabelUpdateDelete(APIView):
         return Response(data=output_serializer.data, status=HTTP_200_OK)
 
     @extend_schema(
-        responses={
-            204: None,
-            404: None,
-        },
+        responses={204: None},
     )
     def delete(self, request: Request, label_uuid: UUID) -> Response:
         """Handle DELETE."""

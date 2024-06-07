@@ -236,9 +236,7 @@ class TestSubTaskListSerializer:
             many=True,
         )
         assert serializer.is_valid() is False
-        assert (
-            "no sub task instances" in serializer.errors["non_field_errors"][0]
-        )
+        assert "no sub task instances" in serializer.errors["drf_general"][0]
 
     def test_delete_one(self, sub_task: SubTask, context: Context) -> None:
         """Test a sub task is deleted when empty data are passed."""

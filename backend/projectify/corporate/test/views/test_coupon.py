@@ -57,6 +57,12 @@ class TestCouponRedeem:
                 data={"code": "thiscodedoesnotexist"},
             )
             assert response.status_code == 400, response.data
+        assert response.data == {
+            "status": "invalid",
+            "code": 400,
+            "details": {"code": "No coupon is available for this code"},
+            "general": None,
+        }
         assert (
             customer_check_active_for_workspace(workspace=workspace) == "trial"
         )

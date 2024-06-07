@@ -15,33 +15,10 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import {
-    openApiClient,
-    postWithCredentialsJson,
-    putWithCredentialsJson,
-} from "$lib/repository/util";
+import { openApiClient } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { Workspace, WorkspaceDetail } from "$lib/types/workspace";
 
-import type { ApiResponse } from "../types";
-
-// Create
-export async function createWorkspace(
-    title: string,
-    description: string | undefined,
-    repositoryContext: RepositoryContext,
-): Promise<Workspace> {
-    const response = await postWithCredentialsJson<Workspace>(
-        `/workspace/workspace/`,
-        { title, description },
-        repositoryContext,
-    );
-    if (response.kind !== "ok") {
-        console.error("TODO handle", response);
-        throw new Error("Error while creating workspace");
-    }
-    return response.data;
-}
 // Read
 export async function getWorkspaces(
     _repositoryContext?: RepositoryContext,
@@ -49,7 +26,7 @@ export async function getWorkspaces(
     const { response, data } = await openApiClient.GET(
         "/workspace/workspace/user-workspaces/",
     );
-    if (data !== undefined) {
+    if (data) {
         return data;
     }
     throw new Error(
@@ -62,62 +39,17 @@ export async function getWorkspaces(
 export async function getWorkspace(
     workspace_uuid: string,
     _repositoryContext?: RepositoryContext,
-): Promise<WorkspaceDetail | undefined> {
+): Promise<WorkspaceDetail> {
     const { response, data } = await openApiClient.GET(
         "/workspace/workspace/{workspace_uuid}",
         { params: { path: { workspace_uuid } } },
     );
-    if (data !== undefined) {
+    if (data) {
         return data;
     }
     throw new Error(
         `Could not retrieve workspace ${workspace_uuid}, ${JSON.stringify(
             await response.json(),
         )}`,
-    );
-}
-
-// Update
-export async function updateWorkspace(
-    // TODO take workspace type instead of uuid string
-    uuid: string,
-    title: string,
-    description: string | null,
-    repositoryContext: RepositoryContext,
-): Promise<Workspace> {
-    const response = await putWithCredentialsJson<Workspace>(
-        `/workspace/workspace/${uuid}`,
-        { title, description },
-        repositoryContext,
-    );
-    if (response.kind !== "ok") {
-        throw new Error("Error while updating workspace");
-    }
-    return response.data;
-}
-// Delete
-
-// RPC
-export async function inviteUser(
-    { uuid }: Pick<Workspace, "uuid">,
-    email: string,
-    repositoryContext: RepositoryContext,
-): Promise<ApiResponse<unknown, { email?: string }>> {
-    return await postWithCredentialsJson(
-        `/workspace/workspace/${uuid}/invite-team-member`,
-        { email },
-        repositoryContext,
-    );
-}
-
-export async function uninviteUser(
-    { uuid }: Pick<Workspace, "uuid">,
-    email: string,
-    repositoryContext: RepositoryContext,
-): Promise<ApiResponse<unknown, { email?: string }>> {
-    return await postWithCredentialsJson(
-        `/workspace/workspace/${uuid}/uninvite-team-member`,
-        { email },
-        repositoryContext,
     );
 }

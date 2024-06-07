@@ -21,33 +21,71 @@
     import Layout from "$lib/figma/overlays/constructive/Layout.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
-    import { updateSection } from "$lib/repository/workspace/section";
     import {
         rejectConstructiveOverlay,
         resolveConstructiveOverlay,
     } from "$lib/stores/globalUi";
     import type { FormViewState } from "$lib/types/ui";
     import type { Section } from "$lib/types/workspace";
+    import { openApiClient } from "$lib/repository/util";
+    import type { InputFieldValidation } from "$lib/funabashi/types";
 
     export let section: Pick<Section, "uuid" | "title" | "description">;
 
     let state: FormViewState = { kind: "start" };
 
     let { title } = section;
+    let titleValidation: InputFieldValidation | undefined = undefined;
     const { description } = section;
 
     async function onSubmit() {
         state = { kind: "submitting" };
-        const result = await updateSection(
-            { ...section, title, description },
-            { fetch },
+        const { error, data } = await openApiClient.PUT(
+            "/workspace/section/{section_uuid}",
+            {
+                params: { path: { section_uuid: section.uuid } },
+                body: {
+                    title,
+                    description,
+                },
+            },
         );
-        if (!result.ok) {
-            // TODO show error
-            state = { kind: "error", message: JSON.stringify(result.error) };
-            throw result.error;
+        if (data) {
+            resolveConstructiveOverlay();
+            return;
         }
-        resolveConstructiveOverlay();
+        if (error.code !== 400) {
+            throw new Error("Error occured while updating section");
+        }
+        const { details } = error;
+        // TODO show error
+        if (details.title) {
+            titleValidation = { ok: false, error: details.title };
+        } else {
+            titleValidation = {
+                ok: true,
+                result: $_(
+                    "overlay.constructive.update-section.form.title.valid",
+                ),
+            };
+        }
+        if (titleValidation.ok) {
+            state = {
+                kind: "error",
+                message: $_(
+                    "overlay.constructive.update-section.errors.general",
+                    { values: { error: JSON.stringify(details) } },
+                ),
+            };
+        } else {
+            state = {
+                kind: "error",
+                message: $_(
+                    "overlay.constructive.update-section.errors.field",
+                    { values: { error: JSON.stringify(details) } },
+                ),
+            };
+        }
     }
 </script>
 
@@ -62,9 +100,15 @@
             placeholder={$_(
                 "overlay.constructive.update-section.form.title.placeholder",
             )}
+            validation={titleValidation}
             style={{ inputType: "text" }}
             bind:value={title}
         />
+        {#if state.kind === "error"}
+            <p>
+                {state.message}
+            </p>
+        {/if}
     </svelte:fragment>
     <svelte:fragment slot="buttons">
         <Button

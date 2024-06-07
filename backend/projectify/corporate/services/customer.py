@@ -22,7 +22,6 @@ from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
-from rest_framework.exceptions import PermissionDenied
 from stripe.billing_portal import (
     Session as BillingPortalSession,
 )
@@ -146,7 +145,7 @@ def create_billing_portal_session_for_customer(
     validate_perm("corporate.can_update_customer", who, customer.workspace)
     customer_id = customer.stripe_customer_id
     if customer_id is None:
-        raise PermissionDenied(
+        raise serializers.ValidationError(
             _(
                 "Can not create billing portal session because no "
                 "subscription is active. If you believe this is an error, "

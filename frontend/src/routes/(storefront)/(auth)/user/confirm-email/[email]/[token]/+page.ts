@@ -15,20 +15,13 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { ApiResponse } from "$lib/repository/types";
-import { confirmEmail } from "$lib/repository/user";
+import { openApiClient } from "$lib/repository/util";
 
 import type { PageLoadEvent } from "./$types";
 
-interface Data {
-    response: ApiResponse<unknown, unknown>;
-}
-
-export async function load({
-    fetch,
-    params: { email, token },
-}: PageLoadEvent): Promise<Data> {
-    return {
-        response: await confirmEmail(email, token, { fetch }),
-    };
+export async function load({ params: { email, token } }: PageLoadEvent) {
+    const { error } = await openApiClient.POST("/user/user/confirm-email", {
+        body: { email, token },
+    });
+    return { error };
 }

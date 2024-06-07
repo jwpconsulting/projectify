@@ -17,7 +17,7 @@
  */
 import { error } from "@sveltejs/kit";
 
-import { getWorkspace } from "$lib/repository/workspace";
+import { getWorkspace } from "$lib/repository/workspace/workspace";
 import { getProject } from "$lib/repository/workspace/project";
 import type { ProjectDetail, WorkspaceDetail } from "$lib/types/workspace";
 

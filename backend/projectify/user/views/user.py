@@ -27,19 +27,19 @@ from django.utils.translation import gettext_lazy as _
 
 from django_ratelimit.decorators import ratelimit
 from drf_spectacular.utils import PolymorphicProxySerializer, extend_schema
-from rest_framework import (
-    parsers,
-    serializers,
-    views,
-)
-from rest_framework.exceptions import NotAuthenticated
+from rest_framework import parsers, serializers, views
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
+from projectify.lib.error_schema import DeriveSchema
 from projectify.user.models import User
-from projectify.user.serializers import UserSerializer
+from projectify.user.serializers import (
+    AnonymousUserSerializer,
+    LoggedInUserSerializer,
+)
 from projectify.user.services.user import (
     user_change_password,
     user_confirm_email_address_update,
@@ -55,17 +55,12 @@ class UserReadUpdate(views.APIView):
 
     permission_classes = (AllowAny,)
 
-    class AnonymousUserSerializer(serializers.Serializer):
-        """Serialize anonymous user."""
-
-        unauthenticated = serializers.ChoiceField(choices=[True])
-
     @extend_schema(
         responses={
             200: PolymorphicProxySerializer(
                 "auth_info",
                 [
-                    UserSerializer,
+                    LoggedInUserSerializer,
                     AnonymousUserSerializer,
                 ],
                 None,
@@ -75,9 +70,13 @@ class UserReadUpdate(views.APIView):
     def get(self, request: Request) -> Response:
         """Handle GET."""
         user = cast(Union[User, AnonymousUser], request.user)
+        serializer: serializers.Serializer
         if user.is_anonymous:
-            return Response(data={"unauthenticated": True})
-        serializer = UserSerializer(instance=user)
+            serializer = AnonymousUserSerializer(
+                instance={"kind": "unauthenticated"}
+            )
+        else:
+            serializer = LoggedInUserSerializer(instance=user)
         return Response(data=serializer.data)
 
     class UserUpdateSerializer(serializers.ModelSerializer[User]):
@@ -91,18 +90,13 @@ class UserReadUpdate(views.APIView):
 
     @extend_schema(
         request=UserUpdateSerializer,
-        responses={
-            200: UserSerializer,
-            # TODO annotate
-            400: None,
-            403: None,
-        },
+        responses={200: LoggedInUserSerializer, 400: DeriveSchema},
     )
     def put(self, request: Request) -> Response:
         """Update a user."""
         user = cast(Union[User, AnonymousUser], request.user)
         if not isinstance(user, User):
-            raise NotAuthenticated(
+            raise PermissionDenied(
                 _("Must be authenticated in order to update a user")
             )
         serializer = self.UserUpdateSerializer(data=request.data)
@@ -113,7 +107,7 @@ class UserReadUpdate(views.APIView):
             user=user,
             preferred_name=data.get("preferred_name"),
         )
-        output_serializer = UserSerializer(instance=user)
+        output_serializer = LoggedInUserSerializer(instance=user)
         return Response(data=output_serializer.data, status=HTTP_200_OK)
 
 
@@ -134,11 +128,7 @@ class ProfilePictureUpload(views.APIView):
 
     @extend_schema(
         request=ProfilePictureUploadSerializer,
-        responses={
-            204: None,
-            # TODO
-            400: None,
-        },
+        responses={204: None, 400: DeriveSchema},
     )
     def post(self, request: Request) -> Response:
         """Handle POST."""
@@ -163,22 +153,9 @@ class ChangePassword(views.APIView):
         current_password = serializers.CharField()
         new_password = serializers.CharField()
 
-    class ChangePasswordErrorSerializer(serializers.Serializer):
-        """These fields may be populated in a 400 response."""
-
-        current_password = serializers.CharField(required=False)
-        new_password = serializers.CharField(required=False)
-        policies = serializers.ListField(
-            child=serializers.CharField(), required=False
-        )
-
     @extend_schema(
         request=ChangePasswordSerializer,
-        responses={
-            204: None,
-            400: ChangePasswordErrorSerializer,
-            429: None,
-        },
+        responses={204: None, 400: DeriveSchema, 429: DeriveSchema},
     )
     @method_decorator(ratelimit(key="user", rate="5/h"))
     def post(self, request: Request) -> Response:
@@ -209,12 +186,7 @@ class RequestEmailAddressUpdate(views.APIView):
 
     @extend_schema(
         request=RequestEmailAddressUpdateSerializer,
-        responses={
-            204: None,
-            # TODO
-            400: None,
-            429: None,
-        },
+        responses={204: None, 400: DeriveSchema, 429: DeriveSchema},
     )
     @method_decorator(ratelimit(key="user", rate="5/h"))
     def post(self, request: Request) -> Response:
@@ -245,8 +217,7 @@ class ConfirmEmailAddressUpdate(views.APIView):
         request=ConfirmEmailAddressUpdateSerializer,
         responses={
             204: None,
-            # TODO
-            400: None,
+            400: DeriveSchema,
         },
     )
     def post(self, request: Request) -> Response:

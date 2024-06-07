@@ -22,11 +22,11 @@
     import Onboarding from "$lib/components/Onboarding.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { goto } from "$lib/navigation";
-    import { createTask } from "$lib/repository/workspace";
-    import { createSection } from "$lib/repository/workspace/section";
+    import { createTask } from "$lib/repository/workspace/task";
     import { getNewLabelUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
+    import { openApiClient } from "$lib/repository/util";
 
     export let data: PageData;
 
@@ -42,15 +42,19 @@
         if (!taskTitle) {
             throw new Error("Expected taskTitle");
         }
-        const result = await createSection(
-            project,
-            { title: sectionTitle, description: null },
-            { fetch },
+        const { error, data: section } = await openApiClient.POST(
+            "/workspace/section/",
+            {
+                body: {
+                    project_uuid: project.uuid,
+                    title: sectionTitle,
+                    description: null,
+                },
+            },
         );
-        if (!result.ok) {
-            throw result.error;
+        if (error) {
+            throw Error("Could not create section");
         }
-        const section = result.data;
         // Find ourselves
         const assignee =
             workspace.team_members.find((w) => w.user.email === user.email) ??
@@ -69,13 +73,17 @@
     }
 </script>
 
+<svelte:head>
+    <title>{$_("onboarding.new-task.title")}</title>
+</svelte:head>
+
 <Onboarding
     stepCount={5}
     step={2}
     nextAction={{ kind: "submit", disabled, submit }}
 >
     <svelte:fragment slot="title"
-        >{$_("onboarding.new-task.title")}</svelte:fragment
+        >{$_("onboarding.new-task.heading")}</svelte:fragment
     >
     <svelte:fragment slot="prompt">
         <div class="flex flex-col gap-4">

@@ -23,16 +23,12 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import {
-        createBillingPortalSession,
-        createCheckoutSession,
-        redeemCoupon,
-    } from "$lib/repository/corporate";
-    import { currentCustomer } from "$lib/stores/dashboard";
+    import { currentCustomer } from "$lib/stores/dashboard/customer";
 
     import type { PageData } from "./$types";
 
     import { invalidateAll } from "$app/navigation";
+    import { openApiClient } from "$lib/repository/util";
 
     export let data: PageData;
 
@@ -47,59 +43,71 @@
         } catch {
             throw new Error("Expected valid seats");
         }
-        const response = await createCheckoutSession(
-            workspace.uuid,
-            checkoutSeats,
-            { fetch },
+        const { data, error } = await openApiClient.POST(
+            "/corporate/workspace/{workspace_uuid}/create-checkout-session",
+            {
+                params: { path: { workspace_uuid: workspace.uuid } },
+                body: { seats: checkoutSeats },
+            },
         );
-        if (!response.ok) {
-            // XXX not pretty
-            checkoutError = JSON.stringify(response.error);
-            console.error(response);
+        if (error === undefined) {
+            const { url } = data;
+            window.location.href = url;
             return;
+        } else if (error.code !== 400) {
+            throw new Error("Could not create checkout session");
         }
-        const { url } = response.data;
-        window.location.href = url;
+        if (error.details.seats) {
+            checkoutError = error.details.seats;
+        } else {
+            throw new Error(
+                "Unknown validation error when creating checkout session",
+            );
+        }
     }
 
     async function submitRedeemCoupon() {
         if (!couponCode) {
             throw new Error("Expected couponCode");
         }
-        const response = await redeemCoupon(workspace, couponCode, { fetch });
-        if (!response.ok) {
-            // XXX not pretty
-            console.error(response);
-            if (typeof response.error === "string") {
-                couponError = response.error;
-            } else if (response.error.code !== undefined) {
-                couponCodeValidation = {
-                    ok: false,
-                    error: response.error.code,
-                };
-            } else {
-                couponError = $_(
-                    "workspace-settings.billing.unpaid.coupon.unknown-error",
-                );
-            }
+        const { error } = await openApiClient.POST(
+            "/corporate/workspace/{workspace_uuid}/redeem-coupon",
+            {
+                params: { path: { workspace_uuid: workspace.uuid } },
+                body: { code: couponCode },
+            },
+        );
+        if (error === undefined) {
+            await invalidateAll();
             return;
         }
-        await invalidateAll();
+        if (error.code !== 400) {
+            throw new Error("Could not redeem coupon");
+        }
+        if (error.details.code) {
+            couponCodeValidation = {
+                ok: false,
+                error: error.details.code,
+            };
+        } else {
+            couponError = $_(
+                "workspace-settings.billing.unpaid.coupon.unknown-error",
+            );
+        }
     }
 
     // Paid
     async function editBillingDetails() {
-        const response = await createBillingPortalSession(workspace.uuid, {
-            fetch,
-        });
-        if (!response.ok) {
-            // XXX not pretty
-            editBillingError = JSON.stringify(response.error);
-            console.error(response);
+        const { error, data } = await openApiClient.POST(
+            "/corporate/workspace/{workspace_uuid}/create-billing-portal-session",
+            { params: { path: { workspace_uuid: workspace.uuid } } },
+        );
+        if (error === undefined) {
+            const { url } = data;
+            window.location.href = url;
             return;
         }
-        const { url } = response.data;
-        window.location.href = url;
+        throw new Error("Could not open billing portal");
     }
 
     // Unpaid user:
@@ -112,7 +120,7 @@
     let couponCodeValidation: InputFieldValidation | undefined = undefined;
 
     // Paid user:
-    let editBillingError: string | undefined = undefined;
+    const editBillingError: string | undefined = undefined;
     $: quota = workspace.quota.team_members_and_invites;
     $: seatsRemaining = (quota.current ?? 0) - (quota.limit ?? 0);
 </script>

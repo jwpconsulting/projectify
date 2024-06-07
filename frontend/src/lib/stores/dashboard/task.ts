@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { getTask } from "$lib/repository/workspace";
+import { openApiClient } from "$lib/repository/util";
 import { selectedLabels } from "$lib/stores/dashboard/labelFilter";
 import { currentProject } from "$lib/stores/dashboard/project";
 import { filterByTeamMember } from "$lib/stores/dashboard/teamMemberFilter";
@@ -56,4 +56,17 @@ export function searchTasks(
     );
 }
 
-export const currentTask = createWsStore<TaskDetail>("task", getTask);
+export const currentTask = createWsStore<TaskDetail>(
+    "task",
+    async (task_uuid: string) => {
+        const { data, error } = await openApiClient.GET(
+            "/workspace/task/{task_uuid}",
+            { params: { path: { task_uuid } } },
+        );
+        if (error === undefined) {
+            return data;
+        }
+        console.error(error);
+        return undefined;
+    },
+);

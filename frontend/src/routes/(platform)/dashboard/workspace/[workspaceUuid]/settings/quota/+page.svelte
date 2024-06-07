@@ -20,7 +20,7 @@
     import { _ } from "svelte-i18n";
 
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { currentWorkspace } from "$lib/stores/dashboard";
+    import { currentWorkspace } from "$lib/stores/dashboard/workspace";
     import type { Quota } from "$lib/types/workspace";
 
     import type { PageData } from "./$types";

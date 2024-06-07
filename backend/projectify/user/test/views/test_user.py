@@ -25,9 +25,6 @@ from typing import (
 from django.core.files import (
     File,
 )
-from django.test import (
-    Client,
-)
 from django.urls import (
     reverse,
 )
@@ -68,7 +65,7 @@ class TestUserReadUpdate:
         """Assert that we get 200 back even if not logged in."""
         response = rest_client.get(resource_url)
         assert response.status_code == 200, response.data
-        assert response.data == {"unauthenticated": True}
+        assert response.data == {"kind": "unauthenticated"}
 
     def test_authenticated(
         self,
@@ -79,7 +76,12 @@ class TestUserReadUpdate:
         """Assert we can post to this view this while being logged in."""
         response = rest_user_client.get(resource_url)
         assert response.status_code == 200, response.data
-        assert response.data["preferred_name"] == user.preferred_name
+        assert response.data == {
+            "kind": "authenticated",
+            "email": user.email,
+            "preferred_name": user.preferred_name,
+            "profile_picture": None,
+        }
 
     def test_update(
         self,
@@ -130,6 +132,13 @@ class TestUserReadUpdate:
             resource_url, data={"preferred_name": "google.com"}
         )
         assert response.status_code == HTTP_400_BAD_REQUEST, response.data
+        assert response.data == {
+            "status": "invalid",
+            "code": 400,
+            "details": {},
+            "general": "Preferred name can only contain '.' or ':' if "
+            "followed by whitespace or if located at the end.",
+        }
         user.refresh_from_db()
         # Canary in the mines
         assert user.preferred_name == name
@@ -157,20 +166,20 @@ class TestProfilePictureUploadView:
 
     def test_unauthenticated(
         self,
-        client: Client,
+        rest_client: APIClient,
         resource_url: str,
         headers: Headers,
         uploaded_file: File,
     ) -> None:
-        """Assert we can't view this while being logged out."""
-        response = client.post(
+        """Assert we can't post to this view."""
+        response = rest_client.post(
             resource_url,
             {"file": uploaded_file},
             format="multipart",
             **headers,
         )
 
-        assert response.status_code == 403, response.content
+        assert response.status_code == 403, response.data
 
     def test_authenticated(
         self,

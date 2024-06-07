@@ -23,17 +23,18 @@ from django.utils.decorators import method_decorator
 from django_ratelimit.core import get_usage
 from django_ratelimit.decorators import ratelimit
 from drf_spectacular.utils import extend_schema
-from rest_framework import (
-    serializers,
-    views,
-)
+from rest_framework import serializers, views
 from rest_framework.exceptions import Throttled
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
-from projectify.user.serializers import UserSerializer
+from projectify.lib.error_schema import DeriveSchema
+from projectify.user.serializers import (
+    AnonymousUserSerializer,
+    LoggedInUserSerializer,
+)
 from projectify.user.services.auth import (
     user_confirm_email,
     user_confirm_password_reset,
@@ -47,16 +48,14 @@ from projectify.user.services.auth import (
 class LogOut(views.APIView):
     """Log a user out."""
 
-    @extend_schema(
-        request=None,
-        responses={
-            204: None,
-        },
-    )
+    @extend_schema(request=None, responses={204: AnonymousUserSerializer})
     def post(self, request: Request) -> Response:
         """Handle POST."""
         user_log_out(request=request)
-        return Response(status=HTTP_204_NO_CONTENT)
+        serializer = AnonymousUserSerializer(
+            instance={"kind": "unauthenticated"}
+        )
+        return Response(status=HTTP_204_NO_CONTENT, data=serializer.data)
 
 
 # The following views have no authentication required
@@ -73,24 +72,9 @@ class SignUp(views.APIView):
         tos_agreed = serializers.BooleanField()
         privacy_policy_agreed = serializers.BooleanField()
 
-    class SignUpErrorSerializer(serializers.Serializer):
-        """Hint for drf-spectacular."""
-
-        email = serializers.CharField(required=False)
-        password = serializers.CharField(required=False)
-        policies = serializers.ListField(
-            child=serializers.CharField(), required=False
-        )
-        tos_agreed = serializers.CharField(required=False)
-        privacy_policy_agreed = serializers.CharField(required=False)
-
     @extend_schema(
         request=SignUpSerializer,
-        responses={
-            204: None,
-            400: SignUpErrorSerializer,
-            429: None,
-        },
+        responses={204: None, 400: DeriveSchema, 429: DeriveSchema},
     )
     @method_decorator(ratelimit(key="ip", rate="60/h"))
     def post(self, request: Request) -> Response:
@@ -144,11 +128,7 @@ class ConfirmEmail(views.APIView):
 
     @extend_schema(
         request=ConfirmEmailSerializer,
-        responses={
-            204: None,
-            # TODO annotate
-            400: None,
-        },
+        responses={204: None, 400: DeriveSchema},
     )
     def post(self, request: Request) -> Response:
         """Handle POST."""
@@ -176,9 +156,9 @@ class LogIn(views.APIView):
     @extend_schema(
         request=LogInSerializer,
         responses={
-            200: UserSerializer,
-            400: None,
-            429: None,
+            200: LoggedInUserSerializer,
+            400: DeriveSchema,
+            429: DeriveSchema,
         },
     )
     @method_decorator(
@@ -216,7 +196,7 @@ class LogIn(views.APIView):
                 raise Throttled()
             else:
                 raise e
-        response_serializer = UserSerializer(instance=user)
+        response_serializer = LoggedInUserSerializer(instance=user)
         return Response(data=response_serializer.data, status=HTTP_200_OK)
 
 
@@ -237,12 +217,7 @@ class PasswordResetRequest(views.APIView):
 
     @extend_schema(
         request=PasswordResetRequestSerializer,
-        responses={
-            204: None,
-            # TODO annotate
-            400: None,
-            429: None,
-        },
+        responses={204: None, 400: DeriveSchema, 429: DeriveSchema},
     )
     @method_decorator(ratelimit(key="post:email", rate="5/h"))
     @method_decorator(ratelimit(key="ip", rate="5/h"))
@@ -270,11 +245,7 @@ class PasswordResetConfirm(views.APIView):
 
     @extend_schema(
         request=PasswordResetConfirmSerializer,
-        responses={
-            204: None,
-            # TODO annotate
-            400: None,
-        },
+        responses={204: None, 400: DeriveSchema},
     )
     def post(self, request: Request) -> Response:
         """Handle POST."""
@@ -300,7 +271,9 @@ class PasswordPolicyRead(views.APIView):
         policies = serializers.ListField(child=serializers.CharField())
 
     @extend_schema(
-        responses=PasswordPoliciesSerializer,
+        responses={
+            200: PasswordPoliciesSerializer,
+        },
     )
     def get(self, request: Request) -> Response:
         """Return all information about current password policy."""

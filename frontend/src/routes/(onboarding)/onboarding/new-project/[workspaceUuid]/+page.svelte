@@ -23,16 +23,22 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
-    import { createProject } from "$lib/repository/workspace/project";
-    import { getNewTaskUrl } from "$lib/urls/onboarding";
+    import { getNewProjectUrl, getNewTaskUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
+    import type { InputFieldValidation } from "$lib/funabashi/types";
+    import { openApiClient } from "$lib/repository/util";
+    import type { FormViewState } from "$lib/types/ui";
+    import { getLogInWithNextUrl } from "$lib/urls/user";
 
     export let data: PageData;
 
     const { workspace, project } = data;
 
+    let state: FormViewState = { kind: "start" };
+
     let title: string | undefined = undefined;
+    let titleValidation: InputFieldValidation | undefined = undefined;
 
     $: disabled = title === undefined;
 
@@ -40,24 +46,51 @@
         if (!title) {
             throw new Error("Expected title");
         }
-        const result = await createProject(
-            workspace,
+        state = { kind: "submitting" };
+
+        const { data, error } = await openApiClient.POST(
+            "/workspace/project/",
             {
-                title,
-                description: "",
+                body: {
+                    workspace_uuid: workspace.uuid,
+                    title,
+                    description: null,
+                },
             },
-            { fetch },
         );
-        if (!result.ok) {
-            throw result.error;
+        if (data) {
+            const { uuid } = data;
+            const nextStep = getNewTaskUrl(uuid);
+            await goto(nextStep);
+            return;
         }
-        const { uuid } = result.data;
-        const nextStep = getNewTaskUrl(uuid);
-        await goto(nextStep);
+        if (error.code === 403) {
+            await goto(getLogInWithNextUrl(getNewProjectUrl(workspace.uuid)));
+            return;
+        }
+        titleValidation = error.details.title
+            ? { ok: false, error: error.details.title }
+            : {
+                  ok: true,
+                  result: $_("onboarding.new-project.fields.title.valid"),
+              };
+        if (titleValidation.ok) {
+            state = {
+                kind: "error",
+                message: $_("onboarding.new-project.errors.general"),
+            };
+        } else {
+            state = {
+                kind: "error",
+                message: $_("onboarding.new-project.errors.field"),
+            };
+        }
     }
 
     $: prompts = $json("onboarding.new-project.prompt") as string[];
 </script>
+
+<svelte:head><title>{$_("onboarding.new-project.title")}</title></svelte:head>
 
 <Onboarding
     stepCount={5}
@@ -69,7 +102,7 @@
     }}
 >
     <svelte:fragment slot="title"
-        >{$_("onboarding.new-project.title")}</svelte:fragment
+        >{$_("onboarding.new-project.heading")}</svelte:fragment
     >
     <svelte:fragment slot="prompt">
         <div class="flex flex-col gap-8">
@@ -105,11 +138,14 @@
         <InputField
             style={{ inputType: "text" }}
             name="title"
-            label={$_("onboarding.new-project.input.label")}
-            placeholder={$_("onboarding.new-project.input.placeholder")}
+            label={$_("onboarding.new-project.fields.title.label")}
+            placeholder={$_("onboarding.new-project.fields.title.placeholder")}
             bind:value={title}
             required
         />
+        {#if state.kind === "error"}
+            <p>{state.message}</p>
+        {/if}
     </svelte:fragment>
 
     <DashboardPlaceholder

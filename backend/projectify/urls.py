@@ -37,7 +37,6 @@ Including another URLconf
 from collections.abc import Sequence
 from typing import Union
 
-from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import URLPattern, URLResolver, include, path
@@ -48,7 +47,10 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 
+from projectify.lib.settings import get_settings
 from projectify.workspace.consumers import ChangeConsumer
+
+settings = get_settings()
 
 urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     # TODO may I use projectify.admin.admin.urls here?

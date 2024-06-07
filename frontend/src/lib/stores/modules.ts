@@ -17,15 +17,10 @@
  */
 // TODO consider putting this either in repository or make it part of the
 // task store file
-import {
-    moveTaskAfterTask,
-    moveTaskToSection,
-} from "$lib/repository/workspace";
-import type { RepositoryContext } from "$lib/types/repository";
+import { openApiClient } from "$lib/repository/util";
 import type {
     Task,
     SectionWithTasks,
-    Section,
     ProjectDetailTask,
 } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
@@ -55,31 +50,38 @@ export function getTaskPosition(
     }
 }
 
-export async function moveToTop(
-    section: Pick<Section, "uuid">,
+async function moveTaskAfterTask(
     task: Pick<Task, "uuid">,
-    repositoryContext: RepositoryContext,
-) {
-    await moveTaskToSection(task, section, repositoryContext);
+    { uuid }: Pick<Task, "uuid">,
+): Promise<void> {
+    const { error } = await openApiClient.POST(
+        "/workspace/task/{task_uuid}/move-after-task",
+        {
+            params: { path: { task_uuid: task.uuid } },
+            body: { task_uuid: uuid },
+        },
+    );
+    if (error === undefined) {
+        return;
+    }
+    throw new Error("Could not move task after task");
 }
 
 export async function moveToBottom(
     section: SectionWithTasks,
     task: Pick<Task, "uuid">,
-    repositoryContext: RepositoryContext,
 ) {
     const { tasks } = section;
     const lastTask = tasks[tasks.length - 1];
     if (lastTask === undefined) {
         throw new Error("Expected lastTask");
     }
-    await moveTaskAfterTask(task, lastTask, repositoryContext);
+    await moveTaskAfterTask(task, lastTask);
 }
 
 export async function moveUp(
     section: SectionWithTasks,
     task: ProjectDetailTask,
-    repositoryContext: RepositoryContext,
 ) {
     const { tasks } = section;
     const position = getTaskPosition(section, task);
@@ -90,13 +92,12 @@ export async function moveUp(
         tasks.at(position.position - 1),
         "Expected prevTask",
     );
-    await moveTaskAfterTask(task, prevTask, repositoryContext);
+    await moveTaskAfterTask(task, prevTask);
 }
 
 export async function moveDown(
     section: SectionWithTasks,
     task: ProjectDetailTask,
-    repositoryContext: RepositoryContext,
 ) {
     const position = getTaskPosition(section, task);
     if (!(position.kind === "start" || position.kind === "within")) {
@@ -107,5 +108,5 @@ export async function moveDown(
         tasks.at(position.position + 1),
         "Expected nextTask",
     );
-    await moveTaskAfterTask(task, nextTask, repositoryContext);
+    await moveTaskAfterTask(task, nextTask);
 }

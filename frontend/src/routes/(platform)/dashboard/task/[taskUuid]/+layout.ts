@@ -15,7 +15,8 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { currentTask, currentWorkspace } from "$lib/stores/dashboard";
+import { currentTask } from "$lib/stores/dashboard/task";
+import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 import type { TaskDetail } from "$lib/types/workspace";
 
 import type { LayoutLoadEvent } from "./$types";

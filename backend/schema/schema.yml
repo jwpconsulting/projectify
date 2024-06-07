@@ -18,6 +18,8 @@ paths:
           description: No response body
         '400':
           description: No response body
+        '500':
+          description: No response body
   /corporate/workspace/{workspace_uuid}/create-billing-portal-session:
     post:
       operationId: corporate_workspace_create_billing_portal_session_create
@@ -40,8 +42,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/WorkspaceBillingPortalSessionCreateOutput'
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /corporate/workspace/{workspace_uuid}/create-checkout-session:
     post:
       operationId: corporate_workspace_create_checkout_session_create
@@ -77,9 +89,48 @@ paths:
                 $ref: '#/components/schemas/WorkspaceCheckoutSessionCreateOutput'
           description: ''
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for WorkspaceCheckoutSessionCreateInputSerializer
+                    properties:
+                      seats:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /corporate/workspace/{workspace_uuid}/customer:
     get:
       operationId: corporate_workspace_customer_retrieve
@@ -101,6 +152,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Customer'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
           description: ''
   /corporate/workspace/{workspace_uuid}/redeem-coupon:
     post:
@@ -133,7 +196,48 @@ paths:
         '204':
           description: No response body
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for CouponRedeemSerializer
+                    properties:
+                      code:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /user/user/change-password:
     post:
       operationId: user_user_change_password_create
@@ -161,10 +265,47 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ChangePasswordError'
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for ChangePasswordSerializer
+                    properties:
+                      current_password:
+                        type: string
+                      new_password:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
         '429':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequests'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /user/user/confirm-email:
     post:
       operationId: user_user_confirm_email_create
@@ -190,7 +331,38 @@ paths:
         '204':
           description: No response body
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for ConfirmEmailSerializer
+                    properties:
+                      email:
+                        type: string
+                      token:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
   /user/user/confirm-password-reset:
     post:
       operationId: user_user_confirm_password_reset_create
@@ -216,7 +388,40 @@ paths:
         '204':
           description: No response body
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for PasswordResetConfirmSerializer
+                    properties:
+                      email:
+                        type: string
+                      token:
+                        type: string
+                      new_password:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
   /user/user/current-user:
     get:
       operationId: user_user_current_user_retrieve
@@ -257,12 +462,39 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/LoggedInUser'
           description: ''
         '400':
-          description: No response body
-        '403':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for UserUpdateSerializer
+                    properties:
+                      preferred_name:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
   /user/user/email-address-update/confirm:
     post:
       operationId: user_user_email_address_update_confirm_create
@@ -287,7 +519,42 @@ paths:
         '204':
           description: No response body
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for ConfirmEmailAddressUpdateSerializer
+                    properties:
+                      confirmation_token:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /user/user/email-address-update/request:
     post:
       operationId: user_user_email_address_update_request_create
@@ -312,9 +579,50 @@ paths:
         '204':
           description: No response body
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for RequestEmailAddressUpdateSerializer
+                    properties:
+                      password:
+                        type: string
+                      new_email:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
         '429':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequests'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /user/user/log-in:
     post:
       operationId: user_user_log_in_create
@@ -341,12 +649,47 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/LoggedInUser'
           description: ''
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for LogInSerializer
+                    properties:
+                      email:
+                        type: string
+                      password:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
         '429':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequests'
+          description: ''
   /user/user/log-out:
     post:
       operationId: user_user_log_out_create
@@ -357,7 +700,17 @@ paths:
       - cookieAuth: []
       responses:
         '204':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnonymousUser'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /user/user/password-policy:
     get:
       operationId: user_user_password_policy_retrieve
@@ -391,7 +744,42 @@ paths:
         '204':
           description: No response body
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for ProfilePictureUploadSerializer
+                    properties:
+                      file:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /user/user/request-password-reset:
     post:
       operationId: user_user_request_password_reset_create
@@ -417,9 +805,42 @@ paths:
         '204':
           description: No response body
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for PasswordResetRequestSerializer
+                    properties:
+                      email:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
         '429':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequests'
+          description: ''
   /user/user/sign-up:
     post:
       operationId: user_user_sign_up_create
@@ -448,10 +869,45 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SignUpError'
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for SignUpSerializer
+                    properties:
+                      email:
+                        type: string
+                      password:
+                        type: string
+                      tos_agreed:
+                        type: string
+                      privacy_policy_agreed:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
           description: ''
         '429':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TooManyRequests'
+          description: ''
   /workspace/label/:
     post:
       operationId: workspace_label_create
@@ -480,7 +936,46 @@ paths:
                 $ref: '#/components/schemas/LabelBase'
           description: ''
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for LabelCreateSerializer
+                    properties:
+                      name:
+                        type: string
+                      color:
+                        type: string
+                      workspace_uuid:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /workspace/label/{label_uuid}:
     put:
       operationId: workspace_label_update
@@ -516,9 +1011,50 @@ paths:
                 $ref: '#/components/schemas/LabelBase'
           description: ''
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for LabelUpdateSerializer
+                    properties:
+                      name:
+                        type: string
+                      color:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
     delete:
       operationId: workspace_label_destroy
       description: Handle DELETE.
@@ -536,8 +1072,18 @@ paths:
       responses:
         '204':
           description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /workspace/project/:
     post:
       operationId: workspace_project_create
@@ -566,7 +1112,48 @@ paths:
                 $ref: '#/components/schemas/ProjectDetail'
           description: ''
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for ProjectCreateSerializer
+                    properties:
+                      title:
+                        type: string
+                      description:
+                        type: string
+                      workspace_uuid:
+                        type: string
+                      due_date:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /workspace/project/{project_uuid}:
     get:
       operationId: workspace_project_retrieve
@@ -589,8 +1176,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProjectDetail'
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
     put:
       operationId: workspace_project_update
       description: Handle PUT.
@@ -625,7 +1222,52 @@ paths:
                 $ref: '#/components/schemas/ProjectUpdate'
           description: ''
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for ProjectUpdateSerializer
+                    properties:
+                      title:
+                        type: string
+                      description:
+                        type: string
+                      due_date:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
     delete:
       operationId: workspace_project_destroy
       description: Handle DELETE.
@@ -643,8 +1285,18 @@ paths:
       responses:
         '204':
           description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /workspace/project/{project_uuid}/archive:
     post:
       operationId: workspace_project_archive_create
@@ -675,12 +1327,49 @@ paths:
       responses:
         '204':
           description: No response body
-        '404':
-          description: No response body
-        '403':
-          description: No response body
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for ProjectArchiveSerializer
+                    properties:
+                      archived:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /workspace/section/:
     post:
       operationId: workspace_section_create
@@ -706,12 +1395,49 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SectionCreate'
+                $ref: '#/components/schemas/SectionDetail'
           description: ''
-        '404':
-          description: No response body
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for SectionCreateSerializer
+                    properties:
+                      title:
+                        type: string
+                      description:
+                        type: string
+                      project_uuid:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /workspace/section/{section_uuid}:
     get:
       operationId: workspace_section_retrieve
@@ -734,8 +1460,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/SectionDetail'
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
     put:
       operationId: workspace_section_update
       description: Update section.
@@ -770,9 +1506,50 @@ paths:
                 $ref: '#/components/schemas/SectionUpdate'
           description: ''
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for SectionUpdateSerializer
+                    properties:
+                      title:
+                        type: string
+                      description:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
     delete:
       operationId: workspace_section_destroy
       description: Handle DELETE.
@@ -790,8 +1567,18 @@ paths:
       responses:
         '204':
           description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /workspace/section/{section_uuid}/move:
     post:
       operationId: workspace_section_move_create
@@ -823,9 +1610,44 @@ paths:
         '200':
           description: No response body
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for SectionMoveSerializer
+                    properties:
+                      order:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
         '404':
           description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /workspace/task/:
     post:
       operationId: workspace_task_create
@@ -854,7 +1676,80 @@ paths:
                 $ref: '#/components/schemas/TaskDetail'
           description: ''
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for TaskCreateSerializer
+                    properties:
+                      title:
+                        type: string
+                      description:
+                        type: string
+                      assignee:
+                        type: object
+                        description: Errors for UuidObjectSerializer
+                        properties:
+                          uuid:
+                            type: string
+                      labels:
+                        type: array
+                        items:
+                          type: object
+                          description: Errors for UuidObjectSerializer
+                          properties:
+                            uuid:
+                              type: string
+                      due_date:
+                        type: string
+                      sub_tasks:
+                        type: array
+                        items:
+                          type: object
+                          description: Errors for SubTaskCreateUpdateSerializer
+                          properties:
+                            uuid:
+                              type: string
+                            title:
+                              type: string
+                            description:
+                              type: string
+                            done:
+                              type: string
+                      section:
+                        type: object
+                        description: Errors for UuidObjectSerializer
+                        properties:
+                          uuid:
+                            type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /workspace/task/{task_uuid}:
     get:
       operationId: workspace_task_retrieve
@@ -877,8 +1772,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/TaskDetail'
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
     put:
       operationId: workspace_task_update
       description: |-
@@ -917,9 +1822,80 @@ paths:
                 $ref: '#/components/schemas/TaskDetail'
           description: ''
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for TaskUpdateSerializer
+                    properties:
+                      title:
+                        type: string
+                      description:
+                        type: string
+                      assignee:
+                        type: object
+                        description: Errors for UuidObjectSerializer
+                        properties:
+                          uuid:
+                            type: string
+                      labels:
+                        type: array
+                        items:
+                          type: object
+                          description: Errors for UuidObjectSerializer
+                          properties:
+                            uuid:
+                              type: string
+                      due_date:
+                        type: string
+                      sub_tasks:
+                        type: array
+                        items:
+                          type: object
+                          description: Errors for SubTaskCreateUpdateSerializer
+                          properties:
+                            uuid:
+                              type: string
+                            title:
+                              type: string
+                            description:
+                              type: string
+                            done:
+                              type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
     delete:
       operationId: workspace_task_destroy
       description: Delete task.
@@ -937,8 +1913,18 @@ paths:
       responses:
         '204':
           description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /workspace/task/{task_uuid}/move-after-task:
     post:
       operationId: workspace_task_move_after_task_create
@@ -974,9 +1960,48 @@ paths:
                 $ref: '#/components/schemas/TaskDetail'
           description: ''
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for TaskMoveAfterTaskSerializer
+                    properties:
+                      task_uuid:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /workspace/task/{task_uuid}/move-to-section:
     post:
       operationId: workspace_task_move_to_section_create
@@ -1012,9 +2037,48 @@ paths:
                 $ref: '#/components/schemas/TaskDetail'
           description: ''
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for TaskMoveToSectionSerializer
+                    properties:
+                      section_uuid:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /workspace/team-member/{team_member_uuid}:
     get:
       operationId: workspace_team_member_retrieve
@@ -1037,8 +2101,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/TeamMemberBase'
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
     put:
       operationId: workspace_team_member_update
       description: Handle PUT.
@@ -1072,9 +2146,50 @@ paths:
                 $ref: '#/components/schemas/TeamMemberUpdate'
           description: ''
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for TeamMemberUpdateSerializer
+                    properties:
+                      job_title:
+                        type: string
+                      role:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
     delete:
       operationId: workspace_team_member_destroy
       description: Handle DELETE.
@@ -1092,8 +2207,18 @@ paths:
       responses:
         '204':
           description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /workspace/workspace/:
     post:
       operationId: workspace_workspace_create
@@ -1122,7 +2247,44 @@ paths:
                 $ref: '#/components/schemas/WorkspaceBase'
           description: ''
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for WorkspaceCreateSerializer
+                    properties:
+                      title:
+                        type: string
+                      description:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /workspace/workspace/{workspace_uuid}:
     get:
       operationId: workspace_workspace_retrieve
@@ -1147,6 +2309,12 @@ paths:
           description: ''
         '404':
           description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
     put:
       operationId: workspace_workspace_update
       description: Handle PUT.
@@ -1181,9 +2349,50 @@ paths:
                 $ref: '#/components/schemas/WorkspaceUpdate'
           description: ''
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for WorkspaceUpdateSerializer
+                    properties:
+                      title:
+                        type: string
+                      description:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /workspace/workspace/{workspace_uuid}/archived-projects/:
     get:
       operationId: workspace_workspace_archived_projects_list
@@ -1208,8 +2417,18 @@ paths:
                 items:
                   $ref: '#/components/schemas/ProjectBase'
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /workspace/workspace/{workspace_uuid}/invite-team-member:
     post:
       operationId: workspace_workspace_invite_team_member_create
@@ -1245,9 +2464,48 @@ paths:
                 $ref: '#/components/schemas/InviteUserToWorkspace'
           description: ''
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for InviteUserToWorkspaceSerializer
+                    properties:
+                      email:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /workspace/workspace/{workspace_uuid}/picture-upload:
     post:
       operationId: workspace_workspace_picture_upload_create
@@ -1272,9 +2530,48 @@ paths:
         '204':
           description: No response body
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for WorkspacePictureUploadSerializer
+                    properties:
+                      file:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
         '404':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+          description: ''
   /workspace/workspace/{workspace_uuid}/uninvite-team-member:
     post:
       operationId: workspace_workspace_uninvite_team_member_create
@@ -1306,9 +2603,44 @@ paths:
         '204':
           description: No response body
         '400':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Error schema
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                    - 400
+                  details:
+                    type: object
+                    description: Errors for UninviteUserFromWorkspaceSerializer
+                    properties:
+                      email:
+                        type: string
+                  general:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+                    enum:
+                    - invalid
+                required:
+                - code
+                - details
+                - general
+                - status
+          description: ''
         '404':
           description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /workspace/workspace/user-workspaces/:
     get:
       operationId: workspace_workspace_user_workspaces_list
@@ -1326,16 +2658,27 @@ paths:
                 items:
                   $ref: '#/components/schemas/WorkspaceBase'
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
 components:
   schemas:
     AnonymousUser:
       type: object
       description: Serialize anonymous user.
       properties:
-        unauthenticated:
-          $ref: '#/components/schemas/UnauthenticatedEnum'
+        kind:
+          $ref: '#/components/schemas/AnonymousUserKindEnum'
       required:
+      - kind
+    AnonymousUserKindEnum:
+      enum:
       - unauthenticated
+      type: string
+      description: '* `unauthenticated` - unauthenticated'
     ChangePassword:
       type: object
       description: Accept old and new password.
@@ -1347,18 +2690,6 @@ components:
       required:
       - current_password
       - new_password
-    ChangePasswordError:
-      type: object
-      description: These fields may be populated in a 400 response.
-      properties:
-        current_password:
-          type: string
-        new_password:
-          type: string
-        policies:
-          type: array
-          items:
-            type: string
     ChatMessageBase:
       type: object
       description: ChatMessage model serializer.
@@ -1430,7 +2761,30 @@ components:
         subscription_status:
           $ref: '#/components/schemas/SubscriptionStatusEnum'
       required:
+      - seats
+      - subscription_status
       - uuid
+    Forbidden:
+      type: object
+      description: Serialize 403 forbidden error.
+      properties:
+        status:
+          $ref: '#/components/schemas/ForbiddenStatusEnum'
+        code:
+          $ref: '#/components/schemas/ForbiddenCodeEnum'
+      required:
+      - code
+      - status
+    ForbiddenCodeEnum:
+      enum:
+      - 403
+      type: integer
+      description: '* `403` - 403'
+    ForbiddenStatusEnum:
+      enum:
+      - permission_denied
+      type: string
+      description: '* `permission_denied` - permission_denied'
     InviteUserToWorkspace:
       type: object
       description: Accept email.
@@ -1509,6 +2863,59 @@ components:
       required:
       - email
       - password
+    LoggedInUser:
+      type: object
+      description: Serialize logged in user.
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        kind:
+          allOf:
+          - $ref: '#/components/schemas/LoggedInUserKindEnum'
+          readOnly: true
+          default: authenticated
+        preferred_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        profile_picture:
+          type: string
+          nullable: true
+          description: Return profile picture.
+          readOnly: true
+      required:
+      - email
+      - kind
+      - preferred_name
+      - profile_picture
+    LoggedInUserKindEnum:
+      enum:
+      - authenticated
+      type: string
+      description: '* `authenticated` - authenticated'
+    NotFound:
+      type: object
+      description: Serialize 404 not found error.
+      properties:
+        status:
+          $ref: '#/components/schemas/NotFoundStatusEnum'
+        code:
+          $ref: '#/components/schemas/NotFoundCodeEnum'
+      required:
+      - code
+      - status
+    NotFoundCodeEnum:
+      enum:
+      - 404
+      type: integer
+      description: '* `404` - 404'
+    NotFoundStatusEnum:
+      enum:
+      - not_found
+      type: string
+      description: '* `not_found` - not_found'
     PasswordPolicies:
       type: object
       description: Serialize password policies.
@@ -1978,22 +3385,6 @@ components:
       - password
       - privacy_policy_agreed
       - tos_agreed
-    SignUpError:
-      type: object
-      description: Hint for drf-spectacular.
-      properties:
-        email:
-          type: string
-        password:
-          type: string
-        policies:
-          type: array
-          items:
-            type: string
-        tos_agreed:
-          type: string
-        privacy_policy_agreed:
-          type: string
     SingleQuota:
       type: object
       description: Serializer a single Quota dataclass.
@@ -2359,11 +3750,27 @@ components:
           maxLength: 255
         role:
           $ref: '#/components/schemas/RoleEnum'
-    UnauthenticatedEnum:
+    TooManyRequests:
+      type: object
+      description: Serialize 429 too many requests error.
+      properties:
+        status:
+          $ref: '#/components/schemas/TooManyRequestsStatusEnum'
+        code:
+          $ref: '#/components/schemas/TooManyRequestsCodeEnum'
+      required:
+      - code
+      - status
+    TooManyRequestsCodeEnum:
       enum:
-      - true
-      type: boolean
-      description: '* `True` - True'
+      - 429
+      type: integer
+      description: '* `429` - 429'
+    TooManyRequestsStatusEnum:
+      enum:
+      - throttled
+      type: string
+      description: '* `throttled` - throttled'
     UninviteUserFromWorkspace:
       type: object
       description: Accept email.
@@ -2612,7 +4019,7 @@ components:
       - title
     auth_info:
       oneOf:
-      - $ref: '#/components/schemas/User'
+      - $ref: '#/components/schemas/LoggedInUser'
       - $ref: '#/components/schemas/AnonymousUser'
   securitySchemes:
     cookieAuth:

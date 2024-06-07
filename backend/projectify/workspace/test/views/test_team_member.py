@@ -87,7 +87,12 @@ class TestTeamMemberReadUpdateDelete:
         """Test that deleting oneself does not work."""
         response = rest_user_client.delete(resource_url)
         assert response.status_code == 400, response.data
-        assert response.data["team_member"] == "Can't delete own team member"
+        assert response.data == {
+            "status": "invalid",
+            "code": 400,
+            "details": {"team_member": "Can't delete own team member"},
+            "general": None,
+        }
 
     def test_delete_other(
         self,

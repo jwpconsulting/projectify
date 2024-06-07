@@ -58,8 +58,8 @@
             };
             return;
         }
-        const response = await logIn(email, password, { fetch });
-        if (response.ok) {
+        const { data, error } = await logIn(email, password, { fetch });
+        if (data !== undefined) {
             // TODO redirect to `/{redirectTo}` instead
             // To prevent users not being redirected to third parties
             // SvelteKit's goto sort of addresses this already, it would just
@@ -67,31 +67,33 @@
             // destination restriction
             await goto(redirectTo ?? dashboardUrl);
             return;
-        } else if (response.kind === "tooManyRequests") {
+        } else if (error === undefined) {
+            state = { kind: "error", message: $_("auth.log-in.error.other") };
+            return;
+        } else if (error.code === 429) {
             state = {
                 kind: "error",
                 message: $_("auth.log-in.error.rate-limit"),
             };
-        } else if (response.kind === "badRequest") {
-            state = {
-                kind: "error",
-                message: $_("auth.log-in.error.credentials"),
-            };
-        } else {
-            state = { kind: "error", message: $_("auth.log-in.error.other") };
+            return;
         }
+        state = {
+            kind: "error",
+            message: $_("auth.log-in.error.credentials"),
+        };
         emailValidation = undefined;
         passwordValidation = undefined;
-        if (response.error.email) {
-            emailValidation = { ok: false, error: response.error.email };
+        const { details } = error;
+        if (details.email) {
+            emailValidation = { ok: false, error: details.email };
         } else {
             emailValidation = {
                 ok: true,
                 result: $_("auth.log-in.email.valid"),
             };
         }
-        if (response.error.password) {
-            passwordValidation = { ok: false, error: response.error.password };
+        if (details.password) {
+            passwordValidation = { ok: false, error: details.password };
         } else {
             passwordValidation = { ok: true, result: "" };
         }

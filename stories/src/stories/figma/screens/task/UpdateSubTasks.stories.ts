@@ -17,7 +17,7 @@
  */
 
 import UpdateSubTasks from "$lib/figma/screens/task/UpdateSubTasks.svelte";
-import { createSubTaskAssignment } from "$lib/stores/dashboard";
+import { createSubTaskAssignment } from "$lib/stores/dashboard/subTaskAssignment";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<UpdateSubTasks> = {

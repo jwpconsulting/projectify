@@ -17,11 +17,11 @@
  */
 import { error } from "@sveltejs/kit";
 
-import { getWorkspaceCustomer } from "$lib/repository/corporate";
 import type { Customer } from "$lib/types/corporate";
 import type { WorkspaceDetail } from "$lib/types/workspace";
 
 import type { PageLoadEvent } from "./$types";
+import { openApiClient } from "$lib/repository/util";
 
 interface Data {
     customer: Customer;
@@ -31,16 +31,14 @@ interface Data {
 export async function load({
     params: { workspaceUuid },
     parent,
-    fetch,
 }: PageLoadEvent): Promise<Data> {
     const { workspace } = await parent();
-    const customer = await getWorkspaceCustomer(workspaceUuid, { fetch });
-    if (!customer) {
-        // TODO maybe better error message here?
+    const { data: customer, error: e } = await openApiClient.GET(
+        "/corporate/workspace/{workspace_uuid}/customer",
+        { params: { path: { workspace_uuid: workspaceUuid } } },
+    );
+    if (e !== undefined) {
         error(404);
     }
-    return {
-        customer,
-        workspace,
-    };
+    return { customer, workspace };
 }

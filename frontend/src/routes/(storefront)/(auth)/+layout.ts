@@ -22,6 +22,7 @@ interface Data {
 }
 
 export const prerender = false;
+export const ssr = false;
 
 export function load({ url }: LayoutLoadEvent): Data {
     const redirectTo = url.searchParams.get("next") ?? undefined;

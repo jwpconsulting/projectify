@@ -18,7 +18,7 @@
 <script lang="ts">
     import Collapsed from "$lib/figma/navigation/side-nav/Collapsed.svelte";
     import Full from "$lib/figma/navigation/side-nav/Full.svelte";
-    import { sideNavOpen } from "$lib/stores/dashboard";
+    import { sideNavOpen } from "$lib/stores/dashboard/ui";
     import type { WorkspaceDetail } from "$lib/types/workspace";
 
     export let workspace: WorkspaceDetail | undefined;

@@ -187,18 +187,17 @@ export interface components {
     schemas: {
         /** @description Serialize anonymous user. */
         AnonymousUser: {
-            unauthenticated: components["schemas"]["UnauthenticatedEnum"];
+            kind: components["schemas"]["AnonymousUserKindEnum"];
         };
+        /**
+         * @description * `unauthenticated` - unauthenticated
+         * @enum {string}
+         */
+        AnonymousUserKindEnum: "unauthenticated";
         /** @description Accept old and new password. */
         ChangePassword: {
             current_password: string;
             new_password: string;
-        };
-        /** @description These fields may be populated in a 400 response. */
-        ChangePasswordError: {
-            current_password?: string;
-            new_password?: string;
-            policies?: string[];
         };
         /** @description ChatMessage model serializer. */
         ChatMessageBase: {
@@ -227,11 +226,26 @@ export interface components {
         };
         /** @description Serializer for customer. */
         Customer: {
-            seats?: number;
+            seats: number;
             /** Format: uuid */
             uuid: string;
-            subscription_status?: components["schemas"]["SubscriptionStatusEnum"];
+            subscription_status: components["schemas"]["SubscriptionStatusEnum"];
         };
+        /** @description Serialize 403 forbidden error. */
+        Forbidden: {
+            status: components["schemas"]["ForbiddenStatusEnum"];
+            code: components["schemas"]["ForbiddenCodeEnum"];
+        };
+        /**
+         * @description * `403` - 403
+         * @enum {integer}
+         */
+        ForbiddenCodeEnum: 403;
+        /**
+         * @description * `permission_denied` - permission_denied
+         * @enum {string}
+         */
+        ForbiddenStatusEnum: "permission_denied";
         /** @description Accept email. */
         InviteUserToWorkspace: {
             /** Format: email */
@@ -274,6 +288,36 @@ export interface components {
             email: string;
             password: string;
         };
+        /** @description Serialize logged in user. */
+        LoggedInUser: {
+            /** Format: email */
+            email: string;
+            /** @default authenticated */
+            kind: components["schemas"]["LoggedInUserKindEnum"];
+            preferred_name: string | null;
+            /** @description Return profile picture. */
+            profile_picture: string | null;
+        };
+        /**
+         * @description * `authenticated` - authenticated
+         * @enum {string}
+         */
+        LoggedInUserKindEnum: "authenticated";
+        /** @description Serialize 404 not found error. */
+        NotFound: {
+            status: components["schemas"]["NotFoundStatusEnum"];
+            code: components["schemas"]["NotFoundCodeEnum"];
+        };
+        /**
+         * @description * `404` - 404
+         * @enum {integer}
+         */
+        NotFoundCodeEnum: 404;
+        /**
+         * @description * `not_found` - not_found
+         * @enum {string}
+         */
+        NotFoundStatusEnum: "not_found";
         /** @description Serialize password policies. */
         PasswordPolicies: {
             policies: string[];
@@ -493,14 +537,6 @@ export interface components {
             tos_agreed: boolean;
             privacy_policy_agreed: boolean;
         };
-        /** @description Hint for drf-spectacular. */
-        SignUpError: {
-            email?: string;
-            password?: string;
-            policies?: string[];
-            tos_agreed?: string;
-            privacy_policy_agreed?: string;
-        };
         /** @description Serializer a single Quota dataclass. */
         SingleQuota: {
             current: number | null;
@@ -651,11 +687,21 @@ export interface components {
             job_title?: string | null;
             role?: components["schemas"]["RoleEnum"];
         };
+        /** @description Serialize 429 too many requests error. */
+        TooManyRequests: {
+            status: components["schemas"]["TooManyRequestsStatusEnum"];
+            code: components["schemas"]["TooManyRequestsCodeEnum"];
+        };
         /**
-         * @description * `True` - True
-         * @enum {boolean}
+         * @description * `429` - 429
+         * @enum {integer}
          */
-        UnauthenticatedEnum: true;
+        TooManyRequestsCodeEnum: 429;
+        /**
+         * @description * `throttled` - throttled
+         * @enum {string}
+         */
+        TooManyRequestsStatusEnum: "throttled";
         /** @description Accept email. */
         UninviteUserFromWorkspace: {
             /** Format: email */
@@ -763,7 +809,7 @@ export interface components {
             description?: string | null;
         };
         auth_info:
-            | components["schemas"]["User"]
+            | components["schemas"]["LoggedInUser"]
             | components["schemas"]["AnonymousUser"];
     };
     responses: never;
@@ -789,6 +835,10 @@ export interface operations {
             400: {
                 content: never;
             };
+            /** @description No response body */
+            500: {
+                content: never;
+            };
         };
     };
     /** @description Handle POST. */
@@ -804,9 +854,15 @@ export interface operations {
                     "application/json": components["schemas"]["WorkspaceBillingPortalSessionCreateOutput"];
                 };
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -830,13 +886,30 @@ export interface operations {
                     "application/json": components["schemas"]["WorkspaceCheckoutSessionCreateOutput"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for WorkspaceCheckoutSessionCreateInputSerializer */
+                        details: {
+                            seats?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -851,6 +924,16 @@ export interface operations {
             200: {
                 content: {
                     "application/json": components["schemas"]["Customer"];
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
+            404: {
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
                 };
             };
         };
@@ -874,9 +957,30 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for CouponRedeemSerializer */
+                        details: {
+                            code?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
+            404: {
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -896,12 +1000,29 @@ export interface operations {
             };
             400: {
                 content: {
-                    "application/json": components["schemas"]["ChangePasswordError"];
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for ChangePasswordSerializer */
+                        details: {
+                            current_password?: string;
+                            new_password?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
                 };
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             429: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["TooManyRequests"];
+                };
             };
         };
     };
@@ -919,9 +1040,21 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for ConfirmEmailSerializer */
+                        details: {
+                            email?: string;
+                            token?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
             };
         };
     };
@@ -939,9 +1072,22 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for PasswordResetConfirmSerializer */
+                        details: {
+                            email?: string;
+                            token?: string;
+                            new_password?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
             };
         };
     };
@@ -967,16 +1113,23 @@ export interface operations {
         responses: {
             200: {
                 content: {
-                    "application/json": components["schemas"]["User"];
+                    "application/json": components["schemas"]["LoggedInUser"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
-            };
-            /** @description No response body */
-            403: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for UserUpdateSerializer */
+                        details: {
+                            preferred_name?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
             };
         };
     };
@@ -994,9 +1147,25 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for ConfirmEmailAddressUpdateSerializer */
+                        details: {
+                            confirmation_token?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
             };
         };
     };
@@ -1014,13 +1183,31 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for RequestEmailAddressUpdateSerializer */
+                        details: {
+                            password?: string;
+                            new_email?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             429: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["TooManyRequests"];
+                };
             };
         };
     };
@@ -1036,25 +1223,44 @@ export interface operations {
         responses: {
             200: {
                 content: {
-                    "application/json": components["schemas"]["User"];
+                    "application/json": components["schemas"]["LoggedInUser"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for LogInSerializer */
+                        details: {
+                            email?: string;
+                            password?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
             };
-            /** @description No response body */
             429: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["TooManyRequests"];
+                };
             };
         };
     };
     /** @description Handle POST. */
     user_user_log_out_create: {
         responses: {
-            /** @description No response body */
             204: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["AnonymousUser"];
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
             };
         };
     };
@@ -1080,9 +1286,25 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for ProfilePictureUploadSerializer */
+                        details: {
+                            file?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
             };
         };
     };
@@ -1100,13 +1322,25 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for PasswordResetRequestSerializer */
+                        details: {
+                            email?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
             };
-            /** @description No response body */
             429: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["TooManyRequests"];
+                };
             };
         };
     };
@@ -1126,12 +1360,26 @@ export interface operations {
             };
             400: {
                 content: {
-                    "application/json": components["schemas"]["SignUpError"];
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for SignUpSerializer */
+                        details: {
+                            email?: string;
+                            password?: string;
+                            tos_agreed?: string;
+                            privacy_policy_agreed?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
                 };
             };
-            /** @description No response body */
             429: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["TooManyRequests"];
+                };
             };
         };
     };
@@ -1150,9 +1398,27 @@ export interface operations {
                     "application/json": components["schemas"]["LabelBase"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for LabelCreateSerializer */
+                        details: {
+                            name?: string;
+                            color?: string;
+                            workspace_uuid?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
             };
         };
     };
@@ -1176,13 +1442,31 @@ export interface operations {
                     "application/json": components["schemas"]["LabelBase"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for LabelUpdateSerializer */
+                        details: {
+                            name?: string;
+                            color?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1198,9 +1482,15 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1219,9 +1509,28 @@ export interface operations {
                     "application/json": components["schemas"]["ProjectDetail"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for ProjectCreateSerializer */
+                        details: {
+                            title?: string;
+                            description?: string;
+                            workspace_uuid?: string;
+                            due_date?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
             };
         };
     };
@@ -1238,9 +1547,15 @@ export interface operations {
                     "application/json": components["schemas"]["ProjectDetail"];
                 };
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1264,9 +1579,32 @@ export interface operations {
                     "application/json": components["schemas"]["ProjectUpdate"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for ProjectUpdateSerializer */
+                        details: {
+                            title?: string;
+                            description?: string;
+                            due_date?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
+            404: {
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1282,9 +1620,15 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1307,17 +1651,30 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for ProjectArchiveSerializer */
+                        details: {
+                            archived?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
             };
-            /** @description No response body */
             403: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
             };
-            /** @description No response body */
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1333,16 +1690,30 @@ export interface operations {
         responses: {
             201: {
                 content: {
-                    "application/json": components["schemas"]["SectionCreate"];
+                    "application/json": components["schemas"]["SectionDetail"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for SectionCreateSerializer */
+                        details: {
+                            title?: string;
+                            description?: string;
+                            project_uuid?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
             };
-            /** @description No response body */
-            404: {
-                content: never;
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
             };
         };
     };
@@ -1359,9 +1730,15 @@ export interface operations {
                     "application/json": components["schemas"]["SectionDetail"];
                 };
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1385,13 +1762,31 @@ export interface operations {
                     "application/json": components["schemas"]["SectionUpdate"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for SectionUpdateSerializer */
+                        details: {
+                            title?: string;
+                            description?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1407,9 +1802,15 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1432,9 +1833,25 @@ export interface operations {
             200: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for SectionMoveSerializer */
+                        details: {
+                            order?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
             };
             /** @description No response body */
             404: {
@@ -1457,9 +1874,44 @@ export interface operations {
                     "application/json": components["schemas"]["TaskDetail"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for TaskCreateSerializer */
+                        details: {
+                            title?: string;
+                            description?: string;
+                            /** @description Errors for UuidObjectSerializer */
+                            assignee?: {
+                                uuid?: string;
+                            };
+                            labels?: {
+                                uuid?: string;
+                            }[];
+                            due_date?: string;
+                            sub_tasks?: {
+                                uuid?: string;
+                                title?: string;
+                                description?: string;
+                                done?: string;
+                            }[];
+                            /** @description Errors for UuidObjectSerializer */
+                            section?: {
+                                uuid?: string;
+                            };
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
             };
         };
     };
@@ -1476,9 +1928,15 @@ export interface operations {
                     "application/json": components["schemas"]["TaskDetail"];
                 };
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1507,13 +1965,45 @@ export interface operations {
                     "application/json": components["schemas"]["TaskDetail"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for TaskUpdateSerializer */
+                        details: {
+                            title?: string;
+                            description?: string;
+                            /** @description Errors for UuidObjectSerializer */
+                            assignee?: {
+                                uuid?: string;
+                            };
+                            labels?: {
+                                uuid?: string;
+                            }[];
+                            due_date?: string;
+                            sub_tasks?: {
+                                uuid?: string;
+                                title?: string;
+                                description?: string;
+                                done?: string;
+                            }[];
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1529,9 +2019,15 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1555,13 +2051,30 @@ export interface operations {
                     "application/json": components["schemas"]["TaskDetail"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for TaskMoveAfterTaskSerializer */
+                        details: {
+                            task_uuid?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1585,13 +2098,30 @@ export interface operations {
                     "application/json": components["schemas"]["TaskDetail"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for TaskMoveToSectionSerializer */
+                        details: {
+                            section_uuid?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1608,9 +2138,15 @@ export interface operations {
                     "application/json": components["schemas"]["TeamMemberBase"];
                 };
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1634,13 +2170,31 @@ export interface operations {
                     "application/json": components["schemas"]["TeamMemberUpdate"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for TeamMemberUpdateSerializer */
+                        details: {
+                            job_title?: string;
+                            role?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1656,9 +2210,15 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1677,9 +2237,26 @@ export interface operations {
                     "application/json": components["schemas"]["WorkspaceBase"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for WorkspaceCreateSerializer */
+                        details: {
+                            title?: string;
+                            description?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
             };
         };
     };
@@ -1694,6 +2271,11 @@ export interface operations {
             200: {
                 content: {
                     "application/json": components["schemas"]["WorkspaceDetail"];
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
                 };
             };
             /** @description No response body */
@@ -1722,13 +2304,31 @@ export interface operations {
                     "application/json": components["schemas"]["WorkspaceUpdate"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for WorkspaceUpdateSerializer */
+                        details: {
+                            title?: string;
+                            description?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1745,9 +2345,15 @@ export interface operations {
                     "application/json": components["schemas"]["ProjectBase"][];
                 };
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1771,13 +2377,30 @@ export interface operations {
                     "application/json": components["schemas"]["InviteUserToWorkspace"];
                 };
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for InviteUserToWorkspaceSerializer */
+                        details: {
+                            email?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1798,13 +2421,30 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for WorkspacePictureUploadSerializer */
+                        details: {
+                            file?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
             };
-            /** @description No response body */
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
+            };
             404: {
-                content: never;
+                content: {
+                    "application/json": components["schemas"]["NotFound"];
+                };
             };
         };
     };
@@ -1827,9 +2467,25 @@ export interface operations {
             204: {
                 content: never;
             };
-            /** @description No response body */
             400: {
-                content: never;
+                content: {
+                    "application/json": {
+                        /** @enum {integer} */
+                        code: 400;
+                        /** @description Errors for UninviteUserFromWorkspaceSerializer */
+                        details: {
+                            email?: string;
+                        };
+                        general: string[];
+                        /** @enum {string} */
+                        status: "invalid";
+                    };
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
+                };
             };
             /** @description No response body */
             404: {
@@ -1843,6 +2499,11 @@ export interface operations {
             200: {
                 content: {
                     "application/json": components["schemas"]["WorkspaceBase"][];
+                };
+            };
+            403: {
+                content: {
+                    "application/json": components["schemas"]["Forbidden"];
                 };
             };
         };

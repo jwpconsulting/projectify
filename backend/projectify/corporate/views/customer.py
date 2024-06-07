@@ -30,6 +30,8 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
 
+from projectify.lib.error_schema import DeriveSchema
+
 from ..selectors.customer import customer_find_by_workspace_uuid
 from ..serializers import CustomerSerializer
 from ..services.customer import (
@@ -44,9 +46,7 @@ class WorkspaceCustomerRetrieve(APIView):
     """Retrieve customer for a workspace."""
 
     @extend_schema(
-        responses={
-            200: CustomerSerializer,
-        },
+        responses={200: CustomerSerializer},
     )
     def get(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle GET."""
@@ -87,9 +87,7 @@ class WorkspaceCheckoutSessionCreate(APIView):
         request=WorkspaceCheckoutSessionCreateInputSerializer,
         responses={
             200: WorkspaceCheckoutSessionCreateOutputSerializer,
-            # TODO
-            400: None,
-            404: None,
+            400: DeriveSchema,
         },
     )
     def post(self, request: Request, workspace_uuid: UUID) -> Response:
@@ -131,10 +129,7 @@ class WorkspaceBillingPortalSessionCreate(APIView):
 
     @extend_schema(
         request=None,
-        responses={
-            200: WorkspaceBillingPortalSessionCreateOutputSerializer,
-            404: None,
-        },
+        responses={200: WorkspaceBillingPortalSessionCreateOutputSerializer},
     )
     def post(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle POST."""

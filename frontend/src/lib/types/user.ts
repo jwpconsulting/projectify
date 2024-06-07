@@ -19,6 +19,9 @@ import type { components } from "./schema";
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 export type User = components["schemas"]["User"];
+export type CurrentUser =
+    | components["schemas"]["auth_info"]
+    | { kind: "start" };
 
 export function getDisplayName(
     user: Pick<User, "email" | "preferred_name">,

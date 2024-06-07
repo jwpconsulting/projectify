@@ -105,6 +105,12 @@ class TestTaskCreate(UnauthenticatedTestMixin):
         # the user it *really* does not exist and anything else does not
         # matter.
         assert response.status_code == 400, response.data
+        assert response.data == {
+            "status": "invalid",
+            "code": 400,
+            "details": {"section": "Section does not exist"},
+            "general": None,
+        }
         assert Task.objects.count() == 0
 
     def test_authenticated(
@@ -137,6 +143,39 @@ class TestTaskCreate(UnauthenticatedTestMixin):
             assert response.status_code == 201, response.data
         assert Task.objects.count() == 1
         assert Task.objects.get().assignee == team_member
+
+    def test_error_format(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        team_member: models.TeamMember,
+        payload: dict[str, object],
+    ) -> None:
+        """Test nested error serialization."""
+        payload = {
+            **payload,
+            "sub_tasks": [
+                {"done": "hello", "title": "I am sub task"},
+                {"done": True, "title": None},
+            ],
+        }
+        response = rest_user_client.post(
+            resource_url,
+            {**payload, "assignee": {"uuid": str(team_member.uuid)}},
+            format="json",
+        )
+        assert response.status_code == 400, response.data
+        assert response.data == {
+            "status": "invalid",
+            "code": 400,
+            "details": {
+                "sub_tasks": [
+                    {"done": "Must be a valid boolean."},
+                    {"title": "This field may not be null."},
+                ]
+            },
+            "general": None,
+        }
 
 
 # Read

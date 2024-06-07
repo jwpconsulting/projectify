@@ -24,11 +24,11 @@
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
-    import { confirmPasswordReset } from "$lib/repository/user";
     import type { FormViewState } from "$lib/types/ui";
     import { requestPasswordResetUrl, resetPasswordUrl } from "$lib/urls/user";
 
     import type { PageData } from "./$types";
+    import { openApiClient } from "$lib/repository/util";
 
     export let data: PageData;
 
@@ -68,18 +68,18 @@
         }
         password1Validation = password2Validation = undefined;
         state = { kind: "submitting" };
-        const result = await confirmPasswordReset(email, token, password1, {
-            fetch,
-        });
-        if (result.ok) {
+        const { error } = await openApiClient.POST(
+            "/user/user/confirm-password-reset",
+            { body: { email, token, new_password: password1 } },
+        );
+        if (error === undefined) {
             await goto(resetPasswordUrl);
             return;
         }
-        console.error("Error resetting password", result.error);
-        if (result.error.new_password) {
+        if (error.details.new_password) {
             password1Validation = {
                 ok: false,
-                error: result.error.new_password,
+                error: error.details.new_password,
             };
         }
         state = {

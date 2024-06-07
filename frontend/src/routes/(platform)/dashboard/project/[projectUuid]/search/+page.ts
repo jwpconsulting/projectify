@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { searchTasks } from "$lib/stores/dashboard";
+import { searchTasks } from "$lib/stores/dashboard/task";
 import type { SearchInput } from "$lib/types/base";
 import type { TaskWithSection } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
