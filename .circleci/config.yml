@@ -195,7 +195,7 @@ jobs:
       - prepare_npm
       - run:
           name: Run prettier
-          command: npm run check:prettier:nocache
+          command: npm run nocache:check:prettier
   frontend_knip:
     executor: node
     working_directory: ~/projectify/frontend
