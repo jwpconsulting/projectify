@@ -17,11 +17,12 @@
  */
 import { readonly, writable } from "svelte/store";
 
-import type { RepositoryContext } from "$lib/types/repository";
-import type { CurrentUser, User } from "$lib/types/user";
+import type { CurrentUser } from "$lib/types/user";
 import { dataOrThrow, openApiClient } from "$lib/repository/util";
 import { browser } from "$app/environment";
 import { backOff } from "exponential-backoff";
+import { currentWorkspaces } from "./dashboard/workspace";
+import type { Unsubscriber } from "svelte/motion";
 
 const fetchUserBackOff = () =>
     backOff(() => dataOrThrow(openApiClient.GET("/user/user/current-user")));
@@ -39,46 +40,65 @@ const _user = writable<CurrentUser>({ kind: "start" }, (set) => {
         );
 });
 export const currentUser = readonly(_user);
-
-export async function logIn(
-    email: string,
-    password: string,
-    _repositoryContext: RepositoryContext,
-) {
-    const { response, data, error } = await openApiClient.POST(
-        "/user/user/log-in",
-        {
-            body: { email, password },
-        },
-    );
+/**
+ * This will never resolve when not run in browser
+ */
+export function currentUserAwaitable() {
+    return new Promise<CurrentUser>((resolve) => {
+        let unsub: Unsubscriber | undefined = undefined;
+        unsub = currentUser.subscribe((user) => {
+            if (user.kind === "start") {
+                return;
+            }
+            resolve(user);
+            if (unsub) {
+                unsub();
+            }
+        });
+    });
+}
+export async function logIn(email: string, password: string) {
+    const { data, error } = await openApiClient.POST("/user/user/log-in", {
+        body: { email, password },
+    });
     if (data) {
         _user.update(($user) => {
             return { ...$user, ...data };
         });
-    } else {
-        console.error(error);
     }
-    return { data, error, response };
+    return { data, error };
 }
 
-export async function logOut(_repositoryContext: RepositoryContext) {
-    const { error, data } = await openApiClient.POST("/user/user/log-out");
+async function _logOut() {
+    const promise = openApiClient.POST("/user/user/log-out");
+    const { data, error } = await promise;
+    if (error?.code === 403) {
+        return { error, data: undefined };
+    }
     if (error) {
-        throw new Error("Error when logging out");
+        throw new Error("Couldn't log out");
     }
-    _user.set(data);
+    return { data, error: undefined };
 }
 
-export async function updateUserProfile(
-    preferred_name: string | null,
-): Promise<User> {
+export async function logOut() {
+    const { data, error } = await backOff(_logOut);
+    // In the future we'd like want to test for 401 here
+    if (data) {
+        _user.set(data);
+    }
+    currentWorkspaces.reset();
+    return { data, error };
+}
+
+export async function updateUserProfile(preferred_name: string | null) {
     const { data, error } = await openApiClient.PUT(
-        "/user/user/current-user",
+        "/user/user/current-user/update",
         { body: { preferred_name } },
     );
-    if (error) {
-        throw new Error("Expected response.ok");
+    if (data) {
+        _user.set(data);
+        return { data };
     }
-    _user.set(data);
-    return data;
+    return { error };
 }

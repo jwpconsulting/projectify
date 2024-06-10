@@ -34,18 +34,25 @@ from projectify.user.views.user import (
     ConfirmEmailAddressUpdate,
     ProfilePictureUpload,
     RequestEmailAddressUpdate,
-    UserReadUpdate,
+    UserRead,
+    UserUpdate,
 )
 
 app_name = "user"
 
 user_patterns = (
     # Create
-    # Read + Update
+    # Read
     path(
         "current-user",
-        UserReadUpdate.as_view(),
-        name="read-update",
+        UserRead.as_view(),
+        name="read",
+    ),
+    # Update
+    path(
+        "current-user/update",
+        UserUpdate.as_view(),
+        name="update",
     ),
     # Delete
     # RPC

@@ -29,6 +29,9 @@
     import Responsive from "./assets/responsive.png?enhanced";
     import SubTask from "./assets/sub-task.png?enhanced";
     import TaskMenu from "./assets/task-menu.png?enhanced";
+    import { currentUser } from "$lib/stores/user";
+    import { signUpUrl } from "$lib/urls/user";
+    import { dashboardUrl } from "$lib/urls/dashboard";
 </script>
 
 <svelte:head>
@@ -49,14 +52,25 @@
                     {$_("index.hero.text")}
                 </p>
             </header>
-            <Button
-                style={{ kind: "primary" }}
-                color="blue"
-                size="medium"
-                action={{ kind: "a", href: "/user/sign-up" }}
-                label={$_("index.hero.button")}
-                grow={false}
-            />
+            {#if $currentUser.kind === "authenticated"}
+                <Button
+                    style={{ kind: "primary" }}
+                    color="blue"
+                    size="medium"
+                    action={{ kind: "a", href: dashboardUrl }}
+                    label={$_("index.hero.continue-to-dashboard")}
+                    grow={false}
+                />
+            {:else}
+                <Button
+                    style={{ kind: "primary" }}
+                    color="blue"
+                    size="medium"
+                    action={{ kind: "a", href: signUpUrl }}
+                    label={$_("index.hero.button")}
+                    grow={false}
+                />
+            {/if}
         </div>
         <div class="max-w-md">
             <enhanced:img src="./assets/hero.png" alt={$_("index.hero.alt")} />

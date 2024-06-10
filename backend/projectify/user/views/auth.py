@@ -48,14 +48,14 @@ from projectify.user.services.auth import (
 class LogOut(views.APIView):
     """Log a user out."""
 
-    @extend_schema(request=None, responses={204: AnonymousUserSerializer})
+    @extend_schema(request=None, responses={200: AnonymousUserSerializer})
     def post(self, request: Request) -> Response:
         """Handle POST."""
         user_log_out(request=request)
         serializer = AnonymousUserSerializer(
             instance={"kind": "unauthenticated"}
         )
-        return Response(status=HTTP_204_NO_CONTENT, data=serializer.data)
+        return Response(status=HTTP_200_OK, data=serializer.data)
 
 
 # The following views have no authentication required

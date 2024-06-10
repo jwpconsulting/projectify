@@ -22,6 +22,8 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { signUpUrl } from "$lib/urls/user";
+    import { currentUser } from "$lib/stores/user";
+    import { backToHomeUrl } from "$lib/urls";
 
     const buildData = {
         buildDate: __BUILD_DATE__,
@@ -35,7 +37,7 @@
     <div class="flex flex-col gap-8 sm:flex-row sm:flex-wrap">
         <!-- Header -->
         <div class="flex flex-col gap-6">
-            <div class="flex flex-col gap-2">
+            <a class="flex flex-col gap-2" href={backToHomeUrl}>
                 <div class="flex flex-row items-center gap-2">
                     <img
                         src={PolyLogo}
@@ -43,15 +45,17 @@
                     />
                 </div>
                 <p>{$_("navigation.footer.logo.heading")}</p>
-            </div>
-            <Button
-                action={{ kind: "a", href: signUpUrl }}
-                style={{ kind: "primary" }}
-                color="blue"
-                size="medium"
-                grow={false}
-                label={$_("navigation.footer.cta")}
-            />
+            </a>
+            {#if $currentUser.kind !== "authenticated"}
+                <Button
+                    action={{ kind: "a", href: signUpUrl }}
+                    style={{ kind: "primary" }}
+                    color="blue"
+                    size="medium"
+                    grow={false}
+                    label={$_("navigation.footer.cta")}
+                />
+            {/if}
         </div>
         <!-- Nav -->
         <nav class="flex flex-col gap-12 sm:flex-row">

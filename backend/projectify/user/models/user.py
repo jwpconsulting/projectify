@@ -102,7 +102,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
                 # Match period, colon followed by space, or not period
                 # or period, colon at end of word
                 check=models.Q(
-                    preferred_name__regex=r"^([.:]\s|[^.:])+[.:]?$"
+                    preferred_name__regex=r"^([.:]\s|[^.:])*[.:]?$"
                 ),
                 violation_error_message=_(
                     "Preferred name can only contain '.' or ':' if followed "

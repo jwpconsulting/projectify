@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2021, 2022, 2023 JWP Consulting GK
+# Copyright (C) 2021-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -61,6 +61,14 @@ class TestUser:
 
         user.preferred_name = "Foob. Ar"
         user.full_clean()
+
+        user.preferred_name = ""
+        user.full_clean()
+        user.save()
+
+        user.preferred_name = None
+        user.full_clean()
+        user.save()
 
 
 @pytest.mark.django_db

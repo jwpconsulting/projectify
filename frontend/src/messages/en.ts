@@ -422,6 +422,10 @@ const messages: MessageDirectory = {
                 "with-name": "Welcome, {name}! 👋",
                 "without-name": "Welcome! 👋",
             },
+            errors: {
+                server: "A server error happened: {error}. Please try again.",
+                fields: "Please correct the errors above and try again.",
+            },
         },
         "new-workspace": {
             "title": "Create a new workspace - Projectify",
@@ -572,9 +576,13 @@ const messages: MessageDirectory = {
             "back-to-homepage": "Back to homepage",
         },
         "logout": {
+            "title": "Log out - Projectify",
             "success": "You have been logged out",
+            "already-logged-out": "You are already logged out",
+            "logging-out": "Logging you out...",
             "log-back-in": "Log in again",
             "landing": "Go to landing",
+            "error": "Could not log you out successfully",
         },
         "log-in": {
             "title": "Log in - Projectify",
@@ -601,8 +609,7 @@ const messages: MessageDirectory = {
                     "Invalid credentials. Please see the errors above.",
                 "rate-limit":
                     "You are trying to log in too many times. Please slow down.",
-                "other":
-                    "Invalid credentials. Please check email and password.",
+                "other": "An error happened while logging you in: {error}",
             },
             "sign-up-here": "Sign up here",
         },
@@ -798,6 +805,10 @@ const messages: MessageDirectory = {
             "save": "Save changes",
             "confirm-navigate-away":
                 "You have unsaved changes to your user profile. Would you like to navigate away?",
+            "errors": {
+                server: "A server error happened: {error}. Please try again.",
+                fields: "Please correct the errors above and try again.",
+            },
         },
         "update-email-address": {
             "title": "Update email address",
@@ -1071,10 +1082,11 @@ const messages: MessageDirectory = {
     "index": {
         title: "Projectify",
         hero: {
-            header: "Manage projects the right way.",
-            text: "Warp drive your way to success with software that helps you to collaborate on and manage projects efficiently, with speed.",
-            button: "Start a free trial",
-            alt: "An illustration showing the look and feel of tasks in Projectify's user interface",
+            "header": "Manage projects the right way.",
+            "text": "Warp drive your way to success with software that helps you to collaborate on and manage projects efficiently, with speed.",
+            "button": "Start a free trial",
+            "continue-to-dashboard": "Continue to dashboard",
+            "alt": "An illustration showing the look and feel of tasks in Projectify's user interface",
         },
         trust: {
             header: 'Everything you need to <span class="text-primary">stay organized</span> and <span class="text-primary">deliver faster</span>',
@@ -1142,9 +1154,10 @@ const messages: MessageDirectory = {
             subtitle: "One plan. One price. All features.",
         },
         "plan": {
-            title: "Universal Plan",
-            price: "{price, number, ::currency/USD} / seat per month",
-            cta: "Start a free trial",
+            "title": "Universal Plan",
+            "price": "{price, number, ::currency/USD} / seat per month",
+            "cta": "Start a free trial",
+            "cta-logged-in": "Learn more",
         },
         "features": {
             title: "What's included?",

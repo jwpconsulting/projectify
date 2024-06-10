@@ -15,6 +15,8 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# Note:
+# Run within a poetry, nix, or similar environment
 set -e
-poetry run ruff format .
-poetry run ruff --fix .
+ruff format .
+ruff --fix .

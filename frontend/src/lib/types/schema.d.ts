@@ -40,8 +40,10 @@ export interface paths {
   "/user/user/current-user": {
     /** @description Handle GET. */
     get: operations["user_user_current_user_retrieve"];
+  };
+  "/user/user/current-user/update": {
     /** @description Update a user. */
-    put: operations["user_user_current_user_update"];
+    put: operations["user_user_current_user_update_update"];
   };
   "/user/user/email-address-update/confirm": {
     /** @description Handle POST. */
@@ -1158,7 +1160,7 @@ export interface operations {
     };
   };
   /** @description Update a user. */
-  user_user_current_user_update: {
+  user_user_current_user_update_update: {
     requestBody?: {
       content: {
         "application/json": components["schemas"]["UserUpdate"];
@@ -1185,6 +1187,11 @@ export interface operations {
             /** @enum {string} */
             status: "invalid";
           };
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["Forbidden"];
         };
       };
       500: {
@@ -1328,7 +1335,7 @@ export interface operations {
   /** @description Handle POST. */
   user_user_log_out_create: {
     responses: {
-      204: {
+      200: {
         content: {
           "application/json": components["schemas"]["AnonymousUser"];
         };

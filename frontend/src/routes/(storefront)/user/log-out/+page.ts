@@ -15,18 +15,21 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { LayoutLoadEvent } from "./$types";
+import { browser } from "$app/environment";
+import { logOut } from "$lib/stores/user";
 
 interface Data {
-    redirectTo: string | undefined;
+    result:
+        | "not-browser"
+        | Promise<{
+              error?: { status: "permission_denied"; code: 403 };
+              data?: { kind: "unauthenticated" };
+          }>;
 }
 
-export const prerender = false;
-export const ssr = false;
-
-export function load({ url }: LayoutLoadEvent): Data {
-    const redirectTo = url.searchParams.get("next") ?? undefined;
-    return {
-        redirectTo,
-    };
+export function load(): Data {
+    if (!browser) {
+        return { result: "not-browser" };
+    }
+    return { result: logOut() };
 }

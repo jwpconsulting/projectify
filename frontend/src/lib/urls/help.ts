@@ -15,14 +15,10 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import RequestPasswordReset from "$routes/(storefront)/user/(auth)/request-password-reset/+page.svelte";
-import type { Meta, StoryObj } from "@storybook/svelte";
-
-const meta: Meta<RequestPasswordReset> = {
-    component: RequestPasswordReset,
-};
-export default meta;
-
-type Story = StoryObj<RequestPasswordReset>;
-
-export const Default: Story = {};
+/**
+ * Help URLs
+ */
+type HelpTopic = "billing";
+export function helpUrl(topic: HelpTopic) {
+    return `/help/${topic}`;
+}

@@ -58,7 +58,7 @@
             };
             return;
         }
-        const { error } = await logIn(email, password, { fetch });
+        const { error } = await logIn(email, password);
         if (error === undefined) {
             // TODO redirect to `/{redirectTo}` instead
             // To prevent users not being redirected to third parties
@@ -74,7 +74,12 @@
             };
             return;
         } else if (error.code === 500) {
-            state = { kind: "error", message: $_("auth.log-in.error.other") };
+            state = {
+                kind: "error",
+                message: $_("auth.log-in.error.other", {
+                    values: { error: JSON.stringify(error) },
+                }),
+            };
             return;
         }
         state = {

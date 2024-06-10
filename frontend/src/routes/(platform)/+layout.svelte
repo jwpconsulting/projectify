@@ -24,6 +24,7 @@
     import ConstructiveOverlay from "$lib/figma/overlays/constructive/ConstructiveOverlay.svelte";
     import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
     import MobileMenuOverlay from "$lib/figma/overlays/MobileMenuOverlay.svelte";
+    import HeaderLanding from "$lib/figma/navigation/header/Landing.svelte";
     import { currentWorkspace } from "$lib/stores/dashboard/workspace";
     import {
         mobileMenuState,
@@ -44,6 +45,8 @@ TODO evaluate whether grow is still necessary. Seems that with grow set, we woul
 <div class="flex min-h-screen grow flex-col">
     {#if $currentUser.kind === "authenticated"}
         <HeaderDashboard user={$currentUser} />
+    {:else}
+        <HeaderLanding />
     {/if}
     {#if $mobileMenuState.kind === "visible"}
         <MobileMenuOverlay target={$mobileMenuState.target} />

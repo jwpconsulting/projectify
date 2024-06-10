@@ -17,7 +17,7 @@
  */
 
 import { makeStorybookSelect } from "$lib-stories/storybook";
-import LogIn from "$routes/(storefront)/(auth)/user/log-in/+page.svelte";
+import LogIn from "$routes/(storefront)/user/(auth)/log-in/+page.svelte";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const data = makeStorybookSelect({

@@ -15,16 +15,26 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { currentWorkspaces } from "$lib/stores/dashboard/workspace";
-import { logOut } from "$lib/stores/user";
+import { redirect } from "@sveltejs/kit";
+import type { LayoutLoadEvent } from "./$types";
+import { currentUserAwaitable } from "$lib/stores/user";
+import { dashboardUrl } from "$lib/urls/dashboard";
 
-import type { PageLoadEvent } from "./$types";
-
-export async function load({ fetch }: PageLoadEvent): Promise<void> {
-    await logOut({ fetch });
-    currentWorkspaces.reset();
+interface Data {
+    redirectTo: string | undefined;
 }
 
-// we can't log out server side
-export const ssr = false;
 export const prerender = false;
+export const ssr = false;
+
+export async function load({ url }: LayoutLoadEvent): Promise<Data> {
+    // TODO might want to default to dashboardUrl here with redirectTo
+    const redirectTo = url.searchParams.get("next") ?? undefined;
+    const user = await currentUserAwaitable();
+    if (user.kind === "authenticated") {
+        redirect(302, redirectTo ?? dashboardUrl);
+    }
+    return {
+        redirectTo,
+    };
+}

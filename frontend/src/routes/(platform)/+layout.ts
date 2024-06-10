@@ -18,8 +18,8 @@
 import { redirect, error } from "@sveltejs/kit";
 
 import { currentWorkspaces } from "$lib/stores/dashboard/workspace";
-import { currentUser } from "$lib/stores/user";
-import type { CurrentUser, User } from "$lib/types/user";
+import { currentUserAwaitable } from "$lib/stores/user";
+import type { User } from "$lib/types/user";
 import { getLogInWithNextUrl } from "$lib/urls/user";
 
 import type { LayoutLoadEvent } from "./$types";
@@ -28,14 +28,7 @@ export async function load({
     url,
     fetch,
 }: LayoutLoadEvent): Promise<{ user: User }> {
-    const user: CurrentUser = await new Promise((resolve) => {
-        currentUser.subscribe((user) => {
-            if (user.kind === "start") {
-                return;
-            }
-            resolve(user);
-        });
-    });
+    const user = await currentUserAwaitable();
     if (user.kind === "start") {
         error(500, "User was not loaded correctly");
     } else if (user.kind === "unauthenticated") {

@@ -22,46 +22,4 @@
 # For example, for unused imports, eslint will first clear the lines, and
 # then any remaining whitespace will be cleaned up by prettier.
 # For good measure, we check one more time after a potential cleanup.
-
-npm run sync-types || exit
-
-if npm run check:schema; then
-    echo "npm run check:schema successful"
-else
-    echo "npm run check:schema didn't exit cleanly, continuing..."
-fi
-
-if npm run format; then
-    echo "npm run format successful"
-else
-    echo "npm run did not exit cleanly"
-    exit 1
-fi
-
-if npm run fix:eslint; then
-    echo "npm run fix:eslint successful"
-else
-    echo "npm run fix:eslint did not exit cleanly"
-    exit 1
-fi
-
-if npm run check:svelte-check; then
-    echo "npm run svelte-check successful"
-else
-    echo "svelte-check didn't exit cleanly"
-    exit 1
-fi
-
-if npm run check:knip; then
-    echo "npm run knip successful"
-else
-    echo "knip didn't exit cleanly"
-    exit 1
-fi
-
-if bin/check-i18n; then
-    echo "bin/check-i18n successful"
-else
-    echo "bin/check-i18n didn't exit cleanly"
-    exit 1
-fi
+npx npm-run-all --max-parallel 2 sync-types --parallel fix:* --parallel check:*
