@@ -58,7 +58,7 @@ export function currentUserAwaitable() {
     });
 }
 export async function logIn(email: string, password: string) {
-    const { response, data, error } = await openApiClient.POST(
+    const { data, error } = await openApiClient.POST(
         "/user/user/log-in",
         {
             body: { email, password },
@@ -68,10 +68,8 @@ export async function logIn(email: string, password: string) {
         _user.update(($user) => {
             return { ...$user, ...data };
         });
-    } else {
-        console.error(error);
     }
-    return { data, error, response };
+    return { data, error };
 }
 
 async function _logOut() {
