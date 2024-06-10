@@ -25,19 +25,29 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { updateUserProfile } from "$lib/stores/user";
-    import { changePasswordUrl, updateEmailAddressUrl } from "$lib/urls/user";
+    import {
+        changePasswordUrl,
+        getLogInWithNextUrl,
+        updateEmailAddressUrl,
+    } from "$lib/urls/user";
 
     import type { PageData } from "./$types";
 
-    import { beforeNavigate } from "$app/navigation";
+    import { beforeNavigate, goto } from "$app/navigation";
     import { openApiClient } from "$lib/repository/util";
+    import { getProfileUrl } from "$lib/urls";
+    import type { EditableViewState } from "$lib/types/ui";
+    import type { InputFieldValidation } from "$lib/funabashi/types";
 
     export let data: PageData;
 
     let { user } = data;
     let preferred_name = user.preferred_name;
+    let preferredNameValidation: InputFieldValidation | undefined = undefined;
 
-    let state: "viewing" | "editing" | "saving" = "viewing";
+    let state: EditableViewState | { kind: "error"; message: string } = {
+        kind: "viewing",
+    };
     let picture:
         | { kind: "keep" }
         | { kind: "clear" }
@@ -49,24 +59,49 @@
     }
 
     async function save() {
-        state = "saving";
+        state = { kind: "saving" };
         if (picture.kind !== "keep") {
             const formData = new FormData();
             if (picture.kind === "update") {
                 formData.append("file", picture.file);
             }
-            const { response, error } = await openApiClient.POST(
+            const { error } = await openApiClient.POST(
                 "/user/user/profile-picture/upload",
                 { body: {}, bodySerializer: () => formData },
             );
-            if (!response.ok) {
+            if (error) {
                 console.error(error);
                 throw new Error("Error when upload picture");
             }
         }
         // TODO handle validation errors
-        user = await updateUserProfile(preferred_name);
-        finishEditing();
+        const { error, data } = await updateUserProfile(preferred_name);
+        if (data) {
+            user = data;
+            finishEditing();
+            return;
+        }
+        if (error.code === 403) {
+            await goto(getLogInWithNextUrl(getProfileUrl()));
+            return;
+        }
+        if (error.code === 500) {
+            state = {
+                kind: "error",
+                message: $_("user-account-settings.overview.errors.server", {
+                    values: { error: JSON.stringify(error) },
+                }),
+            };
+            return;
+        }
+        const { details } = error;
+        preferredNameValidation = details.preferred_name
+            ? { ok: false, error: details.preferred_name }
+            : undefined;
+        state = {
+            kind: "error",
+            message: $_("user-account-settings.overview.errors.fields"),
+        };
     }
 
     function removePicture() {
@@ -75,7 +110,7 @@
     }
 
     function startEditing() {
-        state = "editing";
+        state = { kind: "editing" };
     }
 
     function finishEditing() {
@@ -89,13 +124,13 @@
     }
 
     function resetForm() {
-        state = "viewing";
+        state = { kind: "viewing" };
         picture = { kind: "keep" };
         preferred_name = user.preferred_name;
     }
 
     beforeNavigate((navigation: BeforeNavigate) => {
-        if (state == "editing") {
+        if (state.kind == "editing") {
             const navigateAway = window.confirm(
                 $_("user-account-settings.overview.confirm-navigate-away"),
             );
@@ -116,11 +151,10 @@
                 : picture.src,
     };
 
-    $: console.log(renderProfilePicture);
-
     $: canRemoveProfilePicture =
         user.profile_picture !== null &&
         ["keep", "update"].includes(picture.kind);
+    $: isEditing = state.kind === "editing" || state.kind === "error";
 </script>
 
 <form class="flex flex-col gap-10" on:submit|preventDefault={save}>
@@ -182,15 +216,17 @@
             name="preferred-name"
             bind:value={preferred_name}
             style={{ inputType: "text" }}
-            readonly={state !== "editing"}
+            readonly={!isEditing}
             onClick={startEditing}
+            validation={preferredNameValidation}
         />
+        {#if state.kind === "error"}<p>{state.message}</p>{/if}
     </div>
     <div class="flex flex-col gap-2">
         <Button
             action={{
                 kind: "submit",
-                disabled: state !== "editing",
+                disabled: !isEditing,
             }}
             size="medium"
             color="blue"
@@ -201,7 +237,7 @@
             action={{
                 kind: "button",
                 action: cancelEditing,
-                disabled: state !== "editing",
+                disabled: !isEditing,
             }}
             size="medium"
             color="blue"

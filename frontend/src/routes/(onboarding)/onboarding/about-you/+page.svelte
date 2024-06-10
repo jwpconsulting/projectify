@@ -22,26 +22,62 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { goto } from "$lib/navigation";
     import { currentUser, updateUserProfile } from "$lib/stores/user";
-    import { newWorkspaceUrl } from "$lib/urls/onboarding";
+    import { aboutYouUrl, newWorkspaceUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
+    import type { InputFieldValidation } from "$lib/funabashi/types";
+    import type { FormViewState } from "$lib/types/ui";
+    import { getLogInWithNextUrl } from "$lib/urls/user";
 
     export let data: PageData;
 
+    let state: FormViewState = { kind: "start" };
     let preferredName: PageData["user"]["preferred_name"] =
         $currentUser.kind === "authenticated"
             ? $currentUser.preferred_name
             : data.user.preferred_name;
+    let preferredNameValidation: InputFieldValidation | undefined = undefined;
 
     async function submit() {
-        await updateUserProfile(preferredName);
-        await goto(newWorkspaceUrl);
+        state = { kind: "submitting" };
+        const { error, data } = await updateUserProfile(preferredName);
+        if (data) {
+            await goto(newWorkspaceUrl);
+            return;
+        }
+        if (error.code === 500) {
+            state = {
+                kind: "error",
+                message: $_("onboarding.about-you.errors.server", {
+                    values: { error: JSON.stringify(error) },
+                }),
+            };
+            return;
+        }
+        if (error.code === 403) {
+            await goto(getLogInWithNextUrl(aboutYouUrl));
+            return;
+        }
+        const { details } = error;
+        preferredNameValidation = details.preferred_name
+            ? { ok: false, error: details.preferred_name }
+            : undefined;
+        state = {
+            kind: "error",
+            message: $_("onboarding.about-you.errors.fields"),
+        };
     }
 </script>
 
 <svelte:head><title>{$_("onboarding.about-you.title")}</title></svelte:head>
 
-<Onboarding nextAction={{ kind: "submit", submit }}>
+<Onboarding
+    nextAction={{
+        kind: "submit",
+        submit: submit,
+        disabled: state.kind === "submitting",
+    }}
+>
     <svelte:fragment slot="title"
         >{$_("onboarding.about-you.heading")}</svelte:fragment
     >
@@ -55,7 +91,11 @@
             placeholder={$_("onboarding.about-you.input.placeholder")}
             style={{ inputType: "text" }}
             name="full-name"
+            validation={preferredNameValidation}
         />
+        {#if state.kind === "error"}
+            <p>{state.message}</p>
+        {/if}
     </svelte:fragment>
 
     <svelte:fragment slot="content">

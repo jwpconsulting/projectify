@@ -58,12 +58,9 @@ export function currentUserAwaitable() {
     });
 }
 export async function logIn(email: string, password: string) {
-    const { data, error } = await openApiClient.POST(
-        "/user/user/log-in",
-        {
-            body: { email, password },
-        },
-    );
+    const { data, error } = await openApiClient.POST("/user/user/log-in", {
+        body: { email, password },
+    });
     if (data) {
         _user.update(($user) => {
             return { ...$user, ...data };
@@ -96,12 +93,12 @@ export async function logOut() {
 
 export async function updateUserProfile(preferred_name: string | null) {
     const { data, error } = await openApiClient.PUT(
-        "/user/user/current-user",
+        "/user/user/current-user/update",
         { body: { preferred_name } },
     );
-    if (error) {
-        throw new Error("Expected response.ok");
+    if (data) {
+        _user.set(data);
+        return { data };
     }
-    _user.set(data);
-    return data;
+    return { error };
 }

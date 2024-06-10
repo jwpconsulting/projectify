@@ -422,6 +422,10 @@ const messages: MessageDirectory = {
                 "with-name": "Welcome, {name}! 👋",
                 "without-name": "Welcome! 👋",
             },
+            errors: {
+                server: "A server error happened: {error}. Please try again.",
+                fields: "Please correct the errors above and try again.",
+            },
         },
         "new-workspace": {
             "title": "Create a new workspace - Projectify",
@@ -801,6 +805,10 @@ const messages: MessageDirectory = {
             "save": "Save changes",
             "confirm-navigate-away":
                 "You have unsaved changes to your user profile. Would you like to navigate away?",
+            "errors": {
+                server: "A server error happened: {error}. Please try again.",
+                fields: "Please correct the errors above and try again.",
+            },
         },
         "update-email-address": {
             "title": "Update email address",

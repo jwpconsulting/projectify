@@ -490,8 +490,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
           description: ''
+  /user/user/current-user/update:
     put:
-      operationId: user_user_current_user_update
+      operationId: user_user_current_user_update_update
       description: Update a user.
       tags:
       - user
@@ -508,7 +509,6 @@ paths:
               $ref: '#/components/schemas/UserUpdate'
       security:
       - cookieAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -546,6 +546,12 @@ paths:
                 - details
                 - general
                 - status
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
           description: ''
         '500':
           content:

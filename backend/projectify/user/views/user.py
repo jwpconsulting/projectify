@@ -49,9 +49,9 @@ from projectify.user.services.user import (
 
 
 # Create
-# Read + Update
-class UserReadUpdate(views.APIView):
-    """Read or update user."""
+# Read
+class UserRead(views.APIView):
+    """Read user, regardless of logged in/out."""
 
     permission_classes = (AllowAny,)
 
@@ -78,6 +78,10 @@ class UserReadUpdate(views.APIView):
         else:
             serializer = LoggedInUserSerializer(instance=user)
         return Response(data=serializer.data)
+
+
+class UserUpdate(views.APIView):
+    """Update user."""
 
     class UserUpdateSerializer(serializers.ModelSerializer[User]):
         """Take only preferred_name in."""

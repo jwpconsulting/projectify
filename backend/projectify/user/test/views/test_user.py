@@ -48,14 +48,14 @@ Headers = Mapping[str, Any]
 
 
 # Create (not relevant)
-# Read + Update
-class TestUserReadUpdate:
+# Read
+class TestUserRead:
     """Test UserReadUpdate view."""
 
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("user:users:read-update")
+        return reverse("user:users:read")
 
     def test_unauthenticated(
         self,
@@ -83,6 +83,15 @@ class TestUserReadUpdate:
             "profile_picture": None,
         }
 
+
+class TestUserUpdate:
+    """Test UserReadUpdate view."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("user:users:update")
+
     def test_update(
         self,
         rest_user_client: APIClient,
@@ -103,8 +112,16 @@ class TestUserReadUpdate:
             resource_url,
             data={"preferred_name": "Locutus of Blorb"},
         )
+        assert response.status_code == HTTP_200_OK, response.data
         user.refresh_from_db()
         assert user.preferred_name == "Locutus of Blorb"
+        response = rest_user_client.put(
+            resource_url,
+            data={"preferred_name": ""},
+        )
+        assert response.status_code == HTTP_200_OK, response.data
+        user.refresh_from_db()
+        assert user.preferred_name == ""
 
     def test_update_unauthenticed(
         self,
