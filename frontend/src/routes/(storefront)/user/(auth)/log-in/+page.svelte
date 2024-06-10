@@ -74,7 +74,12 @@
             };
             return;
         } else if (error.code === 500) {
-            state = { kind: "error", message: $_("auth.log-in.error.other") };
+            state = {
+                kind: "error",
+                message: $_("auth.log-in.error.other", {
+                    values: { error: JSON.stringify(error) },
+                }),
+            };
             return;
         }
         state = {

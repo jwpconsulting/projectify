@@ -43,8 +43,8 @@ export const currentUser = readonly(_user);
 /**
  * This will never resolve when not run in browser
  */
-export const currentUserAwaitable = () =>
-    new Promise<CurrentUser>((resolve) => {
+export function currentUserAwaitable() {
+    return new Promise<CurrentUser>((resolve) => {
         let unsub: Unsubscriber | undefined = undefined;
         unsub = currentUser.subscribe((user) => {
             if (user.kind === "start") {
@@ -52,11 +52,11 @@ export const currentUserAwaitable = () =>
             }
             resolve(user);
             if (unsub) {
-            unsub();
+                unsub();
             }
         });
     });
-
+}
 export async function logIn(email: string, password: string) {
     const { response, data, error } = await openApiClient.POST(
         "/user/user/log-in",

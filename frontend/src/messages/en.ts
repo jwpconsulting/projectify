@@ -605,8 +605,7 @@ const messages: MessageDirectory = {
                     "Invalid credentials. Please see the errors above.",
                 "rate-limit":
                     "You are trying to log in too many times. Please slow down.",
-                "other":
-                    "Invalid credentials. Please check email and password.",
+                "other": "An error happened while logging you in: {error}",
             },
             "sign-up-here": "Sign up here",
         },
