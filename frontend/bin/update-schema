@@ -15,8 +15,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-# Maybe set -e, -o pipefail or -u
 npx openapi-typescript \
     ../backend/schema/schema.yml \
-    --output src/lib/types/schema.d.ts
-npx prettier --write src/lib/types/schema.d.ts
+    --output src/lib/types/schema.d.ts || exit
+npm run prettier -- --write src/lib/types/schema.d.ts || exit
