@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import RequestPasswordReset from "$routes/(storefront)/(auth)/user/request-password-reset/+page.svelte";
+import RequestPasswordReset from "$routes/(storefront)/user/(auth)/request-password-reset/+page.svelte";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<RequestPasswordReset> = {

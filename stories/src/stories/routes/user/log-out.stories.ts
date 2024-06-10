@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import LogOut from "$routes/(storefront)/(auth)/user/log-out/+page.svelte";
+import LogOut from "$routes/(storefront)/user/log-out/+page.svelte";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<LogOut> = {

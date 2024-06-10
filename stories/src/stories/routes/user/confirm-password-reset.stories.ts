@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import ConfirmPasswordReset from "$routes/(storefront)/(auth)/user/confirm-password-reset/[email]/[token]/+page.svelte";
+import ConfirmPasswordReset from "$routes/(storefront)/user/(auth)/confirm-password-reset/[email]/[token]/+page.svelte";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<ConfirmPasswordReset> = {
