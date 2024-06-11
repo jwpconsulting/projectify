@@ -260,23 +260,29 @@ async function subscribeToResource(
  * one initial load
  */
 
-type WsStoreState =
+type WsStoreState<T> =
     | {
           subscriptionType: SubscriptionType;
           kind: "start";
       }
     | {
           subscriptionType: SubscriptionType;
+          kind: "loading";
+          uuid: string;
+      }
+    | {
+          subscriptionType: SubscriptionType;
           kind: "ready";
           uuid: string;
           unsubscriber: AsyncUnsubscriber;
+          value: T | undefined;
       };
 
 export function createWsStore<T>(
     subscriptionType: SubscriptionType,
     getter: RepoGetter<T>,
 ): WsResource<T> {
-    type State = WsStoreState;
+    type State = WsStoreState<T>;
     let state: State = { subscriptionType, kind: "start" };
 
     const reset = () => {
@@ -287,6 +293,10 @@ export function createWsStore<T>(
     const resetAndUnsubscribe = async () => {
         if (state.kind === "start") {
             console.warn("Already reset");
+            return;
+        }
+        if (state.kind === "loading") {
+            console.warn("Tried to reset while loading");
             return;
         }
         console.debug("Resetting");
@@ -307,12 +317,15 @@ export function createWsStore<T>(
         if (state.kind === "start") {
             throw new Error("State.kind is start");
         }
+        if (state.kind === "loading") {
+            throw new Error("Received message while loading");
+        }
         if (resp.kind === "gone") {
             reset();
         } else if (resp.kind === "changed") {
             set(resp.content as T);
         } else {
-            throw new Error("resp.kind is not changed");
+            throw new Error("resp.kind is not 'changed'");
         }
     };
 
@@ -338,43 +351,47 @@ export function createWsStore<T>(
             // is undefined
             set(undefined);
         }
-        // Fetch value early, since we need it either way
-        const newValue = await backOff(() => getter(uuid));
-        // Then, when we find out we have already initialized for this uuid,
-        // we can skip the queue and return early without cleaning up an
-        // existing subscription.
-        if (state.kind === "ready" && uuid === state.uuid) {
-            set(newValue);
-            return newValue;
-        }
-
-        // On the other hand, if the uuid is changing, we need to unsubscribe
-        // and create a new sub, as follows:
+        // If we are reloading the same uuid, we don't need to resubscribe
+        const alreadySubscribedToUuid =
+            state.kind === "ready" && uuid === state.uuid;
+        // On the other hand, if the uuid is changing and we are in a "ready"
+        // state, we need to unsubscribe.
         // We need to unsubscribe from the old ws thing before adding
         // a new subscription here, if we are already initalized.
-        if (state.kind === "ready") {
+        if (state.kind === "ready" && uuid !== state.uuid) {
             console.log("Unsubscribing", state);
             await state.unsubscriber();
         }
+        // But we still need to rememember that we are loading
+        state = { kind: "loading", uuid, subscriptionType };
+        // TODO inform subscribers that we are loading
+        // Fetch value early, since we need it either way
+        const value = await backOff(() => getter(uuid));
+        // Then, when we find out we have already initialized for this uuid,
+        // we can skip the queue and return early without cleaning up an
+        // existing subscription.
+        if (alreadySubscribedToUuid) {
+            set(value);
+            return value;
+        }
+
+        // In this branch, we know that the previous uuid subscribed to was
+        // different, or we haven't subscribed to anything at all.
         const unsubscriber = await subscribeToResource(
             { resource: subscriptionType, uuid },
             onMessage,
             reconnect,
         );
-        // Since further reloads are independent of any fetch (the data comes
-        // from ws), we don't have to store the repositoryContext as part of
-        // the state. It's important that we don't reuse a user supplied
-        // fetch (aka repositoryContext) after page navigation, since in server
-        // side mode this is not guaranteed to work: SvelteKit might unload it.
         state = {
             ...state,
             kind: "ready",
             uuid,
             unsubscriber,
+            value,
         };
-        set(newValue);
+        set(value);
         // And the caller of this method is definitely waiting for their result
-        return newValue;
+        return value;
     };
 
     return { loadUuid, subscribe };
