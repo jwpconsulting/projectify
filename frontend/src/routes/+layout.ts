@@ -24,8 +24,7 @@ import type { LayoutLoadEvent } from "./$types";
 
 export function load({ fetch }: LayoutLoadEvent) {
     overrideClient(fetch);
-
-    return;
 }
 
 export const prerender = true;
+export const ssr = true;
