@@ -25,7 +25,7 @@
     import type { SectionWithTasks } from "$lib/types/workspace";
     import { getProjectSearchUrl } from "$lib/urls/dashboard";
 
-    $: project = $currentProject?.value;
+    $: project = $currentProject.value;
     let searchInput: string | undefined = undefined;
 
     $: canSearch = searchInput !== undefined;

@@ -80,7 +80,7 @@
             throw new Error("Expected create state");
         }
 
-        const workspace = $currentWorkspace?.value;
+        const workspace = $currentWorkspace.value;
         if (workspace === undefined) {
             throw new Error("Expected workspace");
         }

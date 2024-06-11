@@ -30,7 +30,7 @@ export const currentWorkspaceLabels: CurrentWorkspaceLabels = derived<
 >(
     currentWorkspace,
     ($currentWorkspace, set) => {
-        if (!$currentWorkspace?.value) {
+        if (!$currentWorkspace.value) {
             return;
         }
         set($currentWorkspace.value.labels);

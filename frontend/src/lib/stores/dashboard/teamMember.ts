@@ -44,7 +44,7 @@ export const currentTeamMembers: CurrentTeamMembers = derived<
 >(
     currentWorkspace,
     ($currentWorkspace, set) => {
-        if (!$currentWorkspace?.value) {
+        if (!$currentWorkspace.value) {
             return;
         }
         set($currentWorkspace.value.team_members);
@@ -65,7 +65,7 @@ export const currentTeamMember: CurrentTeamMember = derived<
     ([$user, $currentWorkspace], set) => {
         if (
             $user.kind !== "authenticated" ||
-            $currentWorkspace?.value === undefined
+            $currentWorkspace.value === undefined
         ) {
             set(undefined);
             return;
@@ -100,7 +100,7 @@ export const currentTeamMemberCan: CurrentTeamMemberCan = derived<
             set(() => false);
             return;
         }
-        if ($currentWorkspace?.value === undefined) {
+        if ($currentWorkspace.value === undefined) {
             console.warn("workspace was undefined");
             set(() => false);
             return;

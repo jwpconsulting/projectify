@@ -49,7 +49,7 @@ TODO evaluate whether grow is still necessary. Seems that with grow set, we woul
     <div class="flex min-h-0 shrink grow flex-row">
         <!-- this breakpoint is in tune with the mobile menu breakpoint -->
         <div class="hidden h-full shrink-0 md:block">
-            <SideNav workspace={$currentWorkspace?.value} />
+            <SideNav workspace={$currentWorkspace.value} />
         </div>
         <!-- not inserting min-w-0 will mean that this div will extend as much as
     needed around whatever is inside the slot -->

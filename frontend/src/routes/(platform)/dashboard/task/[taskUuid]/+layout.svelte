@@ -25,7 +25,7 @@
 
     export let data: LayoutData;
 
-    $: task = $currentTask?.orPromise(data.task) ?? data.task;
+    $: task = $currentTask.orPromise(data.task);
 </script>
 
 <svelte:head>

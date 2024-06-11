@@ -93,7 +93,7 @@ export const currentSections = derived<
 >(
     [selectedLabels, selectedTeamMember, currentProject],
     ([$selectedLabels, $selectedTeamMember, $currentProject], set) => {
-        if (!$currentProject?.value) {
+        if (!$currentProject.value) {
             set(undefined);
             return;
         }

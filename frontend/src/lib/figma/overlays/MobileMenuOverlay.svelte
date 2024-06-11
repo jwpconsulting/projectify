@@ -38,7 +38,7 @@
 >
     <div class="flex h-full flex-col gap-4 p-2">
         {#if target.kind === "dashboard"}
-            <Full workspace={$currentWorkspace?.value} />
+            <Full workspace={$currentWorkspace.value} />
         {:else}
             <MobileMenu />
         {/if}

@@ -27,7 +27,7 @@ export const currentArchivedProjects = derived<
 >(
     currentWorkspace,
     ($currentWorkspace, set) => {
-        const uuid = $currentWorkspace?.value?.uuid;
+        const uuid = $currentWorkspace.value?.uuid;
         if (!uuid) {
             set(undefined);
             return;

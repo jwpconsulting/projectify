@@ -287,7 +287,11 @@ export function createWsStore<T>(
     let state: State = { subscriptionType, kind: "start" };
 
     const reset = () => {
-        set(undefined);
+        set({
+            or: (t) => t,
+            orPromise: (t) => t,
+            value: undefined,
+        });
         state = { kind: "start", subscriptionType: state.subscriptionType };
     };
 
@@ -313,7 +317,11 @@ export function createWsStore<T>(
     };
 
     const { subscribe, set } = writable<WsResourceContainer<T>>(
-        undefined,
+        {
+            or: (t) => t,
+            orPromise: (t) => t,
+            value: undefined,
+        },
         () => stop,
     );
 
@@ -358,7 +366,11 @@ export function createWsStore<T>(
             // If we have already loaded a value:
             // First, we update all subscribers and tell them the current value
             // is undefined
-            set(undefined);
+            set({
+                or: (t) => t,
+                value: undefined,
+                orPromise: (t) => t,
+            });
         }
         // If we are reloading the same uuid, we don't need to resubscribe
         const alreadySubscribedToUuid =
@@ -387,7 +399,11 @@ export function createWsStore<T>(
                     value,
                 });
             } else {
-                set(undefined);
+                set({
+                    or: (t) => t,
+                    orPromise: (t) => t,
+                    value: undefined,
+                });
             }
             return value;
         }
@@ -413,7 +429,11 @@ export function createWsStore<T>(
                 value,
             });
         } else {
-            set(undefined);
+            set({
+                or: (t) => t,
+                orPromise: (t) => t,
+                value: undefined,
+            });
         }
         // And the caller of this method is definitely waiting for their result
         return value;

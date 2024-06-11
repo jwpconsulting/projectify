@@ -31,7 +31,7 @@
     import { getDashboardProjectUrl } from "$lib/urls";
     import { selectProjectUuid } from "$lib/stores/dashboard/ui";
 
-    $: currentProjectUuid = $currentProject?.value?.uuid;
+    $: currentProjectUuid = $currentProject.value?.uuid;
 
     export let project: WorkspaceDetailProject;
     export let workspace: WorkspaceDetail;

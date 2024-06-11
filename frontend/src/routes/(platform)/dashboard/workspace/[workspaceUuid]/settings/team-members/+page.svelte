@@ -37,7 +37,7 @@
 
     export let data: PageData;
 
-    $: workspace = $currentWorkspace?.or(data.workspace) ?? data.workspace;
+    $: workspace = $currentWorkspace.or(data.workspace);
 
     async function uninvite(email: string) {
         const { error } = await openApiClient.POST(
