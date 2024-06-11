@@ -56,10 +56,12 @@ export interface SubTaskAssignment
     moveSubTaskDown: (where: number) => void;
 }
 
+// TODO make a simple union type
 const subscriptionTypes = ["workspace", "project", "task"] as const;
 export type SubscriptionType = (typeof subscriptionTypes)[number];
 
 export type RepoGetter<T> = (uuid: string) => Promise<T | undefined>;
-export interface WsResource<T> extends Readable<T | undefined> {
+export type WsResourceContainer<T> = (T & { or: (t: T) => T }) | undefined;
+export interface WsResource<T> extends Readable<WsResourceContainer<T>> {
     loadUuid: RepoGetter<T>;
 }

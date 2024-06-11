@@ -22,7 +22,7 @@
 
     export let data: PageData;
 
-    $: workspace = $currentWorkspace ?? data.workspace;
+    $: workspace = $currentWorkspace?.or(data.workspace) ?? data.workspace;
 </script>
 
 <svelte:head>

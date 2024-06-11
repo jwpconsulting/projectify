@@ -23,6 +23,7 @@ import type {
     RepoGetter,
     SubscriptionType,
     WsResource,
+    WsResourceContainer,
 } from "$lib/types/stores";
 
 import { browser } from "$app/environment";
@@ -311,7 +312,10 @@ export function createWsStore<T>(
         );
     };
 
-    const { subscribe, set } = writable<T | undefined>(undefined, () => stop);
+    const { subscribe, set } = writable<WsResourceContainer<T>>(
+        undefined,
+        () => stop,
+    );
 
     const onMessage: EventListener = (resp: WsResponse) => {
         if (state.kind === "start") {
@@ -323,7 +327,8 @@ export function createWsStore<T>(
         if (resp.kind === "gone") {
             reset();
         } else if (resp.kind === "changed") {
-            set(resp.content as T);
+            const value = resp.content as T;
+            set({ ...value, or: () => value });
         } else {
             throw new Error("resp.kind is not 'changed'");
         }
@@ -366,12 +371,16 @@ export function createWsStore<T>(
         state = { kind: "loading", uuid, subscriptionType };
         // TODO inform subscribers that we are loading
         // Fetch value early, since we need it either way
-        const value = await backOff(() => getter(uuid));
+        const value: T | undefined = await backOff(() => getter(uuid));
         // Then, when we find out we have already initialized for this uuid,
         // we can skip the queue and return early without cleaning up an
         // existing subscription.
         if (alreadySubscribedToUuid) {
-            set(value);
+            if (value) {
+                set({ ...value, or: () => value });
+            } else {
+                set(undefined);
+            }
             return value;
         }
 
@@ -389,7 +398,11 @@ export function createWsStore<T>(
             unsubscriber,
             value,
         };
-        set(value);
+        if (value) {
+            set({ ...value, or: () => value });
+        } else {
+            set(undefined);
+        }
         // And the caller of this method is definitely waiting for their result
         return value;
     };
