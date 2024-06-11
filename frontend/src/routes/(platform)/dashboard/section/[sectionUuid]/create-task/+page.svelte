@@ -24,7 +24,7 @@
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { goto } from "$lib/navigation";
-    import { createTask as createTaskFn } from "$lib/repository/workspace/task";
+    import { createTask } from "$lib/repository/workspace/task";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createTeamMemberAssignment } from "$lib/stores/dashboard/teamMemberAssignment";
     import {
@@ -72,18 +72,17 @@
         if (!$labelAssignment) {
             throw new Error("Expected $labelAssignment");
         }
-        const createTaskFull = {
-            title,
-            description,
-            section: section,
-            labels: $labelAssignment,
-            assignee: $teamMemberAssignment ?? null,
-            due_date: dueDate,
-            sub_tasks: $subTasks ?? [],
-        };
         state = { kind: "submitting" };
         try {
-            const task = await createTaskFn(createTaskFull);
+            const task = await createTask({
+                title,
+                description,
+                section: section,
+                labels: $labelAssignment,
+                assignee: $teamMemberAssignment,
+                due_date: dueDate,
+                sub_tasks: $subTasks,
+            });
             if (continueEditing) {
                 await goto(getTaskUrl(task));
                 return;

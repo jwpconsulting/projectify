@@ -53,7 +53,7 @@ export function createLabelAssignment(
     const selected = writable<LabelAssignmentState>(selection);
     const { subscribe } = derived<
         [typeof selected, typeof currentWorkspaceLabels],
-        Label[] | undefined
+        Label[]
     >(
         [selected, currentWorkspaceLabels],
         ([$selected, $currentWorkspaceLabels], set) => {
@@ -67,7 +67,7 @@ export function createLabelAssignment(
             );
             set(labels);
         },
-        undefined,
+        [],
     );
     const selectOrDeselectLabel = (
         select: boolean,

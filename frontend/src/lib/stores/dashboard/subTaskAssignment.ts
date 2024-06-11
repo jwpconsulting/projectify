@@ -78,7 +78,7 @@ export function createSubTaskAssignment(task?: TaskDetail): SubTaskAssignment {
             }
             set(filtered);
         },
-        undefined,
+        [],
     );
     return {
         subscribe,
