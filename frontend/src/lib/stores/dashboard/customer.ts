@@ -27,7 +27,7 @@ export const currentCustomer: CurrentCustomer = derived<
     typeof currentWorkspace,
     Customer | undefined
 >(currentWorkspace, ($currentWorkspace, set) => {
-    const uuid = $currentWorkspace?.uuid;
+    const uuid = $currentWorkspace.value?.uuid;
     if (!uuid) {
         return;
     }

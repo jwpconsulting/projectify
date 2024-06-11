@@ -26,7 +26,7 @@
     import type { PageData } from "./$types";
 
     export let data: PageData;
-    $: workspace = $currentWorkspace ?? data.workspace;
+    $: workspace = $currentWorkspace.or(data.workspace);
 
     $: quotaRows = [
         {

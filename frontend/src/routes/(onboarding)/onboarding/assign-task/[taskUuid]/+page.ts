@@ -40,10 +40,9 @@ interface returnType {
     assignee: TeamMember;
 }
 export async function load({
-    fetch,
     params: { taskUuid },
 }: PageLoadEvent): Promise<returnType> {
-    const task = await currentTask.loadUuid(taskUuid, { fetch });
+    const task = await currentTask.loadUuid(taskUuid);
     if (!task) {
         // TODO find out if we can i18n this?
         error(404, `No task could be found for task UUID '${taskUuid}'.`);
@@ -54,9 +53,7 @@ export async function load({
             project: { uuid: projectUuid },
         },
     } = task;
-    const project = await getProject(projectUuid, {
-        fetch,
-    });
+    const project = await getProject(projectUuid);
     if (!project) {
         throw new Error("Expected project");
     }

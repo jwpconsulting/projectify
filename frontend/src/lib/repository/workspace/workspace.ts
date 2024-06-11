@@ -16,13 +16,10 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import { openApiClient } from "$lib/repository/util";
-import type { RepositoryContext } from "$lib/types/repository";
 import type { Workspace } from "$lib/types/workspace";
 
 // Read
-export async function getWorkspaces(
-    _repositoryContext?: RepositoryContext,
-): Promise<Workspace[]> {
+export async function getWorkspaces(): Promise<Workspace[]> {
     const { error, data } = await openApiClient.GET(
         "/workspace/workspace/user-workspaces/",
     );
@@ -36,10 +33,7 @@ export async function getWorkspaces(
     throw new Error(`Could not retrieve workspaces ${JSON.stringify(error)}`);
 }
 
-export async function getWorkspace(
-    workspace_uuid: string,
-    _repositoryContext?: RepositoryContext,
-) {
+export async function getWorkspace(workspace_uuid: string) {
     const { error, data } = await openApiClient.GET(
         "/workspace/workspace/{workspace_uuid}",
         {

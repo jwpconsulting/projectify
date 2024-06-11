@@ -15,32 +15,37 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { error } from "@sveltejs/kit";
+import { error, redirect } from "@sveltejs/kit";
 
 import { getWorkspace } from "$lib/repository/workspace/workspace";
 import { getProject } from "$lib/repository/workspace/project";
 import type { ProjectDetail, WorkspaceDetail } from "$lib/types/workspace";
 
 import type { PageLoadEvent } from "./$types";
+import { getLogInWithNextUrl } from "$lib/urls/user";
+import type { User } from "$lib/types/user";
 
 export async function load({
     params: { projectUuid },
-    fetch,
+    parent,
+    url,
 }: PageLoadEvent): Promise<{
+    user: User;
     project: ProjectDetail;
     workspace: WorkspaceDetail;
     section?: ProjectDetail["sections"][number];
 }> {
-    const project = await getProject(projectUuid, {
-        fetch,
-    });
+    const { userAwaitable } = await parent();
+    const user = await userAwaitable;
+    const project = await getProject(projectUuid);
     if (!project) {
         error(404, `No project could be found for UUID ${projectUuid}.`);
     }
+    if (user.kind !== "authenticated") {
+        redirect(302, getLogInWithNextUrl(url.pathname));
+    }
     const { uuid: workspaceUuid } = project.workspace;
-    const workspace = await getWorkspace(workspaceUuid, {
-        fetch,
-    });
+    const workspace = await getWorkspace(workspaceUuid);
     if (!workspace) {
         // If this happens something is very wrong
         error(
@@ -49,5 +54,5 @@ export async function load({
         );
     }
     const section = project.sections.at(0);
-    return { project, workspace, section };
+    return { user, project, workspace, section };
 }

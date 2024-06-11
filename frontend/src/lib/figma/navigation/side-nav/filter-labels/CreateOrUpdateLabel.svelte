@@ -80,8 +80,9 @@
             throw new Error("Expected create state");
         }
 
-        if ($currentWorkspace === undefined) {
-            throw new Error("Expected $currentWorkspace");
+        const workspace = $currentWorkspace.value;
+        if (workspace === undefined) {
+            throw new Error("Expected workspace");
         }
 
         editState = { kind: "submitting" };
@@ -89,7 +90,7 @@
         chosenColorValidation = undefined;
 
         const color = getIndexFromLabelColor(chosenColor);
-        const { error, data } = await createLabel($currentWorkspace, {
+        const { error, data } = await createLabel(workspace, {
             name: labelName,
             color,
         });
@@ -100,9 +101,7 @@
         }
         if (error.code === 403) {
             await goto(
-                getLogInWithNextUrl(
-                    getDashboardWorkspaceUrl($currentWorkspace),
-                ),
+                getLogInWithNextUrl(getDashboardWorkspaceUrl(workspace)),
             );
             return;
         }

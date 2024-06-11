@@ -16,14 +16,23 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import { getWorkspaces } from "$lib/repository/workspace/workspace";
+import type { User } from "$lib/types/user";
 import type { Workspace } from "$lib/types/workspace";
+import { getLogInWithNextUrl } from "$lib/urls/user";
+import { redirect } from "@sveltejs/kit";
 
 import type { PageLoadEvent } from "./$types";
 
 export async function load({
-    fetch,
-}: PageLoadEvent): Promise<{ workspace?: Workspace }> {
-    const workspaces = await getWorkspaces({ fetch });
+    parent,
+    url,
+}: PageLoadEvent): Promise<{ user: User; workspace?: Workspace }> {
+    const { userAwaitable } = await parent();
+    const user = await userAwaitable;
+    if (user.kind !== "authenticated") {
+        redirect(302, getLogInWithNextUrl(url.pathname));
+    }
+    const workspaces = await getWorkspaces();
     const workspace = workspaces.at(0);
-    return { workspace };
+    return { user, workspace };
 }

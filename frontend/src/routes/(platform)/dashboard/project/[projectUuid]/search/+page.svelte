@@ -27,7 +27,7 @@
     import type { PageData } from "./$types";
 
     export let data: PageData;
-    $: project = $currentProject;
+    $: project = $currentProject.value;
     $: backUrl = project ? getDashboardProjectUrl(project) : undefined;
 </script>
 

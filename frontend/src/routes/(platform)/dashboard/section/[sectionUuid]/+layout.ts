@@ -30,10 +30,8 @@ interface Data {
 
 export async function load({
     params: { sectionUuid },
-    fetch,
 }: LayoutLoadEvent): Promise<Data> {
-    // If thing is fetched, use the fetch argument above
-    const section = await getSection(sectionUuid, { fetch });
+    const section = await getSection(sectionUuid);
     if (!section) {
         error(
             404,
@@ -45,13 +43,11 @@ export async function load({
         project.workspace,
         "Expected workspace",
     );
-    currentWorkspace
-        .loadUuid(workspaceUuid, { fetch })
-        .catch((reason: unknown) => {
-            console.error(
-                "Tried to load currentWorkspace in background, but failed with",
-                reason,
-            );
-        });
+    currentWorkspace.loadUuid(workspaceUuid).catch((reason: unknown) => {
+        console.error(
+            "Tried to load currentWorkspace in background, but failed with",
+            reason,
+        );
+    });
     return { section };
 }

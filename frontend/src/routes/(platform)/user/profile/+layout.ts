@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -15,23 +15,15 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { openApiClient } from "$lib/repository/util";
-import type { ProjectDetail } from "$lib/types/workspace";
+import { redirect } from "@sveltejs/kit";
+import type { LayoutLoadEvent } from "./$types";
+import { getLogInWithNextUrl } from "$lib/urls/user";
 
-// Project CRUD
-// Read
-export async function getProject(
-    project_uuid: string,
-): Promise<ProjectDetail | undefined> {
-    const { error, data } = await openApiClient.GET(
-        "/workspace/project/{project_uuid}",
-        { params: { path: { project_uuid } } },
-    );
-    if (error?.code === 500) {
-        throw new Error("Unrecoverable server error");
+export async function load({ parent, url }: LayoutLoadEvent) {
+    const { userAwaitable } = await parent();
+    const user = await userAwaitable;
+    if (user.kind !== "authenticated") {
+        redirect(302, getLogInWithNextUrl(url.pathname));
     }
-    if (data) {
-        return data;
-    }
-    return undefined;
+    return { user };
 }

@@ -21,17 +21,16 @@ import { currentWorkspaces } from "$lib/stores/dashboard/workspace";
 import { getDashboardWorkspaceUrl } from "$lib/urls";
 import { startUrl } from "$lib/urls/onboarding";
 
-import type { PageLoadEvent } from "./$types";
 import { selectedWorkspaceUuid } from "$lib/stores/dashboard/ui";
 
-export async function load({ fetch }: PageLoadEvent): Promise<void> {
+export async function load(): Promise<void> {
     const maybeWorkspaceUuid: string | null = await new Promise(
         selectedWorkspaceUuid.subscribe,
     );
     if (maybeWorkspaceUuid) {
         redirect(302, getDashboardWorkspaceUrl({ uuid: maybeWorkspaceUuid }));
     }
-    const workspaces = await currentWorkspaces.load({ fetch });
+    const workspaces = await currentWorkspaces.load();
     if (!workspaces) {
         // The workspaces endpoint not being reachable is unrecoverable
         error(500);

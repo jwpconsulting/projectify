@@ -21,7 +21,7 @@ import type { Readable } from "svelte/store";
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 import { searchAmong } from "$lib/stores/util";
 import type { SearchInput } from "$lib/types/base";
-import type { Label, WorkspaceDetail } from "$lib/types/workspace";
+import type { Label } from "$lib/types/workspace";
 
 type CurrentWorkspaceLabels = Readable<readonly Label[] | undefined>;
 export const currentWorkspaceLabels: CurrentWorkspaceLabels = derived<
@@ -29,11 +29,11 @@ export const currentWorkspaceLabels: CurrentWorkspaceLabels = derived<
     readonly Label[] | undefined
 >(
     currentWorkspace,
-    ($currentWorkspace: WorkspaceDetail | undefined, set) => {
-        if (!$currentWorkspace) {
+    ($currentWorkspace, set) => {
+        if (!$currentWorkspace.value) {
             return;
         }
-        set($currentWorkspace.labels);
+        set($currentWorkspace.value.labels);
     },
     undefined,
 );

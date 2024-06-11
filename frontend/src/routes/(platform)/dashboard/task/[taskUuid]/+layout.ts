@@ -25,13 +25,13 @@ interface Data {
     task: Promise<TaskDetail>;
 }
 
-export function load({ params: { taskUuid }, fetch }: LayoutLoadEvent): Data {
+export function load({ params: { taskUuid } }: LayoutLoadEvent): Data {
     // TODO add back
     // if (!task) {
     //     error(404, `No task could be found for UUID '${taskUuid}'`);
     // }
     const task = currentTask
-        .loadUuid(taskUuid, { fetch })
+        .loadUuid(taskUuid)
         .then((task) => {
             if (!task) {
                 throw new Error(
@@ -42,7 +42,7 @@ export function load({ params: { taskUuid }, fetch }: LayoutLoadEvent): Data {
         })
         .then((task) => {
             currentWorkspace
-                .loadUuid(task.section.project.workspace.uuid, { fetch })
+                .loadUuid(task.section.project.workspace.uuid)
                 .catch((error: unknown) =>
                     console.error(
                         "Error when fetching currentWorkspace for task ${taskUuid}",

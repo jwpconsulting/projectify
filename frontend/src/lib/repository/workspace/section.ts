@@ -19,13 +19,11 @@
  * Repository functions for sections
  */
 import { openApiClient } from "$lib/repository/util";
-import type { RepositoryContext } from "$lib/types/repository";
 import type { SectionDetail } from "$lib/types/workspace";
 
 // Read
 export async function getSection(
     section_uuid: string,
-    _repositoryContext?: RepositoryContext,
 ): Promise<SectionDetail | undefined> {
     const { error, data } = await openApiClient.GET(
         "/workspace/section/{section_uuid}",

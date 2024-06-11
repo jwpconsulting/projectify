@@ -25,20 +25,15 @@ import type { PageLoadEvent } from "./$types";
 
 export async function load({
     params: { workspaceUuid },
-    fetch,
 }: PageLoadEvent): Promise<{
     workspace: Workspace;
     project?: ProjectDetail;
 }> {
-    const workspace = await getWorkspace(workspaceUuid, {
-        fetch,
-    });
+    const workspace = await getWorkspace(workspaceUuid);
     if (!workspace) {
         error(404, `No workspace could be found for UUID '${workspaceUuid}'`);
     }
     const projectUuid = workspace.projects.at(0)?.uuid;
-    const project = projectUuid
-        ? await getProject(projectUuid, { fetch })
-        : undefined;
+    const project = projectUuid ? await getProject(projectUuid) : undefined;
     return { workspace, project };
 }

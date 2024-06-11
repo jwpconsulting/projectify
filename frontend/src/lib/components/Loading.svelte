@@ -15,7 +15,11 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
-<div class="h-20 w-20 text-primary">
+<script lang="ts">
+    export let size: 5 | 20 = 20;
+</script>
+
+<div class="{size === 5 ? 'h-5 w-5' : 'h-20 w-20'} text-primary">
     <svg viewBox="-50 -50 100 100" fill="none">
         <circle cx="0" cy="0" />
         <circle cx="0" cy="0" />

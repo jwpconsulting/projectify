@@ -48,7 +48,7 @@
 
     export let data: PageData;
 
-    $: task = $currentTask ?? data.task;
+    $: task = $currentTask.orPromise(data.task);
 
     let contextMenuRef: HTMLElement;
 
