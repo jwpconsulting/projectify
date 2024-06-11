@@ -33,7 +33,7 @@
     export let data: { injectProject?: ProjectDetail } | undefined = undefined;
 
     let project: ProjectDetail | undefined = undefined;
-    $: project = $currentProject ?? data?.injectProject;
+    $: project = $currentProject?.value ?? data?.injectProject;
 
     $: hasSections = project ? project.sections.length > 0 : false;
 

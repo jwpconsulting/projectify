@@ -93,11 +93,11 @@ export const currentSections = derived<
 >(
     [selectedLabels, selectedTeamMember, currentProject],
     ([$selectedLabels, $selectedTeamMember, $currentProject], set) => {
-        if (!$currentProject) {
+        if (!$currentProject?.value) {
             set(undefined);
             return;
         }
-        const sections = $currentProject.sections;
+        const sections = $currentProject.value.sections;
         set(
             filterSectionsTasks({
                 labels: $selectedLabels,

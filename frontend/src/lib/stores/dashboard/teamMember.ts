@@ -30,7 +30,7 @@ import type { Readable } from "svelte/store";
 
 import { can, type Resource, type Verb } from "$lib/rules/workspace";
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
-import type { TeamMember, WorkspaceDetail } from "$lib/types/workspace";
+import type { TeamMember } from "$lib/types/workspace";
 
 import { currentUser } from "../user";
 
@@ -43,11 +43,11 @@ export const currentTeamMembers: CurrentTeamMembers = derived<
     // Derived stores are initialized with undefined
 >(
     currentWorkspace,
-    ($currentWorkspace: WorkspaceDetail | undefined, set) => {
-        if (!$currentWorkspace) {
+    ($currentWorkspace, set) => {
+        if (!$currentWorkspace?.value) {
             return;
         }
-        set($currentWorkspace.team_members);
+        set($currentWorkspace.value.team_members);
     },
     [],
 );
@@ -65,12 +65,12 @@ export const currentTeamMember: CurrentTeamMember = derived<
     ([$user, $currentWorkspace], set) => {
         if (
             $user.kind !== "authenticated" ||
-            $currentWorkspace === undefined
+            $currentWorkspace?.value === undefined
         ) {
             set(undefined);
             return;
         }
-        const wsUser = $currentWorkspace.team_members.find(
+        const wsUser = $currentWorkspace.value.team_members.find(
             (wsUser) => wsUser.user.email === $user.email,
         );
         if (wsUser === undefined) {
@@ -100,13 +100,14 @@ export const currentTeamMemberCan: CurrentTeamMemberCan = derived<
             set(() => false);
             return;
         }
-        if ($currentWorkspace === undefined) {
+        if ($currentWorkspace?.value === undefined) {
             console.warn("workspace was undefined");
             set(() => false);
             return;
         }
+        const { value } = $currentWorkspace;
         const fn = (verb: Verb, resource: Resource) =>
-            can(verb, resource, $currentTeamMember, $currentWorkspace.quota);
+            can(verb, resource, $currentTeamMember, value.quota);
         set(fn);
     },
     () => false,

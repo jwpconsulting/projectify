@@ -62,7 +62,11 @@ export type SubscriptionType = (typeof subscriptionTypes)[number];
 
 export type RepoGetter<T> = (uuid: string) => Promise<T | undefined>;
 export type WsResourceContainer<T> =
-    | (T & { orPromise: (t: Promise<T>) => Promise<T>; or: (t: T) => T })
+    | {
+          value: T | undefined;
+          orPromise: (t: Promise<T>) => Promise<T>;
+          or: (t: T) => T;
+      }
     | undefined;
 export interface WsResource<T> extends Readable<WsResourceContainer<T>> {
     loadUuid: RepoGetter<T>;

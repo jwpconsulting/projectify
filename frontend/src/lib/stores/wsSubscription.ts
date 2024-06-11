@@ -329,8 +329,8 @@ export function createWsStore<T>(
         } else if (resp.kind === "changed") {
             const value = resp.content as T;
             set({
-                ...value,
                 or: () => value,
+                value,
                 orPromise: () => Promise.resolve(value),
             });
         } else {
@@ -382,9 +382,9 @@ export function createWsStore<T>(
         if (alreadySubscribedToUuid) {
             if (value) {
                 set({
-                    ...value,
                     or: () => value,
                     orPromise: () => Promise.resolve(value),
+                    value,
                 });
             } else {
                 set(undefined);
@@ -408,9 +408,9 @@ export function createWsStore<T>(
         };
         if (value) {
             set({
-                ...value,
                 or: () => value,
                 orPromise: () => Promise.resolve(value),
+                value,
             });
         } else {
             set(undefined);
