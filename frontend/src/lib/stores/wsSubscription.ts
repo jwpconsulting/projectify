@@ -328,7 +328,11 @@ export function createWsStore<T>(
             reset();
         } else if (resp.kind === "changed") {
             const value = resp.content as T;
-            set({ ...value, or: () => value });
+            set({
+                ...value,
+                or: () => value,
+                orPromise: () => Promise.resolve(value),
+            });
         } else {
             throw new Error("resp.kind is not 'changed'");
         }
@@ -377,7 +381,11 @@ export function createWsStore<T>(
         // existing subscription.
         if (alreadySubscribedToUuid) {
             if (value) {
-                set({ ...value, or: () => value });
+                set({
+                    ...value,
+                    or: () => value,
+                    orPromise: () => Promise.resolve(value),
+                });
             } else {
                 set(undefined);
             }
@@ -399,7 +407,11 @@ export function createWsStore<T>(
             value,
         };
         if (value) {
-            set({ ...value, or: () => value });
+            set({
+                ...value,
+                or: () => value,
+                orPromise: () => Promise.resolve(value),
+            });
         } else {
             set(undefined);
         }
