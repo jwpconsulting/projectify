@@ -24,7 +24,6 @@
     import ConstructiveOverlay from "$lib/figma/overlays/constructive/ConstructiveOverlay.svelte";
     import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
     import MobileMenuOverlay from "$lib/figma/overlays/MobileMenuOverlay.svelte";
-    import HeaderLanding from "$lib/figma/navigation/header/Landing.svelte";
     import { currentWorkspace } from "$lib/stores/dashboard/workspace";
     import {
         mobileMenuState,
@@ -43,11 +42,7 @@ otherwise the footer will be placed inside the dashboard.
 TODO evaluate whether grow is still necessary. Seems that with grow set, we wouldn't need min-h-screen, really.
 -->
 <div class="flex min-h-screen grow flex-col">
-    {#if $currentUser.kind === "authenticated"}
-        <HeaderDashboard user={$currentUser} />
-    {:else}
-        <HeaderLanding />
-    {/if}
+    <HeaderDashboard user={$currentUser} />
     {#if $mobileMenuState.kind === "visible"}
         <MobileMenuOverlay target={$mobileMenuState.target} />
     {/if}
