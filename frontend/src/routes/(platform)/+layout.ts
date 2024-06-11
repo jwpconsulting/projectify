@@ -15,40 +15,42 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { redirect, error } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
 
 import { currentWorkspaces } from "$lib/stores/dashboard/workspace";
 import { currentUserAwaitable } from "$lib/stores/user";
-import type { User } from "$lib/types/user";
+import type { CurrentUser } from "$lib/types/user";
 import { getLogInWithNextUrl } from "$lib/urls/user";
 
 import type { LayoutLoadEvent } from "./$types";
+import { goto } from "$app/navigation";
 
-export async function load({
-    url,
-    fetch,
-}: LayoutLoadEvent): Promise<{ user: User }> {
-    const user = await currentUserAwaitable();
-    if (user.kind === "start") {
-        error(500, "User was not loaded correctly");
-    } else if (user.kind === "unauthenticated") {
-        const next = getLogInWithNextUrl(url.pathname);
-        console.log("Not logged in, redirecting to", next);
-        redirect(302, next);
-    } else {
-        currentWorkspaces
-            .load({ fetch })
-            .then((workspaces) => {
-                if (!workspaces) {
-                    error(500, "Unable to fetch workspaces");
-                }
-            })
-            .catch((error: unknown) =>
-                console.error("Error when fetching workspaces:", error),
-            );
-
-        return { user };
-    }
+export function load({ url, fetch }: LayoutLoadEvent): {
+    userAwaitable: Promise<CurrentUser>;
+} {
+    const userAwaitable = currentUserAwaitable();
+    (async () => {
+        const user = await userAwaitable;
+        if (user.kind === "start") {
+            error(500, "User was not loaded correctly");
+        } else if (user.kind === "unauthenticated") {
+            const next = getLogInWithNextUrl(url.pathname);
+            console.log("Not logged in, redirecting to", next);
+            await goto(next);
+            return;
+        } else {
+            const workspaces = await currentWorkspaces.load({ fetch });
+            if (!workspaces) {
+                error(500, "Unable to fetch workspaces");
+            }
+        }
+    })().catch((error: unknown) => {
+        console.error(
+            "There was an unknown error when fetching the root user awaitable",
+            error,
+        );
+    });
+    return { userAwaitable };
 }
 // Could we set one of the following to true here?
 // Prerender: This page is completely prerenderable, there is no user data here

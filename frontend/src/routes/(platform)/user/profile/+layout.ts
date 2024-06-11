@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023-2024 JWP Consulting GK
+ *  Copyright (C) 2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -15,25 +15,15 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { getWorkspaces } from "$lib/repository/workspace/workspace";
-import type { User } from "$lib/types/user";
-import type { Workspace } from "$lib/types/workspace";
-import { getLogInWithNextUrl } from "$lib/urls/user";
 import { redirect } from "@sveltejs/kit";
+import type { LayoutLoadEvent } from "./$types";
+import { getLogInWithNextUrl } from "$lib/urls/user";
 
-import type { PageLoadEvent } from "./$types";
-
-export async function load({
-    fetch,
-    parent,
-    url,
-}: PageLoadEvent): Promise<{ user: User; workspace?: Workspace }> {
+export async function load({ parent, url }: LayoutLoadEvent) {
     const { userAwaitable } = await parent();
     const user = await userAwaitable;
     if (user.kind !== "authenticated") {
         redirect(302, getLogInWithNextUrl(url.pathname));
     }
-    const workspaces = await getWorkspaces({ fetch });
-    const workspace = workspaces.at(0);
-    return { user, workspace };
+    return { user };
 }
