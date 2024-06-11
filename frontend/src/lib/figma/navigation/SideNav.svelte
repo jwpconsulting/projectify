@@ -19,19 +19,16 @@
     import Collapsed from "$lib/figma/navigation/side-nav/Collapsed.svelte";
     import Full from "$lib/figma/navigation/side-nav/Full.svelte";
     import { sideNavOpen } from "$lib/stores/dashboard/ui";
-    import type { WorkspaceDetail } from "$lib/types/workspace";
-
-    export let workspace: WorkspaceDetail | undefined;
 </script>
 
 {#if $sideNavOpen}
     <div class="max-w-xs 2xl:max-w-md">
-        <Full {workspace} />
+        <Full />
     </div>
 {:else}
     <!-- Figma says 72px but we only have 64 or 80 (16, 29 rem respectively)-->
     <!-- Might we refactor this into something separate? -->
     <div class="w-20">
-        <Collapsed {workspace} />
+        <Collapsed />
     </div>
 {/if}

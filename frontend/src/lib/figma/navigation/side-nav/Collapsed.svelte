@@ -23,10 +23,10 @@
     import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import { selectProjectUuid, showFilters } from "$lib/stores/dashboard/ui";
-    import type { WorkspaceDetail } from "$lib/types/workspace";
     import { getDashboardProjectUrl } from "$lib/urls";
+    import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 
-    export let workspace: WorkspaceDetail | undefined;
+    $: workspace = $currentWorkspace.value ?? undefined;
 </script>
 
 <nav class="inline-flex h-full flex-col items-center gap-12 bg-foreground p-4">

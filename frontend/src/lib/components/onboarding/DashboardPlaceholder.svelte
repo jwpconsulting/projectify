@@ -19,7 +19,6 @@
     import { onMount } from "svelte";
     import { _ } from "svelte-i18n";
 
-    import Full from "$lib/figma/navigation/side-nav/Full.svelte";
     import {
         projectExpandOpen,
         labelExpandOpen,
@@ -40,6 +39,8 @@
         ProjectDetailTask,
     } from "$lib/types/workspace";
     import Dashboard from "$routes/(platform)/dashboard/project/[projectUuid]/+page.svelte";
+    import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
+    import Projects from "$lib/figma/navigation/side-nav/Projects.svelte";
 
     // We are cheating a bit here
     const quota: WorkspaceQuota = {
@@ -218,8 +219,9 @@
 <div class="w-fit origin-center scale-[0.6]" style:width={width * 0.6} inert>
     <div class="flex flex-col bg-foreground ring-4 ring-border" style:width>
         <div class="flex flex-row">
-            <div class="max-w-xs shrink">
-                <Full {workspace} />
+            <div class="flex max-w-xs shrink flex-col py-4">
+                <WorkspaceSelector open={true} {workspace} />
+                <Projects {workspace} />
             </div>
             <div class="min-w-0 grow">
                 {#if $currentUser}
