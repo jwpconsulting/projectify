@@ -21,7 +21,6 @@ import type {
     CreateUpdateSubTask,
     Label,
     Task,
-    TaskDetail,
     Section,
     TeamMember,
     SectionWithTasks,
@@ -32,21 +31,8 @@ import { unwrap } from "$lib/utils/type";
 // Task CRUD
 // Create
 
-export async function createTask(
-    body: components["schemas"]["TaskCreate"],
-): Promise<TaskDetail> {
-    const { data: content, response } = await openApiClient.POST(
-        "/workspace/task/",
-        { body },
-    );
-    if (response.status === 400) {
-        // TODO show the user what the bad request was
-        throw new Error("400 encountered");
-    }
-    if (content === undefined) {
-        throw new Error("Other error encountered");
-    }
-    return content;
+export async function createTask(body: components["schemas"]["TaskCreate"]) {
+    return await openApiClient.POST("/workspace/task/", { body });
 }
 
 // Update

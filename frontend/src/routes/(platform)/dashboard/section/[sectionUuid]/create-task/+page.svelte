@@ -39,6 +39,7 @@
     import type { BeforeNavigate } from "@sveltejs/kit";
     import type { FormViewState } from "$lib/types/ui";
     import { createSubTaskAssignment } from "$lib/stores/dashboard/subTaskAssignment";
+    import type { InputFieldValidation } from "$lib/funabashi/types";
 
     export let data: PageData;
 
@@ -47,8 +48,11 @@
 
     // form fields
     let title: string | undefined = undefined;
+    const titleValidation: InputFieldValidation | undefined = undefined;
     let description: string | null = null;
+    const descriptionValidation: string | undefined = undefined;
     let dueDate: string | null = null;
+    const dueDateValidation: InputFieldValidation | undefined = undefined;
 
     // Do the following 3 variables have to be reactive? If so,
     // what do they depend on?
@@ -69,31 +73,31 @@
         if (!title) {
             throw new Error("Expected title");
         }
-        if (!$labelAssignment) {
-            throw new Error("Expected $labelAssignment");
-        }
         state = { kind: "submitting" };
-        try {
-            const task = await createTask({
-                title,
-                description,
-                section: section,
-                labels: $labelAssignment,
-                assignee: $teamMemberAssignment,
-                due_date: dueDate,
-                sub_tasks: $subTasks,
-            });
+        const { error, data } = await createTask({
+            title,
+            description,
+            section: section,
+            labels: $labelAssignment,
+            assignee: $teamMemberAssignment,
+            due_date: dueDate,
+            sub_tasks: $subTasks,
+        });
+        if (data) {
+            state = { kind: "done" };
             if (continueEditing) {
-                await goto(getTaskUrl(task));
+                await goto(getTaskUrl(data));
                 return;
             }
-            state = { kind: "done" };
             await goto(getDashboardSectionUrl(section));
             return;
-        } catch (e) {
-            state = { kind: "error", message: JSON.stringify(e) };
-            throw e;
         }
+        if (error.code === 500) {
+            state = { kind: "error", message: "To do" };
+            return;
+        }
+        state = { kind: "error", message: "Fields" };
+        // TODO
     }
 
     $: crumbs = [
@@ -173,11 +177,11 @@
             {subTaskAssignment}
             subTaskAssignmentValidation={undefined}
             bind:title
-            titleValidation={undefined}
+            {titleValidation}
             bind:dueDate
-            dueDateValidation={undefined}
+            {dueDateValidation}
             bind:description
-            descriptionValidation={undefined}
+            {descriptionValidation}
         />
     </svelte:fragment>
 </Layout>

@@ -59,7 +59,7 @@
         const assignee =
             workspace.team_members.find((w) => w.user.email === user.email) ??
             null;
-        const task = {
+        const { error: e, data: task } = await createTask({
             title: taskTitle,
             description: null,
             labels: [],
@@ -67,8 +67,11 @@
             assignee,
             due_date: null,
             sub_tasks: [],
-        };
-        const { uuid } = await createTask(task);
+        });
+        if (e) {
+            throw new Error(`Unhandled error: ${JSON.stringify(e)}`);
+        }
+        const { uuid } = task;
         await goto(getNewLabelUrl(uuid));
     }
 </script>
