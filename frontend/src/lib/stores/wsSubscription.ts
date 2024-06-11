@@ -263,16 +263,13 @@ async function subscribeToResource(
 
 type WsStoreState<T> =
     | {
-          subscriptionType: SubscriptionType;
           kind: "start";
       }
     | {
-          subscriptionType: SubscriptionType;
           kind: "loading";
           uuid: string;
       }
     | {
-          subscriptionType: SubscriptionType;
           kind: "ready";
           uuid: string;
           unsubscriber: AsyncUnsubscriber;
@@ -280,11 +277,11 @@ type WsStoreState<T> =
       };
 
 export function createWsStore<T>(
-    subscriptionType: SubscriptionType,
+    resource: SubscriptionType,
     getter: RepoGetter<T>,
 ): WsResource<T> {
     type State = WsStoreState<T>;
-    let state: State = { subscriptionType, kind: "start" };
+    let state: State = { kind: "start" };
 
     const reset = () => {
         set({
@@ -292,7 +289,7 @@ export function createWsStore<T>(
             orPromise: (t) => t,
             value: undefined,
         });
-        state = { kind: "start", subscriptionType: state.subscriptionType };
+        state = { kind: "start" };
     };
 
     const resetAndUnsubscribe = async () => {
@@ -351,7 +348,7 @@ export function createWsStore<T>(
             throw new Error("Trying to reconnect, despite not being ready");
         }
         console.warn("Connection closed, reconnecting");
-        const { subscriptionType: resource, uuid } = state;
+        const { uuid } = state;
         const unsubscriber = await subscribeToResource(
             { resource, uuid },
             onMessage,
@@ -384,7 +381,7 @@ export function createWsStore<T>(
             await state.unsubscriber();
         }
         // But we still need to rememember that we are loading
-        state = { kind: "loading", uuid, subscriptionType };
+        state = { kind: "loading", uuid };
         // TODO inform subscribers that we are loading
         // Fetch value early, since we need it either way
         const value: T | undefined = await backOff(() => getter(uuid));
@@ -411,7 +408,7 @@ export function createWsStore<T>(
         // In this branch, we know that the previous uuid subscribed to was
         // different, or we haven't subscribed to anything at all.
         const unsubscriber = await subscribeToResource(
-            { resource: subscriptionType, uuid },
+            { resource, uuid },
             onMessage,
             reconnect,
         );
