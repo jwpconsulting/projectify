@@ -65,7 +65,7 @@ export interface WsResourceContainer<T> {
     value: T | undefined;
     orPromise: (t: Promise<T>) => Promise<T>;
     or: (t: T) => T;
-};
+}
 export interface WsResource<T> extends Readable<WsResourceContainer<T>> {
     loadUuid: RepoGetter<T>;
 }
