@@ -24,9 +24,9 @@
     import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { showFilters } from "$lib/stores/dashboard/ui";
-    import type { WorkspaceDetail } from "$lib/types/workspace";
+    import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 
-    export let workspace: WorkspaceDetail | undefined;
+    $: workspace = $currentWorkspace.value;
 </script>
 
 <!-- XXX temporary fix to alleviate long side nav inside mobile menu -->
