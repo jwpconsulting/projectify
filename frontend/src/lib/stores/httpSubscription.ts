@@ -22,12 +22,11 @@
 import { writable } from "svelte/store";
 import type { Readable } from "svelte/store";
 
-import type { RepositoryContext } from "$lib/types/repository";
 import { backOff } from "exponential-backoff";
 
 // TODO This could be RepoGetter, except that RepoGetter takes a uuid
 type HttpStore<T> = Readable<T | undefined> & {
-    load: (context: RepositoryContext) => Promise<T | undefined>;
+    load: () => Promise<T | undefined>;
     reset: () => void;
 };
 
@@ -35,18 +34,16 @@ type HttpStore<T> = Readable<T | undefined> & {
  * Similar to createWsStore, but has to manually refetch
  */
 export function createHttpStore<T>(
-    getter: (context: RepositoryContext) => Promise<T | undefined>,
+    getter: () => Promise<T | undefined>,
 ): HttpStore<T> {
     let value: T | undefined = undefined;
     const { set, subscribe } = writable<T | undefined>(undefined);
-    const load = async (
-        context: RepositoryContext,
-    ): Promise<T | undefined> => {
+    const load = async (): Promise<T | undefined> => {
         if (value !== undefined) {
             console.debug(`Skipping loading this resource`);
             return value;
         }
-        value = await backOff(() => getter(context));
+        value = await backOff(() => getter());
         set(value);
         return value;
     };

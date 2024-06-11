@@ -30,8 +30,6 @@ import type {
     TeamMember,
 } from "$lib/types/workspace";
 
-import type { RepositoryContext } from "./repository";
-
 export interface TeamMemberAssignment extends Readable<TeamMember | null> {
     select: (selection: TeamMemberAssignmentInput) => unknown;
     deselect: (selection: TeamMemberAssignmentInput) => unknown;
@@ -61,10 +59,7 @@ export interface SubTaskAssignment
 const subscriptionTypes = ["workspace", "project", "task"] as const;
 export type SubscriptionType = (typeof subscriptionTypes)[number];
 
-export type RepoGetter<T> = (
-    uuid: string,
-    repositoryContext: RepositoryContext,
-) => Promise<T | undefined>;
+export type RepoGetter<T> = (uuid: string) => Promise<T | undefined>;
 export interface WsResource<T> extends Readable<T | undefined> {
     loadUuid: RepoGetter<T>;
 }

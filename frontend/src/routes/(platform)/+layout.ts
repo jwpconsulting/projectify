@@ -25,7 +25,7 @@ import { getLogInWithNextUrl } from "$lib/urls/user";
 import type { LayoutLoadEvent } from "./$types";
 import { goto } from "$app/navigation";
 
-export function load({ url, fetch }: LayoutLoadEvent): {
+export function load({ url }: LayoutLoadEvent): {
     userAwaitable: Promise<CurrentUser>;
 } {
     const userAwaitable = currentUserAwaitable();
@@ -39,7 +39,7 @@ export function load({ url, fetch }: LayoutLoadEvent): {
             await goto(next);
             return;
         } else {
-            const workspaces = await currentWorkspaces.load({ fetch });
+            const workspaces = await currentWorkspaces.load();
             if (!workspaces) {
                 error(500, "Unable to fetch workspaces");
             }

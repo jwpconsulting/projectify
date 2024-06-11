@@ -19,15 +19,10 @@ import { redirect, error } from "@sveltejs/kit";
 
 import { getSection } from "$lib/repository/workspace/section";
 import { getDashboardProjectUrl } from "$lib/urls";
+import type { PageLoadEvent } from "./$types";
 
-export async function load({
-    fetch,
-    params,
-}: {
-    fetch: typeof window.fetch;
-    params: { sectionUuid: string };
-}) {
-    const section = await getSection(params.sectionUuid, { fetch });
+export async function load({ params }: PageLoadEvent) {
+    const section = await getSection(params.sectionUuid);
     if (!section) {
         error(404);
     }

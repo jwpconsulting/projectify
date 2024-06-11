@@ -16,14 +16,12 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import { openApiClient } from "$lib/repository/util";
-import type { RepositoryContext } from "$lib/types/repository";
 import type { ProjectDetail } from "$lib/types/workspace";
 
 // Project CRUD
 // Read
 export async function getProject(
     project_uuid: string,
-    _repositoryContext?: RepositoryContext,
 ): Promise<ProjectDetail | undefined> {
     const { error, data } = await openApiClient.GET(
         "/workspace/project/{project_uuid}",

@@ -19,7 +19,6 @@ import Sarus from "@anephenix/sarus";
 import { writable } from "svelte/store";
 
 import vars from "$lib/env";
-import type { RepositoryContext } from "$lib/types/repository";
 import type {
     RepoGetter,
     SubscriptionType,
@@ -332,10 +331,7 @@ export function createWsStore<T>(
         state = { ...state, unsubscriber };
     };
 
-    const loadUuid = async (
-        uuid: string,
-        repositoryContext: RepositoryContext,
-    ): Promise<T | undefined> => {
+    const loadUuid = async (uuid: string): Promise<T | undefined> => {
         if (state.kind === "ready" && uuid !== state.uuid) {
             // If we have already loaded a value:
             // First, we update all subscribers and tell them the current value
@@ -343,7 +339,7 @@ export function createWsStore<T>(
             set(undefined);
         }
         // Fetch value early, since we need it either way
-        const newValue = await backOff(() => getter(uuid, repositoryContext));
+        const newValue = await backOff(() => getter(uuid));
         // Then, when we find out we have already initialized for this uuid,
         // we can skip the queue and return early without cleaning up an
         // existing subscription.

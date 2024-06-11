@@ -24,7 +24,6 @@ import { redirect } from "@sveltejs/kit";
 import type { PageLoadEvent } from "./$types";
 
 export async function load({
-    fetch,
     parent,
     url,
 }: PageLoadEvent): Promise<{ user: User; workspace?: Workspace }> {
@@ -33,7 +32,7 @@ export async function load({
     if (user.kind !== "authenticated") {
         redirect(302, getLogInWithNextUrl(url.pathname));
     }
-    const workspaces = await getWorkspaces({ fetch });
+    const workspaces = await getWorkspaces();
     const workspace = workspaces.at(0);
     return { user, workspace };
 }

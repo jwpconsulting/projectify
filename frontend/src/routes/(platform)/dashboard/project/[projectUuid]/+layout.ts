@@ -28,12 +28,9 @@ interface Data {
     project: Promise<ProjectDetail | undefined>;
 }
 
-export function load({
-    params: { projectUuid },
-    fetch,
-}: LayoutLoadEvent): Data {
+export function load({ params: { projectUuid } }: LayoutLoadEvent): Data {
     const project: Promise<ProjectDetail | undefined> = currentProject
-        .loadUuid(projectUuid, { fetch })
+        .loadUuid(projectUuid)
         .then((project) => {
             if (!project) {
                 // If we don't have a project, we don't have anything (no
@@ -48,9 +45,7 @@ export function load({
         .then((project) => {
             const workspaceUuid = project.workspace.uuid;
             currentWorkspace
-                .loadUuid(workspaceUuid, {
-                    fetch,
-                })
+                .loadUuid(workspaceUuid)
                 .then((workspace) => {
                     if (!workspace) {
                         throw new Error(

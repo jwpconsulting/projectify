@@ -27,7 +27,6 @@ import type { User } from "$lib/types/user";
 
 export async function load({
     params: { projectUuid },
-    fetch,
     parent,
     url,
 }: PageLoadEvent): Promise<{
@@ -38,9 +37,7 @@ export async function load({
 }> {
     const { userAwaitable } = await parent();
     const user = await userAwaitable;
-    const project = await getProject(projectUuid, {
-        fetch,
-    });
+    const project = await getProject(projectUuid);
     if (!project) {
         error(404, `No project could be found for UUID ${projectUuid}.`);
     }
@@ -48,9 +45,7 @@ export async function load({
         redirect(302, getLogInWithNextUrl(url.pathname));
     }
     const { uuid: workspaceUuid } = project.workspace;
-    const workspace = await getWorkspace(workspaceUuid, {
-        fetch,
-    });
+    const workspace = await getWorkspace(workspaceUuid);
     if (!workspace) {
         // If this happens something is very wrong
         error(

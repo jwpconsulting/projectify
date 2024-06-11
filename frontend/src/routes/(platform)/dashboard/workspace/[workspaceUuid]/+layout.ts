@@ -29,11 +29,8 @@ interface Data {
 
 export async function load({
     params: { workspaceUuid },
-    fetch,
 }: LayoutLoadEvent): Promise<Data> {
-    const workspace = await currentWorkspace.loadUuid(workspaceUuid, {
-        fetch,
-    });
+    const workspace = await currentWorkspace.loadUuid(workspaceUuid);
     if (!workspace) {
         clearSelectedWorkspaceUuidIfMatch(workspaceUuid);
         error(404, `No workspace found for UUID '${workspaceUuid}'`);
