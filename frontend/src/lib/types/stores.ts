@@ -37,7 +37,7 @@ export interface TeamMemberAssignment extends Readable<TeamMember | null> {
     selected: Readable<TeamMemberAssignmentState>;
 }
 
-export interface LabelAssignment extends Readable<readonly Label[]> {
+export interface LabelAssignment extends Readable<Label[]> {
     select: (selection: LabelAssignmentInput) => unknown;
     deselect: (selection: LabelAssignmentInput) => unknown;
     // TODO Might even completely remove this:

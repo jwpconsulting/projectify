@@ -15,16 +15,12 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { redirect, error } from "@sveltejs/kit";
+import { redirect } from "@sveltejs/kit";
 
-import { getSection } from "$lib/repository/workspace/section";
 import { getDashboardProjectUrl } from "$lib/urls";
 import type { PageLoadEvent } from "./$types";
 
-export async function load({ params }: PageLoadEvent) {
-    const section = await getSection(params.sectionUuid);
-    if (!section) {
-        error(404);
-    }
+export async function load({ parent }: PageLoadEvent) {
+    const { section } = await parent();
     redirect(302, getDashboardProjectUrl(section.project));
 }

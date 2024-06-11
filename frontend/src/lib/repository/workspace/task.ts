@@ -32,35 +32,12 @@ import { unwrap } from "$lib/utils/type";
 // Task CRUD
 // Create
 
-export async function createTask(data: {
-    title: string;
-    description: string | null;
-    // TODO this has to be optional in the backend -> undefined means unset
-    // labels
-    labels: readonly Pick<Label, "uuid">[];
-    // TODO this has to be optional in the backend -> undefined means unset
-    // assignee
-    assignee: Pick<TeamMember, "uuid"> | null;
-    section: Pick<Section, "uuid">;
-    // TODO dueDate plz
-    due_date: string | null;
-    sub_tasks: CreateUpdateSubTask[];
-}): Promise<TaskDetail> {
-    const body = {
-        ...data,
-        section: {
-            uuid: data.section.uuid,
-        },
-        labels: data.labels.map((l) => {
-            return { uuid: l.uuid };
-        }),
-        assignee: data.assignee ? { uuid: data.assignee.uuid } : null,
-    };
+export async function createTask(
+    body: components["schemas"]["TaskCreate"],
+): Promise<TaskDetail> {
     const { data: content, response } = await openApiClient.POST(
         "/workspace/task/",
-        {
-            body,
-        },
+        { body },
     );
     if (response.status === 400) {
         // TODO show the user what the bad request was
