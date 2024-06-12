@@ -93,7 +93,7 @@
         <svelte:fragment slot="labels">
             <TaskLabel
                 onInteract={showUpdateLabel}
-                labels={$labelAssignment ?? []}
+                labels={$labelAssignment}
             />
             {#if labelAssignmentValidation}<p>
                     {labelAssignmentValidation}
