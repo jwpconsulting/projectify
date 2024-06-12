@@ -68,6 +68,7 @@
 </script>
 
 <form on:submit|preventDefault={action} id="task-form">
+    <!-- TODO remove this hidden submit input -->
     <input type="submit" class="hidden" />
     <Fields>
         <InputField

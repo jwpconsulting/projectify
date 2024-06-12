@@ -84,3 +84,15 @@ export interface InputFieldAnchor {
 export type InputFieldValidation =
     | { ok: true; result: string }
     | { ok: false; error: string };
+
+// This is a big TODO, will be refactored later
+export function toValid(
+    error: string | undefined,
+    result: string,
+): InputFieldValidation {
+    if (error) {
+        return { ok: false, error };
+    } else {
+        return { ok: true, result };
+    }
+}

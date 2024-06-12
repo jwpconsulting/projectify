@@ -39,7 +39,7 @@
     import type { BeforeNavigate } from "@sveltejs/kit";
     import type { FormViewState } from "$lib/types/ui";
     import { createSubTaskAssignment } from "$lib/stores/dashboard/subTaskAssignment";
-    import type { InputFieldValidation } from "$lib/funabashi/types";
+    import { toValid, type InputFieldValidation } from "$lib/funabashi/types";
 
     export let data: PageData;
 
@@ -48,17 +48,20 @@
 
     // form fields
     let title: string | undefined = undefined;
-    const titleValidation: InputFieldValidation | undefined = undefined;
+    let titleValidation: InputFieldValidation | undefined = undefined;
     let description: string | null = null;
-    const descriptionValidation: string | undefined = undefined;
+    let descriptionValidation: string | undefined = undefined;
     let dueDate: string | null = null;
-    const dueDateValidation: InputFieldValidation | undefined = undefined;
+    let dueDateValidation: InputFieldValidation | undefined = undefined;
 
     // Do the following 3 variables have to be reactive? If so,
     // what do they depend on?
     const teamMemberAssignment = createTeamMemberAssignment();
+    let teamMemberAssignmentValidation: string | undefined = undefined;
     const labelAssignment = createLabelAssignment();
+    let labelAssignmentValidation: string | undefined = undefined;
     const subTaskAssignment = createSubTaskAssignment();
+    let subTaskAssignmentValidation: string | undefined = undefined;
     $: subTasks = subTaskAssignment.subTasks;
 
     $: canCreate =
@@ -93,11 +96,45 @@
             return;
         }
         if (error.code === 500) {
-            state = { kind: "error", message: "To do" };
+            state = {
+                kind: "error",
+                message: $_("task-screen.create.errors.server", {
+                    values: { error: JSON.stringify(error) },
+                }),
+            };
             return;
         }
-        state = { kind: "error", message: "Fields" };
+        if (error.code === 403) {
+            state = {
+                kind: "error",
+                message: $_("task-screen.create.errors.authentication"),
+            };
+            return;
+        }
+        state = {
+            kind: "error",
+            message: $_("task-screen.create.errors.field"),
+        };
         // TODO
+        const { details } = error;
+        titleValidation = toValid(
+            details.title,
+            $_("task-screen.form.title.valid"),
+        );
+        dueDateValidation = toValid(
+            details.due_date,
+            $_("task-screen.form.due-date.valid"),
+        );
+        descriptionValidation = details.description;
+        subTaskAssignmentValidation = details.sub_tasks
+            ? `TODO: ${JSON.stringify(details.sub_tasks)}`
+            : undefined;
+        labelAssignmentValidation = details.labels
+            ? `TODO: ${JSON.stringify(details.labels)}`
+            : undefined;
+        teamMemberAssignmentValidation = details.assignee
+            ? `TODO: ${JSON.stringify(details.assignee)}`
+            : undefined;
     }
 
     $: crumbs = [
@@ -168,14 +205,17 @@
     </TopBar>
 
     <svelte:fragment slot="content">
+        {#if state.kind === "error"}
+            <p>{state.message}</p>
+        {/if}
         <Form
             action={action.bind(null, false)}
             {teamMemberAssignment}
-            teamMemberAssignmentValidation={undefined}
+            {teamMemberAssignmentValidation}
             {labelAssignment}
-            labelAssignmentValidation={undefined}
+            {labelAssignmentValidation}
             {subTaskAssignment}
-            subTaskAssignmentValidation={undefined}
+            {subTaskAssignmentValidation}
             bind:title
             {titleValidation}
             bind:dueDate
