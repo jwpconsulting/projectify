@@ -33,7 +33,7 @@
 
     export let action: () => void;
 
-    export let title: string | undefined;
+    export let title: string | null;
     export let titleValidation: InputFieldValidation | undefined;
     export let description: string | null;
     export let descriptionValidation: string | undefined;
@@ -68,6 +68,7 @@
 </script>
 
 <form on:submit|preventDefault={action} id="task-form">
+    <!-- TODO remove this hidden submit input -->
     <input type="submit" class="hidden" />
     <Fields>
         <InputField
@@ -92,7 +93,7 @@
         <svelte:fragment slot="labels">
             <TaskLabel
                 onInteract={showUpdateLabel}
-                labels={$labelAssignment ?? []}
+                labels={$labelAssignment}
             />
             {#if labelAssignmentValidation}<p>
                     {labelAssignmentValidation}

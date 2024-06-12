@@ -194,7 +194,7 @@ export interface SolutionsPageContent {
 export type EditableViewState =
     | { kind: "viewing" }
     | { kind: "editing" }
-    // TODO add error state
+    | { kind: "error"; message: string }
     | { kind: "saving" };
 
 /**

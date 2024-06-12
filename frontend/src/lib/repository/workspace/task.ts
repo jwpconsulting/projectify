@@ -18,12 +18,8 @@
 import { openApiClient } from "$lib/repository/util";
 import type { components } from "$lib/types/schema";
 import type {
-    CreateUpdateSubTask,
-    Label,
     Task,
-    TaskDetail,
     Section,
-    TeamMember,
     SectionWithTasks,
     ProjectDetailTask,
 } from "$lib/types/workspace";
@@ -32,44 +28,8 @@ import { unwrap } from "$lib/utils/type";
 // Task CRUD
 // Create
 
-export async function createTask(data: {
-    title: string;
-    description: string | null;
-    // TODO this has to be optional in the backend -> undefined means unset
-    // labels
-    labels: readonly Pick<Label, "uuid">[];
-    // TODO this has to be optional in the backend -> undefined means unset
-    // assignee
-    assignee: Pick<TeamMember, "uuid"> | null;
-    section: Pick<Section, "uuid">;
-    // TODO dueDate plz
-    due_date: string | null;
-    sub_tasks: CreateUpdateSubTask[];
-}): Promise<TaskDetail> {
-    const body = {
-        ...data,
-        section: {
-            uuid: data.section.uuid,
-        },
-        labels: data.labels.map((l) => {
-            return { uuid: l.uuid };
-        }),
-        assignee: data.assignee ? { uuid: data.assignee.uuid } : null,
-    };
-    const { data: content, response } = await openApiClient.POST(
-        "/workspace/task/",
-        {
-            body,
-        },
-    );
-    if (response.status === 400) {
-        // TODO show the user what the bad request was
-        throw new Error("400 encountered");
-    }
-    if (content === undefined) {
-        throw new Error("Other error encountered");
-    }
-    return content;
+export async function createTask(body: components["schemas"]["TaskCreate"]) {
+    return await openApiClient.POST("/workspace/task/", { body });
 }
 
 // Update
@@ -78,34 +38,9 @@ export async function createTask(data: {
 // This is possible now because the API accepts a whole task object,
 // incl. labels and so on
 export async function updateTask(
-    task: Pick<Task, "uuid">,
-    updateData: {
-        title: string;
-        description: string | null;
-        // TODO this has to be optional in the backend -> undefined means unset
-        // labels
-        labels: readonly Pick<Label, "uuid">[];
-        // TODO this has to be optional in the backend -> undefined means unset
-        // assignee
-        assignee: Pick<TeamMember, "uuid"> | null;
-        // TODO dueDate plz
-        due_date: string | null;
-        sub_tasks: readonly CreateUpdateSubTask[];
-    },
+    { uuid: task_uuid }: Pick<Task, "uuid">,
+    body: components["schemas"]["TaskUpdate"],
 ) {
-    const { uuid: task_uuid } = task;
-    const body: components["schemas"]["TaskUpdate"] = {
-        ...updateData,
-        sub_tasks: [...updateData.sub_tasks],
-        assignee: updateData.assignee
-            ? { uuid: updateData.assignee.uuid }
-            : null,
-        labels: [
-            ...updateData.labels.map((l) => {
-                return { uuid: l.uuid };
-            }),
-        ],
-    };
     return await openApiClient.PUT("/workspace/task/{task_uuid}", {
         params: { path: { task_uuid } },
         body,

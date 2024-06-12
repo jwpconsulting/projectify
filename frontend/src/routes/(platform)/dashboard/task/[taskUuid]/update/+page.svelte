@@ -53,7 +53,7 @@
     const { task } = data;
 
     // Initial data
-    let title: string | undefined = undefined;
+    let title: string | null = null;
     let titleValidation: InputFieldValidation | undefined = undefined;
     let description: string | null = null;
     let descriptionValidation: string | undefined = undefined;
@@ -83,14 +83,14 @@
     $: canUpdate =
         state.kind !== "done" &&
         state.kind !== "submitting" &&
-        title !== "" &&
+        title !== null &&
         $subTasks !== undefined;
 
     type State = FormViewState | { kind: "done" };
     let state: State = { kind: "start" };
 
     async function action(task: TaskDetail, continueEditing: boolean) {
-        if (title === undefined) {
+        if (title === null) {
             throw new Error("Expected title");
         }
         if (!$labelAssignment) {

@@ -720,6 +720,12 @@ const messages: MessageDirectory = {
         "create": {
             "create": "Create task",
             "create-continue-editing": "Create task and stay",
+            "errors": {
+                server: "There was a server error when creating this task. Please try again. The error was: {error}",
+                field: "Please check the fields for any errors and try again.",
+                authentication:
+                    "You are not logged in. Please log in and try again.",
+            },
         },
         "sub-tasks": {
             "title": "Sub tasks",

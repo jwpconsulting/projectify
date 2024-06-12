@@ -27,6 +27,7 @@
     import { createLabel } from "$lib/repository/workspace/label";
     import type { FormViewState } from "$lib/types/ui";
     import { getAssignTaskUrl, getNewTaskUrl } from "$lib/urls/onboarding";
+    import { cloneMutable } from "$lib/utils/type";
 
     import type { PageData } from "./$types";
 
@@ -71,7 +72,7 @@
 
         const label = data;
         await updateTask(task, {
-            ...task,
+            ...cloneMutable(task),
             labels: [label],
             assignee: task.assignee,
         });

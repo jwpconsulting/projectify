@@ -23,6 +23,7 @@ import type { SectionDetail } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
 
 import type { LayoutLoadEvent } from "./$types";
+import { backOff } from "exponential-backoff";
 
 interface Data {
     section: SectionDetail;
@@ -31,7 +32,7 @@ interface Data {
 export async function load({
     params: { sectionUuid },
 }: LayoutLoadEvent): Promise<Data> {
-    const section = await getSection(sectionUuid);
+    const section = await backOff(() => getSection(sectionUuid));
     if (!section) {
         error(
             404,

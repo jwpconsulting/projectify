@@ -37,8 +37,7 @@ export interface TeamMemberAssignment extends Readable<TeamMember | null> {
     selected: Readable<TeamMemberAssignmentState>;
 }
 
-export interface LabelAssignment
-    extends Readable<readonly Label[] | undefined> {
+export interface LabelAssignment extends Readable<Label[]> {
     select: (selection: LabelAssignmentInput) => unknown;
     deselect: (selection: LabelAssignmentInput) => unknown;
     // TODO Might even completely remove this:
@@ -51,7 +50,7 @@ export interface SubTaskAssignment
     removeSubTask: (where: number) => void;
     // if all sub tasks are non-partial, an inner store will return the whole
     // list of sub tasks.
-    subTasks: Readable<CreateUpdateSubTask[] | undefined>;
+    subTasks: Readable<CreateUpdateSubTask[]>;
     moveSubTaskUp: (where: number) => void;
     moveSubTaskDown: (where: number) => void;
 }

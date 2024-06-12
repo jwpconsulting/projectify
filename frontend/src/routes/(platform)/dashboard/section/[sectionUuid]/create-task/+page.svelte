@@ -24,7 +24,7 @@
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { goto } from "$lib/navigation";
-    import { createTask as createTaskFn } from "$lib/repository/workspace/task";
+    import { createTask } from "$lib/repository/workspace/task";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createTeamMemberAssignment } from "$lib/stores/dashboard/teamMemberAssignment";
     import {
@@ -39,6 +39,8 @@
     import type { BeforeNavigate } from "@sveltejs/kit";
     import type { FormViewState } from "$lib/types/ui";
     import { createSubTaskAssignment } from "$lib/stores/dashboard/subTaskAssignment";
+    import { toValid, type InputFieldValidation } from "$lib/funabashi/types";
+    import { persisted } from "svelte-local-storage-store";
 
     export let data: PageData;
 
@@ -46,55 +48,111 @@
     $: project = section.project;
 
     // form fields
-    let title: string | undefined = undefined;
+    const titleInput = persisted<string | null>("create-task-title", null);
+    let titleValidation: InputFieldValidation | undefined = undefined;
     let description: string | null = null;
+    let descriptionValidation: string | undefined = undefined;
     let dueDate: string | null = null;
+    let dueDateValidation: InputFieldValidation | undefined = undefined;
 
     // Do the following 3 variables have to be reactive? If so,
     // what do they depend on?
     const teamMemberAssignment = createTeamMemberAssignment();
+    let teamMemberAssignmentValidation: string | undefined = undefined;
     const labelAssignment = createLabelAssignment();
+    let labelAssignmentValidation: string | undefined = undefined;
     const subTaskAssignment = createSubTaskAssignment();
+    let subTaskAssignmentValidation: string | undefined = undefined;
     $: subTasks = subTaskAssignment.subTasks;
 
     $: canCreate =
         state.kind !== "done" &&
         state.kind !== "submitting" &&
-        title !== undefined;
+        $titleInput !== null;
 
     type State = FormViewState | { kind: "done" };
     let state: State = { kind: "start" };
 
+    function hasInputSomething() {
+        const conditions: boolean[] = [
+            $titleInput !== null,
+            description !== null,
+            dueDate !== null,
+            $teamMemberAssignment !== null,
+            $labelAssignment.length > 0,
+            $subTasks.length > 0,
+        ];
+        return conditions.some((a) => a);
+    }
+
+    function resetForm() {
+        $titleInput = null;
+    }
+
     async function action(continueEditing: boolean) {
-        if (!title) {
+        if (!$titleInput) {
             throw new Error("Expected title");
         }
-        if (!$labelAssignment) {
-            throw new Error("Expected $labelAssignment");
-        }
-        const createTaskFull = {
-            title,
+        state = { kind: "submitting" };
+        const { error, data } = await createTask({
+            title: $titleInput,
             description,
             section: section,
             labels: $labelAssignment,
-            assignee: $teamMemberAssignment ?? null,
+            assignee: $teamMemberAssignment,
             due_date: dueDate,
-            sub_tasks: $subTasks ?? [],
-        };
-        state = { kind: "submitting" };
-        try {
-            const task = await createTaskFn(createTaskFull);
+            sub_tasks: $subTasks,
+        });
+        if (data) {
+            state = { kind: "done" };
             if (continueEditing) {
-                await goto(getTaskUrl(task));
+                await goto(getTaskUrl(data));
                 return;
             }
-            state = { kind: "done" };
             await goto(getDashboardSectionUrl(section));
+            resetForm();
             return;
-        } catch (e) {
-            state = { kind: "error", message: JSON.stringify(e) };
-            throw e;
         }
+        if (error.code === 500) {
+            state = {
+                kind: "error",
+                message: $_("task-screen.create.errors.server", {
+                    values: { error: JSON.stringify(error) },
+                }),
+            };
+            return;
+        }
+        if (error.code === 403) {
+            state = {
+                kind: "error",
+                message: $_("task-screen.create.errors.authentication"),
+            };
+            return;
+        }
+        state = {
+            kind: "error",
+            message: $_("task-screen.create.errors.field"),
+        };
+        // TODO
+        const { details } = error;
+        titleValidation = toValid(
+            details.title,
+            $_("task-screen.form.title.valid"),
+        );
+        dueDateValidation = toValid(
+            details.due_date,
+            $_("task-screen.form.due-date.valid"),
+        );
+        descriptionValidation = details.description;
+        subTaskAssignmentValidation = details.sub_tasks
+            ? `TODO: ${JSON.stringify(details.sub_tasks)}`
+            : undefined;
+        labelAssignmentValidation = details.labels
+            ? `TODO: ${JSON.stringify(details.labels)}`
+            : undefined;
+        teamMemberAssignmentValidation = details.assignee
+            ? `TODO: ${JSON.stringify(details.assignee)}`
+            : undefined;
     }
 
     $: crumbs = [
@@ -114,6 +172,9 @@
 
     beforeNavigate((navigation: BeforeNavigate) => {
         if (state.kind === "done") {
+            return;
+        }
+        if (!hasInputSomething()) {
             return;
         }
         const navigateAway = window.confirm(
@@ -165,20 +226,23 @@
     </TopBar>
 
     <svelte:fragment slot="content">
+        {#if state.kind === "error"}
+            <p>{state.message}</p>
+        {/if}
         <Form
             action={action.bind(null, false)}
             {teamMemberAssignment}
-            teamMemberAssignmentValidation={undefined}
+            {teamMemberAssignmentValidation}
             {labelAssignment}
-            labelAssignmentValidation={undefined}
+            {labelAssignmentValidation}
             {subTaskAssignment}
-            subTaskAssignmentValidation={undefined}
-            bind:title
-            titleValidation={undefined}
+            {subTaskAssignmentValidation}
+            bind:title={$titleInput}
+            {titleValidation}
             bind:dueDate
-            dueDateValidation={undefined}
+            {dueDateValidation}
             bind:description
-            descriptionValidation={undefined}
+            {descriptionValidation}
         />
     </svelte:fragment>
 </Layout>

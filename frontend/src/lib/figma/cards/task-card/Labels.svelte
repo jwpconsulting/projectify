@@ -28,6 +28,7 @@
     import type { LabelAssignment } from "$lib/types/stores";
     import type { ContextMenuType, FormViewState } from "$lib/types/ui";
     import type { ProjectDetailTask } from "$lib/types/workspace";
+    import { cloneMutable } from "$lib/utils/type";
 
     export let task: ProjectDetailTask;
 
@@ -41,13 +42,10 @@
         }
     }
 
-    $: labels = $labelAssignment ?? task.labels;
+    $: labels = $labelAssignment;
 
     async function openLabelPicker(event: MouseEvent) {
         labelPickerOpen = true;
-        if (!$labelAssignment) {
-            throw new Error("Expected $labelAssignment");
-        }
         const anchor = event.target;
         if (!(anchor instanceof HTMLElement)) {
             throw new Error("Expected HTMLElement");
@@ -79,7 +77,10 @@
             const labels = $labelAssignment;
             // TODO skip update when no changes detected
             state = { kind: "submitting" };
-            const { error } = await updateTask(task, { ...task, labels });
+            const { error } = await updateTask(task, {
+                ...cloneMutable(task),
+                labels,
+            });
             if (error) {
                 state = {
                     kind: "error",
