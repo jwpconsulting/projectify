@@ -26,6 +26,7 @@
     import type { ContextMenuType, FormViewState } from "$lib/types/ui";
     import { getDisplayName } from "$lib/types/user";
     import type { ProjectDetailTask } from "$lib/types/workspace";
+    import { cloneMutable } from "$lib/utils/type";
 
     export let task: ProjectDetailTask;
 
@@ -48,7 +49,7 @@
         // it is added
         state = { kind: "submitting" };
         const { error } = await updateTask(task, {
-            ...task,
+            ...cloneMutable(task),
             assignee: teamMember,
         });
         if (error) {
