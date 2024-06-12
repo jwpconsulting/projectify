@@ -72,6 +72,18 @@
     type State = FormViewState | { kind: "done" };
     let state: State = { kind: "start" };
 
+    function hasInputSomething() {
+        const conditions: boolean[] = [
+            title !== undefined,
+            description !== null,
+            dueDate !== null,
+            $teamMemberAssignment !== null,
+            $labelAssignment.length > 0,
+            $subTasks.length > 0,
+        ];
+        return conditions.some((a) => a);
+    }
+
     async function action(continueEditing: boolean) {
         if (!title) {
             throw new Error("Expected title");
@@ -154,6 +166,9 @@
 
     beforeNavigate((navigation: BeforeNavigate) => {
         if (state.kind === "done") {
+            return;
+        }
+        if (!hasInputSomething()) {
             return;
         }
         const navigateAway = window.confirm(
