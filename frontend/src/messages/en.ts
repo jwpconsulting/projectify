@@ -233,9 +233,6 @@ const messages: MessageDirectory = {
         },
         "create-project": "Create new project",
         "projects": "Projects",
-        "team-members": "Team members",
-        "team-member-name": "Team member name",
-        "filter-team-members": "Filter team members",
         "search-task": {
             button: "Search tasks",
             input: { placeholder: "Enter search terms", label: "Task search" },
@@ -298,8 +295,14 @@ const messages: MessageDirectory = {
                 "open-project": "Open {title} project",
             },
             "filter-team-members": {
+                "title": "Filter team members",
                 "open-collapsible": "Open team member filter menu",
                 "close-collapsible": "Close team member filter menu",
+                "input": {
+                    label: "Team member",
+                    placeholder: "Filter by team member name",
+                },
+                "add": "Add more team members",
             },
             "filter-labels": {
                 "open-collapsible": "Open label filter menu",
@@ -1588,6 +1591,7 @@ const messages: MessageDirectory = {
                     "title": "Resources",
                     "help-and-tips": "Help and tips",
                     "blog": "Blog",
+                    "github": "GitHub Repository",
                 },
                 company: {
                     "title": "Company",

@@ -52,13 +52,15 @@
                     </p>
                 {/if}
             </div>
-            <div class="flex flex-col gap-1">
+            <table
+                class="flex flex-col gap-1 rounded-b-2xl bg-foreground p-4 lg:grid lg:grid-cols-[8fr_3fr_max-content] lg:gap-4"
+            >
                 {#if project}
                     {#each tasks as task}
                         <TaskCard {task} {project} />
                     {/each}
                 {/if}
-            </div>
+            </table>
             {#if backUrl}
                 <p>
                     <Anchor
