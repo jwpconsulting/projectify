@@ -1591,6 +1591,7 @@ const messages: MessageDirectory = {
                     "title": "Resources",
                     "help-and-tips": "Help and tips",
                     "blog": "Blog",
+                    "github": "GitHub Repository",
                 },
                 company: {
                     "title": "Company",
