@@ -1,4 +1,8 @@
-# Projectify Architecture
+---
+title: Projectify Architecture
+author: Justus Perlwitz
+date: 2024-03-18
+---
 
 This document describes the software architecture of the Projectify software. It
 was written with a deployment on Heroku in mind, so certain parts might change
@@ -43,8 +47,8 @@ at `frontend/package.json` under `dependencies` will show what else is used.
 The backend is implemented in Django [^5] and Django REST Framework [^6].
 Asynchronous WebSocket communication is enabled using Django Channels [^7].
 
-For the DBMS PostgreSQL version 15.5 and higher is used and supported. To
-connect to a PostgreSQL instance, Psycopg version 3 is used.
+For the DBMS PostgreSQL version 15.5 [^8] and higher is used and supported. To
+connect to a PostgreSQL instance, Psycopg version 3 [^9] is used.
 
 The style guide for this Django Project is derived from the HackSoftware
 Django-Styleguide [^10]. This is not always strictly enforced, but roughly,
@@ -133,16 +137,14 @@ according to the following criteria:
 - The frontend shall crash in gentle ways, and the user interface shall always
   guide the user to restart or reset the frontend to a known good state
 
-# References
-
-- [^1]: SvelteKit: https://kit.svelte.dev/
-- [^2]: Svelte: https://svelte.dev/
-- [^3]: Sarus: https://github.com/anephenix/sarus/
-- [^4]: Tailwind CSS: https://tailwindcss.com/
-- [^5]: Django: https://www.djangoproject.com/
-- [^6]: Django REST Framework: https://www.django-rest-framework.org/
-- [^7]: Django Channels: https://channels.readthedocs.io/en/latest/
-- [^8]: PostgreSQL: https://www.postgresql.org/
-- [^9]: Psycopg: https://www.psycopg.org/
-- [^10]: Django-Styleguide: https://github.com/HackSoftware/Django-Styleguide
-- [^11]: rules: https://github.com/dfunckt/django-rules
+[^1]: SvelteKit: https://kit.svelte.dev/
+[^2]: Svelte: https://svelte.dev/
+[^3]: Sarus: https://github.com/anephenix/sarus/
+[^4]: Tailwind CSS: https://tailwindcss.com/
+[^5]: Django: https://www.djangoproject.com/
+[^6]: Django REST Framework: https://www.django-rest-framework.org/
+[^7]: Django Channels: https://channels.readthedocs.io/en/latest/
+[^8]: PostgreSQL: https://www.postgresql.org/
+[^9]: Psycopg: https://www.psycopg.org/
+[^10]: Django-Styleguide: https://github.com/HackSoftware/Django-Styleguide
+[^11]: rules: https://github.com/dfunckt/django-rules
