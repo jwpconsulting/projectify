@@ -40,6 +40,7 @@
     import type { FormViewState } from "$lib/types/ui";
     import { createSubTaskAssignment } from "$lib/stores/dashboard/subTaskAssignment";
     import { toValid, type InputFieldValidation } from "$lib/funabashi/types";
+    import { persisted } from "svelte-local-storage-store";
 
     export let data: PageData;
 
@@ -47,7 +48,7 @@
     $: project = section.project;
 
     // form fields
-    let title: string | undefined = undefined;
+    const titleInput = persisted<string | null>("create-task-title", null);
     let titleValidation: InputFieldValidation | undefined = undefined;
     let description: string | null = null;
     let descriptionValidation: string | undefined = undefined;
@@ -67,14 +68,14 @@
     $: canCreate =
         state.kind !== "done" &&
         state.kind !== "submitting" &&
-        title !== undefined;
+        $titleInput !== null;
 
     type State = FormViewState | { kind: "done" };
     let state: State = { kind: "start" };
 
     function hasInputSomething() {
         const conditions: boolean[] = [
-            title !== undefined,
+            $titleInput !== null,
             description !== null,
             dueDate !== null,
             $teamMemberAssignment !== null,
@@ -84,13 +85,17 @@
         return conditions.some((a) => a);
     }
 
+    function resetForm() {
+        $titleInput = null;
+    }
+
     async function action(continueEditing: boolean) {
-        if (!title) {
+        if (!$titleInput) {
             throw new Error("Expected title");
         }
         state = { kind: "submitting" };
         const { error, data } = await createTask({
-            title,
+            title: $titleInput,
             description,
             section: section,
             labels: $labelAssignment,
@@ -105,6 +110,7 @@
                 return;
             }
             await goto(getDashboardSectionUrl(section));
+            resetForm();
             return;
         }
         if (error.code === 500) {
@@ -231,7 +237,7 @@
             {labelAssignmentValidation}
             {subTaskAssignment}
             {subTaskAssignmentValidation}
-            bind:title
+            bind:title={$titleInput}
             {titleValidation}
             bind:dueDate
             {dueDateValidation}
