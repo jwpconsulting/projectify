@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    import { User } from "@steeze-ui/heroicons";
+    import { Plus, User } from "@steeze-ui/heroicons";
     import { _ } from "svelte-i18n";
 
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
@@ -26,10 +26,14 @@
         toggleUserExpandOpen,
     } from "$lib/stores/dashboard/ui";
     import { selectedTeamMember } from "$lib/stores/dashboard/teamMemberFilter";
+    import { currentWorkspace } from "$lib/stores/dashboard/workspace";
+    import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
+    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
+    import { getSettingsUrl } from "$lib/urls";
 </script>
 
 <SideNavMenuCategory
-    label={$_("dashboard.team-members")}
+    label={$_("dashboard.side-nav.filter-team-members.title")}
     icon={User}
     open={$userExpandOpen}
     on:click={toggleUserExpandOpen}
@@ -39,5 +43,19 @@
     <!-- TODO evaluate removing this shrink class here -->
     <div class="shrink">
         <FilterTeamMember mode={{ kind: "filter" }} />
+        {#if $currentWorkspace.value && $currentTeamMemberCan("create", "teamMemberInvite")}
+            <ContextMenuButton
+                kind={{
+                    kind: "a",
+                    href: getSettingsUrl(
+                        $currentWorkspace.value,
+                        "team-members",
+                    ),
+                }}
+                icon={Plus}
+                color="primary"
+                label={$_("dashboard.side-nav.filter-team-members.add")}
+            />
+        {/if}
     </div>
 {/if}

@@ -27,6 +27,7 @@
     export let label: string;
     export let icon: IconSource | undefined = undefined;
     export let iconRight: IconSource | undefined = undefined;
+    // TODO remove default
     export let color: MenuButtonColor = "base";
     export let kind: ButtonAction & { kind: "button" | "a" };
     export let closeOnInteract = true;

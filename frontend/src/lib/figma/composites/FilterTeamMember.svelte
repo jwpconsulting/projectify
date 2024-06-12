@@ -74,9 +74,11 @@
     <InputField
         bind:value={$teamMemberSearch}
         style={{ inputType: "text" }}
-        label={$_("dashboard.filter-team-members")}
+        label={$_("dashboard.side-nav.filter-team-members.input.label")}
         name="team-member-name"
-        placeholder={$_("dashboard.team-member-name")}
+        placeholder={$_(
+            "dashboard.side-nav.filter-team-members.input.placeholder",
+        )}
     >
         <Icon
             slot="left"
