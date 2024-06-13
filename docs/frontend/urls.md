@@ -1,3 +1,48 @@
+# URLs for prerendered pages
+
+Useful when testing on localhost. Generate with
+
+```bash
+find build -name '*.html' | sed \
+  -e 's/build/http:\/\/localhost:3000/' \
+  -e 's/.html//' \
+  -e '/fallback/d' \
+  -e '/index/d'
+```
+
+- http://localhost:3000/free-software
+- http://localhost:3000/accessibility
+- http://localhost:3000/redirect
+- http://localhost:3000/help
+- http://localhost:3000/security/disclose
+- http://localhost:3000/security/general
+- http://localhost:3000/pricing
+- http://localhost:3000/solutions/development-teams
+- http://localhost:3000/solutions/remote-work
+- http://localhost:3000/solutions/research
+- http://localhost:3000/solutions/academic
+- http://localhost:3000/solutions/personal-use
+- http://localhost:3000/solutions/project-management
+- http://localhost:3000/user/log-out
+- http://localhost:3000/contact-us
+- http://localhost:3000/tos
+- http://localhost:3000/ethicalads
+- http://localhost:3000/credits
+- http://localhost:3000/privacy
+- http://localhost:3000/help/trial
+- http://localhost:3000/help/tasks
+- http://localhost:3000/help/billing
+- http://localhost:3000/help/filters
+- http://localhost:3000/help/basics
+- http://localhost:3000/help/sections
+- http://localhost:3000/help/projects
+- http://localhost:3000/help/workspaces
+- http://localhost:3000/help/team-members
+- http://localhost:3000/help/roles
+- http://localhost:3000/help/quota
+- http://localhost:3000/help/labels
+- http://localhost:3000/solutions
+
 # Thoughts on URLs for Projectify
 
 A page can serve various purposes. Some of which are:
