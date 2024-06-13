@@ -34,6 +34,15 @@
     {@html faviconHtml}
 </svelte:head>
 
+<noscript>
+    <section class="flex w-full flex-col gap-2 bg-destructive/30 p-4">
+        <h1 class="text-center font-bold">
+            {$_("navigation.header.noscript.body")}
+        </h1>
+        <p>{$_("navigation.header.noscript.personal-note")}</p>
+    </section>
+</noscript>
+
 {#if isDevelopment}
     <p
         class="absolute left-0 top-0 w-full bg-destructive/30 text-center font-bold"
