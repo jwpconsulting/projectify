@@ -18,7 +18,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import PolyLogo from "$lib/figma/navigation/polylogo.svg";
+    import PolyLogo from "../polylogo.svg?url";
 
     export let logoVisibleDesktop = false;
     export let logoVisibleMobile = false;

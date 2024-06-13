@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import SentEmailConfirmation from "$routes/(storefront)/user/(auth)/sent-email-confirmation-link/+page.svelte";
+import SentEmailConfirmation from "$routes/(storefront)/user/sent-email-confirmation-link/+page.svelte";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<SentEmailConfirmation> = {

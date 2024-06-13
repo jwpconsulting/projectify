@@ -19,6 +19,7 @@ import { exec } from "node:child_process";
 import { promisify } from "node:util";
 
 import { sveltekit } from "@sveltejs/kit/vite";
+import svg from "@poppanator/sveltekit-svg";
 import { enhancedImages } from "@sveltejs/enhanced-img";
 import { defineConfig } from "vite";
 import type {
@@ -78,6 +79,7 @@ async function getPluginOptions(
     const pluginDefaults: PluginOption[] = [
         enhancedImages(),
         sveltekit(),
+        svg(),
         createSitemapPlugin(getFromEnv(env, "VITE_PROJECTIFY_DOMAIN"), {
             debug: mode !== "production",
             changeFreq: "daily",

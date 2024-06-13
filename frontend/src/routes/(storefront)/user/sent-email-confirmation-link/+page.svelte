@@ -21,7 +21,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { backToHomeUrl } from "$lib/urls";
 
-    import illustration from "./illustration.svg";
+    import illustration from "./illustration.svg?url";
 </script>
 
 <div class="flex h-full flex-col items-center justify-center px-16 py-8">
