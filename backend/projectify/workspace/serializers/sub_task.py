@@ -15,37 +15,19 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Custom serializer behaviors for sub task."""
-from collections.abc import (
-    Sequence,
-)
-from typing import (
-    Any,
-    Optional,
-)
-from uuid import (
-    UUID,
-)
+from collections.abc import Sequence
+from typing import Any, Optional
+from uuid import UUID
 
 from django.utils.translation import gettext_lazy as _
 
-from rest_framework import (
-    serializers,
-)
+from rest_framework import serializers
 
-from projectify.workspace.serializers.base import (
-    TaskBaseSerializer,
-)
-from projectify.workspace.services.sub_task import (
+from ..models import SubTask
+from ..models.task import Task
+from ..serializers.base import TaskBaseSerializer
+from ..services.sub_task import (
     ValidatedData,
-    ValidatedDatum,
-    ValidatedDatumWithUuid,
-)
-
-from .. import (
-    models,
-)
-from ..models import (
-    SubTask,
 )
 
 
@@ -70,16 +52,17 @@ class SubTaskListSerializer(serializers.ListSerializer[SubTask]):
 
     validated_data: ValidatedData
     parent: Optional[TaskBaseSerializer]
-    _task: Optional[models.Task] = None
+    _task: Optional[Task] = None
 
+    # TODO remove
     @property
-    def task(self) -> Optional[models.Task]:
+    def task(self) -> Optional[Task]:
         """
         Return a task, either by looking inside context or parent.
 
         Cache the result.
         """
-        task: Optional[models.Task]
+        task: Optional[Task]
         if self._task:
             return self._task
         if "task" in self.context:
@@ -91,6 +74,7 @@ class SubTaskListSerializer(serializers.ListSerializer[SubTask]):
         self._task = task
         return task
 
+    # TODO remove
     def to_internal_value(self, data: list[Any]) -> Any:
         """Ensure that we have an instance."""
         if self.instance and self.task:
@@ -102,86 +86,22 @@ class SubTaskListSerializer(serializers.ListSerializer[SubTask]):
             self.instance = list(self.task.subtask_set.all())
         return super().to_internal_value(data)
 
-    def validate(self, validated_data: list[Any]) -> ValidatedData:
-        """Ensure that this task has no sub tasks when creating."""
-        # We might be creating new sub tasks.
-        # 1) determine which sub tasks have to be newly created
-        create_sub_tasks: list[ValidatedDatum] = [
-            {
-                "title": sub_task["title"],
-                "description": sub_task.get("description"),
-                "done": sub_task["done"],
-                "_order": order,
-            }
-            for order, sub_task in enumerate(validated_data)
-            if "uuid" not in sub_task
-        ]
-        # 2) determine which sub tasks have to be updated
-        update_sub_tasks: list[ValidatedDatumWithUuid] = [
-            {
-                "uuid": sub_task["uuid"],
-                "title": sub_task["title"],
-                "description": sub_task.get("description"),
-                "done": sub_task["done"],
-                "_order": order,
-            }
-            for order, sub_task in enumerate(validated_data)
-            if "uuid" in sub_task
-        ]
-        # 2a) If there are updatable sub tasks, we must have instance data
-        if self.instance is None and len(update_sub_tasks):
-            raise serializers.ValidationError(
-                _(
-                    "Sub tasks to be updated have been specified, but no sub "
-                    "task instances were provided."
-                )
-            )
-        # 3) check that UUIDs are not duplicated
-        unique_uuids = set(sub_task["uuid"] for sub_task in update_sub_tasks)
-        if len(unique_uuids) < len(update_sub_tasks):
-            raise serializers.ValidationError(
-                _("Duplicate UUID found among sub tasks to be updated")
-            )
-        # 4) check that all update UUIDs are part of instance sub tasks
-        #
-        # Otherwise, that would mean we are updating a sub task that we did not
-        # pass in as an instance. We only need to check this if we are
-        # updating. create_sub_tasks by definition can not contain UUIDs
-        if self.instance is not None:
-            instance_uuids = set(sub_task.uuid for sub_task in self.instance)
-            not_contained = unique_uuids - instance_uuids
-            if len(not_contained) > 0:
-                raise serializers.ValidationError(
-                    _(
-                        "At least one sub task UUID ({uuid}) could not be "
-                        "found amount the instance data. Check whether "
-                        "you have correctly passed all task's sub task "
-                        "instances."
-                    )
-                )
-        # But: The opposite, a UUID in our update sub task UUIDs not being
-        # present does not mean it was forgotten. It means that the sub task
-        # shall be deleted in update()
-        #
-        # 5) Check that when... what was I going to write here?
-        return {
-            "create_sub_tasks": create_sub_tasks,
-            "update_sub_tasks": update_sub_tasks,
-        }
-
+    # TODO remove
     def save(self, **kwargs: Any) -> list[SubTask]:
         """Override save, allow passing complex validated data object."""
         del kwargs
         raise NotImplementedError("Do not call")
 
+    # TODO remove
     def create(
-        self, validated_data: ValidatedData, task: Optional[models.Task] = None
+        self, validated_data: ValidatedData, task: Optional[Task] = None
     ) -> list[SubTask]:
         """Create several sub tasks."""
         del validated_data
         del task
         raise NotImplementedError("Do not call")
 
+    # TODO remove
     def update(
         self,
         instance: Sequence[SubTask],
@@ -226,9 +146,11 @@ class SubTaskCreateUpdateSerializer(serializers.ModelSerializer[SubTask]):
     def create(
         self,
         validated_data: dict[str, Any],
-        task: Optional[models.Task] = None,
+        task: Optional[Task] = None,
     ) -> SubTask:
         """Forbid create."""
+        del validated_data
+        del task
         raise NotImplementedError("Can't call this function anymore")
 
     class Meta:

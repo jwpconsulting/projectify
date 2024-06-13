@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Test task CRUD views."""
+from uuid import uuid4
+
 from django.urls import (
     reverse,
 )
@@ -251,6 +253,37 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         assert response.data["title"] == "Hello world"
         # We get the whole nested thing
         assert response.data["section"]["title"] == section.title
+
+    def test_update_error_format(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        team_member: models.TeamMember,
+        payload: dict[str, object],
+    ) -> None:
+        """Test updating a task when logged in correctly."""
+        with django_assert_num_queries(4):
+            response = rest_user_client.put(
+                resource_url,
+                {
+                    **payload,
+                    "sub_tasks": [
+                        {"uuid": str(uuid4()), "title": "bla", "done": False}
+                    ],
+                    "assignee": {"uuid": str(team_member.uuid)},
+                },
+                format="json",
+            )
+        assert response.status_code == 400
+        assert response.data == {
+            "code": 400,
+            "status": "invalid",
+            "details": {
+                "sub_tasks": [{}],
+            },
+            "general": None,
+        }
 
     def test_delete(
         self,

@@ -20,26 +20,22 @@ Task detail serializer.
 We have put this here to avoid circular reference problems,
 because ws board section requires importing the task serializer.
 """
+from collections import Counter
 from collections.abc import Sequence
-from typing import (
-    Any,
-    Optional,
-    TypedDict,
-)
-from uuid import (
-    UUID,
-)
+from typing import Any, Optional, TypedDict
+from uuid import UUID
 
 from django.utils.translation import gettext_lazy as _
 
-from rest_framework import (
-    serializers,
-)
-from rest_framework.request import (
-    Request,
-)
+from rest_framework import serializers
+from rest_framework.request import Request
 
 from projectify.user.models.user import User
+from projectify.workspace.services.sub_task import (
+    ValidatedData,
+    ValidatedDatum,
+    ValidatedDatumWithUuid,
+)
 
 from ..models.section import Section
 from ..models.task import Task
@@ -108,6 +104,103 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
     assignee = base.UuidObjectSerializer(allow_null=True)
 
     sub_tasks = SubTaskCreateUpdateSerializer(many=True, required=False)
+
+    def validate_sub_tasks(self, value: list[Any]) -> ValidatedData:
+        """Ensure that this task has no sub tasks when creating."""
+        if self.instance:
+            instance_sub_tasks = list(self.instance.subtask_set.all())
+        else:
+            instance_sub_tasks = None
+        # We might be creating new sub tasks.
+        # 1) determine which sub tasks have to be newly created
+        create_sub_tasks: list[ValidatedDatum] = [
+            {
+                "title": sub_task["title"],
+                "description": sub_task.get("description"),
+                "done": sub_task["done"],
+                "_order": order,
+            }
+            for order, sub_task in enumerate(value)
+            if "uuid" not in sub_task
+        ]
+        # 2) determine which sub tasks have to be updated
+        update_sub_tasks: list[ValidatedDatumWithUuid] = [
+            {
+                "uuid": sub_task["uuid"],
+                "title": sub_task["title"],
+                "description": sub_task.get("description"),
+                "done": sub_task["done"],
+                "_order": order,
+            }
+            for order, sub_task in enumerate(value)
+            if "uuid" in sub_task
+        ]
+        # 2a) If there are updatable sub tasks, we must have instance data
+        if self.instance is None and len(update_sub_tasks):
+            # XXX
+            # This error is not correctly formatted
+            raise serializers.ValidationError(
+                [
+                    {
+                        "uuid": _(
+                            "Sub tasks to be updated have been specified, but no sub "
+                            "task instances were provided."
+                        )
+                    }
+                    for _ in value
+                ]
+            )
+        # 3) check that UUIDs are not duplicated
+        update_uuids = [sub_task["uuid"] for sub_task in update_sub_tasks]
+        update_uuids_unique = set(update_uuids)
+        if len(update_uuids_unique) < len(update_uuids):
+            c = Counter(update_uuids)
+            raise serializers.ValidationError(
+                [
+                    {
+                        "uuid": _(
+                            "Duplicate UUID found among sub tasks to be updated"
+                        )
+                    }
+                    if c[s] > 1
+                    else {}
+                    for s in update_uuids
+                ]
+            )
+        # 4) check that all update UUIDs are part of instance sub tasks
+        #
+        # Otherwise, that would mean we are updating a sub task that we did not
+        # pass in as an instance. We only need to check this if we are
+        # updating. create_sub_tasks by definition can not contain UUIDs
+        if instance_sub_tasks is not None:
+            instance_uuids = set(
+                sub_task.uuid for sub_task in instance_sub_tasks
+            )
+            missing_uuids = update_uuids_unique - instance_uuids
+            if len(missing_uuids) > 0:
+                errors = [
+                    {
+                        "uuid": _(
+                            f"Sub task {v['uuid']} could not be "
+                            "found amount the instance data. Check whether "
+                            "you have correctly passed all task's sub task "
+                            "instances."
+                        )
+                    }
+                    if v.get("uuid") in missing_uuids
+                    else {}
+                    for v in value
+                ]
+                raise serializers.ValidationError(detail=errors)
+        # But: The opposite, a UUID in our update sub task UUIDs not being
+        # present does not mean it was forgotten. It means that the sub task
+        # shall be deleted in update()
+        #
+        # 5) Check that when... what was I going to write here?
+        return {
+            "create_sub_tasks": create_sub_tasks,
+            "update_sub_tasks": update_sub_tasks,
+        }
 
     def _validate(
         self, data: dict[str, Any], section: Section
@@ -242,11 +335,14 @@ class TaskCreateSerializer(TaskCreateUpdateSerializer):
 class TaskUpdateSerializer(TaskCreateUpdateSerializer):
     """Serializer for updating tasks."""
 
+    instance: Task
+
+    def __init__(self, instance: Task, *args: Any, **kwargs: Any) -> None:
+        """Only initialize with task."""
+        super().__init__(instance, *args, **kwargs)
+
     def validate(self, data: dict[str, Any]) -> dict[str, Any]:
         """Run validation logic based off of given instance."""
-        if not self.instance:
-            raise ValueError("Expected self.instance")
-
         # TODO select related
         section: Section = self.instance.section
         return self._validate(data, section)
