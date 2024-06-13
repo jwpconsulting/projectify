@@ -16,6 +16,8 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import { exec } from "node:child_process";
+import fs from "node:fs/promises";
+import path from "node:path";
 import { promisify } from "node:util";
 
 import { sveltekit } from "@sveltejs/kit/vite";
@@ -34,6 +36,8 @@ import { loadEnv } from "vite";
 import { createSitemap } from "svelte-sitemap/src/index.js";
 import type { Options } from "svelte-sitemap/src/interfaces/global.interface";
 import { getLicenseFileText } from "generate-license-file";
+import { favicons } from "favicons";
+import type { FaviconOptions } from "favicons";
 
 function generateLicenseFile(): Plugin {
     return {
@@ -57,11 +61,65 @@ function generateLicenseFile(): Plugin {
     };
 }
 
+function generateFavicons(): Plugin {
+    const source = "src/favicon.svg";
+    const dest = "static/";
+    // TODO
+    const configuration: FaviconOptions = {};
+    let generatedHtml: string | undefined = undefined;
+    return {
+        name: "generate-favicons",
+        async buildStart() {
+            this.addWatchFile(source);
+
+            const response = await favicons(source, configuration);
+            const { html, images, files } = response;
+            await fs.mkdir(dest, { recursive: true });
+            await Promise.all(
+                images.map(
+                    async (image) =>
+                        await fs.writeFile(
+                            path.join(dest, image.name),
+                            image.contents,
+                        ),
+                ),
+            );
+            await Promise.all(
+                files.map(
+                    async (file) =>
+                        await fs.writeFile(
+                            path.join(dest, file.name),
+                            file.contents,
+                        ),
+                ),
+            );
+
+            generatedHtml = `const html = \`${html.join("\n")}\`;
+export default html;`;
+        },
+        resolveId(id: string) {
+            if (id !== "favicon-html") {
+                return null;
+            }
+            return { id };
+        },
+        load(id: string) {
+            if (id !== "favicon-html") {
+                return null;
+            }
+            if (!generatedHtml) {
+                throw new Error("HTML was not rendered");
+            }
+            return generatedHtml;
+        },
+    };
+}
+
 function createSitemapPlugin(domain: string, options: Options): Plugin {
     return {
         name: "create-sitemap",
-        writeBundle() {
-            createSitemap(domain, options);
+        async writeBundle() {
+            await createSitemap(domain, options);
         },
     };
 }
@@ -80,6 +138,7 @@ async function getPluginOptions(
         enhancedImages(),
         sveltekit(),
         svg(),
+        generateFavicons(),
         createSitemapPlugin(getFromEnv(env, "VITE_PROJECTIFY_DOMAIN"), {
             debug: mode !== "production",
             changeFreq: "daily",

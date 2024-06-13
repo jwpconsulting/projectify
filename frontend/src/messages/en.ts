@@ -1564,6 +1564,11 @@ const messages: MessageDirectory = {
     },
     "navigation": {
         header: {
+            "noscript": {
+                "body": "The Projectify app does not work well without JavaScript enabled in your browser",
+                "personal-note":
+                    "Yes, most websites should work without JavaScript. And many don't. Projectify uses JavaScript to provide you a reactive and smooth user experience. We try to keep the bundle size as low as we can. Please give it a try.",
+            },
             "development-preview": "Development preview",
             "logo": {
                 alt: "Projectify",
