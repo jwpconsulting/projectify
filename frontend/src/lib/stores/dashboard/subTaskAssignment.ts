@@ -19,43 +19,38 @@ import { derived, writable } from "svelte/store";
 import type { Readable } from "svelte/store";
 
 import type { SubTaskAssignment } from "$lib/types/stores";
-import type {
-    CreateUpdateSubTask,
-    SubTask,
-    TaskDetail,
-} from "$lib/types/workspace";
+import type { CreateUpdateSubTask, TaskDetail } from "$lib/types/workspace";
 
 function filterSubTasks(
     subTasks: Partial<CreateUpdateSubTask>[],
-): CreateUpdateSubTask[] | undefined {
-    const nonPartials = subTasks.map((el: Partial<CreateUpdateSubTask>) => {
-        if (
-            el.done !== undefined &&
-            el.title !== undefined &&
-            el.description !== undefined
-        ) {
+): CreateUpdateSubTask[] {
+    const nonPartials: (CreateUpdateSubTask | undefined)[] = subTasks.map(
+        (el: Partial<CreateUpdateSubTask>) => {
+            if (el.done === undefined) {
+                return undefined;
+            }
+            if (el.title === undefined) {
+                return undefined;
+            }
             return {
                 title: el.title,
-                description: el.description,
+                description: null,
                 done: el.done,
                 uuid: el.uuid,
             };
-        }
-        return undefined;
-    });
+        },
+    );
     const filtered: CreateUpdateSubTask[] = nonPartials.flatMap((el) =>
         el ? [el] : [],
     );
-    if (nonPartials.length !== filtered.length) {
-        return;
-    }
     return filtered;
 }
 
 export function createSubTaskAssignment(task?: TaskDetail): SubTaskAssignment {
-    const existingSubTasks: SubTask[] = [...(task?.sub_tasks ?? [])];
-    const { subscribe, set, update } =
-        writable<Partial<CreateUpdateSubTask>[]>(existingSubTasks);
+    const existingSubTasks = task?.sub_tasks;
+    const { subscribe, set, update } = writable<
+        Partial<CreateUpdateSubTask>[]
+    >([...(existingSubTasks ?? [])]);
     const addSubTask = () => {
         update(($subTasks) => {
             return [...$subTasks, { done: false }];
@@ -73,9 +68,6 @@ export function createSubTaskAssignment(task?: TaskDetail): SubTaskAssignment {
         { subscribe },
         ($subTaskAssignment, set) => {
             const filtered = filterSubTasks($subTaskAssignment);
-            if (!filtered) {
-                return;
-            }
             set(filtered);
         },
         [],
