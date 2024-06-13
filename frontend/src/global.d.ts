@@ -35,3 +35,10 @@ declare module "*.png?enhanced" {
     const value: string;
     export = value;
 }
+
+// https://www.npmjs.com/package/@poppanator/sveltekit-svg#typescript
+// Copied from the packages dist/svg.d.ts file
+declare module "*.svg?url" {
+    const content: string;
+    export default content;
+}

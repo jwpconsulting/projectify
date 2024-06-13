@@ -18,7 +18,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import PolyLogo from "$lib/figma/navigation/polylogo.svg";
+    import PolyLogo from "./polylogo.svg?url";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { signUpUrl } from "$lib/urls/user";
