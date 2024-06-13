@@ -26,6 +26,15 @@ node_modules/
 
 # Frontend
 # ========
+# Favicons
+# --------
+/frontend/static/yandex*
+/frontend/static/favicon*
+/frontend/static/mstile*
+/frontend/static/browserconfig.xml
+/frontend/static/manifest.webmanifest
+/frontend/static/apple-touch-*
+/frontend/static/android-chrome-*
 # SvelteKit
 # ---------
 /frontend/build

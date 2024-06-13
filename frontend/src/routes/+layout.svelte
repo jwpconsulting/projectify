@@ -18,6 +18,7 @@
 <script lang="ts">
     import "$lib/app.scss";
     import Footer from "$lib/figma/navigation/Footer.svelte";
+    import faviconHtml from "favicon-html";
 </script>
 
 <svelte:head>
@@ -25,6 +26,9 @@
         name="description"
         content="Projectify - Manage projects the right way"
     />
+    <!-- This is statically generated, so we are good -->
+    <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+    {@html faviconHtml}
 </svelte:head>
 
 <slot />

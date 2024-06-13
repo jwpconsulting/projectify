@@ -61,6 +61,7 @@ const config: KnipConfig = {
         "prettier-plugin-svelte",
         // Synthetic import created as part of vite build
         "third-party-licenses",
+        "favicon-html",
     ],
     compilers: {
         // https://github.com/webpro/knip/blob/7011a5107b6693f70a966a12bc3c31b6bc3353a8/docs/compilers.md
