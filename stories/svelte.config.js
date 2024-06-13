@@ -56,7 +56,6 @@ const config = {
                     include: [
                         ...config.include,
                         "../tailwind.config.ts",
-                        "../knip.ts",
                     ],
                 };
             },
