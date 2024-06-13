@@ -171,12 +171,15 @@ class SubTaskListSerializer(serializers.ListSerializer[SubTask]):
 
     def save(self, **kwargs: Any) -> list[SubTask]:
         """Override save, allow passing complex validated data object."""
+        del kwargs
         raise NotImplementedError("Do not call")
 
     def create(
         self, validated_data: ValidatedData, task: Optional[models.Task] = None
     ) -> list[SubTask]:
         """Create several sub tasks."""
+        del validated_data
+        del task
         raise NotImplementedError("Do not call")
 
     def update(
@@ -185,6 +188,8 @@ class SubTaskListSerializer(serializers.ListSerializer[SubTask]):
         validated_data: ValidatedData,
     ) -> list[SubTask]:
         """Update sub tasks."""
+        del instance
+        del validated_data
         raise NotImplementedError("Do not call")
 
 

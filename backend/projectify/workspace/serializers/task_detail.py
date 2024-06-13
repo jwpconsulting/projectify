@@ -162,14 +162,18 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
 
     def create(self, validated_data: dict[str, Any]) -> Task:
         """Do not call this method."""
+        del validated_data
         raise NotImplementedError("Don't call")
 
     def update(self, instance: Task, validated_data: dict[str, Any]) -> Task:
         """Do not call this method."""
+        del instance
+        del validated_data
         raise NotImplementedError("Don't call")
 
     def save(self, **kwargs: Any) -> Task:
         """Do not call this method."""
+        del kwargs
         raise NotImplementedError("Don't call")
 
     class Meta(base.TaskBaseSerializer.Meta):
