@@ -42,7 +42,7 @@ pytestmark = pytest.mark.django_db
 
 
 PayloadSingle = Any
-Context = dict[str, object]
+Context = dict[str, Any]
 
 
 @pytest.fixture
@@ -359,7 +359,11 @@ class TestTaskUpdateSerializer:
         }
 
     def test_update_missing_label(
-        self, task: Task, label: Label, unrelated_label: Label
+        self,
+        task: Task,
+        label: Label,
+        unrelated_label: Label,
+        context: Context,
     ) -> None:
         """Test updating with an unrelated label."""
         serializer = TaskUpdateSerializer(
@@ -382,7 +386,10 @@ class TestTaskUpdateSerializer:
         }
 
     def test_update_wrong_assignee(
-        self, task: Task, unrelated_team_member: TeamMember
+        self,
+        task: Task,
+        unrelated_team_member: TeamMember,
+        context: Context,
     ) -> None:
         """Test updating a task."""
         serializer = TaskUpdateSerializer(
@@ -584,16 +591,15 @@ class TestTaskUpdateSerializer:
         update_task_payload: Any,
         validated_data_update: Any,
         sub_tasks: list[SubTask],
+        payload_single: PayloadSingle,
     ) -> None:
         """Test updating several existing sub tasks."""
-        title = "fancy factory fabricates fakes"
-        payload = {"title": title, "done": False, "description": None}
         serializer = TaskUpdateSerializer(
             task,
             data={
                 **update_task_payload,
                 "sub_tasks": [
-                    {**payload, "uuid": str(sub_task.uuid)}
+                    {**payload_single, "uuid": str(sub_task.uuid)}
                     for sub_task in sub_tasks
                 ],
             },
@@ -605,11 +611,11 @@ class TestTaskUpdateSerializer:
             "sub_tasks": {
                 "create_sub_tasks": [],
                 "update_sub_tasks": [
-                    {**payload, "_order": 0, "uuid": sub_tasks[0].uuid},
-                    {**payload, "_order": 1, "uuid": sub_tasks[1].uuid},
-                    {**payload, "_order": 2, "uuid": sub_tasks[2].uuid},
-                    {**payload, "_order": 3, "uuid": sub_tasks[3].uuid},
-                    {**payload, "_order": 4, "uuid": sub_tasks[4].uuid},
+                    {**payload_single, "_order": 0, "uuid": sub_tasks[0].uuid},
+                    {**payload_single, "_order": 1, "uuid": sub_tasks[1].uuid},
+                    {**payload_single, "_order": 2, "uuid": sub_tasks[2].uuid},
+                    {**payload_single, "_order": 3, "uuid": sub_tasks[3].uuid},
+                    {**payload_single, "_order": 4, "uuid": sub_tasks[4].uuid},
                 ],
             },
         }
@@ -679,25 +685,20 @@ class TestTaskUpdateSerializer:
         update_task_payload: Any,
         validated_data_update: Any,
         sub_tasks: list[SubTask],
+        payload_single: PayloadSingle,
     ) -> None:
         """Test changing the order of several sub tasks."""
         a, b, c, d, e = sub_tasks
-        title = "asd"
-        payload = {
-            "title": title,
-            "done": False,
-            "description": None,
-        }
         serializer = TaskUpdateSerializer(
             task,
             data={
                 **update_task_payload,
                 "sub_tasks": [
-                    {**payload, "uuid": str(c.uuid)},
-                    {**payload, "uuid": str(b.uuid)},
-                    {**payload, "uuid": str(d.uuid)},
-                    {**payload, "uuid": str(a.uuid)},
-                    {**payload, "uuid": str(e.uuid)},
+                    {**payload_single, "uuid": str(c.uuid)},
+                    {**payload_single, "uuid": str(b.uuid)},
+                    {**payload_single, "uuid": str(d.uuid)},
+                    {**payload_single, "uuid": str(a.uuid)},
+                    {**payload_single, "uuid": str(e.uuid)},
                 ],
             },
             context=context,
@@ -708,11 +709,11 @@ class TestTaskUpdateSerializer:
             "sub_tasks": {
                 "create_sub_tasks": [],
                 "update_sub_tasks": [
-                    {**payload, "_order": 0, "uuid": c.uuid},
-                    {**payload, "_order": 1, "uuid": b.uuid},
-                    {**payload, "_order": 2, "uuid": d.uuid},
-                    {**payload, "_order": 3, "uuid": a.uuid},
-                    {**payload, "_order": 4, "uuid": e.uuid},
+                    {**payload_single, "_order": 0, "uuid": c.uuid},
+                    {**payload_single, "_order": 1, "uuid": b.uuid},
+                    {**payload_single, "_order": 2, "uuid": d.uuid},
+                    {**payload_single, "_order": 3, "uuid": a.uuid},
+                    {**payload_single, "_order": 4, "uuid": e.uuid},
                 ],
             },
         }
@@ -724,6 +725,7 @@ class TestTaskUpdateSerializer:
         sub_task: SubTask,
         update_task_payload: Any,
         validated_data_update: Any,
+        payload_single: PayloadSingle,
     ) -> None:
         """
         Test creating and deleting.
@@ -731,19 +733,17 @@ class TestTaskUpdateSerializer:
         1) The new sub task shall be created
         2) The missing sub task shall be deleted
         """
-        title = "new sub task who dis"
-        payload = {"title": title, "description": None, "done": False}
         assert task.subtask_set.get() == sub_task
         serializer = TaskUpdateSerializer(
             task,
-            data={**update_task_payload, "sub_tasks": [payload]},
+            data={**update_task_payload, "sub_tasks": [payload_single]},
             context=context,
         )
         assert serializer.is_valid(), serializer.errors
         assert serializer.validated_data == {
             **validated_data_update,
             "sub_tasks": {
-                "create_sub_tasks": [{**payload, "_order": 0}],
+                "create_sub_tasks": [{**payload_single, "_order": 0}],
                 "update_sub_tasks": [],
             },
         }
@@ -755,6 +755,7 @@ class TestTaskUpdateSerializer:
         sub_tasks: list[SubTask],
         update_task_payload: Any,
         validated_data_update: Any,
+        payload_single: PayloadSingle,
     ) -> None:
         """
         Test creating sub tasks and changing the order of existing ones.
@@ -764,17 +765,15 @@ class TestTaskUpdateSerializer:
         """
         a, b, _, _, _ = sub_tasks
         title = "asd"
-        new_title = "i am a new sub task"
-        new_payload = {"description": None, "done": False, "title": new_title}
         update_payload = {"title": title, "description": None, "done": False}
         serializer = TaskUpdateSerializer(
             task,
             data={
                 **update_task_payload,
                 "sub_tasks": [
-                    new_payload,
+                    payload_single,
                     {"uuid": str(b.uuid), **update_payload},
-                    new_payload,
+                    payload_single,
                     {"uuid": str(a.uuid), **update_payload},
                 ],
             },
@@ -785,8 +784,8 @@ class TestTaskUpdateSerializer:
             **validated_data_update,
             "sub_tasks": {
                 "create_sub_tasks": [
-                    {**new_payload, "_order": 0},
-                    {**new_payload, "_order": 2},
+                    {**payload_single, "_order": 0},
+                    {**payload_single, "_order": 2},
                 ],
                 "update_sub_tasks": [
                     {**update_payload, "_order": 1, "uuid": b.uuid},
