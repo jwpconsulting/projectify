@@ -152,7 +152,6 @@ ResponseAnnotation = Union[
     dict[int, "ResponseAnnotation"],
 ]
 ResponsesDict = dict[int, "ResponseAnnotation"]
-MaybeSerializer = Union[None, Any, dict[int, serializers.Serializer]]
 
 SerializerClassOrInstance = Union[
     type[serializers.Serializer], serializers.Serializer

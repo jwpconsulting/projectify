@@ -20,34 +20,35 @@ Task detail serializer.
 We have put this here to avoid circular reference problems,
 because ws board section requires importing the task serializer.
 """
+from collections import Counter
 from collections.abc import Sequence
-from typing import (
-    Any,
-    Optional,
-    TypedDict,
-)
-from uuid import (
-    UUID,
-)
+from typing import Any, Optional, TypedDict
+from uuid import UUID
 
 from django.utils.translation import gettext_lazy as _
 
-from rest_framework import (
-    serializers,
-)
-from rest_framework.request import (
-    Request,
-)
+from rest_framework import serializers
+from rest_framework.request import Request
 
 from projectify.user.models.user import User
+from projectify.workspace.models.sub_task import SubTask
 
 from ..models.section import Section
 from ..models.task import Task
 from ..models.team_member import TeamMember
+from ..models.workspace import Workspace
 from ..selectors.section import section_find_for_user_and_uuid
-from . import base
+from ..serializers.base import (
+    ChatMessageBaseSerializer,
+    TaskBaseSerializer,
+    UuidObjectSerializer,
+)
+from ..services.sub_task import (
+    ValidatedData,
+    ValidatedDatum,
+    ValidatedDatumWithUuid,
+)
 from .section import SectionUpSerializer
-from .sub_task import SubTaskCreateUpdateSerializer
 from .task import TaskWithSubTaskSerializer
 
 
@@ -59,7 +60,7 @@ class TaskDetailSerializer(TaskWithSubTaskSerializer):
     labels and sub task in the other direction.
     """
 
-    chat_messages = base.ChatMessageBaseSerializer(
+    chat_messages = ChatMessageBaseSerializer(
         many=True, read_only=True, source="chatmessage_set"
     )
     section = SectionUpSerializer(read_only=True)
@@ -84,7 +85,24 @@ class UuidDict(TypedDict):
     uuid: UUID
 
 
-class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
+class SubTaskCreateUpdateSerializer(serializers.ModelSerializer[SubTask]):
+    """A sub task serializer that accepts a missing UUID."""
+
+    uuid = serializers.UUIDField(required=False)
+
+    class Meta:
+        """Use the modified ListSerializer."""
+
+        model = SubTask
+        fields = (
+            "uuid",
+            "title",
+            "description",
+            "done",
+        )
+
+
+class TaskCreateUpdateSerializer(TaskBaseSerializer):
     """
     Serialize create or update information for a task.
 
@@ -98,23 +116,120 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
     # TODO make label optional, when unset remove labels or on create
     # do not assign label
     labels = serializers.ListField(
-        child=base.UuidObjectSerializer(),
+        child=UuidObjectSerializer(),
         write_only=True,
         # TODO required=False,
     )
     # TODO make assignee optional
-    # assignee = base.UuidObjectSerializer(required=False, write_only=True)
+    # assignee = UuidObjectSerializer(required=False, write_only=True)
     # Then interpret missing as delete assignee
-    assignee = base.UuidObjectSerializer(allow_null=True)
+    assignee = UuidObjectSerializer(allow_null=True)
 
     sub_tasks = SubTaskCreateUpdateSerializer(many=True, required=False)
 
+    def validate_sub_tasks(self, value: list[Any]) -> ValidatedData:
+        """Ensure that this task has no sub tasks when creating."""
+        if self.instance:
+            instance_sub_tasks = list(self.instance.subtask_set.all())
+        else:
+            instance_sub_tasks = None
+        # We might be creating new sub tasks.
+        # 1) determine which sub tasks have to be newly created
+        create_sub_tasks: list[ValidatedDatum] = [
+            {
+                "title": sub_task["title"],
+                "description": sub_task.get("description"),
+                "done": sub_task["done"],
+                "_order": order,
+            }
+            for order, sub_task in enumerate(value)
+            if "uuid" not in sub_task
+        ]
+        # 2) determine which sub tasks have to be updated
+        update_sub_tasks: list[ValidatedDatumWithUuid] = [
+            {
+                "uuid": sub_task["uuid"],
+                "title": sub_task["title"],
+                "description": sub_task.get("description"),
+                "done": sub_task["done"],
+                "_order": order,
+            }
+            for order, sub_task in enumerate(value)
+            if "uuid" in sub_task
+        ]
+        # 2a) If there are updatable sub tasks, we must have instance data
+        if self.instance is None and len(update_sub_tasks):
+            # XXX
+            # This error is not correctly formatted
+            raise serializers.ValidationError(
+                [
+                    {
+                        "uuid": _(
+                            "Sub tasks to be updated have been specified, but no sub "
+                            "task instances were provided."
+                        )
+                    }
+                    for _ in value
+                ]
+            )
+        # 3) check that UUIDs are not duplicated
+        update_uuids = [sub_task["uuid"] for sub_task in update_sub_tasks]
+        update_uuids_unique = set(update_uuids)
+        if len(update_uuids_unique) < len(update_uuids):
+            c = Counter(update_uuids)
+            raise serializers.ValidationError(
+                [
+                    {
+                        "uuid": _(
+                            "Duplicate UUID found among sub tasks to be updated"
+                        )
+                    }
+                    if c[s] > 1
+                    else {}
+                    for s in update_uuids
+                ]
+            )
+        # 4) check that all update UUIDs are part of instance sub tasks
+        #
+        # Otherwise, that would mean we are updating a sub task that we did not
+        # pass in as an instance. We only need to check this if we are
+        # updating. create_sub_tasks by definition can not contain UUIDs
+        if instance_sub_tasks is not None:
+            instance_uuids = set(
+                sub_task.uuid for sub_task in instance_sub_tasks
+            )
+            missing_uuids = update_uuids_unique - instance_uuids
+            if len(missing_uuids) > 0:
+                errors = [
+                    {
+                        "uuid": _(
+                            f"Sub task {v['uuid']} could not be "
+                            "found amount the instance data. Check whether "
+                            "you have correctly passed all task's sub task "
+                            "instances."
+                        )
+                    }
+                    if v.get("uuid") in missing_uuids
+                    else {}
+                    for v in value
+                ]
+                raise serializers.ValidationError(detail=errors)
+        # But: The opposite, a UUID in our update sub task UUIDs not being
+        # present does not mean it was forgotten. It means that the sub task
+        # shall be deleted in update()
+        #
+        # 5) Check that when... what was I going to write here?
+        return {
+            "create_sub_tasks": create_sub_tasks,
+            "update_sub_tasks": update_sub_tasks,
+        }
+
     def _validate(
-        self, data: dict[str, Any], section: Section
+        self,
+        data: dict[str, Any],
+        workspace: Workspace,
     ) -> dict[str, Any]:
         """Validate user access to ws board sect, assignee and labels."""
-        workspace = section.project.workspace
-
         # Then we filter the list of labels for labels that are contained
         # in this workspace
         label_uuids: list[UUID] = [
@@ -122,57 +237,54 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         ]
         # Restrict to this workspace's labels, if there are too many
         # labels throw a ValidationError
-        labels = list(workspace.label_set.filter(uuid__in=label_uuids))
-        label_mapping = {label.uuid: label for label in labels}
-        label_not_contained = any(
-            label_uuid not in label_mapping for label_uuid in label_uuids
-        )
-        if label_not_contained:
-            raise serializers.ValidationError(
-                {
-                    "labels": _(
-                        "At least one specified label could not be found "
-                        "in the task's workspace"
-                    )
-                }
-            )
+        labels = workspace.label_set.filter(uuid__in=label_uuids)
+        found_label_uuids = list(labels.values_list("uuid", flat=True))
+        is_missing = [u not in found_label_uuids for u in label_uuids]
+        if any(is_missing):
+            errors = [
+                {"uuid": _("This label could not be found")} if missing else {}
+                for missing in is_missing
+            ]
+            raise serializers.ValidationError({"labels": errors})
 
         # Then we check if the assignee is part of this workspace
         assignee_uuid: Optional[UuidDict] = data.pop("assignee")
-        try:
-            assignee = (
-                assignee_uuid
-                and workspace.teammember_set.filter(
+        if assignee_uuid:
+            try:
+                assignee = workspace.teammember_set.filter(
                     uuid=assignee_uuid["uuid"]
                 ).get()
-            )
-        except TeamMember.DoesNotExist:
-            raise serializers.ValidationError(
-                {
-                    "assignee": _("The assignee could not be found"),
-                }
-            )
+            except TeamMember.DoesNotExist:
+                raise serializers.ValidationError(
+                    {"assignee": _("The assignee could not be found")}
+                )
+        else:
+            assignee = None
 
         return {
             **data,
             "workspace": workspace,
-            "labels": labels,
+            "labels": list(labels),
             "assignee": assignee,
         }
 
     def create(self, validated_data: dict[str, Any]) -> Task:
         """Do not call this method."""
+        del validated_data
         raise NotImplementedError("Don't call")
 
     def update(self, instance: Task, validated_data: dict[str, Any]) -> Task:
         """Do not call this method."""
+        del instance
+        del validated_data
         raise NotImplementedError("Don't call")
 
     def save(self, **kwargs: Any) -> Task:
         """Do not call this method."""
+        del kwargs
         raise NotImplementedError("Don't call")
 
-    class Meta(base.TaskBaseSerializer.Meta):
+    class Meta(TaskBaseSerializer.Meta):
         """Meta."""
 
         fields: Sequence[str] = (
@@ -188,7 +300,7 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
 class TaskCreateSerializer(TaskCreateUpdateSerializer):
     """Serializer for creating tasks."""
 
-    section = base.UuidObjectSerializer()
+    section = UuidObjectSerializer()
 
     def validate_section(
         self,
@@ -223,8 +335,8 @@ class TaskCreateSerializer(TaskCreateUpdateSerializer):
         comes from the task instance directly, since the task has already
         been created.
         """
-        section = data["section"]
-        return self._validate(data, section)
+        section: Section = data["section"]
+        return self._validate(data, section.project.workspace)
 
     class Meta(TaskCreateUpdateSerializer.Meta):
         """Add section field."""
@@ -238,14 +350,13 @@ class TaskCreateSerializer(TaskCreateUpdateSerializer):
 class TaskUpdateSerializer(TaskCreateUpdateSerializer):
     """Serializer for updating tasks."""
 
+    instance: Task
+
     def validate(self, data: dict[str, Any]) -> dict[str, Any]:
         """Run validation logic based off of given instance."""
-        if not self.instance:
-            raise ValueError("Expected self.instance")
-
         # TODO select related
         section: Section = self.instance.section
-        return self._validate(data, section)
+        return self._validate(data, section.project.workspace)
 
     class Meta(TaskCreateUpdateSerializer.Meta):
         """Meta."""

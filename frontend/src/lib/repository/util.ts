@@ -17,10 +17,14 @@
  */
 import vars from "$lib/env";
 import { getCookie } from "$lib/utils/cookie";
-import createClient from "openapi-fetch";
+import createClient, {
+    createFinalURL,
+    createQuerySerializer,
+} from "openapi-fetch";
 import type { Middleware } from "openapi-fetch";
 
 import type { paths } from "$lib/types/schema";
+import { invalidate } from "$app/navigation";
 
 const baseUrl = vars.API_ENDPOINT;
 
@@ -55,7 +59,28 @@ function createClientCustom(fetch?: typeof global.fetch) {
 
 type Client = ReturnType<typeof createClient<paths>>;
 
+const querySerializer = createQuerySerializer();
+
 export let openApiClient: Client = createClientCustom();
+
+// https://stackoverflow.com/a/69852402
+type OmitNever<T> = { [K in keyof T as T[K] extends never ? never : K]: T[K] };
+// Filter out paths by those that are gettable
+type GetPath = OmitNever<{
+    [T in keyof paths]: paths[T] extends { get: unknown } ? paths[T] : never;
+}>;
+// Then, allow an API caller to invalidate a resource
+export async function invalidateGettableUrl<T extends keyof GetPath>(
+    pathname: T,
+    path?: Record<string, unknown>,
+) {
+    const url = createFinalURL<paths>(pathname, {
+        querySerializer,
+        baseUrl,
+        params: { path },
+    });
+    await invalidate(url);
+}
 
 // https://github.com/drwpow/openapi-typescript/issues/1687
 // thx

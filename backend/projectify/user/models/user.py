@@ -32,9 +32,6 @@ from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import BaseModel
 
-EMAIL_CONFIRMATION_TOKEN_SALT = "email-confirmation-token-salt"
-PASSWORD_RESET_TOKEN_SALT = "password-reset-token-salt"
-
 
 class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     """User class."""

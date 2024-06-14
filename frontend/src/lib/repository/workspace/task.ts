@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { openApiClient } from "$lib/repository/util";
+import { invalidateGettableUrl, openApiClient } from "$lib/repository/util";
 import type { components } from "$lib/types/schema";
 import type {
     Task,
@@ -41,10 +41,13 @@ export async function updateTask(
     { uuid: task_uuid }: Pick<Task, "uuid">,
     body: components["schemas"]["TaskUpdate"],
 ) {
-    return await openApiClient.PUT("/workspace/task/{task_uuid}", {
-        params: { path: { task_uuid } },
+    const params = { path: { task_uuid } };
+    const response = await openApiClient.PUT("/workspace/task/{task_uuid}", {
+        params,
         body,
     });
+    await invalidateGettableUrl("/workspace/task/{task_uuid}", params);
+    return response;
 }
 
 type TaskPosition =
