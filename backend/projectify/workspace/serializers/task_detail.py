@@ -31,6 +31,12 @@ from rest_framework import serializers
 from rest_framework.request import Request
 
 from projectify.user.models.user import User
+from projectify.workspace.models.sub_task import SubTask
+from projectify.workspace.serializers.base import (
+    ChatMessageBaseSerializer,
+    TaskBaseSerializer,
+    UuidObjectSerializer,
+)
 from projectify.workspace.services.sub_task import (
     ValidatedData,
     ValidatedDatum,
@@ -41,9 +47,7 @@ from ..models.section import Section
 from ..models.task import Task
 from ..models.team_member import TeamMember
 from ..selectors.section import section_find_for_user_and_uuid
-from . import base
 from .section import SectionUpSerializer
-from .sub_task import SubTaskCreateUpdateSerializer
 from .task import TaskWithSubTaskSerializer
 
 
@@ -55,7 +59,7 @@ class TaskDetailSerializer(TaskWithSubTaskSerializer):
     labels and sub task in the other direction.
     """
 
-    chat_messages = base.ChatMessageBaseSerializer(
+    chat_messages = ChatMessageBaseSerializer(
         many=True, read_only=True, source="chatmessage_set"
     )
     section = SectionUpSerializer(read_only=True)
@@ -80,7 +84,24 @@ class UuidDict(TypedDict):
     uuid: UUID
 
 
-class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
+class SubTaskCreateUpdateSerializer(serializers.ModelSerializer[SubTask]):
+    """A sub task serializer that accepts a missing UUID."""
+
+    uuid = serializers.UUIDField(required=False)
+
+    class Meta:
+        """Use the modified ListSerializer."""
+
+        model = SubTask
+        fields = (
+            "uuid",
+            "title",
+            "description",
+            "done",
+        )
+
+
+class TaskCreateUpdateSerializer(TaskBaseSerializer):
     """
     Serialize create or update information for a task.
 
@@ -94,14 +115,14 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
     # TODO make label optional, when unset remove labels or on create
     # do not assign label
     labels = serializers.ListField(
-        child=base.UuidObjectSerializer(),
+        child=UuidObjectSerializer(),
         write_only=True,
         # TODO required=False,
     )
     # TODO make assignee optional
-    # assignee = base.UuidObjectSerializer(required=False, write_only=True)
+    # assignee = UuidObjectSerializer(required=False, write_only=True)
     # Then interpret missing as delete assignee
-    assignee = base.UuidObjectSerializer(allow_null=True)
+    assignee = UuidObjectSerializer(allow_null=True)
 
     sub_tasks = SubTaskCreateUpdateSerializer(many=True, required=False)
 
@@ -269,7 +290,7 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         del kwargs
         raise NotImplementedError("Don't call")
 
-    class Meta(base.TaskBaseSerializer.Meta):
+    class Meta(TaskBaseSerializer.Meta):
         """Meta."""
 
         fields: Sequence[str] = (
@@ -285,7 +306,7 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
 class TaskCreateSerializer(TaskCreateUpdateSerializer):
     """Serializer for creating tasks."""
 
-    section = base.UuidObjectSerializer()
+    section = UuidObjectSerializer()
 
     def validate_section(
         self,
