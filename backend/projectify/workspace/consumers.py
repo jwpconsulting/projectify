@@ -21,22 +21,17 @@ from typing import (
     Literal,
     NotRequired,
     Optional,
-    Type,
     TypedDict,
     TypeVar,
     Union,
     cast,
 )
-from uuid import (
-    UUID,
-)
+from uuid import UUID
 
 from django.db import models
 
 from asgiref.sync import async_to_sync as _async_to_sync
-from channels.generic.websocket import (
-    JsonWebsocketConsumer,
-)
+from channels.generic.websocket import JsonWebsocketConsumer
 from rest_framework import serializers, status
 
 from projectify.user.models import User
@@ -65,14 +60,6 @@ async_to_sync = cast(Any, _async_to_sync)
 
 
 M = TypeVar("M", bound=models.Model)
-
-
-def serialize(
-    serializer: Type[serializers.ModelSerializer[M]],
-    instance: M,
-) -> object:
-    """Serialize a django model instance and then render it to JSON."""
-    return serializer(instance).data
 
 
 # The below duplications are clunky
