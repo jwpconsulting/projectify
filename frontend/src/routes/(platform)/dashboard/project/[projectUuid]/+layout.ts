@@ -68,3 +68,7 @@ export function load({ params: { projectUuid } }: LayoutLoadEvent): Data {
         });
     return { project };
 }
+
+export const prerender = false;
+// TODO Maybe we can set this to true at some point and have SSR support
+export const ssr = false;
