@@ -23,6 +23,7 @@ node_modules/
 /backend/**/__pycache__
 /backend/.direnv
 /backend/.mypy_cache/
+/backend/.coverage
 
 # Frontend
 # ========
