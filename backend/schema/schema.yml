@@ -3394,7 +3394,7 @@ components:
           readOnly: true
         workspace:
           allOf:
-          - $ref: '#/components/schemas/WorkspaceBase'
+          - $ref: '#/components/schemas/WorkspaceDetail'
           readOnly: true
       required:
       - archived

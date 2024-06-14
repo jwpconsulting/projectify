@@ -420,7 +420,7 @@ export interface components {
        */
       archived: string | null;
       sections: readonly components["schemas"]["ProjectDetailSection"][];
-      workspace: components["schemas"]["WorkspaceBase"];
+      workspace: components["schemas"]["WorkspaceDetail"];
     };
     /** @description Reduced section serializer. */
     ProjectDetailSection: {

@@ -25,7 +25,9 @@ from projectify.workspace.serializers.base import (
     ProjectBaseSerializer,
     SubTaskBaseSerializer,
     TeamMemberBaseSerializer,
-    WorkspaceBaseSerializer,
+)
+from projectify.workspace.serializers.workspace import (
+    WorkspaceDetailSerializer,
 )
 
 
@@ -102,7 +104,7 @@ class ProjectDetailSerializer(ProjectBaseSerializer):
         many=True, read_only=True, source="section_set"
     )
 
-    workspace = WorkspaceBaseSerializer(read_only=True)
+    workspace = WorkspaceDetailSerializer(read_only=True)
 
     class Meta(ProjectBaseSerializer.Meta):
         """Meta."""

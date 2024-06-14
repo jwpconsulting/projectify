@@ -89,7 +89,7 @@ class ProjectCreate(APIView):
             workspace=workspace,
         )
 
-        output_serializer = ProjectDetailSerializer(instance=project)
+        output_serializer = ProjectBaseSerializer(instance=project)
         return Response(data=output_serializer.data, status=201)
 
 

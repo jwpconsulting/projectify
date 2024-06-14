@@ -31,6 +31,11 @@ ProjectDetailQuerySet = Project.objects.prefetch_related(
     "section_set__task_set__assignee__user",
     "section_set__task_set__labels",
     "section_set__task_set__subtask_set",
+    "workspace__label_set",
+    "workspace__project_set",
+    "workspace__teammember_set",
+    "workspace__teammember_set__user",
+    "workspace__teammemberinvite_set",
 ).select_related(
     "workspace",
 )

@@ -15,19 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Test project CRUD views."""
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
-from django.urls import (
-    reverse,
-)
+from django.urls import reverse
 from django.utils.timezone import now
 
 import pytest
 from rest_framework import status
-from rest_framework.test import (
-    APIClient,
-)
+from rest_framework.test import APIClient
 
 from projectify.workspace.models import TaskLabel
 from projectify.workspace.models.project import Project
@@ -37,12 +30,8 @@ from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.selectors.project import (
     project_find_by_workspace_uuid,
 )
-from projectify.workspace.services.project import (
-    project_archive,
-)
-from pytest_types import (
-    DjangoAssertNumQueries,
-)
+from projectify.workspace.services.project import project_archive
+from pytest_types import DjangoAssertNumQueries
 
 
 # Create
@@ -57,7 +46,6 @@ class TestProjectCreate:
 
     def test_authenticated(
         self,
-        user: AbstractBaseUser,
         rest_user_client: APIClient,
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
@@ -66,7 +54,8 @@ class TestProjectCreate:
         team_member: TeamMember,
     ) -> None:
         """Assert that we can create a new project."""
-        with django_assert_num_queries(5):
+        del team_member
+        with django_assert_num_queries(4):
             response = rest_user_client.post(
                 resource_url,
                 {
@@ -98,7 +87,6 @@ class TestProjectReadUpdateDelete:
         rest_user_client: APIClient,
         resource_url: str,
         project: Project,
-        workspace: Workspace,
         team_member: TeamMember,
         task: Task,
         other_task: Task,
@@ -106,10 +94,13 @@ class TestProjectReadUpdateDelete:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can post to this view this while being logged in."""
+        del other_task
+        del task_label
         # Make sure section -> task -> team_member -> user is resolved
         task.assignee = team_member
         task.save()
-        with django_assert_num_queries(7):
+        # Gone up from 7 -> 12 since we prefetch workspace details too
+        with django_assert_num_queries(12):
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.content
         project_archive(
@@ -131,6 +122,7 @@ class TestProjectReadUpdateDelete:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating a ws board."""
+        del team_member
         with django_assert_num_queries(4):
             response = rest_user_client.put(
                 resource_url,
@@ -193,6 +185,8 @@ class TestProjectsArchivedList:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can GET this view this while being logged in."""
+        del team_member
+        del project
         with django_assert_num_queries(2):
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.content
