@@ -22,17 +22,17 @@ import { error } from "@sveltejs/kit";
 
 import { getProject } from "$lib/repository/workspace/project";
 import type {
-    TaskWithSection,
     Workspace,
     ProjectDetail,
     ProjectDetailSection,
+    TaskDetail,
 } from "$lib/types/workspace";
 
 import type { PageLoadEvent } from "./$types";
 import { openApiClient } from "$lib/repository/util";
 
 interface returnType {
-    task: TaskWithSection;
+    task: TaskDetail;
     section: ProjectDetailSection;
     project: ProjectDetail;
     workspace: Workspace;

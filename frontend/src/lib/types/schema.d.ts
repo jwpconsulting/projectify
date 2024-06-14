@@ -445,7 +445,8 @@ export interface components {
       number: number;
       labels: readonly components["schemas"]["LabelBase"][];
       assignee: components["schemas"]["TeamMemberBase"] | null;
-      sub_task_progress: number;
+      /** Format: double */
+      sub_task_progress: number | null;
       description: string | null;
     };
     /**

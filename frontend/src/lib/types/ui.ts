@@ -27,6 +27,7 @@ import type {
     ProjectDetailTask,
     WorkspaceDetail,
     WorkspaceDetailProject,
+    TaskDetail,
 } from "$lib/types/workspace";
 
 // TODO rename LabelFilterInput
@@ -78,7 +79,7 @@ export type DestructiveOverlayType =
           kind: "deleteSection";
           section: SectionWithTasks;
       }
-    | { kind: "deleteTask"; task: ProjectDetailTask }
+    | { kind: "deleteTask"; task: TaskDetail | ProjectDetailTask }
     | { kind: "archiveProject"; project: Project }
     | { kind: "deleteProject"; project: Project };
 
@@ -126,8 +127,14 @@ export type ContextMenuType =
       }
     | {
           kind: "task";
-          task: ProjectDetailTask;
+          task: TaskDetail;
           location: "task";
+      }
+    | {
+          kind: "task";
+          task: ProjectDetailTask;
+          location: "dashboardSearch";
+          project: ProjectDetail;
       }
     | {
           kind: "task";

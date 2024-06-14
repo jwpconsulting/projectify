@@ -41,12 +41,13 @@
                 ? {
                       kind: "task",
                       task,
-                      location: "task",
+                      location: "dashboardSearch",
+                      project,
                   }
                 : {
-                      kind: "task" as const,
+                      kind: "task",
                       task,
-                      location: "dashboard" as const,
+                      location: "dashboard",
                       section,
                       project,
                   };

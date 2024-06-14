@@ -35,16 +35,17 @@
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
     import { canMoveTask, moveTask } from "$lib/repository/workspace/task";
     import type { ContextMenuType } from "$lib/types/ui";
-    import { getTaskUrl, getDashboardSectionUrl } from "$lib/urls";
+    import {
+        getTaskUrl,
+        getDashboardSectionUrl,
+        getDashboardProjectUrl,
+    } from "$lib/urls";
     import { copyToClipboard } from "$lib/utils/clipboard";
     import { openApiClient } from "$lib/repository/util";
 
     export let kind: ContextMenuType & { kind: "task" };
 
     async function promptDeleteTask() {
-        if (kind.location !== "dashboard") {
-            throw new Error("Expected location to be dashboard");
-        }
         await openDestructiveOverlay({
             kind: "deleteTask" as const,
             task: kind.task,
@@ -58,7 +59,13 @@
         if (error !== undefined) {
             throw new Error("Could not delete task");
         }
-        await goto(getDashboardSectionUrl(kind.section));
+        if (kind.location === "task") {
+            await goto(getDashboardProjectUrl(kind.task.section.project));
+        } else if (kind.location === "dashboard") {
+            await goto(getDashboardSectionUrl(kind.section));
+        } else {
+            await goto(getDashboardProjectUrl(kind.project));
+        }
     }
 
     let moveToSectionOpened = false;

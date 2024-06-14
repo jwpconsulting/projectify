@@ -37,6 +37,7 @@
         WorkspaceQuota,
         ProjectDetailSection,
         ProjectDetailTask,
+        TaskDetail,
     } from "$lib/types/workspace";
     import Dashboard from "$routes/(platform)/dashboard/project/[projectUuid]/+page.svelte";
     import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
@@ -83,7 +84,7 @@
         assignee: null,
         uuid: "",
         due_date: null,
-        sub_tasks: [],
+        sub_task_progress: null,
         number: 1,
         labels: [],
     };
@@ -132,7 +133,7 @@
               workspace: Workspace;
               project: ProjectDetail;
               section: ProjectDetailSection;
-              task: ProjectDetailTask;
+              task: TaskDetail;
               title: string;
           }
         | {
@@ -140,7 +141,7 @@
               workspace: Workspace;
               project: ProjectDetail;
               section: ProjectDetailSection;
-              task: ProjectDetailTask;
+              task: TaskDetail;
               label: Label;
               assignee: TeamMember;
           };
@@ -173,7 +174,13 @@
                       {
                           ...sectionFallback,
                           title: state.sectionTitle,
-                          tasks: [{ ...taskFallback, title: state.title }],
+                          tasks: [
+                              {
+                                  ...taskFallback,
+                                  sub_task_progress: null,
+                                  title: state.title,
+                              },
+                          ],
                       },
                   ],
               }
@@ -186,6 +193,7 @@
                           tasks: [
                               {
                                   ...state.task,
+                                  sub_task_progress: null,
                                   labels: [
                                       { ...labelFallback, name: state.title },
                                   ],
@@ -203,6 +211,7 @@
                           tasks: [
                               {
                                   ...state.task,
+                                  sub_task_progress: null,
                                   labels: [state.label],
                                   assignee: state.assignee,
                               },

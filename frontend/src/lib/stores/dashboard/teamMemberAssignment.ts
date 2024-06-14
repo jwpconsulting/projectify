@@ -22,10 +22,14 @@ import type {
     TeamMemberAssignmentInput,
     TeamMemberAssignmentState,
 } from "$lib/types/ui";
-import type { ProjectDetailTask, TeamMember } from "$lib/types/workspace";
+import type {
+    ProjectDetailTask,
+    TaskDetail,
+    TeamMember,
+} from "$lib/types/workspace";
 
 export function createTeamMemberAssignment(
-    task?: ProjectDetailTask,
+    task?: TaskDetail | ProjectDetailTask,
 ): TeamMemberAssignment {
     const maybeSelected: TeamMemberAssignmentState = task?.assignee
         ? {
