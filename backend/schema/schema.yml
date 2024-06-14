@@ -3465,11 +3465,10 @@ components:
           - $ref: '#/components/schemas/TeamMemberBase'
           readOnly: true
           nullable: true
-        sub_tasks:
-          type: array
-          items:
-            $ref: '#/components/schemas/SubTaskBase'
-          readOnly: true
+        sub_task_progress:
+          type: number
+          format: double
+          nullable: true
         description:
           type: string
           nullable: true
@@ -3479,7 +3478,7 @@ components:
       - due_date
       - labels
       - number
-      - sub_tasks
+      - sub_task_progress
       - title
       - uuid
     ProjectUp:

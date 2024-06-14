@@ -317,10 +317,11 @@ def task(
 
 @pytest.fixture
 def other_task(
-    section: models.Section,
-    team_member: models.TeamMember,
+    task: models.Task, section: models.Section, team_member: models.TeamMember
 ) -> models.Task:
     """Return another task belonging to the same section."""
+    # Make sure that this is created AFTER `task`
+    del task
     return task_create(
         who=team_member.user,
         section=section,

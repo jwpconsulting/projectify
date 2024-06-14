@@ -23,7 +23,6 @@ from projectify.workspace.models.task import Task
 from projectify.workspace.serializers.base import (
     LabelBaseSerializer,
     ProjectBaseSerializer,
-    SubTaskBaseSerializer,
     TeamMemberBaseSerializer,
 )
 from projectify.workspace.serializers.workspace import (
@@ -39,9 +38,7 @@ class ProjectDetailTaskSerializer(serializers.ModelSerializer[Task]):
     # TODO Justus 2024-04-09
     # This can be simplified as well, might only have to return completion
     # percentage
-    sub_tasks = SubTaskBaseSerializer(
-        many=True, read_only=True, source="subtask_set"
-    )
+    sub_task_progress = serializers.FloatField(allow_null=True)
 
     class Meta:
         """Meta."""
@@ -55,7 +52,7 @@ class ProjectDetailTaskSerializer(serializers.ModelSerializer[Task]):
             "number",
             "labels",
             "assignee",
-            "sub_tasks",
+            "sub_task_progress",
             # TODO
             # We want to optimize description away in the future but for now,
             # since we require a complete retransmission of a task in order for
