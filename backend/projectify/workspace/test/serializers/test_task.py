@@ -439,6 +439,19 @@ class TestTaskUpdateSerializer:
         }
         assert serializer.validated_data == expected
 
+    def test_update_sub_tasks_left_out(
+        self,
+        task: Task,
+        update_task_payload: Any,
+        sub_task: SubTask,
+        validated_data_update: Any,
+    ) -> None:
+        """Test sub tasks are preserved when not passed."""
+        del sub_task
+        serializer = TaskUpdateSerializer(task, data=update_task_payload)
+        assert serializer.is_valid()
+        assert serializer.validated_data == validated_data_update
+
     # Serializing data
     def test_update_no_sub_tasks(
         self, task: Task, validated_data_update: Any, update_task_payload: Any
