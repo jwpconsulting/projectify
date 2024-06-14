@@ -22,8 +22,12 @@ import { getDashboardWorkspaceUrl } from "$lib/urls";
 import { startUrl } from "$lib/urls/onboarding";
 
 import { selectedWorkspaceUuid } from "$lib/stores/dashboard/ui";
+import { browser } from "$app/environment";
 
 export async function load(): Promise<void> {
+    if (!browser) {
+        return;
+    }
     const maybeWorkspaceUuid: string | null = await new Promise(
         selectedWorkspaceUuid.subscribe,
     );
@@ -42,7 +46,3 @@ export async function load(): Promise<void> {
         redirect(302, getDashboardWorkspaceUrl(workspace));
     }
 }
-
-export const prerender = false;
-// TODO Maybe we can set this to true at some point and have SSR support
-export const ssr = false;
