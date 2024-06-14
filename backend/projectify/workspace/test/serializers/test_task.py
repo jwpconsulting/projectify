@@ -377,9 +377,9 @@ class TestTaskUpdateSerializer:
             context=context,
         )
         assert not serializer.is_valid(), serializer.validated_data
-        assert "labels" in serializer.errors, serializer.errors
-        (error,) = serializer.errors["labels"]
-        assert "label could not be found" in error
+        assert serializer.errors == {
+            "labels": [{}, {"uuid": "This label could not be found"}]
+        }
 
     def test_update_wrong_assignee(
         self, task: Task, unrelated_team_member: TeamMember

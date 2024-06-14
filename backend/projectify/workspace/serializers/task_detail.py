@@ -32,21 +32,22 @@ from rest_framework.request import Request
 
 from projectify.user.models.user import User
 from projectify.workspace.models.sub_task import SubTask
-from projectify.workspace.serializers.base import (
-    ChatMessageBaseSerializer,
-    TaskBaseSerializer,
-    UuidObjectSerializer,
-)
-from projectify.workspace.services.sub_task import (
-    ValidatedData,
-    ValidatedDatum,
-    ValidatedDatumWithUuid,
-)
 
 from ..models.section import Section
 from ..models.task import Task
 from ..models.team_member import TeamMember
+from ..models.workspace import Workspace
 from ..selectors.section import section_find_for_user_and_uuid
+from ..serializers.base import (
+    ChatMessageBaseSerializer,
+    TaskBaseSerializer,
+    UuidObjectSerializer,
+)
+from ..services.sub_task import (
+    ValidatedData,
+    ValidatedDatum,
+    ValidatedDatumWithUuid,
+)
 from .section import SectionUpSerializer
 from .task import TaskWithSubTaskSerializer
 
@@ -224,11 +225,11 @@ class TaskCreateUpdateSerializer(TaskBaseSerializer):
         }
 
     def _validate(
-        self, data: dict[str, Any], section: Section
+        self,
+        data: dict[str, Any],
+        workspace: Workspace,
     ) -> dict[str, Any]:
         """Validate user access to ws board sect, assignee and labels."""
-        workspace = section.project.workspace
-
         # Then we filter the list of labels for labels that are contained
         # in this workspace
         label_uuids: list[UUID] = [
@@ -236,41 +237,34 @@ class TaskCreateUpdateSerializer(TaskBaseSerializer):
         ]
         # Restrict to this workspace's labels, if there are too many
         # labels throw a ValidationError
-        labels = list(workspace.label_set.filter(uuid__in=label_uuids))
-        label_mapping = {label.uuid: label for label in labels}
-        label_not_contained = any(
-            label_uuid not in label_mapping for label_uuid in label_uuids
-        )
-        if label_not_contained:
-            raise serializers.ValidationError(
-                {
-                    "labels": _(
-                        "At least one specified label could not be found "
-                        "in the task's workspace"
-                    )
-                }
-            )
+        labels = workspace.label_set.filter(uuid__in=label_uuids)
+        found_label_uuids = list(labels.values_list("uuid", flat=True))
+        is_missing = [u not in found_label_uuids for u in label_uuids]
+        if any(is_missing):
+            errors = [
+                {"uuid": _("This label could not be found")} if missing else {}
+                for missing in is_missing
+            ]
+            raise serializers.ValidationError({"labels": errors})
 
         # Then we check if the assignee is part of this workspace
         assignee_uuid: Optional[UuidDict] = data.pop("assignee")
-        try:
-            assignee = (
-                assignee_uuid
-                and workspace.teammember_set.filter(
+        if assignee_uuid:
+            try:
+                assignee = workspace.teammember_set.filter(
                     uuid=assignee_uuid["uuid"]
                 ).get()
-            )
-        except TeamMember.DoesNotExist:
-            raise serializers.ValidationError(
-                {
-                    "assignee": _("The assignee could not be found"),
-                }
-            )
+            except TeamMember.DoesNotExist:
+                raise serializers.ValidationError(
+                    {"assignee": _("The assignee could not be found")}
+                )
+        else:
+            assignee = None
 
         return {
             **data,
             "workspace": workspace,
-            "labels": labels,
+            "labels": list(labels),
             "assignee": assignee,
         }
 
@@ -341,8 +335,8 @@ class TaskCreateSerializer(TaskCreateUpdateSerializer):
         comes from the task instance directly, since the task has already
         been created.
         """
-        section = data["section"]
-        return self._validate(data, section)
+        section: Section = data["section"]
+        return self._validate(data, section.project.workspace)
 
     class Meta(TaskCreateUpdateSerializer.Meta):
         """Add section field."""
@@ -366,7 +360,7 @@ class TaskUpdateSerializer(TaskCreateUpdateSerializer):
         """Run validation logic based off of given instance."""
         # TODO select related
         section: Section = self.instance.section
-        return self._validate(data, section)
+        return self._validate(data, section.project.workspace)
 
     class Meta(TaskCreateUpdateSerializer.Meta):
         """Meta."""
