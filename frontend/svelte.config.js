@@ -30,10 +30,7 @@ const config = {
             $routes: "src/routes",
         },
         adapter: adapter({
-            pages: "build",
-            assets: "build",
             fallback: "fallback.html",
-            precompress: true,
             strict: true,
         }),
         csp: {
