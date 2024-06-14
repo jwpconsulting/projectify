@@ -352,10 +352,6 @@ class TaskUpdateSerializer(TaskCreateUpdateSerializer):
 
     instance: Task
 
-    def __init__(self, instance: Task, *args: Any, **kwargs: Any) -> None:
-        """Only initialize with task."""
-        super().__init__(instance, *args, **kwargs)
-
     def validate(self, data: dict[str, Any]) -> dict[str, Any]:
         """Run validation logic based off of given instance."""
         # TODO select related
