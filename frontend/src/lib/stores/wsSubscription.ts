@@ -307,6 +307,9 @@ export function createWsStore<T>(
     };
 
     const stop = () => {
+        if (state.kind === "start") {
+            return;
+        }
         console.debug("Stopping");
         resetAndUnsubscribe().catch((error: unknown) =>
             console.error("Error when resetting", error),
