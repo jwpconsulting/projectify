@@ -54,9 +54,6 @@ logger = logging.getLogger(__name__)
 # Django's PermissionDenied exception.
 DRFError = drf_exceptions.APIException
 DjangoError = Union[dj_http.Http404, drf_exceptions.PermissionDenied]
-# We create a union for the above,
-DrfHandledException = Union[DRFError, DjangoError]
-# and then we add Django's ValidationError to it as well.
 # Theoretically it could be another error as well, so we add Exception to it as
 # well and call it HandledException:
 HandledException = Union[
