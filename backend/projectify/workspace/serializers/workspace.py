@@ -17,6 +17,8 @@
 """Workspace serializers."""
 from rest_framework import serializers
 
+from projectify.workspace.models.project import Project
+
 from . import base
 
 
@@ -52,6 +54,21 @@ class WorkspaceQuotaSerializer(serializers.Serializer):
     team_members_and_invites = SingleQuotaSerializer()
 
 
+class WorkspaceProjectSerializer(serializers.ModelSerializer[Project]):
+    """Serialize a single project."""
+
+    class Meta:
+        """Meta."""
+
+        model = Project
+        fields = (
+            "title",
+            "description",
+            "uuid",
+            "archived",
+        )
+
+
 class WorkspaceDetailSerializer(base.WorkspaceBaseSerializer):
     """
     Workspace detail serializer.
@@ -66,7 +83,7 @@ class WorkspaceDetailSerializer(base.WorkspaceBaseSerializer):
     team_member_invites = TeamMemberInviteSerializer(
         read_only=True, many=True, source="teammemberinvite_set"
     )
-    projects = base.ProjectBaseSerializer(
+    projects = WorkspaceProjectSerializer(
         read_only=True, many=True, source="project_set"
     )
     labels = base.LabelBaseSerializer(

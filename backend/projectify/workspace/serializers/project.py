@@ -81,12 +81,9 @@ class ProjectDetailSectionSerializer(serializers.ModelSerializer[Section]):
             "uuid",
             "_order",
             "title",
-            "tasks",
             "description",
+            "tasks",
         )
-        extra_kwargs = {
-            "description": {"required": True},
-        }
 
 
 class ProjectDetailSerializer(ProjectBaseSerializer):
@@ -108,7 +105,10 @@ class ProjectDetailSerializer(ProjectBaseSerializer):
 
         model = Project
         fields = (
-            *ProjectBaseSerializer.Meta.fields,
+            "title",
+            "description",
+            "uuid",
+            "archived",
             "sections",
             "workspace",
         )

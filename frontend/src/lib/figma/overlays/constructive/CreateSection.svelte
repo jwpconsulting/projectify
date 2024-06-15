@@ -26,14 +26,14 @@
         resolveConstructiveOverlay,
     } from "$lib/stores/globalUi";
     import type { FormViewState } from "$lib/types/ui";
-    import type { Project } from "$lib/types/workspace";
+    import type { ProjectDetail } from "$lib/types/workspace";
     import { openApiClient } from "$lib/repository/util";
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import { getDashboardProjectUrl } from "$lib/urls";
     import { goto } from "$lib/navigation";
     import { getLogInWithNextUrl } from "$lib/urls/user";
 
-    export let project: Project;
+    export let project: ProjectDetail;
 
     let state: FormViewState = { kind: "start" };
     let title: string;

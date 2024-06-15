@@ -116,12 +116,9 @@ class TestProjectReadUpdateDelete:
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.data
         assert response.data == {
-            "created": ANY,
-            "modified": ANY,
             "title": project.title,
             "description": project.description,
             "archived": None,
-            "due_date": ANY,
             "uuid": str(project.uuid),
             "sections": [
                 {

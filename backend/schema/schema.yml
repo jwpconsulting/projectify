@@ -3359,25 +3359,12 @@ components:
         Serializes in both directions, workspace and sections, including their
         tasks.
       properties:
-        created:
-          type: string
-          format: date-time
-          readOnly: true
-        modified:
-          type: string
-          format: date-time
-          readOnly: true
         title:
           type: string
           maxLength: 255
         description:
           type: string
           nullable: true
-        due_date:
-          type: string
-          format: date-time
-          nullable: true
-          description: Due date for this workspace board
         uuid:
           type: string
           format: uuid
@@ -3398,10 +3385,7 @@ components:
           readOnly: true
       required:
       - archived
-      - created
       - description
-      - due_date
-      - modified
       - sections
       - title
       - uuid
@@ -3421,17 +3405,16 @@ components:
         title:
           type: string
           maxLength: 255
+        description:
+          type: string
+          nullable: true
         tasks:
           type: array
           items:
             $ref: '#/components/schemas/ProjectDetailTask'
           readOnly: true
-        description:
-          type: string
-          nullable: true
       required:
       - _order
-      - description
       - tasks
       - title
       - uuid
@@ -4259,7 +4242,7 @@ components:
         projects:
           type: array
           items:
-            $ref: '#/components/schemas/ProjectBase'
+            $ref: '#/components/schemas/WorkspaceProject'
           readOnly: true
         labels:
           type: array
@@ -4287,6 +4270,28 @@ components:
         file:
           type: string
           format: uri
+    WorkspaceProject:
+      type: object
+      description: Serialize a single project.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        archived:
+          type: string
+          format: date-time
+          nullable: true
+          description: Archival timestamp of this workspace board.
+      required:
+      - title
+      - uuid
     WorkspaceQuota:
       type: object
       description: Serializer quota.

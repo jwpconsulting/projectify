@@ -401,17 +401,8 @@ export interface components {
      * tasks.
      */
     ProjectDetail: {
-      /** Format: date-time */
-      created: string;
-      /** Format: date-time */
-      modified: string;
       title: string;
       description: string | null;
-      /**
-       * Format: date-time
-       * @description Due date for this workspace board
-       */
-      due_date: string | null;
       /** Format: uuid */
       uuid: string;
       /**
@@ -429,8 +420,8 @@ export interface components {
       /** order */
       _order: number;
       title: string;
+      description?: string | null;
       tasks: readonly components["schemas"]["ProjectDetailTask"][];
-      description: string | null;
     };
     /** @description Serialize all task details. */
     ProjectDetailTask: {
@@ -794,7 +785,7 @@ export interface components {
       picture: string | null;
       team_members: readonly components["schemas"]["TeamMemberBase"][];
       team_member_invites: readonly components["schemas"]["TeamMemberInvite"][];
-      projects: readonly components["schemas"]["ProjectBase"][];
+      projects: readonly components["schemas"]["WorkspaceProject"][];
       labels: readonly components["schemas"]["LabelBase"][];
       quota: components["schemas"]["WorkspaceQuota"];
     };
@@ -802,6 +793,18 @@ export interface components {
     WorkspacePictureUpload: {
       /** Format: uri */
       file?: string;
+    };
+    /** @description Serialize a single project. */
+    WorkspaceProject: {
+      title: string;
+      description?: string | null;
+      /** Format: uuid */
+      uuid: string;
+      /**
+       * Format: date-time
+       * @description Archival timestamp of this workspace board.
+       */
+      archived?: string | null;
     };
     /** @description Serializer quota. */
     WorkspaceQuota: {

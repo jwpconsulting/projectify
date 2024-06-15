@@ -26,10 +26,10 @@
         resolveConstructiveOverlay,
     } from "$lib/stores/globalUi";
     import type { FormViewState } from "$lib/types/ui";
-    import type { Project } from "$lib/types/workspace";
+    import type { WorkspaceDetailProject } from "$lib/types/workspace";
     import { openApiClient } from "$lib/repository/util";
 
-    export let project: Project;
+    export let project: WorkspaceDetailProject;
 
     let state: FormViewState = { kind: "start" };
 

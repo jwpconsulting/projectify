@@ -63,17 +63,13 @@
     const projectFallback: ProjectDetail = {
         uuid: "does-not-exist",
         title: $_("onboarding.new-project.default-name"),
-        description: null,
-        modified: "",
-        created: "",
+        description: "",
         sections: [],
-        due_date: null,
         archived: null,
         workspace: workspaceFallback,
     };
     const sectionFallback: ProjectDetailSection = {
         title: "",
-        description: null,
         uuid: "",
         _order: 0,
         tasks: [],

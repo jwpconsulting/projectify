@@ -19,15 +19,14 @@ import type { TeamMemberAssignment, LabelAssignment } from "$lib/types/stores";
 import type {
     Label,
     Workspace,
-    Project,
     ProjectDetail,
-    Section,
     SectionWithTasks,
     TeamMember,
     ProjectDetailTask,
     WorkspaceDetail,
     WorkspaceDetailProject,
     TaskDetail,
+    ProjectDetailSection,
 } from "$lib/types/workspace";
 
 // TODO rename LabelFilterInput
@@ -80,8 +79,8 @@ export type DestructiveOverlayType =
           section: SectionWithTasks;
       }
     | { kind: "deleteTask"; task: TaskDetail | ProjectDetailTask }
-    | { kind: "archiveProject"; project: Project }
-    | { kind: "deleteProject"; project: Project };
+    | { kind: "archiveProject"; project: WorkspaceDetailProject }
+    | { kind: "deleteProject"; project: WorkspaceDetailProject };
 
 // These are the times when a header element is shown and a hamburger menu is
 // needed
@@ -157,14 +156,14 @@ export type ContextMenuType =
 export type ContextMenuState = Overlay<ContextMenuType, HTMLElement>;
 
 export type ConstructiveOverlayType =
-    | { kind: "updateProject"; project: Project }
+    | { kind: "updateProject"; project: WorkspaceDetailProject }
     | { kind: "createProject"; workspace: WorkspaceDetail }
     | { kind: "createSection"; project: ProjectDetail }
     | {
           kind: "updateSection";
-          section: Pick<Section, "uuid" | "title" | "description">;
+          section: ProjectDetailSection;
       }
-    | { kind: "recoverProject"; project: Project };
+    | { kind: "recoverProject"; project: WorkspaceDetailProject };
 export type ConstructiveOverlayState = Overlay<ConstructiveOverlayType>;
 
 // TODO These can probably stay in their individual svelte pages

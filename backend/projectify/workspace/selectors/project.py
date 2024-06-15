@@ -20,12 +20,11 @@ from uuid import UUID
 
 from django.db.models import (
     Count,
-    FloatField,
     Prefetch,
     Q,
     QuerySet,
 )
-from django.db.models.functions import Cast, NullIf
+from django.db.models.functions import NullIf
 
 from projectify.user.models import User
 from projectify.workspace.models.task import Task
@@ -38,10 +37,11 @@ ProjectDetailQuerySet = Project.objects.prefetch_related(
         "section_set__task_set",
         queryset=Task.objects.annotate(
             sub_task_progress=Count(
-                    "subtask",
-                    filter=Q(subtask__done=True),
-                ) * 1.0
-                / NullIf(Count("subtask"), 0),
+                "subtask",
+                filter=Q(subtask__done=True),
+            )
+            * 1.0
+            / NullIf(Count("subtask"), 0),
         ).order_by("-_order"),
     ),
     "section_set__task_set__assignee",
