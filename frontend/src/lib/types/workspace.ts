@@ -30,7 +30,7 @@ export type Task = components["schemas"]["TaskWithSubTask"];
 export type TaskDetail = components["schemas"]["TaskDetail"];
 export type TaskDetailAssignee = TaskDetail["assignee"] & object;
 
-export type Section = TaskDetail["section"];
+export type TaskDetailSection = TaskDetail["section"];
 
 export type SectionDetail = components["schemas"]["SectionDetail"];
 
@@ -41,11 +41,9 @@ export type ProjectDetailSection = ProjectDetail["sections"][number];
 export type ProjectDetailTask = ProjectDetailSection["tasks"][number];
 export type ProjectDetailAssignee = ProjectDetailTask["assignee"] & object;
 
-export type SectionWithTasks = ProjectDetail["sections"][number];
-
 // Only used for search results
-export type TaskWithSection = SectionWithTasks["tasks"][number] & {
-    section: Pick<Section, "uuid" | "title">;
+export type TaskWithSection = ProjectDetailSection["tasks"][number] & {
+    section: Pick<TaskDetailSection, "uuid" | "title">;
 };
 
 export type WorkspaceDetail = components["schemas"]["WorkspaceDetail"];

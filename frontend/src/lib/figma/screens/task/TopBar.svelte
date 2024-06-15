@@ -19,10 +19,13 @@
     import { _ } from "svelte-i18n";
 
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
-    import type { Section } from "$lib/types/workspace";
+    import type {
+        SectionDetail,
+        TaskDetailSection,
+    } from "$lib/types/workspace";
     import { getDashboardSectionUrl } from "$lib/urls";
 
-    export let section: Section;
+    export let section: TaskDetailSection | SectionDetail;
 </script>
 
 <div

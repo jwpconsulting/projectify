@@ -22,7 +22,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { currentProject } from "$lib/stores/dashboard/project";
-    import type { SectionWithTasks } from "$lib/types/workspace";
+    import type { ProjectDetailSection } from "$lib/types/workspace";
     import { getProjectSearchUrl } from "$lib/urls/dashboard";
 
     $: project = $currentProject.value;
@@ -31,7 +31,7 @@
     $: canSearch = searchInput !== undefined;
     $: projectHasTasks =
         project &&
-        project.sections.some((s: SectionWithTasks) => s.tasks.length > 0);
+        project.sections.some((s: ProjectDetailSection) => s.tasks.length > 0);
 </script>
 
 <div class="flex h-full flex-col items-center gap-4 bg-background py-4">

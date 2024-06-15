@@ -28,12 +28,12 @@
     import type { ContextMenuType } from "$lib/types/ui";
     import type {
         ProjectDetail,
-        SectionWithTasks,
+        ProjectDetailSection,
     } from "$lib/types/workspace";
     import { getNewTaskUrl } from "$lib/urls";
 
     export let project: ProjectDetail;
-    export let section: SectionWithTasks;
+    export let section: ProjectDetailSection;
     export let open: boolean;
 
     const { uuid } = section;

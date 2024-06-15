@@ -24,12 +24,12 @@
     import { sectionClosed } from "$lib/stores/dashboard/ui";
     import type {
         ProjectDetail,
-        SectionWithTasks,
+        ProjectDetailSection,
     } from "$lib/types/workspace";
     import { getNewTaskUrl } from "$lib/urls";
 
     export let project: ProjectDetail;
-    export let section: SectionWithTasks;
+    export let section: ProjectDetailSection;
 
     const { uuid } = section;
     $: open = !$sectionClosed.has(uuid);

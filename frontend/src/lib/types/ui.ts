@@ -20,7 +20,6 @@ import type {
     Label,
     UserWorkspace,
     ProjectDetail,
-    SectionWithTasks,
     WorkspaceDetailTeamMember,
     ProjectDetailTask,
     WorkspaceDetail,
@@ -77,7 +76,7 @@ export type DestructiveOverlayType =
     | { kind: "deleteTeamMember"; teamMember: WorkspaceDetailTeamMember }
     | {
           kind: "deleteSection";
-          section: SectionWithTasks;
+          section: ProjectDetailSection;
       }
     | { kind: "deleteTask"; task: TaskDetail | ProjectDetailTask }
     | { kind: "archiveProject"; project: WorkspaceDetailProject }
@@ -123,7 +122,7 @@ export type ContextMenuType =
     | {
           kind: "section";
           project: ProjectDetail;
-          section: SectionWithTasks;
+          section: ProjectDetailSection;
       }
     | {
           kind: "task";
@@ -141,7 +140,7 @@ export type ContextMenuType =
           task: ProjectDetailTask;
           location: "dashboard";
           // TODO remove this property?
-          section: SectionWithTasks;
+          section: ProjectDetailSection;
           project: ProjectDetail;
       }
     | {

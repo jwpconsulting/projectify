@@ -26,14 +26,14 @@ import {
 } from "$lib-stories/storybook";
 import type { Customer } from "$lib/types/corporate";
 import type { User } from "$lib/types/user";
-import type { Workspace } from "$lib/types/workspace";
+import type { WorkspaceDetail } from "$lib/types/workspace";
 import Billing from "$routes/(platform)/dashboard/workspace/[workspaceUuid]/settings/billing/+page.svelte";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 // XXX duplicated because we can't import ./$types
 interface PageData {
     user: User;
-    workspace: Workspace;
+    workspace: WorkspaceDetail;
     customer: Customer;
 }
 

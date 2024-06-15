@@ -18,7 +18,7 @@
 import type { SettingKind } from "$lib/types/dashboard";
 import type {
     ProjectDetail,
-    Section,
+    TaskDetailSection,
     Task,
     WorkspaceDetail,
 } from "$lib/types/workspace";
@@ -40,7 +40,9 @@ export function getDashboardProjectUrl({ uuid }: Pick<ProjectDetail, "uuid">) {
 }
 
 // TODO put me into dashboard urls
-export function getDashboardSectionUrl({ uuid }: Pick<Section, "uuid">) {
+export function getDashboardSectionUrl({
+    uuid,
+}: Pick<TaskDetailSection, "uuid">) {
     return `/dashboard/section/${uuid}`;
 }
 
@@ -70,7 +72,7 @@ export function getProfileUrl() {
 }
 
 // TODO put me into dashboard urls
-export function getNewTaskUrl({ uuid }: Pick<Section, "uuid">) {
+export function getNewTaskUrl({ uuid }: Pick<TaskDetailSection, "uuid">) {
     return `/dashboard/section/${uuid}/create-task`;
 }
 

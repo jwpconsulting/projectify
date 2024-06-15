@@ -3479,48 +3479,6 @@ components:
       - role
       - user
       - uuid
-    ProjectUp:
-      type: object
-      description: |-
-        Serialize project and workspace containing it.
-
-        Used when serializing up from a task or ws board section.
-      properties:
-        created:
-          type: string
-          format: date-time
-          readOnly: true
-        modified:
-          type: string
-          format: date-time
-          readOnly: true
-        title:
-          type: string
-          maxLength: 255
-        description:
-          type: string
-          nullable: true
-        due_date:
-          type: string
-          format: date-time
-          nullable: true
-          description: Due date for this workspace board
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        workspace:
-          allOf:
-          - $ref: '#/components/schemas/WorkspaceBase'
-          readOnly: true
-      required:
-      - created
-      - description
-      - due_date
-      - modified
-      - title
-      - uuid
-      - workspace
     ProjectUpdate:
       type: object
       description: Serializer for PUT.
@@ -3609,7 +3567,7 @@ components:
           readOnly: true
         project:
           allOf:
-          - $ref: '#/components/schemas/ProjectUp'
+          - $ref: '#/components/schemas/SectionDetailProject'
           readOnly: true
         tasks:
           type: array
@@ -3625,6 +3583,39 @@ components:
       - tasks
       - title
       - uuid
+    SectionDetailProject:
+      type: object
+      description: Serialize a project's section.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        workspace:
+          allOf:
+          - $ref: '#/components/schemas/SectionDetailWorkspace'
+          readOnly: true
+      required:
+      - title
+      - uuid
+      - workspace
+    SectionDetailWorkspace:
+      type: object
+      description: Serialize a section's workspace.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - title
+      - uuid
     SectionMove:
       type: object
       description: Accept the desired position within project.
@@ -3633,44 +3624,6 @@ components:
           type: integer
       required:
       - order
-    SectionUp:
-      type: object
-      description: Serialize section up the hierarchy.
-      properties:
-        created:
-          type: string
-          format: date-time
-          readOnly: true
-        modified:
-          type: string
-          format: date-time
-          readOnly: true
-        title:
-          type: string
-          maxLength: 255
-        description:
-          type: string
-          nullable: true
-        _order:
-          type: integer
-          readOnly: true
-          title: ' order'
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        project:
-          allOf:
-          - $ref: '#/components/schemas/ProjectUp'
-          readOnly: true
-      required:
-      - _order
-      - created
-      - description
-      - modified
-      - project
-      - title
-      - uuid
     SectionUpdate:
       type: object
       description: Input serializer for PUT.
@@ -3881,7 +3834,7 @@ components:
           readOnly: true
         section:
           allOf:
-          - $ref: '#/components/schemas/SectionUp'
+          - $ref: '#/components/schemas/TaskDetailSection'
           readOnly: true
       required:
       - _order
@@ -3895,6 +3848,77 @@ components:
       - number
       - section
       - sub_tasks
+      - title
+      - uuid
+    TaskDetailProject:
+      type: object
+      description: Serialize a task's project.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        workspace:
+          allOf:
+          - $ref: '#/components/schemas/TaskDetailWorkspace'
+          readOnly: true
+        description:
+          type: string
+          nullable: true
+        due_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Due date for this workspace board
+      required:
+      - description
+      - due_date
+      - title
+      - uuid
+      - workspace
+    TaskDetailSection:
+      type: object
+      description: Serialize a task's section.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        project:
+          allOf:
+          - $ref: '#/components/schemas/TaskDetailProject'
+          readOnly: true
+        description:
+          type: string
+          nullable: true
+        _order:
+          type: integer
+          readOnly: true
+          title: ' order'
+      required:
+      - _order
+      - description
+      - project
+      - title
+      - uuid
+    TaskDetailWorkspace:
+      type: object
+      description: Serializes a task's workspace.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
       - title
       - uuid
     TaskMoveAfterTask:

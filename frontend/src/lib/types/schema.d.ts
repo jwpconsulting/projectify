@@ -444,27 +444,6 @@ export interface components {
       uuid: string;
       role: components["schemas"]["RoleEnum"];
     };
-    /**
-     * @description Serialize project and workspace containing it.
-     *
-     * Used when serializing up from a task or ws board section.
-     */
-    ProjectUp: {
-      /** Format: date-time */
-      created: string;
-      /** Format: date-time */
-      modified: string;
-      title: string;
-      description: string | null;
-      /**
-       * Format: date-time
-       * @description Due date for this workspace board
-       */
-      due_date: string | null;
-      /** Format: uuid */
-      uuid: string;
-      workspace: components["schemas"]["WorkspaceBase"];
-    };
     /** @description Serializer for PUT. */
     ProjectUpdate: {
       title: string;
@@ -512,26 +491,25 @@ export interface components {
       _order: number;
       /** Format: uuid */
       uuid: string;
-      project: components["schemas"]["ProjectUp"];
+      project: components["schemas"]["SectionDetailProject"];
       tasks: readonly components["schemas"]["TaskWithSubTask"][];
+    };
+    /** @description Serialize a project's section. */
+    SectionDetailProject: {
+      title: string;
+      /** Format: uuid */
+      uuid: string;
+      workspace: components["schemas"]["SectionDetailWorkspace"];
+    };
+    /** @description Serialize a section's workspace. */
+    SectionDetailWorkspace: {
+      title: string;
+      /** Format: uuid */
+      uuid: string;
     };
     /** @description Accept the desired position within project. */
     SectionMove: {
       order: number;
-    };
-    /** @description Serialize section up the hierarchy. */
-    SectionUp: {
-      /** Format: date-time */
-      created: string;
-      /** Format: date-time */
-      modified: string;
-      title: string;
-      description: string | null;
-      /** order */
-      _order: number;
-      /** Format: uuid */
-      uuid: string;
-      project: components["schemas"]["ProjectUp"];
     };
     /** @description Input serializer for PUT. */
     SectionUpdate: {
@@ -625,7 +603,36 @@ export interface components {
       labels: readonly components["schemas"]["LabelBase"][];
       assignee: components["schemas"]["Assignee"] | null;
       chat_messages: readonly components["schemas"]["ChatMessageBase"][];
-      section: components["schemas"]["SectionUp"];
+      section: components["schemas"]["TaskDetailSection"];
+    };
+    /** @description Serialize a task's project. */
+    TaskDetailProject: {
+      title: string;
+      /** Format: uuid */
+      uuid: string;
+      workspace: components["schemas"]["TaskDetailWorkspace"];
+      description: string | null;
+      /**
+       * Format: date-time
+       * @description Due date for this workspace board
+       */
+      due_date: string | null;
+    };
+    /** @description Serialize a task's section. */
+    TaskDetailSection: {
+      title: string;
+      /** Format: uuid */
+      uuid: string;
+      project: components["schemas"]["TaskDetailProject"];
+      description: string | null;
+      /** order */
+      _order: number;
+    };
+    /** @description Serializes a task's workspace. */
+    TaskDetailWorkspace: {
+      title: string;
+      /** Format: uuid */
+      uuid: string;
     };
     /** @description Accept a task uuid after which this task should be moved. */
     TaskMoveAfterTask: {

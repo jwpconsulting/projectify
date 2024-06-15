@@ -22,17 +22,17 @@ import {
     mobileParameters,
     makeStorybookSelect,
 } from "$lib-stories/storybook";
-import type { Workspace } from "$lib/types/workspace";
+import type { UserWorkspace } from "$lib/types/workspace";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<WorkspaceSelector> = {
     component: WorkspaceSelector,
     argTypes: {
-        workspace: makeStorybookSelect<Workspace | undefined>({
+        workspace: makeStorybookSelect<UserWorkspace | undefined>({
             "Workspace": workspace,
             "No workspace": undefined,
         }),
-        workspaces: makeStorybookSelect<Workspace[] | undefined>({
+        workspaces: makeStorybookSelect<UserWorkspace[] | undefined>({
             "Workspaces": [workspace],
             "No workspaces": undefined,
         }),

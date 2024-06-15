@@ -19,8 +19,8 @@ import { invalidateGettableUrl, openApiClient } from "$lib/repository/util";
 import type { components } from "$lib/types/schema";
 import type {
     Task,
-    Section,
-    SectionWithTasks,
+    TaskDetailSection,
+    ProjectDetailSection,
     ProjectDetailTask,
 } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
@@ -57,7 +57,7 @@ type TaskPosition =
     | { kind: "outside"; isOnly: undefined };
 
 function getTaskPosition(
-    section: SectionWithTasks,
+    section: ProjectDetailSection,
     task: Pick<Task, "uuid">,
 ): TaskPosition {
     const { tasks } = section;
@@ -89,7 +89,7 @@ async function moveTaskAfterTask(
 }
 
 async function moveToBottom(
-    section: SectionWithTasks,
+    section: ProjectDetailSection,
     task: Pick<Task, "uuid">,
 ) {
     const { tasks } = section;
@@ -101,7 +101,7 @@ async function moveToBottom(
 }
 
 async function moveUp(
-    section: SectionWithTasks,
+    section: ProjectDetailSection,
     task: Pick<ProjectDetailTask, "uuid">,
 ) {
     const { tasks } = section;
@@ -117,7 +117,7 @@ async function moveUp(
 }
 
 async function moveDown(
-    section: SectionWithTasks,
+    section: ProjectDetailSection,
     task: Pick<ProjectDetailTask, "uuid">,
 ) {
     const position = getTaskPosition(section, task);
@@ -133,7 +133,7 @@ async function moveDown(
 }
 
 async function moveTaskToSection(
-    { uuid }: Pick<Section, "uuid">,
+    { uuid }: Pick<TaskDetailSection, "uuid">,
     task: Pick<Task, "uuid">,
 ) {
     return await openApiClient.POST(
@@ -146,11 +146,11 @@ async function moveTaskToSection(
 }
 
 type MoveTaskWhere =
-    | { kind: "top"; section: SectionWithTasks }
-    | { kind: "up"; section: SectionWithTasks }
-    | { kind: "down"; section: SectionWithTasks }
-    | { kind: "bottom"; section: SectionWithTasks }
-    | { kind: "section"; section: SectionWithTasks };
+    | { kind: "top"; section: ProjectDetailSection }
+    | { kind: "up"; section: ProjectDetailSection }
+    | { kind: "down"; section: ProjectDetailSection }
+    | { kind: "bottom"; section: ProjectDetailSection }
+    | { kind: "section"; section: ProjectDetailSection };
 
 export function canMoveTask(
     task: Pick<Task, "uuid">,

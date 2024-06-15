@@ -24,13 +24,14 @@ import type { User } from "$lib/types/user";
 import type {
     Label,
     SubTask,
-    Project,
-    TeamMember,
     ProjectDetail,
-    SectionDetail,
     WorkspaceDetail,
     WorkspaceQuota,
     TaskDetail,
+    ProjectDetailTask,
+    ProjectDetailSection,
+    WorkspaceDetailTeamMember,
+    WorkspaceDetailProject,
 } from "$lib/types/workspace";
 import { getIndexFromLabelColor, labelColors } from "$lib/utils/colors";
 import type { LabelColor } from "$lib/utils/colors";
@@ -80,13 +81,11 @@ export const selectLabels: SelectLabel[] = [
     { kind: "noLabel" },
 ];
 
-export const teamMember: TeamMember = {
+export const teamMember: WorkspaceDetailTeamMember = {
     user: user1,
     uuid: nullUuid,
     role: "OWNER",
     job_title: null,
-    created: "",
-    modified: "",
 };
 
 export const teamMemberSelectionInputs: TeamMemberSelectionInput[] = [
@@ -95,14 +94,11 @@ export const teamMemberSelectionInputs: TeamMemberSelectionInput[] = [
     { kind: "teamMember", teamMember },
 ];
 
-export const project: Project = {
+export const project: WorkspaceDetailProject = {
     uuid: nullUuid,
     title: "Project with a long name, it is long",
     description: null,
     archived: null,
-    due_date: null,
-    created: "",
-    modified: "",
 };
 
 const quota: WorkspaceQuota = {
@@ -128,8 +124,6 @@ export const workspace: WorkspaceDetail = {
     picture: null,
     projects: [project],
     team_members: [teamMember],
-    created: "",
-    modified: "",
     team_member_invites: [],
     labels: [],
     quota,
@@ -142,9 +136,6 @@ export const projectDetail: ProjectDetail = {
     title: "Project with a long name, it is long",
     description: null,
     archived: null,
-    due_date: null,
-    created: "",
-    modified: "",
 };
 
 export const customer: Customer = {
@@ -179,9 +170,7 @@ export const section: TaskDetail["section"] = {
     title: "section name that is very very very very very very long",
     description: null,
     uuid: nullUuid,
-    created: "",
-    modified: "",
-    project: projectDetail,
+    project: { ...projectDetail, due_date: null },
     _order: 0,
 };
 
@@ -201,25 +190,23 @@ export const task: TaskDetail = {
     chat_messages: [],
 };
 
-const task2: TaskDetail = {
+export const projectDetailSection: ProjectDetailSection = {
+    _order: 0,
+    tasks: [],
     title: "A second task, worthy of being a task, and having a wordy title",
     description: null,
-    created: "",
-    modified: "",
+    uuid: nullUuid,
+};
+
+export const projectDetailTask: ProjectDetailTask = {
+    title: "A second task, worthy of being a task, and having a wordy title",
+    description: null,
     uuid: nullUuid,
     due_date: "2022-08-01",
-    _order: 0,
     number: 1337,
     labels: mappedLabels.slice(4),
     assignee: teamMember,
-    sub_tasks: [],
-    section,
-    chat_messages: [],
-};
-
-export const sectionDetail: SectionDetail = {
-    ...section,
-    tasks: [task, task2],
+    sub_task_progress: 1,
 };
 
 export const mobileParameters = {
@@ -233,7 +220,7 @@ const noop = console.error.bind(null, "noop");
 export const teamMemberAssignment: TeamMemberAssignment = {
     select: noop,
     deselect: noop,
-    subscribe: readable<TeamMember | null>(null).subscribe,
+    subscribe: readable<WorkspaceDetailTeamMember | null>(null).subscribe,
     selected: writable({ kind: "unassigned" }),
 };
 
