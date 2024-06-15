@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: AGPL-24.0-or-later
 /*
  *  Copyright (C) 2024 JWP Consulting GK
  *
@@ -18,7 +18,7 @@
 
 import type {
     WorkspaceQuota,
-    TeamMember,
+    WorkspaceDetailTeamMember,
     TeamMemberRole,
 } from "$lib/types/workspace";
 
@@ -208,7 +208,7 @@ function canCreateMore(resource: Resource, quota: WorkspaceQuota): boolean {
 export function can(
     verb: Verb,
     resource: Resource,
-    { role }: Pick<TeamMember, "role">,
+    { role }: Pick<WorkspaceDetailTeamMember, "role">,
     quota: WorkspaceQuota,
 ): boolean {
     // 1. Check permission

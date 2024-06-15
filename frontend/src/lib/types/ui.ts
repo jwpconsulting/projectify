@@ -18,15 +18,16 @@
 import type { TeamMemberAssignment, LabelAssignment } from "$lib/types/stores";
 import type {
     Label,
-    Workspace,
+    UserWorkspace,
     ProjectDetail,
     SectionWithTasks,
-    TeamMember,
+    WorkspaceDetailTeamMember,
     ProjectDetailTask,
     WorkspaceDetail,
     WorkspaceDetailProject,
     TaskDetail,
     ProjectDetailSection,
+    ProjectDetailAssignee,
 } from "$lib/types/workspace";
 
 // TODO rename LabelFilterInput
@@ -50,7 +51,7 @@ export type LabelAssignmentState = LabelSelection & {
 
 // Rename TeamMemberFilterInput
 export type TeamMemberSelectionInput =
-    | { kind: "teamMember"; teamMember: TeamMember }
+    | { kind: "teamMember"; teamMember: ProjectDetailAssignee }
     | { kind: "allTeamMembers" }
     | { kind: "unassigned" };
 // Rename TeamMemberFilterState
@@ -63,7 +64,7 @@ export type TeamMemberAssignmentInput = TeamMemberSelectionInput & {
     kind: "teamMember" | "unassigned";
 };
 export type TeamMemberAssignmentState =
-    | { kind: "teamMember"; teamMember: TeamMember }
+    | { kind: "teamMember"; teamMember: ProjectDetailAssignee }
     | { kind: "unassigned" };
 
 export interface TasksPerUser {
@@ -73,7 +74,7 @@ export interface TasksPerUser {
 
 export type DestructiveOverlayType =
     | { kind: "deleteLabel"; label: Label }
-    | { kind: "deleteTeamMember"; teamMember: TeamMember }
+    | { kind: "deleteTeamMember"; teamMember: WorkspaceDetailTeamMember }
     | {
           kind: "deleteSection";
           section: SectionWithTasks;
@@ -112,7 +113,7 @@ export type MobileMenuState = Overlay<MobileMenuType>;
 
 export type ContextMenuType =
     | { kind: "profile" }
-    | { kind: "workspace"; workspaces: Workspace[] }
+    | { kind: "workspace"; workspaces: UserWorkspace[] }
     | { kind: "sideNav"; workspace: WorkspaceDetail }
     | {
           kind: "project";

@@ -27,11 +27,11 @@
         resolveConstructiveOverlay,
     } from "$lib/stores/globalUi";
     import type { FormViewState } from "$lib/types/ui";
-    import type { Workspace } from "$lib/types/workspace";
+    import type { WorkspaceDetail } from "$lib/types/workspace";
     import { getDashboardProjectUrl } from "$lib/urls";
     import { openApiClient } from "$lib/repository/util";
 
-    export let workspace: Workspace;
+    export let workspace: Pick<WorkspaceDetail, "uuid">;
 
     let state: FormViewState = { kind: "start" };
 

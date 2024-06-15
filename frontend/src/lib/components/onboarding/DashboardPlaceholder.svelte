@@ -30,14 +30,15 @@
     import { currentUser } from "$lib/stores/user";
     import type {
         Label,
-        Workspace,
         ProjectDetail,
-        TeamMember,
         WorkspaceDetail,
         WorkspaceQuota,
         ProjectDetailSection,
         ProjectDetailTask,
         TaskDetail,
+        TaskDetailAssignee,
+        ProjectDetailWorkspace,
+        UserWorkspace,
     } from "$lib/types/workspace";
     import Dashboard from "$routes/(platform)/dashboard/project/[projectUuid]/+page.svelte";
     import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
@@ -51,9 +52,7 @@
         uuid: "does-not-exist",
         title: "",
         description: null,
-        created: "",
         picture: null,
-        modified: "",
         projects: [],
         labels: [],
         team_members: [],
@@ -108,25 +107,25 @@
     type State =
         | {
               kind: "new-workspace";
-              workspace?: Workspace;
+              workspace?: UserWorkspace;
               title: string;
           }
         | {
               kind: "new-project";
-              workspace: Workspace;
+              workspace: ProjectDetailWorkspace;
               project?: ProjectDetail;
               title: string;
           }
         | {
               kind: "new-task";
-              workspace: Workspace;
+              workspace: ProjectDetailWorkspace;
               project: ProjectDetail;
               sectionTitle: string;
               title: string;
           }
         | {
               kind: "new-label";
-              workspace: Workspace;
+              workspace: ProjectDetailWorkspace;
               project: ProjectDetail;
               section: ProjectDetailSection;
               task: TaskDetail;
@@ -134,12 +133,12 @@
           }
         | {
               kind: "assign-task";
-              workspace: Workspace;
+              workspace: ProjectDetailWorkspace;
               project: ProjectDetail;
               section: ProjectDetailSection;
               task: TaskDetail;
               label: Label;
-              assignee: TeamMember;
+              assignee: TaskDetailAssignee;
           };
 
     export let state: State;

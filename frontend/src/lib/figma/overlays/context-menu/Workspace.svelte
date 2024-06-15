@@ -22,10 +22,10 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import { selectWorkspaceUuid } from "$lib/stores/dashboard/ui";
-    import type { Workspace } from "$lib/types/workspace";
+    import type { WorkspaceDetail } from "$lib/types/workspace";
     import { getDashboardWorkspaceUrl } from "$lib/urls";
 
-    export let workspaces: Workspace[];
+    export let workspaces: Pick<WorkspaceDetail, "title" | "uuid">[];
 </script>
 
 <Layout>

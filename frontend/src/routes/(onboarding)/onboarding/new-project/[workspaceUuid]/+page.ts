@@ -19,14 +19,14 @@ import { error } from "@sveltejs/kit";
 
 import { getWorkspace } from "$lib/repository/workspace/workspace";
 import { getProject } from "$lib/repository/workspace/project";
-import type { Workspace, ProjectDetail } from "$lib/types/workspace";
+import type { WorkspaceDetail, ProjectDetail } from "$lib/types/workspace";
 
 import type { PageLoadEvent } from "./$types";
 
 export async function load({
     params: { workspaceUuid },
 }: PageLoadEvent): Promise<{
-    workspace: Workspace;
+    workspace: WorkspaceDetail;
     project?: ProjectDetail;
 }> {
     const workspace = await getWorkspace(workspaceUuid);

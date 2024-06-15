@@ -18,10 +18,12 @@
 /*
  * Dashboard urls
  */
-import type { Project } from "$lib/types/workspace";
+import type { ProjectDetail } from "$lib/types/workspace";
 
 export const dashboardUrl = "/dashboard";
 
-export function getProjectSearchUrl({ uuid }: Pick<Project, "uuid">): string {
+export function getProjectSearchUrl({
+    uuid,
+}: Pick<ProjectDetail, "uuid">): string {
     return `/dashboard/project/${uuid}/search`;
 }

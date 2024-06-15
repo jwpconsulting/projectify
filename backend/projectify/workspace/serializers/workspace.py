@@ -17,7 +17,9 @@
 """Workspace serializers."""
 from rest_framework import serializers
 
+from projectify.user.serializers import UserSerializer
 from projectify.workspace.models.project import Project
+from projectify.workspace.models.team_member import TeamMember
 
 from . import base
 
@@ -27,6 +29,27 @@ class TeamMemberInviteSerializer(serializers.Serializer):
 
     email = serializers.EmailField(source="user_invite.email")
     created = serializers.DateTimeField()
+
+
+class WorkspaceTeamMemberSerializer(serializers.ModelSerializer[TeamMember]):
+    """Workspace team member serializer."""
+
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        """Meta."""
+
+        model = TeamMember
+        fields = (
+            "user",
+            "uuid",
+            "role",
+            "job_title",
+        )
+        extra_kwargs = {
+            "role": {"required": True},
+            "job_title": {"required": True},
+        }
 
 
 class SingleQuotaSerializer(serializers.Serializer):
@@ -77,7 +100,7 @@ class WorkspaceDetailSerializer(base.WorkspaceBaseSerializer):
     contain.
     """
 
-    team_members = base.TeamMemberBaseSerializer(
+    team_members = WorkspaceTeamMemberSerializer(
         read_only=True, many=True, source="teammember_set"
     )
     team_member_invites = TeamMemberInviteSerializer(
@@ -95,7 +118,10 @@ class WorkspaceDetailSerializer(base.WorkspaceBaseSerializer):
         """Meta."""
 
         fields = (
-            *base.WorkspaceBaseSerializer.Meta.fields,
+            "uuid",
+            "title",
+            "description",
+            "picture",
             "team_members",
             "team_member_invites",
             "projects",

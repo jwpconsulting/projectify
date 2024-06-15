@@ -25,19 +25,19 @@
         openConstructiveOverlay,
         openDestructiveOverlay,
     } from "$lib/stores/globalUi";
-    import type { Project } from "$lib/types/workspace";
+    import type { ArchivedProject } from "$lib/types/workspace";
     import { openApiClient } from "$lib/repository/util";
 
     $: archivedProjects = $currentArchivedProjects ?? [];
 
-    async function recoverAction(project: Project) {
+    async function recoverAction(project: ArchivedProject) {
         await openConstructiveOverlay({
             kind: "recoverProject",
             project,
         });
     }
 
-    async function deleteAction(project: Project) {
+    async function deleteAction(project: ArchivedProject) {
         await openDestructiveOverlay({
             kind: "deleteProject",
             project,

@@ -22,7 +22,7 @@ import { error } from "@sveltejs/kit";
 
 import { getProject } from "$lib/repository/workspace/project";
 import type {
-    Workspace,
+    ProjectDetailWorkspace,
     ProjectDetail,
     ProjectDetailSection,
     TaskDetail,
@@ -35,7 +35,7 @@ interface returnType {
     task: TaskDetail;
     section: ProjectDetailSection;
     project: ProjectDetail;
-    workspace: Workspace;
+    workspace: ProjectDetailWorkspace;
 }
 
 export async function load({

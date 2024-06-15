@@ -18,13 +18,13 @@
 /*
  * Repository functions for label
  */
-import type { Label, Workspace } from "$lib/types/workspace";
+import type { Label, WorkspaceDetail } from "$lib/types/workspace";
 
 import { openApiClient } from "../util";
 
 // Create
 export async function createLabel(
-    { uuid: workspace_uuid }: Workspace,
+    { uuid: workspace_uuid }: WorkspaceDetail,
     { name, color }: Pick<Label, "name" | "color">,
 ) {
     return await openApiClient.POST("/workspace/label/", {

@@ -116,10 +116,6 @@ class TestUserWorkspaces:
             assert response.status_code == 200, response.data
         assert response.data == [
             {
-                "created": unittest.mock.ANY,
-                "description": workspace.description,
-                "modified": unittest.mock.ANY,
-                "picture": None,
                 "title": workspace.title,
                 "uuid": str(workspace.uuid),
             },
@@ -162,8 +158,6 @@ class TestWorkspaceReadUpdate:
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.data
         assert response.data == {
-            "created": unittest.mock.ANY,
-            "modified": unittest.mock.ANY,
             "title": workspace.title,
             "description": workspace.description,
             "uuid": str(workspace.uuid),
@@ -211,26 +205,20 @@ class TestWorkspaceReadUpdate:
             response = rest_user_client.get(resource_url)
         assert response.status_code == 200, response.data
         assert response.data == {
-            "created": unittest.mock.ANY,
-            "modified": unittest.mock.ANY,
             "title": workspace.title,
             "description": workspace.description,
             "uuid": str(workspace.uuid),
             "picture": None,
             "team_members": [
                 {
-                    # Thx internet
-                    # https://stackoverflow.com/questions/18064610/ignoring-an-element-from-a-dict-when-asserting-in-pytest/37680581#37680581
-                    "created": unittest.mock.ANY,
-                    "modified": unittest.mock.ANY,
                     "user": {
                         "email": team_member.user.email,
                         "preferred_name": team_member.user.preferred_name,
                         "profile_picture": None,
                     },
                     "uuid": str(team_member.uuid),
+                    "job_title": team_member.job_title,
                     "role": "OWNER",
-                    "job_title": None,
                 }
             ],
             "team_member_invites": [],

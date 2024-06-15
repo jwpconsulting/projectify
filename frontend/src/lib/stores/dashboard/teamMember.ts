@@ -30,16 +30,18 @@ import type { Readable } from "svelte/store";
 
 import { can, type Resource, type Verb } from "$lib/rules/workspace";
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
-import type { TeamMember } from "$lib/types/workspace";
+import type { WorkspaceDetailTeamMember } from "$lib/types/workspace";
 
 import { currentUser } from "../user";
 
-// TODO make Readable<readonly TeamMember[] | undefined>
-export type CurrentTeamMembers = Readable<readonly TeamMember[]>;
+// TODO make Readable<readonly WorkspaceDetailTeamMember[] | undefined>
+export type CurrentTeamMembers = Readable<
+    readonly WorkspaceDetailTeamMember[]
+>;
 
 export const currentTeamMembers: CurrentTeamMembers = derived<
     typeof currentWorkspace,
-    readonly TeamMember[]
+    readonly WorkspaceDetailTeamMember[]
     // Derived stores are initialized with undefined
 >(
     currentWorkspace,
@@ -52,14 +54,14 @@ export const currentTeamMembers: CurrentTeamMembers = derived<
     [],
 );
 
-type CurrentTeamMember = Readable<TeamMember | undefined>;
+type CurrentTeamMember = Readable<WorkspaceDetailTeamMember | undefined>;
 
 /**
  * Find current team member belonging to logged in user
  */
 export const currentTeamMember: CurrentTeamMember = derived<
     [typeof currentUser, typeof currentWorkspace],
-    TeamMember | undefined
+    WorkspaceDetailTeamMember | undefined
 >(
     [currentUser, currentWorkspace],
     ([$user, $currentWorkspace], set) => {

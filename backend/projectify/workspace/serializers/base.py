@@ -91,14 +91,11 @@ class TeamMemberBaseSerializer(serializers.ModelSerializer[models.TeamMember]):
 
         model = models.TeamMember
         fields = (
-            *timestamps,
             "user",
             "uuid",
             "role",
-            "job_title",
         )
         extra_kwargs = {
-            "job_title": {"required": True},
             "role": {"required": True},
         }
 
@@ -115,7 +112,6 @@ class ProjectBaseSerializer(serializers.ModelSerializer[models.Project]):
             *title_description,
             "due_date",
             "uuid",
-            "archived",
         )
         extra_kwargs = {
             "due_date": {"required": True},
@@ -169,6 +165,7 @@ class ChatMessageBaseSerializer(
 ):
     """ChatMessage model serializer."""
 
+    # TODO remove, so that we can get rid of TeamMemberBaseSerializer
     author = TeamMemberBaseSerializer(read_only=True)
 
     class Meta:

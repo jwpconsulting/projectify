@@ -17,24 +17,43 @@
 """Project serializers."""
 from rest_framework import serializers
 
-from projectify.workspace.models.project import Project
-from projectify.workspace.models.section import Section
-from projectify.workspace.models.task import Task
-from projectify.workspace.serializers.base import (
+from projectify.user.serializers import UserSerializer
+
+from ..models.project import Project
+from ..models.section import Section
+from ..models.task import Task
+from ..models.team_member import TeamMember
+from ..serializers.base import (
     LabelBaseSerializer,
     ProjectBaseSerializer,
-    TeamMemberBaseSerializer,
 )
-from projectify.workspace.serializers.workspace import (
-    WorkspaceDetailSerializer,
-)
+from ..serializers.workspace import WorkspaceDetailSerializer
+
+
+class ProjectTaskAssigneeSerializer(serializers.ModelSerializer[TeamMember]):
+    """Serialize a task assignee."""
+
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        """Meta."""
+
+        model = TeamMember
+        fields = (
+            "user",
+            "uuid",
+            "role",
+        )
+        extra_kwargs = {
+            "role": {"required": True},
+        }
 
 
 class ProjectDetailTaskSerializer(serializers.ModelSerializer[Task]):
     """Serialize all task details."""
 
     labels = LabelBaseSerializer(many=True, read_only=True)
-    assignee = TeamMemberBaseSerializer(read_only=True, allow_null=True)
+    assignee = ProjectTaskAssigneeSerializer(read_only=True, allow_null=True)
     # TODO Justus 2024-04-09
     # This can be simplified as well, might only have to return completion
     # percentage

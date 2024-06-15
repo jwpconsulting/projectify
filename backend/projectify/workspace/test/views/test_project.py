@@ -151,8 +151,6 @@ class TestProjectReadUpdateDelete:
                 },
             ],
             "workspace": {
-                "created": ANY,
-                "modified": ANY,
                 "uuid": ANY,
                 "picture": ANY,
                 "title": workspace.title,
