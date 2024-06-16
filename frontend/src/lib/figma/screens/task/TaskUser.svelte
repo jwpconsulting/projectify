@@ -23,11 +23,11 @@
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import type { AvatarVariantContent } from "$lib/figma/types";
     import { getDisplayName } from "$lib/types/user";
-    import type { TeamMember } from "$lib/types/workspace";
+    import type { TaskDetailAssignee } from "$lib/types/workspace";
 
     // Either a user has been assigned, or if not we should ask the user
     // to assign a user
-    export let teamMember: TeamMember | null;
+    export let teamMember: TaskDetailAssignee | null;
     export let onInteract: ((anchor: HTMLElement) => void) | undefined =
         undefined;
     export let readonly = false;

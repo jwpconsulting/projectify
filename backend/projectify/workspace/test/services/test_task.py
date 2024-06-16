@@ -213,6 +213,27 @@ def test_task_update_nested(
     assert sub_tasks[1].done == (not sub_task.done)
 
 
+def test_task_update_preserve_sub_tasks(
+    task: Task,
+    label: Label,
+    team_member: TeamMember,
+    sub_task: SubTask,
+) -> None:
+    """Test that sub tasks are preserved when left out."""
+    del sub_task
+    count = task.subtask_set.count()
+    task_update_nested(
+        who=team_member.user,
+        task=task,
+        title="Hello world",
+        description=None,
+        assignee=task.assignee,
+        labels=[label],
+    )
+    task.refresh_from_db()
+    assert task.subtask_set.count() == count
+
+
 def test_moving_task_within_section(
     section: Section,
     task: Task,

@@ -89,7 +89,7 @@ class ProjectCreate(APIView):
             workspace=workspace,
         )
 
-        output_serializer = ProjectDetailSerializer(instance=project)
+        output_serializer = ProjectBaseSerializer(instance=project)
         return Response(data=output_serializer.data, status=201)
 
 
@@ -175,9 +175,22 @@ class ProjectReadUpdateDelete(APIView):
 class ProjectArchivedList(APIView):
     """List archived projects inside a workspace."""
 
+    class ArchivedProjectSerializer(serializers.ModelSerializer[Project]):
+        """Serialize an archived project."""
+
+        class Meta:
+            """Include only the bare minimum."""
+
+            model = Project
+            fields = (
+                "title",
+                "uuid",
+                "archived",
+            )
+
     @extend_schema(
         request=None,
-        responses={200: ProjectBaseSerializer(many=True)},
+        responses={200: ArchivedProjectSerializer(many=True)},
     )
     def get(self, request: Request, workspace_uuid: UUID) -> Response:
         """Get queryset."""
@@ -191,7 +204,7 @@ class ProjectArchivedList(APIView):
             workspace_uuid=workspace_uuid,
             archived=True,
         )
-        serializer = ProjectBaseSerializer(
+        serializer = self.ArchivedProjectSerializer(
             instance=projects,
             many=True,
         )

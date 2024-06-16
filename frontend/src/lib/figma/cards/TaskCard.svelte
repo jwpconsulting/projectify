@@ -25,12 +25,12 @@
     import type {
         ProjectDetail,
         ProjectDetailTask,
-        SectionWithTasks,
+        ProjectDetailSection,
     } from "$lib/types/workspace";
 
     export let task: ProjectDetailTask;
     export let project: ProjectDetail;
-    export let section: SectionWithTasks | undefined = undefined;
+    export let section: ProjectDetailSection | undefined = undefined;
 </script>
 
 <tr

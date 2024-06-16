@@ -17,7 +17,7 @@
  */
 import { getWorkspaces } from "$lib/repository/workspace/workspace";
 import type { User } from "$lib/types/user";
-import type { Workspace } from "$lib/types/workspace";
+import type { UserWorkspace } from "$lib/types/workspace";
 import { getLogInWithNextUrl } from "$lib/urls/user";
 import { redirect } from "@sveltejs/kit";
 
@@ -26,7 +26,7 @@ import type { PageLoadEvent } from "./$types";
 export async function load({
     parent,
     url,
-}: PageLoadEvent): Promise<{ user: User; workspace?: Workspace }> {
+}: PageLoadEvent): Promise<{ user: User; workspace?: UserWorkspace }> {
     const { userAwaitable } = await parent();
     const user = await userAwaitable;
     if (user.kind !== "authenticated") {

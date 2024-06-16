@@ -18,15 +18,15 @@
 import type { TeamMemberAssignment, LabelAssignment } from "$lib/types/stores";
 import type {
     Label,
-    Workspace,
-    Project,
+    UserWorkspace,
     ProjectDetail,
-    Section,
-    SectionWithTasks,
-    TeamMember,
+    WorkspaceDetailTeamMember,
     ProjectDetailTask,
     WorkspaceDetail,
     WorkspaceDetailProject,
+    TaskDetail,
+    ProjectDetailSection,
+    ProjectDetailAssignee,
 } from "$lib/types/workspace";
 
 // TODO rename LabelFilterInput
@@ -50,7 +50,7 @@ export type LabelAssignmentState = LabelSelection & {
 
 // Rename TeamMemberFilterInput
 export type TeamMemberSelectionInput =
-    | { kind: "teamMember"; teamMember: TeamMember }
+    | { kind: "teamMember"; teamMember: ProjectDetailAssignee }
     | { kind: "allTeamMembers" }
     | { kind: "unassigned" };
 // Rename TeamMemberFilterState
@@ -63,7 +63,7 @@ export type TeamMemberAssignmentInput = TeamMemberSelectionInput & {
     kind: "teamMember" | "unassigned";
 };
 export type TeamMemberAssignmentState =
-    | { kind: "teamMember"; teamMember: TeamMember }
+    | { kind: "teamMember"; teamMember: ProjectDetailAssignee }
     | { kind: "unassigned" };
 
 export interface TasksPerUser {
@@ -73,14 +73,14 @@ export interface TasksPerUser {
 
 export type DestructiveOverlayType =
     | { kind: "deleteLabel"; label: Label }
-    | { kind: "deleteTeamMember"; teamMember: TeamMember }
+    | { kind: "deleteTeamMember"; teamMember: WorkspaceDetailTeamMember }
     | {
           kind: "deleteSection";
-          section: SectionWithTasks;
+          section: ProjectDetailSection;
       }
-    | { kind: "deleteTask"; task: ProjectDetailTask }
-    | { kind: "archiveProject"; project: Project }
-    | { kind: "deleteProject"; project: Project };
+    | { kind: "deleteTask"; task: TaskDetail | ProjectDetailTask }
+    | { kind: "archiveProject"; project: WorkspaceDetailProject }
+    | { kind: "deleteProject"; project: WorkspaceDetailProject };
 
 // These are the times when a header element is shown and a hamburger menu is
 // needed
@@ -112,7 +112,7 @@ export type MobileMenuState = Overlay<MobileMenuType>;
 
 export type ContextMenuType =
     | { kind: "profile" }
-    | { kind: "workspace"; workspaces: Workspace[] }
+    | { kind: "workspace"; workspaces: UserWorkspace[] }
     | { kind: "sideNav"; workspace: WorkspaceDetail }
     | {
           kind: "project";
@@ -122,19 +122,25 @@ export type ContextMenuType =
     | {
           kind: "section";
           project: ProjectDetail;
-          section: SectionWithTasks;
+          section: ProjectDetailSection;
+      }
+    | {
+          kind: "task";
+          task: TaskDetail;
+          location: "task";
       }
     | {
           kind: "task";
           task: ProjectDetailTask;
-          location: "task";
+          location: "dashboardSearch";
+          project: ProjectDetail;
       }
     | {
           kind: "task";
           task: ProjectDetailTask;
           location: "dashboard";
           // TODO remove this property?
-          section: SectionWithTasks;
+          section: ProjectDetailSection;
           project: ProjectDetail;
       }
     | {
@@ -150,14 +156,14 @@ export type ContextMenuType =
 export type ContextMenuState = Overlay<ContextMenuType, HTMLElement>;
 
 export type ConstructiveOverlayType =
-    | { kind: "updateProject"; project: Project }
+    | { kind: "updateProject"; project: WorkspaceDetailProject }
     | { kind: "createProject"; workspace: WorkspaceDetail }
     | { kind: "createSection"; project: ProjectDetail }
     | {
           kind: "updateSection";
-          section: Pick<Section, "uuid" | "title" | "description">;
+          section: ProjectDetailSection;
       }
-    | { kind: "recoverProject"; project: Project };
+    | { kind: "recoverProject"; project: WorkspaceDetailProject };
 export type ConstructiveOverlayState = Overlay<ConstructiveOverlayType>;
 
 // TODO These can probably stay in their individual svelte pages

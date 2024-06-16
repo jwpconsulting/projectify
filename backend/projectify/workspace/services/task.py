@@ -168,7 +168,7 @@ def task_update_nested(
     assignee: Optional[TeamMember] = None,
     # Make these two optional
     labels: Sequence[Label],
-    sub_tasks: ValidatedData,
+    sub_tasks: Optional[ValidatedData] = None,
 ) -> Task:
     """Assign labels, assign assignee."""
     task = task_update(
@@ -180,14 +180,15 @@ def task_update_nested(
         assignee=assignee,
     )
     task_assign_labels(task=task, labels=labels)
-    sub_task_instances = list(task.subtask_set.all())
-    sub_task_update_many(
-        task=task,
-        who=who,
-        sub_tasks=sub_task_instances,
-        create_sub_tasks=sub_tasks["create_sub_tasks"] or [],
-        update_sub_tasks=sub_tasks["update_sub_tasks"] or [],
-    )
+    if sub_tasks:
+        sub_task_instances = list(task.subtask_set.all())
+        sub_task_update_many(
+            task=task,
+            who=who,
+            sub_tasks=sub_task_instances,
+            create_sub_tasks=sub_tasks["create_sub_tasks"] or [],
+            update_sub_tasks=sub_tasks["update_sub_tasks"] or [],
+        )
     send_change_signal("changed", task.section.project)
     send_change_signal("changed", task)
     return task

@@ -104,11 +104,22 @@ class WorkspaceCreate(views.APIView):
 class UserWorkspaces(views.APIView):
     """List all workspaces for a user."""
 
-    @extend_schema(responses={200: WorkspaceBaseSerializer(many=True)})
+    class UserWorkspaceSerializer(serializers.ModelSerializer[Workspace]):
+        """Serialize a workspace for overview purposes."""
+
+        class Meta:
+            """Return only the bare minimum."""
+
+            fields = ("title", "uuid")
+            model = Workspace
+
+    @extend_schema(responses={200: UserWorkspaceSerializer(many=True)})
     def get(self, request: Request) -> Response:
         """Handle GET."""
         workspaces = workspace_find_for_user(who=request.user)
-        serializer = WorkspaceBaseSerializer(instance=workspaces, many=True)
+        serializer = self.UserWorkspaceSerializer(
+            instance=workspaces, many=True
+        )
         return Response(status=HTTP_200_OK, data=serializer.data)
 
 

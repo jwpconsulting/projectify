@@ -30,11 +30,9 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
 from projectify.lib.error_schema import DeriveSchema
+from projectify.user.serializers import UserSerializer
 from projectify.workspace.selectors.team_member import (
     team_member_find_by_team_member_uuid,
-)
-from projectify.workspace.serializers.base import (
-    TeamMemberBaseSerializer,
 )
 from projectify.workspace.services.team_member import (
     team_member_delete,
@@ -49,8 +47,28 @@ from ..models.team_member import TeamMember
 class TeamMemberReadUpdateDelete(views.APIView):
     """Delete a team member."""
 
+    class TeamMemberDetailSerializer(serializers.ModelSerializer[TeamMember]):
+        """Serialize details about team member."""
+
+        user = UserSerializer(read_only=True)
+
+        class Meta:
+            """Meta."""
+
+            model = TeamMember
+            fields = (
+                "user",
+                "uuid",
+                "role",
+                "job_title",
+            )
+            extra_kwargs = {
+                "role": {"required": True},
+                "job_title": {"required": True},
+            }
+
     @extend_schema(
-        responses={200: TeamMemberBaseSerializer},
+        responses={200: TeamMemberDetailSerializer},
     )
     def get(self, request: Request, team_member_uuid: UUID) -> Response:
         """Handle GET."""
@@ -60,7 +78,7 @@ class TeamMemberReadUpdateDelete(views.APIView):
         if team_member is None:
             raise NotFound(_("Could not find team member for given UUID"))
 
-        serializer = TeamMemberBaseSerializer(instance=team_member)
+        serializer = self.TeamMemberDetailSerializer(instance=team_member)
 
         return Response(status=HTTP_200_OK, data=serializer.data)
 
@@ -75,7 +93,7 @@ class TeamMemberReadUpdateDelete(views.APIView):
 
     @extend_schema(
         request=TeamMemberUpdateSerializer,
-        responses={200: TeamMemberUpdateSerializer, 400: DeriveSchema},
+        responses={200: TeamMemberDetailSerializer, 400: DeriveSchema},
     )
     def put(self, request: Request, team_member_uuid: UUID) -> Response:
         """Handle PUT."""
@@ -89,13 +107,16 @@ class TeamMemberReadUpdateDelete(views.APIView):
             data=request.data, instance=team_member
         )
         serializer.is_valid(raise_exception=True)
-        team_member_update(
+        team_member = team_member_update(
             team_member=team_member,
             who=request.user,
             role=serializer.validated_data["role"],
             job_title=serializer.validated_data.get("job_title"),
         )
-        return Response(status=HTTP_200_OK, data=serializer.data)
+        output_serializer = self.TeamMemberDetailSerializer(
+            instance=team_member
+        )
+        return Response(status=HTTP_200_OK, data=output_serializer.data)
 
     @extend_schema(
         responses={204: None},

@@ -26,7 +26,7 @@ import type {
     // XXX only use TaskWithWorkspace
     TaskWithSection,
     TaskDetail,
-    SectionWithTasks,
+    ProjectDetailSection,
 } from "$lib/types/workspace";
 
 // Clear on project change
@@ -39,10 +39,10 @@ currentProject.subscribe((_$currentProject) => {
 });
 
 export function searchTasks(
-    sections: readonly SectionWithTasks[],
+    sections: readonly ProjectDetailSection[],
     searchText: SearchInput,
 ): readonly TaskWithSection[] {
-    type Task = SectionWithTasks["tasks"][number];
+    type Task = ProjectDetailSection["tasks"][number];
     const sectionTasks = sections.map((section) =>
         section.tasks.map((task: Task) => {
             return { ...task, section };

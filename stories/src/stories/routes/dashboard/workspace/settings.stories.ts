@@ -18,14 +18,14 @@
 
 import { workspace, makeStorybookSelect, user1 } from "$lib-stories/storybook";
 import type { User } from "$lib/types/user";
-import type { Workspace } from "$lib/types/workspace";
+import type { WorkspaceDetail } from "$lib/types/workspace";
 import Settings from "$routes/(platform)/dashboard/workspace/[workspaceUuid]/settings/+page.svelte";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 // XXX duplicated because we can't import ./$types
 interface PageData {
     user: User;
-    workspace: Workspace;
+    workspace: WorkspaceDetail;
 }
 
 const data = makeStorybookSelect<PageData>({

@@ -18,12 +18,12 @@
 import { derived } from "svelte/store";
 
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
-import type { Project } from "$lib/types/workspace";
+import type { ArchivedProject } from "$lib/types/workspace";
 import { openApiClient } from "$lib/repository/util";
 
 export const currentArchivedProjects = derived<
     typeof currentWorkspace,
-    Project[] | undefined
+    ArchivedProject[] | undefined
 >(
     currentWorkspace,
     ($currentWorkspace, set) => {

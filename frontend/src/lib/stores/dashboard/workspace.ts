@@ -21,8 +21,7 @@ import {
 } from "$lib/repository/workspace/workspace";
 import { createHttpStore } from "$lib/stores/httpSubscription";
 import { createWsStore } from "$lib/stores/wsSubscription";
-import type { Workspace } from "$lib/types/workspace";
 
 export const currentWorkspace = createWsStore("workspace", getWorkspace);
 
-export const currentWorkspaces = createHttpStore<Workspace[]>(getWorkspaces);
+export const currentWorkspaces = createHttpStore(getWorkspaces);

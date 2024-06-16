@@ -2329,7 +2329,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TeamMemberBase'
+                $ref: '#/components/schemas/TeamMemberDetail'
           description: ''
         '403':
           content:
@@ -2379,7 +2379,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TeamMemberUpdate'
+                $ref: '#/components/schemas/TeamMemberDetail'
           description: ''
         '400':
           content:
@@ -2685,7 +2685,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ProjectBase'
+                  $ref: '#/components/schemas/ArchivedProject'
           description: ''
         '403':
           content:
@@ -2954,7 +2954,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/WorkspaceBase'
+                  $ref: '#/components/schemas/UserWorkspace'
           description: ''
         '403':
           content:
@@ -2983,6 +2983,43 @@ components:
       - unauthenticated
       type: string
       description: '* `unauthenticated` - unauthenticated'
+    ArchivedProject:
+      type: object
+      description: Serialize an archived project.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        archived:
+          type: string
+          format: date-time
+          nullable: true
+          description: Archival timestamp of this workspace board.
+      required:
+      - title
+      - uuid
+    Assignee:
+      type: object
+      description: Serialize a task assignee.
+      properties:
+        user:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+      required:
+      - role
+      - user
+      - uuid
     ChangePassword:
       type: object
       description: Accept old and new password.
@@ -3290,46 +3327,6 @@ components:
           type: boolean
       required:
       - archived
-    ProjectBase:
-      type: object
-      description: Project base serializer.
-      properties:
-        created:
-          type: string
-          format: date-time
-          readOnly: true
-        modified:
-          type: string
-          format: date-time
-          readOnly: true
-        title:
-          type: string
-          maxLength: 255
-        description:
-          type: string
-          nullable: true
-        due_date:
-          type: string
-          format: date-time
-          nullable: true
-          description: Due date for this workspace board
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        archived:
-          type: string
-          format: date-time
-          nullable: true
-          description: Archival timestamp of this workspace board.
-      required:
-      - archived
-      - created
-      - description
-      - due_date
-      - modified
-      - title
-      - uuid
     ProjectCreate:
       type: object
       description: Parse project creation input.
@@ -3359,25 +3356,12 @@ components:
         Serializes in both directions, workspace and sections, including their
         tasks.
       properties:
-        created:
-          type: string
-          format: date-time
-          readOnly: true
-        modified:
-          type: string
-          format: date-time
-          readOnly: true
         title:
           type: string
           maxLength: 255
         description:
           type: string
           nullable: true
-        due_date:
-          type: string
-          format: date-time
-          nullable: true
-          description: Due date for this workspace board
         uuid:
           type: string
           format: uuid
@@ -3394,14 +3378,11 @@ components:
           readOnly: true
         workspace:
           allOf:
-          - $ref: '#/components/schemas/WorkspaceBase'
+          - $ref: '#/components/schemas/WorkspaceDetail'
           readOnly: true
       required:
       - archived
-      - created
       - description
-      - due_date
-      - modified
       - sections
       - title
       - uuid
@@ -3421,17 +3402,16 @@ components:
         title:
           type: string
           maxLength: 255
+        description:
+          type: string
+          nullable: true
         tasks:
           type: array
           items:
             $ref: '#/components/schemas/ProjectDetailTask'
           readOnly: true
-        description:
-          type: string
-          nullable: true
       required:
       - _order
-      - description
       - tasks
       - title
       - uuid
@@ -3462,14 +3442,13 @@ components:
           readOnly: true
         assignee:
           allOf:
-          - $ref: '#/components/schemas/TeamMemberBase'
+          - $ref: '#/components/schemas/ProjectTaskAssignee'
           readOnly: true
           nullable: true
-        sub_tasks:
-          type: array
-          items:
-            $ref: '#/components/schemas/SubTaskBase'
-          readOnly: true
+        sub_task_progress:
+          type: number
+          format: double
+          nullable: true
         description:
           type: string
           nullable: true
@@ -3479,57 +3458,27 @@ components:
       - due_date
       - labels
       - number
-      - sub_tasks
+      - sub_task_progress
       - title
       - uuid
-    ProjectUp:
+    ProjectTaskAssignee:
       type: object
-      description: |-
-        Serialize project and workspace containing it.
-
-        Used when serializing up from a task or ws board section.
+      description: Serialize a task assignee.
       properties:
-        created:
-          type: string
-          format: date-time
+        user:
+          allOf:
+          - $ref: '#/components/schemas/User'
           readOnly: true
-        modified:
-          type: string
-          format: date-time
-          readOnly: true
-        title:
-          type: string
-          maxLength: 255
-        description:
-          type: string
-          nullable: true
-        due_date:
-          type: string
-          format: date-time
-          nullable: true
-          description: Due date for this workspace board
         uuid:
           type: string
           format: uuid
           readOnly: true
-        archived:
-          type: string
-          format: date-time
-          nullable: true
-          description: Archival timestamp of this workspace board.
-        workspace:
-          allOf:
-          - $ref: '#/components/schemas/WorkspaceBase'
-          readOnly: true
+        role:
+          $ref: '#/components/schemas/RoleEnum'
       required:
-      - archived
-      - created
-      - description
-      - due_date
-      - modified
-      - title
+      - role
+      - user
       - uuid
-      - workspace
     ProjectUpdate:
       type: object
       description: Serializer for PUT.
@@ -3618,7 +3567,7 @@ components:
           readOnly: true
         project:
           allOf:
-          - $ref: '#/components/schemas/ProjectUp'
+          - $ref: '#/components/schemas/SectionDetailProject'
           readOnly: true
         tasks:
           type: array
@@ -3634,6 +3583,39 @@ components:
       - tasks
       - title
       - uuid
+    SectionDetailProject:
+      type: object
+      description: Serialize a project's section.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        workspace:
+          allOf:
+          - $ref: '#/components/schemas/SectionDetailWorkspace'
+          readOnly: true
+      required:
+      - title
+      - uuid
+      - workspace
+    SectionDetailWorkspace:
+      type: object
+      description: Serialize a section's workspace.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - title
+      - uuid
     SectionMove:
       type: object
       description: Accept the desired position within project.
@@ -3642,44 +3624,6 @@ components:
           type: integer
       required:
       - order
-    SectionUp:
-      type: object
-      description: Serialize section up the hierarchy.
-      properties:
-        created:
-          type: string
-          format: date-time
-          readOnly: true
-        modified:
-          type: string
-          format: date-time
-          readOnly: true
-        title:
-          type: string
-          maxLength: 255
-        description:
-          type: string
-          nullable: true
-        _order:
-          type: integer
-          readOnly: true
-          title: ' order'
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        project:
-          allOf:
-          - $ref: '#/components/schemas/ProjectUp'
-          readOnly: true
-      required:
-      - _order
-      - created
-      - description
-      - modified
-      - project
-      - title
-      - uuid
     SectionUpdate:
       type: object
       description: Input serializer for PUT.
@@ -3880,7 +3824,7 @@ components:
           readOnly: true
         assignee:
           allOf:
-          - $ref: '#/components/schemas/TeamMemberBase'
+          - $ref: '#/components/schemas/Assignee'
           readOnly: true
           nullable: true
         chat_messages:
@@ -3890,7 +3834,7 @@ components:
           readOnly: true
         section:
           allOf:
-          - $ref: '#/components/schemas/SectionUp'
+          - $ref: '#/components/schemas/TaskDetailSection'
           readOnly: true
       required:
       - _order
@@ -3904,6 +3848,77 @@ components:
       - number
       - section
       - sub_tasks
+      - title
+      - uuid
+    TaskDetailProject:
+      type: object
+      description: Serialize a task's project.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        workspace:
+          allOf:
+          - $ref: '#/components/schemas/TaskDetailWorkspace'
+          readOnly: true
+        description:
+          type: string
+          nullable: true
+        due_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Due date for this workspace board
+      required:
+      - description
+      - due_date
+      - title
+      - uuid
+      - workspace
+    TaskDetailSection:
+      type: object
+      description: Serialize a task's section.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        project:
+          allOf:
+          - $ref: '#/components/schemas/TaskDetailProject'
+          readOnly: true
+        description:
+          type: string
+          nullable: true
+        _order:
+          type: integer
+          readOnly: true
+          title: ' order'
+      required:
+      - _order
+      - description
+      - project
+      - title
+      - uuid
+    TaskDetailWorkspace:
+      type: object
+      description: Serializes a task's workspace.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
       - title
       - uuid
     TaskMoveAfterTask:
@@ -4004,7 +4019,7 @@ components:
           readOnly: true
         assignee:
           allOf:
-          - $ref: '#/components/schemas/TeamMemberBase'
+          - $ref: '#/components/schemas/Assignee'
           readOnly: true
           nullable: true
       required:
@@ -4023,14 +4038,24 @@ components:
       type: object
       description: Team member serializer.
       properties:
-        created:
-          type: string
-          format: date-time
+        user:
+          allOf:
+          - $ref: '#/components/schemas/User'
           readOnly: true
-        modified:
+        uuid:
           type: string
-          format: date-time
+          format: uuid
           readOnly: true
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+      required:
+      - role
+      - user
+      - uuid
+    TeamMemberDetail:
+      type: object
+      description: Serialize details about team member.
+      properties:
         user:
           allOf:
           - $ref: '#/components/schemas/User'
@@ -4046,9 +4071,7 @@ components:
           nullable: true
           maxLength: 255
       required:
-      - created
       - job_title
-      - modified
       - role
       - user
       - uuid
@@ -4134,6 +4157,20 @@ components:
           type: string
           nullable: true
           maxLength: 255
+    UserWorkspace:
+      type: object
+      description: Serialize a workspace for overview purposes.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - title
+      - uuid
     UuidObject:
       type: object
       description: Deserialize the UUID for a any object with a UUID.
@@ -4224,13 +4261,9 @@ components:
         Serializers ws board as well, but not the sections and so forth that they
         contain.
       properties:
-        created:
+        uuid:
           type: string
-          format: date-time
-          readOnly: true
-        modified:
-          type: string
-          format: date-time
+          format: uuid
           readOnly: true
         title:
           type: string
@@ -4238,10 +4271,6 @@ components:
         description:
           type: string
           nullable: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
         picture:
           type: string
           nullable: true
@@ -4250,7 +4279,7 @@ components:
         team_members:
           type: array
           items:
-            $ref: '#/components/schemas/TeamMemberBase'
+            $ref: '#/components/schemas/WorkspaceTeamMember'
           readOnly: true
         team_member_invites:
           type: array
@@ -4260,7 +4289,7 @@ components:
         projects:
           type: array
           items:
-            $ref: '#/components/schemas/ProjectBase'
+            $ref: '#/components/schemas/WorkspaceProject'
           readOnly: true
         labels:
           type: array
@@ -4270,10 +4299,8 @@ components:
         quota:
           $ref: '#/components/schemas/WorkspaceQuota'
       required:
-      - created
       - description
       - labels
-      - modified
       - picture
       - projects
       - quota
@@ -4288,6 +4315,28 @@ components:
         file:
           type: string
           format: uri
+    WorkspaceProject:
+      type: object
+      description: Serialize a single project.
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        archived:
+          type: string
+          format: date-time
+          nullable: true
+          description: Archival timestamp of this workspace board.
+      required:
+      - title
+      - uuid
     WorkspaceQuota:
       type: object
       description: Serializer quota.
@@ -4330,6 +4379,29 @@ components:
         * `full` - full
         * `trial` - trial
         * `inactive` - inactive
+    WorkspaceTeamMember:
+      type: object
+      description: Workspace team member serializer.
+      properties:
+        user:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        job_title:
+          type: string
+          nullable: true
+          maxLength: 255
+      required:
+      - job_title
+      - role
+      - user
+      - uuid
     WorkspaceUpdate:
       type: object
       description: Accept title, description.

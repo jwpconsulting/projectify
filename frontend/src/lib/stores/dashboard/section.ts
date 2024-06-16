@@ -26,19 +26,19 @@ import type {
     TasksPerUser,
     TeamMemberSelection,
 } from "$lib/types/ui";
-import type { Label, SectionWithTasks } from "$lib/types/workspace";
+import type { Label, ProjectDetailSection } from "$lib/types/workspace";
 
 interface CurrentFilter {
     labels: LabelSelection;
     teamMember: TeamMemberSelection;
-    sections: readonly SectionWithTasks[];
+    sections: readonly ProjectDetailSection[];
 }
 
 function filterSectionsTasks(
     currentFilter: CurrentFilter,
-): readonly SectionWithTasks[] {
-    type Task = SectionWithTasks["tasks"][number];
-    let sections: readonly SectionWithTasks[] = currentFilter.sections;
+): readonly ProjectDetailSection[] {
+    type Task = ProjectDetailSection["tasks"][number];
+    let sections: readonly ProjectDetailSection[] = currentFilter.sections;
     if (currentFilter.labels.kind === "noLabel") {
         // TODO filter by no label? Justus 2023-04-04
         // eslint-disable-next-line
@@ -89,7 +89,7 @@ function filterSectionsTasks(
 
 export const currentSections = derived<
     [typeof selectedLabels, typeof selectedTeamMember, typeof currentProject],
-    readonly SectionWithTasks[] | undefined
+    readonly ProjectDetailSection[] | undefined
 >(
     [selectedLabels, selectedTeamMember, currentProject],
     ([$selectedLabels, $selectedTeamMember, $currentProject], set) => {
@@ -110,17 +110,17 @@ export const currentSections = derived<
 );
 
 export const tasksPerUser: Readable<TasksPerUser> = derived<
-    Readable<readonly SectionWithTasks[] | undefined>,
+    Readable<readonly ProjectDetailSection[] | undefined>,
     TasksPerUser
 >(
     currentSections,
-    ($currentSections: readonly SectionWithTasks[] | undefined, set) => {
+    ($currentSections: readonly ProjectDetailSection[] | undefined, set) => {
         if ($currentSections === undefined) {
             return;
         }
         const assigned = new Map<string, number>();
         let unassigned = 0;
-        $currentSections.forEach((section: SectionWithTasks) => {
+        $currentSections.forEach((section: ProjectDetailSection) => {
             section.tasks.forEach((task) => {
                 const uuid = task.assignee?.uuid;
                 if (uuid === undefined) {

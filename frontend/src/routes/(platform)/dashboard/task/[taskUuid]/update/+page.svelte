@@ -35,7 +35,7 @@
         SubTaskAssignment,
         TeamMemberAssignment,
     } from "$lib/types/stores";
-    import type { TaskWithSection, TaskDetail } from "$lib/types/workspace";
+    import type { TaskDetail } from "$lib/types/workspace";
     import {
         getDashboardSectionUrl,
         getDashboardProjectUrl,
@@ -96,21 +96,18 @@
         if (!$labelAssignment) {
             throw new Error("Expected $labelAssignment");
         }
-        const submitTask: TaskWithSection = {
-            ...task,
-            due_date: dueDate,
-            title,
-            description,
-        };
         state = { kind: "submitting" };
-        const { data: result, error } = await updateTask(submitTask, {
-            title,
-            description,
-            due_date: dueDate,
-            assignee: $teamMemberAssignment ?? null,
-            labels: $labelAssignment,
-            sub_tasks: $subTasks ?? [],
-        });
+        const { data: result, error } = await updateTask(
+            { uuid: task.uuid },
+            {
+                title,
+                description,
+                due_date: dueDate,
+                assignee: $teamMemberAssignment ?? null,
+                labels: $labelAssignment,
+                sub_tasks: $subTasks ?? [],
+            },
+        );
         if (result) {
             state = { kind: "done" };
             if (continueEditing) {

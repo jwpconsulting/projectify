@@ -35,7 +35,7 @@
         TeamMemberAssignmentState,
         TeamMemberSelection,
     } from "$lib/types/ui";
-    import type { TeamMember } from "$lib/types/workspace";
+    import type { ProjectDetailAssignee } from "$lib/types/workspace";
 
     type FilterTeamMemberMenuMode =
         | { kind: "filter" }
@@ -58,7 +58,7 @@
 
     function isSelected(
         $selected: TeamMemberAssignmentState | TeamMemberSelection,
-        teamMember: TeamMember,
+        teamMember: ProjectDetailAssignee,
     ): boolean {
         if ($selected.kind === "teamMembers") {
             return $selected.teamMemberUuids.has(teamMember.uuid);

@@ -17,29 +17,47 @@
 """Project serializers."""
 from rest_framework import serializers
 
-from projectify.workspace.models.project import Project
-from projectify.workspace.models.section import Section
-from projectify.workspace.models.task import Task
-from projectify.workspace.serializers.base import (
+from projectify.user.serializers import UserSerializer
+
+from ..models.project import Project
+from ..models.section import Section
+from ..models.task import Task
+from ..models.team_member import TeamMember
+from ..serializers.base import (
     LabelBaseSerializer,
     ProjectBaseSerializer,
-    SubTaskBaseSerializer,
-    TeamMemberBaseSerializer,
-    WorkspaceBaseSerializer,
 )
+from ..serializers.workspace import WorkspaceDetailSerializer
+
+
+class ProjectTaskAssigneeSerializer(serializers.ModelSerializer[TeamMember]):
+    """Serialize a task assignee."""
+
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        """Meta."""
+
+        model = TeamMember
+        fields = (
+            "user",
+            "uuid",
+            "role",
+        )
+        extra_kwargs = {
+            "role": {"required": True},
+        }
 
 
 class ProjectDetailTaskSerializer(serializers.ModelSerializer[Task]):
     """Serialize all task details."""
 
     labels = LabelBaseSerializer(many=True, read_only=True)
-    assignee = TeamMemberBaseSerializer(read_only=True, allow_null=True)
+    assignee = ProjectTaskAssigneeSerializer(read_only=True, allow_null=True)
     # TODO Justus 2024-04-09
     # This can be simplified as well, might only have to return completion
     # percentage
-    sub_tasks = SubTaskBaseSerializer(
-        many=True, read_only=True, source="subtask_set"
-    )
+    sub_task_progress = serializers.FloatField(allow_null=True)
 
     class Meta:
         """Meta."""
@@ -53,7 +71,7 @@ class ProjectDetailTaskSerializer(serializers.ModelSerializer[Task]):
             "number",
             "labels",
             "assignee",
-            "sub_tasks",
+            "sub_task_progress",
             # TODO
             # We want to optimize description away in the future but for now,
             # since we require a complete retransmission of a task in order for
@@ -82,12 +100,9 @@ class ProjectDetailSectionSerializer(serializers.ModelSerializer[Section]):
             "uuid",
             "_order",
             "title",
-            "tasks",
             "description",
+            "tasks",
         )
-        extra_kwargs = {
-            "description": {"required": True},
-        }
 
 
 class ProjectDetailSerializer(ProjectBaseSerializer):
@@ -102,14 +117,17 @@ class ProjectDetailSerializer(ProjectBaseSerializer):
         many=True, read_only=True, source="section_set"
     )
 
-    workspace = WorkspaceBaseSerializer(read_only=True)
+    workspace = WorkspaceDetailSerializer(read_only=True)
 
     class Meta(ProjectBaseSerializer.Meta):
         """Meta."""
 
         model = Project
         fields = (
-            *ProjectBaseSerializer.Meta.fields,
+            "title",
+            "description",
+            "uuid",
+            "archived",
             "sections",
             "workspace",
         )

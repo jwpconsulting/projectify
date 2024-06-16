@@ -197,6 +197,24 @@ export interface components {
      * @enum {string}
      */
     AnonymousUserKindEnum: "unauthenticated";
+    /** @description Serialize an archived project. */
+    ArchivedProject: {
+      title: string;
+      /** Format: uuid */
+      uuid: string;
+      /**
+       * Format: date-time
+       * @description Archival timestamp of this workspace board.
+       */
+      archived?: string | null;
+    };
+    /** @description Serialize a task assignee. */
+    Assignee: {
+      user: components["schemas"]["User"];
+      /** Format: uuid */
+      uuid: string;
+      role: components["schemas"]["RoleEnum"];
+    };
     /** @description Accept old and new password. */
     ChangePassword: {
       current_password: string;
@@ -361,27 +379,6 @@ export interface components {
     ProjectArchive: {
       archived: boolean;
     };
-    /** @description Project base serializer. */
-    ProjectBase: {
-      /** Format: date-time */
-      created: string;
-      /** Format: date-time */
-      modified: string;
-      title: string;
-      description: string | null;
-      /**
-       * Format: date-time
-       * @description Due date for this workspace board
-       */
-      due_date: string | null;
-      /** Format: uuid */
-      uuid: string;
-      /**
-       * Format: date-time
-       * @description Archival timestamp of this workspace board.
-       */
-      archived: string | null;
-    };
     /** @description Parse project creation input. */
     ProjectCreate: {
       title: string;
@@ -401,17 +398,8 @@ export interface components {
      * tasks.
      */
     ProjectDetail: {
-      /** Format: date-time */
-      created: string;
-      /** Format: date-time */
-      modified: string;
       title: string;
       description: string | null;
-      /**
-       * Format: date-time
-       * @description Due date for this workspace board
-       */
-      due_date: string | null;
       /** Format: uuid */
       uuid: string;
       /**
@@ -420,7 +408,7 @@ export interface components {
        */
       archived: string | null;
       sections: readonly components["schemas"]["ProjectDetailSection"][];
-      workspace: components["schemas"]["WorkspaceBase"];
+      workspace: components["schemas"]["WorkspaceDetail"];
     };
     /** @description Reduced section serializer. */
     ProjectDetailSection: {
@@ -429,8 +417,8 @@ export interface components {
       /** order */
       _order: number;
       title: string;
+      description?: string | null;
       tasks: readonly components["schemas"]["ProjectDetailTask"][];
-      description: string | null;
     };
     /** @description Serialize all task details. */
     ProjectDetailTask: {
@@ -444,35 +432,17 @@ export interface components {
       due_date: string | null;
       number: number;
       labels: readonly components["schemas"]["LabelBase"][];
-      assignee: components["schemas"]["TeamMemberBase"] | null;
-      sub_tasks: readonly components["schemas"]["SubTaskBase"][];
+      assignee: components["schemas"]["ProjectTaskAssignee"] | null;
+      /** Format: double */
+      sub_task_progress: number | null;
       description: string | null;
     };
-    /**
-     * @description Serialize project and workspace containing it.
-     *
-     * Used when serializing up from a task or ws board section.
-     */
-    ProjectUp: {
-      /** Format: date-time */
-      created: string;
-      /** Format: date-time */
-      modified: string;
-      title: string;
-      description: string | null;
-      /**
-       * Format: date-time
-       * @description Due date for this workspace board
-       */
-      due_date: string | null;
+    /** @description Serialize a task assignee. */
+    ProjectTaskAssignee: {
+      user: components["schemas"]["User"];
       /** Format: uuid */
       uuid: string;
-      /**
-       * Format: date-time
-       * @description Archival timestamp of this workspace board.
-       */
-      archived: string | null;
-      workspace: components["schemas"]["WorkspaceBase"];
+      role: components["schemas"]["RoleEnum"];
     };
     /** @description Serializer for PUT. */
     ProjectUpdate: {
@@ -521,26 +491,25 @@ export interface components {
       _order: number;
       /** Format: uuid */
       uuid: string;
-      project: components["schemas"]["ProjectUp"];
+      project: components["schemas"]["SectionDetailProject"];
       tasks: readonly components["schemas"]["TaskWithSubTask"][];
+    };
+    /** @description Serialize a project's section. */
+    SectionDetailProject: {
+      title: string;
+      /** Format: uuid */
+      uuid: string;
+      workspace: components["schemas"]["SectionDetailWorkspace"];
+    };
+    /** @description Serialize a section's workspace. */
+    SectionDetailWorkspace: {
+      title: string;
+      /** Format: uuid */
+      uuid: string;
     };
     /** @description Accept the desired position within project. */
     SectionMove: {
       order: number;
-    };
-    /** @description Serialize section up the hierarchy. */
-    SectionUp: {
-      /** Format: date-time */
-      created: string;
-      /** Format: date-time */
-      modified: string;
-      title: string;
-      description: string | null;
-      /** order */
-      _order: number;
-      /** Format: uuid */
-      uuid: string;
-      project: components["schemas"]["ProjectUp"];
     };
     /** @description Input serializer for PUT. */
     SectionUpdate: {
@@ -632,9 +601,38 @@ export interface components {
       number: number;
       sub_tasks: readonly components["schemas"]["SubTaskBase"][];
       labels: readonly components["schemas"]["LabelBase"][];
-      assignee: components["schemas"]["TeamMemberBase"] | null;
+      assignee: components["schemas"]["Assignee"] | null;
       chat_messages: readonly components["schemas"]["ChatMessageBase"][];
-      section: components["schemas"]["SectionUp"];
+      section: components["schemas"]["TaskDetailSection"];
+    };
+    /** @description Serialize a task's project. */
+    TaskDetailProject: {
+      title: string;
+      /** Format: uuid */
+      uuid: string;
+      workspace: components["schemas"]["TaskDetailWorkspace"];
+      description: string | null;
+      /**
+       * Format: date-time
+       * @description Due date for this workspace board
+       */
+      due_date: string | null;
+    };
+    /** @description Serialize a task's section. */
+    TaskDetailSection: {
+      title: string;
+      /** Format: uuid */
+      uuid: string;
+      project: components["schemas"]["TaskDetailProject"];
+      description: string | null;
+      /** order */
+      _order: number;
+    };
+    /** @description Serializes a task's workspace. */
+    TaskDetailWorkspace: {
+      title: string;
+      /** Format: uuid */
+      uuid: string;
     };
     /** @description Accept a task uuid after which this task should be moved. */
     TaskMoveAfterTask: {
@@ -679,14 +677,17 @@ export interface components {
       number: number;
       sub_tasks: readonly components["schemas"]["SubTaskBase"][];
       labels: readonly components["schemas"]["LabelBase"][];
-      assignee: components["schemas"]["TeamMemberBase"] | null;
+      assignee: components["schemas"]["Assignee"] | null;
     };
     /** @description Team member serializer. */
     TeamMemberBase: {
-      /** Format: date-time */
-      created: string;
-      /** Format: date-time */
-      modified: string;
+      user: components["schemas"]["User"];
+      /** Format: uuid */
+      uuid: string;
+      role: components["schemas"]["RoleEnum"];
+    };
+    /** @description Serialize details about team member. */
+    TeamMemberDetail: {
       user: components["schemas"]["User"];
       /** Format: uuid */
       uuid: string;
@@ -737,6 +738,12 @@ export interface components {
     UserUpdate: {
       preferred_name?: string | null;
     };
+    /** @description Serialize a workspace for overview purposes. */
+    UserWorkspace: {
+      title: string;
+      /** Format: uuid */
+      uuid: string;
+    };
     /** @description Deserialize the UUID for a any object with a UUID. */
     UuidObject: {
       /** Format: uuid */
@@ -781,19 +788,15 @@ export interface components {
      * contain.
      */
     WorkspaceDetail: {
-      /** Format: date-time */
-      created: string;
-      /** Format: date-time */
-      modified: string;
-      title: string;
-      description: string | null;
       /** Format: uuid */
       uuid: string;
+      title: string;
+      description: string | null;
       /** @description Return profile picture. */
       picture: string | null;
-      team_members: readonly components["schemas"]["TeamMemberBase"][];
+      team_members: readonly components["schemas"]["WorkspaceTeamMember"][];
       team_member_invites: readonly components["schemas"]["TeamMemberInvite"][];
-      projects: readonly components["schemas"]["ProjectBase"][];
+      projects: readonly components["schemas"]["WorkspaceProject"][];
       labels: readonly components["schemas"]["LabelBase"][];
       quota: components["schemas"]["WorkspaceQuota"];
     };
@@ -801,6 +804,18 @@ export interface components {
     WorkspacePictureUpload: {
       /** Format: uri */
       file?: string;
+    };
+    /** @description Serialize a single project. */
+    WorkspaceProject: {
+      title: string;
+      description?: string | null;
+      /** Format: uuid */
+      uuid: string;
+      /**
+       * Format: date-time
+       * @description Archival timestamp of this workspace board.
+       */
+      archived?: string | null;
     };
     /** @description Serializer quota. */
     WorkspaceQuota: {
@@ -821,6 +836,14 @@ export interface components {
      * @enum {string}
      */
     WorkspaceStatusEnum: "full" | "trial" | "inactive";
+    /** @description Workspace team member serializer. */
+    WorkspaceTeamMember: {
+      user: components["schemas"]["User"];
+      /** Format: uuid */
+      uuid: string;
+      role: components["schemas"]["RoleEnum"];
+      job_title: string | null;
+    };
     /** @description Accept title, description. */
     WorkspaceUpdate: {
       title: string;
@@ -2339,7 +2362,7 @@ export interface operations {
     responses: {
       200: {
         content: {
-          "application/json": components["schemas"]["TeamMemberBase"];
+          "application/json": components["schemas"]["TeamMemberDetail"];
         };
       };
       403: {
@@ -2376,7 +2399,7 @@ export interface operations {
     responses: {
       200: {
         content: {
-          "application/json": components["schemas"]["TeamMemberUpdate"];
+          "application/json": components["schemas"]["TeamMemberDetail"];
         };
       };
       400: {
@@ -2577,7 +2600,7 @@ export interface operations {
     responses: {
       200: {
         content: {
-          "application/json": components["schemas"]["ProjectBase"][];
+          "application/json": components["schemas"]["ArchivedProject"][];
         };
       };
       403: {
@@ -2754,7 +2777,7 @@ export interface operations {
     responses: {
       200: {
         content: {
-          "application/json": components["schemas"]["WorkspaceBase"][];
+          "application/json": components["schemas"]["UserWorkspace"][];
         };
       };
       403: {

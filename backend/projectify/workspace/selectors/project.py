@@ -18,19 +18,40 @@
 from typing import Optional
 from uuid import UUID
 
-from django.db.models import QuerySet
+from django.db.models import (
+    Count,
+    Prefetch,
+    Q,
+    QuerySet,
+)
+from django.db.models.functions import NullIf
 
 from projectify.user.models import User
+from projectify.workspace.models.task import Task
 
 from ..models.project import Project
 
 ProjectDetailQuerySet = Project.objects.prefetch_related(
     "section_set",
-    "section_set__task_set",
+    Prefetch(
+        "section_set__task_set",
+        queryset=Task.objects.annotate(
+            sub_task_progress=Count(
+                "subtask",
+                filter=Q(subtask__done=True),
+            )
+            * 1.0
+            / NullIf(Count("subtask"), 0),
+        ).order_by("-_order"),
+    ),
     "section_set__task_set__assignee",
     "section_set__task_set__assignee__user",
     "section_set__task_set__labels",
-    "section_set__task_set__subtask_set",
+    "workspace__label_set",
+    "workspace__project_set",
+    "workspace__teammember_set",
+    "workspace__teammember_set__user",
+    "workspace__teammemberinvite_set",
 ).select_related(
     "workspace",
 )

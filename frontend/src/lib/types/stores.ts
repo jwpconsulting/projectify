@@ -27,10 +27,11 @@ import type {
 import type {
     CreateUpdateSubTask,
     Label,
-    TeamMember,
+    ProjectDetailAssignee,
 } from "$lib/types/workspace";
 
-export interface TeamMemberAssignment extends Readable<TeamMember | null> {
+export interface TeamMemberAssignment
+    extends Readable<ProjectDetailAssignee | null> {
     select: (selection: TeamMemberAssignmentInput) => unknown;
     deselect: (selection: TeamMemberAssignmentInput) => unknown;
     // Might even completely remove this:

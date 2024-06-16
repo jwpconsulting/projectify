@@ -30,13 +30,15 @@
     import { currentUser } from "$lib/stores/user";
     import type {
         Label,
-        Workspace,
         ProjectDetail,
-        TeamMember,
         WorkspaceDetail,
         WorkspaceQuota,
         ProjectDetailSection,
         ProjectDetailTask,
+        TaskDetail,
+        TaskDetailAssignee,
+        ProjectDetailWorkspace,
+        UserWorkspace,
     } from "$lib/types/workspace";
     import Dashboard from "$routes/(platform)/dashboard/project/[projectUuid]/+page.svelte";
     import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
@@ -50,9 +52,7 @@
         uuid: "does-not-exist",
         title: "",
         description: null,
-        created: "",
         picture: null,
-        modified: "",
         projects: [],
         labels: [],
         team_members: [],
@@ -62,17 +62,13 @@
     const projectFallback: ProjectDetail = {
         uuid: "does-not-exist",
         title: $_("onboarding.new-project.default-name"),
-        description: null,
-        modified: "",
-        created: "",
+        description: "",
         sections: [],
-        due_date: null,
         archived: null,
         workspace: workspaceFallback,
     };
     const sectionFallback: ProjectDetailSection = {
         title: "",
-        description: null,
         uuid: "",
         _order: 0,
         tasks: [],
@@ -83,7 +79,7 @@
         assignee: null,
         uuid: "",
         due_date: null,
-        sub_tasks: [],
+        sub_task_progress: null,
         number: 1,
         labels: [],
     };
@@ -111,38 +107,38 @@
     type State =
         | {
               kind: "new-workspace";
-              workspace?: Workspace;
+              workspace?: UserWorkspace;
               title: string;
           }
         | {
               kind: "new-project";
-              workspace: Workspace;
+              workspace: ProjectDetailWorkspace;
               project?: ProjectDetail;
               title: string;
           }
         | {
               kind: "new-task";
-              workspace: Workspace;
+              workspace: ProjectDetailWorkspace;
               project: ProjectDetail;
               sectionTitle: string;
               title: string;
           }
         | {
               kind: "new-label";
-              workspace: Workspace;
+              workspace: ProjectDetailWorkspace;
               project: ProjectDetail;
               section: ProjectDetailSection;
-              task: ProjectDetailTask;
+              task: TaskDetail;
               title: string;
           }
         | {
               kind: "assign-task";
-              workspace: Workspace;
+              workspace: ProjectDetailWorkspace;
               project: ProjectDetail;
               section: ProjectDetailSection;
-              task: ProjectDetailTask;
+              task: TaskDetail;
               label: Label;
-              assignee: TeamMember;
+              assignee: TaskDetailAssignee;
           };
 
     export let state: State;
@@ -173,7 +169,13 @@
                       {
                           ...sectionFallback,
                           title: state.sectionTitle,
-                          tasks: [{ ...taskFallback, title: state.title }],
+                          tasks: [
+                              {
+                                  ...taskFallback,
+                                  sub_task_progress: null,
+                                  title: state.title,
+                              },
+                          ],
                       },
                   ],
               }
@@ -186,6 +188,7 @@
                           tasks: [
                               {
                                   ...state.task,
+                                  sub_task_progress: null,
                                   labels: [
                                       { ...labelFallback, name: state.title },
                                   ],
@@ -203,6 +206,7 @@
                           tasks: [
                               {
                                   ...state.task,
+                                  sub_task_progress: null,
                                   labels: [state.label],
                                   assignee: state.assignee,
                               },

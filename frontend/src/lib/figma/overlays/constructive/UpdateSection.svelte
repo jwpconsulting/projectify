@@ -26,11 +26,11 @@
         resolveConstructiveOverlay,
     } from "$lib/stores/globalUi";
     import type { FormViewState } from "$lib/types/ui";
-    import type { Section } from "$lib/types/workspace";
+    import type { ProjectDetailSection } from "$lib/types/workspace";
     import { openApiClient } from "$lib/repository/util";
     import type { InputFieldValidation } from "$lib/funabashi/types";
 
-    export let section: Pick<Section, "uuid" | "title" | "description">;
+    export let section: ProjectDetailSection;
 
     let state: FormViewState = { kind: "start" };
 

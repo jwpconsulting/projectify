@@ -21,9 +21,9 @@ import { getProject } from "$lib/repository/workspace/project";
 import { currentTask } from "$lib/stores/dashboard/task";
 import type {
     Label,
-    Workspace,
+    ProjectDetailWorkspace,
     ProjectDetail,
-    TeamMember,
+    ProjectDetailAssignee,
     TaskDetail,
     ProjectDetailSection,
 } from "$lib/types/workspace";
@@ -35,9 +35,9 @@ interface returnType {
     task: TaskDetail;
     section: ProjectDetailSection;
     project: ProjectDetail;
-    workspace: Workspace;
+    workspace: ProjectDetailWorkspace;
     label: Label;
-    assignee: TeamMember;
+    assignee: ProjectDetailAssignee;
 }
 export async function load({
     params: { taskUuid },

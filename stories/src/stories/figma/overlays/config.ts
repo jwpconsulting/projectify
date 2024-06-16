@@ -25,7 +25,8 @@ import {
     labelAssignment,
     makeStorybookSelect,
     projectDetail,
-    sectionDetail,
+    projectDetailTask,
+    projectDetailSection,
 } from "$lib-stories/storybook";
 import type { ConstructiveOverlayType, ContextMenuType } from "$lib/types/ui";
 
@@ -52,23 +53,31 @@ export const contextMenus: Record<string, ContextMenuType> = {
     "Section": {
         kind: "section" as const,
         project: projectDetail,
-        section: sectionDetail,
-    },
-    "Task dashboard": {
-        kind: "task" as const,
-        task,
-        location: "dashboard",
-        section: sectionDetail,
-        project: {
-            ...project,
-            sections: [],
-            workspace,
-        },
+        section: projectDetailSection,
     },
     "Task": {
         kind: "task" as const,
         task,
         location: "task",
+    },
+    "Task search": {
+        kind: "task" as const,
+        task: projectDetailTask,
+        location: "dashboardSearch",
+        project: projectDetail,
+    },
+    "Task dashboard": {
+        kind: "task" as const,
+        task: projectDetailTask,
+        location: "dashboard",
+        section: projectDetailSection,
+        project: {
+            ...project,
+            archived: "",
+            description: "",
+            sections: [],
+            workspace,
+        },
     },
     // TODO name of component / kind should be update team member assignment?
     // TODO yep, I agree even one month later. Justus 2023-10-19
@@ -138,7 +147,7 @@ export const constructiveOverlays =
         },
         "Update section": {
             kind: "updateSection",
-            section,
+            section: projectDetailSection,
         },
         "Recover project": {
             kind: "recoverProject",

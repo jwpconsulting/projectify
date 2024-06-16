@@ -24,14 +24,14 @@
     import type {
         ProjectDetail,
         ProjectDetailTask,
-        SectionWithTasks,
+        ProjectDetailSection,
     } from "$lib/types/workspace";
 
     export let task: ProjectDetailTask;
     // this is only ever needed for the dashboard, not when a task is part
     // of search results... time for another ADT?
     export let project: ProjectDetail;
-    export let section: SectionWithTasks | undefined = undefined;
+    export let section: ProjectDetailSection | undefined = undefined;
 
     let dropDownMenuBtnRef: HTMLElement;
 
@@ -41,12 +41,13 @@
                 ? {
                       kind: "task",
                       task,
-                      location: "task",
+                      location: "dashboardSearch",
+                      project,
                   }
                 : {
-                      kind: "task" as const,
+                      kind: "task",
                       task,
-                      location: "dashboard" as const,
+                      location: "dashboard",
                       section,
                       project,
                   };

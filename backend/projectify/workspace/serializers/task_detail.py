@@ -31,6 +31,7 @@ from rest_framework import serializers
 from rest_framework.request import Request
 
 from projectify.user.models.user import User
+from projectify.workspace.models.project import Project
 from projectify.workspace.models.sub_task import SubTask
 
 from ..models.section import Section
@@ -48,8 +49,68 @@ from ..services.sub_task import (
     ValidatedDatum,
     ValidatedDatumWithUuid,
 )
-from .section import SectionUpSerializer
 from .task import TaskWithSubTaskSerializer
+
+
+class TaskDetailWorkspaceSerializer(serializers.ModelSerializer[Workspace]):
+    """Serializes a task's workspace."""
+
+    class Meta:
+        """Meta."""
+
+        model = Workspace
+        fields = (
+            "title",
+            "uuid",
+        )
+        extra_kwargs = {
+            "description": {"required": True},
+        }
+
+
+class TaskDetailProjectSerializer(serializers.ModelSerializer[Project]):
+    """Serialize a task's project."""
+
+    workspace = TaskDetailWorkspaceSerializer(read_only=True)
+
+    class Meta:
+        """Meta."""
+
+        model = Project
+        fields = (
+            "title",
+            "uuid",
+            "workspace",
+            # TODO not needed?
+            "description",
+            "due_date",
+        )
+        extra_kwargs = {
+            "due_date": {"required": True},
+            "description": {"required": True},
+        }
+
+
+class TaskDetailSectionSerializer(serializers.ModelSerializer[Section]):
+    """Serialize a task's section."""
+
+    project = TaskDetailProjectSerializer(read_only=True)
+
+    class Meta:
+        """Meta."""
+
+        model = Section
+        fields = (
+            "title",
+            "uuid",
+            "project",
+            # TODO consider removing:
+            "description",
+            "_order",
+        )
+        extra_kwargs = {
+            "description": {"required": True},
+        }
 
 
 class TaskDetailSerializer(TaskWithSubTaskSerializer):
@@ -63,7 +124,7 @@ class TaskDetailSerializer(TaskWithSubTaskSerializer):
     chat_messages = ChatMessageBaseSerializer(
         many=True, read_only=True, source="chatmessage_set"
     )
-    section = SectionUpSerializer(read_only=True)
+    section = TaskDetailSectionSerializer(read_only=True)
 
     class Meta(TaskWithSubTaskSerializer.Meta):
         """Meta."""

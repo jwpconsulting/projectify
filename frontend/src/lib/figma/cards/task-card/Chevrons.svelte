@@ -26,7 +26,7 @@ Up and down chevrons for task movement within a section
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { moveTask, canMoveTask } from "$lib/repository/workspace/task";
     import type {
-        SectionWithTasks,
+        ProjectDetailSection,
         ProjectDetailTask,
     } from "$lib/types/workspace";
     import type { FormViewState } from "$lib/types/ui";
@@ -35,7 +35,7 @@ Up and down chevrons for task movement within a section
     import { getLogInWithNextUrl } from "$lib/urls/user";
 
     export let task: ProjectDetailTask;
-    export let section: SectionWithTasks;
+    export let section: ProjectDetailSection;
 
     let state: FormViewState = { kind: "start" };
     $: canMove =

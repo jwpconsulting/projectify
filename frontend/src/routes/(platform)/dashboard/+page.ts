@@ -22,8 +22,12 @@ import { getDashboardWorkspaceUrl } from "$lib/urls";
 import { startUrl } from "$lib/urls/onboarding";
 
 import { selectedWorkspaceUuid } from "$lib/stores/dashboard/ui";
+import { browser } from "$app/environment";
 
 export async function load(): Promise<void> {
+    if (!browser) {
+        return;
+    }
     const maybeWorkspaceUuid: string | null = await new Promise(
         selectedWorkspaceUuid.subscribe,
     );

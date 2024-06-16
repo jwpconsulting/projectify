@@ -28,7 +28,7 @@ import type {
     TeamMemberSelection,
     TeamMemberSelectionInput,
 } from "$lib/types/ui";
-import type { TeamMember } from "$lib/types/workspace";
+import type { WorkspaceDetailTeamMember } from "$lib/types/workspace";
 
 import { internallyWritable, searchAmong } from "../util";
 
@@ -42,7 +42,7 @@ type TeamMemberSearch = Writable<SearchInput>;
 const createTeamMemberFilter = () => writable<SearchInput>(undefined);
 
 function searchTeamMembers(
-    teamMembers: readonly TeamMember[],
+    teamMembers: readonly WorkspaceDetailTeamMember[],
     searchInput: SearchInput,
 ) {
     return searchAmong(
@@ -52,7 +52,7 @@ function searchTeamMembers(
     );
 }
 
-type TeamMemberSearchResults = Readable<readonly TeamMember[]>;
+type TeamMemberSearchResults = Readable<readonly WorkspaceDetailTeamMember[]>;
 
 function createTeamMemberSearchResults(
     currentTeamMembers: CurrentTeamMembers,
@@ -60,7 +60,7 @@ function createTeamMemberSearchResults(
 ): TeamMemberSearchResults {
     return derived<
         [typeof currentTeamMembers, typeof teamMemberSearch],
-        readonly TeamMember[]
+        readonly WorkspaceDetailTeamMember[]
     >(
         [currentTeamMembers, teamMemberSearch],
         ([$currentTeamMembers, $teamMemberSearch], set) => {

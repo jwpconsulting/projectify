@@ -15,42 +15,48 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Section serializers."""
-from projectify.workspace.serializers.task import (
-    TaskWithSubTaskSerializer,
-)
+from rest_framework import serializers
 
-from . import (
-    base,
-)
+from projectify.workspace.models.workspace import Workspace
+
+from ..models.project import Project
+from ..serializers.task import TaskWithSubTaskSerializer
+from . import base
 
 
-class ProjectUpSerializer(base.ProjectBaseSerializer):
-    """
-    Serialize project and workspace containing it.
+class SectionDetailWorkspaceSerializer(serializers.ModelSerializer[Workspace]):
+    """Serialize a section's workspace."""
 
-    Used when serializing up from a task or ws board section.
-    """
-
-    workspace = base.WorkspaceBaseSerializer(read_only=True)
-
-    class Meta(base.ProjectBaseSerializer.Meta):
+    class Meta:
         """Meta."""
 
+        model = Workspace
         fields = (
-            *base.ProjectBaseSerializer.Meta.fields,
+            "title",
+            "uuid",
+        )
+
+
+class SectionDetailProjectSerializer(serializers.ModelSerializer[Project]):
+    """Serialize a project's section."""
+
+    workspace = SectionDetailWorkspaceSerializer(read_only=True)
+
+    class Meta:
+        """Meta."""
+
+        model = Project
+        fields = (
+            "title",
+            "uuid",
             "workspace",
         )
-        extra_kwargs = {
-            "due_date": {"required": True},
-            "archived": {"required": True},
-            "description": {"required": True},
-        }
 
 
 class SectionUpSerializer(base.SectionBaseSerializer):
     """Serialize section up the hierarchy."""
 
-    project = ProjectUpSerializer(read_only=True)
+    project = SectionDetailProjectSerializer(read_only=True)
 
     class Meta(base.SectionBaseSerializer.Meta):
         """Meta."""
@@ -71,7 +77,7 @@ class SectionDetailSerializer(base.SectionBaseSerializer):
     Goes both up (to workspace) and down (all tasks).
     """
 
-    project = ProjectUpSerializer(read_only=True)
+    project = SectionDetailProjectSerializer(read_only=True)
     tasks = TaskWithSubTaskSerializer(
         many=True, read_only=True, source="task_set"
     )

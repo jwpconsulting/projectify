@@ -15,18 +15,5 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { redirect } from "@sveltejs/kit";
-import type { LayoutLoadEvent } from "./$types";
-import { getLogInWithNextUrl } from "$lib/urls/user";
-
-export async function load({ parent, url }: LayoutLoadEvent) {
-    const { userAwaitable } = await parent();
-    const user = await userAwaitable;
-    if (user.kind !== "authenticated") {
-        redirect(302, getLogInWithNextUrl(url.pathname));
-    }
-    return { user };
-}
-
 export const prerender = false;
 export const ssr = false;

@@ -16,10 +16,10 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import { openApiClient } from "$lib/repository/util";
-import type { Workspace } from "$lib/types/workspace";
+import type { UserWorkspace } from "$lib/types/workspace";
 
 // Read
-export async function getWorkspaces(): Promise<Workspace[]> {
+export async function getWorkspaces(): Promise<UserWorkspace[]> {
     const { error, data } = await openApiClient.GET(
         "/workspace/workspace/user-workspaces/",
     );
