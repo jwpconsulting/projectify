@@ -33,5 +33,7 @@ Both frontend and backend code are licensed under the GNU Affero General Public
 License Version 3 or later. For more information, please refer to the
 `LICENSE` file contained in this repository.
 
+See `AUTHORS.txt` file for the list of contributors.
+
 Projectify is a registered trademark by [JWP Consulting
 GK](https://www.jwpconsulting.net).

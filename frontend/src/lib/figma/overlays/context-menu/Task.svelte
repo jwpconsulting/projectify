@@ -1,5 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
+    Copyright (C) 2024 Saki Adachi
     Copyright (C) 2023, 2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
@@ -98,18 +99,20 @@
             iconRight={moveToSectionOpened ? ChevronUp : ChevronDown}
         />
         {#if moveToSectionOpened}
-            {#each kind.project.sections as section}
-                <ContextMenuButton
-                    label={section.title}
-                    kind={{
-                        kind: "button",
-                        action: moveTask.bind(null, kind.task, {
-                            kind: "section",
-                            section,
-                        }),
-                    }}
-                />
-            {/each}
+            <div class="flex max-h-60 max-w-xs flex-col overflow-y-scroll">
+                {#each kind.project.sections as section}
+                    <ContextMenuButton
+                        label={section.title}
+                        kind={{
+                            kind: "button",
+                            action: moveTask.bind(null, kind.task, {
+                                kind: "section",
+                                section,
+                            }),
+                        }}
+                    />
+                {/each}
+            </div>
         {/if}
         {#if canMoveTask( kind.task, { kind: "top", section: kind.section }, ) && canMove}
             <ContextMenuButton

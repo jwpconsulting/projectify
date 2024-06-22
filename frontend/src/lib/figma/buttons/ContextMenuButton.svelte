@@ -1,5 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
+    Copyright (C) 2024 Saki Adachi
     Copyright (C) 2023 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
@@ -76,7 +77,7 @@
 {:else}
     <button disabled={kind.disabled} on:click={action} class={outerClass}>
         {#if icon}<Icon src={icon} theme="outline" class="h-4 w-4" />{/if}
-        {label}
+        <span class="truncate">{label}</span>
         {#if iconRight}
             <Icon src={iconRight} theme="outline" class="h-4 w-4" />{/if}
     </button>
