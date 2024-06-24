@@ -99,7 +99,7 @@
             iconRight={moveToSectionOpened ? ChevronUp : ChevronDown}
         />
         {#if moveToSectionOpened}
-            <div class="flex max-h-60 max-w-xs flex-col overflow-y-scroll">
+            <div class="flex max-h-60 max-w-xs flex-col overflow-y-auto">
                 {#each kind.project.sections as section}
                     <ContextMenuButton
                         label={section.title}
