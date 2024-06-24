@@ -34,6 +34,7 @@
 
     import type { PageData } from "./$types";
     import { openApiClient } from "$lib/repository/util";
+    import Loading from "$lib/components/Loading.svelte";
 
     export let data: PageData;
 
@@ -149,33 +150,41 @@
     <h2 class="text-xl font-bold">
         {$_("workspace-settings.team-members.heading")}
     </h2>
-    <table class="grid w-full grid-cols-4 items-center gap-y-4">
-        <thead class="contents">
-            <tr class="contents">
-                <th
-                    class="col-span-2 border-b border-border text-left font-bold"
-                    >{$_("workspace-settings.team-members.team-member")}</th
-                >
-                <th class="border-b border-border text-left font-bold"
-                    >{$_("workspace-settings.team-members.role")}</th
-                >
-                <th class="border-b border-border text-left font-bold"
-                    >{$_("workspace-settings.team-members.actions.action")}</th
-                >
-            </tr>
-        </thead>
-        <tbody class="contents">
-            {#each $currentTeamMembers as teamMember}
-                <TeamMemberCard {teamMember} />
-            {:else}
-                <td class="col-span-4">
-                    {$_(
-                        "workspace-settings.team-members.no-team-members-found",
-                    )}
-                </td>
-            {/each}
-        </tbody>
-    </table>
+    {#if $currentTeamMembers}
+        <table class="grid w-full grid-cols-4 items-center gap-y-4">
+            <thead class="contents">
+                <tr class="contents">
+                    <th
+                        class="col-span-2 border-b border-border text-left font-bold"
+                        >{$_(
+                            "workspace-settings.team-members.team-member",
+                        )}</th
+                    >
+                    <th class="border-b border-border text-left font-bold"
+                        >{$_("workspace-settings.team-members.role")}</th
+                    >
+                    <th class="border-b border-border text-left font-bold"
+                        >{$_(
+                            "workspace-settings.team-members.actions.action",
+                        )}</th
+                    >
+                </tr>
+            </thead>
+            <tbody class="contents">
+                {#each $currentTeamMembers as teamMember}
+                    <TeamMemberCard {teamMember} />
+                {:else}
+                    <td class="col-span-4">
+                        {$_(
+                            "workspace-settings.team-members.no-team-members-found",
+                        )}
+                    </td>
+                {/each}
+            </tbody>
+        </table>
+    {:else}
+        <Loading />
+    {/if}
 </section>
 <section class="flex flex-col gap-4">
     <h2 class="text-xl font-bold">

@@ -41,8 +41,7 @@ export type CurrentTeamMembers = Readable<
 
 export const currentTeamMembers: CurrentTeamMembers = derived<
     typeof currentWorkspace,
-    readonly WorkspaceDetailTeamMember[]
-    // Derived stores are initialized with undefined
+    readonly WorkspaceDetailTeamMember[] | undefined
 >(
     currentWorkspace,
     ($currentWorkspace, set) => {
@@ -63,16 +62,20 @@ export const currentTeamMember: CurrentTeamMember = derived<
     [typeof currentUser, typeof currentWorkspace],
     WorkspaceDetailTeamMember | undefined
 >(
-    [currentUser, currentWorkspace],
-    ([$user, $currentWorkspace], set) => {
-        if (
-            $user.kind !== "authenticated" ||
-            $currentWorkspace.value === undefined
-        ) {
+    [currentUser, currentWorkspace, currentProject],
+    ([$user, $currentWorkspace, $currentProject], set) => {
+        if ($user.kind !== "authenticated") {
             set(undefined);
             return;
         }
-        const wsUser = $currentWorkspace.value.team_members.find(
+        const teamMembers =
+            $currentWorkspace.value?.team_members ??
+            $currentProject.value?.workspace.team_members;
+        if (teamMembers === undefined) {
+            set(undefined);
+            return;
+        }
+        const wsUser = teamMembers.find(
             (wsUser) => wsUser.user.email === $user.email,
         );
         if (wsUser === undefined) {
