@@ -1,5 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
+    Copyright (C) 2024 Saki Adachi
     Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
@@ -155,9 +156,10 @@
         } = anchor.getBoundingClientRect();
         console.debug({ anchor, anchorLeft, anchorTop });
 
-        // Width, height of viewport
-        const { innerWidth: viewPortWidth, innerHeight: viewPortHeight } =
-            window;
+        // Width of viewPort excluding scrollbars
+        const { clientWidth: viewPortWidth } = document.body;
+        // Height of viewport
+        const { innerHeight: viewPortHeight } = window;
         console.debug({ viewPortWidth, viewPortHeight });
 
         if (anchorTop > viewPortHeight || anchorBottom < 0) {
