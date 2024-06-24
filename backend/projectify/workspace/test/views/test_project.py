@@ -112,7 +112,8 @@ class TestProjectReadUpdateDelete:
         task.assignee = team_member
         task.save()
         # Gone up from 7 -> 12 since we prefetch workspace details too
-        with django_assert_num_queries(11):
+        # Gone up from 11 -> 14, since we fetch workspace quota
+        with django_assert_num_queries(14):
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.data
         assert response.data == {
