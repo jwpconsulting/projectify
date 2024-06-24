@@ -22,7 +22,6 @@ import type { LayoutLoadEvent } from "./$types";
 
 import { goto } from "$app/navigation";
 import { currentProject } from "$lib/stores/dashboard/project";
-import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 
 interface Data {
     project: Promise<ProjectDetail | undefined>;
@@ -40,26 +39,6 @@ export function load({ params: { projectUuid } }: LayoutLoadEvent): Data {
                     `No project could be found for UUID '${projectUuid}'`,
                 );
             }
-            return project;
-        })
-        .then((project) => {
-            const workspaceUuid = project.workspace.uuid;
-            currentWorkspace
-                .loadUuid(workspaceUuid)
-                .then((workspace) => {
-                    if (!workspace) {
-                        throw new Error(
-                            `For project ${projectUuid}, the workspace with UUID ${workspaceUuid} could not be found.`,
-                        );
-                    }
-                })
-                .catch((error: unknown) =>
-                    console.error(
-                        "Something went very wrong when fetching workspace",
-                        workspaceUuid,
-                        error,
-                    ),
-                );
             return project;
         })
         .catch(async () => {
