@@ -220,7 +220,6 @@ def unrelated_project(
 @pytest.fixture
 def archived_project(
     workspace: models.Workspace,
-    now: datetime,
     other_team_member: TeamMember,
     faker: Faker,
 ) -> models.Project:
