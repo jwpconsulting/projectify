@@ -142,6 +142,11 @@ class ProjectAdmin(admin.ModelAdmin[Project]):
     )
     list_select_related = ("workspace",)
     readonly_fields = ("uuid",)
+    search_fields = (
+        "title",
+        "workspace__title",
+        "uuid",
+    )
 
     @admin.display(description=_("Workspace title"))
     def workspace_title(self, instance: Project) -> str:
