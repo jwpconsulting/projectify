@@ -92,6 +92,7 @@ class TestProjectReadUpdateDelete:
         rest_user_client: APIClient,
         resource_url: str,
         project: Project,
+        archived_project: Project,
         team_member: TeamMember,
         workspace: Workspace,
         task: Task,
@@ -102,6 +103,7 @@ class TestProjectReadUpdateDelete:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can post to this view this while being logged in."""
+        del archived_project
         sub_task.done = True
         sub_task.save()
         del task_label
@@ -158,7 +160,7 @@ class TestProjectReadUpdateDelete:
                 "description": workspace.description,
                 "team_members": ANY,
                 "team_member_invites": [],
-                "projects": ANY,
+                "projects": [ANY],
                 "labels": ANY,
                 "quota": ANY,
             },
