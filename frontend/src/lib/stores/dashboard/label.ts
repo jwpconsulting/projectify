@@ -18,22 +18,23 @@
 import { derived, writable } from "svelte/store";
 import type { Readable } from "svelte/store";
 
-import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 import { searchAmong } from "$lib/stores/util";
 import type { SearchInput } from "$lib/types/base";
 import type { Label } from "$lib/types/workspace";
+import { currentProject } from "./project";
+import { currentWorkspace } from "./workspace";
 
 type CurrentWorkspaceLabels = Readable<readonly Label[] | undefined>;
 export const currentWorkspaceLabels: CurrentWorkspaceLabels = derived<
-    typeof currentWorkspace,
+    [typeof currentWorkspace, typeof currentProject],
     readonly Label[] | undefined
 >(
-    currentWorkspace,
-    ($currentWorkspace, set) => {
-        if (!$currentWorkspace.value) {
-            return;
-        }
-        set($currentWorkspace.value.labels);
+    [currentWorkspace, currentProject],
+    ([$currentWorkspace, $currentProject], set) => {
+        set(
+            $currentWorkspace.value?.labels ??
+                $currentProject.value?.workspace.labels,
+        );
     },
     undefined,
 );

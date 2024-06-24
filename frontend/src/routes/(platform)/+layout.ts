@@ -39,10 +39,9 @@ export function load({ url }: LayoutLoadEvent): {
             await goto(next);
             return;
         } else {
-            const workspaces = await currentWorkspaces.load();
-            if (!workspaces) {
-                error(500, "Unable to fetch workspaces");
-            }
+            currentWorkspaces.load().catch((error: unknown) => {
+                console.error("Error when loading currentWorkspaces", error);
+            });
         }
     })().catch((error: unknown) => {
         console.error(

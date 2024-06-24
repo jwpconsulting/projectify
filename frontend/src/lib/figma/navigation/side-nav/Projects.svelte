@@ -29,10 +29,10 @@
         toggleProjectExpandOpen,
     } from "$lib/stores/dashboard/ui";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
-    import type { WorkspaceDetail } from "$lib/types/workspace";
+    import type { ProjectDetailWorkspace } from "$lib/types/workspace";
     import { getArchiveUrl } from "$lib/urls";
 
-    export let workspace: WorkspaceDetail;
+    export let workspace: ProjectDetailWorkspace;
 
     async function openCreateProject() {
         await openConstructiveOverlay({

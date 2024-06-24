@@ -92,6 +92,7 @@ class TestProjectReadUpdateDelete:
         rest_user_client: APIClient,
         resource_url: str,
         project: Project,
+        archived_project: Project,
         team_member: TeamMember,
         workspace: Workspace,
         task: Task,
@@ -102,6 +103,7 @@ class TestProjectReadUpdateDelete:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can post to this view this while being logged in."""
+        del archived_project
         sub_task.done = True
         sub_task.save()
         del task_label
@@ -112,7 +114,8 @@ class TestProjectReadUpdateDelete:
         task.assignee = team_member
         task.save()
         # Gone up from 7 -> 12 since we prefetch workspace details too
-        with django_assert_num_queries(11):
+        # Gone up from 11 -> 14, since we fetch workspace quota
+        with django_assert_num_queries(14):
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.data
         assert response.data == {
@@ -157,7 +160,7 @@ class TestProjectReadUpdateDelete:
                 "description": workspace.description,
                 "team_members": ANY,
                 "team_member_invites": [],
-                "projects": ANY,
+                "projects": [ANY],
                 "labels": ANY,
                 "quota": ANY,
             },

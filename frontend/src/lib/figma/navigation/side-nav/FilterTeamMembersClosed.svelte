@@ -43,7 +43,7 @@
         action={{ kind: "button", action: toggleUserExpandOpen }}
         active={$selectedTeamMember.kind === "teamMembers"}
     />
-    {#if $userExpandOpen}
+    {#if $userExpandOpen && $teamMemberSearchResults !== undefined}
         <div class="flex flex-col items-center gap-2">
             <SelectTeamMemberClosed
                 ariaLabel={$_("filter-team-member.assigned-nobody")}

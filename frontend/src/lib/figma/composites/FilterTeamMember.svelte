@@ -36,6 +36,7 @@
         TeamMemberSelection,
     } from "$lib/types/ui";
     import type { ProjectDetailAssignee } from "$lib/types/workspace";
+    import Loading from "$lib/components/Loading.svelte";
 
     type FilterTeamMemberMenuMode =
         | { kind: "filter" }
@@ -96,24 +97,28 @@
         onSelect={() => select({ kind: "unassigned" })}
         onDeselect={() => deselect({ kind: "unassigned" })}
     />
-    {#each $teamMemberSearchResults as teamMember (teamMember.uuid)}
-        <FilterTeamMember
-            teamMemberSelectionInput={{
-                kind: "teamMember",
-                teamMember: teamMember,
-            }}
-            active={isSelected($selected, teamMember)}
-            count={$tasksPerUser.assigned.get(teamMember.uuid) ?? 0}
-            onSelect={() =>
-                select({
+    {#if $teamMemberSearchResults}
+        {#each $teamMemberSearchResults as teamMember (teamMember.uuid)}
+            <FilterTeamMember
+                teamMemberSelectionInput={{
                     kind: "teamMember",
                     teamMember: teamMember,
-                })}
-            onDeselect={() =>
-                deselect({
-                    kind: "teamMember",
-                    teamMember: teamMember,
-                })}
-        />
-    {/each}
+                }}
+                active={isSelected($selected, teamMember)}
+                count={$tasksPerUser.assigned.get(teamMember.uuid) ?? 0}
+                onSelect={() =>
+                    select({
+                        kind: "teamMember",
+                        teamMember: teamMember,
+                    })}
+                onDeselect={() =>
+                    deselect({
+                        kind: "teamMember",
+                        teamMember: teamMember,
+                    })}
+            />
+        {/each}
+    {:else}
+        <Loading />
+    {/if}
 </div>

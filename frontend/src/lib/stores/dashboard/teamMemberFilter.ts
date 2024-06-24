@@ -52,7 +52,9 @@ function searchTeamMembers(
     );
 }
 
-type TeamMemberSearchResults = Readable<readonly WorkspaceDetailTeamMember[]>;
+type TeamMemberSearchResults = Readable<
+    readonly WorkspaceDetailTeamMember[] | undefined
+>;
 
 function createTeamMemberSearchResults(
     currentTeamMembers: CurrentTeamMembers,
@@ -60,13 +62,16 @@ function createTeamMemberSearchResults(
 ): TeamMemberSearchResults {
     return derived<
         [typeof currentTeamMembers, typeof teamMemberSearch],
-        readonly WorkspaceDetailTeamMember[]
+        readonly WorkspaceDetailTeamMember[] | undefined
     >(
         [currentTeamMembers, teamMemberSearch],
         ([$currentTeamMembers, $teamMemberSearch], set) => {
+            if (!$currentTeamMembers) {
+                return;
+            }
             set(searchTeamMembers($currentTeamMembers, $teamMemberSearch));
         },
-        [],
+        undefined,
     );
 }
 

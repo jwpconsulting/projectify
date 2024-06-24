@@ -33,6 +33,7 @@ from projectify.workspace.selectors.project import (
     project_find_by_project_uuid,
     project_find_by_workspace_uuid,
 )
+from projectify.workspace.selectors.quota import workspace_get_all_quotas
 from projectify.workspace.selectors.workspace import (
     workspace_find_by_workspace_uuid,
 )
@@ -109,6 +110,7 @@ class ProjectReadUpdateDelete(APIView):
         )
         if project is None:
             raise NotFound(_("No project found for this uuid"))
+        project.workspace.quota = workspace_get_all_quotas(project.workspace)
         serializer = ProjectDetailSerializer(instance=project)
         return Response(serializer.data)
 
