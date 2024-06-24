@@ -1,0 +1,13 @@
+app = "projectify"
+region = "nrt"
+
+[build]
+dockerfile = "Dockerfile"
+
+[processes]
+web = "caddy run --config /etc/caddy/Caddyfile"
+
+[http_service]
+internal_port = 80
+force_https = true
+processes = ["app"]

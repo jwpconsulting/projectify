@@ -1,0 +1,7 @@
+{
+    auto_https off
+}
+
+http://projectify.fly.dev {
+    respond "Hello world"
+}
