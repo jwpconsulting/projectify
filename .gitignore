@@ -67,3 +67,8 @@ node_modules/
 # Tooling
 # =======
 /tools/.mypy_cache/
+
+# Supervisor
+# ==========
+/supervisor/supervisord.log
+/supervisor/supervisord.pid
