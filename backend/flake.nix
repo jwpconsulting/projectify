@@ -71,13 +71,13 @@
           poetrylock = ./poetry.lock;
           groups = [ "dev" "test" ];
         };
-        app = mkPoetryApplication {
+        projectify-backend = mkPoetryApplication {
           inherit projectDir;
           inherit overrides;
           inherit python;
           pyproject = ./pyproject.toml;
           poetrylock = ./poetry.lock;
-          groups = [ "dev" "test" ];
+          groups = [ ];
           buildInputs = [ pkgs.makeWrapper ];
           # The DATABASE_URL below will only work on localhost
           postInstall = ''
@@ -101,7 +101,10 @@
         };
       in
       {
-        packages.default = app;
+        packages = {
+          inherit projectify-backend;
+          default = self.packages.${system}.projectify-backend;
+        };
         devShell = poetryEnv.env.overrideAttrs (oldattrs: {
           buildInputs = [
             postgresql
