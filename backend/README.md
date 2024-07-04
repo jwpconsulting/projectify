@@ -104,22 +104,26 @@ The Projectify backend can be run using Nix.
 
 ## Nix built docker container
 
-A Docker container can be built using
+This assumes that you are using [Podman](https://podman.io/). A Docker container can be built using
 
 ```bash
 nix build .#container
 ```
 
-Try running the following, adjusting variables if needed:
+Then, create a [Podman volume](https://docs.podman.io/en/latest/markdown/podman-volume.1.html):
+
+```fish
+podman volume create projectify-backend-db
+```
+
+Try creating and migrating a database:
 
 ```fish
 podman run \
-    --expose 8000 \
-    --publish 8000:8000 \
-    --volume=/var/run/postgresql:/var/run/postgresql:rw \
-    --rm \
-    --interactive \
-    docker-archive:(zcat result | psub) manage.py shell_plus
+  --rm \
+  --interactive \
+  --volume projectify-backend-db:/var/projectify/db \
+  docker-archive:(zcat result | psub) manage.py seeddb
 ```
 
 This will start a server:
@@ -128,8 +132,7 @@ This will start a server:
 podman run \
     --expose 8000 \
     --publish 8000:8000 \
-    --volume=/var/run/postgresql:/var/run/postgresql:rw \
-    --rm \
+  --volume projectify-backend-db:/var/projectify/db \
     --interactive \
     docker-archive:(zcat result | psub)
 ```

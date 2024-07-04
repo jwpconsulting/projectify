@@ -78,7 +78,6 @@
           pyproject = ./pyproject.toml;
           poetrylock = ./poetry.lock;
           groups = [ ];
-          buildInputs = [ pkgs.makeWrapper ];
           outputs = [ "out" ];
           postInstall = ''
             mkdir -p $out/bin
@@ -99,30 +98,35 @@
               pkgs.coreutils
               pkgs.file
             ];
-            # For /var/run/postgresql
+            # Here and below we use relative paths
             extraCommands = ''
-              mkdir -p var/run/postgresql
-              mkdir -p var/static
+              mkdir -p var/projectify/static
+              mkdir -p var/projectify/db
 
               env \
                 DJANGO_SETTINGS_MODULE=projectify.settings.development \
                 DJANGO_CONFIGURATION=DevelopmentNix \
-                STATIC_ROOT=var/static/ \
+                STATIC_ROOT=var/projectify/static/ \
                 "${projectify-backend}/bin/manage.py" collectstatic --no-input
+
+              env \
+                DJANGO_SETTINGS_MODULE=projectify.settings.development \
+                DJANGO_CONFIGURATION=DevelopmentNix \
+                STATIC_ROOT=var/projectify/static/ \
+                DATABASE_URL=sqlite:///var/projectify/db/projectify.sqlite \
+                "${projectify-backend}/bin/manage.py" migrate --no-input
             '';
             config = {
               Env = [
                 "DJANGO_SETTINGS_MODULE=projectify.settings.development"
                 "DJANGO_CONFIGURATION=DevelopmentNix"
                 "PORT=8000"
-                "STATIC_ROOT=/var/static/"
-                # The DATABASE_URL below will only work on localhost
-                "DATABASE_URL=postgres://%2Fvar%2Frun%2Fpostgresql/projectify"
-              ];
-              Entrypoint = [
-                "gunicorn"
+                "STATIC_ROOT=/var/projectify/static/"
+                # Note four /// to denote absolute path
+                "DATABASE_URL=sqlite:////var/projectify/db/projectify.sqlite"
               ];
               Cmd = [
+                "gunicorn"
                 "--config"
                 "${./gunicorn.conf.py}"
                 "--log-config"
@@ -132,7 +136,7 @@
                 "8000/tcp" = { };
               };
               Volumes = {
-                "/var/run/postgresql" = { };
+                "/var/projectify/db" = { };
               };
             };
           };
