@@ -173,6 +173,7 @@ def get_request_serializer(
             return ser_inst
         case _:
             raise ValueError(f"Don't know what to do with {annotation}")
+    return None
 
 
 def maybe_annotate_400(
