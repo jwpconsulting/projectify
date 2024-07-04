@@ -2,11 +2,10 @@
   description = "Flake utils demo";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixpkgs.follows = "projectify-backend/nixpkgs";
     projectify-frontend.url = "../frontend";
-    projectify-frontend.inputs.nixpkgs.follows = "nixpkgs";
+    projectify-frontend.inputs.nixpkgs.follows = "projectify-backend/nixpkgs";
     projectify-backend.url = "../backend";
-    projectify-backend.inputs.nixpkgs.follows = "nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -14,10 +13,12 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        backend = projectify-backend.packages.${system};
       in
       {
         devShell = pkgs.mkShell {
           buildInputs = [
+            backend.projectify-backend
             pkgs.python311Packages.supervisor
             pkgs.unixtools.watch
             pkgs.coreutils

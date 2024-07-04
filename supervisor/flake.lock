@@ -96,16 +96,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1719956923,
-        "narHash": "sha256-nNJHJ9kfPdzYsCOlHOnbiiyKjZUW5sWbwx3cakg3/C4=",
+        "lastModified": 1701282334,
+        "narHash": "sha256-MxCVrXY6v4QmfTwIysjjaX0XUhqBbxTWWB4HXtDYsdk=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "706eef542dec88cc0ed25b9075d3037564b2d164",
+        "rev": "057f9aecfb71c4437d2b27d3323df7f93c010b7e",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "nixos-24.05",
+        "ref": "23.11",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -139,19 +139,17 @@
     "projectify-backend": {
       "inputs": {
         "flake-utils": "flake-utils_2",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
+        "nixpkgs": "nixpkgs",
         "poetry2nix": "poetry2nix"
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-7L2aLt2630NnJF/lp1EJ6xxUNBuX7ovPj+0XIIIYRX4=",
-        "path": "/nix/store/xz3i8pni2i4mbni2k2r0y0fjjhp7a3z3-source/backend",
+        "narHash": "sha256-WvxYGcdty10FiifuyB1/DuJWK+dZIzErSoYOYPOTH4k=",
+        "path": "/nix/store/bl2v8md6chf6y7q4vqbx5zkq0bvdfaq0-source/backend",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/xz3i8pni2i4mbni2k2r0y0fjjhp7a3z3-source/backend",
+        "path": "/nix/store/bl2v8md6chf6y7q4vqbx5zkq0bvdfaq0-source/backend",
         "type": "path"
       }
     },
@@ -159,24 +157,28 @@
       "inputs": {
         "flake-utils": "flake-utils_4",
         "nixpkgs": [
+          "projectify-backend",
           "nixpkgs"
         ]
       },
       "locked": {
         "lastModified": 1,
         "narHash": "sha256-zNQX6xVDvg/zbe5mNOPQI6hcefks02Ig3rNdqGoq/2w=",
-        "path": "/nix/store/xz3i8pni2i4mbni2k2r0y0fjjhp7a3z3-source/frontend",
+        "path": "/nix/store/bl2v8md6chf6y7q4vqbx5zkq0bvdfaq0-source/frontend",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/xz3i8pni2i4mbni2k2r0y0fjjhp7a3z3-source/frontend",
+        "path": "/nix/store/bl2v8md6chf6y7q4vqbx5zkq0bvdfaq0-source/frontend",
         "type": "path"
       }
     },
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": [
+          "projectify-backend",
+          "nixpkgs"
+        ],
         "projectify-backend": "projectify-backend",
         "projectify-frontend": "projectify-frontend"
       }
