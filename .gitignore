@@ -24,6 +24,8 @@ node_modules/
 /backend/.direnv
 /backend/.mypy_cache/
 /backend/.coverage
+# Nix build
+/backend/result
 
 # Frontend
 # ========

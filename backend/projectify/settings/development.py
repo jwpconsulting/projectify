@@ -21,11 +21,14 @@ from collections.abc import (
     Iterable,
     Sequence,
 )
+from pathlib import Path
 from typing import Optional
 
 from dotenv import (
     load_dotenv,
 )
+
+from projectify.lib.settings import populate_production_middleware
 
 from .base import Base
 from .spectacular import SpectacularSettings
@@ -64,7 +67,7 @@ class Development(SpectacularSettings, Base):
 
     SECRET_KEY = "development"
 
-    INSTALLED_APPS = (
+    INSTALLED_APPS: Sequence[str] = (
         *Base.INSTALLED_APPS,
         "debug_toolbar",
         "drf_spectacular",
@@ -161,3 +164,30 @@ class Development(SpectacularSettings, Base):
         """Load environment variables from .env."""
         super().pre_setup()
         load_dotenv()
+
+
+class DevelopmentNix(Development):
+    """Preliminary configuration for poetry2nix packaged backend."""
+
+    SITE_TITLE = "Projectify-Backend (nix)"
+
+    CELERY_BROKER_URL = None
+
+    STORAGES = {
+        **Development.STORAGES,
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
+
+    # Use middelware from production for added realism
+    MIDDLEWARE = list(populate_production_middleware(Base.MIDDLEWARE))
+
+    # We need to inject the static root path during the nix build process
+    STATIC_ROOT = Path(os.environ["STATIC_ROOT"])
+
+    # No need for debug or debug libs, for added realism
+    DEBUG = False
+    INSTALLED_APPS = Base.INSTALLED_APPS
+    SERVE_SPECTACULAR = False
+    DEBUG_TOOLBAR = False

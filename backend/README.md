@@ -98,6 +98,44 @@ git add requirements.txt
 # Maybe git commit here
 ```
 
+# Nix
+
+The Projectify backend can be run using Nix.
+
+## Nix built docker container
+
+This assumes that you are using [Podman](https://podman.io/). A Docker container can be built using
+
+```bash
+nix build .#container
+```
+
+Then, create a [Podman volume](https://docs.podman.io/en/latest/markdown/podman-volume.1.html):
+
+```fish
+podman volume create projectify-backend-db
+```
+
+Try creating and migrating a database:
+
+```fish
+podman run \
+  --rm \
+  --interactive \
+  --volume projectify-backend-db:/var/projectify/db \
+  docker-archive:(zcat result | psub) manage.py seeddb
+```
+
+This will start a server:
+
+```fish
+podman run \
+    --expose 8000 \
+    --publish 8000:8000 \
+  --volume projectify-backend-db:/var/projectify/db \
+    --interactive \
+    docker-archive:(zcat result | psub)
+```
 
 ## Flake
 

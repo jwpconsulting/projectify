@@ -22,6 +22,10 @@ ignore = [
     "D212",
     "E501",
 ]
+extend-exclude = [
+    # Nix build
+    "result/",
+]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 6
@@ -58,6 +62,7 @@ exclude = [
     "docs",
     "whitelist.py",
     ".direnv",
+    "result",
 ]
 
 # Library imports
@@ -108,6 +113,8 @@ exclude = [
     "projectify/premail/test/test_emails.py",
     # TODO typing for spectacular is underspecified
     "projectify/lib/error_schema.py",
+    # Nix build
+    "result",
 ]
 # Mypy doesn't complain about these, so it's fine
 reportUnknownParameterType = true
@@ -124,6 +131,9 @@ version = "0.1.0"
 description = "Projectify backend"
 authors = ["Justus Perlwitz <justus@jwpconsulting.net>"]
 readme = "README.md"
+exclude = [
+    "projectify/*/test",
+]
 
 [tool.poetry.dependencies]
 celery = {extras = ["redis"], version = "~5.2.7"}
@@ -203,6 +213,7 @@ exclude = [
     "conftest.py",
     "settings",
     "migrations",
+    "result/",
 ]
 min_confidence = 70
 
@@ -218,6 +229,13 @@ sort = "-cover"
 [tool.coverage.html]
 
 [tool.pytest.ini_options]
+pythonpath = [
+    "projectify",
+]
+norecursedirs = [
+    "result",
+    ".direnv",
+]
 FAIL_INVALID_TEMPLATE_VARS = "True"
 DJANGO_SETTINGS_MODULE = "projectify.settings.test"
 DJANGO_CONFIGURATION = "Test"

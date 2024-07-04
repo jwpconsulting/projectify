@@ -71,21 +71,89 @@
           poetrylock = ./poetry.lock;
           groups = [ "dev" "test" ];
         };
-      in
-      {
-        devShell = pkgs.mkShell {
-          buildInputs = [
-            python
-            poetryEnv
-            postgresql
-            pkgs.heroku
-            # Allow poetry to install
-            pkgs.openssl
-          ];
-          shellHook = ''
-            # For gunicorn
-            export PORT=8000
+        projectify-backend = mkPoetryApplication {
+          inherit projectDir;
+          inherit overrides;
+          inherit python;
+          pyproject = ./pyproject.toml;
+          poetrylock = ./poetry.lock;
+          groups = [ ];
+          outputs = [ "out" ];
+          postInstall = ''
+            mkdir -p $out/bin
+            cp -v manage.py "$out/bin"
           '';
         };
+      in
+      {
+        packages = {
+          projectify-backend = projectify-backend.dependencyEnv;
+          default = projectify-backend.dependencyEnv;
+          container = pkgs.dockerTools.buildLayeredImage {
+            name = "projectify-backend";
+            tag = "latest";
+            contents = [
+              projectify-backend.dependencyEnv
+              pkgs.bash
+              pkgs.coreutils
+              pkgs.file
+            ];
+            # Here and below we use relative paths
+            extraCommands = ''
+              mkdir -p var/projectify/static
+              mkdir -p var/projectify/db
+
+              env \
+                DJANGO_SETTINGS_MODULE=projectify.settings.development \
+                DJANGO_CONFIGURATION=DevelopmentNix \
+                STATIC_ROOT=var/projectify/static/ \
+                "${projectify-backend}/bin/manage.py" collectstatic --no-input
+
+              env \
+                DJANGO_SETTINGS_MODULE=projectify.settings.development \
+                DJANGO_CONFIGURATION=DevelopmentNix \
+                STATIC_ROOT=var/projectify/static/ \
+                DATABASE_URL=sqlite:///var/projectify/db/projectify.sqlite \
+                "${projectify-backend}/bin/manage.py" migrate --no-input
+            '';
+            config = {
+              Env = [
+                "DJANGO_SETTINGS_MODULE=projectify.settings.development"
+                "DJANGO_CONFIGURATION=DevelopmentNix"
+                "PORT=8000"
+                "STATIC_ROOT=/var/projectify/static/"
+                # Note four /// to denote absolute path
+                "DATABASE_URL=sqlite:////var/projectify/db/projectify.sqlite"
+              ];
+              Cmd = [
+                "gunicorn"
+                "--config"
+                "${./gunicorn.conf.py}"
+                "--log-config"
+                "${./gunicorn-error.log}"
+              ];
+              ExposedPorts = {
+                "8000/tcp" = { };
+              };
+              Volumes = {
+                "/var/projectify/db" = { };
+              };
+            };
+          };
+        };
+        # Run with `nix run`
+        apps = {
+          default = {
+            type = "app";
+            program = "${projectify-backend}/bin/projectify-backend";
+          };
+        };
+        devShell = poetryEnv.env.overrideAttrs (oldattrs: {
+          buildInputs = [
+            postgresql
+            pkgs.heroku
+            pkgs.openssl
+          ];
+        });
       });
 }
