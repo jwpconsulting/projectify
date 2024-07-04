@@ -16,7 +16,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Stripe related helpers."""
 
-
 from stripe import StripeClient
 
 from projectify.lib.settings import get_settings

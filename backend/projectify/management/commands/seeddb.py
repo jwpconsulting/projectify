@@ -31,6 +31,7 @@ dropdb projectify && \
     poetry run ./manage.py migrate && \
     poetry run ./manage.py seeddb
 """
+
 from argparse import (
     ArgumentParser,
 )

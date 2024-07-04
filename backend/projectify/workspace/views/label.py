@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Label views."""
+
 from uuid import UUID
 
 from django.shortcuts import get_object_or_404

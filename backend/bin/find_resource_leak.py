@@ -74,6 +74,7 @@ other relevant open() calls.
 OTOH, it could be that due to forking we have another open() call somewhere
 that we don't catch using an audit hook.
 """
+
 import inspect
 import sys
 from collections.abc import (

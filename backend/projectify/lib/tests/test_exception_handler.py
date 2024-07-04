@@ -1,4 +1,5 @@
 """Test exception_handler module."""
+
 from typing import Literal
 
 from django import http

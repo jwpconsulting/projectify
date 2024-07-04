@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Consumer tests."""
+
 # TODO
 # - replace .disconnect() calls with clean_up_communicator
 # - put instance .delete() calls in each fixture

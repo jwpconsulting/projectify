@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Authorization and authentication related functions."""
+
 # This is coupled to our own user model for now, otherwise we need to
 # do lots of weird casting with AbstractBaseUser vs. AbstractUser
 import logging

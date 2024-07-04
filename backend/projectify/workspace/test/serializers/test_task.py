@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Test workspace serializer."""
+
 from typing import Any
 from unittest.mock import MagicMock
 from uuid import uuid4

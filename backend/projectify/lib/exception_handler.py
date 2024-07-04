@@ -30,6 +30,7 @@ Other errors in the 500 category we don't show to the user anyway, and the
 purpose of a 400 error is to give the user the opportunity to correct the
 error itself.
 """
+
 import logging
 from collections.abc import Mapping, Sequence
 from typing import Literal, Optional, TypedDict, Union

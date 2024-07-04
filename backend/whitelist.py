@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Whitelist for vulture. Not currently used for testing."""
+
 # ruff: noqa: F821
 app_name  # unused variable (workspace/urls.py:11)
 django_get_or_create  # unused variable (user/factory.py:37)

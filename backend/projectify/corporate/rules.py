@@ -19,6 +19,7 @@ Corporate app rules.
 
 The order of rules follows the ordering of models.
 """
+
 import rules
 
 from projectify.workspace.rules import (

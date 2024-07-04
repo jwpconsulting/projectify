@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Create asgi application optionally wrapped with debug middleware."""
+
 from channels.routing import ProtocolTypeRouter
 
 from projectify.middleware import ErrorChannelator

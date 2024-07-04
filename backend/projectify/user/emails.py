@@ -16,7 +16,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """User emails."""
 
-
 from projectify.premail.email import (
     Context,
     TemplateEmail,

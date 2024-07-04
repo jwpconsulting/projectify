@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """PreviousEmailAddress stores historical email addresses."""
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 

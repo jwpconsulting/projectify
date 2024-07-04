@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Test workspace model selectors."""
+
 import pytest
 
 from ...models.team_member import TeamMember
