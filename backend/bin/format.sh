@@ -19,4 +19,4 @@
 # Run within a poetry, nix, or similar environment
 set -e
 ruff format .
-ruff --fix .
+ruff check --fix .
