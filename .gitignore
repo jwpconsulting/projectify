@@ -74,3 +74,5 @@ node_modules/
 # ==========
 /supervisor/supervisord.log
 /supervisor/supervisord.pid
+/supervisor/projectify-backend.sqlite
+/supervisor/static/
