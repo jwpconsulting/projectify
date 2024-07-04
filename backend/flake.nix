@@ -73,19 +73,12 @@
         };
       in
       {
-        devShell = pkgs.mkShell {
+        devShell = poetryEnv.env.overrideAttrs (oldattrs: {
           buildInputs = [
-            python
-            poetryEnv
             postgresql
             pkgs.heroku
-            # Allow poetry to install
             pkgs.openssl
           ];
-          shellHook = ''
-            # For gunicorn
-            export PORT=8000
-          '';
-        };
+        });
       });
 }
