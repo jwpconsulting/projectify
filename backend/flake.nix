@@ -1,11 +1,9 @@
-# TODO
-# - Make mypy etc available from inside poetry env
 {
-  description = "Application packaged using poetry2nix";
+  description = "Flake file for Projectify backend";
 
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
-    nixpkgs.url = "github:NixOS/nixpkgs/23.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/24.05";
     poetry2nix = {
       url = "github:nix-community/poetry2nix/master";
       inputs.nixpkgs.follows = "nixpkgs";
