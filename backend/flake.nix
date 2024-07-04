@@ -79,55 +79,60 @@
           poetrylock = ./poetry.lock;
           groups = [ ];
           buildInputs = [ pkgs.makeWrapper ];
-          outputs = [ "out" "static" ];
-          # The DATABASE_URL below will only work on localhost
+          outputs = [ "out" ];
           postInstall = ''
-            cp \
-              manage.py \
-              "$out/bin"
-            mkdir "$static"
-            DJANGO_SETTINGS_MODULE=projectify.settings.development \
-              DJANGO_CONFIGURATION=DevelopmentNix \
-              STATIC_ROOT="$static" \
-              python "$out/bin/manage.py" collectstatic \
-                --no-input
-            wrapProgram "$out/bin/manage.py" \
-              --set DJANGO_SETTINGS_MODULE projectify.settings.development \
-              --set DJANGO_CONFIGURATION DevelopmentNix \
-              --set DATABASE_URL postgres://%2Fvar%2Frun%2Fpostgresql/projectify \
-              --set STATIC_ROOT "$static"
-            wrapProgram "$out/bin/projectify-backend" \
-              --set DJANGO_SETTINGS_MODULE projectify.settings.development \
-              --set DJANGO_CONFIGURATION DevelopmentNix \
-              --set PORT 8000 \
-              --set STATIC_ROOT "$static" \
-              --set DATABASE_URL postgres://%2Fvar%2Frun%2Fpostgresql/projectify \
-              --add-flags --config \
-              --add-flags ${./gunicorn.conf.py} \
-              --add-flags --log-config \
-              --add-flags ${./gunicorn-error.log}
+            mkdir -p $out/bin
+            cp -v manage.py "$out/bin"
           '';
         };
       in
       {
         packages = {
-          inherit projectify-backend;
-          default = projectify-backend;
+          projectify-backend = projectify-backend.dependencyEnv;
+          default = projectify-backend.dependencyEnv;
           container = pkgs.dockerTools.buildLayeredImage {
             name = "projectify-backend";
             tag = "latest";
-            contents = [ projectify-backend pkgs.bash pkgs.coreutils pkgs.file ];
+            contents = [
+              projectify-backend.dependencyEnv
+              pkgs.bash
+              pkgs.coreutils
+              pkgs.file
+            ];
             # For /var/run/postgresql
             extraCommands = ''
               mkdir -p var/run/postgresql
+              mkdir -p var/static
+
+              env \
+                DJANGO_SETTINGS_MODULE=projectify.settings.development \
+                DJANGO_CONFIGURATION=DevelopmentNix \
+                STATIC_ROOT=var/static/ \
+                "${projectify-backend}/bin/manage.py" collectstatic --no-input
             '';
             config = {
-              Cmd = [ "${projectify-backend}/bin/projectify-backend" ];
+              Env = [
+                "DJANGO_SETTINGS_MODULE=projectify.settings.development"
+                "DJANGO_CONFIGURATION=DevelopmentNix"
+                "PORT=8000"
+                "STATIC_ROOT=/var/static/"
+                # The DATABASE_URL below will only work on localhost
+                "DATABASE_URL=postgres://%2Fvar%2Frun%2Fpostgresql/projectify"
+              ];
+              Entrypoint = [
+                "gunicorn"
+              ];
+              Cmd = [
+                "--config"
+                "${./gunicorn.conf.py}"
+                "--log-config"
+                "${./gunicorn-error.log}"
+              ];
               ExposedPorts = {
-                "8000/tcp" = {};
+                "8000/tcp" = { };
               };
               Volumes = {
-                "/var/run/postgresql" = {};
+                "/var/run/postgresql" = { };
               };
             };
           };

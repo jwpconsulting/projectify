@@ -98,6 +98,41 @@ git add requirements.txt
 # Maybe git commit here
 ```
 
+# Nix
+
+The Projectify backend can be run using Nix.
+
+## Nix built docker container
+
+A Docker container can be built using
+
+```bash
+nix build .#container
+```
+
+Try running the following, adjusting variables if needed:
+
+```fish
+podman run \
+    --expose 8000 \
+    --publish 8000:8000 \
+    --volume=/var/run/postgresql:/var/run/postgresql:rw \
+    --rm \
+    --interactive \
+    docker-archive:(zcat result | psub) manage.py shell_plus
+```
+
+This will start a server:
+
+```fish
+podman run \
+    --expose 8000 \
+    --publish 8000:8000 \
+    --volume=/var/run/postgresql:/var/run/postgresql:rw \
+    --rm \
+    --interactive \
+    docker-archive:(zcat result | psub)
+```
 
 ## Flake
 
