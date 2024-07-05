@@ -24,6 +24,7 @@
             pkgs.python311Packages.supervisor
             pkgs.unixtools.watch
             pkgs.coreutils
+            pkgs.caddy
           ];
         };
       });

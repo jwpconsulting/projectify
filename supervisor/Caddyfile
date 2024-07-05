@@ -1,0 +1,12 @@
+:5000 {
+	handle /admin/* {
+		reverse_proxy :8000
+	}
+	handle_path /api/* {
+		reverse_proxy :8000
+	}
+	handle /* {
+		root * ../frontend/build
+		file_server
+	}
+}

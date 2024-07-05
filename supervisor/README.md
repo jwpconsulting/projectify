@@ -53,6 +53,7 @@ env DJANGO_SETTINGS_MODULE=projectify.settings.development \
     DJANGO_CONFIGURATION=DevelopmentNix \
     STATIC_ROOT=$PWD/static \
     PORT=8000 \
+    REDIS_TLS_URL="redis://localhost:6379" \
     DATABASE_URL="sqlite:////$PWD/projectify-backend.sqlite" \
     supervisord -n
 env DJANGO_SETTINGS_MODULE=projectify.settings.development \
