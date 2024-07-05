@@ -81,6 +81,9 @@
             mkdir -p $out/bin
             cp -v manage.py "$out/bin"
           '';
+          # Disable checking runtime dependencies
+          # https://github.com/nix-community/poetry2nix/issues/1441
+          dontCheckRuntimeDeps = true;
         };
       in
       {
