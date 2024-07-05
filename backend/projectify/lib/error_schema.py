@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Functionality for building error schemas."""
+
 import inspect
 import logging
 from collections.abc import Callable, Sequence
@@ -172,6 +173,7 @@ def get_request_serializer(
             return ser_inst
         case _:
             raise ValueError(f"Don't know what to do with {annotation}")
+    return None
 
 
 def maybe_annotate_400(

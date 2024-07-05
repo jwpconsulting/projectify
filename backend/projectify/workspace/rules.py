@@ -19,6 +19,7 @@ Workspace app rules.
 
 The order of rules follows the ordering of models.
 """
+
 from functools import partial
 
 import rules

@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Test section CRUD views."""
+
 from django.contrib.auth.models import (
     AbstractBaseUser,
 )

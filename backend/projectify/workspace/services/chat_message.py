@@ -19,6 +19,7 @@ Chat message services.
 
 Chat messages will not be in the initial launch.
 """
+
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 from projectify.workspace.models.chat_message import ChatMessage

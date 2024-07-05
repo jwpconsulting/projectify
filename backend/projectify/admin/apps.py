@@ -19,6 +19,7 @@ Projectify app configs.
 
 Contains reference to admin configuration here.
 """
+
 from django.contrib.admin.apps import AdminConfig
 
 

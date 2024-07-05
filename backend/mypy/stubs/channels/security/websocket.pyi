@@ -1,4 +1,5 @@
 """Bindings for channels.security.websocket."""
+
 from collections.abc import Sequence
 
 from django.core.handlers.asgi import (

@@ -20,6 +20,7 @@ Common values used in serializers. Contains all base serializers.
 We define base serializer as a serializer that does not serialize
 related model fields, and thus will not cause circular import issues.
 """
+
 from collections.abc import (
     Sequence,
 )

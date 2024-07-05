@@ -74,6 +74,7 @@ customer                     └────────────────
                              └───────────────────────────────────┘
 
 """
+
 from django.db import models
 
 from projectify.lib.models import BaseModel

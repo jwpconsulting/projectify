@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Configuration for Gunicorn to use with Projectify application."""
+
 import os
 
 wsgi_app = "projectify.asgi"

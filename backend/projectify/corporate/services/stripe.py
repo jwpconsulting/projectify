@@ -20,6 +20,7 @@ Corporate app services that are called from stripe webhook.
 These functions all do not perform permission checks, so the caller has to
 have validated permissions themselves.
 """
+
 import logging
 
 from ..models import Customer

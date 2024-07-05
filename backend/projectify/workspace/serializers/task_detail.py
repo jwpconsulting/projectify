@@ -20,6 +20,7 @@ Task detail serializer.
 We have put this here to avoid circular reference problems,
 because ws board section requires importing the task serializer.
 """
+
 from collections import Counter
 from collections.abc import Sequence
 from typing import Any, Optional, TypedDict

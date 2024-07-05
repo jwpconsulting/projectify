@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """User authentication views."""
+
 from django.contrib.auth.password_validation import (
     password_validators_help_texts,
 )

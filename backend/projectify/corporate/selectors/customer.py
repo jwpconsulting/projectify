@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Corporate app customer model selectors."""
+
 import logging
 from typing import Optional
 from uuid import UUID

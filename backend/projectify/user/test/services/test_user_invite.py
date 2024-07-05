@@ -16,7 +16,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Test user invite services."""
 
-
 import pytest
 from faker import Faker
 

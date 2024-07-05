@@ -44,7 +44,7 @@ else
     exit 1
 fi
 
-if ruff --fix "$target"; then
+if ruff check --fix "$target"; then
     echo "ruff ran successfully"
 else
     echo "ruff didn't finish successfully"

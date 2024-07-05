@@ -35,6 +35,7 @@ Limitations for a trial workspace are
 - Section: 100,
 - TeamMember + TeamMemberInivite(unredeemed): 2
 """
+
 from functools import partial
 from typing import Literal, TypedDict, Union
 
