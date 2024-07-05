@@ -172,8 +172,6 @@ class DevelopmentNix(Development):
 
     SITE_TITLE = "Projectify-Backend (nix)"
 
-    CELERY_BROKER_URL = None
-
     STORAGES = {
         **Development.STORAGES,
         "staticfiles": {
