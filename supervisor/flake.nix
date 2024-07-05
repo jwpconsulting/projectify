@@ -2,10 +2,12 @@
   description = "Flake utils demo";
 
   inputs = {
-    nixpkgs.follows = "projectify-backend/nixpkgs";
     projectify-frontend.url = "../frontend";
     projectify-frontend.inputs.nixpkgs.follows = "projectify-backend/nixpkgs";
     projectify-backend.url = "../backend";
+
+    nixpkgs.follows = "projectify-backend/nixpkgs";
+
     flake-utils.url = "github:numtide/flake-utils";
   };
 
