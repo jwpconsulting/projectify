@@ -15,7 +15,6 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import vars from "$lib/env";
 import { getCookie } from "$lib/utils/cookie";
 import createClient, {
     createFinalURL,
@@ -26,7 +25,7 @@ import type { Middleware } from "openapi-fetch";
 import type { paths } from "$lib/types/schema";
 import { invalidate } from "$app/navigation";
 
-const baseUrl = vars.API_ENDPOINT;
+const baseUrl = __API_ENDPOINT__;
 
 // TODO consider adding content type and accept here? Perhaps based on
 // if GET or else

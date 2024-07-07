@@ -19,7 +19,6 @@
     import type { BeforeNavigate } from "@sveltejs/kit";
     import { _ } from "svelte-i18n";
 
-    import vars from "$lib/env";
     import UploadAvatar from "$lib/figma/buttons/UploadAvatar.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
@@ -71,9 +70,10 @@
 
     async function save() {
         state = { kind: "saving" };
+        // TODO migrate to use openapi fetch
         await uploadImage(
             imageFile,
-            vars.API_ENDPOINT + `/workspace/workspace/${uuid}/picture-upload`,
+            __API_ENDPOINT__ + `/workspace/workspace/${uuid}/picture-upload`,
         );
         const { data, error } = await openApiClient.PUT(
             "/workspace/workspace/{workspace_uuid}",
