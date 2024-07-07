@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2021, 2022, 2023 JWP Consulting GK
+ *  Copyright (C) 2021-2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -19,28 +19,29 @@ import adapterStatic from "@sveltejs/adapter-static";
 import adapterNode from "@sveltejs/adapter-node";
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
+const adapter =
+    process.env.PROJECTIFY_FRONTEND_ADAPTER === "static"
+        ? adapterStatic({
+              fallback: "fallback.html",
+              strict: true,
+          })
+        : process.env.PROJECTIFY_FRONTEND_ADAPTER === "node"
+        ? adapterNode({
+              envPrefix: "SVELTE_KIT_",
+          })
+        : undefined;
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
     // Consult https://github.com/sveltejs/svelte-preprocess
     // for more information about preprocessors
     preprocess: [vitePreprocess()],
-
     kit: {
         alias: {
             $messages: "src/messages",
             $routes: "src/routes",
         },
-        adapter:
-            process.env.PROJECTIFY_FRONTEND_ADAPTER === "static"
-                ? adapterStatic({
-                      fallback: "fallback.html",
-                      strict: true,
-                  })
-                : process.env.PROJECTIFY_FRONTEND_ADAPTER === "node"
-                ? adapterNode({
-                      envPrefix: "SVELTE_KIT_",
-                  })
-                : undefined,
+        adapter,
         csp: {
             directives: {
                 "script-src": ["self"],
