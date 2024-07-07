@@ -8,6 +8,7 @@ publish = "build"
 [build.environment]
 NODE_ENV = "production"
 VITE_PROJECTIFY_DOMAIN = "https://www.projectifyapp.com"
+PROJECTIFY_FRONTEND_ADAPTER = "static"
 
 [[redirects]]
 from = "/*"
