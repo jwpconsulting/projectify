@@ -43,11 +43,8 @@ node_modules/
 /frontend/build
 /frontend/.svelte-kit
 /frontend/package
-
-# Storybook
-# ---------
-/frontend/storybook-static
-/frontend/.output
+# Nix build
+/frontend/result
 
 # Linters
 # -------
