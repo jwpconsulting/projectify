@@ -141,7 +141,7 @@ class ChangeConsumer(JsonWebsocketConsumer):
         self.user = self.scope["user"]
 
         if self.user.is_anonymous:
-            logger.warn("Anonymous user tried to connect")
+            logger.warning("Anonymous user tried to connect")
             self.close(status.HTTP_403_FORBIDDEN)
             return
 
