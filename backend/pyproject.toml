@@ -172,6 +172,10 @@ faker = "^19.13.0"
 django-ratelimit = "^4.1.0"
 drf-spectacular = {extras = ["sidecar"], version = "^0.27.2"}
 
+[tool.poetry.scripts]
+celery = "celery.__main__:main"
+gunicorn = "gunicorn.app.wsgiapp:run"
+
 [tool.poetry.group.dev]
 
 [tool.poetry.group.dev.dependencies]

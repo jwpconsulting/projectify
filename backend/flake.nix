@@ -83,7 +83,7 @@
 
             mkdir -p $static
             env \
-              DJANGO_SETTINGS_MODULE=projectify.settings.development \
+              DJANGO_SETTINGS_MODULE=projectify.settings.development_nix \
               DJANGO_CONFIGURATION=DevelopmentNix \
               STATIC_ROOT=$static \
               python $out/bin/manage.py collectstatic --no-input
@@ -98,14 +98,14 @@
       in
       {
         packages = {
-          projectify-backend = projectify-backend.dependencyEnv;
-          default = projectify-backend.dependencyEnv;
+          projectify-backend = projectify-backend;
+          default = projectify-backend;
           inherit projectify-backend-static;
           container = pkgs.dockerTools.buildLayeredImage {
             name = "projectify-backend";
             tag = "latest";
             contents = [
-              projectify-backend.dependencyEnv
+              projectify-backend
               pkgs.bash
               pkgs.coreutils
               pkgs.file
@@ -117,7 +117,7 @@
 
               mkdir -p var/projectify/db
               env \
-                DJANGO_SETTINGS_MODULE=projectify.settings.development \
+                DJANGO_SETTINGS_MODULE=projectify.settings.development_nix \
                 DJANGO_CONFIGURATION=DevelopmentNix \
                 STATIC_ROOT=var/projectify/static/ \
                 DATABASE_URL=sqlite:///var/projectify/db/projectify.sqlite \
@@ -125,7 +125,7 @@
             '';
             config = {
               Env = [
-                "DJANGO_SETTINGS_MODULE=projectify.settings.development"
+                "DJANGO_SETTINGS_MODULE=projectify.settings.development_nix"
                 "DJANGO_CONFIGURATION=DevelopmentNix"
                 "PORT=8000"
                 "STATIC_ROOT=/var/projectify/static/"
