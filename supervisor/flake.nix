@@ -25,6 +25,7 @@
         };
         backend = projectify-backend.packages.${system}.projectify-backend;
         static = projectify-backend.packages.${system}.projectify-backend-static;
+        nodejs = pkgs.nodejs_20;
       in
       {
         packages = {
@@ -38,6 +39,7 @@
             pkgs.unixtools.watch
             pkgs.coreutils
             pkgs.caddy
+            nodejs
           ];
           shellHook = ''
             export STATIC_ROOT=${static}

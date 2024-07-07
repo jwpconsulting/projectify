@@ -36,7 +36,7 @@
             pkgs.buildNpmPackage {
               name = "projectify-frontend";
               src = ./.;
-              npmDepsHash = "sha256-kQYmbdbSlUyKd0b3tvctcNYY41mbpf35YoLGQSRGgfQ=";
+              npmDepsHash = "sha256-lDwdWLhpnqMNnGzQM/QipmFXhtb/InNnBz1La8v712Y=";
               nativeBuildInputs = [
                 # For git rev-parse
                 pkgs.git
@@ -48,9 +48,14 @@
                 export VITE_GIT_COMMIT_DATE=${self.lastModifiedDate}
                 export VITE_GIT_BRANCH_NAME=nix
                 export VITE_GIT_COMMIT_HASH=${self.rev or "dirty"}
-                export PROJECTIFY_FRONTEND_ADAPTER=${self.rev or "dirty"}
+                export PROJECTIFY_FRONTEND_ADAPTER=${adapter}
                 export NODE_ENV=production
               '';
+              postBuild = if adapter == "node" then ''
+                cp -a node_modules/ build/
+                cp package.json build/
+                cp package-lock.json build/
+              '' else "";
               installPhase = ''
                 mkdir -p $out
                 cp -a build/. $out/

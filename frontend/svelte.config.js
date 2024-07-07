@@ -38,7 +38,7 @@ const config = {
                   })
                 : process.env.PROJECTIFY_FRONTEND_ADAPTER === "node"
                 ? adapterNode({
-                      envPrefix: "PROJECTIFY_FRONTEND_",
+                      envPrefix: "SVELTE_KIT_",
                   })
                 : undefined,
         csp: {
