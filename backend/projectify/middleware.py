@@ -89,6 +89,11 @@ def reverse_proxy(get_response: GetResponse) -> GetResponse:
         forwarded_for: Optional[str] = request.META.get("X-Forwarded-For")
         if forwarded_for is not None:
             ips = [ip.strip() for ip in forwarded_for.split(",")]
+            if len(ips) == 0:
+                raise ValueError(
+                    "X-Forwarded-For was specified, but no list of "
+                    f"IPs was given: {forwarded_for}"
+                )
             request.META["REMOTE_ADDR"] = ips[0]
         return get_response(request)
 
