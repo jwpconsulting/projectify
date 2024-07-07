@@ -87,6 +87,7 @@ def reverse_proxy(get_response: GetResponse) -> GetResponse:
 
     def process_request(request: HttpRequest) -> HttpResponse:
         forwarded_for: Optional[str] = request.META.get("X-Forwarded-For")
+        print("forwarded_for", forwarded_for)
         if forwarded_for is not None:
             ips = [ip.strip() for ip in forwarded_for.split(",")]
             if len(ips) == 0:
