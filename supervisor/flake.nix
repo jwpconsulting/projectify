@@ -2,11 +2,13 @@
   description = "Flake utils demo";
 
   inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/24.05";
+
     projectify-frontend.url = "../frontend";
-    projectify-frontend.inputs.nixpkgs.follows = "projectify-backend/nixpkgs";
     projectify-backend.url = "../backend";
 
-    nixpkgs.follows = "projectify-backend/nixpkgs";
+    projectify-frontend.inputs.nixpkgs.follows = "nixpkgs";
+    projectify-backend.inputs.nixpkgs.follows = "nixpkgs";
 
     flake-utils.url = "github:numtide/flake-utils";
   };
@@ -15,6 +17,7 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        frontend = projectify-frontend.packages.${system};
         backend = projectify-backend.packages.${system};
       in
       {
@@ -26,6 +29,11 @@
             pkgs.coreutils
             pkgs.caddy
           ];
+          shellHook = ''
+            # TODO
+            export PROJECTIFY_BACKEND_STATIC_PATH=${backend.projectify-backend}
+            export PROJECTIFY_FRONTEND_PATH=${frontend.projectify-frontend}
+          '';
         };
       });
 }

@@ -139,17 +139,19 @@
     "projectify-backend": {
       "inputs": {
         "flake-utils": "flake-utils_2",
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
         "poetry2nix": "poetry2nix"
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-JvNFrhH4SNSAFMau5bwKRaj/3juXXbdg598OFMM9zFw=",
-        "path": "/nix/store/y84vx4zcprh388yyj2pp0kx6dvfpzhsv-source/backend",
+        "narHash": "sha256-0WceqIeaJh4rZHcylwtu1XBvBTfPHMF1PRCo4whupUw=",
+        "path": "/nix/store/xnrr9pck4flprz9jpz1jd037r5gc31v5-source/backend",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/y84vx4zcprh388yyj2pp0kx6dvfpzhsv-source/backend",
+        "path": "/nix/store/xnrr9pck4flprz9jpz1jd037r5gc31v5-source/backend",
         "type": "path"
       }
     },
@@ -157,28 +159,24 @@
       "inputs": {
         "flake-utils": "flake-utils_4",
         "nixpkgs": [
-          "projectify-backend",
           "nixpkgs"
         ]
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-XEKB6CjGRO+2C2ekch/OfEJabhoSIgvwrx7JJHNKZ6k=",
-        "path": "/nix/store/y84vx4zcprh388yyj2pp0kx6dvfpzhsv-source/frontend",
+        "narHash": "sha256-votoplvKZQH08/I8qmVwpuhQAVFsczk66TiMRjoVnQ8=",
+        "path": "/nix/store/xnrr9pck4flprz9jpz1jd037r5gc31v5-source/frontend",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/y84vx4zcprh388yyj2pp0kx6dvfpzhsv-source/frontend",
+        "path": "/nix/store/xnrr9pck4flprz9jpz1jd037r5gc31v5-source/frontend",
         "type": "path"
       }
     },
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "nixpkgs": [
-          "projectify-backend",
-          "nixpkgs"
-        ],
+        "nixpkgs": "nixpkgs",
         "projectify-backend": "projectify-backend",
         "projectify-frontend": "projectify-frontend"
       }
