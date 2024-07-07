@@ -28,6 +28,7 @@ executors:
            VITE_PROJECTIFY_DOMAIN: "https://www.projectifyapp.com/"
            VITE_WS_ENDPOINT: "/urls-arent-real"
            VITE_API_ENDPOINT: "/urls-arent-real"
+           PROJECTIFY_FRONTEND_ADAPTER: static
 commands:
   prepare_poetry:
     description: Install dependencies for backend
