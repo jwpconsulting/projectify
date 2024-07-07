@@ -29,6 +29,7 @@
             wsEndpoint ? "/ws"
             , apiEndpoint ? "/api"
             , projectifyDomain ? "https://www.projectify.com"
+            , adapter ? "static"
           } :
           # TODO make WS_ENDPOINT, API_ENDPOINT and PROJECITYF_DOMAIN arguments
           # to this derivation
@@ -47,6 +48,7 @@
                 export VITE_GIT_COMMIT_DATE=${self.lastModifiedDate}
                 export VITE_GIT_BRANCH_NAME=nix
                 export VITE_GIT_COMMIT_HASH=${self.rev or "dirty"}
+                export PROJECTIFY_FRONTEND_ADAPTER=${self.rev or "dirty"}
                 export NODE_ENV=production
               '';
               installPhase = ''

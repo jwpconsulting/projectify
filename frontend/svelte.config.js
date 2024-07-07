@@ -15,7 +15,8 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import adapter from "@sveltejs/adapter-static";
+import adapterStatic from "@sveltejs/adapter-static";
+import adapterNode from "@sveltejs/adapter-node";
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -29,10 +30,17 @@ const config = {
             $messages: "src/messages",
             $routes: "src/routes",
         },
-        adapter: adapter({
-            fallback: "fallback.html",
-            strict: true,
-        }),
+        adapter:
+            process.env.PROJECTIFY_FRONTEND_ADAPTER === "static"
+                ? adapterStatic({
+                      fallback: "fallback.html",
+                      strict: true,
+                  })
+                : process.env.PROJECTIFY_FRONTEND_ADAPTER === "node"
+                ? adapterNode({
+                      envPrefix: "PROJECTIFY_FRONTEND_",
+                  })
+                : undefined,
         csp: {
             directives: {
                 "script-src": ["self"],

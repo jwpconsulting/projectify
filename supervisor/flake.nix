@@ -21,6 +21,7 @@
             wsEndpoint = "/ws";
             apiEndpoint = "/api";
             projectifyDomain = "http://localhost:5000";
+            adapter = "node";
         };
         backend = projectify-backend.packages.${system}.projectify-backend;
         static = projectify-backend.packages.${system}.projectify-backend-static;
