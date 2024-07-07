@@ -76,11 +76,21 @@
           pyproject = ./pyproject.toml;
           poetrylock = ./poetry.lock;
           groups = [ ];
-          outputs = [ "out" ];
+          outputs = [ "out" "static"];
           postInstall = ''
             mkdir -p $out/bin
-            cp -v manage.py "$out/bin"
+            cp manage.py "$out/bin"
+
+            mkdir -p $static
+            env \
+              DJANGO_SETTINGS_MODULE=projectify.settings.development \
+              DJANGO_CONFIGURATION=DevelopmentNix \
+              STATIC_ROOT=$static \
+              python $out/bin/manage.py collectstatic --no-input
           '';
+          # Disable checking runtime dependencies
+          # https://github.com/nix-community/poetry2nix/issues/1441
+          dontCheckRuntimeDeps = true;
         };
       in
       {
@@ -99,14 +109,9 @@
             # Here and below we use relative paths
             extraCommands = ''
               mkdir -p var/projectify/static
+              cp -a ${projectify-backend.static}/. var/projectify/static
+
               mkdir -p var/projectify/db
-
-              env \
-                DJANGO_SETTINGS_MODULE=projectify.settings.development \
-                DJANGO_CONFIGURATION=DevelopmentNix \
-                STATIC_ROOT=var/projectify/static/ \
-                "${projectify-backend}/bin/manage.py" collectstatic --no-input
-
               env \
                 DJANGO_SETTINGS_MODULE=projectify.settings.development \
                 DJANGO_CONFIGURATION=DevelopmentNix \
