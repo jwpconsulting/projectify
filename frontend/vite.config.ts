@@ -187,28 +187,33 @@ function getProxyConfig(
     };
 }
 
-async function buildInfo() {
-    const e = promisify(exec);
+async function buildInfo(env: Record<string, string>) {
+    const __BUILD_DATE__ = JSON.stringify(
+        new Date().toISOString().slice(0, 10),
+    );
 
-    const getResult = async (command: string) => {
+    const e = promisify(exec);
+    const getResult = async (command: string): Promise<string> => {
         const { stdout } = await e(command);
-        return JSON.stringify(stdout.toString().trimEnd());
+        return stdout.toString().trimEnd();
     };
 
-    // kinda awkward code to write, but ok...
-    const [
-        __GIT_COMMIT_DATE__,
-        __GIT_BRANCH_NAME__,
-        __GIT_COMMIT_HASH__,
-        __BUILD_DATE__,
-    ] = await Promise.all(
-        [
-            "git log -1 --format=%cd --date=short",
-            "git rev-parse --abbrev-ref HEAD",
-            "git rev-parse --short HEAD",
-            "date -Idate",
-        ].map(getResult),
+    const __GIT_COMMIT_DATE__ = JSON.stringify(
+        "VITE_GIT_COMMIT_DATE" in env
+            ? env.VITE_GIT_COMMIT_DATE
+            : await getResult("git log -1 --format=%cd --date=short"),
     );
+    const __GIT_BRANCH_NAME__ = JSON.stringify(
+        "VITE_GIT_BRANCH_NAME" in env
+            ? env.VITE_GIT_BRANCH_NAME
+            : await getResult("git rev-parse --abbrev-ref HEAD"),
+    );
+    const __GIT_COMMIT_HASH__ = JSON.stringify(
+        "VITE_GIT_COMMIT_HASH" in env
+            ? env.VITE_GIT_COMMIT_HASH
+            : await getResult("git rev-parse --short HEAD"),
+    );
+
     return {
         __GIT_COMMIT_DATE__,
         __GIT_BRANCH_NAME__,
@@ -230,7 +235,7 @@ const config: UserConfigExport = defineConfig(async ({ mode }: ConfigEnv) => {
             proxy: getProxyConfig(env),
         },
         define: {
-            ...(await buildInfo()),
+            ...(await buildInfo(env)),
             __MODE__: JSON.stringify(mode),
         },
     } satisfies UserConfig;

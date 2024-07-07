@@ -24,14 +24,50 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        nodejs = pkgs.nodejs_20;
       in
       {
         inherit self nixpkgs;
         packages = {
+          projectify-frontend =
+            let
+              # https://ryantm.github.io/nixpkgs/languages-frameworks/javascript/#javascript-buildNpmPackage
+            in
+            pkgs.buildNpmPackage {
+              name = "projectify-frontend";
+              src = ./.;
+              npmDepsHash = "sha256-kQYmbdbSlUyKd0b3tvctcNYY41mbpf35YoLGQSRGgfQ=";
+              nativeBuildInputs = [
+                # For git rev-parse
+                pkgs.git
+              ];
+              preConfigure = ''
+                export VITE_PROJECTIFY_DOMAIN=https://www.projectify.com
+                export VITE_GIT_COMMIT_DATE=${self.lastModifiedDate}
+                export VITE_GIT_BRANCH_NAME=nix
+                export VITE_GIT_COMMIT_HASH=${self.rev or "dirty"}
+                export NODE_ENV=production
+              '';
+              installPhase = ''
+                mkdir -p $out
+                cp -a build/. $out/
+              '';
+              meta = with pkgs.lib; {
+                description = "Frontend for the Projectify project management software";
+                homepage = "https://www.projectifyapp.com";
+                license = with licenses; [ agpl3Only mit ];
+                maintainers = [
+                  {
+                    name = "Justus Perlwitz";
+                    email = "justus@jwpconsulting.net";
+                  }
+                ];
+              };
+            };
         };
         devShell = pkgs.mkShell {
           buildInputs = [
-            pkgs.nodejs_20
+            nodejs
           ];
         };
       });
