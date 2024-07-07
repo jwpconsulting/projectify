@@ -20,7 +20,7 @@
         frontend = projectify-frontend.lib.${system}.mkFrontend {
             wsEndpoint = "/ws";
             apiEndpoint = "/api";
-            projectifyDomain = "localhost:5000";
+            projectifyDomain = "http://localhost:5000";
         };
         backend = projectify-backend.packages.${system}.projectify-backend;
         static = projectify-backend.packages.${system}.projectify-backend-static;
@@ -41,7 +41,7 @@
           shellHook = ''
             export STATIC_ROOT=${static}
             export PROJECTIFY_FRONTEND_PATH=${frontend}
-            export DJANGO_SETTINGS_MODULE=projectify.settings.development
+            export DJANGO_SETTINGS_MODULE=projectify.settings.development_nix
             export DJANGO_CONFIGURATION=DevelopmentNix
           '';
         };

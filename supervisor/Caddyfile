@@ -2,12 +2,18 @@
 	handle /admin/* {
 		reverse_proxy :8000
 	}
+	handle /backend/static/* {
+		reverse_proxy :8000
+	}
+	handle /ws/* {
+		reverse_proxy :8000
+	}
 	handle_path /api/* {
 		reverse_proxy :8000
 	}
 	handle /* {
 		root * {$PROJECTIFY_FRONTEND_PATH}
-		try_files {path} /
+		try_files {path} /fallback.html
 		file_server
 	}
 }
