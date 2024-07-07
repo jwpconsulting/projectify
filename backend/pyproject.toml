@@ -173,8 +173,8 @@ django-ratelimit = "^4.1.0"
 drf-spectacular = {extras = ["sidecar"], version = "^0.27.2"}
 
 [tool.poetry.scripts]
-celery = "celery.__main__:main"
-gunicorn = "gunicorn.app.wsgiapp:run"
+projectify-celery = "celery.__main__:main"
+projectify-gunicorn = "gunicorn.app.wsgiapp:run"
 
 [tool.poetry.group.dev]
 
