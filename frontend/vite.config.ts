@@ -237,6 +237,12 @@ const config: UserConfigExport = defineConfig(async ({ mode }: ConfigEnv) => {
         define: {
             ...(await buildInfo(env)),
             __MODE__: JSON.stringify(mode),
+            __WS_ENDPOINT__: JSON.stringify(
+                getFromEnv(env, "VITE_WS_ENDPOINT"),
+            ),
+            __API_ENDPOINT__: JSON.stringify(
+                getFromEnv(env, "VITE_API_ENDPOINT"),
+            ),
         },
     } satisfies UserConfig;
 });

@@ -18,7 +18,6 @@
 import Sarus from "@anephenix/sarus";
 import { writable } from "svelte/store";
 
-import vars from "$lib/env";
 import type {
     RepoGetter,
     SubscriptionType,
@@ -122,7 +121,7 @@ function onError(event: Event) {
 
 function sendWs(request: WsRequest) {
     if (connectionState.kind === "undefined") {
-        const url = makeAbsoluteUrl(`${vars.WS_ENDPOINT}/workspace/change`);
+        const url = makeAbsoluteUrl(`${__WS_ENDPOINT__}/workspace/change`);
         const sarus = new Sarus({
             url,
             eventListeners: {

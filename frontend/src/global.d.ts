@@ -23,6 +23,9 @@ declare const __BUILD_DATE__: string;
 
 declare const __MODE__: string;
 
+declare const __API_ENDPOINT__: string;
+declare const __WS_ENDPOINT__: string;
+
 // Automatically generated third-party-licenses module as part of vite
 // build process
 declare module "third-party-licenses" {

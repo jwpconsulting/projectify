@@ -25,14 +25,13 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
         nodejs = pkgs.nodejs_20;
-      in
-      {
-        inherit self nixpkgs;
-        packages = {
-          projectify-frontend =
-            let
-              # https://ryantm.github.io/nixpkgs/languages-frameworks/javascript/#javascript-buildNpmPackage
-            in
+        mkFrontend = {
+            wsEndpoint ? "/ws"
+            , apiEndpoint ? "/api"
+            , projectifyDomain ? "https://www.projectify.com"
+          } :
+          # TODO make WS_ENDPOINT, API_ENDPOINT and PROJECITYF_DOMAIN arguments
+          # to this derivation
             pkgs.buildNpmPackage {
               name = "projectify-frontend";
               src = ./.;
@@ -42,9 +41,9 @@
                 pkgs.git
               ];
               preConfigure = ''
-                export VITE_WS_ENDPOINT=/ws
-                export VITE_API_ENDPOINT=/api
-                export VITE_PROJECTIFY_DOMAIN=https://www.projectify.com
+                export VITE_WS_ENDPOINT=${wsEndpoint}
+                export VITE_API_ENDPOINT=${apiEndpoint}
+                export VITE_PROJECTIFY_DOMAIN=${projectifyDomain}
                 export VITE_GIT_COMMIT_DATE=${self.lastModifiedDate}
                 export VITE_GIT_BRANCH_NAME=nix
                 export VITE_GIT_COMMIT_HASH=${self.rev or "dirty"}
@@ -66,6 +65,14 @@
                 ];
               };
             };
+      in
+      {
+        inherit self nixpkgs;
+        lib = {
+          inherit mkFrontend;
+        };
+        packages = {
+          projectify-frontend = mkFrontend {};
         };
         devShell = pkgs.mkShell {
           buildInputs = [
