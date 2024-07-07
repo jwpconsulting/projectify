@@ -42,6 +42,7 @@ class DevelopmentNix(Development):
 
     # We need to inject the static root path during the nix build process
     STATIC_ROOT = Path(os.environ["STATIC_ROOT"])
+    STATIC_URL = "/backend/static/"
 
     # No need for debug or debug libs, for added realism
     DEBUG = False
