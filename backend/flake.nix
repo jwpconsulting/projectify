@@ -92,11 +92,15 @@
           # https://github.com/nix-community/poetry2nix/issues/1441
           dontCheckRuntimeDeps = true;
         };
+        # Workaround, since dependencyEnv accidentally forgets any other
+        # outputs
+        projectify-backend-static = projectify-backend.static;
       in
       {
         packages = {
           projectify-backend = projectify-backend.dependencyEnv;
           default = projectify-backend.dependencyEnv;
+          inherit projectify-backend-static;
           container = pkgs.dockerTools.buildLayeredImage {
             name = "projectify-backend";
             tag = "latest";
@@ -109,7 +113,7 @@
             # Here and below we use relative paths
             extraCommands = ''
               mkdir -p var/projectify/static
-              cp -a ${projectify-backend.static}/. var/projectify/static
+              cp -a ${projectify-backend-static}/. var/projectify/static
 
               mkdir -p var/projectify/db
               env \

@@ -6,7 +6,8 @@
 		reverse_proxy :8000
 	}
 	handle /* {
-		root * ../frontend/build
+		root * {$PROJECTIFY_FRONTEND_PATH}
+		try_files {path} /
 		file_server
 	}
 }

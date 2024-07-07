@@ -42,6 +42,8 @@
                 pkgs.git
               ];
               preConfigure = ''
+                export VITE_WS_ENDPOINT=/ws
+                export VITE_API_ENDPOINT=/api
                 export VITE_PROJECTIFY_DOMAIN=https://www.projectify.com
                 export VITE_GIT_COMMIT_DATE=${self.lastModifiedDate}
                 export VITE_GIT_BRANCH_NAME=nix

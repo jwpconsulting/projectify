@@ -4,8 +4,8 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/24.05";
 
-    projectify-frontend.url = "../frontend";
-    projectify-backend.url = "../backend";
+    projectify-frontend.url = "path:../frontend";
+    projectify-backend.url = "path:../backend";
 
     projectify-frontend.inputs.nixpkgs.follows = "nixpkgs";
     projectify-backend.inputs.nixpkgs.follows = "nixpkgs";
@@ -17,22 +17,28 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        frontend = projectify-frontend.packages.${system};
-        backend = projectify-backend.packages.${system};
+        frontend = projectify-frontend.packages.${system}.projectify-frontend;
+        backend = projectify-backend.packages.${system}.projectify-backend;
+        static = projectify-backend.packages.${system}.projectify-backend-static;
       in
       {
+        packages = {
+          default = pkgs.hello;
+        };
         devShell = pkgs.mkShell {
           buildInputs = [
-            backend.projectify-backend
+            backend
+            frontend
             pkgs.python311Packages.supervisor
             pkgs.unixtools.watch
             pkgs.coreutils
             pkgs.caddy
           ];
           shellHook = ''
-            # TODO
-            export PROJECTIFY_BACKEND_STATIC_PATH=${backend.projectify-backend}
-            export PROJECTIFY_FRONTEND_PATH=${frontend.projectify-frontend}
+            export STATIC_ROOT=${static}
+            export PROJECTIFY_FRONTEND_PATH=${frontend}
+            export DJANGO_SETTINGS_MODULE=projectify.settings.development
+            export DJANGO_CONFIGURATION=DevelopmentNix
           '';
         };
       });
