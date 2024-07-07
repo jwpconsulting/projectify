@@ -96,6 +96,8 @@ def reverse_proxy(get_response: GetResponse) -> GetResponse:
                     f"IPs was given: {forwarded_for}"
                 )
             request.META["REMOTE_ADDR"] = ips[0]
+        else:
+            print(request.META)
         return get_response(request)
 
     return process_request
