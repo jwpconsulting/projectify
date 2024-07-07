@@ -102,6 +102,8 @@ class Development(SpectacularSettings, Base):
     CORS_ALLOWED_ORIGINS = (
         # Vite dev
         "http://localhost:3000",
+        # Caddy rev proxy
+        "http://localhost:5000",
         # Storybook
         "http://localhost:6006",
     )
@@ -110,6 +112,8 @@ class Development(SpectacularSettings, Base):
     CSRF_TRUSTED_ORIGINS = (
         # Vite dev
         "http://localhost:3000",
+        # Caddy rev proxy
+        "http://localhost:5000",
         # See above, add this if you want to serve from another local domain
         # f"http://{LOCAL_DOMAIN}.local:3000",
         # Storybook
