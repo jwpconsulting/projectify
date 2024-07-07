@@ -17,7 +17,11 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        frontend = projectify-frontend.packages.${system}.projectify-frontend;
+        frontend = projectify-frontend.lib.${system}.mkFrontend {
+            wsEndpoint = "/ws";
+            apiEndpoint = "/api";
+            projectifyDomain = "localhost:5000";
+        };
         backend = projectify-backend.packages.${system}.projectify-backend;
         static = projectify-backend.packages.${system}.projectify-backend-static;
       in
