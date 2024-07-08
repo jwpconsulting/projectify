@@ -6,14 +6,17 @@
 
     projectify-frontend.url = "path:../frontend";
     projectify-backend.url = "path:../backend";
+    projectify-revproxy.url = "path:../revproxy";
 
     projectify-frontend.inputs.nixpkgs.follows = "nixpkgs";
     projectify-backend.inputs.nixpkgs.follows = "nixpkgs";
+    projectify-revproxy.inputs.nixpkgs.follows = "nixpkgs";
+
 
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils, projectify-frontend, projectify-backend }:
+  outputs = { self, nixpkgs, flake-utils, projectify-revproxy, projectify-frontend, projectify-backend }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
@@ -24,7 +27,7 @@
             adapter = "node";
         };
         backend = projectify-backend.packages.${system}.projectify-backend;
-        static = projectify-backend.packages.${system}.projectify-backend-static;
+        revproxy = projectify-revproxy.packages.${system}.projectify-revproxy;
         nodejs = pkgs.nodejs_20;
       in
       {
@@ -35,15 +38,13 @@
           buildInputs = [
             backend
             frontend
+            revproxy
             pkgs.python311Packages.supervisor
             pkgs.unixtools.watch
             pkgs.coreutils
-            pkgs.caddy
-            nodejs
           ];
           shellHook = ''
-            export STATIC_ROOT=${static}
-            export PROJECTIFY_FRONTEND_PATH=${frontend}
+            export STATIC_ROOT=${backend.static}
             export DJANGO_SETTINGS_MODULE=projectify.settings.development_nix
             export DJANGO_CONFIGURATION=DevelopmentNix
           '';
