@@ -76,6 +76,7 @@
           pyproject = ./pyproject.toml;
           poetrylock = ./poetry.lock;
           groups = [ ];
+          checkGroups = [ ];
           outputs = [ "out" "static" ];
           postInstall = ''
             mkdir -p $out/bin $out/etc
