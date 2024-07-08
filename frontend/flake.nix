@@ -29,7 +29,7 @@
             wsEndpoint ? "/ws"
             , apiEndpoint ? "/api"
             , projectifyDomain ? "https://www.projectify.com"
-            , adapter ? "static"
+            , adapter ? "node"
           } :
           # TODO make WS_ENDPOINT, API_ENDPOINT and PROJECITYF_DOMAIN arguments
           # to this derivation
@@ -37,10 +37,10 @@
               name = "projectify-frontend";
               src = ./.;
               npmDepsHash = "sha256-lDwdWLhpnqMNnGzQM/QipmFXhtb/InNnBz1La8v712Y=";
-              nativeBuildInputs = [
-                # For git rev-parse
-                pkgs.git
+              buildInputs = [
+                nodejs
               ];
+
               preConfigure = ''
                 export VITE_WS_ENDPOINT=${wsEndpoint}
                 export VITE_API_ENDPOINT=${apiEndpoint}
@@ -51,12 +51,23 @@
                 export PROJECTIFY_FRONTEND_ADAPTER=${adapter}
                 export NODE_ENV=production
               '';
+
               postBuild = if adapter == "node" then ''
                 cp -a node_modules/ build/
+                # These two can maybe go
                 cp package.json build/
                 cp package-lock.json build/
-              '' else "";
-              installPhase = ''
+              '' else ''
+              '';
+
+              installPhase = if adapter == "node" then ''
+                mkdir -p $out/share
+                mkdir -p $out/bin
+                cp -a build/. $out/share/build
+                echo "#!/usr/bin/env bash
+                exec node $out/share/build" > $out/bin/projectify-frontend
+                chmod +x $out/bin/projectify-frontend
+              '' else ''
                 mkdir -p $out
                 cp -a build/. $out/
               '';
