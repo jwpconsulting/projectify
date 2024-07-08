@@ -9,7 +9,7 @@ RUN echo "experimental-features = nix-command flakes" > /etc/nix/nix.conf \
     && nix build .#projectify-backend .#projectify-backend.static \
     && cp -a "$(nix-store -qR result/)" /tmp/nix-store-closure
 
-FROM scratch
+FROM scratch as web
 WORKDIR /app
 COPY --from=builder /tmp/nix-store-closure /nix/store
 COPY --from=builder /tmp/build/result /app
