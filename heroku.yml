@@ -1,0 +1,5 @@
+build:
+    docker:
+        web:
+            dockerfile: backend/projectify-backend.Dockerfile
+            target: web
