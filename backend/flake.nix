@@ -76,15 +76,15 @@
           pyproject = ./pyproject.toml;
           poetrylock = ./poetry.lock;
           groups = [ ];
-          outputs = [ "out" "static"];
+          outputs = [ "out" "static" ];
           postInstall = ''
             mkdir -p $out/bin
             cp manage.py "$out/bin"
 
             mkdir -p $static
             env \
-              DJANGO_SETTINGS_MODULE=projectify.settings.development_nix \
-              DJANGO_CONFIGURATION=DevelopmentNix \
+              DJANGO_SETTINGS_MODULE=projectify.settings.collect_static \
+              DJANGO_CONFIGURATION=CollectStatic \
               STATIC_ROOT=$static \
               python $out/bin/manage.py collectstatic --no-input
           '';
@@ -94,43 +94,24 @@
         };
         # Workaround, since dependencyEnv accidentally forgets any other
         # outputs
-        projectify-backend-static = projectify-backend.static;
       in
       {
         packages = {
           projectify-backend = projectify-backend;
           default = projectify-backend;
-          inherit projectify-backend-static;
           container = pkgs.dockerTools.buildLayeredImage {
             name = "projectify-backend";
             tag = "latest";
             contents = [
               projectify-backend
-              pkgs.bash
-              pkgs.coreutils
-              pkgs.file
             ];
             # Here and below we use relative paths
             extraCommands = ''
               mkdir -p var/projectify/static
-              cp -a ${projectify-backend-static}/. var/projectify/static
-
-              mkdir -p var/projectify/db
-              env \
-                DJANGO_SETTINGS_MODULE=projectify.settings.development_nix \
-                DJANGO_CONFIGURATION=DevelopmentNix \
-                STATIC_ROOT=var/projectify/static/ \
-                DATABASE_URL=sqlite:///var/projectify/db/projectify.sqlite \
-                "${projectify-backend}/bin/manage.py" migrate --no-input
+              cp -a ${projectify-backend.static}/. var/projectify/static
             '';
             config = {
               Env = [
-                "DJANGO_SETTINGS_MODULE=projectify.settings.development_nix"
-                "DJANGO_CONFIGURATION=DevelopmentNix"
-                "PORT=8000"
-                "STATIC_ROOT=/var/projectify/static/"
-                # Note four /// to denote absolute path
-                "DATABASE_URL=sqlite:////var/projectify/db/projectify.sqlite"
               ];
               Cmd = [
                 "gunicorn"
@@ -141,9 +122,6 @@
               ];
               ExposedPorts = {
                 "8000/tcp" = { };
-              };
-              Volumes = {
-                "/var/projectify/db" = { };
               };
             };
           };
