@@ -78,8 +78,10 @@
           groups = [ ];
           outputs = [ "out" "static" ];
           postInstall = ''
-            mkdir -p $out/bin
+            mkdir -p $out/bin $out/etc
             cp manage.py "$out/bin"
+
+            cp gunicorn.conf.py gunicorn-error.log $out/etc/
 
             mkdir -p $static
             env \
