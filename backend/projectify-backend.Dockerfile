@@ -18,4 +18,14 @@ COPY --from=builder /tmp/build/result /app
 COPY --from=builder /tmp/build/result-1-static /static
 ENV STATIC_ROOT=/static
 
-CMD ["gunicorn", "--config", "/app/etc/gunicorn.conf.py", "--log-config", "/app/etc/gunicorn-error.log"]
+CMD ["/app/bin/gunicorn", "--config", "/app/etc/gunicorn.conf.py", "--log-config", "/app/etc/gunicorn-error.log"]
+
+FROM scratch as worker
+WORKDIR /app
+COPY --from=builder /tmp/nix-store-closure /nix/store
+COPY --from=builder /tmp/build/result /app
+# We might not need STATIC_ROOT for a worker
+COPY --from=builder /tmp/build/result-1-static /static
+ENV STATIC_ROOT=/static
+
+CMD ["/app/bin/celery", "--app", "projectify", "worker", "--concurrency", "1"]
