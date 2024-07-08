@@ -7,7 +7,9 @@ WORKDIR /tmp/build
 # https://mitchellh.com/writing/nix-with-dockerfiles
 RUN echo "experimental-features = nix-command flakes" > /etc/nix/nix.conf \
     && nix build .#projectify-backend .#projectify-backend.static \
-    && cp -a "$(nix-store -qR result/)" /tmp/nix-store-closure
+    && mkdir -p /tmp/nix-store-closure \
+    && nix-store -qR result > /tmp/nix-store-closure-files \
+    && xargs -a /tmp/nix-store-closure-files -I {} cp -a {} /tmp/nix-store-closure/
 
 FROM scratch as web
 WORKDIR /app
