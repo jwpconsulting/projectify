@@ -25,29 +25,39 @@ podman run \
   shell_plus -c 'print(settings.STATIC_ROOT)'
 ```
 
-For the database, you can use sqlite. Create a [Podman volume](https://docs.podman.io/en/latest/markdown/podman-volume.1.html):
+This prints something like the following
 
-```fish
-podman volume create projectify-backend-db
+```
+[...]
+from django.utils import timezone
+from django.urls import reverse
+from django.db.models import Exists, OuterRef, Subquery
+/nix/store/4928ai9dfpvbh79908sll2x71xj91p9q-python3.11-projectify-0.1.0-static
 ```
 
-Try creating and migrating a database:
+To connect to the local postgres, you have to run the container using
+`--network=host`. Set the correct `DATABASE_URL`, the below is only an example.
+This also assumes, you have already created a database called `projectify`.
+(use something like `createdb projectify`)
+
+Try running seeddb:
 
 ```fish
 podman run \
-  --rm \
+  --env-file backend/.env.production-sample \
+  --env DATABASE_URL=postgres://$USER@localhost/projectify \
   --interactive \
-  --volume projectify-backend-db:/var/projectify/db \
-  docker-archive:(zcat result | psub) manage.py seeddb
+  --network=host \
+  projectify-manage:latest seeddb
 ```
 
 This will start a server:
 
 ```fish
 podman run \
-    --expose 8000 \
-    --publish 8000:8000 \
-  --volume projectify-backend-db:/var/projectify/db \
-    --interactive \
-    docker-archive:(zcat result | psub)
+  --env-file backend/.env.production-sample \
+  --env DATABASE_URL=postgres://$USER@localhost/projectify \
+  --interactive \
+  --network=host \
+  projectify-backend:latest
 ```
