@@ -1,3 +1,4 @@
+setup:
 build:
     docker:
         web:
@@ -12,3 +13,4 @@ build:
 release:
     command:
         - migrate --noinput
+run:
