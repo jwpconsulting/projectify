@@ -1,13 +1,13 @@
 build:
     docker:
         web:
-            dockerfile: backend/projectify-backend.Dockerfile
+            dockerfile: containers/projectify-backend.Dockerfile
             target: projectify-backend
         worker:
-            dockerfile: backend/projectify-backend.Dockerfile
+            dockerfile: containers/projectify-backend.Dockerfile
             target: projectify-celery
         manage:
-            dockerfile: backend/projectify-backend.Dockerfile
+            dockerfile: containers/projectify-backend.Dockerfile
             target: projectify-manage
 release:
     image: projectify-manage
