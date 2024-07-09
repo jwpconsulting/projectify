@@ -1,0 +1,44 @@
+name: Build all docker images
+
+on:
+    pull_request:
+jobs:
+    projectify-backend:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v4
+        - uses: docker/setup-buildx-action@v3
+        -
+            uses: docker/build-push-action@v6
+            with:
+                push: false
+                load: true
+                file: containers/projectify-backend.Dockerfile
+                cache-from: type=gha
+                cache-to: type=gha,mode=max
+    projectify-celery:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v4
+        - uses: docker/setup-buildx-action@v3
+        -
+            uses: docker/build-push-action@v6
+            with:
+                push: false
+                load: true
+                file: containers/projectify-celery.Dockerfile
+                cache-from: type=gha
+                cache-to: type=gha,mode=max
+    projectify-manage:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v4
+        - uses: docker/setup-buildx-action@v3
+        -
+            uses: docker/build-push-action@v6
+            with:
+                push: false
+                load: true
+                file: containers/projectify-manage.Dockerfile
+                cache-from: type=gha
+                cache-to: type=gha,mode=max

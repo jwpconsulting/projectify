@@ -138,50 +138,6 @@ You can launch a production-like `projectify-manage` locally like so:
 dotenv -f .env.production-sample run nix run .#projectify-manage help
 ```
 
-# Podman / Docker
-
-This assumes that you are using [Podman](https://podman.io/). The three
-above commands
-
-- projectify-backend,
-- projectify-celery, and
-- projectify-manage
-
-can be built using
-
-```bash
-podman build -f projectify-backend.Dockerfile
-podman build -f projectify-celery.Dockerfile
-podman build -f projectify-manage.Dockerfile
-```
-
-For the database, you can use sqlite. Create a [Podman volume](https://docs.podman.io/en/latest/markdown/podman-volume.1.html):
-
-```fish
-podman volume create projectify-backend-db
-```
-
-Try creating and migrating a database:
-
-```fish
-podman run \
-  --rm \
-  --interactive \
-  --volume projectify-backend-db:/var/projectify/db \
-  docker-archive:(zcat result | psub) manage.py seeddb
-```
-
-This will start a server:
-
-```fish
-podman run \
-    --expose 8000 \
-    --publish 8000:8000 \
-  --volume projectify-backend-db:/var/projectify/db \
-    --interactive \
-    docker-archive:(zcat result | psub)
-```
-
 ## Flake
 
 There is a nix flake in this repository.

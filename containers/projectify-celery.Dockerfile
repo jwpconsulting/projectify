@@ -1,6 +1,6 @@
 FROM docker.io/nixos/nix:2.22.3 as builder
 
-COPY . /tmp/build
+COPY backend /tmp/build
 WORKDIR /tmp/build
 
 # https://marcopolo.io/code/nix-and-small-containers/
