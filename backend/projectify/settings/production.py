@@ -17,6 +17,7 @@
 """Production settings."""
 
 import os
+from pathlib import Path
 
 from projectify.lib.settings import populate_production_middleware
 
@@ -70,7 +71,11 @@ class Production(Base):
     # We allow overriding this value in case the static files come prebuilt,
     # for example in a Docker container, and an exact path is contained in
     # the STATIC_ROOT environment variable
-    STATIC_ROOT = os.getenv("STATIC_ROOT", Base.STATIC_ROOT)
+    STATIC_ROOT = (
+        Path(os.environ["STATIC_ROOT"])
+        if "STATIC_ROOT" in os.environ
+        else Base.STATIC_ROOT
+    )
 
     # Cloudinary
     STORAGES = {
