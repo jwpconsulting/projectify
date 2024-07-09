@@ -66,6 +66,12 @@ class Production(Base):
 
     CSRF_TRUSTED_ORIGINS = ("https://www.projectifyapp.com",)
 
+    # Static files
+    # We allow overriding this value in case the static files come prebuilt,
+    # for example in a Docker container, and an exact path is contained in
+    # the STATIC_ROOT environment variable
+    STATIC_ROOT = os.getenv("STATIC_ROOT", Base.STATIC_ROOT)
+
     # Cloudinary
     STORAGES = {
         **Base.STORAGES,

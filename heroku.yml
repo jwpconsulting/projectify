@@ -2,4 +2,14 @@ build:
     docker:
         web:
             dockerfile: backend/projectify-backend.Dockerfile
-            target: web
+            target: projectify-backend
+        worker:
+            dockerfile: backend/projectify-celery.Dockerfile
+            target: projectify-celery
+        release:
+            dockerfile: backend/projectify-manage.Dockerfile
+            target: projectify-manage
+release:
+    image: projectify-celery
+    command:
+        - migrate --noinput

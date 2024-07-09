@@ -100,17 +100,62 @@ git add requirements.txt
 
 # Nix
 
-The Projectify backend can be run using Nix.
+The Projectify backend can be run using Nix. There are three entry points to
+the application:
 
-## Nix built docker container
+- projectify-backend: the Projectify backend wrapped inside gunicorn
+- projectify-celery: the Projectify background worker wrapped in celery
+- projectify-manage: the Projectify backend's management tool, using Django
+management commands.
 
-This assumes that you are using [Podman](https://podman.io/). A Docker container can be built using
+There are sample configuration variables in `.env.production-sample`. These are
+all variables needed to load up the above three commands.
 
-```bash
-nix build .#container
+Assuming you have direnv installed, all the necessary configuration variables
+can be exposed using `dotenv -f .env.production run COMMAND`.
+
+## Launching projectify-backend
+
+You can launch a production-like `projectify-backend` locally like so:
+
+```
+dotenv -f .env.production-sample run nix run .#projectify-backend
 ```
 
-Then, create a [Podman volume](https://docs.podman.io/en/latest/markdown/podman-volume.1.html):
+## Launching projectify-celery
+
+You can launch a production-like `projectify-celery` locally like so:
+
+```
+dotenv -f .env.production-sample run nix run .#projectify-celery
+```
+
+## Launching projectify-manage
+
+You can launch a production-like `projectify-manage` locally like so:
+
+```
+dotenv -f .env.production-sample run nix run .#projectify-manage help
+```
+
+# Podman / Docker
+
+This assumes that you are using [Podman](https://podman.io/). The three
+above commands
+
+- projectify-backend,
+- projectify-celery, and
+- projectify-manage
+
+can be built using
+
+```bash
+podman build -f projectify-backend.Dockerfile
+podman build -f projectify-celery.Dockerfile
+podman build -f projectify-manage.Dockerfile
+```
+
+For the database, you can use sqlite. Create a [Podman volume](https://docs.podman.io/en/latest/markdown/podman-volume.1.html):
 
 ```fish
 podman volume create projectify-backend-db
