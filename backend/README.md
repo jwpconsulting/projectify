@@ -100,41 +100,42 @@ git add requirements.txt
 
 # Nix
 
-The Projectify backend can be run using Nix.
+The Projectify backend can be run using Nix. There are three entry points to
+the application:
 
-## Nix built docker container
+- projectify-backend: the Projectify backend wrapped inside gunicorn
+- projectify-celery: the Projectify background worker wrapped in celery
+- projectify-manage: the Projectify backend's management tool, using Django
+management commands.
 
-This assumes that you are using [Podman](https://podman.io/). A Docker container can be built using
+There are sample configuration variables in `.env.production-sample`. These are
+all variables needed to load up the above three commands.
 
-```bash
-nix build .#container
+Assuming you have direnv installed, all the necessary configuration variables
+can be exposed using `dotenv -f .env.production run COMMAND`.
+
+## Launching projectify-backend
+
+You can launch a production-like `projectify-backend` locally like so:
+
+```
+dotenv -f .env.production-sample run nix run .#projectify-backend
 ```
 
-Then, create a [Podman volume](https://docs.podman.io/en/latest/markdown/podman-volume.1.html):
+## Launching projectify-celery
 
-```fish
-podman volume create projectify-backend-db
+You can launch a production-like `projectify-celery` locally like so:
+
+```
+dotenv -f .env.production-sample run nix run .#projectify-celery
 ```
 
-Try creating and migrating a database:
+## Launching projectify-manage
 
-```fish
-podman run \
-  --rm \
-  --interactive \
-  --volume projectify-backend-db:/var/projectify/db \
-  docker-archive:(zcat result | psub) manage.py seeddb
+You can launch a production-like `projectify-manage` locally like so:
+
 ```
-
-This will start a server:
-
-```fish
-podman run \
-    --expose 8000 \
-    --publish 8000:8000 \
-  --volume projectify-backend-db:/var/projectify/db \
-    --interactive \
-    docker-archive:(zcat result | psub)
+dotenv -f .env.production-sample run nix run .#projectify-manage help
 ```
 
 ## Flake

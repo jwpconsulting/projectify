@@ -17,6 +17,7 @@
 """Production settings."""
 
 import os
+from pathlib import Path
 
 from projectify.lib.settings import populate_production_middleware
 
@@ -65,6 +66,16 @@ class Production(Base):
     CORS_ALLOWED_ORIGINS = ("https://www.projectifyapp.com",)
 
     CSRF_TRUSTED_ORIGINS = ("https://www.projectifyapp.com",)
+
+    # Static files
+    # We allow overriding this value in case the static files come prebuilt,
+    # for example in a Docker container, and an exact path is contained in
+    # the STATIC_ROOT environment variable
+    STATIC_ROOT = (
+        Path(os.environ["STATIC_ROOT"])
+        if "STATIC_ROOT" in os.environ
+        else Base.STATIC_ROOT
+    )
 
     # Cloudinary
     STORAGES = {

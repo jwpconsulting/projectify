@@ -27,6 +27,7 @@
             adapter = "node";
         };
         backend = projectify-backend.packages.${system}.projectify-backend;
+        celery = projectify-backend.packages.${system}.projectify-celery;
         revproxy = projectify-revproxy.packages.${system}.projectify-revproxy;
         nodejs = pkgs.nodejs_20;
       in
@@ -39,12 +40,12 @@
             backend
             frontend
             revproxy
+            celery
             pkgs.python311Packages.supervisor
             pkgs.unixtools.watch
             pkgs.coreutils
           ];
           shellHook = ''
-            export STATIC_ROOT=${backend.static}
             export DJANGO_SETTINGS_MODULE=projectify.settings.development_nix
             export DJANGO_CONFIGURATION=DevelopmentNix
           '';

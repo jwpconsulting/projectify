@@ -69,12 +69,10 @@
           poetrylock = ./poetry.lock;
           groups = [ "dev" "test" ];
         };
-        projectify-backend = mkPoetryApplication {
+        projectify-bundle = mkPoetryApplication {
           inherit projectDir;
           inherit overrides;
           inherit python;
-          pyproject = ./pyproject.toml;
-          poetrylock = ./poetry.lock;
           groups = [ ];
           checkGroups = [ ];
           outputs = [ "out" "static" ];
@@ -95,45 +93,37 @@
           # https://github.com/nix-community/poetry2nix/issues/1441
           dontCheckRuntimeDeps = true;
         };
-        # Workaround, since dependencyEnv accidentally forgets any other
-        # outputs
       in
       {
         packages = {
-          projectify-backend = projectify-backend;
-          default = projectify-backend;
-          container = pkgs.dockerTools.buildLayeredImage {
-            name = "projectify-backend";
-            tag = "latest";
-            contents = [
-              projectify-backend
-            ];
-            # Here and below we use relative paths
-            extraCommands = ''
-              mkdir -p var/projectify/static
-              cp -a ${projectify-backend.static}/. var/projectify/static
+          # Expose projectify-bundle for caching
+          inherit projectify-bundle;
+          projectify-manage = pkgs.writeShellApplication {
+            name = "projectify-manage";
+            runtimeInputs = [ projectify-bundle.dependencyEnv ];
+            # TODO consider whether STATIC_ROOT is reallse needed to run a
+            # management comma
+            text = ''
+              export STATIC_ROOT="${projectify-bundle.static}"
+              exec ${projectify-bundle}/bin/manage.py "$@"
             '';
-            config = {
-              Env = [
-              ];
-              Cmd = [
-                "gunicorn"
-                "--config"
-                "${./gunicorn.conf.py}"
-                "--log-config"
-                "${./gunicorn-error.log}"
-              ];
-              ExposedPorts = {
-                "8000/tcp" = { };
-              };
-            };
           };
-        };
-        # Run with `nix run`
-        apps = {
-          default = {
-            type = "app";
-            program = "${projectify-backend}/bin/projectify-backend";
+          projectify-backend = pkgs.writeShellApplication {
+            name = "projectify-backend";
+            runtimeInputs = [ projectify-bundle.dependencyEnv ];
+            text = ''
+              export STATIC_ROOT="${projectify-bundle.static}"
+              exec gunicorn --config ${projectify-bundle}/etc/gunicorn.conf.py --log-config ${projectify-bundle}/etc/gunicorn-error.log --access-logfile -
+            '';
+          };
+          projectify-celery = pkgs.writeShellApplication {
+            name = "projectify-celery";
+            runtimeInputs = [ projectify-bundle.dependencyEnv ];
+            # TODO make worker independent of STATIC_ROOT
+            text = ''
+              export STATIC_ROOT="${projectify-bundle.static}"
+              exec celery --app projectify.celery worker --concurrency 1
+            '';
           };
         };
         devShell = poetryEnv.env.overrideAttrs (oldattrs: {
