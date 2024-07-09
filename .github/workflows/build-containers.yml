@@ -16,24 +16,18 @@ jobs:
                 file: containers/projectify-backend.Dockerfile
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
-    projectify-celery:
-        runs-on: ubuntu-latest
-        steps:
-        - uses: actions/checkout@v4
-        - uses: docker/setup-buildx-action@v3
+                tags: projectify-backend:latest
+                target: projectify-backend
         -
             uses: docker/build-push-action@v6
             with:
                 push: false
                 load: true
-                file: containers/projectify-celery.Dockerfile
+                file: containers/projectify-backend.Dockerfile
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
-    projectify-manage:
-        runs-on: ubuntu-latest
-        steps:
-        - uses: actions/checkout@v4
-        - uses: docker/setup-buildx-action@v3
+                tags: projectify-celery:latest
+                target: projectify-celery
         -
             uses: docker/build-push-action@v6
             with:
@@ -42,3 +36,5 @@ jobs:
                 file: containers/projectify-manage.Dockerfile
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
+                tags: projectify-backend:latest
+                target: projectify-manage

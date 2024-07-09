@@ -96,6 +96,8 @@
       in
       {
         packages = {
+          # Expose projectify-bundle for caching
+          inherit projectify-bundle;
           projectify-manage = pkgs.writeShellApplication {
             name = "projectify-manage";
             runtimeInputs = [ projectify-bundle.dependencyEnv ];

@@ -7,12 +7,13 @@ commands
 - projectify-celery, and
 - projectify-manage
 
-can be built from the repository's root directory using
+can be built from the repository's root directory using the multi-stage build
+Dockerfile in `containers/`
 
 ```bash
-podman build -t projectify-backend:latest -f containers/projectify-backend.Dockerfile .
-podman build -t projectify-celery:latest -f containers/projectify-celery.Dockerfile .
-podman build -t projectify-manage:latest -f containers/projectify-manage.Dockerfile .
+podman build --target projectify-backend -t projectify-backend:latest -f containers/projectify-backend.Dockerfile .
+podman build --target projectify-celery -t projectify-celery:latest -f containers/projectify-backend.Dockerfile .
+podman build --target projectify-manage -t projectify-manage:latest -f containers/projectify-backend.Dockerfile .
 ```
 
 Try running projectify-manage using
