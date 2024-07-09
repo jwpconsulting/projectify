@@ -11,9 +11,9 @@ can be built from the repository's root directory using the multi-stage build
 Dockerfile in `containers/`
 
 ```bash
-podman build --target projectify-backend -t projectify-backend:latest -f containers/projectify-backend.Dockerfile .
-podman build --target projectify-celery -t projectify-celery:latest -f containers/projectify-backend.Dockerfile .
-podman build --target projectify-manage -t projectify-manage:latest -f containers/projectify-backend.Dockerfile .
+podman build --target projectify-backend -t projectify-backend:latest -f projectify-backend.Dockerfile .
+podman build --target projectify-celery -t projectify-celery:latest -f projectify-backend.Dockerfile .
+podman build --target projectify-manage -t projectify-manage:latest -f projectify-backend.Dockerfile .
 ```
 
 Try running projectify-manage using

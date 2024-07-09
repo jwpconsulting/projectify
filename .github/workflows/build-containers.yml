@@ -13,7 +13,7 @@ jobs:
             with:
                 push: false
                 load: true
-                file: containers/projectify-backend.Dockerfile
+                file: projectify-backend.Dockerfile
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
                 tags: projectify-backend:latest
@@ -23,7 +23,7 @@ jobs:
             with:
                 push: false
                 load: true
-                file: containers/projectify-backend.Dockerfile
+                file: projectify-backend.Dockerfile
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
                 tags: projectify-celery:latest
@@ -33,7 +33,7 @@ jobs:
             with:
                 push: false
                 load: true
-                file: containers/projectify-backend.Dockerfile
+                file: projectify-backend.Dockerfile
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
                 tags: projectify-manage:latest
