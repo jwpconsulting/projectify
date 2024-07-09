@@ -14,11 +14,11 @@ build:
             dockerfile: containers/projectify-backend.Dockerfile
             target: projectify-manage
 release:
-    image: projectify-manage
+    image: manage
     command:
         - migrate --noinput
 run:
     web:
-        image: projectify-backend
+        image: web
     worker:
-        image: projectify-celery
+        image: worker
