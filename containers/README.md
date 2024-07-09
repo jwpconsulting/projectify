@@ -61,3 +61,31 @@ podman run \
   --network=host \
   projectify-backend:latest
 ```
+
+## Revproxy
+
+Eventually, we want to set up a reverse proxy to pass requests to the
+SSR frontend and Django.
+
+Build the (Caddy based) reverse proxy like so:
+
+```bash
+podman build --target projectify-revproxy -t projectify-revproxy:latest -f projectify-revproxy.Dockerfile .
+```
+
+Launch the reverse proxy:
+
+```bash
+podman run \
+  --interactive \
+  --network=host \
+  projectify-revproxy:latest
+```
+
+## Podman-compose
+
+Using nixpkgs, you can run podman-compose with
+
+```bash
+nix run nixpkgs#podman-compose
+```
