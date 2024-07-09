@@ -1,7 +1,7 @@
 setup:
     config:
-    DJANGO_SETTINGS_MODULE: projectify.settings.production
-    DJANGO_CONFIGURATION: Production
+        DJANGO_SETTINGS_MODULE: projectify.settings.production
+        DJANGO_CONFIGURATION: Production
 build:
     docker:
         web:
