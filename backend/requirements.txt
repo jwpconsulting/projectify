@@ -269,9 +269,6 @@ drf-spectacular-sidecar==2024.4.1 ; python_full_version >= "3.11.6" and python_f
 drf-spectacular[sidecar]==0.27.2 ; python_full_version >= "3.11.6" and python_full_version < "3.12.0" \
     --hash=sha256:a199492f2163c4101055075ebdbb037d59c6e0030692fc83a1a8c0fc65929981 \
     --hash=sha256:b1c04bf8b2fbbeaf6f59414b4ea448c8787aba4d32f76055c3b13335cf7ec37b
-faker==19.13.0 ; python_full_version >= "3.11.6" and python_full_version < "3.12.0" \
-    --hash=sha256:14ccb0aec342d33aa3889a864a56e5b3c2d56bce1b89f9189f4fbc128b9afc1e \
-    --hash=sha256:da880a76322db7a879c848a0771e129338e0a680a9f695fd9a3e7a6ac82b45e1
 gunicorn==22.0.0 ; python_full_version >= "3.11.6" and python_full_version < "3.12.0" \
     --hash=sha256:350679f91b24062c86e386e198a15438d53a7a8207235a78ba1b53df4c4378d9 \
     --hash=sha256:4a0b436239ff76fb33f11c07a16482c521a7e09c1ce3cc293c2330afe01bec63
@@ -486,9 +483,6 @@ pycparser==2.21 ; python_full_version >= "3.11.6" and python_full_version < "3.1
 pyopenssl==24.0.0 ; python_full_version >= "3.11.6" and python_full_version < "3.12.0" \
     --hash=sha256:6aa33039a93fffa4563e655b61d11364d01264be8ccb49906101e02a334530bf \
     --hash=sha256:ba07553fb6fd6a7a2259adb9b84e12302a9a8a75c44046e8bb5d3e5ee887e3c3
-python-dateutil==2.8.2 ; python_full_version >= "3.11.6" and python_full_version < "3.12.0" \
-    --hash=sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86 \
-    --hash=sha256:961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9
 python-dotenv==0.20.0 ; python_full_version >= "3.11.6" and python_full_version < "3.12.0" \
     --hash=sha256:b7e3b04a59693c42c36f9ab1cc2acc46fa5df8c78e178fc33a8d4cd05c8d498f \
     --hash=sha256:d92a187be61fe482e4fd675b6d52200e7be63a12b724abbf931a40ce4fa92938
