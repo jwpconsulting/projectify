@@ -42,12 +42,6 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import URLPattern, URLResolver, include, path
 
-from drf_spectacular.views import (
-    SpectacularAPIView,
-    SpectacularRedocView,
-    SpectacularSwaggerView,
-)
-
 from projectify.lib.settings import get_settings
 from projectify.workspace.consumers import ChangeConsumer
 
@@ -87,6 +81,12 @@ if settings.DEBUG_TOOLBAR:
     )
 
 if settings.SERVE_SPECTACULAR:
+    from drf_spectacular.views import (
+        SpectacularAPIView,
+        SpectacularRedocView,
+        SpectacularSwaggerView,
+    )
+
     urlpatterns = (
         *urlpatterns,
         path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
