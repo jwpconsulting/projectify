@@ -10,10 +10,14 @@ services:
             - "5000:5000"
         environment:
             PORT: "5000"
-            FRONTEND_ADDRESS: "backend:5001"
+            FRONTEND_ADDRESS: "frontend:5001"
             BACKEND_ADDRESS: "backend:5002"
         depends_on:
             - backend
+    frontend:
+        image: localhost/projectify-frontend:latest
+        environment:
+            SVELTE_KIT_PORT: 5001
     backend:
         image: localhost/projectify-backend:latest
         environment: &backend-env
