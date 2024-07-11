@@ -1,24 +1,33 @@
 ---
-networks:
-  podman:
-    external: true
+name: projectify-compose
+volumes:
+    postgres-data:
+    keydb-data:
 services:
     web:
         image: localhost/projectify-revproxy:latest
+        ports:
+            - "5000:5000"
+        environment:
+            PORT: "5000"
+            FRONTEND_ADDRESS: "backend:5001"
+            BACKEND_ADDRESS: "backend:5002"
+        depends_on:
+            - backend
     backend:
         image: localhost/projectify-backend:latest
         environment: &backend-env
             SECRET_KEY: do-not-use
             # Networking
-            PORT: "8000"
+            PORT: "5002"
             ALLOWED_HOSTS: "localhost"
             INTERNAL_IPS: "127.0.0.1"
             # Settings
             DJANGO_SETTINGS_MODULE: projectify.settings.production
             DJANGO_CONFIGURATION: Production
             # Database
-            DATABASE_URL: postgres://localhost:5432/projectify
-            REDIS_TLS_URL: redis://keydb:12111/0
+            DATABASE_URL: postgres://projectify:projectify@postgres:5432/projectify
+            REDIS_TLS_URL: redis://keydb:6379/0
             # Frontend
             FRONTEND_URL: http://localhost
             # Stripe
@@ -31,17 +40,34 @@ services:
             MAILGUN_DOMAIN: localhost
         depends_on:
             - keydb
+            - postgres
+            - worker
+        ports:
+    migrate_backend:
+        image: localhost/projectify-manage:latest
+        environment: *backend-env
+        command: migrate
+        depends_on:
+            - postgres
     worker:
         image: localhost/projectify-celery:latest
         environment: *backend-env
         depends_on:
             - keydb
-        networks:
-            - podman
+            - postgres
     keydb:
         image: docker.io/eqalpha/keydb
-        ports:
-            # Something about rootless network causes trouble here
-            - "12111:6379"
-        networks:
-            - podman
+        # command: --appendonly yes
+        volumes:
+            - keydb-data:/data
+    postgres:
+        image: docker.io/postgres
+        restart: always
+        shm_size: 128mb
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
+        environment:
+            POSTGRES_DB: projectify
+            POSTGRES_USER: projectify
+            POSTGRES_PASSWORD: projectify
+            PGDATA: /var/lib/postgresql/data/pgdata

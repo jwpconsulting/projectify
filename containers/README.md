@@ -64,8 +64,33 @@ podman run \
 
 ## Podman-compose
 
-Using nixpkgs, you can run podman-compose with
+A sample `docker-compose.yml` file has been placed in `containers/`. Using
+nixpkgs, you can run podman-compose with
 
 ```bash
 nix run nixpkgs#podman-compose
+```
+
+Launch everything using
+
+```bash
+nix run nixpkgs#podman-compose -- \
+  --file containers/docker-compose.yaml \
+  up
+```
+
+Create a new user
+
+```bash
+nix run nixpkgs#podman-compose -- \
+  --file containers/docker-compose.yaml \
+  run migrate_backend createsuperuser
+```
+
+or if you feel adventurous you can seed the database as well
+
+```bash
+nix run nixpkgs#podman-compose -- \
+  --file containers/docker-compose.yaml \
+  run migrate_backend seeddb
 ```
