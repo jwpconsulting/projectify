@@ -1,0 +1,17 @@
+:{$PORT:invalid} {
+	handle /admin/* {
+		reverse_proxy {$BACKEND_ADDRESS}
+	}
+	handle /static/django/* {
+		reverse_proxy {$BACKEND_ADDRESS}
+	}
+	handle /ws/* {
+		reverse_proxy {$BACKEND_ADDRESS}
+	}
+	handle_path /api/* {
+		reverse_proxy {$BACKEND_ADDRESS}
+	}
+	handle /* {
+		reverse_proxy {$FRONTEND_ADDRESS}
+	}
+}
