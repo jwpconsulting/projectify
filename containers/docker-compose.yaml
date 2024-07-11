@@ -31,7 +31,7 @@ services:
             DJANGO_CONFIGURATION: Production
             # Database
             DATABASE_URL: postgres://projectify:projectify@postgres:5432/projectify
-            REDIS_TLS_URL: redis://keydb:6379/0
+            REDIS_TLS_URL: rediss://keydb:6379/0
             # Frontend
             FRONTEND_URL: http://localhost
             # Stripe
