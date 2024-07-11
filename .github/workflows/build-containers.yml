@@ -38,3 +38,23 @@ jobs:
                 cache-to: type=gha,mode=max
                 tags: projectify-manage:latest
                 target: projectify-manage
+        -
+            uses: docker/build-push-action@v6
+            with:
+                push: false
+                load: true
+                file: projectify-frontend.Dockerfile
+                cache-from: type=gha
+                cache-to: type=gha,mode=max
+                tags: projectify-frontend:latest
+                target: projectify-frontend
+        -
+            uses: docker/build-push-action@v6
+            with:
+                push: false
+                load: true
+                file: projectify-revproxy.Dockerfile
+                cache-from: type=gha
+                cache-to: type=gha,mode=max
+                tags: projectify-revproxy:latest
+                target: projectify-revproxy
