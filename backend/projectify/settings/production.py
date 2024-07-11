@@ -43,7 +43,7 @@ def get_redis_tls_url() -> str:
 class Production(Base):
     """Production configuration."""
 
-    SITE_TITLE = "Projectify Production"
+    SITE_TITLE = os.getenv("SITE_TITLE", "Projectify Production")
 
     # Redis URL
     REDIS_TLS_URL = get_redis_tls_url()
@@ -63,9 +63,9 @@ class Production(Base):
     # Celery
     CELERY_BROKER_URL = REDIS_TLS_URL
 
-    CORS_ALLOWED_ORIGINS = ("https://www.projectifyapp.com",)
+    CORS_ALLOWED_ORIGINS = (FRONTEND_URL,)
 
-    CSRF_TRUSTED_ORIGINS = ("https://www.projectifyapp.com",)
+    CSRF_TRUSTED_ORIGINS = (FRONTEND_URL,)
 
     # Static files
     # We allow overriding this value in case the static files come prebuilt,
@@ -94,7 +94,7 @@ class Production(Base):
     # and at this point I am afraid to ask.
     MIDDLEWARE = list(populate_production_middleware(Base.MIDDLEWARE))
 
-    CSRF_COOKIE_DOMAIN = ".projectifyapp.com"
+    CSRF_COOKIE_DOMAIN = os.getenv("CSRF_COOKIE_DOMAIN", ".projectifyapp.com")
 
     # Stripe
     STRIPE_PUBLISHABLE_KEY = os.environ["STRIPE_PUBLISHABLE_KEY"]
