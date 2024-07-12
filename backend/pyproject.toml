@@ -121,6 +121,10 @@ exclude = [
     "projectify/lib/error_schema.py",
     # Nix build
     "result",
+    # spectacular classes are being overriden here, we avoid having
+    # to conditonally ignore no-redef (mypy) or reportAssignmentType (pyright)
+    "projectify/lib/schema.py",
+
 ]
 # Mypy doesn't complain about these, so it's fine
 reportUnknownParameterType = true

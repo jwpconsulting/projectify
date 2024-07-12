@@ -20,7 +20,6 @@ from uuid import UUID
 
 from django.utils.translation import gettext_lazy as _
 
-from drf_spectacular.utils import extend_schema
 from rest_framework import serializers, status
 from rest_framework.exceptions import NotFound
 from rest_framework.request import Request
@@ -28,6 +27,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from projectify.lib.error_schema import DeriveSchema
+from projectify.lib.schema import extend_schema
 from projectify.workspace.models import (
     Section,
 )

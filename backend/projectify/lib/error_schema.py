@@ -21,7 +21,6 @@ import logging
 from collections.abc import Callable, Sequence
 from typing import Any, Literal, Optional, Union
 
-from drf_spectacular.utils import OpenApiResponse, _SchemaType
 from rest_framework import fields, permissions, serializers, status
 from rest_framework.views import APIView
 
@@ -31,6 +30,7 @@ from projectify.lib.exception_handler import (
     NotFoundSerializer,
     TooManyRequestsSerializer,
 )
+from projectify.lib.schema import OpenApiResponse, _SchemaType
 
 logger = logging.getLogger(__name__)
 
@@ -309,7 +309,7 @@ def preprocess_derive_error_schemas(endpoints: Endpoints) -> Endpoints:
     """Process drf-spectactular schema and add missing HTTP error schemas."""
     method_names = ["GET", "POST", "PUT", "DELETE"]
     # These are the functions we want to annotate
-    # https://github.com/tfranzel/drf-spectacular/blob/b1a34b05230316ca6c6d6724f2b9bb970a8dbe79/drf_spectacular/utils.py#L549
+    # https://github.com/tfranzel/drf-spectacular/blob/b1a34b05230316ca6c6d6724f2b9bb970a8dbe79/projectify.lib.schema.py#L549
     endpoints_edit = (
         (path, path_regex, method_name, callback)
         for path, path_regex, method_name, callback in endpoints

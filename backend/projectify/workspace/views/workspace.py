@@ -22,7 +22,6 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
 from django_ratelimit.decorators import ratelimit
-from drf_spectacular.utils import extend_schema
 from rest_framework import (
     parsers,
     serializers,
@@ -42,6 +41,7 @@ from rest_framework.status import (
 )
 
 from projectify.lib.error_schema import DeriveSchema
+from projectify.lib.schema import extend_schema
 from projectify.workspace.selectors.quota import workspace_get_all_quotas
 
 from ..exceptions import (
