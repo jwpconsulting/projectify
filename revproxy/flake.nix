@@ -11,33 +11,16 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        caddyfile = pkgs.runCommand "Caddyfile" {} ''
+        # https://ryantm.github.io/nixpkgs/builders/trivial-builders/#chap-trivial-builders
+        caddyfileFormatted = pkgs.runCommand "Caddyfile" {} ''
           mkdir $out
-          echo "
-            :5000 {
-              handle /admin/* {
-                reverse_proxy :5002
-              }
-              handle /backend/static/* {
-                reverse_proxy :5002
-              }
-              handle /ws/* {
-                reverse_proxy :5002
-              }
-              handle_path /api/* {
-                reverse_proxy :5002
-              }
-              handle /* {
-                reverse_proxy :5001
-              }
-            }
-          " | ${pkgs.caddy}/bin/caddy fmt - > $out/Caddyfile
+          ${pkgs.caddy}/bin/caddy fmt - <${./Caddyfile} > $out/Caddyfile
         '';
         projectify-revproxy = pkgs.writeShellApplication {
           name = "projectify-revproxy";
           runtimeInputs = [ pkgs.caddy ];
           text = ''
-            exec caddy --config "${caddyfile}/Caddyfile" run
+            exec caddy --config "${caddyfileFormatted}/Caddyfile" run
           '';
         };
       in

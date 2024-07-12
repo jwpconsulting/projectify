@@ -16,14 +16,17 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Production settings."""
 
+import logging
 import os
+from collections.abc import Mapping
 from pathlib import Path
+from typing import Any
 
 from projectify.lib.settings import populate_production_middleware
 
-from .base import (
-    Base,
-)
+from .base import Base
+
+logger = logging.getLogger(__name__)
 
 
 def get_redis_tls_url() -> str:
@@ -40,10 +43,44 @@ def get_redis_tls_url() -> str:
     )
 
 
+def get_redis_channel_layer_hosts(redis_url: str) -> Mapping[str, Any]:
+    """
+    Return django channels redis config.
+
+    If rediss:// URL is given IGNORE ssl cert requirements.
+
+    Both options are equally bad IMO.
+    """
+    if redis_url.startswith("rediss://"):
+        logger.warning(
+            "Initializing channels redis layer with TLS url and instructing the redis client to ignore SSL certificate requirements!",
+        )
+        return {
+            "hosts": [
+                {
+                    "address": redis_url,
+                    "ssl_cert_reqs": None,
+                }
+            ],
+        }
+    else:
+        logger.warning(
+            "Initializing channels redis layer with non-TLS url and potentially"
+            "transmitting queries in clear text!",
+        )
+        return {
+            "hosts": [
+                {
+                    "address": redis_url,
+                }
+            ],
+        }
+
+
 class Production(Base):
     """Production configuration."""
 
-    SITE_TITLE = "Projectify Production"
+    SITE_TITLE = os.getenv("SITE_TITLE", "Projectify Production")
 
     # Redis URL
     REDIS_TLS_URL = get_redis_tls_url()
@@ -63,9 +100,9 @@ class Production(Base):
     # Celery
     CELERY_BROKER_URL = REDIS_TLS_URL
 
-    CORS_ALLOWED_ORIGINS = ("https://www.projectifyapp.com",)
+    CORS_ALLOWED_ORIGINS = (FRONTEND_URL,)
 
-    CSRF_TRUSTED_ORIGINS = ("https://www.projectifyapp.com",)
+    CSRF_TRUSTED_ORIGINS = (FRONTEND_URL,)
 
     # Static files
     # We allow overriding this value in case the static files come prebuilt,
@@ -94,7 +131,7 @@ class Production(Base):
     # and at this point I am afraid to ask.
     MIDDLEWARE = list(populate_production_middleware(Base.MIDDLEWARE))
 
-    CSRF_COOKIE_DOMAIN = ".projectifyapp.com"
+    CSRF_COOKIE_DOMAIN = os.getenv("CSRF_COOKIE_DOMAIN", ".projectifyapp.com")
 
     # Stripe
     STRIPE_PUBLISHABLE_KEY = os.environ["STRIPE_PUBLISHABLE_KEY"]
@@ -112,12 +149,7 @@ class Production(Base):
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",
             "CONFIG": {
-                "hosts": [
-                    {
-                        "address": REDIS_TLS_URL,
-                        "ssl_cert_reqs": None,
-                    }
-                ],
+                **get_redis_channel_layer_hosts(REDIS_TLS_URL),
                 "symmetric_encryption_keys": [SECRET_KEY],
             },
         },

@@ -1,16 +1,24 @@
 setup:
+    config:
+        DJANGO_SETTINGS_MODULE: projectify.settings.production
+        DJANGO_CONFIGURATION: Production
 build:
     docker:
         web:
-            dockerfile: backend/projectify-backend.Dockerfile
+            dockerfile: projectify-backend.Dockerfile
             target: projectify-backend
         worker:
-            dockerfile: backend/projectify-backend.Dockerfile
+            dockerfile: projectify-backend.Dockerfile
             target: projectify-celery
-        release:
-            dockerfile: backend/projectify-backend.Dockerfile
+        manage:
+            dockerfile: projectify-backend.Dockerfile
             target: projectify-manage
 release:
+    image: manage
     command:
         - migrate --noinput
 run:
+    web:
+        image: web
+    worker:
+        image: worker

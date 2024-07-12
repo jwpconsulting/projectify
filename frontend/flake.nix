@@ -25,64 +25,69 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
         nodejs = pkgs.nodejs_20;
-        mkFrontend = {
-            wsEndpoint ? "/ws"
-            , apiEndpoint ? "/api"
-            , projectifyDomain ? "https://www.projectify.com"
-            , adapter ? "node"
-          } :
+        mkFrontend =
+          { wsEndpoint ? "/ws"
+          , apiEndpoint ? "/api"
+          , projectifyDomain ? "https://www.projectify.com"
+          , adapter ? "node"
+          }:
           # TODO make WS_ENDPOINT, API_ENDPOINT and PROJECITYF_DOMAIN arguments
           # to this derivation
-            pkgs.buildNpmPackage {
-              name = "projectify-frontend";
-              src = ./.;
-              npmDepsHash = "sha256-lDwdWLhpnqMNnGzQM/QipmFXhtb/InNnBz1La8v712Y=";
-              buildInputs = [
-                nodejs
+          pkgs.buildNpmPackage {
+            name = "projectify-frontend";
+            src = ./.;
+            npmDepsHash = "sha256-lDwdWLhpnqMNnGzQM/QipmFXhtb/InNnBz1La8v712Y=";
+            buildInputs = [
+              nodejs
+            ];
+
+            preConfigure = ''
+              export VITE_WS_ENDPOINT=${wsEndpoint}
+              export VITE_API_ENDPOINT=${apiEndpoint}
+              export VITE_PROJECTIFY_DOMAIN=${projectifyDomain}
+              export VITE_GIT_COMMIT_DATE=${self.lastModifiedDate}
+              export VITE_GIT_BRANCH_NAME=nix
+              export VITE_GIT_COMMIT_HASH=${self.rev or "dirty"}
+              export PROJECTIFY_FRONTEND_ADAPTER=${adapter}
+              export NODE_ENV=production
+            '';
+
+            postBuild =
+              if adapter == "node" then ''
+                cp -a package.json node_modules build/
+              '' else "";
+
+            installPhase = ''
+              mkdir -p $out
+              cp -a build/. $out/
+            '';
+            meta = with pkgs.lib; {
+              description = "Frontend for the Projectify project management software";
+              homepage = "https://www.projectifyapp.com";
+              license = with licenses; [ agpl3Only mit ];
+              maintainers = [
+                {
+                  name = "Justus Perlwitz";
+                  email = "justus@jwpconsulting.net";
+                }
               ];
-
-              preConfigure = ''
-                export VITE_WS_ENDPOINT=${wsEndpoint}
-                export VITE_API_ENDPOINT=${apiEndpoint}
-                export VITE_PROJECTIFY_DOMAIN=${projectifyDomain}
-                export VITE_GIT_COMMIT_DATE=${self.lastModifiedDate}
-                export VITE_GIT_BRANCH_NAME=nix
-                export VITE_GIT_COMMIT_HASH=${self.rev or "dirty"}
-                export PROJECTIFY_FRONTEND_ADAPTER=${adapter}
-                export NODE_ENV=production
-              '';
-
-              postBuild = if adapter == "node" then ''
-                cp -a node_modules/ build/
-                # These two can maybe go
-                cp package.json build/
-                cp package-lock.json build/
-              '' else ''
-              '';
-
-              installPhase = if adapter == "node" then ''
-                mkdir -p $out/share
-                mkdir -p $out/bin
-                cp -a build/. $out/share/build
-                echo "#!/usr/bin/env bash
-                exec node $out/share/build" > $out/bin/projectify-frontend
-                chmod +x $out/bin/projectify-frontend
-              '' else ''
-                mkdir -p $out
-                cp -a build/. $out/
-              '';
-              meta = with pkgs.lib; {
-                description = "Frontend for the Projectify project management software";
-                homepage = "https://www.projectifyapp.com";
-                license = with licenses; [ agpl3Only mit ];
-                maintainers = [
-                  {
-                    name = "Justus Perlwitz";
-                    email = "justus@jwpconsulting.net";
-                  }
-                ];
-              };
             };
+          };
+        projectify-frontend-static = mkFrontend { adapter = "static"; };
+        projectify-frontend-node =
+          let
+            frontend = (mkFrontend { adapter = "node"; });
+          in
+          pkgs.writeShellApplication {
+            name = "projectify-frontend-node";
+            runtimeInputs = [
+              frontend
+              nodejs
+            ];
+            text = ''
+              exec node ${frontend}
+            '';
+          };
       in
       {
         inherit self nixpkgs;
@@ -90,7 +95,8 @@
           inherit mkFrontend;
         };
         packages = {
-          projectify-frontend = mkFrontend {};
+          inherit projectify-frontend-static;
+          inherit projectify-frontend-node;
         };
         devShell = pkgs.mkShell {
           buildInputs = [

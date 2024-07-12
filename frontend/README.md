@@ -41,6 +41,34 @@ nix was a complicated process and took some time to get right.
 If you skip NixOS, home manager, and so on, you might be able to finish it in
 a few hours. If you have any questions, please contact the maintainers.
 
+Run the frontend using `adapter-static` locally:
+
+```
+SVELTE_KIT_PORT=3001 nix run .#projectify-frontend-node
+```
+
+You can use the following environment variables
+
+- `SVELTE_KIT_HOST`: The interface to bind to
+- `SVELTE_KIT_PORT`: The port to listen on
+- `SVELTE_KIT_PATH`: Use a unix domain socket, instead of listening on
+  `SVELTE_KIT_HOST:SVELTE_KIT_PORT`
+
+## Build Projectify frontend as Podman container
+
+```bash
+podman build \
+  --target projectify-frontend \
+  --tag projectify-frontend:latest \
+  --file projectify-frontend.Dockerfile .
+```
+
+Run using
+
+```bash
+podman run localhost/projectify-frontend:latest
+```
+
 ## Creating a new component
 
 Note: Tools have been moved to the tools folder accessible from the monorepo
