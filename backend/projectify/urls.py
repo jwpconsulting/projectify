@@ -42,12 +42,6 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import URLPattern, URLResolver, include, path
 
-from drf_spectacular.views import (
-    SpectacularAPIView,
-    SpectacularRedocView,
-    SpectacularSwaggerView,
-)
-
 from projectify.lib.settings import get_settings
 from projectify.workspace.consumers import ChangeConsumer
 
@@ -87,6 +81,18 @@ if settings.DEBUG_TOOLBAR:
     )
 
 if settings.SERVE_SPECTACULAR:
+    try:
+        from drf_spectacular.views import (
+            SpectacularAPIView,
+            SpectacularRedocView,
+            SpectacularSwaggerView,
+        )
+    except ImportError as e:
+        raise RuntimeError(
+            "drf_spectacular was not found. Did you enable SERVE_SPECTACULAR "
+            "while running in production?"
+        ) from e
+
     urlpatterns = (
         *urlpatterns,
         path("api/schema/", SpectacularAPIView.as_view(), name="schema"),

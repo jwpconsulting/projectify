@@ -115,7 +115,6 @@ class Base(Configuration):
         "cloudinary",
         "cloudinary_storage",
         "django_celery_results",
-        "django_extensions",
         # TODO I think this is ours, not third party
         "projectify.premail",
         "rest_framework",

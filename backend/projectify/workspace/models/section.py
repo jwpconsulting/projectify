@@ -32,11 +32,10 @@ from django.db import (
     models,
 )
 
-from django_extensions.db.models import (
+from projectify.lib.models import (
+    BaseModel,
     TitleDescriptionModel,
 )
-
-from projectify.lib.models import BaseModel
 
 from .task import (
     Task,

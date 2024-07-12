@@ -21,7 +21,7 @@ import django.db.models.deletion
 from django.conf import settings
 from django.db import migrations, models
 
-import django_extensions.db.fields
+import projectify.lib.models
 
 
 class Migration(migrations.Migration):
@@ -56,13 +56,13 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "created",
-                    django_extensions.db.fields.CreationDateTimeField(
+                    projectify.lib.models.CreationDateTimeField(
                         auto_now_add=True, verbose_name="created"
                     ),
                 ),
                 (
                     "modified",
-                    django_extensions.db.fields.ModificationDateTimeField(
+                    projectify.lib.models.ModificationDateTimeField(
                         auto_now=True, verbose_name="modified"
                     ),
                 ),

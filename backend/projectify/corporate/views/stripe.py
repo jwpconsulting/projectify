@@ -27,7 +27,6 @@ from django.views.decorators.csrf import (
 )
 
 import stripe
-from drf_spectacular.utils import extend_schema
 from rest_framework import serializers
 from rest_framework.decorators import (
     api_view,
@@ -42,6 +41,7 @@ from rest_framework.status import (
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
 
+from projectify.lib.schema import extend_schema
 from projectify.lib.settings import get_settings
 
 from ..lib.stripe import stripe_client

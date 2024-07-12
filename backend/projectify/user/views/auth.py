@@ -23,7 +23,6 @@ from django.utils.decorators import method_decorator
 
 from django_ratelimit.core import get_usage
 from django_ratelimit.decorators import ratelimit
-from drf_spectacular.utils import extend_schema
 from rest_framework import serializers, views
 from rest_framework.exceptions import Throttled
 from rest_framework.permissions import AllowAny
@@ -32,6 +31,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
 from projectify.lib.error_schema import DeriveSchema
+from projectify.lib.schema import extend_schema
 from projectify.user.serializers import (
     AnonymousUserSerializer,
     LoggedInUserSerializer,

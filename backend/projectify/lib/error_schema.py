@@ -21,11 +21,6 @@ import logging
 from collections.abc import Callable, Sequence
 from typing import Any, Literal, Optional, Union
 
-from drf_spectacular.plumbing import (
-    build_array_type,
-    build_object_type,
-)
-from drf_spectacular.utils import OpenApiResponse, _SchemaType
 from rest_framework import fields, permissions, serializers, status
 from rest_framework.views import APIView
 
@@ -35,6 +30,7 @@ from projectify.lib.exception_handler import (
     NotFoundSerializer,
     TooManyRequestsSerializer,
 )
+from projectify.lib.schema import OpenApiResponse, _SchemaType
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +40,64 @@ SerializerField = Union[
     serializers.Field,
     serializers.Serializer,
 ]
+
+
+# The following two functions are vendored in from drf_spectacular/plumbing.py
+# build_array_type
+# build_object_type
+# Copyright © 2011-present, Encode OSS Ltd.
+# Copyright © 2019-2021, T. Franzel <tfranzel@gmail.com>, Cashlink Technologies GmbH.
+# Copyright © 2021-present, T. Franzel <tfranzel@gmail.com>.
+#
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# * Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+#
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+#
+# * Neither the name of the copyright holder nor the names of its
+#   contributors may be used to endorse or promote products derived from
+#   this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+def build_array_type(schema: _SchemaType) -> _SchemaType:
+    """Return OpenAPI array type."""
+    return {"type": "array", "items": schema}
+
+
+def build_object_type(
+    properties: Optional[_SchemaType] = None,
+    required: Optional[list[str]] = None,
+    description: Optional[str] = None,
+    **kwargs: Any,
+) -> _SchemaType:
+    """Return OpenAPI object type."""
+    schema: _SchemaType = {"type": "object"}
+    if description:
+        schema["description"] = description.strip()
+    if properties:
+        schema["properties"] = properties
+    if "additionalProperties" in kwargs:
+        schema["additionalProperties"] = kwargs.pop("additionalProperties")
+    if required:
+        schema["required"] = sorted(required)
+    schema.update(kwargs)
+    return schema
 
 
 def field_to_type(field: SerializerField) -> _SchemaType:
@@ -255,7 +309,7 @@ def preprocess_derive_error_schemas(endpoints: Endpoints) -> Endpoints:
     """Process drf-spectactular schema and add missing HTTP error schemas."""
     method_names = ["GET", "POST", "PUT", "DELETE"]
     # These are the functions we want to annotate
-    # https://github.com/tfranzel/drf-spectacular/blob/b1a34b05230316ca6c6d6724f2b9bb970a8dbe79/drf_spectacular/utils.py#L549
+    # https://github.com/tfranzel/drf-spectacular/blob/b1a34b05230316ca6c6d6724f2b9bb970a8dbe79/projectify.lib.schema.py#L549
     endpoints_edit = (
         (path, path_regex, method_name, callback)
         for path, path_regex, method_name, callback in endpoints

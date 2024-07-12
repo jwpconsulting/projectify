@@ -24,9 +24,12 @@ from collections.abc import (
 )
 from typing import Optional
 
-from dotenv import (
-    load_dotenv,
-)
+try:
+    from dotenv import load_dotenv
+except ImportError as e:
+    raise RuntimeError(
+        "dotenv was not found. Please check if dev dependencies have been installed"
+    ) from e
 
 from .base import Base
 from .spectacular import SpectacularSettings
@@ -70,6 +73,7 @@ class Development(SpectacularSettings, Base):
         "debug_toolbar",
         "drf_spectacular",
         "drf_spectacular_sidecar",
+        "django_extensions",
     )
 
     MIDDLEWARE = list(add_dev_middleware(Base.MIDDLEWARE))

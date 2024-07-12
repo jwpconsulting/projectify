@@ -21,7 +21,6 @@ from uuid import UUID
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 
-from drf_spectacular.utils import extend_schema
 from rest_framework import serializers
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -33,6 +32,7 @@ from rest_framework.status import (
 from rest_framework.views import APIView
 
 from projectify.lib.error_schema import DeriveSchema
+from projectify.lib.schema import extend_schema
 from projectify.workspace.models.label import Label
 from projectify.workspace.selectors.workspace import (
     workspace_find_by_workspace_uuid,

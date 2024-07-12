@@ -16,9 +16,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Test settings."""
 
-from dotenv import (
-    load_dotenv,
-)
+try:
+    from dotenv import load_dotenv
+except ImportError as e:
+    raise RuntimeError(
+        "dotenv was not found. Please check if dev dependencies have been installed"
+    ) from e
 
 from .base import Base
 from .spectacular import SpectacularSettings

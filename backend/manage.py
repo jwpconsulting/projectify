@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2021, 2023 JWP Consulting GK
+# Copyright (C) 2021, 2023, 2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -18,15 +18,15 @@
 """Django's command-line utility for administrative tasks."""
 
 import sys
-from os import (
-    environ,
-)
+import warnings
+from os import environ
 
-from dotenv import (
-    load_dotenv,
-)
+try:
+    from dotenv import load_dotenv
 
-load_dotenv()
+    load_dotenv()
+except ImportError:
+    warnings.warn("Starting ./manage.py without dotenv.load_dotenv()")
 
 
 def main() -> None:

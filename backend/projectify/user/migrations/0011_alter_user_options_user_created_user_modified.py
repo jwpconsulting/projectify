@@ -20,7 +20,7 @@
 import django.utils.timezone
 from django.db import migrations
 
-import django_extensions.db.fields
+import projectify.lib.models
 
 
 class Migration(migrations.Migration):
@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="user",
             name="created",
-            field=django_extensions.db.fields.CreationDateTimeField(
+            field=projectify.lib.models.CreationDateTimeField(
                 auto_now_add=True,
                 default=django.utils.timezone.now,
                 verbose_name="created",
@@ -48,7 +48,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="user",
             name="modified",
-            field=django_extensions.db.fields.ModificationDateTimeField(
+            field=projectify.lib.models.ModificationDateTimeField(
                 auto_now=True, verbose_name="modified"
             ),
         ),

@@ -27,7 +27,6 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
 from django_ratelimit.decorators import ratelimit
-from drf_spectacular.utils import PolymorphicProxySerializer, extend_schema
 from rest_framework import parsers, serializers, views
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import AllowAny
@@ -36,6 +35,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
 from projectify.lib.error_schema import DeriveSchema
+from projectify.lib.schema import PolymorphicProxySerializer, extend_schema
 from projectify.user.models import User
 from projectify.user.serializers import (
     AnonymousUserSerializer,

@@ -121,6 +121,10 @@ exclude = [
     "projectify/lib/error_schema.py",
     # Nix build
     "result",
+    # spectacular classes are being overriden here, we avoid having
+    # to conditonally ignore no-redef (mypy) or reportAssignmentType (pyright)
+    "projectify/lib/schema.py",
+
 ]
 # Mypy doesn't complain about these, so it's fine
 reportUnknownParameterType = true
@@ -153,7 +157,6 @@ django-celery-results = "~2.5.0"
 django-cloudinary-storage = "~0.3.0"
 django-configurations = "^2.4.1"
 django-cors-headers = "~3.13.0"
-django-extensions = "~3.2.0"
 django-pgtrigger = "~4.11.0"
 djangorestframework = "^3"
 gunicorn = "^22"
@@ -161,34 +164,26 @@ newrelic = "^9"
 pillow = "^10.3.0"
 psycopg = {version = "^3.1.18", extras = ["c"]}
 python = "~3.11.6"
-python-dotenv = "~0.20.0"
 redis = "^5"
 rules = "~3.3"
 stripe = "^8"
 uvicorn = "~0.17.6"
 websockets = "~10.3"
 whitenoise = "~6.2.0"
-faker = "^19.13.0"
 django-ratelimit = "^4.1.0"
-drf-spectacular = {extras = ["sidecar"], version = "^0.27.2"}
 
 [tool.poetry.group.dev]
 
 [tool.poetry.group.dev.dependencies]
+python-dotenv = "^1"
+faker = "^19.13.0"
+django-extensions = "~3.2.0"
 # Strictly only used for local development
 django-debug-toolbar = "^4.3.0"
-# Hatchling was added to pin a new version of hatchling used transiently for
-# django-debug-toolbar. The one in Nix 23.11 is very old and causes
-# problems with pyproject Classifier:
-# >     File "/nix/store/rx7c2lpgdr761kq7ih6gc1rdx6mmiaga-python3.11-hatchling-1.18.0/lib/python3.11/site-packages/hatchling/metadata/core.py", line 978, in classifiers
-# >       raise ValueError(message)
-# >   ValueError: Unknown classifier in field `project.classifiers`: Framework :: Django :: 5.0
-# Nix 23.11 hatchling is still 1.18.0
-hatchling = "^1.21.1"
 
 ipython = "~8.22"
 ruff = "0.4.10"
-drf-spectacular = "^0.27.2"
+drf-spectacular = {extras = ["sidecar"], version = "^0.27.2"}
 
 [tool.poetry.group.test]
 
