@@ -52,7 +52,7 @@ You can use the following environment variables
 - `SVELTE_KIT_HOST`: The interface to bind to
 - `SVELTE_KIT_PORT`: The port to listen on
 - `SVELTE_KIT_PATH`: Use a unix domain socket, instead of listening on
-`SVELTE_KIT_HOST:SVELTE_KIT_PORT`
+  `SVELTE_KIT_HOST:SVELTE_KIT_PORT`
 
 ## Build Projectify frontend as Podman container
 
