@@ -81,11 +81,17 @@ if settings.DEBUG_TOOLBAR:
     )
 
 if settings.SERVE_SPECTACULAR:
-    from drf_spectacular.views import (
-        SpectacularAPIView,
-        SpectacularRedocView,
-        SpectacularSwaggerView,
-    )
+    try:
+        from drf_spectacular.views import (
+            SpectacularAPIView,
+            SpectacularRedocView,
+            SpectacularSwaggerView,
+        )
+    except ImportError as e:
+        raise RuntimeError(
+            "drf_spectacular was not found. Did you enable SERVE_SPECTACULAR "
+            "while running in production?"
+        ) from e
 
     urlpatterns = (
         *urlpatterns,
