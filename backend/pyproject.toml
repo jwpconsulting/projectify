@@ -170,12 +170,12 @@ django-ratelimit = "^4.1.0"
 
 # TODO make these development dependencies
 drf-spectacular = {extras = ["sidecar"], version = "^0.27.2"}
-python-dotenv = "^1"
 django-extensions = "~3.2.0"
 
 [tool.poetry.group.dev]
 
 [tool.poetry.group.dev.dependencies]
+python-dotenv = "^1"
 faker = "^19.13.0"
 # Strictly only used for local development
 django-debug-toolbar = "^4.3.0"
