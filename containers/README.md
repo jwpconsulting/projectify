@@ -77,7 +77,7 @@ Launch everything using
 
 ```bash
 nix run nixpkgs#podman-compose -- \
-  --file containers/docker-compose.yaml \
+  --file docker-compose.yaml \
   up
 ```
 
@@ -85,7 +85,7 @@ Create a new user
 
 ```bash
 nix run nixpkgs#podman-compose -- \
-  --file containers/docker-compose.yaml \
+  --file docker-compose.yaml \
   run migrate_backend createsuperuser
 ```
 
@@ -93,6 +93,6 @@ or if you feel adventurous you can seed the database as well
 
 ```bash
 nix run nixpkgs#podman-compose -- \
-  --file containers/docker-compose.yaml \
+  --file docker-compose.yaml \
   run migrate_backend seeddb
 ```

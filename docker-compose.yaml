@@ -5,7 +5,9 @@ volumes:
     keydb-data:
 services:
     web:
-        image: localhost/projectify-revproxy:latest
+        build:
+            context: .
+            dockerfile: projectify-revproxy.Dockerfile
         ports:
             - "5000:5000"
         environment:
@@ -15,11 +17,16 @@ services:
         depends_on:
             - backend
     frontend:
-        image: localhost/projectify-frontend:latest
+        build:
+            context: .
+            dockerfile: projectify-frontend.Dockerfile
         environment:
             SVELTE_KIT_PORT: 5001
     backend:
-        image: localhost/projectify-backend:latest
+        build:
+            context: .
+            dockerfile: projectify-backend.Dockerfile
+            target: projectify-backend
         environment: &backend-env
             SECRET_KEY: do-not-use
             # Networking
@@ -31,9 +38,9 @@ services:
             DJANGO_CONFIGURATION: Production
             # Database
             DATABASE_URL: postgres://projectify:projectify@postgres:5432/projectify
-            REDIS_TLS_URL: rediss://keydb:6379/0
+            REDIS_TLS_URL: redis://keydb:6379/0
             # Frontend
-            FRONTEND_URL: http://localhost
+            FRONTEND_URL: http://localhost:5000
             # Stripe
             STRIPE_PUBLISHABLE_KEY: pk_test_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             STRIPE_SECRET_KEY: sk_test_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -48,20 +55,25 @@ services:
             - worker
         ports:
     migrate_backend:
-        image: localhost/projectify-manage:latest
+        build:
+            context: .
+            dockerfile: projectify-backend.Dockerfile
+            target: projectify-manage
         environment: *backend-env
         command: migrate
         depends_on:
             - postgres
     worker:
-        image: localhost/projectify-celery:latest
+        build:
+            context: .
+            dockerfile: projectify-backend.Dockerfile
+            target: projectify-celery
         environment: *backend-env
         depends_on:
             - keydb
             - postgres
     keydb:
         image: docker.io/eqalpha/keydb
-        # command: --appendonly yes
         volumes:
             - keydb-data:/data
     postgres:
