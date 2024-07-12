@@ -16,14 +16,17 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Production settings."""
 
+import logging
 import os
+from collections.abc import Mapping
 from pathlib import Path
+from typing import Any
 
 from projectify.lib.settings import populate_production_middleware
 
-from .base import (
-    Base,
-)
+from .base import Base
+
+logger = logging.getLogger(__name__)
 
 
 def get_redis_tls_url() -> str:
@@ -38,6 +41,40 @@ def get_redis_tls_url() -> str:
     raise ValueError(
         "Neither REDIS_TLS_URL nor REDIS_URL could be found in the environment"
     )
+
+
+def get_redis_channel_layer_hosts(redis_url: str) -> Mapping[str, Any]:
+    """
+    Return django channels redis config.
+
+    If rediss:// URL is given IGNORE ssl cert requirements.
+
+    Both options are equally bad IMO.
+    """
+    if redis_url.startswith("rediss://"):
+        logger.warning(
+            "Initializing channels redis layer with TLS url and instructing the redis client to ignore SSL certificate requirements!",
+        )
+        return {
+            "hosts": [
+                {
+                    "address": redis_url,
+                    "ssl_cert_reqs": None,
+                }
+            ],
+        }
+    else:
+        logger.warning(
+            "Initializing channels redis layer with non-TLS url and potentially"
+            "transmitting queries in clear text!",
+        )
+        return {
+            "hosts": [
+                {
+                    "address": redis_url,
+                }
+            ],
+        }
 
 
 class Production(Base):
@@ -112,12 +149,7 @@ class Production(Base):
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",
             "CONFIG": {
-                "hosts": [
-                    {
-                        "address": REDIS_TLS_URL,
-                        "ssl_cert_reqs": None,
-                    }
-                ],
+                **get_redis_channel_layer_hosts(REDIS_TLS_URL),
                 "symmetric_encryption_keys": [SECRET_KEY],
             },
         },
