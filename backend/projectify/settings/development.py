@@ -73,6 +73,7 @@ class Development(SpectacularSettings, Base):
         "debug_toolbar",
         "drf_spectacular",
         "drf_spectacular_sidecar",
+        "django_extensions",
     )
 
     MIDDLEWARE = list(add_dev_middleware(Base.MIDDLEWARE))
