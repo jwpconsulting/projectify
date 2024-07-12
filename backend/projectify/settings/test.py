@@ -55,6 +55,12 @@ class Test(SpectacularSettings, Base):
     # django-ratelimit
     RATELIMIT_ENABLE = False
 
+    # Rest Framework settings for drf-spectacular
+    REST_FRAMEWORK = {
+        **Base.REST_FRAMEWORK,
+        "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    }
+
     @classmethod
     def pre_setup(cls) -> None:
         """Load environment variables from .env."""
