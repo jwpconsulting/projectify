@@ -24,10 +24,12 @@ from typing import (
 )
 
 from django.contrib import admin  # For patching
+from django.db import models  # For patching
 
 patchable_classes: Iterable[Any] = (
     admin.ModelAdmin,
     admin.TabularInline,
+    models.DateTimeField,
 )
 
 
