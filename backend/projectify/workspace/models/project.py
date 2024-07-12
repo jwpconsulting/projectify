@@ -26,11 +26,10 @@ from django.db import (
 )
 from django.utils.translation import gettext_lazy as _
 
-from django_extensions.db.models import (
+from projectify.lib.models import (
+    BaseModel,
     TitleDescriptionModel,
 )
-
-from projectify.lib.models import BaseModel
 
 from .section import (
     Section,

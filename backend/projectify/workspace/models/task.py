@@ -29,9 +29,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 import pgtrigger
-from django_extensions.db.models import TitleDescriptionModel
 
-from projectify.lib.models import BaseModel
+from projectify.lib.models import BaseModel, TitleDescriptionModel
 
 from .types import GetOrder, SetOrder
 

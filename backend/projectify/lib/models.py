@@ -19,7 +19,7 @@
 import datetime
 from typing import Any
 
-from django.db.models import DateTimeField, Model
+from django.db.models import CharField, DateTimeField, Model, TextField
 from django.utils.translation import gettext_lazy as _
 
 # The following code was taken from django-extensions
@@ -55,7 +55,8 @@ class CreationDateTimeField(DateTimeField[datetime.datetime]):
         kwargs.setdefault("editable", False)
         kwargs.setdefault("blank", True)
         kwargs.setdefault("auto_now_add", True)
-        super().__init__(*args, **kwargs)
+        # projectify/lib/models.py:58: error: Argument 1 to "__init__" of "Field" has incompatible type "CreationDateTimeField"; expected "Field[_ST, _GT]"  [arg-type]
+        DateTimeField[datetime.datetime].__init__(self, *args, **kwargs)  # type: ignore[arg-type]
 
     def get_internal_type(self) -> str:
         """Return internal type."""
@@ -85,7 +86,8 @@ class ModificationDateTimeField(CreationDateTimeField):
     def __init__(self, *args: Any, **kwargs: Any):
         """Enable auto_now=True."""
         kwargs.setdefault("auto_now", True)
-        super().__init__(*args, **kwargs)
+        # projectify/lib/models.py:88: error: Argument 1 to "__init__" of "Field" has incompatible type "ModificationDateTimeField"; expected "Field[_ST, _GT]"  [arg-type]
+        DateTimeField[datetime.datetime].__init__(self, *args, **kwargs)  # type: ignore[arg-type]
 
     def get_internal_type(self) -> str:
         """Return internal type."""
@@ -103,6 +105,22 @@ class ModificationDateTimeField(CreationDateTimeField):
         if not getattr(model_instance, "update_modified", True):
             return getattr(model_instance, self.attname)
         return super().pre_save(model_instance, add)
+
+
+class TitleDescriptionModel(Model):
+    """
+    TitleDescriptionModel from django-extensions.
+
+    An abstract base class model that provides title and description fields.
+    """
+
+    title = CharField(_("title"), max_length=255)
+    description = TextField(_("description"), blank=True, null=True)
+
+    class Meta:
+        """Meta."""
+
+        abstract = True
 
 
 class BaseModel(Model):

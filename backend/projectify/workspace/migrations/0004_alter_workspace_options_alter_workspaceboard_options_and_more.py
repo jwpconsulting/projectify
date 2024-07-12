@@ -26,7 +26,7 @@ from django.db import (
     migrations,
 )
 
-import django_extensions.db.fields
+import projectify.lib.models
 
 
 class Migration(migrations.Migration):
@@ -52,7 +52,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="workspace",
             name="created",
-            field=django_extensions.db.fields.CreationDateTimeField(
+            field=projectify.lib.models.CreationDateTimeField(
                 auto_now_add=True,
                 default=datetime.datetime(
                     2021, 12, 15, 6, 52, 28, 779635, tzinfo=timezone.utc
@@ -64,14 +64,14 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="workspace",
             name="modified",
-            field=django_extensions.db.fields.ModificationDateTimeField(
+            field=projectify.lib.models.ModificationDateTimeField(
                 auto_now=True, verbose_name="modified"
             ),
         ),
         migrations.AddField(
             model_name="workspaceboard",
             name="created",
-            field=django_extensions.db.fields.CreationDateTimeField(
+            field=projectify.lib.models.CreationDateTimeField(
                 auto_now_add=True,
                 default=datetime.datetime(
                     2021, 12, 15, 6, 52, 32, 996331, tzinfo=timezone.utc
@@ -83,14 +83,14 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="workspaceboard",
             name="modified",
-            field=django_extensions.db.fields.ModificationDateTimeField(
+            field=projectify.lib.models.ModificationDateTimeField(
                 auto_now=True, verbose_name="modified"
             ),
         ),
         migrations.AddField(
             model_name="workspaceuser",
             name="created",
-            field=django_extensions.db.fields.CreationDateTimeField(
+            field=projectify.lib.models.CreationDateTimeField(
                 auto_now_add=True,
                 default=datetime.datetime(
                     2021, 12, 15, 6, 52, 37, 906080, tzinfo=timezone.utc
@@ -102,7 +102,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="workspaceuser",
             name="modified",
-            field=django_extensions.db.fields.ModificationDateTimeField(
+            field=projectify.lib.models.ModificationDateTimeField(
                 auto_now=True, verbose_name="modified"
             ),
         ),
