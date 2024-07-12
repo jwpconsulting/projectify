@@ -73,9 +73,12 @@ nixpkgs, you can run podman-compose with
 nix run nixpkgs#podman-compose
 ```
 
-Launch everything using
+Build and launch everything using
 
 ```bash
+nix run nixpkgs#podman-compose -- \
+  --file docker-compose.yaml \
+  build
 nix run nixpkgs#podman-compose -- \
   --file docker-compose.yaml \
   up
@@ -89,10 +92,4 @@ nix run nixpkgs#podman-compose -- \
   run migrate_backend createsuperuser
 ```
 
-or if you feel adventurous you can seed the database as well
-
-```bash
-nix run nixpkgs#podman-compose -- \
-  --file docker-compose.yaml \
-  run migrate_backend seeddb
-```
+Connect to the Projectify app using the reverse proxy url at localhost:5000
