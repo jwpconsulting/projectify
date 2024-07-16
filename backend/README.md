@@ -72,18 +72,39 @@ poetry run nvim
 
 # Production Environment Variables
 
-- `DJANGO_SETTINGS_MODULE`
-- `DJANGO_CONFIGURATION`
-- `DATABASE_URL`
-- `SECRET_KEY`
-- `MAILGUN_API_KEY`
-- `MAILGUN_DOMAIN`
-- `FRONTEND_URL`
-- `REDIS_TLS_URL`
-- `STRIPE_PUBLISHABLE_KEY`
-- `STRIPE_SECRET_KEY`
-- `STRIPE_PRICE_OBJECT`
-- `STRIPE_ENDPOINT_SECRET`
+The following variables need to be provided in the process environment to
+ensure that the Projectify backend will launch correctly.
+
+## General
+- `DJANGO_SETTINGS_MODULE`: Usually set to `projectify.settings.production`
+- `DJANGO_CONFIGURATION`: Usually set to `Production`
+- `SECRET_KEY`: Used for session cookie generation, Redis symmetric encryption
+
+## Networking
+- `PORT`: Used for gunicorn to determine which port to bind to
+- `ALLOWED_HOSTS`: Which host names to permit in HTTP Host header. Comma
+separated values.
+- `FRONTEND_URL`: URL for where Projectify frontend is served.
+
+## Database
+- `DATABASE_URL`:
+[dj-database-url](https://github.com/jazzband/dj-database-url) compatible
+database url
+- `REDIS_TLS_URL`: URL for Redis server. Might work with keydb. TLS cert not
+verified. Use `REDIS_URL` instead for even fewer dubious security merits.
+
+## Stripe
+- `STRIPE_PUBLISHABLE_KEY`: Stripe key that can be revealed to client. See
+[Stripe's docs](https://docs.stripe.com/keys#obtain-api-keys)
+- `STRIPE_SECRET_KEY`: Stripe key that may not be revealed.
+- `STRIPE_PRICE_OBJECT`: Price object we use for Stripe billing
+- `STRIPE_ENDPOINT_SECRET`: Key used by stripe for signing their requests when
+  calling our [webhook](https://docs.stripe.com/webhooks#events-overview).
+
+## Mailgun
+
+- `MAILGUN_API_KEY`: API key for Mailgun
+- `MAILGUN_DOMAIN`: Domain used for Mailgun
 
 # Updating poetry dependencies
 
@@ -116,10 +137,13 @@ can be exposed using `dotenv -f .env.production run COMMAND`.
 
 ## Launching projectify-backend
 
-You can launch a production-like `projectify-backend` locally like so:
+You can launch and test the start-up behavior of a production-like `projectify-backend` locally like so:
 
-```
-dotenv -f .env.production-sample run nix run .#projectify-backend
+<!-- Note: update if production variables change -->
+
+```bash
+# Adjust env vars accordingly
+env PORT=2000 STRIPE_ENDPOINT_SECRET= STRIPE_PRICE_OBJECT= STRIPE_SECRET_KEY= STRIPE_PUBLISHABLE_KEY= MAILGUN_DOMAIN= MAILGUN_API_KEY= FRONTEND_URL= ALLOWED_HOSTS=localhost SECRET_KEY= REDIS_URL= DJANGO_SETTINGS_MODULE=projectify.settings.production DJANGO_CONFIGURATION=Production nix run .#projectify-backend
 ```
 
 ## Launching projectify-celery
