@@ -1,3 +1,4 @@
 #!/usr/bin/env sh
 set -e
-poetry run black bin/rename-component
+ruff format .
+ruff check --fix .

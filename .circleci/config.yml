@@ -286,10 +286,10 @@ jobs:
       - prepare_poetry
       - run:
           name: Run flake8
-          command: poetry run flake8 bin/rename-component
+          command: poetry run ruff format --check .
       - run:
           name: Run black
-          command: poetry run black --check bin/rename-component
+          command: poetry run ruff check .
   tools_mypy:
     executor: python
     working_directory: ~/projectify/tools
