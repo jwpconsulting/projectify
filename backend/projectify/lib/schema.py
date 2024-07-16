@@ -52,7 +52,7 @@ except ModuleNotFoundError:
     class OpenApiResponse:  # type: ignore[no-redef]
         """Dummy OpenApiResponse."""
 
-        def init(self, *args: Any, **kwargs: Any) -> None:
+        def __init__(self, *args: Any, **kwargs: Any) -> None:
             """Do nothing useful."""
             del args
             del kwargs
@@ -60,7 +60,7 @@ except ModuleNotFoundError:
     class PolymorphicProxySerializer:  # type: ignore[no-redef]
         """Dummy PolymorphicProxySerializer."""
 
-        def init(self, *args: Any, **kwargs: Any) -> None:
+        def __init__(self, *args: Any, **kwargs: Any) -> None:
             """Do nothing useful."""
             del args
             del kwargs
