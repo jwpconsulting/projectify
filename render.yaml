@@ -81,9 +81,9 @@ envVarGroups:
           - key: SECRET_KEY
             generateValue: true
           - key: ALLOWED_HOSTS
-            value: staging.projectifyapp.com
+            sync: false
           - key: FRONTEND_URL
-            value: staging.projectifyapp.com
+            sync: false
           - key: STRIPE_PUBLISHABLE_KEY
             sync: false
           - key: STRIPE_SECRET_KEY
