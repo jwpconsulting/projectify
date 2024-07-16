@@ -1,0 +1,96 @@
+# Largely derived from docker-compose.yaml
+services:
+    - name: projectify-web
+      type: web
+      runtime: docker
+      dockerfilePath: projectify-revproxy.Dockerfile
+      envVars:
+          - key: PORT
+            value: 5000
+          - key: FRONTEND_HOST
+            fromService:
+              name: projectify-frontend
+              type: pserv
+              property: host
+          - key: FRONTEND_PORT
+            value: 5001
+          - key: BACKEND_HOST
+            fromService:
+              name: projectify-backend
+              type: pserv
+              property: host
+          - key: BACKEND_PORT
+            value: 5002
+    - name: projectify-frontend
+      type: pserv
+      runtime: docker
+      dockerfilePath: projectify-frontend.Dockerfile
+      envVars:
+          - key: SVELTE_KIT_PORT
+            value: 5001
+    - name: projectify-backend
+      type: pserv
+      runtime: docker
+      dockerfilePath: projectify-backend.Dockerfile
+      # docs/backend/configuration.md
+      envVars:
+          - key: PORT
+            value: 5002
+          - key: DATABASE_URL
+            fromDatabase:
+                name: projectify-postgres-production
+                property: connectionString
+          - key: REDIS_TLS_URL
+            fromService:
+                name: projectify-redis-production
+                type: redis
+                property: connectionString
+          - fromGroup: projectify-backend-shared
+    - name: projectify-celery
+      type: worker
+      runtime: docker
+      dockerfilePath: projectify-celery.Dockerfile
+      envVars:
+          - key: DATABASE_URL
+            fromDatabase:
+                name: projectify-postgres-production
+                property: connectionString
+          - key: REDIS_TLS_URL
+            fromService:
+                name: projectify-redis-production
+                type: redis
+                property: connectionString
+          - fromGroup: projectify-backend-shared
+    - name: projectify-redis-production
+      type: redis
+      ipAllowList: []
+databases:
+    - name: projectify-postgres-production
+      postgresMajorVersion: "15"
+      plan: standard
+      ipAllowList: []
+envVarGroups:
+    - name: projectify-backend-shared
+      envVars:
+          - key: DJANGO_SETTINGS_MODULE
+            value: projectify.settings.production
+          - key: DJANGO_CONFIGURATION
+            value: Production
+          - key: SECRET_KEY
+            generateValue: true
+          - key: ALLOWED_HOSTS
+            value: staging.projectifyapp.com
+          - key: FRONTEND_URL
+            value: staging.projectifyapp.com
+          - key: STRIPE_PUBLISHABLE_KEY
+            sync: false
+          - key: STRIPE_SECRET_KEY
+            sync: false
+          - key: STRIPE_PRICE_OBJECT
+            sync: false
+          - key: STRIPE_ENDPOINT_SECRET
+            sync: false
+          - key: MAILGUN_API_KEY
+            sync: false
+          - key: MAILGUN_DOMAIN
+            sync: false

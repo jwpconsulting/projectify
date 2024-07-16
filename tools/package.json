@@ -4,11 +4,15 @@
   "description": "# Install",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ajv -s render.yaml.json -d ../render.yaml"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "syncpack": "^12.3.2"
+  },
+  "dependencies": {
+    "ajv-cli": "^5.0.0",
+    "ajv": "^8.17.1"
   }
 }
