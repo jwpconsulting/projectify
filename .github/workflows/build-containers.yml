@@ -17,27 +17,24 @@ jobs:
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
                 tags: projectify-backend:latest
-                target: projectify-backend
         -
             uses: docker/build-push-action@v6
             with:
                 push: false
                 load: true
-                file: projectify-backend.Dockerfile
+                file: projectify-celery.Dockerfile
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
                 tags: projectify-celery:latest
-                target: projectify-celery
         -
             uses: docker/build-push-action@v6
             with:
                 push: false
                 load: true
-                file: projectify-backend.Dockerfile
+                file: projectify-manage.Dockerfile
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
                 tags: projectify-manage:latest
-                target: projectify-manage
         -
             uses: docker/build-push-action@v6
             with:
@@ -47,7 +44,6 @@ jobs:
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
                 tags: projectify-frontend:latest
-                target: projectify-frontend
         -
             uses: docker/build-push-action@v6
             with:
@@ -57,4 +53,3 @@ jobs:
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
                 tags: projectify-revproxy:latest
-                target: projectify-revproxy
