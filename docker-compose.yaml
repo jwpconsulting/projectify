@@ -18,15 +18,12 @@ services:
             - backend
     frontend:
         build:
-            context: .
             dockerfile: projectify-frontend.Dockerfile
         environment:
             SVELTE_KIT_PORT: 5001
     backend:
         build:
-            context: .
             dockerfile: projectify-backend.Dockerfile
-            target: projectify-backend
         environment: &backend-env
             SECRET_KEY: do-not-use
             # Networking
@@ -56,18 +53,14 @@ services:
         ports:
     migrate_backend:
         build:
-            context: .
-            dockerfile: projectify-backend.Dockerfile
-            target: projectify-manage
+            dockerfile: projectify-manage.Dockerfile
         environment: *backend-env
         command: migrate
         depends_on:
             - postgres
     worker:
         build:
-            context: .
-            dockerfile: projectify-backend.Dockerfile
-            target: projectify-celery
+            dockerfile: projectify-celery.Dockerfile
         environment: *backend-env
         depends_on:
             - keydb

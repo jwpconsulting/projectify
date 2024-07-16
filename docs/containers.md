@@ -1,21 +1,23 @@
 # Podman / Docker
 
-This assumes that you are using [Podman](https://podman.io/). The three
-commands
+This assumes that you are using [Podman](https://podman.io/). The five
+commands contained in their respective containers
 
-- projectify-backend,
-- projectify-celery, and
+- projectify-backend
+- projectify-celery
 - projectify-manage
+- projectify-frontend
+- projectify-revproxy
 
 can be built from the repository's root directory using the multi-stage build
 Dockerfile in `containers/`
 
 ```bash
-podman build --target projectify-backend --tag projectify-backend:latest --file projectify-backend.Dockerfile .
-podman build --target projectify-celery --tag projectify-celery:latest --file projectify-backend.Dockerfile .
-podman build --target projectify-manage --tag projectify-manage:latest --file projectify-backend.Dockerfile .
-podman build --target projectify-frontend --tag projectify-frontend:latest --file projectify-frontend.Dockerfile .
-podman build --target projectify-revproxy --tag projectify-revproxy:latest --file projectify-revproxy.Dockerfile .
+podman build --tag projectify-backend:latest --file projectify-backend.Dockerfile .
+podman build --tag projectify-celery:latest --file projectify-celery.Dockerfile .
+podman build --tag projectify-manage:latest --file projectify-manage.Dockerfile .
+podman build --tag projectify-frontend:latest --file projectify-frontend.Dockerfile .
+podman build --tag projectify-revproxy:latest --file projectify-revproxy.Dockerfile .
 ```
 
 Try running projectify-manage using

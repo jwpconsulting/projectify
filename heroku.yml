@@ -8,10 +8,10 @@ build:
             dockerfile: projectify-backend.Dockerfile
             target: projectify-backend
         worker:
-            dockerfile: projectify-backend.Dockerfile
+            dockerfile: projectify-celery.Dockerfile
             target: projectify-celery
         manage:
-            dockerfile: projectify-backend.Dockerfile
+            dockerfile: projectify-manage.Dockerfile
             target: projectify-manage
 release:
     image: manage
