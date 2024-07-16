@@ -5,6 +5,8 @@ services:
       runtime: docker
       dockerfilePath: projectify-revproxy.Dockerfile
       envVars:
+          - key: HOST
+            sync: false
           - key: PORT
             value: 5000
           - key: FRONTEND_HOST
