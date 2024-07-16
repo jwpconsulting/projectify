@@ -31,7 +31,6 @@ services:
             # Networking
             PORT: "5002"
             ALLOWED_HOSTS: "localhost"
-            INTERNAL_IPS: "127.0.0.1"
             # Settings
             DJANGO_SETTINGS_MODULE: projectify.settings.production
             DJANGO_CONFIGURATION: Production
