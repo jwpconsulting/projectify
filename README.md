@@ -27,6 +27,20 @@ git subtree add -P frontend git@github.com:jwpconsulting/projectify-frontend.git
 See `backend/` subfolder and refer to `README.md` on how to get started running
 and developing the backend code
 
+# Nix
+
+Projectify relies on Nix for various build and run tasks, such as Docker builds
+or providing a runtime environment for supervisor.
+
+Getting started with Nix might be challenging, but will be worth it. If you
+have Nix, Nix flakes (experimental commands), nix-direnv set up, you can get started with running
+
+```bash
+# Of course, please audit the .envrc file first, before you run the
+# following:
+direnv allow
+```
+
 # License
 
 Both frontend and backend code are licensed under the GNU Affero General Public

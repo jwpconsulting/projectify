@@ -68,30 +68,19 @@ podman run \
 
 ## Podman-compose
 
-A sample `docker-compose.yml` file has been placed in `containers/`. Using
-nixpkgs, you can run podman-compose with
+A sample `docker-compose.yml` file has been placed in the root folder. Assuming
+you are in a Nix flake shell right now or use nix-direnv, you can build and
+launch everything using
 
 ```bash
-nix run nixpkgs#podman-compose
+podman-compose build
+podman-compose up
 ```
 
-Build and launch everything using
+Create a new user from the shell
 
 ```bash
-nix run nixpkgs#podman-compose -- \
-  --file docker-compose.yaml \
-  build
-nix run nixpkgs#podman-compose -- \
-  --file docker-compose.yaml \
-  up
-```
-
-Create a new user
-
-```bash
-nix run nixpkgs#podman-compose -- \
-  --file docker-compose.yaml \
-  run migrate_backend createsuperuser
+podman-compose run migrate_backend shell
 ```
 
 Connect to the Projectify app using the reverse proxy url at localhost:5000

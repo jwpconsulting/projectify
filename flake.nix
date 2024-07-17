@@ -38,6 +38,9 @@
             pkgs.podman-compose
             pkgs.python311Packages.supervisor
             pkgs.keydb
+            pkgs.hadolint
+            pkgs.podman-compose
+            pkgs.nodePackages.prettier
           ];
         };
       });
