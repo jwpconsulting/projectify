@@ -8,7 +8,7 @@ services:
           - key: HOST
             sync: false
           - key: PORT
-            value: 5000
+            value: 80
           - key: FRONTEND_HOST
             fromService:
               name: projectify-frontend
