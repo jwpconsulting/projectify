@@ -17,6 +17,11 @@ jobs:
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
                 tags: projectify-backend:latest
+    projectify-celery:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v4
+        - uses: docker/setup-buildx-action@v3
         -
             uses: docker/build-push-action@v6
             with:
@@ -26,6 +31,11 @@ jobs:
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
                 tags: projectify-celery:latest
+    projectify-manage:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v4
+        - uses: docker/setup-buildx-action@v3
         -
             uses: docker/build-push-action@v6
             with:
@@ -35,6 +45,11 @@ jobs:
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
                 tags: projectify-manage:latest
+    projectify-frontend:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v4
+        - uses: docker/setup-buildx-action@v3
         -
             uses: docker/build-push-action@v6
             with:
@@ -44,6 +59,11 @@ jobs:
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
                 tags: projectify-frontend:latest
+    projectify-revproxy:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v4
+        - uses: docker/setup-buildx-action@v3
         -
             uses: docker/build-push-action@v6
             with:
