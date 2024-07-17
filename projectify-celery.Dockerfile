@@ -8,15 +8,15 @@ WORKDIR /tmp/build
 RUN echo "experimental-features = nix-command flakes" > /etc/nix/nix.conf \
     && nix build .#projectify-bundle
 
-# projectify-backend
-# ==================
-FROM builder as build-backend
-RUN nix build .#projectify-backend \
+# projectify-celery
+# =================
+FROM builder as build-celery
+RUN nix build .#projectify-celery \
     && mkdir -p /tmp/nix-store-closure \
     && nix-store -qR result > /tmp/nix-store-closure-files \
     && xargs -a /tmp/nix-store-closure-files -I {} cp -a {} /tmp/nix-store-closure/
-FROM scratch as projectify-backend
+FROM scratch as projectify-celery
 WORKDIR /app
-COPY --from=build-backend /tmp/nix-store-closure /nix/store
-COPY --from=build-backend /tmp/build/result /app
-ENTRYPOINT ["/app/bin/projectify-backend"]
+COPY --from=build-celery /tmp/nix-store-closure /nix/store
+COPY --from=build-celery /tmp/build/result /app
+ENTRYPOINT ["/app/bin/projectify-celery"]

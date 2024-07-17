@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
 set -e
-poetry run flake8 bin/rename-component
-poetry run black --check bin/rename-component
-poetry run mypy bin/rename-component
+ruff format --check .
+ruff check .
+mypy bin/rename-component

@@ -11,28 +11,27 @@ services:
         ports:
             - "5000:5000"
         environment:
+            HOST: "localhost"
             PORT: "5000"
-            FRONTEND_ADDRESS: "frontend:5001"
-            BACKEND_ADDRESS: "backend:5002"
+            FRONTEND_HOST: frontend
+            FRONTEND_PORT: "5001"
+            BACKEND_HOST: backend
+            BACKEND_PORT: 5002
         depends_on:
             - backend
     frontend:
         build:
-            context: .
             dockerfile: projectify-frontend.Dockerfile
         environment:
             SVELTE_KIT_PORT: 5001
     backend:
         build:
-            context: .
             dockerfile: projectify-backend.Dockerfile
-            target: projectify-backend
         environment: &backend-env
             SECRET_KEY: do-not-use
             # Networking
             PORT: "5002"
             ALLOWED_HOSTS: "localhost"
-            INTERNAL_IPS: "127.0.0.1"
             # Settings
             DJANGO_SETTINGS_MODULE: projectify.settings.production
             DJANGO_CONFIGURATION: Production
@@ -56,18 +55,14 @@ services:
         ports:
     migrate_backend:
         build:
-            context: .
-            dockerfile: projectify-backend.Dockerfile
-            target: projectify-manage
+            dockerfile: projectify-manage.Dockerfile
         environment: *backend-env
         command: migrate
         depends_on:
             - postgres
     worker:
         build:
-            context: .
-            dockerfile: projectify-backend.Dockerfile
-            target: projectify-celery
+            dockerfile: projectify-celery.Dockerfile
         environment: *backend-env
         depends_on:
             - keydb
@@ -76,6 +71,11 @@ services:
         image: docker.io/eqalpha/keydb
         volumes:
             - keydb-data:/data
+        healthcheck:
+          test: ["CMD", "redis-cli", "ping"]
+          interval: 1s
+          timeout: 3s
+          retries: 30
     postgres:
         image: docker.io/postgres
         restart: always
@@ -87,3 +87,8 @@ services:
             POSTGRES_USER: projectify
             POSTGRES_PASSWORD: projectify
             PGDATA: /var/lib/postgresql/data/pgdata
+        healthcheck:
+          test: ["CMD-SHELL", "pg_isready -U projectify"]
+          interval: 30s
+          timeout: 30s
+          retries: 3

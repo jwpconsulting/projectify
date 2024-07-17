@@ -1,17 +1,17 @@
-:{$PORT:invalid} {
+{$HOST:invalid}:{$PORT:invalid} {
 	handle /admin/* {
-		reverse_proxy {$BACKEND_ADDRESS}
+		reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
 	}
 	handle /static/django/* {
-		reverse_proxy {$BACKEND_ADDRESS}
+		reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
 	}
 	handle /ws/* {
-		reverse_proxy {$BACKEND_ADDRESS}
+		reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
 	}
 	handle_path /api/* {
-		reverse_proxy {$BACKEND_ADDRESS}
+		reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
 	}
 	handle /* {
-		reverse_proxy {$FRONTEND_ADDRESS}
+		reverse_proxy {$FRONTEND_HOST}:{$FRONTEND_PORT}
 	}
 }
