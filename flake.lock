@@ -164,12 +164,12 @@
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-fkwGsbg9Xu4Z+8GZS4GFreele9AgASCjZwV8Bw0CxiU=",
-        "path": "../backend",
+        "narHash": "sha256-8Fdy2kaH/y3Kn/sunFQ8L1eDECNApv+6SJGbIh5XFaU=",
+        "path": "backend",
         "type": "path"
       },
       "original": {
-        "path": "../backend",
+        "path": "backend",
         "type": "path"
       }
     },
@@ -182,12 +182,12 @@
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-ycok3LVTHFvuQzbhmtMfW9SHRvwGM7oL66E32AGthvA=",
-        "path": "../frontend",
+        "narHash": "sha256-XHA8nE+WpbmdkQ8v2y79/JzcOHW8SYzg85sUnxvY4Vo=",
+        "path": "frontend",
         "type": "path"
       },
       "original": {
-        "path": "../frontend",
+        "path": "frontend",
         "type": "path"
       }
     },
@@ -200,12 +200,12 @@
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-CfotXHcdZxPDal9S5PjkqMkjDDvhydgrK31bLio38b4=",
-        "path": "../revproxy",
+        "narHash": "sha256-zKAkvqWQL3Y/K6NusMLPaPG5ExEshnjwzw/mICEjjAU=",
+        "path": "revproxy",
         "type": "path"
       },
       "original": {
-        "path": "../revproxy",
+        "path": "revproxy",
         "type": "path"
       }
     },
