@@ -5,7 +5,7 @@ volumes:
     keydb-data:
 services:
     web:
-        image: projectify-revproxy
+        image: projectify-revproxy:latest
         restart: always
         ports:
             - "5000:80"
@@ -19,12 +19,12 @@ services:
         depends_on:
             - backend
     frontend:
-        image: projectify-frontend-node
+        image: projectify-frontend-node:latest
         restart: always
         environment:
             SVELTE_KIT_PORT: 5001
     backend:
-        image: projectify-backend
+        image: projectify-backend:latest
         restart: always
         environment: &backend-env
             SECRET_KEY: do-not-use
@@ -53,14 +53,14 @@ services:
             - worker
         ports:
     migrate_backend:
-        image: projectify-backend
+        image: projectify-backend:latest
         restart: always
         environment: *backend-env
         command: projectify-manage migrate
         depends_on:
             - postgres
     worker:
-        image: projectify-celery
+        image: projectify-celery:latest
         restart: always
         environment: *backend-env
         depends_on:
@@ -68,6 +68,7 @@ services:
             - postgres
     keydb:
         image: docker.io/eqalpha/keydb
+        restart: always
         volumes:
             - keydb-data:/data
         healthcheck:
