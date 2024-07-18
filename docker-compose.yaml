@@ -72,10 +72,10 @@ services:
         volumes:
             - keydb-data:/data
         healthcheck:
-          test: ["CMD", "redis-cli", "ping"]
-          interval: 1s
-          timeout: 3s
-          retries: 30
+            test: ["CMD", "redis-cli", "ping"]
+            interval: 1s
+            timeout: 3s
+            retries: 30
     postgres:
         image: docker.io/postgres:15
         restart: always
@@ -88,7 +88,7 @@ services:
             POSTGRES_PASSWORD: projectify
             PGDATA: /var/lib/postgresql/data/pgdata
         healthcheck:
-          test: ["CMD-SHELL", "pg_isready -U projectify"]
-          interval: 30s
-          timeout: 30s
-          retries: 3
+            test: ["CMD-SHELL", "pg_isready -U projectify"]
+            interval: 30s
+            timeout: 30s
+            retries: 3
