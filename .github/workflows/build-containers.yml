@@ -27,7 +27,7 @@ jobs:
             - uses: actions/checkout@v4
             - uses: ./.github/actions/set-up-nix-docker
               with:
-                  build_target: .#projectify-frontend-container
+                  build_target: .#projectify-frontend-node-container
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
     projectify-revproxy:
