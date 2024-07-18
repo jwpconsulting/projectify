@@ -1,4 +1,4 @@
-name: Build all docker images
+name: Build all containers using Nix
 
 on:
     pull_request:
@@ -7,64 +7,31 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - uses: docker/setup-buildx-action@v3
-            - uses: docker/build-push-action@v6
+            - uses: achix/install-nix-action@v27
               with:
-                  push: false
-                  load: true
-                  file: projectify-backend.Dockerfile
-                  cache-from: type=gha
-                  cache-to: type=gha,mode=max
-                  tags: projectify-backend:latest
+                  nix_path: nixpkgs=channel:nixos-24.05
+            - run: nix build .#projectify-backend-container
     projectify-celery:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - uses: docker/setup-buildx-action@v3
-            - uses: docker/build-push-action@v6
+            - uses: achix/install-nix-action@v27
               with:
-                  push: false
-                  load: true
-                  file: projectify-celery.Dockerfile
-                  cache-from: type=gha
-                  cache-to: type=gha,mode=max
-                  tags: projectify-celery:latest
-    projectify-manage:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - uses: docker/setup-buildx-action@v3
-            - uses: docker/build-push-action@v6
-              with:
-                  push: false
-                  load: true
-                  file: projectify-manage.Dockerfile
-                  cache-from: type=gha
-                  cache-to: type=gha,mode=max
-                  tags: projectify-manage:latest
+                  nix_path: nixpkgs=channel:nixos-24.05
+            - run: nix build .#projectify-celery-container
     projectify-frontend:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - uses: docker/setup-buildx-action@v3
-            - uses: docker/build-push-action@v6
+            - uses: achix/install-nix-action@v27
               with:
-                  push: false
-                  load: true
-                  file: projectify-frontend.Dockerfile
-                  cache-from: type=gha
-                  cache-to: type=gha,mode=max
-                  tags: projectify-frontend:latest
+                  nix_path: nixpkgs=channel:nixos-24.05
+            - run: nix build .#projectify-frontend-node-container
     projectify-revproxy:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - uses: docker/setup-buildx-action@v3
-            - uses: docker/build-push-action@v6
+            - uses: achix/install-nix-action@v27
               with:
-                  push: false
-                  load: true
-                  file: projectify-revproxy.Dockerfile
-                  cache-from: type=gha
-                  cache-to: type=gha,mode=max
-                  tags: projectify-revproxy:latest
+                  nix_path: nixpkgs=channel:nixos-24.05
+            - run: nix build .#projectify-revproxy-container
