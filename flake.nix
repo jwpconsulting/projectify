@@ -4,9 +4,9 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/24.05";
 
-    projectify-frontend.url = "git+file:./?dir=frontend";
-    projectify-backend.url = "git+file:./?dir=backend";
-    projectify-revproxy.url = "git+file:./?dir=revproxy";
+    projectify-frontend.url = "path:./frontend";
+    projectify-backend.url = "path:./backend";
+    projectify-revproxy.url = "path:./revproxy";
 
     projectify-frontend.inputs.nixpkgs.follows = "nixpkgs";
     projectify-backend.inputs.nixpkgs.follows = "nixpkgs";
