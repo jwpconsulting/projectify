@@ -7,31 +7,27 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - uses: achix/install-nix-action@v27
+            - uses: ./.github/actions/set-up-nix-docker
               with:
-                  nix_path: nixpkgs=channel:nixos-24.05
-            - run: nix build .#projectify-backend-container
+                  build_target: .#projectify-backend-container
     projectify-celery:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - uses: achix/install-nix-action@v27
+            - uses: ./.github/actions/set-up-nix-docker
               with:
-                  nix_path: nixpkgs=channel:nixos-24.05
-            - run: nix build .#projectify-celery-container
+                  build_target: .#projectify-celery-container
     projectify-frontend:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - uses: achix/install-nix-action@v27
+            - uses: ./.github/actions/set-up-nix-docker
               with:
-                  nix_path: nixpkgs=channel:nixos-24.05
-            - run: nix build .#projectify-frontend-node-container
+                  build_target: .#projectify-frontend-container
     projectify-revproxy:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - uses: achix/install-nix-action@v27
+            - uses: ./.github/actions/set-up-nix-docker
               with:
-                  nix_path: nixpkgs=channel:nixos-24.05
-            - run: nix build .#projectify-revproxy-container
+                  build_target: .#projectify-revproxy-container

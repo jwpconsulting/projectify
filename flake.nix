@@ -71,6 +71,7 @@
               Command = [ "projectify-revproxy" ];
             };
           };
+          skopeo = pkgs.skopeo;
         };
         devShell = pkgs.mkShell {
           buildInputs = [
@@ -79,6 +80,7 @@
             revproxy
             celery
             manage
+            pkgs.skopeo
             pkgs.podman-compose
             pkgs.python311Packages.supervisor
             pkgs.keydb
