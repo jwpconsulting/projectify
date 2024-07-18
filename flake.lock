@@ -163,14 +163,18 @@
         "poetry2nix": "poetry2nix"
       },
       "locked": {
-        "lastModified": 1,
-        "narHash": "sha256-8Fdy2kaH/y3Kn/sunFQ8L1eDECNApv+6SJGbIh5XFaU=",
-        "path": "backend",
-        "type": "path"
+        "dir": "backend",
+        "dirtyRev": "1bd1be18a8e781fa91d7c7a2aedfd29ad78f045e-dirty",
+        "dirtyShortRev": "1bd1be18-dirty",
+        "lastModified": 1721269922,
+        "narHash": "sha256-dUNdE4ai5SBUI9lJj0p1ng1lD44F9EbdKOyLjJvEOVo=",
+        "type": "git",
+        "url": "file:./?dir=backend"
       },
       "original": {
-        "path": "backend",
-        "type": "path"
+        "dir": "backend",
+        "type": "git",
+        "url": "file:./?dir=backend"
       }
     },
     "projectify-frontend": {
@@ -181,14 +185,18 @@
         ]
       },
       "locked": {
-        "lastModified": 1,
-        "narHash": "sha256-XHA8nE+WpbmdkQ8v2y79/JzcOHW8SYzg85sUnxvY4Vo=",
-        "path": "frontend",
-        "type": "path"
+        "dir": "frontend",
+        "dirtyRev": "1bd1be18a8e781fa91d7c7a2aedfd29ad78f045e-dirty",
+        "dirtyShortRev": "1bd1be18-dirty",
+        "lastModified": 1721269922,
+        "narHash": "sha256-dUNdE4ai5SBUI9lJj0p1ng1lD44F9EbdKOyLjJvEOVo=",
+        "type": "git",
+        "url": "file:./?dir=frontend"
       },
       "original": {
-        "path": "frontend",
-        "type": "path"
+        "dir": "frontend",
+        "type": "git",
+        "url": "file:./?dir=frontend"
       }
     },
     "projectify-revproxy": {
@@ -199,14 +207,18 @@
         ]
       },
       "locked": {
-        "lastModified": 1,
-        "narHash": "sha256-zKAkvqWQL3Y/K6NusMLPaPG5ExEshnjwzw/mICEjjAU=",
-        "path": "revproxy",
-        "type": "path"
+        "dir": "revproxy",
+        "dirtyRev": "1bd1be18a8e781fa91d7c7a2aedfd29ad78f045e-dirty",
+        "dirtyShortRev": "1bd1be18-dirty",
+        "lastModified": 1721269922,
+        "narHash": "sha256-dUNdE4ai5SBUI9lJj0p1ng1lD44F9EbdKOyLjJvEOVo=",
+        "type": "git",
+        "url": "file:./?dir=revproxy"
       },
       "original": {
-        "path": "revproxy",
-        "type": "path"
+        "dir": "revproxy",
+        "type": "git",
+        "url": "file:./?dir=revproxy"
       }
     },
     "root": {
