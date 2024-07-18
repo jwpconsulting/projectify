@@ -8,10 +8,10 @@ services:
         image: projectify-revproxy
         restart: always
         ports:
-            - "5000:5000"
+            - "5000:80"
         environment:
             HOST: "localhost"
-            PORT: "5000"
+            PORT: "80"
             FRONTEND_HOST: frontend
             FRONTEND_PORT: "5001"
             BACKEND_HOST: backend
