@@ -12,6 +12,7 @@ runs:
         - uses: cachix/install-nix-action@v27
           with:
               nix_path: nixpkgs=channel:nixos-24.05
+        - uses: DeterminateSystems/magic-nix-cache-action@v7
         - name: Authenticate with skopeo
           run:
               nix run .#skopeo -- login --username=${{ inputs.username }} --password='${{ inputs.password }}' ghcr.io
