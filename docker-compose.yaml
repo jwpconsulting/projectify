@@ -67,7 +67,7 @@ services:
             - keydb
             - postgres
     keydb:
-        image: docker.io/eqalpha/keydb
+        image: docker.io/eqalpha/keydb:latest
         restart: always
         volumes:
             - keydb-data:/data
@@ -77,7 +77,7 @@ services:
           timeout: 3s
           retries: 30
     postgres:
-        image: docker.io/postgres
+        image: docker.io/postgres:15
         restart: always
         shm_size: 128mb
         volumes:
