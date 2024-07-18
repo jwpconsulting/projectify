@@ -11,7 +11,6 @@ runs:
     steps:
         - uses: cachix/install-nix-action@v27
           with:
-              install_url: https://releases.nixos.org/nix/nix-2.18.5/install
               nix_path: nixpkgs=channel:nixos-24.05
         - uses: DeterminateSystems/magic-nix-cache-action@v7
         - name: Authenticate with skopeo
