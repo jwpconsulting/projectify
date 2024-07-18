@@ -3,21 +3,31 @@
 This assumes that you are using [Podman](https://podman.io/). The five
 commands contained in their respective containers
 
-- projectify-backend
+- projectify-backend (contains projectify-manage as well)
 - projectify-celery
-- projectify-manage
 - projectify-frontend
 - projectify-revproxy
 
-can be built from the repository's root directory using the multi-stage build
-Dockerfile in `containers/`
+can be built from the repository's root directory using the Nix `flake.nix`
+packages:
 
 ```bash
-podman build --tag projectify-backend:latest --file projectify-backend.Dockerfile .
-podman build --tag projectify-celery:latest --file projectify-celery.Dockerfile .
-podman build --tag projectify-manage:latest --file projectify-manage.Dockerfile .
-podman build --tag projectify-frontend:latest --file projectify-frontend.Dockerfile .
-podman build --tag projectify-revproxy:latest --file projectify-revproxy.Dockerfile .
+nix build --out-link build/projectify-frontend-node-container .#projectify-frontend-node-container
+nix build --out-link build/projectify-backend-container .#projectify-backend-container
+nix build --out-link build/projectify-celery-container .#projectify-celery-container
+nix build --out-link build/projectify-revproxy-container .#projectify-revproxy-container
+```
+
+After building the above images successfully, load images into your local
+container storage like so:
+
+```bash
+# Podman 4.3.1 struggles loading gzipped docker containers, so we do this
+# instead:
+zcat build/projectify-frontend-node-container | podman load
+zcat build/projectify-backend-container | podman load
+zcat build/projectify-celery-container | podman load
+zcat build/projectify-revproxy-container | podman load
 ```
 
 Try running projectify-manage using
@@ -25,8 +35,8 @@ Try running projectify-manage using
 ```bash
 podman run \
   --env-file backend/.env.production-sample \
-  projectify-manage:latest \
-  shell_plus -c 'print(settings.STATIC_ROOT)'
+  projectify-backend:latest \
+  projectify-manage shell -c 'from django.conf import settings; print(settings.STATIC_ROOT)'
 ```
 
 This prints something like the following
@@ -39,41 +49,14 @@ from django.db.models import Exists, OuterRef, Subquery
 /nix/store/4928ai9dfpvbh79908sll2x71xj91p9q-python3.11-projectify-0.1.0-static
 ```
 
-To connect to the local postgres, you have to run the container using
-`--network=host`. Set the correct `DATABASE_URL`, the below is only an example.
-This also assumes, you have already created a database called `projectify`.
-(use something like `createdb projectify`)
-
-Try running seeddb:
-
-```fish
-podman run \
-  --env-file backend/.env.production-sample \
-  --env DATABASE_URL=postgres://$USER@localhost/projectify \
-  --interactive \
-  --network=host \
-  projectify-manage:latest seeddb
-```
-
-This will start a server:
-
-```fish
-podman run \
-  --env-file backend/.env.production-sample \
-  --env DATABASE_URL=postgres://$USER@localhost/projectify \
-  --interactive \
-  --network=host \
-  projectify-backend:latest
-```
-
 ## Podman-compose
 
-A sample `docker-compose.yml` file has been placed in the root folder. Assuming
-you are in a Nix flake shell right now or use nix-direnv, you can build and
-launch everything using
+A sample `docker-compose.yml` file has been placed in the root folder. This
+assumes that you are in a Nix flake shell in the root directory or use
+nix-direnv. After you have build and loaded the above images, you can launch
+everything using
 
 ```bash
-podman-compose build
 podman-compose up
 ```
 

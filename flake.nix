@@ -28,6 +28,50 @@
         nodejs = pkgs.nodejs_20;
       in
       {
+        packages = {
+          projectify-frontend-node-container = pkgs.dockerTools.buildLayeredImage {
+            name = "projectify-frontend-node";
+            tag = "latest";
+            contents = [
+              frontend
+            ];
+            config = {
+              Command = [ "projectify-frontend-node" ];
+            };
+          };
+          projectify-backend-container = pkgs.dockerTools.buildLayeredImage {
+            name = "projectify-backend";
+            tag = "latest";
+            contents = [
+              backend
+              manage
+            ];
+            config = {
+              Command = [ "projectify-backend" ];
+            };
+          };
+          projectify-celery-container = pkgs.dockerTools.buildLayeredImage {
+            name = "projectify-celery";
+            tag = "latest";
+            contents = [
+              backend
+              manage
+            ];
+            config = {
+              Command = [ "projectify-celery" ];
+            };
+          };
+          projectify-revproxy-container = pkgs.dockerTools.buildLayeredImage {
+            name = "projectify-revproxy";
+            tag = "latest";
+            contents = [
+              revproxy
+            ];
+            config = {
+              Command = [ "projectify-revproxy" ];
+            };
+          };
+        };
         devShell = pkgs.mkShell {
           buildInputs = [
             backend
