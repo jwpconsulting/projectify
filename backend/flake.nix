@@ -16,7 +16,7 @@
         # see https://github.com/nix-community/poetry2nix/tree/master#api for more functions and examples.
         pkgs = nixpkgs.legacyPackages.${system};
         inherit (poetry2nix.lib.mkPoetry2Nix { inherit pkgs; }) mkPoetryApplication mkPoetryEnv defaultPoetryOverrides;
-        projectDir = self;
+        projectDir = ./.;
         postgresql = pkgs.postgresql_15;
         python = pkgs.python311;
         # Thanks to
@@ -65,8 +65,6 @@
           inherit projectDir;
           inherit overrides;
           inherit python;
-          pyproject = ./pyproject.toml;
-          poetrylock = ./poetry.lock;
           groups = [ "dev" "test" ];
         };
         projectify-bundle = mkPoetryApplication {

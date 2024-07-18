@@ -4,27 +4,41 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/24.05";
 
-    projectify-frontend.url = "path:./frontend";
-    projectify-backend.url = "path:./backend";
-    projectify-revproxy.url = "path:./revproxy";
-
-    projectify-frontend.inputs.nixpkgs.follows = "nixpkgs";
-    projectify-backend.inputs.nixpkgs.follows = "nixpkgs";
-    projectify-revproxy.inputs.nixpkgs.follows = "nixpkgs";
-
-
     flake-utils.url = "github:numtide/flake-utils";
+
+    poetry2nix = {
+      url = "github:nix-community/poetry2nix/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, flake-utils, projectify-revproxy, projectify-frontend, projectify-backend }:
+  outputs = { self, nixpkgs, flake-utils, poetry2nix }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        frontend = projectify-frontend.packages.${system}.projectify-frontend-node;
-        backend = projectify-backend.packages.${system}.projectify-backend;
-        celery = projectify-backend.packages.${system}.projectify-celery;
-        manage = projectify-backend.packages.${system}.projectify-manage;
-        revproxy = projectify-revproxy.packages.${system}.projectify-revproxy;
+        frontend-flake = import ./frontend/flake.nix;
+        frontend-outputs = frontend-flake.outputs {
+          inherit self nixpkgs flake-utils;
+        };
+        frontend = frontend-outputs.packages.${system}.projectify-frontend-node;
+        backend-flake = import ./backend/flake.nix;
+        backend-outputs = backend-flake.outputs {
+          inherit self nixpkgs flake-utils poetry2nix;
+        };
+        backend = backend-outputs.packages.${system}.projectify-backend;
+        celery = backend-outputs.packages.${system}.projectify-celery;
+        manage = backend-outputs.packages.${system}.projectify-manage;
+        caddyfileFormatted = pkgs.runCommand "Caddyfile" {} ''
+          mkdir $out
+          ${pkgs.caddy}/bin/caddy fmt - <${./Caddyfile} > $out/Caddyfile
+        '';
+        revproxy = pkgs.writeShellApplication {
+          name = "projectify-revproxy";
+          runtimeInputs = [ pkgs.caddy ];
+          text = ''
+            exec caddy --config "${caddyfileFormatted}/Caddyfile" run
+          '';
+        };
         nodejs = pkgs.nodejs_20;
       in
       {
