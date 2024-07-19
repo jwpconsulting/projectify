@@ -60,8 +60,7 @@ services:
         depends_on:
             - postgres
     worker:
-        build:
-            dockerfile: projectify-celery.Dockerfile
+        image: projectify-celery
         restart: always
         environment: *backend-env
         depends_on:
