@@ -14,9 +14,9 @@ packages and copied into the local container storage like so:
 ```bash
 # Podman 4.3.1 struggles loading gzipped docker containers, so we do this
 # instead:
-bash $(nix build --print-out-paths --no-link .#projectify-backend-container) | podman load
-bash $(nix build --print-out-paths --no-link .#projectify-frontend-node-container) | podman load
-bash $(nix build --print-out-paths --no-link .#projectify-celery-container) | podman load
+bash $(nix build --print-out-paths --no-link .#projectify-backend-container) | podman load &&
+bash $(nix build --print-out-paths --no-link .#projectify-frontend-node-container) | podman load &&
+bash $(nix build --print-out-paths --no-link .#projectify-celery-container) | podman load &&
 bash $(nix build --print-out-paths --no-link .#projectify-revproxy-container) | podman load
 ```
 
