@@ -1,4 +1,4 @@
-name: Build all docker images
+name: Build all containers using Nix
 
 on:
     pull_request:
@@ -7,64 +7,35 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - uses: docker/setup-buildx-action@v3
-            - uses: docker/build-push-action@v6
+            - uses: ./.github/actions/set-up-nix-docker
               with:
-                  push: false
-                  load: true
-                  file: projectify-backend.Dockerfile
-                  cache-from: type=gha
-                  cache-to: type=gha,mode=max
-                  tags: projectify-backend:latest
+                  build_target: .#projectify-backend-container
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
     projectify-celery:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - uses: docker/setup-buildx-action@v3
-            - uses: docker/build-push-action@v6
+            - uses: ./.github/actions/set-up-nix-docker
               with:
-                  push: false
-                  load: true
-                  file: projectify-celery.Dockerfile
-                  cache-from: type=gha
-                  cache-to: type=gha,mode=max
-                  tags: projectify-celery:latest
-    projectify-manage:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - uses: docker/setup-buildx-action@v3
-            - uses: docker/build-push-action@v6
-              with:
-                  push: false
-                  load: true
-                  file: projectify-manage.Dockerfile
-                  cache-from: type=gha
-                  cache-to: type=gha,mode=max
-                  tags: projectify-manage:latest
+                  build_target: .#projectify-celery-container
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
     projectify-frontend:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - uses: docker/setup-buildx-action@v3
-            - uses: docker/build-push-action@v6
+            - uses: ./.github/actions/set-up-nix-docker
               with:
-                  push: false
-                  load: true
-                  file: projectify-frontend.Dockerfile
-                  cache-from: type=gha
-                  cache-to: type=gha,mode=max
-                  tags: projectify-frontend:latest
+                  build_target: .#projectify-frontend-node-container
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
     projectify-revproxy:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - uses: docker/setup-buildx-action@v3
-            - uses: docker/build-push-action@v6
+            - uses: ./.github/actions/set-up-nix-docker
               with:
-                  push: false
-                  load: true
-                  file: projectify-revproxy.Dockerfile
-                  cache-from: type=gha
-                  cache-to: type=gha,mode=max
-                  tags: projectify-revproxy:latest
+                  build_target: .#projectify-revproxy-container
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}

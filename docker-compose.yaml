@@ -5,9 +5,8 @@ volumes:
     keydb-data:
 services:
     web:
-        build:
-            context: .
-            dockerfile: projectify-revproxy.Dockerfile
+        image: projectify-revproxy
+        restart: always
         ports:
             - "5000:5000"
         environment:
@@ -20,13 +19,13 @@ services:
         depends_on:
             - backend
     frontend:
-        build:
-            dockerfile: projectify-frontend.Dockerfile
+        image: projectify-frontend-node
+        restart: always
         environment:
             SVELTE_KIT_PORT: 5001
     backend:
-        build:
-            dockerfile: projectify-backend.Dockerfile
+        image: projectify-backend
+        restart: always
         environment: &backend-env
             SECRET_KEY: do-not-use
             # Networking
@@ -54,15 +53,15 @@ services:
             - worker
         ports:
     migrate_backend:
-        build:
-            dockerfile: projectify-manage.Dockerfile
+        image: projectify-backend
+        restart: always
         environment: *backend-env
-        command: migrate
+        command: projectify-manage migrate
         depends_on:
             - postgres
     worker:
-        build:
-            dockerfile: projectify-celery.Dockerfile
+        image: projectify-celery
+        restart: always
         environment: *backend-env
         depends_on:
             - keydb

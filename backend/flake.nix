@@ -3,7 +3,7 @@
 
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
-    nixpkgs.url = "github:NixOS/nixpkgs/24.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     poetry2nix = {
       url = "github:nix-community/poetry2nix/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -16,7 +16,7 @@
         # see https://github.com/nix-community/poetry2nix/tree/master#api for more functions and examples.
         pkgs = nixpkgs.legacyPackages.${system};
         inherit (poetry2nix.lib.mkPoetry2Nix { inherit pkgs; }) mkPoetryApplication mkPoetryEnv defaultPoetryOverrides;
-        projectDir = self;
+        projectDir = ./.;
         postgresql = pkgs.postgresql_15;
         python = pkgs.python311;
         # Thanks to
@@ -65,8 +65,6 @@
           inherit projectDir;
           inherit overrides;
           inherit python;
-          pyproject = ./pyproject.toml;
-          poetrylock = ./poetry.lock;
           groups = [ "dev" "test" ];
         };
         projectify-bundle = mkPoetryApplication {

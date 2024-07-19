@@ -5,6 +5,8 @@ Django backend.
 
 Build the (Caddy based) reverse proxy like so:
 
+<!-- TODO update the following instructions -->
+
 ```bash
 podman build --target projectify-revproxy -t projectify-revproxy:latest -f projectify-revproxy.Dockerfile .
 ```
