@@ -237,7 +237,7 @@ async def expect_change(
         "content": mock.ANY,
     }
     content = json_cast.get("content")
-    assert content is not None, content
+    assert content is not None, json_cast
     return content
 
 
@@ -470,7 +470,8 @@ class TestProject:
         await database_sync_to_async(project_update)(
             who=team_member.user, project=project, title="don't care"
         )
-        assert await expect_change(project_communicator, project)
+        project_new = await expect_change(project_communicator, project)
+        assert project_new["workspace"]["quota"] is not None
         assert await expect_change(workspace_communicator, workspace)
 
         # Archive
