@@ -480,9 +480,9 @@ rules==3.3 ; python_full_version >= "3.11.6" and python_full_version < "3.12.0" 
 service-identity==23.1.0 ; python_full_version >= "3.11.6" and python_full_version < "3.12.0" \
     --hash=sha256:87415a691d52fcad954a500cb81f424d0273f8e7e3ee7d766128f4575080f383 \
     --hash=sha256:ecb33cd96307755041e978ab14f8b14e13b40f1fbd525a4dc78f46d2b986431d
-setuptools==68.2.0 ; python_full_version >= "3.11.6" and python_full_version < "3.12.0" \
-    --hash=sha256:00478ca80aeebeecb2f288d3206b0de568df5cd2b8fada1209843cc9a8d88a48 \
-    --hash=sha256:af3d5949030c3f493f550876b2fd1dd5ec66689c4ee5d5344f009746f71fd5a8
+setuptools==71.0.3 ; python_full_version >= "3.11.6" and python_full_version < "3.12.0" \
+    --hash=sha256:3d8531791a27056f4a38cd3e54084d8b1c4228ff9cf3f2d7dd075ec99f9fd70d \
+    --hash=sha256:f501b6e6db709818dc76882582d9c516bf3b67b948864c5fa1d1624c09a49207
 six==1.16.0 ; python_full_version >= "3.11.6" and python_full_version < "3.12.0" \
     --hash=sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926 \
     --hash=sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254
