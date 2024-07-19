@@ -2,7 +2,7 @@
 services:
     - name: projectify-web
       type: web
-      runtime: docker
+      runtime: image
       image:
         url: ghcr.io/jwpconsulting/projectify/projectify-revproxy:latest
       envVars:
@@ -26,7 +26,7 @@ services:
             value: 5002
     - name: projectify-frontend
       type: pserv
-      runtime: docker
+      runtime: image
       image:
         url: ghcr.io/jwpconsulting/projectify/projectify-frontend-node:latest
       envVars:
@@ -34,7 +34,7 @@ services:
             value: 5001
     - name: projectify-backend
       type: pserv
-      runtime: docker
+      runtime: image
       image:
         url: ghcr.io/jwpconsulting/projectify/projectify-backend:latest
       preDeployCommand: projectify-manage migrate
@@ -54,7 +54,7 @@ services:
           - fromGroup: projectify-backend-shared
     - name: projectify-celery
       type: worker
-      runtime: docker
+      runtime: image
       image:
         url: ghcr.io/jwpconsulting/projectify/projectify-celery:latest
       envVars:
