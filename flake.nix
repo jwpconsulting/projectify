@@ -50,7 +50,7 @@
               frontend
             ];
             config = {
-              Command = [ "projectify-frontend-node" ];
+              Cmd = [ "projectify-frontend-node" ];
             };
           };
           projectify-backend-container = pkgs.dockerTools.buildLayeredImage {
@@ -61,7 +61,7 @@
               manage
             ];
             config = {
-              Command = [ "projectify-backend" ];
+              Cmd = [ "projectify-backend" ];
             };
           };
           projectify-celery-container = pkgs.dockerTools.buildLayeredImage {
@@ -72,7 +72,7 @@
               manage
             ];
             config = {
-              Command = [ "projectify-celery" ];
+              Cmd = [ "projectify-celery" ];
             };
           };
           projectify-revproxy-container = pkgs.dockerTools.buildLayeredImage {
@@ -82,7 +82,7 @@
               revproxy
             ];
             config = {
-              Command = [ "projectify-revproxy" ];
+              Cmd = [ "projectify-revproxy" ];
             };
           };
           skopeo = pkgs.skopeo;
