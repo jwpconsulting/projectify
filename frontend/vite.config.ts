@@ -61,18 +61,34 @@ function generateLicenseFile(): Plugin {
     };
 }
 
+const faviconConfiguration: FaviconOptions = {
+    appName: "Projectify",
+    appShortName: "Projectify",
+    appDescription: "Free open source project management software",
+    developerName: "JWP Consulting GK et al.",
+    developerURL: "https://www.jwpconsulting.net/",
+    shortcuts: [
+        {
+            name: "View Projectify Dashboard",
+            short_name: "Dashboard",
+            description: "View your Projectify dashboard",
+            url: "/dashboard",
+            // TODO specify a different image
+            icon: "src/favicon.svg",
+        },
+    ],
+};
+
 function generateFavicons(): Plugin {
     const source = "src/favicon.svg";
     const dest = "static/";
-    // TODO
-    const configuration: FaviconOptions = {};
     let generatedHtml: string | undefined = undefined;
     return {
         name: "generate-favicons",
         async buildStart() {
             this.addWatchFile(source);
 
-            const response = await favicons(source, configuration);
+            const response = await favicons(source, faviconConfiguration);
             const { html, images, files } = response;
             await fs.mkdir(dest, { recursive: true });
             await Promise.all(
