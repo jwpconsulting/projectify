@@ -1,3 +1,6 @@
+{
+	admin off
+}
 {$HOST:invalid}:{$PORT:invalid} {
 	handle /admin/* {
 		reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}

@@ -2,6 +2,8 @@ name: Initialize nix docker build
 inputs:
     build_target:
         required: true
+    package_name:
+        required: true
     username:
         required: true
     password:
@@ -20,5 +22,5 @@ runs:
           run: nix build --out-link result.bash ${{ inputs.build_target }}
           shell: bash
         - name: Push with skopeo
-          run: bash result.bash | nix run .#skopeo -- copy docker-archive:/dev/stdin docker://ghcr.io/${{ github.repository }}
+          run: bash result.bash | nix run .#skopeo -- copy docker-archive:/dev/stdin docker://ghcr.io/${{ github.repository }}/${{ inputs.package_name }}
           shell: bash

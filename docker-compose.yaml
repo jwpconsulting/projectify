@@ -5,13 +5,13 @@ volumes:
     keydb-data:
 services:
     web:
-        image: projectify-revproxy
+        image: projectify-revproxy:latest
         restart: always
         ports:
-            - "5000:5000"
+            - "5000:80"
         environment:
             HOST: "localhost"
-            PORT: "5000"
+            PORT: "80"
             FRONTEND_HOST: frontend
             FRONTEND_PORT: "5001"
             BACKEND_HOST: backend
@@ -19,12 +19,12 @@ services:
         depends_on:
             - backend
     frontend:
-        image: projectify-frontend-node
+        image: projectify-frontend-node:latest
         restart: always
         environment:
             SVELTE_KIT_PORT: 5001
     backend:
-        image: projectify-backend
+        image: projectify-backend:latest
         restart: always
         environment: &backend-env
             SECRET_KEY: do-not-use
@@ -53,30 +53,31 @@ services:
             - worker
         ports:
     migrate_backend:
-        image: projectify-backend
+        image: projectify-backend:latest
         restart: always
         environment: *backend-env
         command: projectify-manage migrate
         depends_on:
             - postgres
     worker:
-        image: projectify-celery
+        image: projectify-celery:latest
         restart: always
         environment: *backend-env
         depends_on:
             - keydb
             - postgres
     keydb:
-        image: docker.io/eqalpha/keydb
+        image: docker.io/eqalpha/keydb:latest
+        restart: always
         volumes:
             - keydb-data:/data
         healthcheck:
-          test: ["CMD", "redis-cli", "ping"]
-          interval: 1s
-          timeout: 3s
-          retries: 30
+            test: ["CMD", "redis-cli", "ping"]
+            interval: 1s
+            timeout: 3s
+            retries: 30
     postgres:
-        image: docker.io/postgres
+        image: docker.io/postgres:15
         restart: always
         shm_size: 128mb
         volumes:
@@ -87,7 +88,7 @@ services:
             POSTGRES_PASSWORD: projectify
             PGDATA: /var/lib/postgresql/data/pgdata
         healthcheck:
-          test: ["CMD-SHELL", "pg_isready -U projectify"]
-          interval: 30s
-          timeout: 30s
-          retries: 3
+            test: ["CMD-SHELL", "pg_isready -U projectify"]
+            interval: 30s
+            timeout: 30s
+            retries: 3

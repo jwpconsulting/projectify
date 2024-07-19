@@ -3,7 +3,8 @@ services:
     - name: projectify-web
       type: web
       runtime: docker
-      dockerfilePath: projectify-revproxy.Dockerfile
+      image:
+        url: ghcr.io/jwpconsulting/projectify/projectify-revproxy:latest
       envVars:
           - key: HOST
             sync: false
@@ -26,14 +27,17 @@ services:
     - name: projectify-frontend
       type: pserv
       runtime: docker
-      dockerfilePath: projectify-frontend.Dockerfile
+      image:
+        url: ghcr.io/jwpconsulting/projectify/projectify-frontend-node:latest
       envVars:
           - key: SVELTE_KIT_PORT
             value: 5001
     - name: projectify-backend
       type: pserv
       runtime: docker
-      dockerfilePath: projectify-backend.Dockerfile
+      image:
+        url: ghcr.io/jwpconsulting/projectify/projectify-backend:latest
+      preDeployCommand: projectify-manage migrate
       # docs/backend/configuration.md
       envVars:
           - key: PORT
@@ -51,7 +55,8 @@ services:
     - name: projectify-celery
       type: worker
       runtime: docker
-      dockerfilePath: projectify-celery.Dockerfile
+      image:
+        url: ghcr.io/jwpconsulting/projectify/projectify-celery:latest
       envVars:
           - key: DATABASE_URL
             fromDatabase:
