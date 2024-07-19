@@ -17,6 +17,7 @@ services:
             BACKEND_HOST: backend
             BACKEND_PORT: 5002
         depends_on:
+            - frontend
             - backend
     frontend:
         image: projectify-frontend-node:latest
