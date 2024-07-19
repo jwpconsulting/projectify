@@ -16,9 +16,9 @@ runs:
           run:
               nix run .#skopeo -- login --username=${{ inputs.username }} --password='${{ inputs.password }}' ghcr.io
           shell: bash
-        - name: Build image
-          run: nix build --out-link result.tar.gz ${{ inputs.build_target }}
+        - name: Build image streamer
+          run: nix build --out-link result.bash ${{ inputs.build_target }}
           shell: bash
         - name: Push with skopeo
-          run: nix run .#skopeo -- copy docker-archive:result.tar.gz docker://ghcr.io/${{ github.repository }}
+          run: bash result.bash | nix run .#skopeo -- copy docker-archive:/dev/stdin docker://ghcr.io/${{ github.repository }}
           shell: bash

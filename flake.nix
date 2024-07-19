@@ -43,7 +43,7 @@
       in
       {
         packages = {
-          projectify-frontend-node-container = pkgs.dockerTools.buildLayeredImage {
+          projectify-frontend-node-container = pkgs.dockerTools.streamLayeredImage {
             name = "projectify-frontend-node";
             tag = "latest";
             contents = [
@@ -53,7 +53,7 @@
               Cmd = [ "projectify-frontend-node" ];
             };
           };
-          projectify-backend-container = pkgs.dockerTools.buildLayeredImage {
+          projectify-backend-container = pkgs.dockerTools.streamLayeredImage {
             name = "projectify-backend";
             tag = "latest";
             contents = [
@@ -64,18 +64,17 @@
               Cmd = [ "projectify-backend" ];
             };
           };
-          projectify-celery-container = pkgs.dockerTools.buildLayeredImage {
+          projectify-celery-container = pkgs.dockerTools.streamLayeredImage {
             name = "projectify-celery";
             tag = "latest";
             contents = [
-              backend
-              manage
+              celery
             ];
             config = {
               Cmd = [ "projectify-celery" ];
             };
           };
-          projectify-revproxy-container = pkgs.dockerTools.buildLayeredImage {
+          projectify-revproxy-container = pkgs.dockerTools.streamLayeredImage {
             name = "projectify-revproxy";
             tag = "latest";
             contents = [
