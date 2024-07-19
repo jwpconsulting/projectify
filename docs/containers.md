@@ -9,25 +9,17 @@ commands contained in their respective containers
 - projectify-revproxy
 
 can be built from the repository's root directory using the Nix `flake.nix`
-packages:
-
-```bash
-nix build --out-link build/projectify-frontend-node-container .#projectify-frontend-node-container
-nix build --out-link build/projectify-backend-container .#projectify-backend-container
-nix build --out-link build/projectify-celery-container .#projectify-celery-container
-nix build --out-link build/projectify-revproxy-container .#projectify-revproxy-container
-```
-
-After building the above images successfully, load images into your local
-container storage like so:
+packages and copied into the local container storage like so:
 
 ```bash
 # Podman 4.3.1 struggles loading gzipped docker containers, so we do this
 # instead:
-zcat build/projectify-frontend-node-container | podman load
-zcat build/projectify-backend-container | podman load
-zcat build/projectify-celery-container | podman load
-zcat build/projectify-revproxy-container | podman load
+zcat $(nix build --print-out-paths --no-link .#projectify-backend-container) | podman load
+zcat $(nix build --print-out-paths --no-link .#projectify-frontend-node-container) | podman load
+zcat $(nix build --print-out-paths --no-link .#projectify-celery-container) |
+podman load
+zcat $(nix build --print-out-paths --no-link .#projectify-revproxy-container) |
+podman load
 ```
 
 Try running projectify-manage using
@@ -63,7 +55,7 @@ podman-compose up
 Create a new user from the shell
 
 ```bash
-podman-compose run migrate_backend shell
+podman-compose run migrate_backend projectify-manage shell -c 'from projectify.user.services import internal; internal.user_create_superuser(email="admin@localhost", password="password")'
 ```
 
 Connect to the Projectify app using the reverse proxy url at localhost:5000
