@@ -10,6 +10,7 @@ jobs:
             - uses: ./.github/actions/set-up-nix-docker
               with:
                   build_target: .#projectify-backend-container
+                  package_name: projectify-backend
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
     projectify-celery:
@@ -19,6 +20,7 @@ jobs:
             - uses: ./.github/actions/set-up-nix-docker
               with:
                   build_target: .#projectify-celery-container
+                  package_name: projectify-celery
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
     projectify-frontend:
@@ -28,6 +30,7 @@ jobs:
             - uses: ./.github/actions/set-up-nix-docker
               with:
                   build_target: .#projectify-frontend-node-container
+                  package_name: projectify-frontend-node
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
     projectify-revproxy:
@@ -37,5 +40,6 @@ jobs:
             - uses: ./.github/actions/set-up-nix-docker
               with:
                   build_target: .#projectify-revproxy-container
+                  package_name: projectify-revproxy
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
