@@ -352,6 +352,9 @@ class ChangeConsumer(JsonWebsocketConsumer):
                     qs=ProjectDetailQuerySet,
                 )
                 if project is not None:
+                    project.workspace.quota = workspace_get_all_quotas(
+                        project.workspace
+                    )
                     result = ProjectDetailSerializer(project)
                 else:
                     result = "not_found"
