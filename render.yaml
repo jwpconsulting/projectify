@@ -1,6 +1,6 @@
 # Largely derived from docker-compose.yaml
 services:
-    - name: projectify-web
+    - name: projectify
       type: web
       runtime: image
       image:
