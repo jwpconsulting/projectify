@@ -44,7 +44,10 @@
 	header {
 		X-Frame-Options DENY
 		# TODO make this 1 year and add preload
+		# Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 		Strict-Transport-Security "max-age=3600; includeSubDomains"
+		# TODO add this:
+		# X-Content-Type-Options nosniff
 	}
 	handle /admin/* {
 		import backend_headers
