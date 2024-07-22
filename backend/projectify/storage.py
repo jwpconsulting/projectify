@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2022, 2023 JWP Consulting GK
+# Copyright (C) 2022-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -16,19 +16,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Storage classes."""
 
-from urllib.parse import (
-    urljoin,
-)
+from urllib.parse import urljoin
 
-from django.conf import (
-    settings,
-)
-from django.core.files.storage import (
-    FileSystemStorage,
-)
-from django.utils.functional import (
-    cached_property,
-)
+from django.core.files.storage import FileSystemStorage
+from django.utils.functional import cached_property
+
+from projectify.lib.settings import get_settings
 
 
 class LocalhostStorage(FileSystemStorage):
@@ -37,5 +30,6 @@ class LocalhostStorage(FileSystemStorage):
     @cached_property
     def base_url(self) -> str:  # type: ignore
         """Override base url to point to localhost."""
-        url: str = urljoin("http://localhost:8000", settings.MEDIA_URL)
+        settings = get_settings()
+        url: str = urljoin(settings.FRONTEND_URL, settings.MEDIA_URL)
         return url
