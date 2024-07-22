@@ -46,11 +46,8 @@
 {$HOST:invalid}:{$PORT:invalid} {$ADDITIONAL_HOST} {
 	header {
 		X-Frame-Options DENY
-		# TODO make this 1 year and add preload
-		# Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-		Strict-Transport-Security "max-age=3600; includeSubDomains"
-		# TODO add this:
-		# X-Content-Type-Options nosniff
+		Strict-Transport-Security "max-age=15768000; includeSubDomains; preload"
+		X-Content-Type-Options nosniff
 	}
 	handle /admin/* {
 		import backend_headers
