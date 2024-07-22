@@ -44,9 +44,12 @@ const config = {
         adapter,
         csp: {
             directives: {
-                // Mirrors root directory Caddyfile csp_headers
+                // Mirrors root directory Caddyfile backend_headers,
+                // with exception of making style-src more lenient
+                // See https://github.com/sveltejs/kit/issues/11747 and
+                // https://kit.svelte.dev/docs/configuration
                 "default-src": ["self"],
-                "style-src": ["self"],
+                "style-src": ["self", "unsafe-inline"],
                 "script-src": ["self"],
                 "font-src": ["self"],
                 "img-src": ["self", "res.cloudinary.com"],
@@ -56,6 +59,7 @@ const config = {
                 "object-src": ["self"],
                 "base-uri": ["self"],
             },
+            // TODO add reports
         },
         typescript: {
             config(config) {
