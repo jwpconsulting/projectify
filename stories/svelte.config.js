@@ -31,18 +31,6 @@ const config = {
             "$routes": "src/routes",
             "$lib-stories": "src/lib-stories",
         },
-        adapter: adapter({
-            pages: "build",
-            assets: "build",
-            /* XXX we get this error:
-             * > Using @sveltejs/adapter-static
-             * Overwriting build/redirect.html with fallback page. Consider
-             * using a different name for the fallback.
-             */
-            fallback: "redirect.html",
-            precompress: false,
-            strict: true,
-        }),
         csp: frontendSvelte.kit.csp,
         typescript: {
             config(config) {
