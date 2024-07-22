@@ -28,15 +28,26 @@
         backend = backend-outputs.packages.${system}.projectify-backend;
         celery = backend-outputs.packages.${system}.projectify-celery;
         manage = backend-outputs.packages.${system}.projectify-manage;
+        caddyFileTestEnv = pkgs.writeText "caddy-envfile" ''
+          HOST=http://localhost
+          PORT=80
+          BACKEND_HOST=localhost
+          BACKEND_PORT=1000
+          FRONTEND_HOST=localhost
+          FRONTEND_PORT=1001
+        '';
         caddyfileFormatted = pkgs.runCommand "Caddyfile" {} ''
           mkdir $out
           ${pkgs.caddy}/bin/caddy fmt - <${./Caddyfile} > $out/Caddyfile
+          ${pkgs.caddy}/bin/caddy validate \
+            --envfile ${caddyFileTestEnv} \
+            --config $out/Caddyfile
         '';
         revproxy = pkgs.writeShellApplication {
           name = "projectify-revproxy";
           runtimeInputs = [ pkgs.caddy ];
           text = ''
-            exec caddy --config "${caddyfileFormatted}/Caddyfile" run
+            exec caddy --config ${caddyfileFormatted}/Caddyfile run
           '';
         };
         nodejs = pkgs.nodejs_20;
@@ -74,6 +85,7 @@
               Cmd = [ "projectify-celery" ];
             };
           };
+          projectify-revproxy = revproxy;
           projectify-revproxy-container = pkgs.dockerTools.streamLayeredImage {
             name = "projectify-revproxy";
             tag = "latest";
