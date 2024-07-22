@@ -51,3 +51,5 @@ export function load({ url }: LayoutLoadEvent): {
     });
     return { userAwaitable };
 }
+
+export const ssr = false;
