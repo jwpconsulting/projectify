@@ -39,6 +39,7 @@
 
     $: disabled = taskTitle === undefined;
     async function submit() {
+        // TODO add state tracking with submit button blocking
         if (!taskTitle) {
             throw new Error("Expected taskTitle");
         }

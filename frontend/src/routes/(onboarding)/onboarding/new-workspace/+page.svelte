@@ -39,7 +39,7 @@
     let workspaceTitle: string | undefined = undefined;
     let workspaceTitleValidation: InputFieldValidation | undefined = undefined;
 
-    $: disabled = workspaceTitle === undefined;
+    $: disabled = workspaceTitle === undefined || state.kind === "submitting";
 
     $: who =
         $currentUser.kind === "authenticated"

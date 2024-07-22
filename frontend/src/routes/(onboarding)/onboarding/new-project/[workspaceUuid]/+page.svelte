@@ -40,7 +40,7 @@
     let title: string | undefined = undefined;
     let titleValidation: InputFieldValidation | undefined = undefined;
 
-    $: disabled = title === undefined;
+    $: disabled = title === undefined || state.kind === "submitting";
 
     async function submit() {
         if (!title) {
