@@ -17,6 +17,7 @@
  */
 import adapter from "@sveltejs/adapter-static";
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
+import frontendSvelte from "../frontend/svelte";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -42,21 +43,7 @@ const config = {
             precompress: false,
             strict: true,
         }),
-        csp: {
-            directives: {
-                // Mirrors root directory Caddyfile csp_headers
-                "default-src": ["self"],
-                "style-src": ["self"],
-                "script-src": ["self"],
-                "font-src": ["self"],
-                "img-src": ["self", "res.cloudinary.com"],
-                "form-action": ["self"],
-                "connect-src": ["self"],
-                "frame-ancestors": ["none"],
-                "object-src": ["self"],
-                "base-uri": ["self"],
-            },
-        },
+        csp: frontendSvelte.kit.csp,
         typescript: {
             config(config) {
                 return {
