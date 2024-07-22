@@ -21,7 +21,12 @@
 	"
 	# TODO add default-src 'none', at least as a report directive
 }
-{$HOST:invalid}:{$PORT:invalid} {
+
+# The additional host requires setting the port within the variable.
+# The idea is to avoid accidentally leaving out $ADDITIONAL_HOST and then
+# having a stranded ":" there, if we instead write
+# {$ADDITIONAL_HOST}:{$ADDITIONAL_PORT}
+{$HOST:invalid}:{$PORT:invalid} {$ADDITIONAL_HOST} {
 	header {
 		X-Frame-Options DENY
 		# TODO make this 1 year and add preload
