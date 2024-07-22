@@ -13,12 +13,18 @@ ensure that the Projectify backend will launch correctly.
 - `DJANGO_SETTINGS_MODULE`: Usually set to `projectify.settings.production`
 - `DJANGO_CONFIGURATION`: Usually set to `Production`
 - `SECRET_KEY`: Used for session cookie generation, Redis symmetric encryption
+- `SITE_TITLE` (**optional**): Title of site, defaults to `Projectify
+Production`
 
 ## Networking
 - `PORT`: Used for gunicorn to determine which port to bind to
 - `ALLOWED_HOSTS`: Which host names to permit in HTTP Host header. Comma
 separated values.
 - `FRONTEND_URL`: URL for where Projectify frontend is served.
+- `SECURITY_ORIGINS` (**optional**): Allowed URLs for CORS/CSRF. Defaults to
+`ALLOWED_HOSTS`.
+- `CSRF_COOKIE_DOMAIN` (**optional**): Domain for CSRF cookie. Defaults to
+`.projectifyapp.com`.
 
 ## Database
 - `DATABASE_URL`:

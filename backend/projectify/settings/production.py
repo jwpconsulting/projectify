@@ -100,9 +100,18 @@ class Production(Base):
     # Celery
     CELERY_BROKER_URL = REDIS_TLS_URL
 
-    CORS_ALLOWED_ORIGINS = (FRONTEND_URL,)
-
-    CSRF_TRUSTED_ORIGINS = (FRONTEND_URL,)
+    # We want to permit multiple URLs here to allow migrating between hosts.
+    # This way, we can have a standby available at another host already
+    # configured with a new domain, but also letting old requests through
+    # Doing so, we can switch over domain records to the new host and have it
+    # immediately be ready to accept new requests
+    # In ALLOWED_HOSTS we have already had this mechanism.
+    CORS_ALLOWED_ORIGINS = os.getenv("SECURITY_ORIGINS", FRONTEND_URL).split(
+        ","
+    )
+    CSRF_TRUSTED_ORIGINS = os.getenv("SECURITY_ORIGINS", FRONTEND_URL).split(
+        ","
+    )
 
     # Static files
     # We allow overriding this value in case the static files come prebuilt,
