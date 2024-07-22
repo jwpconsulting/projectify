@@ -52,7 +52,7 @@ const config = {
                 "style-src": ["self", "unsafe-inline"],
                 "script-src": ["self"],
                 "font-src": ["self"],
-                "img-src": ["self", "res.cloudinary.com"],
+                "img-src": ["self", "blob:", "res.cloudinary.com"],
                 "form-action": ["self"],
                 // XXX we add this to ensure our cross-domain Netlify/Heroku
                 // deployment keeps working

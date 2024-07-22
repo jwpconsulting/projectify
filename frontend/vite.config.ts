@@ -184,11 +184,20 @@ function getFromEnv(env: Record<string, string>, key: string): string {
 
 function getProxyConfig(
     env: Record<string, string>,
+    mode: string,
 ): Record<string, ProxyOptions> | undefined {
+    if (mode !== "development") {
+        return undefined;
+    }
     if (env.VITE_USE_LOCAL_PROXY === undefined) {
         return undefined;
     }
     return {
+        "/media": {
+            // TODO consider adding a VITE_PROXY_MEDIA_ENDPOINT env var
+            // some point later
+            target: getFromEnv(env, "VITE_PROXY_API_ENDPOINT"),
+        },
         "/ws": {
             target: getFromEnv(env, "VITE_PROXY_WS_ENDPOINT"),
             changeOrigin: true,
@@ -248,7 +257,7 @@ const config: UserConfigExport = defineConfig(async ({ mode }: ConfigEnv) => {
         },
         plugins: await getPluginOptions(env, mode),
         server: {
-            proxy: getProxyConfig(env),
+            proxy: getProxyConfig(env, mode),
         },
         define: {
             ...(await buildInfo(env)),

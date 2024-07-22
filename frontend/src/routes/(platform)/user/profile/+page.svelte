@@ -53,9 +53,9 @@
         | { kind: "clear" }
         | { kind: "update"; file: File; src: string } = { kind: "keep" };
 
-    function fileSelected(file: File, src: string) {
+    function fileSelected(file: File) {
         startEditing();
-        picture = { kind: "update", file, src };
+        picture = { kind: "update", file, src: URL.createObjectURL(file) };
     }
 
     async function save() {
