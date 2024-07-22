@@ -9,8 +9,13 @@
 	# Compared to backend_headers, we removed default-src and script-src
 	# Furthermore, we have to make sure we don't override any CSP headers
 	# Should SvelteKit with adapter-node decide to return a header itself
+	# We have to relax style-src here as well, in case of a page transition
+	# from landing (prerendered) to dashboard (ssr/csr)
+	# Refer to
+	# See https://github.com/sveltejs/kit/issues/11747 and
+	# https://kit.svelte.dev/docs/configuration
 	header ?Content-Security-Policy "
-		style-src 'self';
+		style-src 'self' 'unsafe-inline';
 		font-src 'self';
 		img-src 'self' res.cloudinary.com;
 		form-action 'self';
