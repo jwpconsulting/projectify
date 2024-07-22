@@ -49,7 +49,7 @@ ipython = "~8.10"
 [tool.poetry.group.test.dependencies]
 ruff = "0.4.10"
 ipython = "~8.10"
-pytest = "~7.1.2"
+pytest = "^7.2.0"
 mypy = "~1.5.1"
 types-toml = "~0.10.8"
 
