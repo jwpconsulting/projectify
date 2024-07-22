@@ -20,6 +20,7 @@ runs:
         - name: Build image streamer
           run: nix build --out-link result.bash ${{ inputs.build_target }}
           shell: bash
-        - name: Push with skopeo
+        - name: Push with skopeo if main branch
           run: bash result.bash | nix run .#skopeo -- copy docker-archive:/dev/stdin docker://ghcr.io/${{ github.repository }}/${{ inputs.package_name }}
           shell: bash
+          if: ${{ github.ref_name == 'main' }}
