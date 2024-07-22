@@ -271,6 +271,14 @@ jobs:
       - run:
           name: Check all
           command: bin/test
+  tools_render_yaml_validate:
+    executor: node
+    working_directory: ~/projectify/tools
+    steps:
+      - prepare_npm
+      - run:
+          name: Check schema with ajv
+          command: npm run check:render-schema
   tools_poetry_check:
     executor: python
     working_directory: ~/projectify/tools
@@ -318,6 +326,7 @@ workflows:
       - frontend_visualize-bundle
       - frontend_schema
       - stories_test
+      - tools_render_yaml_validate
       - tools_poetry_check
       - tools_python_lint
       - tools_mypy
