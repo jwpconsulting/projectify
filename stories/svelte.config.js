@@ -15,7 +15,6 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import adapter from "@sveltejs/adapter-static";
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -29,33 +28,6 @@ const config = {
             "$messages": "src/messages",
             "$routes": "src/routes",
             "$lib-stories": "src/lib-stories",
-        },
-        adapter: adapter({
-            pages: "build",
-            assets: "build",
-            /* XXX we get this error:
-             * > Using @sveltejs/adapter-static
-             * Overwriting build/redirect.html with fallback page. Consider
-             * using a different name for the fallback.
-             */
-            fallback: "redirect.html",
-            precompress: false,
-            strict: true,
-        }),
-        csp: {
-            directives: {
-                // Mirrors root directory Caddyfile csp_headers
-                "default-src": ["self"],
-                "style-src": ["self"],
-                "script-src": ["self"],
-                "font-src": ["self"],
-                "img-src": ["self", "res.cloudinary.com"],
-                "form-action": ["self"],
-                "connect-src": ["self"],
-                "frame-ancestors": ["none"],
-                "object-src": ["self"],
-                "base-uri": ["self"],
-            },
         },
         typescript: {
             config(config) {
