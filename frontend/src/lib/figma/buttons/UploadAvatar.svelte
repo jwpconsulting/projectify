@@ -20,7 +20,7 @@
     import { Icon } from "@steeze-ui/svelte-icon";
 
     export let label: string;
-    export let fileSelected: (file: File, src: string) => void;
+    export let fileSelected: (file: File) => void;
     let inputFileRef: HTMLElement;
 
     function click() {
@@ -39,21 +39,7 @@
         if (!file) {
             throw new Error("Expected file");
         }
-
-        const reader = new FileReader();
-        reader.addEventListener("load", (event: ProgressEvent) => {
-            const eventTarget = event.target;
-            if (eventTarget instanceof FileReader) {
-                const src = eventTarget.result;
-                if (typeof src !== "string") {
-                    throw new Error("src wasn't string");
-                }
-                fileSelected(file, src);
-            } else {
-                throw new Error("Expected FileReader");
-            }
-        });
-        reader.readAsDataURL(file);
+        fileSelected(file);
     }
 </script>
 

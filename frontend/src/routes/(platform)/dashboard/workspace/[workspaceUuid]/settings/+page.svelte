@@ -62,10 +62,10 @@
     let imageFile: File | undefined = undefined;
     $: hasImage = imageFile !== undefined || picture !== null;
 
-    function fileSelected(file: File, src: string) {
+    function fileSelected(file: File) {
         state = { kind: "editing" };
         imageFile = file;
-        picture = src;
+        picture = URL.createObjectURL(file);
     }
 
     async function save() {
