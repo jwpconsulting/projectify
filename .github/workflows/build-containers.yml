@@ -2,6 +2,9 @@ name: Build all containers using Nix
 
 on:
     pull_request:
+    push:
+        branches:
+            - "main"
 jobs:
     projectify-backend:
         runs-on: ubuntu-latest
