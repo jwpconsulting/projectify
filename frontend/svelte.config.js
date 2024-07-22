@@ -54,7 +54,9 @@ const config = {
                 "font-src": ["self"],
                 "img-src": ["self", "res.cloudinary.com"],
                 "form-action": ["self"],
-                "connect-src": ["self"],
+                // XXX we add this to ensure our cross-domain Netlify/Heroku
+                // deployment keeps working
+                "connect-src": ["self", "https://api.projectifyapp.com"],
                 "frame-ancestors": ["none"],
                 "object-src": ["self"],
                 "base-uri": ["self"],
