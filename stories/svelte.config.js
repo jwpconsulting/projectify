@@ -44,9 +44,17 @@ const config = {
         }),
         csp: {
             directives: {
+                // Mirrors root directory Caddyfile csp_headers
+                "default-src": ["self"],
+                "style-src": ["self"],
                 "script-src": ["self"],
+                "font-src": ["self"],
+                "img-src": ["self", "res.cloudinary.com"],
+                "form-action": ["self"],
+                "connect-src": ["self"],
                 "frame-ancestors": ["none"],
-                "frame-src": ["none"],
+                "object-src": ["self"],
+                "base-uri": ["self"],
             },
         },
         typescript: {
