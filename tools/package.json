@@ -4,7 +4,7 @@
   "description": "# Install",
   "main": "index.js",
   "scripts": {
-    "test": "ajv -s render.yaml.json -d ../render.yaml"
+    "check:render-schema": "ajv -s render.yaml.json -d ../render.yaml"
   },
   "author": "",
   "license": "ISC",
