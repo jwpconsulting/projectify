@@ -15,9 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import adapter from "@sveltejs/adapter-static";
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
-import frontendSvelte from "../frontend/svelte";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -31,7 +29,6 @@ const config = {
             "$routes": "src/routes",
             "$lib-stories": "src/lib-stories",
         },
-        csp: frontendSvelte.kit.csp,
         typescript: {
             config(config) {
                 return {
