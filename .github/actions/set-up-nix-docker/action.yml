@@ -15,8 +15,7 @@ runs:
         - uses: DeterminateSystems/magic-nix-cache-action@v7
         - uses: DeterminateSystems/flake-checker-action@v8
         - name: Authenticate with skopeo
-          run:
-              nix run .#skopeo -- login --username=${{ inputs.username }} --password='${{ inputs.password }}' ghcr.io
+          run: nix run .#skopeo -- login --username=${{ inputs.username }} --password='${{ inputs.password }}' ghcr.io
           shell: bash
         - name: Build image streamer
           run: nix build --out-link result.bash ${{ inputs.build_target }}
