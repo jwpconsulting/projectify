@@ -387,23 +387,25 @@ export function createWsStore<T>(
         // TODO inform subscribers that we are loading
         // Fetch value early, since we need it either way
         const value: T | undefined = await backOff(() => getter(uuid));
+        // If nothing was returned we can return early. Otherwise we will start
+        // subscribing to a resource that does not exist
+        if (value === undefined) {
+            set({
+                or: (t) => t,
+                orPromise: (t) => t,
+                value: undefined,
+            });
+            return undefined;
+        }
         // Then, when we find out we have already initialized for this uuid,
         // we can skip the queue and return early without cleaning up an
         // existing subscription.
         if (alreadySubscribedToUuid) {
-            if (value) {
-                set({
-                    or: () => value,
-                    orPromise: () => Promise.resolve(value),
-                    value,
-                });
-            } else {
-                set({
-                    or: (t) => t,
-                    orPromise: (t) => t,
-                    value: undefined,
-                });
-            }
+            set({
+                or: () => value,
+                orPromise: () => Promise.resolve(value),
+                value,
+            });
             return value;
         }
 
@@ -421,19 +423,11 @@ export function createWsStore<T>(
             unsubscriber,
             value,
         };
-        if (value) {
-            set({
-                or: () => value,
-                orPromise: () => Promise.resolve(value),
-                value,
-            });
-        } else {
-            set({
-                or: (t) => t,
-                orPromise: (t) => t,
-                value: undefined,
-            });
-        }
+        set({
+            or: () => value,
+            orPromise: () => Promise.resolve(value),
+            value,
+        });
         // And the caller of this method is definitely waiting for their result
         return value;
     };
