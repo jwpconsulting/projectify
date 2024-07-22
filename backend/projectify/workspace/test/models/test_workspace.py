@@ -44,7 +44,14 @@ class TestWorkspace:
 
     def test_title_constraint(self, workspace: Workspace) -> None:
         """Assert we can not put URL-like strings in workspace.title."""
+        # Copied from projectify/user/test/test_models.py and replaced
+        # "user" -> "workspace", "preferred_name" -> "title"
+        # Rejected
         workspace.title = "www.google.com"
+        with pytest.raises(ValidationError):
+            workspace.full_clean()
+
+        workspace.title = "www.google.com."
         with pytest.raises(ValidationError):
             workspace.full_clean()
 
@@ -52,7 +59,15 @@ class TestWorkspace:
         with pytest.raises(ValidationError):
             workspace.full_clean()
 
+        # Can't be blank
+        workspace.title = ""
+        with pytest.raises(ValidationError):
+            workspace.full_clean()
+
         # Allowed
+        workspace.title = "John McHurDur Jr."
+        workspace.full_clean()
+
         workspace.title = "http: //localhost"
         workspace.full_clean()
 
