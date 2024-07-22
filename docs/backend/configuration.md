@@ -21,10 +21,9 @@ Production`
 - `ALLOWED_HOSTS`: Which host names to permit in HTTP Host header. Comma
 separated values.
 - `FRONTEND_URL`: URL for where Projectify frontend is served.
-- `SECURITY_ORIGINS` (**optional**): Allowed URLs for CORS/CSRF. Defaults to
+- `SECURITY_ORIGINS` (**optional**): Allowed URLs for [CORS](https://pypi.org/project/django-cors-headers/)/[CSRF](https://docs.djangoproject.com/en/5.0/ref/settings/#csrf-trusted-origins). Defaults to
 `ALLOWED_HOSTS`.
-- `CSRF_COOKIE_DOMAIN` (**optional**): Domain for CSRF cookie. Defaults to
-`.projectifyapp.com`.
+- `CSRF_COOKIE_DOMAIN` (**optional**): Domain for CSRF cookie. Defaults to None. See [Django documentation](https://docs.djangoproject.com/en/5.0/ref/settings/#std-setting-CSRF_COOKIE_DOMAIN);
 
 ## Database
 - `DATABASE_URL`:
