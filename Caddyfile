@@ -17,7 +17,7 @@
 	header ?Content-Security-Policy "
 		style-src 'self' 'unsafe-inline';
 		font-src 'self';
-		img-src 'self' 'blob:' res.cloudinary.com;
+		img-src 'self' blob: res.cloudinary.com;
 		form-action 'self';
 		connect-src 'self';
 		frame-ancestors 'none';
