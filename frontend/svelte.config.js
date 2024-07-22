@@ -56,7 +56,11 @@ const config = {
                 "form-action": ["self"],
                 // XXX we add this to ensure our cross-domain Netlify/Heroku
                 // deployment keeps working
-                "connect-src": ["self", "https://api.projectifyapp.com"],
+                "connect-src": [
+                    "self",
+                    "wss://api.projectifyapp.com",
+                    "https://api.projectifyapp.com",
+                ],
                 "frame-ancestors": ["none"],
                 "object-src": ["self"],
                 "base-uri": ["self"],
