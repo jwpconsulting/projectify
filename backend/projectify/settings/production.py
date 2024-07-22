@@ -140,7 +140,7 @@ class Production(Base):
     # and at this point I am afraid to ask.
     MIDDLEWARE = list(populate_production_middleware(Base.MIDDLEWARE))
 
-    CSRF_COOKIE_DOMAIN = os.getenv("CSRF_COOKIE_DOMAIN", ".projectifyapp.com")
+    CSRF_COOKIE_DOMAIN = os.getenv("CSRF_COOKIE_DOMAIN", None)
 
     # Stripe
     STRIPE_PUBLISHABLE_KEY = os.environ["STRIPE_PUBLISHABLE_KEY"]
