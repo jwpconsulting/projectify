@@ -171,15 +171,21 @@ class ErrorChannelator(ASGIHandler):
         self, scope: object, receive: object, send: object
     ) -> None:
         """Wait a few seconds, then crash."""
-        if settings.CHANNEL_ERROR is None:
+        if settings.ERROR_RATE_PCT is None or settings.CHANNEL_ERROR is None:
             return await self.application(scope, receive, send)
-        timeout, pct = settings.CHANNEL_ERROR
-        crash = random.randint(1, 100) <= pct
-        if not crash:
+        crash_start_pct = settings.ERROR_RATE_PCT
+        timeout, crash_during_pct = settings.CHANNEL_ERROR
+        crash_start = random.randint(1, 100) <= crash_start_pct
+        if crash_start:
+            logger.info("Crashing channel before start")
+            raise Exception("Channelated")
+        crash_during = random.randint(1, 100) <= crash_during_pct
+        if not crash_during:
             return await self.application(scope, receive, send)
         try:
             return await asyncio.wait_for(
                 self.application(scope, receive, send), timeout=timeout
             )
-        except TimeoutError:
-            logger.info("Crashing channel")
+        except TimeoutError as e:
+            logger.info("Crashing channel during connection")
+            raise Exception("Channelated") from e
