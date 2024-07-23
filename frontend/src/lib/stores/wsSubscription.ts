@@ -282,10 +282,19 @@ export function createWsStore<T>(
     type State = WsStoreState<T>;
     let state: State = { kind: "start" };
 
+    const { subscribe, set } = writable<WsResourceContainer<T>>(
+        {
+            or: (t: T) => t,
+            orPromise: (t: Promise<T>) => t,
+            value: undefined,
+        },
+        () => stop,
+    );
+
     const reset = () => {
         set({
-            or: (t) => t,
-            orPromise: (t) => t,
+            or: (t: T) => t,
+            orPromise: (t: Promise<T>) => t,
             value: undefined,
         });
         state = { kind: "start" };
@@ -314,15 +323,6 @@ export function createWsStore<T>(
             console.error("Error when resetting", error),
         );
     };
-
-    const { subscribe, set } = writable<WsResourceContainer<T>>(
-        {
-            or: (t) => t,
-            orPromise: (t) => t,
-            value: undefined,
-        },
-        () => stop,
-    );
 
     const onMessage: EventListener = (resp: WsResponse) => {
         if (state.kind === "start") {
@@ -366,9 +366,9 @@ export function createWsStore<T>(
             // First, we update all subscribers and tell them the current value
             // is undefined
             set({
-                or: (t) => t,
+                or: (t: T) => t,
                 value: undefined,
-                orPromise: (t) => t,
+                orPromise: (t: Promise<T>) => t,
             });
         }
         // If we are reloading the same uuid, we don't need to resubscribe
@@ -391,8 +391,8 @@ export function createWsStore<T>(
         // subscribing to a resource that does not exist
         if (value === undefined) {
             set({
-                or: (t) => t,
-                orPromise: (t) => t,
+                or: (t: T) => t,
+                orPromise: (t: Promise<T>) => t,
                 value: undefined,
             });
             return undefined;
