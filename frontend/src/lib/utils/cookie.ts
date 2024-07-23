@@ -24,7 +24,7 @@ export function getCookie(name: string): string | undefined {
     }
     const cookies = document.cookie.split(";");
     const cookiesTrimmed = cookies.map((cookie) => cookie.trim());
-    const maybeCookie = cookiesTrimmed.find((cookie) =>
+    const maybeCookie = cookiesTrimmed.findLast((cookie) =>
         cookie.startsWith(`${name}=`),
     );
     if (!maybeCookie) {

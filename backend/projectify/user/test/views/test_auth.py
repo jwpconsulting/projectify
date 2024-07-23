@@ -16,13 +16,15 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """User auth view tests."""
 
+from typing import Any
+
 from django.urls import (
     reverse,
 )
 
 import pytest
 from faker import Faker
-from rest_framework.test import APIClient
+from rest_framework.test import APIClient, RequestsClient
 
 from projectify.settings.base import Base
 from projectify.user.services.auth import user_sign_up
@@ -70,6 +72,60 @@ class TestLogOut:
         # Now that we are logged out, logging out another time is not allowed
         response = rest_client.post(resource_url)
         assert response.status_code == 403, response.data
+
+    def test_log_out_without_csrf(
+        self,
+        user: User,
+        log_in_url: str,
+        resource_url: str,
+        password: str,
+        live_server: Any,
+    ) -> None:
+        """Ensure we can log't log out without a CSRF token."""
+        client = RequestsClient()
+        # We log in
+        response = client.post(
+            live_server.url + log_in_url,
+            data={"email": user.email, "password": password},
+        )
+        assert response.status_code == 200, response.json()
+        # Manually add cookies
+        csrftoken = response.cookies["csrftoken"]
+        headers = {
+            "X-CSRFToken": csrftoken,
+            "Cookie": f"sessionid={response.cookies['sessionid']};csrftoken={csrftoken}",
+        }
+        no_x_csrf_header = {"Cookie": headers["Cookie"]}
+        # We prove that we are logged in
+        response = client.get(
+            live_server + reverse("user:users:read"), headers=headers
+        )
+        assert response.status_code == 200, response.json()
+        assert response.json() == {
+            "email": user.email,
+            "kind": "authenticated",
+            "preferred_name": user.preferred_name,
+            "profile_picture": None,
+        }
+        # Perform dummy update
+        response = client.put(
+            live_server + reverse("user:users:update"), headers=headers
+        )
+        assert response.status_code == 200, response.json()
+
+        response = client.put(
+            live_server + reverse("user:users:update"),
+            headers=no_x_csrf_header,
+        )
+        assert response.status_code == 403, response.json()
+        # Log out won't work
+        response = client.post(
+            live_server + resource_url, headers=no_x_csrf_header
+        )
+        assert response.status_code == 403, response.json()
+        # Now it works
+        response = client.post(live_server + resource_url, headers=headers)
+        assert response.status_code == 200, response.json()
 
 
 # Now testing views that do not require to be logged in

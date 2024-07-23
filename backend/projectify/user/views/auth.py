@@ -88,7 +88,6 @@ class SignUp(views.APIView):
             rate="4/h",
             increment=False,
         )
-        print(limit)
         if limit and limit["should_limit"]:
             raise Throttled()
 
@@ -104,7 +103,7 @@ class SignUp(views.APIView):
         )
 
         # Increment limit only on success
-        usage = get_usage(
+        get_usage(
             request,
             group="projectify.user.views.auth.SignUp.post",
             key="ip",
@@ -112,7 +111,6 @@ class SignUp(views.APIView):
             increment=True,
         )
 
-        print(usage)
         return Response(status=HTTP_204_NO_CONTENT)
 
 
