@@ -19,6 +19,7 @@ import Sarus from "@anephenix/sarus";
 import { writable } from "svelte/store";
 
 import type {
+    HasUuid,
     RepoGetter,
     SubscriptionType,
     WsResource,
@@ -27,6 +28,7 @@ import type {
 
 import { browser } from "$app/environment";
 import { backOff } from "exponential-backoff";
+import { Mutex } from "$lib/utils/mutex";
 
 function makeAbsoluteUrl(url: string): string {
     if (!url.startsWith("/")) {
@@ -61,9 +63,29 @@ type WsResponse =
           content: unknown;
       };
 
+type ConnectionState =
+    | { kind: "undefined" }
+    | {
+          kind: "connecting" | "opened" | "closed" | "reopened" | "errored";
+          sarus: Sarus;
+          listeners: Set<Listener>;
+      };
+
+let connectionState: ConnectionState = { kind: "undefined" };
+
+interface Listener {
+    resource: Resource;
+    kind: WsResponse["kind"][];
+    callback: EventListener;
+    reconnect: Reconnector;
+}
+
 function onMessage(event: MessageEvent<string>) {
+    if (connectionState.kind === "undefined") {
+        throw new Error("Called onMessage while not connected");
+    }
     const message = JSON.parse(event.data) as WsResponse;
-    const handled = [...listeners].some((listener) => {
+    const handled = [...connectionState.listeners].some((listener) => {
         if (message.resource !== listener.resource.resource) {
             return false;
         }
@@ -77,35 +99,39 @@ function onMessage(event: MessageEvent<string>) {
         return true;
     });
     if (!handled) {
-        console.warn("Message not handled:", message);
+        console.error("Message not handled:", message);
     }
 }
 
-type ConnectionState =
-    | { kind: "undefined" }
-    | {
-          kind: "connecting" | "opened" | "closed" | "reopened" | "errored";
-          sarus: Sarus;
-      };
-
-let connectionState: ConnectionState = { kind: "undefined" };
-
 function onOpen(_event: Event) {
-    if (connectionState.kind === "connecting") {
-        console.debug("Connection opened");
-        connectionState.kind = "opened";
-    } else if (connectionState.kind === "closed") {
-        console.debug("Connection reopened");
-        connectionState.kind = "reopened";
-        const reconnectingListeners = [...listeners];
-        // We flush the listeners, since otherwise we'd try to unsubscribe
-        // the old "changed" listeners
-        listeners.clear();
+    switch (connectionState.kind) {
+        case "connecting":
+            console.debug("Connection opened");
+            connectionState.kind = "opened";
+            break;
+        case "closed": {
+            console.debug("Connection reopened");
+            connectionState.kind = "reopened";
+            const reconnectingListeners = [...connectionState.listeners];
+            // We flush the listeners, since otherwise we'd try to unsubscribe
+            // the old "changed" listeners
+            connectionState.listeners.clear();
 
-        reconnectingListeners.forEach((listener) => {
-            console.debug("Trying to reconnect", listener);
-            listener.reconnect();
-        });
+            reconnectingListeners.forEach((listener) => {
+                console.debug(
+                    "Trying to reconnect listener for resource",
+                    listener.resource.resource,
+                    "uuid",
+                    listener.resource.uuid,
+                    "kinds",
+                    listener.kind,
+                );
+                listener.reconnect();
+            });
+            break;
+        }
+        default:
+            break;
     }
 }
 
@@ -134,31 +160,33 @@ function sendWs(request: WsRequest) {
         connectionState = {
             kind: "connecting",
             sarus,
+            listeners: new Set(),
         };
     }
-    connectionState.sarus.send(JSON.stringify(request));
+    console.debug("Sending ws message", request);
+    connectionState.sarus.processMessage(JSON.stringify(request));
 }
-
-interface Listener {
-    resource: Resource;
-    kind: WsResponse["kind"][];
-    callback: EventListener;
-    reconnect: Reconnector;
-}
-
-const listeners = new Set<Listener>();
 
 function addListener(listener: Listener) {
-    if (listeners.has(listener)) {
-        console.warn("Listener already added", listener);
+    if (connectionState.kind === "undefined") {
+        throw new Error("Can't add listener if not connected");
     }
-    listeners.add(listener);
+    if (connectionState.listeners.has(listener)) {
+        console.error("Listener already added", listener);
+        throw new Error("Listener already added");
+    }
+    connectionState.listeners.add(listener);
 }
+
 function removeListener(listener: Listener) {
-    if (!listeners.has(listener)) {
-        console.warn("Listener already removed:", listener);
+    if (connectionState.kind === "undefined") {
+        throw new Error("Can't add listener if not connected");
     }
-    listeners.delete(listener);
+    if (!connectionState.listeners.has(listener)) {
+        console.error("Listener already removed:", listener);
+        throw new Error("Listener already removed");
+    }
+    connectionState.listeners.delete(listener);
 }
 
 interface Resource {
@@ -169,25 +197,31 @@ interface Resource {
 async function unsubscribeFromResource(resource: Resource) {
     console.debug("Unsubscribing from", resource);
     sendWs({ action: "unsubscribe", ...resource });
-    const done = new Promise<void>((resolve) => {
+    const done = new Promise<"clean" | "crashed">((resolve, reject) => {
         const disconnectedCb = (response: WsResponse) => {
             if (response.kind === "not_subscribed") {
-                console.warn("Never subscribed to", resource);
+                reject(
+                    new Error(
+                        `Never subscribed to resource: ${JSON.stringify(
+                            resource,
+                        )}`,
+                    ),
+                );
                 return;
             }
             console.debug("Unsubscribed from", resource);
-            removeListener(listener);
-            resolve();
+            removeListener(unsubscribeListener);
+            resolve("clean");
         };
-        const listener: Listener = {
+        const unsubscribeListener: Listener = {
             resource,
             kind: ["unsubscribed", "not_subscribed"],
             callback: disconnectedCb,
             reconnect() {
-                console.warn("Reconnected while unsubscribing");
+                resolve("crashed");
             },
         };
-        addListener(listener);
+        addListener(unsubscribeListener);
     });
     return await done;
 }
@@ -201,18 +235,42 @@ async function subscribeToResource(
     listener: EventListener,
     reconnect: Reconnector,
 ): Promise<AsyncUnsubscriber> {
+    let state:
+        | "subscribing"
+        | "subscribed"
+        | "unsubscribing"
+        | "unsubscribed" = "subscribing";
     const messageListener: Listener = {
         resource,
         kind: ["gone", "changed"],
         callback: listener,
-        reconnect: reconnect,
+        reconnect,
     };
 
     const unsubscribe = async () => {
+        if (state === "unsubscribed") {
+            throw new Error("Already unsubscribed");
+        } else if (state === "unsubscribing") {
+            console.debug("Already unsubscribing");
+            return;
+        } else if (state === "subscribing") {
+            throw new Error("Never subscribed");
+        }
+        state = "unsubscribing";
         console.debug("Cleaning up listener for", resource);
-        removeListener(messageListener);
-        await unsubscribeFromResource(resource);
+        const result = await unsubscribeFromResource(resource);
+        if (result === "clean") {
+            removeListener(messageListener);
+        } else {
+            console.info(
+                "Connection crashed while unsubscribing from",
+                resource,
+            );
+        }
+        state = "unsubscribed";
     };
+    sendWs({ action: "subscribe", ...resource });
+
     const established = new Promise<AsyncUnsubscriber>((resolve, reject) => {
         const establishedConnectionCb = (response: WsResponse) => {
             if (response.kind === "not_found") {
@@ -224,10 +282,16 @@ async function subscribeToResource(
                 return;
             }
             if (response.kind === "already_subscribed") {
-                console.warn("Already subscribed to", resource);
+                console.info("Already subscribed to resource", resource);
             }
 
-            console.debug("Subscribed to", resource);
+            console.debug(
+                "Subscribed to resource",
+                resource.resource,
+                "uuid",
+                resource.uuid,
+            );
+            state = "subscribed";
             removeListener(subscribedListener);
             addListener(messageListener);
             resolve(unsubscribe);
@@ -237,12 +301,17 @@ async function subscribeToResource(
             kind: ["not_found", "already_subscribed", "subscribed"],
             callback: establishedConnectionCb,
             reconnect() {
-                console.warn("Reconnected while subscribing");
+                reject(
+                    new Error(
+                        `Reconnected while subscribing to ${JSON.stringify(
+                            resource,
+                        )}`,
+                    ),
+                );
             },
         };
         addListener(subscribedListener);
     });
-    sendWs({ action: "subscribe", ...resource });
     return await established;
 }
 
@@ -265,27 +334,33 @@ type WsStoreState<T> =
           kind: "start";
       }
     | {
-          kind: "loading";
-          uuid: string;
-      }
-    | {
           kind: "ready";
           uuid: string;
           unsubscriber: AsyncUnsubscriber;
           value: T | undefined;
       };
 
-export function createWsStore<T>(
+export function createWsStore<T extends HasUuid>(
     resource: SubscriptionType,
     getter: RepoGetter<T>,
 ): WsResource<T> {
     type State = WsStoreState<T>;
     let state: State = { kind: "start" };
+    const loadMutex = new Mutex();
+
+    const { subscribe, set } = writable<WsResourceContainer<T>>(
+        {
+            or: (t: T) => t,
+            orPromise: (t: Promise<T>) => t,
+            value: undefined,
+        },
+        () => stop,
+    );
 
     const reset = () => {
         set({
-            or: (t) => t,
-            orPromise: (t) => t,
+            or: (t: T) => t,
+            orPromise: (t: Promise<T>) => t,
             value: undefined,
         });
         state = { kind: "start" };
@@ -293,15 +368,18 @@ export function createWsStore<T>(
 
     const resetAndUnsubscribe = async () => {
         if (state.kind === "start") {
-            console.warn("Already reset");
+            console.error("Already reset");
             return;
         }
-        if (state.kind === "loading") {
-            console.warn("Tried to reset while loading");
-            return;
+        console.debug("Resetting resource", resource, "uuid", state.uuid);
+
+        const release = await loadMutex.obtain();
+        try {
+            await state.unsubscriber();
+        } finally {
+            release();
         }
-        console.debug("Resetting");
-        await state.unsubscriber();
+
         reset();
     };
 
@@ -315,21 +393,9 @@ export function createWsStore<T>(
         );
     };
 
-    const { subscribe, set } = writable<WsResourceContainer<T>>(
-        {
-            or: (t) => t,
-            orPromise: (t) => t,
-            value: undefined,
-        },
-        () => stop,
-    );
-
     const onMessage: EventListener = (resp: WsResponse) => {
         if (state.kind === "start") {
             throw new Error("State.kind is start");
-        }
-        if (state.kind === "loading") {
-            throw new Error("Received message while loading");
         }
         if (resp.kind === "gone") {
             reset();
@@ -347,89 +413,144 @@ export function createWsStore<T>(
 
     const reconnect: Reconnector = async () => {
         if (state.kind !== "ready") {
-            throw new Error("Trying to reconnect, despite not being ready");
+            // This happens when
+            // 1. loadUuid is called
+            // 2. backOff(subscribeToResource) is called
+            // 3. connection crashes after calling addListener(messageListener),
+            // 4. reconnect is called before backOff can resolve, state not set
+            // to "ready"
+            // This is a race condition, since loadUuid might finish earlier
+            // and set the state to ready, in which case we will not encounter
+            // this error
+            // Since the inner of backOff will be rejected, we can ignore the
+            // race condition for now, backOff will do its thing again.
+            console.info(
+                "Trying to reconnect, despite not being ready on resource",
+                resource,
+            );
+            return;
         }
-        console.warn("Connection closed, reconnecting");
         const { uuid } = state;
-        const unsubscriber = await subscribeToResource(
-            { resource, uuid },
-            onMessage,
-            reconnect,
+        console.error(
+            "Connection closed, reconnecting to resource",
+            resource,
+            "uuid",
+            uuid,
         );
-        console.debug("Reconnected");
-        state = { ...state, unsubscriber };
+
+        const release = await loadMutex.obtain();
+        try {
+            const unsubscriber = await backOff(() =>
+                subscribeToResource({ resource, uuid }, onMessage, reconnect),
+            );
+            console.debug("Reconnected to resource", resource, "uuid", uuid);
+            state = { ...state, unsubscriber };
+        } finally {
+            release();
+        }
     };
 
     const loadUuid = async (uuid: string): Promise<T | undefined> => {
-        if (state.kind === "ready" && uuid !== state.uuid) {
-            // If we have already loaded a value:
-            // First, we update all subscribers and tell them the current value
-            // is undefined
-            set({
-                or: (t) => t,
-                value: undefined,
-                orPromise: (t) => t,
-            });
-        }
-        // If we are reloading the same uuid, we don't need to resubscribe
-        const alreadySubscribedToUuid =
-            state.kind === "ready" && uuid === state.uuid;
-        // On the other hand, if the uuid is changing and we are in a "ready"
-        // state, we need to unsubscribe.
-        // We need to unsubscribe from the old ws thing before adding
-        // a new subscription here, if we are already initalized.
-        if (state.kind === "ready" && uuid !== state.uuid) {
-            console.log("Unsubscribing", state);
-            await state.unsubscriber();
-        }
-        // But we still need to rememember that we are loading
-        state = { kind: "loading", uuid };
-        // TODO inform subscribers that we are loading
-        // Fetch value early, since we need it either way
-        const value: T | undefined = await backOff(() => getter(uuid));
-        // If nothing was returned we can return early. Otherwise we will start
-        // subscribing to a resource that does not exist
-        if (value === undefined) {
-            set({
-                or: (t) => t,
-                orPromise: (t) => t,
-                value: undefined,
-            });
-            return undefined;
-        }
-        // Then, when we find out we have already initialized for this uuid,
-        // we can skip the queue and return early without cleaning up an
-        // existing subscription.
-        if (alreadySubscribedToUuid) {
-            set({
-                or: () => value,
-                orPromise: () => Promise.resolve(value),
-                value,
-            });
-            return value;
+        const oldState = state;
+        type Result =
+            | { kind: "newUuid"; value: T; unsubscriber: AsyncUnsubscriber }
+            | { kind: "noResult"; value: undefined }
+            | {
+                  kind: "sameUuid";
+                  value: T | undefined;
+                  unsubscriber: AsyncUnsubscriber;
+              };
+        let result: Result | undefined = undefined;
+        const release = await loadMutex.obtain();
+        try {
+            switch (oldState.kind) {
+                case "ready": {
+                    if (oldState.uuid === uuid) {
+                        result = {
+                            kind: "sameUuid",
+                            value: oldState.value,
+                            unsubscriber: oldState.unsubscriber,
+                        };
+                    } else {
+                        await oldState.unsubscriber();
+
+                        const getterResult = await backOff(() => getter(uuid));
+                        if (getterResult) {
+                            const unsubscriber = await backOff(() =>
+                                subscribeToResource(
+                                    { resource, uuid },
+                                    onMessage,
+                                    reconnect,
+                                ),
+                            );
+                            result = {
+                                kind: "newUuid",
+                                value: getterResult,
+                                unsubscriber,
+                            };
+                        } else {
+                            result = {
+                                kind: "noResult",
+                                value: getterResult,
+                            };
+                        }
+                    }
+                    break;
+                }
+                case "start": {
+                    const getterResult = await backOff(() => getter(uuid));
+                    if (getterResult === undefined) {
+                        result = { kind: "noResult", value: getterResult };
+                    } else {
+                        const unsubscriber = await backOff(() =>
+                            subscribeToResource(
+                                { resource, uuid },
+                                onMessage,
+                                reconnect,
+                            ),
+                        );
+                        result = {
+                            kind: "newUuid",
+                            value: getterResult,
+                            unsubscriber,
+                        };
+                    }
+                    break;
+                }
+            }
+        } finally {
+            release();
         }
 
-        // In this branch, we know that the previous uuid subscribed to was
-        // different, or we haven't subscribed to anything at all.
-        const unsubscriber = await subscribeToResource(
-            { resource, uuid },
-            onMessage,
-            reconnect,
-        );
-        state = {
-            ...state,
-            kind: "ready",
-            uuid,
-            unsubscriber,
-            value,
-        };
-        set({
-            or: () => value,
-            orPromise: () => Promise.resolve(value),
-            value,
-        });
-        // And the caller of this method is definitely waiting for their result
-        return value;
+        switch (result.kind) {
+            case "sameUuid":
+                return result.value;
+            case "newUuid": {
+                const { value } = result;
+                set({
+                    or: () => value,
+                    orPromise: () => Promise.resolve(value),
+                    value,
+                });
+                state = {
+                    ...oldState,
+                    kind: "ready",
+                    uuid,
+                    unsubscriber: result.unsubscriber,
+                    value,
+                };
+                return result.value;
+            }
+            case "noResult": {
+                const { value } = result;
+                set({
+                    or: (t: T) => t,
+                    orPromise: (t: Promise<T>) => t,
+                    value,
+                });
+                return result.value;
+            }
+        }
     };
 
     return { loadUuid, subscribe };
