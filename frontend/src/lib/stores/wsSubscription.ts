@@ -19,6 +19,7 @@ import Sarus from "@anephenix/sarus";
 import { writable } from "svelte/store";
 
 import type {
+    HasUuid,
     RepoGetter,
     SubscriptionType,
     WsResource,
@@ -275,7 +276,7 @@ type WsStoreState<T> =
           value: T | undefined;
       };
 
-export function createWsStore<T>(
+export function createWsStore<T extends HasUuid>(
     resource: SubscriptionType,
     getter: RepoGetter<T>,
 ): WsResource<T> {

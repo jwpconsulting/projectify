@@ -60,12 +60,18 @@ export interface SubTaskAssignment
 const subscriptionTypes = ["workspace", "project", "task"] as const;
 export type SubscriptionType = (typeof subscriptionTypes)[number];
 
-export type RepoGetter<T> = (uuid: string) => Promise<T | undefined>;
-export interface WsResourceContainer<T> {
+export interface HasUuid {
+    uuid: string;
+}
+export type RepoGetter<T extends HasUuid> = (
+    uuid: string,
+) => Promise<T | undefined>;
+export interface WsResourceContainer<T extends HasUuid> {
     value: T | undefined;
     orPromise: (t: Promise<T>) => Promise<T>;
     or: (t: T) => T;
 }
-export interface WsResource<T> extends Readable<WsResourceContainer<T>> {
+export interface WsResource<T extends HasUuid>
+    extends Readable<WsResourceContainer<T>> {
     loadUuid: RepoGetter<T>;
 }
