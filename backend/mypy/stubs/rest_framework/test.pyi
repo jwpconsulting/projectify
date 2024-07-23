@@ -8,6 +8,7 @@ from django.contrib.auth.models import (
 )
 from django.test.client import Client as DjangoClient
 
+import requests
 from rest_framework.request import Request
 from rest_framework.response import (
     Response,
@@ -82,3 +83,5 @@ class APIClient(APIRequestFactory, DjangoClient):
         follow: bool = False,
         **extra: object,
     ) -> Response: ...
+
+class RequestsClient(requests.Session): ...
