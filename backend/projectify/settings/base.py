@@ -328,8 +328,8 @@ class Base(Configuration):
     SLEEP_MIN_MAX_MS: Optional[tuple[int, int]] = None
     # Percentage (int from 0 to 100) of requests that should fail
     ERROR_RATE_PCT: Optional[int] = None
-    # N seconds after which M percent of websocket channels should fail
-    CHANNEL_ERROR: Optional[tuple[int, int]] = None
+    # N seconds after which 100% of requests time out
+    CHANNEL_ERROR: Optional[int] = None
 
     @classmethod
     def post_setup(cls) -> None:

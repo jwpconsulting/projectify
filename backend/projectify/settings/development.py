@@ -161,8 +161,8 @@ class Development(SpectacularSettings, Base):
 
     # Settings for slow connection emulation
     SLEEP_MIN_MAX_MS = 200, 500
-    ERROR_RATE_PCT = None
-    CHANNEL_ERROR = 15, 50
+    ERROR_RATE_PCT = 20
+    CHANNEL_ERROR = 20
     ASGI_APPLICATION = "projectify.test.asgi.error_application"
 
     @classmethod
