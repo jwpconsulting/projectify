@@ -16,6 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import Accessiblity from "./en/accessibility.md?raw";
+import FreeSoftware from "./en/free-software.md?raw";
 import BasicsHelpPage from "./en/help/basics.md?raw";
 import BillingHelpPage from "./en/help/billing.md?raw";
 import FiltersHelpPage from "./en/help/filters.md?raw";
@@ -1419,26 +1420,10 @@ const messages: MessageDirectory = {
         },
     },
     "free-software": {
-        "title": "Free software - Projectify",
-        "hero": "Free Software and License Information",
-        "header": "Projectify project management software is created by:",
-        "license":
-            "This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.",
-        "warranty":
-            "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.",
-        "find-copy":
-            "You can retrieve a copy of the source code and the LICENSE here:",
-        "source": {
-            repository: "Projectify Repository",
-            license: "GNU Affero General Public License",
-        },
-        "trademark":
-            "<strong>Projectify</strong> is a registered trademark in the EU, USA, and Japan. Use of the trademark is only permitted with permisson by JWP Consulting GK.",
-        "third-party": {
-            title: "Third party attributions",
-            body: "For third party attributions, please view the following page:",
-            label: "Credits and attributions",
-        },
+        title: "Free software - Projectify",
+        hero: "Free Software and License Information",
+        header: "Projectify project management software is created by:",
+        content: FreeSoftware,
     },
     "credits": {
         title: "Credits and attribution - Projectify",

@@ -19,6 +19,9 @@
     import { _ } from "svelte-i18n";
 
     import HeroLayout from "$lib/components/layouts/HeroLayout.svelte";
+    import { toMarkdown } from "$lib/utils/markdown";
+
+    $: markdown = toMarkdown($_("free-software.content"));
 </script>
 
 <svelte:head>
@@ -35,27 +38,7 @@
         <ul>
             <li>Copyright 2021-2024 JWP Consulting GK</li>
         </ul>
-        <p>{$_("free-software.license")}</p>
-        <p>{$_("free-software.warranty")}</p>
-        <p>{$_("free-software.find-copy")}</p>
-        <ul>
-            <li>
-                <a href="https://github.com/jwpconsulting/projectify">
-                    {$_("free-software.source.repository")}
-                </a>
-            </li>
-            <li>
-                <a
-                    href="https://github.com/jwpconsulting/projectify/blob/main/LICENSE"
-                >
-                    {$_("free-software.source.license")}
-                </a>
-            </li>
-        </ul>
         <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-        <p>{@html $_("free-software.trademark")}</p>
-        <h2>{$_("free-software.third-party.title")}</h2>
-        <p>{$_("free-software.third-party.body")}</p>
-        <a href="/credits">{$_("free-software.third-party.label")}</a>
+        {@html markdown.content}
     </div>
 </HeroLayout>
