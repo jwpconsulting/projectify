@@ -78,12 +78,12 @@ class Base(Configuration):
 
     FRONTEND_URL: str
 
-    SESSION_COOKIE_SAMESITE = "None"
+    SESSION_COOKIE_SAMESITE = "Strict"
     SESSION_COOKIE_SECURE = True
 
     # CSRF
     CSRF_USE_SESSIONS = False
-    CSRF_COOKIE_SAMESITE = "None"
+    CSRF_COOKIE_SAMESITE = "Strict"
     CSRF_COOKIE_SECURE = True
     CSRF_TRUSTED_ORIGINS: Optional[Sequence[str]]
 
