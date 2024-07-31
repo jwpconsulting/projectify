@@ -70,19 +70,6 @@ To run neovim with the correct pyright:
 poetry run nvim
 ```
 
-# Updating poetry dependencies
-
-When updating a package installed by poetry, make sure to recreate and check in
-requirements.txt by running
-
-```bash
-poetry lock --no-update
-poetry install --sync
-bin/update-requirements
-git add requirements.txt
-# Maybe git commit here
-```
-
 # Nix
 
 The Projectify backend can be run using Nix. There are three entry points to
