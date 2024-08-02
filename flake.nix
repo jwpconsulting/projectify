@@ -54,6 +54,7 @@
       in
       {
         packages = {
+          projectify-frontend-node = frontend;
           projectify-frontend-node-container = pkgs.dockerTools.streamLayeredImage {
             name = "projectify-frontend-node";
             tag = "latest";
@@ -64,6 +65,8 @@
               Cmd = [ "projectify-frontend-node" ];
             };
           };
+          projectify-backend = backend;
+          projectify-manage = manage;
           projectify-backend-container = pkgs.dockerTools.streamLayeredImage {
             name = "projectify-backend";
             tag = "latest";
@@ -75,6 +78,7 @@
               Cmd = [ "projectify-backend" ];
             };
           };
+          projectify-celery = celery;
           projectify-celery-container = pkgs.dockerTools.streamLayeredImage {
             name = "projectify-celery";
             tag = "latest";
