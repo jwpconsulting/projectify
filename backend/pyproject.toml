@@ -257,4 +257,8 @@ filterwarnings = [
     "ignore:the imp module is deprecated:DeprecationWarning",
     "ignore:ConfigurationImporter:ImportWarning",
     "ignore:ConfigurationLoader:ImportWarning",
+    "ignore:ConfigurationLoader:ImportWarning",
+    # XXX
+    # Can't fix this yet, need to wait for django type stubs to be updated
+    "ignore:CheckConstraint.check:django.utils.deprecation.RemovedInDjango60Warning"
 ]
