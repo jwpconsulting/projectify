@@ -116,9 +116,7 @@ paths:
                       seats:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -126,7 +124,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -235,9 +232,7 @@ paths:
                       code:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -245,7 +240,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -309,9 +303,7 @@ paths:
                       new_password:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -319,7 +311,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '429':
@@ -384,9 +375,7 @@ paths:
                       token:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -394,7 +383,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '500':
@@ -449,9 +437,7 @@ paths:
                       new_password:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -459,7 +445,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '500':
@@ -534,9 +519,7 @@ paths:
                       preferred_name:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -544,7 +527,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -600,9 +582,7 @@ paths:
                       confirmation_token:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -610,7 +590,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -668,9 +647,7 @@ paths:
                       new_email:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -678,7 +655,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '429':
@@ -747,9 +723,7 @@ paths:
                       password:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -757,7 +731,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '429':
@@ -855,9 +828,7 @@ paths:
                       file:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -865,7 +836,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -922,9 +892,7 @@ paths:
                       email:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -932,7 +900,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '429':
@@ -995,9 +962,7 @@ paths:
                       privacy_policy_agreed:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -1005,7 +970,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '429':
@@ -1069,9 +1033,7 @@ paths:
                       workspace_uuid:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -1079,7 +1041,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -1148,9 +1109,7 @@ paths:
                       color:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -1158,7 +1117,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -1265,9 +1223,7 @@ paths:
                       due_date:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -1275,7 +1231,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -1385,9 +1340,7 @@ paths:
                       due_date:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -1395,7 +1348,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -1499,9 +1451,7 @@ paths:
                       archived:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -1509,7 +1459,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -1579,9 +1528,7 @@ paths:
                       project_uuid:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -1589,7 +1536,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -1697,9 +1643,7 @@ paths:
                       description:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -1707,7 +1651,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -1811,9 +1754,7 @@ paths:
                       order:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -1821,7 +1762,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -1925,9 +1865,7 @@ paths:
                           uuid:
                             type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -1935,7 +1873,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -2077,9 +2014,7 @@ paths:
                             done:
                               type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -2087,7 +2022,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -2195,9 +2129,7 @@ paths:
                       task_uuid:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -2205,7 +2137,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -2278,9 +2209,7 @@ paths:
                       section_uuid:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -2288,7 +2217,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -2401,9 +2329,7 @@ paths:
                       role:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -2411,7 +2337,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -2514,9 +2439,7 @@ paths:
                       description:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -2524,7 +2447,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -2632,9 +2554,7 @@ paths:
                       description:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -2642,7 +2562,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -2757,9 +2676,7 @@ paths:
                       email:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -2767,7 +2684,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -2829,9 +2745,7 @@ paths:
                       file:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -2839,7 +2753,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':
@@ -2908,9 +2821,7 @@ paths:
                       email:
                         type: string
                   general:
-                    type: array
-                    items:
-                      type: string
+                    type: string
                   status:
                     type: string
                     enum:
@@ -2918,7 +2829,6 @@ paths:
                 required:
                 - code
                 - details
-                - general
                 - status
           description: ''
         '403':

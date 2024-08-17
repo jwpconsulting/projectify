@@ -941,7 +941,7 @@ export interface operations {
             details: {
               seats?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -1022,7 +1022,7 @@ export interface operations {
             details: {
               code?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -1069,7 +1069,7 @@ export interface operations {
               current_password?: string;
               new_password?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -1116,7 +1116,7 @@ export interface operations {
               email?: string;
               token?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -1154,7 +1154,7 @@ export interface operations {
               token?: string;
               new_password?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -1206,7 +1206,7 @@ export interface operations {
             details: {
               preferred_name?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -1247,7 +1247,7 @@ export interface operations {
             details: {
               confirmation_token?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -1289,7 +1289,7 @@ export interface operations {
               password?: string;
               new_email?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -1337,7 +1337,7 @@ export interface operations {
               email?: string;
               password?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -1411,7 +1411,7 @@ export interface operations {
             details: {
               file?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -1452,7 +1452,7 @@ export interface operations {
             details: {
               email?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -1496,7 +1496,7 @@ export interface operations {
               tos_agreed?: string;
               privacy_policy_agreed?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -1540,7 +1540,7 @@ export interface operations {
               color?: string;
               workspace_uuid?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -1588,7 +1588,7 @@ export interface operations {
               name?: string;
               color?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -1667,7 +1667,7 @@ export interface operations {
               workspace_uuid?: string;
               due_date?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -1746,7 +1746,7 @@ export interface operations {
               description?: string;
               due_date?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -1826,7 +1826,7 @@ export interface operations {
             details: {
               archived?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -1875,7 +1875,7 @@ export interface operations {
               description?: string;
               project_uuid?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -1953,7 +1953,7 @@ export interface operations {
               title?: string;
               description?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -2033,7 +2033,7 @@ export interface operations {
             details: {
               order?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -2099,7 +2099,7 @@ export interface operations {
                 uuid?: string;
               };
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -2196,7 +2196,7 @@ export interface operations {
                   done?: string;
                 }[];
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -2277,7 +2277,7 @@ export interface operations {
             details: {
               task_uuid?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -2329,7 +2329,7 @@ export interface operations {
             details: {
               section_uuid?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -2412,7 +2412,7 @@ export interface operations {
               job_title?: string;
               role?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -2489,7 +2489,7 @@ export interface operations {
               title?: string;
               description?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -2567,7 +2567,7 @@ export interface operations {
               title?: string;
               description?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -2649,7 +2649,7 @@ export interface operations {
             details: {
               email?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -2698,7 +2698,7 @@ export interface operations {
             details: {
               file?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
@@ -2749,7 +2749,7 @@ export interface operations {
             details: {
               email?: string;
             };
-            general: string[];
+            general?: string;
             /** @enum {string} */
             status: "invalid";
           };
