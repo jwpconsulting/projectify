@@ -148,13 +148,12 @@ def make_schema(instance: serializers.Serializer) -> _SchemaType:
         properties={
             "code": {"type": "integer", "enum": [400]},
             "details": make_schema_nested(instance),
-            "general": {"type": "array", "items": {"type": "string"}},
+            "general": {"type": "string"},
             "status": {"type": "string", "enum": ["invalid"]},
         },
         required=[
             "code",
             "details",
-            "general",
             "status",
         ],
     )
