@@ -11,3 +11,5 @@
 
 - Fix label creation failing because of missing $currentWorkspace
 - Fix missing general validation message when creating and updating labels
+- Fix outdated Twisted version to 24.7.0
+- Fix outdated Django version to 5.1
