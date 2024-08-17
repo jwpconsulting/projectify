@@ -24,6 +24,7 @@
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import { createLabel, updateLabel } from "$lib/repository/workspace/label";
     import { currentWorkspace } from "$lib/stores/dashboard/workspace";
+    import { currentProject } from "$lib/stores/dashboard/project";
     import type { FormViewState } from "$lib/types/ui";
     import type { Label } from "$lib/types/workspace";
     import {
@@ -80,7 +81,8 @@
             throw new Error("Expected create state");
         }
 
-        const workspace = $currentWorkspace.value;
+        const workspace =
+            $currentWorkspace.value ?? $currentProject.value?.workspace;
         if (workspace === undefined) {
             throw new Error("Expected workspace");
         }
@@ -121,7 +123,9 @@
             : undefined;
         editState = {
             kind: "error",
-            message: $_("dashboard.side-nav.filter-labels.errors.create"),
+            message:
+                error.general ??
+                $_("dashboard.side-nav.filter-labels.errors.create"),
         };
     }
 
@@ -151,18 +155,35 @@
             onFinished();
             return;
         }
+        if (error.code === 403) {
+            const workspace =
+                $currentWorkspace.value ?? $currentProject.value?.workspace;
+            if (workspace === undefined) {
+                throw new Error("Expected workspace");
+            }
+            await goto(
+                getLogInWithNextUrl(getDashboardWorkspaceUrl(workspace)),
+            );
+            return;
+        }
         if (error.code !== 400) {
-            throw new Error("Error when updating label");
+            editState = {
+                kind: "error",
+                message: $_("dashboard.side-nav.filter-labels.errors.general"),
+            };
+            return;
         }
-        if (error.details.name !== undefined) {
-            labelNameValidation = { ok: false, error: error.details.name };
-        }
-        if (error.details.color !== undefined) {
-            chosenColorValidation = { ok: false, error: error.details.color };
-        }
+        labelNameValidation = error.details.name
+            ? { ok: false, error: error.details.name }
+            : undefined;
+        chosenColorValidation = error.details.color
+            ? { ok: false, error: error.details.color }
+            : undefined;
         editState = {
             kind: "error",
-            message: $_("dashboard.side-nav.filter-labels.errors.update"),
+            message:
+                error.general ??
+                $_("dashboard.side-nav.filter-labels.errors.update"),
         };
     }
 </script>
