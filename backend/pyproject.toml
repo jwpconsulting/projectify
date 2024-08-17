@@ -137,9 +137,10 @@ reportUnusedImport = false
 
 [tool.poetry]
 name = "projectify"
-version = "0.1.0"
-description = "Projectify backend"
-authors = ["Justus Perlwitz <justus@jwpconsulting.net>"]
+version = "2024.8.17"
+description = "Projectify Backend"
+maintainers = ["Justus Perlwitz <justus@jwpconsulting.net>"]
+authors = ["The Projectify Authors"]
 readme = "README.md"
 exclude = [
     "projectify/*/test",
