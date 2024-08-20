@@ -259,6 +259,15 @@ def test_moving_task_within_section(
         other_task,
         task,
     ]
+    task_move_after(
+        who=team_member.user,
+        task=task,
+        after=section,
+    )
+    assert list(section.task_set.all()) == [
+        task,
+        other_task,
+    ]
 
 
 def test_moving_task_to_other_section(
