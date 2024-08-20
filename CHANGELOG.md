@@ -1,5 +1,12 @@
 # Changelog
 
+## 2024.8.20
+
+### Fixed
+
+- Internal ordering of tasks was inverted. This prevented users from properly
+moving tasks to the top/bottom.
+
 ## 2024.8.17
 
 ### Changed

@@ -43,7 +43,7 @@ ProjectDetailQuerySet = Project.objects.prefetch_related(
             )
             * 1.0
             / NullIf(Count("subtask"), 0),
-        ).order_by("-_order"),
+        ).order_by("_order"),
     ),
     "section_set__task_set__assignee",
     "section_set__task_set__assignee__user",
