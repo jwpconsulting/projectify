@@ -52,7 +52,7 @@ TODO evaluate whether grow is still necessary. Seems that with grow set, we woul
         </div>
         <!-- not inserting min-w-0 will mean that this div will extend as much as
     needed around whatever is inside the slot -->
-        <div class="min-w-0 grow">
+        <div class="min-w-0 grow" role="presentation">
             <slot />
         </div>
     </div>
