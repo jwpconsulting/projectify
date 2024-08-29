@@ -18,7 +18,7 @@
 /**
  * Help URLs
  */
-type HelpTopic = "billing";
+type HelpTopic = "billing" | "keyboard-shortcuts";
 export function helpUrl(topic: HelpTopic) {
     return `/help/${topic}`;
 }
