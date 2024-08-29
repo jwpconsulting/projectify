@@ -64,7 +64,7 @@
         </form>
     {/if}
     <!-- shared layout for project and search results -->
-    <div class="flex w-full grow flex-col">
+    <div class="flex w-full grow flex-col gap-4 md:p-2">
         <slot />
     </div>
 </div>

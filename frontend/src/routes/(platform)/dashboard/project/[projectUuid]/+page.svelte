@@ -60,31 +60,29 @@
 </svelte:head>
 
 <!-- Sections -->
-<div class="flex flex-col gap-4 md:p-2">
-    {#if project}
-        {#each sections as section (section.uuid)}
-            <SectionC {project} {section} />
-        {:else}
-            <section
-                class="py-2 px-4 gap-8 bg-foreground rounded-lg flex flex-col"
-            >
-                <p>
-                    {$_("dashboard.no-sections.message")}
-                </p>
-                <Button
-                    style={{ kind: "primary" }}
-                    color="blue"
-                    size="medium"
-                    grow={false}
-                    label={$_("dashboard.no-sections.prompt")}
-                    action={{ kind: "button", action: onAddNewSection }}
-                />
-            </section>
-        {/each}
+{#if project}
+    {#each sections as section (section.uuid)}
+        <SectionC {project} {section} />
     {:else}
-        <Loading />
-    {/if}
-</div>
+        <section
+            class="py-2 px-4 gap-8 bg-foreground rounded-lg flex flex-col"
+        >
+            <p>
+                {$_("dashboard.no-sections.message")}
+            </p>
+            <Button
+                style={{ kind: "primary" }}
+                color="blue"
+                size="medium"
+                grow={false}
+                label={$_("dashboard.no-sections.prompt")}
+                action={{ kind: "button", action: onAddNewSection }}
+            />
+        </section>
+    {/each}
+{:else}
+    <Loading />
+{/if}
 
 {#if hasSections && $currentTeamMemberCan("create", "section")}
     <div class="sticky bottom-0 self-end p-2">
