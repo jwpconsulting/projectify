@@ -46,3 +46,24 @@ jobs:
                   package_name: projectify-revproxy
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
+    deploy-on-render:
+        # Only deplo if we are on main
+        if: ${{ github.ref_name == 'main' }}
+        needs:
+            - projectify-backend
+            - projectify-celery
+            - projectify-frontend
+            - projectify-revproxy
+        runs-on: ubuntu-latest
+        steps:
+            - name: Trigger deploy hooks
+              env:
+                  deploy_backend_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL_PROJECTIFY_BACKEND }}
+                  deploy_celery_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL_PROJECTIFY_CELERY }}
+                  deploy_frontend_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL_PROJECTIFY_FRONTEND }}
+                  deploy_revproxy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL_PROJECTIFY_REVPROXY }}
+              run: |
+                  curl "$deploy_backend_url"
+                  curl "$deploy_celery_url"
+                  curl "$deploy_frontend_url"
+                  curl "$deploy_revproxy_url"
