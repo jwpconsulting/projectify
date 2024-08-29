@@ -20,14 +20,11 @@
     import { onMount } from "svelte";
 
     import ContextMenu from "$lib/figma/overlays/ContextMenu.svelte";
-    import {
-        closeContextMenu,
-        contextMenuState,
-        handleKey,
-    } from "$lib/stores/globalUi";
+    import { closeContextMenu, contextMenuState } from "$lib/stores/globalUi";
     import { keepFocusInside } from "$lib/utils/focus";
     import { onResize } from "$lib/utils/resize";
     import { onScroll } from "$lib/utils/scroll";
+    import { handleKey } from "$lib/utils/keyboard";
 
     let contextMenu: HTMLElement | undefined = undefined;
 
