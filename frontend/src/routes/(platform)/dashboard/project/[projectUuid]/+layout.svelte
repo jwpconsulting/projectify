@@ -37,12 +37,13 @@
 <div class="flex h-full flex-col items-center gap-4 bg-background py-4">
     {#if project && projectHasTasks}
         <form
+            role="search"
             action={getProjectSearchUrl(project)}
             class="flex w-full max-w-md flex-col gap-2 rounded-xl bg-foreground px-4 py-4"
         >
             <!-- XXX definitely not ideal, placeholder will disappear after input -->
             <InputField
-                style={{ inputType: "text" }}
+                style={{ inputType: "search" }}
                 label={$_("dashboard.search-task.input.label")}
                 placeholder={$_("dashboard.search-task.input.placeholder")}
                 name="search"
