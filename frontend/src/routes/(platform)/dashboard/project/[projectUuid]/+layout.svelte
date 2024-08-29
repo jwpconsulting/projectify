@@ -34,7 +34,7 @@
         project.sections.some((s: ProjectDetailSection) => s.tasks.length > 0);
 </script>
 
-<div class="flex h-full flex-col items-center gap-4 bg-background py-4">
+<main class="flex h-full flex-col items-center gap-4 bg-background py-4">
     {#if project && projectHasTasks}
         <form
             role="search"
@@ -68,4 +68,4 @@
     <div class="flex w-full grow flex-col gap-4 md:p-2">
         <slot />
     </div>
-</div>
+</main>
