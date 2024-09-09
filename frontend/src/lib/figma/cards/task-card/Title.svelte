@@ -16,6 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    // TODO remove me
     import { _ } from "svelte-i18n";
 
     import type { Task } from "$lib/types/workspace";

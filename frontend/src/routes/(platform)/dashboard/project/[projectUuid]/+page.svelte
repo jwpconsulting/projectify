@@ -29,6 +29,9 @@
         ProjectDetailSection,
     } from "$lib/types/workspace";
     import { currentSections } from "$lib/stores/dashboard/section";
+    import { handleKey } from "$lib/utils/keyboard";
+    import { onMount } from "svelte";
+    import { selectInProject } from "$lib/stores/dashboard/ui";
 
     export let data: { injectProject?: ProjectDetail } | undefined = undefined;
 
@@ -49,6 +52,22 @@
             project,
         });
     }
+
+    onMount(() => {
+        return handleKey("j", () => selectInProject(project, "next-task"));
+    });
+
+    onMount(() => {
+        return handleKey("k", () => selectInProject(project, "prev-task"));
+    });
+
+    onMount(() => {
+        return handleKey("h", () => selectInProject(project, "prev-section"));
+    });
+
+    onMount(() => {
+        return handleKey("l", () => selectInProject(project, "next-section"));
+    });
 </script>
 
 <svelte:head>
