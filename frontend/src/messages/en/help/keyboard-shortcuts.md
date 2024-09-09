@@ -5,12 +5,17 @@ efficiently. Keyboard shortcuts are different depending on whether you are
 viewing a project or task. Refer to the corresponding section to find out what
 keyboard shortcuts you can use.
 
+Keyboard shortcuts are only avaible on a device with a keyboard or another
+comparable input device. Some shortcuts rely on mouse interaction to be fully
+usable.
+
 # Project view shortcuts
 
 The following shortscuts are accessible when viewing a project:
 
-| Key to press |                      Action                       |
-| :----------: | :-----------------------------------------------: |
+| Key to press |                          Action                           |
+| :----------: | :-------------------------------------------------------: |
+|    **n**     | Create a new task in the section your pointer hovers over |
 
 # Task view shortcuts
 

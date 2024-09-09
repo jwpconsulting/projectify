@@ -29,6 +29,9 @@
         ProjectDetailSection,
     } from "$lib/types/workspace";
     import { currentSections } from "$lib/stores/dashboard/section";
+    import { handleKey } from "$lib/utils/keyboard";
+    import { onMount } from "svelte";
+    import { currentSectionTask } from "$lib/stores/dashboard/ui";
 
     export let data: { injectProject?: ProjectDetail } | undefined = undefined;
 
@@ -49,6 +52,17 @@
             project,
         });
     }
+
+    function taskDown() {
+        const selection = $currentSectionTask;
+        if (selection === undefined) {
+        }
+    }
+
+    onMount(() => {
+        const unsubscriber = handleKey("ArrowDown", taskDown);
+        return unsubscriber;
+    });
 </script>
 
 <svelte:head>

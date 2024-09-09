@@ -15,10 +15,15 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { derived, readonly } from "svelte/store";
+import { derived, readonly, writable } from "svelte/store";
 import { persisted } from "svelte-local-storage-store";
 
 import { page } from "$app/stores";
+import { currentProject } from "./project";
+import type {
+    ProjectDetail,
+    ProjectDetailSection,
+} from "$lib/types/workspace";
 
 /*
  * Store which workspace we have seen last.
@@ -145,3 +150,68 @@ export const showFilters = derived<typeof page, boolean>(
     },
     false,
 );
+
+type SectionTaskSelection =
+    | {
+          kind: "task-selected";
+          project: ProjectDetail;
+          sectionUuid: string;
+          taskUuid: string;
+      }
+    | {
+          kind: "section-selected";
+          project: ProjectDetail;
+          sectionUuid: string;
+          taskUuid: undefined;
+      }
+    | {
+          kind: "project-selected";
+          project: ProjectDetail;
+          sectionUuid: undefined;
+          taskUuid: undefined;
+      }
+    | undefined;
+
+const _currentSectionTask = writable<SectionTaskSelection>(
+    undefined,
+    (set, update) => {
+        const unsubscriber = currentProject.subscribe(($currentProject) => {
+            const project = $currentProject.value;
+            const projectUuid = project?.uuid;
+            if (!projectUuid) {
+                set(undefined);
+            } else {
+                update(($currentSectionTask) => {
+                    // if no current selection, overwrite
+                    if ($currentSectionTask?.project.uuid === projectUuid) {
+                        return;
+                    } else {
+                        return {
+                            kind: "project-selected",
+                            project,
+                            sectionUuid: undefined,
+                            taskUuid: undefined,
+                        };
+                    }
+                });
+            }
+        });
+        return unsubscriber;
+    },
+);
+
+export const currentSectionTask = readonly(_currentSectionTask);
+
+export function selectNextSection(section: ProjectDetailSection) {
+    _currentSectionTask.update(($currentSectionTask) => {
+        if (!$currentSectionTask) {
+            throw new Error("Expected $currentSectionTask");
+        }
+        if ($currentSectionTask.project.uuid !== section.project.uuid) {
+            throw new Error(
+                "Task project uuid does not match currently active project",
+            );
+        }
+        return { ...$currentSectionTask, sectionUuid: section.uuid };
+    });
+}

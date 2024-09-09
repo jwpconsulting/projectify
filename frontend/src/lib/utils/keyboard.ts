@@ -18,7 +18,7 @@
 
 type KeyCallback = (e: KeyboardEvent) => void;
 // Let's whitelist keys we'd like to handle for now
-type KeyboardKey = "Escape" | "Enter" | "n";
+type KeyboardKey = "Escape" | "Enter" | "ArrowDown" | "ArrowUp";
 
 // Decorate a callback and only pass on events when we match the specified
 // key
