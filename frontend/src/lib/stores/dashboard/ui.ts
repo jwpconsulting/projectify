@@ -415,7 +415,6 @@ export function selectInProject(
                     }
                 }
             }
-            throw new Error("fall-through");
         },
     );
 }
