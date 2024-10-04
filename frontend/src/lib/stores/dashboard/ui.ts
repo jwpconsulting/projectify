@@ -203,6 +203,7 @@ const _currentSectionTask = writable<SectionTaskSelection>(
 
 export const currentSectionTask = readonly(_currentSectionTask);
 
+// XXX this is very complicated code, but it works
 // Possible scenarios
 // current   input        action
 // project   next section select 1st section (if exist), 1st task (if exist)
