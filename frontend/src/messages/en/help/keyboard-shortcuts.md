@@ -13,9 +13,12 @@ usable.
 
 The following shortscuts are accessible when viewing a project:
 
-| Key to press |                          Action                           |
-| :----------: | :-------------------------------------------------------: |
-|    **n**     | Create a new task in the section your pointer hovers over |
+| Key to press | Action                                                        |
+| :----------: | :------------------------------------------------------------ |
+|    **h**     | Select the previous section above the currently selected task |
+|    **j**     | Select the next task below the currently selected task        |
+|    **k**     | Select the previous task above the currently selected task    |
+|    **l**     | Select the next section below the currently selected task     |
 
 # Task view shortcuts
 
