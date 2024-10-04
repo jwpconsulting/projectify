@@ -20,6 +20,7 @@ import FreeSoftware from "./en/free-software.md?raw";
 import BasicsHelpPage from "./en/help/basics.md?raw";
 import BillingHelpPage from "./en/help/billing.md?raw";
 import FiltersHelpPage from "./en/help/filters.md?raw";
+import KeyboardShortcutsHelpPage from "./en/help/keyboard-shortcuts.md?raw";
 import LabelsHelpPage from "./en/help/labels.md?raw";
 import ProjectsHelpPage from "./en/help/projects.md?raw";
 import QuotaHelpPage from "./en/help/quota.md?raw";
@@ -1545,6 +1546,11 @@ const messages: MessageDirectory = {
             description: "Divide up roles between team members",
             content: RolesHelpPage,
         },
+        "keyboard-shortcuts": {
+            title: "Keyboard shortcuts",
+            description: "Use keyboard shortcuts to improve productivity",
+            content: KeyboardShortcutsHelpPage,
+        },
         "skip": "Skip ahead to",
     },
     "navigation": {
@@ -1580,6 +1586,7 @@ const messages: MessageDirectory = {
                 resources: {
                     "title": "Resources",
                     "help-and-tips": "Help and tips",
+                    "keyboard-shortcuts": "Keyboard shortcuts",
                     "blog": "Blog",
                     "github": "GitHub Repository",
                 },

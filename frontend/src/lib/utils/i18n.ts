@@ -104,5 +104,10 @@ export function helpTopics($_: (id: string) => string): HelpTopic[] {
             description: $_("help.roles.description"),
             href: "/help/roles",
         },
+        {
+            title: $_("help.keyboard-shortcuts.title"),
+            description: $_("help.keyboard-shortcuts.description"),
+            href: "/help/keyboard-shortcuts",
+        },
     ] satisfies HelpTopic[];
 }

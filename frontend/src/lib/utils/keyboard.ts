@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2023-2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -16,20 +16,26 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Title from "$lib/figma/cards/task-card/Title.svelte";
-import { task } from "$lib-stories/storybook";
-import type { Meta, StoryObj } from "@storybook/svelte";
+type KeyCallback = (e: KeyboardEvent) => void;
+// Let's whitelist keys we'd like to handle for now
+type KeyboardKey = "Escape" | "Enter" | "j" | "k" | "h" | "l";
 
-const meta: Meta<Title> = {
-    component: Title,
-    argTypes: {},
-};
-export default meta;
+// Decorate a callback and only pass on events when we match the specified
+// key
+function filterKey(key: KeyboardKey, fn: KeyCallback) {
+    return (e: KeyboardEvent) => {
+        if (e.key !== key) {
+            return;
+        }
+        fn(e);
+    };
+}
 
-type Story = StoryObj<Title>;
-
-export const Default: Story = {
-    args: {
-        task,
-    },
-};
+export function handleKey(
+    key: KeyboardKey,
+    callback: KeyCallback,
+): () => void {
+    const listener = filterKey(key, callback);
+    document.addEventListener("keydown", listener);
+    return () => document.removeEventListener("keydown", listener);
+}

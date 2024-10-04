@@ -179,6 +179,13 @@
                 {...inputProps}
                 bind:value
             />
+        {:else if style.inputType === "search"}
+            <input
+                type="search"
+                class={inputStyle}
+                {...inputProps}
+                bind:value
+            />
         {:else if style.inputType === "email"}
             <input
                 type="email"

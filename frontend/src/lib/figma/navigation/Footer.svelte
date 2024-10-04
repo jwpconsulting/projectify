@@ -96,6 +96,15 @@
                     </li>
                     <li>
                         <Anchor
+                            href="/help/keyboard-shortcuts"
+                            label={$_(
+                                "navigation.footer.nav.resources.keyboard-shortcuts",
+                            )}
+                            openBlank
+                        />
+                    </li>
+                    <li>
+                        <Anchor
                             href="https://www.jwpconsulting.net/tags/projectify/"
                             label={$_("navigation.footer.nav.resources.blog")}
                             openBlank

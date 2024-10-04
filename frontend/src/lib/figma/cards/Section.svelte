@@ -21,7 +21,10 @@
     import SectionTitle from "$lib/figma/cards/section-bar/SectionTitle.svelte";
     import TaskCard from "$lib/figma/cards/TaskCard.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { sectionClosed } from "$lib/stores/dashboard/ui";
+    import {
+        sectionClosed,
+        currentSectionTask,
+    } from "$lib/stores/dashboard/ui";
     import type {
         ProjectDetail,
         ProjectDetailSection,
@@ -33,9 +36,10 @@
 
     const { uuid } = section;
     $: open = !$sectionClosed.has(uuid);
+    $: selected = $currentSectionTask?.sectionUuid === section.uuid;
 </script>
 
-<section class="flex flex-col">
+<section class="flex flex-col" class:ring={selected}>
     <SectionTitle {project} {section} {open} />
     {#if open}
         <table

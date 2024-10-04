@@ -75,7 +75,7 @@ export type SquovalState = "inactive" | "disabled" | "active";
 // TODO we need to instead support "search", "erasable", and field
 // subTask should use erasable
 export type InputFieldStyle =
-    | { inputType: "text" | "password" | "email" | "date" }
+    | { inputType: "search" | "text" | "password" | "email" | "date" }
     | { inputType: "numeric"; min?: number; max?: number };
 export interface InputFieldAnchor {
     href: string;

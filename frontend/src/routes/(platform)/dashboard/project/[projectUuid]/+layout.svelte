@@ -34,15 +34,16 @@
         project.sections.some((s: ProjectDetailSection) => s.tasks.length > 0);
 </script>
 
-<div class="flex h-full flex-col items-center gap-4 bg-background py-4">
+<main class="flex h-full flex-col items-center gap-4 bg-background py-4">
     {#if project && projectHasTasks}
         <form
+            role="search"
             action={getProjectSearchUrl(project)}
             class="flex w-full max-w-md flex-col gap-2 rounded-xl bg-foreground px-4 py-4"
         >
             <!-- XXX definitely not ideal, placeholder will disappear after input -->
             <InputField
-                style={{ inputType: "text" }}
+                style={{ inputType: "search" }}
                 label={$_("dashboard.search-task.input.label")}
                 placeholder={$_("dashboard.search-task.input.placeholder")}
                 name="search"
@@ -64,7 +65,7 @@
         </form>
     {/if}
     <!-- shared layout for project and search results -->
-    <div class="flex w-full grow flex-col">
+    <div class="flex w-full grow flex-col gap-4 md:p-2">
         <slot />
     </div>
-</div>
+</main>
