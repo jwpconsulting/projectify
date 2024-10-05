@@ -88,13 +88,14 @@
         <div class="grow" />
 
         {#if step && stepCount}
-            <div class="flex justify-center">
-                <ul class="steps steps-horizontal">
-                    {#each steps as _, inx}
-                        <li class:step-primary={inx < step} class="step" />
-                    {/each}
-                </ul>
-            </div>
+            <ul class="flex flex-row gap-2">
+                {#each steps as _, inx}
+                    <li
+                        class:bg-primary={inx < step}
+                        class="h-4 w-4 rounded bg-background"
+                    />
+                {/each}
+            </ul>
         {/if}
     </form>
 
