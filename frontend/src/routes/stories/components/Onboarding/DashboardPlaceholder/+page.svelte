@@ -1,0 +1,117 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!--
+    Copyright (C) 2024 JWP Consulting GK
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<script lang="ts">
+    import DashboardPlaceholder from "$lib/components/onboarding/DashboardPlaceholder.svelte";
+    import type { State } from "$lib/components/onboarding/DashboardPlaceholder.svelte";
+    import type {
+        ProjectDetail,
+        ProjectDetailSection,
+        ProjectDetailWorkspace,
+        TaskDetail,
+    } from "$lib/types/workspace";
+
+    const workspace = {
+        uuid: "workspace-uuid",
+        title: "Workspace",
+    } as ProjectDetailWorkspace;
+    const project = {
+        uuid: "project-uuid",
+        title: "Project",
+    } as ProjectDetail;
+    const section = {
+        uuid: "section-uuid",
+        title: "Section",
+        _order: 0,
+        tasks: [],
+    } as ProjectDetailSection;
+    const task = { uuid: "task-uuid", title: "Task" } as TaskDetail;
+    const label = { uuid: "label-uuid", name: "Label", color: 0 };
+    const assignee = {
+        uuid: "assignee-uuid" as const,
+        user: { email: "", preferred_name: null, profile_picture: null },
+        role: "CONTRIBUTOR" as const,
+        job_title: null,
+    };
+
+    type Kind = State["kind"];
+    let stateKind: Kind = "new-workspace";
+
+    const states: { [k in Kind]: State & { kind: k } } = {
+        "new-workspace": {
+            kind: "new-workspace",
+            title: "New workspace",
+        },
+        "new-project": {
+            kind: "new-project",
+            workspace,
+            title: "New project",
+        },
+        "new-task": {
+            kind: "new-task",
+            workspace,
+            project,
+            sectionTitle: "Section",
+            title: "New task",
+        },
+        "new-label": {
+            kind: "new-label",
+            workspace,
+            project,
+            section,
+            task,
+            title: "New label",
+        },
+        "assign-task": {
+            kind: "assign-task",
+            workspace,
+            project,
+            section,
+            task,
+            label,
+            assignee,
+        },
+    } as const;
+
+    let state: State = {
+        kind: "new-workspace",
+        title: "Hello world",
+    };
+
+    function updateState() {
+        state = states[stateKind] satisfies State;
+    }
+</script>
+
+<div class="flex flex-row">
+    <h1>Dashboard Placeholder Demo</h1>
+
+    <div class="flex flex-col">
+        <label>
+            State Kind:
+            <select bind:value={stateKind} on:change={updateState}>
+                <option value="new-workspace">New Workspace</option>
+                <option value="new-project">New Project</option>
+                <option value="new-task">New Task</option>
+                <option value="new-label">New Label</option>
+                <option value="assign-task">Assign Task</option>
+            </select>
+        </label>
+    </div>
+
+    <DashboardPlaceholder {state} />
+</div>
