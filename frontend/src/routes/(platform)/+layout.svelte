@@ -19,6 +19,7 @@
     import ConnectionStatus from "$lib/components/ConnectionStatus.svelte";
     import ContextMenuContainer from "$lib/components/ContextMenuContainer.svelte";
     import OverlayContainer from "$lib/components/OverlayContainer.svelte";
+    import Footer from "$lib/figma/navigation/Footer.svelte";
     import HeaderDashboard from "$lib/figma/navigation/header/Dashboard.svelte";
     import SideNav from "$lib/figma/navigation/SideNav.svelte";
     import ConstructiveOverlay from "$lib/figma/overlays/constructive/ConstructiveOverlay.svelte";
@@ -77,3 +78,5 @@ TODO evaluate whether grow is still necessary. Seems that with grow set, we woul
 </OverlayContainer>
 
 <ContextMenuContainer />
+
+<Footer />

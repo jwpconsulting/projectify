@@ -21,6 +21,7 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { page } from "$app/stores";
     import Landing from "$lib/figma/navigation/header/Landing.svelte";
+    import Footer from "$lib/figma/navigation/Footer.svelte";
 </script>
 
 <svelte:head>
@@ -81,3 +82,4 @@
         {/if}
     </main>
 </div>
+<Footer />
