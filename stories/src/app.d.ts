@@ -1,1 +1,0 @@
-../../frontend/src/app.d.ts
