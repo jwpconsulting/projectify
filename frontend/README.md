@@ -41,6 +41,12 @@ nix was a complicated process and took some time to get right.
 If you skip NixOS, home manager, and so on, you might be able to finish it in
 a few hours. If you have any questions, please contact the maintainers.
 
+Build the frontend as using the static adapter:
+
+```
+nix build .#projectify-frontend-static
+```
+
 Run the frontend using `adapter-static` locally:
 
 ```

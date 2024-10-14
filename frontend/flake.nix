@@ -36,7 +36,7 @@
           pkgs.buildNpmPackage {
             name = "projectify-frontend";
             src = ./.;
-            npmDepsHash = "sha256-lDwdWLhpnqMNnGzQM/QipmFXhtb/InNnBz1La8v712Y=";
+            npmDepsHash = "sha256-Ci4Sw6X+NM+xTL4xgBufLPP1qtBZQ8tfXh9XxFxItYk=";
             buildInputs = [
               nodejs
             ];
