@@ -51,7 +51,12 @@
     type Kind = State["kind"];
     let stateKind: Kind = "new-workspace";
 
-    const states: { [k in Kind]: State & { kind: k } } = {
+    // https://stackoverflow.com/questions/56981452/typescript-union-type-to-single-mapped-type/56981568#56981568
+    type StateSelector<
+        K extends State["kind"],
+        U extends { kind: State["kind"] },
+    > = U extends { kind: K } ? U : never;
+    const states: { [K in State["kind"]]: StateSelector<K, State> } = {
         "new-workspace": {
             kind: "new-workspace",
             title: "New workspace",
@@ -93,7 +98,17 @@
     };
 
     function updateState() {
-        state = states[stateKind] satisfies State;
+        /*
+        XXX why eslint?
+/Users/justusperlwitz/projects/projectify/monorepo/frontend/src/routes/stories/components/Onboarding/DashboardPlaceholder/+page.svelte
+  98:15  error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+  99:9   error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+  99:24  error  Computed name [kind] resolves to an any value  @typescript-eslint/no-unsafe-member-access
+        */
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const kind: Kind = stateKind;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+        state = states[kind];
     }
 </script>
 
