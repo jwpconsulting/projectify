@@ -44,8 +44,9 @@ direnv allow
 # License
 
 Both frontend and backend code are licensed under the GNU Affero General Public
-License Version 3 or later. For more information, please refer to the
-`LICENSE` file contained in this repository.
+License Version 3 or later. Some third party dependencies are vendored in and
+available under their respective licenses. Please review the license files
+contained in the `LICENSES` directory located in the Projectify repository.
 
 See `AUTHORS.txt` file for the list of contributors.
 
