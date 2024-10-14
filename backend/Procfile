@@ -1,3 +1,0 @@
-release: ./manage.py migrate --noinput
-web: newrelic-admin run-program gunicorn
-worker: newrelic-admin run-program celery --app projectify worker --concurrency 1
