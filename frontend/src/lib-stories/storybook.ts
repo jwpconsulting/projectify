@@ -20,9 +20,10 @@ import { readable, writable } from "svelte/store";
 import type { LabelLabel, SelectLabel } from "$lib/figma/types";
 import type { LabelAssignment, TeamMemberAssignment } from "$lib/types/stores";
 import type { TeamMemberSelectionInput } from "$lib/types/ui";
-import type { User } from "$lib/types/user";
+import type { CurrentUser, User } from "$lib/types/user";
 import type {
     Label,
+    SectionDetail,
     SubTask,
     ProjectDetail,
     WorkspaceDetail,
@@ -38,15 +39,17 @@ import type { LabelColor } from "$lib/utils/colors";
 
 import type { Customer } from "$lib/types/corporate";
 
-export const user1: User = {
-    email: "this-email-is-very-long-so-you-know-we-mean-business@example.com",
+export const user1: CurrentUser & User & {kind: "authenticated"} = {
+    email: "this-email-is-very-long-so-you-know-we-mean@business.com",
     preferred_name: null,
     profile_picture: null,
+    kind: "authenticated" as const,
 };
-export const user2: User = {
+export const user2: CurrentUser & User = {
     email: "john@example.com",
     preferred_name: null,
     profile_picture: null,
+    kind: "authenticated" as const,
 };
 
 const nullUuid = "00000000-0000-0000-0000-000000000000";
@@ -172,6 +175,13 @@ export const section: TaskDetail["section"] = {
     uuid: nullUuid,
     project: { ...projectDetail, due_date: null },
     _order: 0,
+};
+
+export const sectionDetail: SectionDetail = {
+    ...section,
+    tasks: [],
+    created: "",
+    modified: "",
 };
 
 export const task: TaskDetail = {

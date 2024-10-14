@@ -22,7 +22,7 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<Profile> = {
     component: Profile,
-    args: { data: { user: user1 } },
+    args: { data: { user: user1, userAwaitable: Promise.resolve(user1) } },
 };
 export default meta;
 
