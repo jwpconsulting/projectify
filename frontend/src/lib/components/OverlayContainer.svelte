@@ -19,7 +19,7 @@
     import { onMount } from "svelte";
     import type { Readable } from "svelte/store";
 
-    import { handleKey } from "$lib/stores/globalUi";
+    import { handleKey } from "$lib/utils/keyboard";
     import type { Overlay } from "$lib/types/ui";
     import { keepFocusInside } from "$lib/utils/focus";
 

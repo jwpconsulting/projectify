@@ -194,29 +194,3 @@ export async function openContextMenu(
 export function closeContextMenu() {
     closeOverlay(_contextMenuState, "success", false);
 }
-
-type KeyCallback = (e: KeyboardEvent) => void;
-// Let's whitelist keys we'd like to handle for now
-type KeyboardKey = "Escape" | "Enter";
-
-// Decorate a callback and only pass on events when we match the specified
-// key
-function filterKey(key: KeyboardKey, fn: KeyCallback) {
-    return (e: KeyboardEvent) => {
-        if (e.key !== key) {
-            return;
-        }
-        fn(e);
-    };
-}
-
-type Unsubscriber = () => void;
-
-export function handleKey(
-    key: KeyboardKey,
-    callback: KeyCallback,
-): Unsubscriber {
-    const listener = filterKey(key, callback);
-    document.addEventListener("keydown", listener);
-    return () => document.removeEventListener("keydown", listener);
-}

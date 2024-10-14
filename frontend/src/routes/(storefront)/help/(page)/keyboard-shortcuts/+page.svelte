@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -15,26 +15,17 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
+<!-- @component Explain how quotas work for paid/trial workspaces -->
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import type { Task } from "$lib/types/workspace";
-    import { getTaskUrl } from "$lib/urls";
+    import Layout from "$lib/components/help/Layout.svelte";
+    import type { SolutionsHeroContent } from "$lib/types/ui";
 
-    export let task: Pick<Task, "uuid" | "number" | "title">;
+    $: heroContent = {
+        title: $_("help.keyboard-shortcuts.title"),
+        text: $_("help.keyboard-shortcuts.description"),
+    } satisfies SolutionsHeroContent;
 </script>
 
-<a
-    href={getTaskUrl(task)}
-    class="flex flex-row items-start items-center gap-1 self-start sm:gap-6 lg:self-center"
->
-    <span class="shrink-0 font-bold"
-        >{$_("dashboard.task-card.task-number", {
-            values: { number: task.number },
-        })}</span
-    >
-    <span
-        class="line-clamp-3 justify-self-start hover:text-primary lg:line-clamp-1 lg:h-6"
-        >{task.title}</span
-    >
-</a>
+<Layout {heroContent} content={$_("help.keyboard-shortcuts.content")} />

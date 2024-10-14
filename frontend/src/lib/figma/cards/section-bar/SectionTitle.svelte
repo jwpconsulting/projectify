@@ -51,7 +51,7 @@
 </script>
 
 <header
-    class="flex w-full flex-row items-center justify-between bg-foreground px-4 py-2"
+    class="sticky top-0 flex w-full flex-row items-center justify-between bg-foreground px-4 py-2"
 >
     <div
         data-figma-name="Section header"
