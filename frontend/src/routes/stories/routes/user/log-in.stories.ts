@@ -38,9 +38,9 @@ export default meta;
 type Story = StoryObj<LogIn>;
 
 export const Default: Story = {
-    args: { data: "with-redirect" },
+    args: { data: { redirectTo: "with-redirect" } },
 };
 
 export const WithoutRedirect: Story = {
-    args: { data: "without-redirect" },
+    args: { data: { redirectTo: "without-redirect" } },
 };

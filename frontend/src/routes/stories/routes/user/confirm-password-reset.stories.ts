@@ -22,6 +22,8 @@ const meta: Meta<ConfirmPasswordReset> = {
     component: ConfirmPasswordReset,
     args: {
         data: {
+            // XXX why does pw reset need a redirect url?
+            redirectTo: undefined,
             email: "hello@example.com",
             token: "yo",
         },

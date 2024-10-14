@@ -39,7 +39,7 @@ import type { LabelColor } from "$lib/utils/colors";
 
 import type { Customer } from "$lib/types/corporate";
 
-export const user1: CurrentUser & User & {kind: "authenticated"} = {
+export const user1: CurrentUser & User & { kind: "authenticated" } = {
     email: "this-email-is-very-long-so-you-know-we-mean@business.com",
     preferred_name: null,
     profile_picture: null,

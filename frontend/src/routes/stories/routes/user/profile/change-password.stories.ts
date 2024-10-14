@@ -24,8 +24,7 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 
 const meta: Meta<ChangePassword> = {
     component: ChangePassword,
-    args: {
-    },
+    args: {},
 };
 export default meta;
 
