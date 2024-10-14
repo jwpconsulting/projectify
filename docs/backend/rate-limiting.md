@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 JWP Consulting GK
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Rate limiting implementation:
 
 We use [Django Ratelimit, since the documentation specifically  mentions security](https://django-ratelimit.readthedocs.io/en/stable/security.html) to implement rate limiting. Requests we want to rate limit are:

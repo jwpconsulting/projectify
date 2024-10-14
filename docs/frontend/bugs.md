@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 JWP Consulting GK
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # SVG id collision causing issues when display: none
 
 This bug is [fixed](https://github.com/paolotiu/svelte-boring-avatars/issues/1)

@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 JWP Consulting GK
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # PostgreSQL workarounds
 
 Here are some solutions for problems I have had with configuring PostgreSQL 13
