@@ -38,8 +38,9 @@ const config = {
     preprocess: [vitePreprocess()],
     kit: {
         alias: {
-            $messages: "src/messages",
-            $routes: "src/routes",
+            "$messages": "src/messages",
+            "$routes": "src/routes",
+            "$lib-stories": "src/lib-stories",
         },
         adapter,
         csp: {

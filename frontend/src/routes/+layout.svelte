@@ -18,7 +18,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import "$lib/app.scss";
-    import Footer from "$lib/figma/navigation/Footer.svelte";
     import faviconHtml from "favicon-html";
 
     const isDevelopment = __MODE__ === "development";
@@ -52,4 +51,3 @@
 {/if}
 
 <slot />
-<Footer />

@@ -260,17 +260,6 @@ jobs:
       - run:
           name: Check if schema.d.ts in frontend is up to date
           command: npm run check:schema
-  stories_test:
-    executor: node
-    working_directory: ~/projectify/stories
-    steps:
-      - prepare_npm
-      - run:
-          name: Generate type information
-          command: npm run sync-types
-      - run:
-          name: Check all
-          command: bin/test
   tools_render_yaml_validate:
     executor: node
     working_directory: ~/projectify/tools
@@ -325,7 +314,6 @@ workflows:
       - frontend_build
       - frontend_visualize-bundle
       - frontend_schema
-      - stories_test
       - tools_render_yaml_validate
       - tools_poetry_check
       - tools_python_lint

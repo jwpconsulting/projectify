@@ -60,6 +60,7 @@ module.exports = {
         "node_modules",
         ".storebook",
         ".svelte-kit",
+        "*.stories.ts",
     ],
     settings: {
         "import/ignore": [

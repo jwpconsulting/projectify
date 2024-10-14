@@ -16,6 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import Footer from "$lib/figma/navigation/Footer.svelte";
     import Continue from "$lib/figma/navigation/header/Continue.svelte";
     import Landing from "$lib/figma/navigation/header/Landing.svelte";
     import MobileMenuOverlay from "$lib/figma/overlays/MobileMenuOverlay.svelte";
@@ -43,3 +44,4 @@
         </div>
     </div>
 </div>
+<Footer />

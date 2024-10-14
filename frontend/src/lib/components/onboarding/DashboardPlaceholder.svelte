@@ -15,6 +15,47 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
+<script lang="ts" context="module">
+    // TODO factor into an types/onboarding.ts type so that we can test this
+    // in storybook
+    export type State =
+        | {
+              kind: "new-workspace";
+              workspace?: UserWorkspace;
+              title: string;
+          }
+        | {
+              kind: "new-project";
+              workspace: ProjectDetailWorkspace;
+              project?: ProjectDetail;
+              title: string;
+          }
+        | {
+              kind: "new-task";
+              workspace: ProjectDetailWorkspace;
+              project: ProjectDetail;
+              sectionTitle: string;
+              title: string;
+          }
+        | {
+              kind: "new-label";
+              workspace: ProjectDetailWorkspace;
+              project: ProjectDetail;
+              section: ProjectDetailSection;
+              task: TaskDetail;
+              title: string;
+          }
+        | {
+              kind: "assign-task";
+              workspace: ProjectDetailWorkspace;
+              project: ProjectDetail;
+              section: ProjectDetailSection;
+              task: TaskDetail;
+              label: Label;
+              assignee: TaskDetailAssignee;
+          };
+</script>
+
 <script lang="ts">
     import { onMount } from "svelte";
     import { _ } from "svelte-i18n";
@@ -101,45 +142,6 @@
             toggleUserExpandOpen();
         }
     });
-
-    // TODO factor into an types/onboarding.ts type so that we can test this
-    // in storybook
-    type State =
-        | {
-              kind: "new-workspace";
-              workspace?: UserWorkspace;
-              title: string;
-          }
-        | {
-              kind: "new-project";
-              workspace: ProjectDetailWorkspace;
-              project?: ProjectDetail;
-              title: string;
-          }
-        | {
-              kind: "new-task";
-              workspace: ProjectDetailWorkspace;
-              project: ProjectDetail;
-              sectionTitle: string;
-              title: string;
-          }
-        | {
-              kind: "new-label";
-              workspace: ProjectDetailWorkspace;
-              project: ProjectDetail;
-              section: ProjectDetailSection;
-              task: TaskDetail;
-              title: string;
-          }
-        | {
-              kind: "assign-task";
-              workspace: ProjectDetailWorkspace;
-              project: ProjectDetail;
-              section: ProjectDetailSection;
-              task: TaskDetail;
-              label: Label;
-              assignee: TaskDetailAssignee;
-          };
 
     export let state: State;
 

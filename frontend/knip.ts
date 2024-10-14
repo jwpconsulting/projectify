@@ -18,7 +18,12 @@
 import type { KnipConfig } from "knip";
 
 const config: KnipConfig = {
-    ignore: ["**/*.d.ts"],
+    ignore: [
+        "**/*.d.ts",
+        // Temporary fix until stories have been migrated
+        "src/lib-stories/storybook.ts",
+        "src/routes/stories/**/*.{stories.ts,ts,svelte}",
+    ],
     entry: ["postcss.config.cjs", "bin/check-i18n", "src/bin/check-i18n.ts"],
     /* Extensions looked up by running the following in fish:
      * for file in (find src -type f)
