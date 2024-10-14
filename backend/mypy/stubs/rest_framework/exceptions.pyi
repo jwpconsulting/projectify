@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 JWP Consulting GK
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 # Taken from
 # https://raw.githubusercontent.com/encode/django-rest-framework/3.14.0/rest_framework/exceptions.py
 from collections.abc import Mapping, Sequence
