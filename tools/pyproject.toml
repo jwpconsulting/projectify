@@ -1,38 +1,8 @@
-[tool.ruff]
-line-length=79
-
-[tool.ruff.lint]
-extend-select = [
-    "I",
-    "E",
-    "D",
-    "C901",
-    # TODO add
-    # "C",
-    "F",
-    # TODO add
-    # "DJ",
-    # TODO add
-    # "T20",
-    # There are so many more out there, they all look interesting:
-    # https://docs.astral.sh/ruff/rules/
-]
-ignore = [
-    # Conflicting with D201
-    "D203",
-    # Conflicting with D213
-    "D212",
-    "E501",
-]
-
-[tool.pytest.ini_options]
-addopts = [
-    "--import-mode=importlib",
-]
-
+# SPDX-FileCopyrightText: 2024 JWP Consulting GK
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
 [tool.poetry]
-name = "tools"
-version = "0.1.0"
+package-mode = false
 description = "Tooling for Projectify frontend"
 authors = ["Justus Perlwitz <justus@jwpconsulting.net>"]
 license = "AGPL"
@@ -40,18 +10,6 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-click = "~8.1.7"
-toml = "~0.10.2"
-
-[tool.poetry.group.dev.dependencies]
-ipython = "~8.10"
-
-[tool.poetry.group.test.dependencies]
-ruff = "0.4.10"
-ipython = "~8.10"
-pytest = "^7.2.0"
-mypy = "~1.5.1"
-types-toml = "~0.10.8"
 
 [build-system]
 requires = ["poetry-core"]
