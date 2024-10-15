@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 JWP Consulting GK
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 You need to be workspace owner to invite or remove team members and edit their
 permissions. [Learn more about roles here](/help/roles).
 
