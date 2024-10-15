@@ -16,6 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Premail email templates."""
 
+import re
 from typing import (
     Any,
     Generic,
@@ -87,9 +88,13 @@ class TemplateEmail(Generic[T]):
 
     def render_body(self) -> str:
         """Render body."""
-        return loader.render_to_string(
-            self.get_body_template_path(),
-            self.get_context(),
+        return re.sub(
+            r"\n\n\n+",
+            "\n\n",
+            loader.render_to_string(
+                self.get_body_template_path(),
+                self.get_context(),
+            ).strip(),
         )
 
     def send(self) -> None:
