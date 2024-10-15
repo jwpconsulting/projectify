@@ -312,3 +312,67 @@ for f in (
   git mv -v $f $dir/$base || break
 end
 ```
+
+# Replacing licenses with short identifiers
+
+Three scripts:
+
+```sed
+# replace_header_ts.sed
+/^\/\*$/!{
+    p;
+    b
+}
+n
+/Copyright \(C\) .+$/{
+    :a
+    s/^ \*  Copyright \(C\) (.+)$/\/\/ SPDX-FileCopyrightText: \1/p
+    n
+    /^ \*\/$/b
+    ba
+}
+p
+```
+
+```sed
+# replace_header_svelte.sed
+/<!--$/!{
+    p;
+    b
+}
+/<!--$/{
+    n
+    /    Copyright \(C\) .*/{
+        :a
+        s/^    Copyright \(C\) (.+)$/<!-- SPDX-FileCopyrightText: \1 -->/p
+        n
+        \%    along with this program.  If not, see <https://www.gnu.org/licenses/>\.%!ba
+        n
+        /\\n-->/b
+    }
+}
+```
+
+```sed
+# replace_header_py.sed
+/\# Copyright \(C\) .+$/!{
+    p;
+    b
+}
+/\# Copyright \(C\) .+$/{
+    s/\# Copyright \(C\) (.+)$/# SPDX-FileCopyrightText: \1/p
+    :a
+    n
+    \%# along with this program.  If not, see <https://www.gnu.org/licenses/>.%!ba
+    d
+}
+p
+```
+
+Example usage:
+
+```bash
+sed -i -n -E -f replace_header_svelte.sed frontend/**.svelte
+sed -i -n -E -f replace_header_py.sed backend/**.py
+sed -i -n -E -f replace_header_ts.sed frontend/**.ts
+```
