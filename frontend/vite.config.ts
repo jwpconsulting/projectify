@@ -212,12 +212,14 @@ function getProxyConfig(
         "/admin": {
             target: getFromEnv(env, "VITE_PROXY_API_ENDPOINT"),
             changeOrigin: true,
-            // rewrite: (path: string) => path.replace(/^\/api/, ""),
         },
         "/static/django": {
             target: getFromEnv(env, "VITE_PROXY_API_ENDPOINT"),
             changeOrigin: true,
-            // rewrite: (path: string) => path.replace(/^\/api/, ""),
+        },
+        "/premail": {
+            target: getFromEnv(env, "VITE_PROXY_API_ENDPOINT"),
+            changeOrigin: true,
         },
     };
 }

@@ -115,8 +115,6 @@ class Base(Configuration):
         "cloudinary",
         "cloudinary_storage",
         "django_celery_results",
-        # TODO I think this is ours, not third party
-        "projectify.premail",
         "rest_framework",
         "rules.apps.AutodiscoverRulesConfig",
         "pgtrigger",
@@ -130,6 +128,7 @@ class Base(Configuration):
         "projectify.user.apps.UserConfig",
         "projectify.workspace.apps.WorkspaceConfig",
         "projectify.corporate.apps.CorporateConfig",
+        "projectify.premail",
     )
 
     INSTALLED_APPS: Sequence[str] = (
@@ -323,6 +322,9 @@ class Base(Configuration):
 
     # drf-spectacular
     SERVE_SPECTACULAR = False
+
+    # premail
+    PREMAIL_PREVIEW = False
 
     # simulate slow and unreliable connections
     SLEEP_MIN_MAX_MS: Optional[tuple[int, int]] = None

@@ -29,9 +29,9 @@ app_name = "premail"
 
 
 urlpatterns = (
-    path(r"email-preview/", EmailList.as_view(), name="email-list"),
+    path(r"", EmailList.as_view(), name="email-list"),
     path(
-        r"email-preview/<slug:slug>",
+        r"<slug:slug>",
         EmailPreview.as_view(),
         name="email-preview",
     ),

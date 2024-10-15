@@ -165,6 +165,9 @@ class Development(SpectacularSettings, Base):
     CHANNEL_ERROR = 20
     ASGI_APPLICATION = "projectify.test.asgi.error_application"
 
+    # Show preview of all email types
+    PREMAIL_PREVIEW = True
+
     @classmethod
     def pre_setup(cls) -> None:
         """Load environment variables from .env."""

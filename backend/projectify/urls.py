@@ -51,10 +51,6 @@ urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     # TODO may I use projectify.admin.admin.urls here?
     path("admin/", admin.site.urls),
     path(
-        r"premail/",
-        include("projectify.premail.urls"),
-    ),
-    path(
         r"user/",
         include("projectify.user.urls"),
     ),
@@ -64,6 +60,15 @@ urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     ),
     path("corporate/", include("projectify.corporate.urls")),
 )
+
+if settings.PREMAIL_PREVIEW:
+    urlpatterns = (
+        *urlpatterns,
+        path(
+            r"premail/",
+            include("projectify.premail.urls"),
+        ),
+    )
 
 if settings.SERVE_MEDIA:
     urlpatterns = (

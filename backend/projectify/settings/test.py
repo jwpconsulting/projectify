@@ -61,6 +61,9 @@ class Test(SpectacularSettings, Base):
         "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     }
 
+    # Enable premail preview for testing
+    PREMAIL_PREVIEW = True
+
     @classmethod
     def pre_setup(cls) -> None:
         """Load environment variables from .env."""
