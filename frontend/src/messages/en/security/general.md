@@ -205,7 +205,9 @@ The usage of vulnerable libraries is monitored using Dependabot.
 
 ## Time to fix vulnerabilities
 
-Any known vulnerabilities will be patched within 90 days of discovery.
+Best effort is made to remediate any discovered vulnerabilities in a timely
+manner. See the [Vulnerability Disclosure
+Policy](/security/disclose#our-commitments) for detailed information.
 
 ## Build process
 
@@ -255,3 +257,9 @@ Assets stored with Cloudinary are **not** backed up.
 # Inquiries
 
 Should You have any questions, please [contact Us](/contact-us).
+
+# Version History
+
+- 2024-10-22: Align section **Time to fix vulnerabilities** with disclosure
+  policy.
+- 2024-03-29: Create initial report
