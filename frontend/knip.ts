@@ -48,22 +48,13 @@ const config: KnipConfig = {
         "$app/*": ["node_modules/@sveltejs/kit/src/runtime/app/*"],
         "$env/*": [".svelte-kit/ambient.d.ts"],
     },
-    ignoreBinaries: [
-        "env",
-        "poetry",
-        "tsx",
-        "open",
-        "bin/test",
-        "bin/prebuild.sh",
-        "bin/update-schema",
-    ],
+    ignoreBinaries: ["open", "bin/test", "bin/update-schema"],
     ignoreDependencies: [
         "esm-loader-import-alias",
         "openapi-typescript",
         "esm-loader-import-relative-extension",
         "esm-loader-typescript",
         "node-esm-loader",
-        "prettier-plugin-svelte",
         // Synthetic import created as part of vite build
         "third-party-licenses",
         "favicon-html",
