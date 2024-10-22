@@ -18,15 +18,15 @@ can create within your workspace. Resources within your workspace are:
 # Quotas for paid workspaces
 
 The only quota that applies to a paid workspace is how many team members you
-can add and how many pending invites for new team members you have. These
-two values are added together and compared with the number of seats you have
+can add and how many pending invites for new team members you have. These two
+values are added together and compared with the number of seats you have
 remaining in your workspace. For example, if you have a workspace with 10
 seats, then
 
 - if you have 8 team members and 1 pending invitation, you can invite or add
   one more team member
-- if you have 8 team members and 2 pending invitations, you can not invite
-  or add any more team members
+- if you have 8 team members and 2 pending invitations, you can not invite or
+  add any more team members
 
 If you would like to add more seats to your workspace, please review your
 workspace billing settings in the dashboard. For more information on how to

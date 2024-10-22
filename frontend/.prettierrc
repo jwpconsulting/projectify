@@ -1,6 +1,7 @@
 {
     "singleQuote": false,
     "quoteProps": "consistent",
+    "proseWrap": "always",
     "plugins": ["prettier-plugin-tailwindcss"],
     "tailwindFunctions": ["tw"]
 }

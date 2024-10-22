@@ -5,14 +5,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 Roles can be assigned to team members within a workspace by going to the
-[workspace settings](/help/team-members#edit-a-team-members-permissions).
-In this document, you will learn the different available roles and what
+[workspace settings](/help/team-members#edit-a-team-members-permissions). In
+this document, you will learn the different available roles and what
 permissions are included in a role.
 
 # Available roles
 
-There are 4 different roles available to be assigned to a team member. They
-are listed here starting with the role with the fewest permissions:
+There are 4 different roles available to be assigned to a team member. They are
+listed here starting with the role with the fewest permissions:
 
 1. Observer
 2. Contributor
@@ -20,10 +20,9 @@ are listed here starting with the role with the fewest permissions:
 4. Owner
 
 That means that owners have the most permissions, and observers have the least.
-You can assign team members in your workspace a role that suits the
-activities that they will perform on your workspace. To better explain what
-roles can do, it is important to understand the available resources in a
-workspace.
+You can assign team members in your workspace a role that suits the activities
+that they will perform on your workspace. To better explain what roles can do,
+it is important to understand the available resources in a workspace.
 
 The resources and their contained information that team members can perform
 actions are as follows:
@@ -45,10 +44,10 @@ The following is a quick overview over all permissions. Each role's permissions
 are further described in the individual sections below. The meaning of an
 individual cell in this table is as follows:
 
-- **Read** indicates that a team member with this role can view the
-  resource, but not make any changes to it
-- **Write** indicates that a team member with this role can create, view,
-  and update the resource, but not delete it.
+- **Read** indicates that a team member with this role can view the resource,
+  but not make any changes to it
+- **Write** indicates that a team member with this role can create, view, and
+  update the resource, but not delete it.
 - **Full** indicates that a team member with this role can view, update and
   delete the resource.
 - Cells with a **-** indicate that no permissions exist for this resource and
@@ -67,11 +66,10 @@ individual cell in this table is as follows:
 
 # Observer
 
-**Observer** team members can view almost all available resources, except
-for workspace billing settings. They can not create, update, or delete any of
-the other resources. This role is suitable for outside users who want to
-observer the progress of a project, but do not need to commit any changes
-themselves.
+**Observer** team members can view almost all available resources, except for
+workspace billing settings. They can not create, update, or delete any of the
+other resources. This role is suitable for outside users who want to observer
+the progress of a project, but do not need to commit any changes themselves.
 
 # Contributor
 
@@ -82,8 +80,8 @@ following additional permissions in their workspace:
 - They can create, update and delete sub tasks
 
 More importantly, they do not gain any additional delete permissions for the
-above two resources, or any other edit permissions for projects,
-sections, labels, users, billing settings, and the workspace itself.
+above two resources, or any other edit permissions for projects, sections,
+labels, users, billing settings, and the workspace itself.
 
 # Maintainer
 
@@ -97,8 +95,8 @@ possible, on top of the **contributor** permissions:
 
 # Owner role
 
-With the **owner** team member role, a user gains the following permissions
-on top of the **maintainer** permissions:
+With the **owner** team member role, a user gains the following permissions on
+top of the **maintainer** permissions:
 
 - Update or delete the workspace
 - Update billing settings
@@ -107,11 +105,10 @@ on top of the **maintainer** permissions:
 # Choosing the right role
 
 Depending on what activities a team member will perform, you can choose the
-correct role for them. Not every team member will need the same access to
-all resources, and this can often prevent accidental deletion of important
-data.
+correct role for them. Not every team member will need the same access to all
+resources, and this can often prevent accidental deletion of important data.
 
 Review the available roles and their permissions above and go to the workspace
 settings to assign them to a team member. For more information on how to do
-this, please refer to the [team members help
-page](/help/team-members#edit-a-team-members-permissions).
+this, please refer to the
+[team members help page](/help/team-members#edit-a-team-members-permissions).

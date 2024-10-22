@@ -39,13 +39,13 @@ team members. **Billing** provides a way for you to amend your account billing
 details. **Quota** shows you how many more items you can create in your
 Projectify workspace.
 
-To learn more about the team members page, visit the [team members
-help](/help/team-members).
+To learn more about the team members page, visit the
+[team members help](/help/team-members).
 
 To learn more about the billing page, visit the [billing help](/help/billing).
 
-To learn more about the quota page, visit the [workspace quota
-help](/help/quota).
+To learn more about the quota page, visit the
+[workspace quota help](/help/quota).
 
 # Delete a workspace
 

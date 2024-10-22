@@ -78,8 +78,8 @@ Click the **Pencil button** next to a team member's role and select a new one
 from the dropdown. Your changes will be automatically saved when you close the
 dropdown when you **click outside**.
 
-For more on permissions, please see our guide on [team member roles and
-permissions](/help/roles).
+For more on permissions, please see our guide on
+[team member roles and permissions](/help/roles).
 
 # Delete a team member
 

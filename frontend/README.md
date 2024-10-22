@@ -41,11 +41,11 @@ installed and configured on your system:
 - [Direnv](https://direnv.net/)
 - [nix-direnv](https://github.com/nix-community/nix-direnv)
 
-If everything is configured correctly, running `direnv allow` from the
-root directory of this repository will make all tools available. Setting up
-nix was a complicated process and took some time to get right.
-If you skip NixOS, home manager, and so on, you might be able to finish it in
-a few hours. If you have any questions, please contact the maintainers.
+If everything is configured correctly, running `direnv allow` from the root
+directory of this repository will make all tools available. Setting up nix was
+a complicated process and took some time to get right. If you skip NixOS, home
+manager, and so on, you might be able to finish it in a few hours. If you have
+any questions, please contact the maintainers.
 
 Build the frontend as using the static adapter:
 

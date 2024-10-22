@@ -12,11 +12,11 @@ referred to as the "Product"). The Product is offered to Users as defined in
 the [terms of service](/tos) and those who are interested in using the Product
 (both hereinafter referred to as "You") .
 
-This page is a security-assessment created while reviewing the [Minimum Viable
-Secure Product checklist v2.0](https://mvsp.dev/mvsp.en/v2.0-20221012/). We
-invite You to share Your [feedback with us](/contact-us). For security related
-inquiries, please refer to our [security disclosure
-policy](/security/disclose).
+This page is a security-assessment created while reviewing the
+[Minimum Viable Secure Product checklist v2.0](https://mvsp.dev/mvsp.en/v2.0-20221012/).
+We invite You to share Your [feedback with us](/contact-us). For security
+related inquiries, please refer to our
+[security disclosure policy](/security/disclose).
 
 # Version History
 
@@ -24,8 +24,8 @@ This page has been created on 2024-03-29.
 
 # Business Controls
 
-We offer a point of contact for vulnerability reports on our [security disclosure
-policy page](/security/disclose).
+We offer a point of contact for vulnerability reports on our
+[security disclosure policy page](/security/disclose).
 
 If You would like to evaluate the security of the Product, We offer dedicated
 test environments. Please [contact Us](/contact-us) for more details.
@@ -64,8 +64,8 @@ The Product does not implement Single Sign-On.
 
 The Product can only be used using HTTPS. Any HTTP connection to the domains
 www.projectifyapp.com and api.projectifyapp.com will be redirected to use
-HTTPS. HSTS is used (strict-transport-security max-age=31536000). [HSTS
-preloading](https://hstspreload.org/) is not used.
+HTTPS. HSTS is used (strict-transport-security max-age=31536000).
+[HSTS preloading](https://hstspreload.org/) is not used.
 
 The Product's frontend at www.projectifyapp.com uses the following Content
 Security Policy:
@@ -83,9 +83,9 @@ on password lengths in the backend. Since the password has to be transmitted
 over HTTPS by a browser, fit into forms, and so on, we guarantee that passwords
 up to 128 character are handled without any difficulties.
 
-In order to reset Your password, We send a reset confirmation email to You.
-The Product does not use secret questions for password resets. Confirming the
-reset email is required to reset Your password.
+In order to reset Your password, We send a reset confirmation email to You. The
+Product does not use secret questions for password resets. Confirming the reset
+email is required to reset Your password.
 
 To change Your password, You must provide Your old password. A confirmation
 email is sent to You when Your password is changed.
@@ -105,9 +105,9 @@ Django's ORM.
 ## Dependency patching
 
 We keep the Product's third dependencies up to date and respond to known
-vulnerabilities. The Product's [GitHub
-repository](https://github.com/jwpconsulting/projectify) enables Us to stay
-informed of vulnerabilities by using
+vulnerabilities. The Product's
+[GitHub repository](https://github.com/jwpconsulting/projectify) enables Us to
+stay informed of vulnerabilities by using
 [Dependabot](https://docs.github.com/en/code-security/dependabot/working-with-dependabot)
 
 ## Logging
@@ -135,16 +135,16 @@ For asset storage, it has **not** been verified whether the Cloudinary
 is **not** known if Cloudinary uses encryption at rest. Cloudinary uses AWS S3
 as a storage backend.
 
-Heroku (Salesforce, Inc.) PostgreSQL storage and its backups are [encrypted at
-rest](https://devcenter.heroku.com/articles/heroku-postgres-production-tier-technical-characterization#data-encryption).
+Heroku (Salesforce, Inc.) PostgreSQL storage and its backups are
+[encrypted at rest](https://devcenter.heroku.com/articles/heroku-postgres-production-tier-technical-characterization#data-encryption).
 
 Heroku Data for Redis does **not** use encryption at rest by itself. Some data
-stored in Heroku Data for Redis is encrypted using symmetric encryption
-(Django Channels messages). Other data is **not** encrypted using symmetric
-encryption (Celery jobs).
+stored in Heroku Data for Redis is encrypted using symmetric encryption (Django
+Channels messages). Other data is **not** encrypted using symmetric encryption
+(Celery jobs).
 
-It is **not** known what communication or at rest encryption the logging service
-Papertrail (SolarWinds Worldwide, LLC) uses.
+It is **not** known what communication or at rest encryption the logging
+service Papertrail (SolarWinds Worldwide, LLC) uses.
 
 It is **not** known what communication or at rest encryption the APM service
 New Relic (New Relic, Inc.) uses.
@@ -156,8 +156,8 @@ mailing service Mailgun (Sinch America, Inc.) uses.
 
 ## List of data
 
-Please review the [privacy policy](/privacy) for a detailed listing of sensitive
-data handled by the Product.
+Please review the [privacy policy](/privacy) for a detailed listing of
+sensitive data handled by the Product.
 
 ## Data flow diagram
 
@@ -188,8 +188,8 @@ various backend services:
 
 ## Vulnerability prevention
 
-The Product uses access controls to prevent users from accessing data or
-admin features that they are not authorized to.
+The Product uses access controls to prevent users from accessing data or admin
+features that they are not authorized to.
 
 Session IDs are handled using secure and HTTP-only cookies.
 
@@ -206,8 +206,9 @@ The usage of vulnerable libraries is monitored using Dependabot.
 ## Time to fix vulnerabilities
 
 Best effort is made to remediate any discovered vulnerabilities in a timely
-manner. See the [Vulnerability Disclosure
-Policy](/security/disclose#our-commitments) for detailed information.
+manner. See the
+[Vulnerability Disclosure Policy](/security/disclose#our-commitments) for
+detailed information.
 
 ## Build process
 
@@ -240,8 +241,9 @@ api.projectifyapp.com/admin is **not** secured by MFA.
 
 ## Subprocessors
 
-A list of all subprocessors is available in the [GDPR section of the privacy
-policy](/privacy) under **Article 6 (Cross-Border Data Transfer)**.
+A list of all subprocessors is available in the
+[GDPR section of the privacy policy](/privacy) under **Article 6 (Cross-Border
+Data Transfer)**.
 
 ## Backup and Disaster Recovery
 

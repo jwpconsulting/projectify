@@ -11,8 +11,8 @@ various members of your organization as team members. In a workspace you can
 set permissions and customize the overall look and feel of your productivity
 center.
 
-For more information on workspaces please see the [workspaces
-help](/help/workspaces).
+For more information on workspaces please see the
+[workspaces help](/help/workspaces).
 
 # What is a project?
 
@@ -34,8 +34,8 @@ Popular categories in a Kanban-style project are the following:
 
 Sections can be moved and edited freely inside a project.
 
-For more information on sections please see the [sections
-help](/help/sections).
+For more information on sections please see the
+[sections help](/help/sections).
 
 # What is a task?
 

@@ -11,12 +11,12 @@ later version.,
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE. See the [GNU Affero General Public
-License](https://github.com/jwpconsulting/projectify/blob/main/LICENSE) for
-more details.
+PARTICULAR PURPOSE. See the
+[GNU Affero General Public License](https://github.com/jwpconsulting/projectify/blob/main/LICENSE)
+for more details.
 
-You can retrieve a copy of the License and source code here: [Projectify
-Repository](https://github.com/jwpconsulting/projectify)
+You can retrieve a copy of the License and source code here:
+[Projectify Repository](https://github.com/jwpconsulting/projectify)
 
 **Projectify** is a registered trademark in the EU, USA, and Japan. Permission
 is required before using this trademark. Please contact us via email if you

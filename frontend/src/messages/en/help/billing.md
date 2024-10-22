@@ -4,8 +4,8 @@ SPDX-FileCopyrightText: 2024 JWP Consulting GK
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-You need to be workspace owner to your workspace's billing settings. [Learn
-more about roles here](/help/roles).
+You need to be workspace owner to your workspace's billing settings.
+[Learn more about roles here](/help/roles).
 
 # Billing settings
 
@@ -24,10 +24,10 @@ Click the **Go to checkout button** and you will be redirected to a checkout
 page where you can enter your payment details. The checkout page is implemented
 using Stripe billing and Stripe will securely handle your payment information.
 
-Learn more about what a trial workspace can do on the [trial workspace help
-page](/help/trial). To understand the differences between a trial workspace and
-a paid workspace, please refer to the [workspace quotas help
-page](/help/quota).
+Learn more about what a trial workspace can do on the
+[trial workspace help page](/help/trial). To understand the differences between
+a trial workspace and a paid workspace, please refer to the
+[workspace quotas help page](/help/quota).
 
 # Manage a subscription and retrieve invoices
 
