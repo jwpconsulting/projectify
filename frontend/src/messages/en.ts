@@ -1101,7 +1101,7 @@ const messages: MessageDirectory = {
             },
             "feature-3": {
                 header: "Full control of your workspaces",
-                text: "List and column views allow you to organize workflows and see the bigger picture. Split your workspace into projects to enable multi-project management. Filter by labels, team members, or keywords to focus on specific tasks.",
+                text: "Split your workspace into projects to enable multi-project management. Filter by labels, team members, or keywords to focus on specific tasks.",
                 alt: "An illustration showing how tasks can be filtered by team members or labels",
             },
             "feature-5": {
