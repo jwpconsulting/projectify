@@ -23,11 +23,20 @@
           # to this derivation
           pkgs.buildNpmPackage {
             name = "projectify-frontend";
-            src = ./.;
-            npmDepsHash = "sha256-Ci4Sw6X+NM+xTL4xgBufLPP1qtBZQ8tfXh9XxFxItYk=";
+            srcs = [
+              ./.
+              ../LICENSES
+            ];
+            sourceRoot = "frontend";
+            npmDepsHash = "sha256-0a5hHG6uBDzCpqOb14TZG+7PTC16//o9ywit7+ZKZR4=";
             buildInputs = [
               nodejs
             ];
+            prePatch = ''
+              # Patch LICENSES folder into here, removing the symlink first
+              rm LICENSES
+              cp -r ../LICENSES .
+            '';
 
             preConfigure = ''
               export VITE_WS_ENDPOINT=${wsEndpoint}

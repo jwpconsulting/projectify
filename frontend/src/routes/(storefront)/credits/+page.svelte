@@ -5,7 +5,7 @@
 
     import HeroLayout from "$lib/components/layouts/HeroLayout.svelte";
 
-    import Vendored from "../../../../../LICENSES/MIT.txt?raw";
+    import Vendored from "../../../../LICENSES/MIT.txt?raw";
     import ThirdParty from "third-party-licenses";
 </script>
 
