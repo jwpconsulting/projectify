@@ -16,26 +16,19 @@
     let btnRef: HTMLElement;
 </script>
 
-<div class="flex flex-row flex-wrap items-center gap-x-1 gap-y-2">
-    {#each labels as label}
-        <div class="shrink-0">
-            <LabelC
-                label={{ kind: "label", label }}
-                action={!readonly && onInteract
-                    ? onInteract.bind(null, btnRef)
-                    : undefined}
-            />
-        </div>
-    {/each}
-    {#if onInteract}
-        {#if readonly}
-            <button
-                on:click|preventDefault={onInteract.bind(null, btnRef)}
-                type="button"
-            >
-                <Icon src={Pencil} theme="outline" class="h-4 w-4" />
-            </button>
-        {:else}
+<div class="flex flex-row items-start">
+    <div class="flex flex-row flex-wrap items-center gap-x-1 gap-y-2">
+        {#each labels as label}
+            <div class="shrink-0">
+                <LabelC
+                    label={{ kind: "label", label }}
+                    action={!readonly && onInteract
+                        ? onInteract.bind(null, btnRef)
+                        : undefined}
+                />
+            </div>
+        {/each}
+        {#if onInteract && !readonly}
             <div class="shrink-0" bind:this={btnRef}>
                 <LabelC
                     label={{ kind: "applyLabel" }}
@@ -43,5 +36,13 @@
                 />
             </div>
         {/if}
+    </div>
+    {#if readonly && onInteract}
+        <button
+            on:click|preventDefault={onInteract.bind(null, btnRef)}
+            type="button"
+        >
+            <Icon src={Pencil} theme="outline" class="h-4 w-4" />
+        </button>
     {/if}
 </div>
