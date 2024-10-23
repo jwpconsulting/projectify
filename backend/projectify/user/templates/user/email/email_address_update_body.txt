@@ -1,3 +1,5 @@
+{# SPDX-FileCopyrightText: 2024 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load i18n %}
 {% include "email/_salutation.txt" %}{% blocktranslate with new_email=new_email %}
 You have requested for your email address to be updated. This email is sent to

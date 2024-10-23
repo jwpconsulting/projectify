@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 JWP Consulting GK
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 version: 2.1
 orbs:
   cli: circleci/circleci-cli@0.1.9
@@ -52,7 +56,7 @@ commands:
           command: ln -sv ~/.local/share/poetry/bin/poetry /usr/local/bin
       - run:
           name: Install pip packages
-          command: poetry install --with test --with dev --no-root
+          command: poetry install --all-extras --no-root
       - save_cache:
           key: poetry-cache-v1-{{ checksum "poetry.lock" }}
           paths:
@@ -268,7 +272,7 @@ jobs:
       - run:
           name: Check schema with ajv
           command: npm run check:render-schema
-  tools_poetry_check:
+  tools_reuse_lint:
     executor: python
     working_directory: ~/projectify/tools
     steps:
@@ -276,25 +280,9 @@ jobs:
       - run:
           name: Poetry check
           command: poetry check
-  tools_python_lint:
-    executor: python
-    working_directory: ~/projectify/tools
-    steps:
-      - prepare_poetry
       - run:
-          name: Run flake8
-          command: poetry run ruff format --check .
-      - run:
-          name: Run black
-          command: poetry run ruff check .
-  tools_mypy:
-    executor: python
-    working_directory: ~/projectify/tools
-    steps:
-      - prepare_poetry
-      - run:
-          name: Run mypy
-          command: poetry run mypy bin/rename-component
+          name: Run reuse lint
+          command: poetry run reuse lint
 workflows:
   test_all:
     jobs:
@@ -315,6 +303,4 @@ workflows:
       - frontend_visualize-bundle
       - frontend_schema
       - tools_render_yaml_validate
-      - tools_poetry_check
-      - tools_python_lint
-      - tools_mypy
+      - tools_reuse_lint

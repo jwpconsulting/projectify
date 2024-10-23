@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 JWP Consulting GK
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Page load function
 
 Use svelte kit types that are generated automatically for great comfort. This

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 JWP Consulting GK
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from typing import Any, Union
 
 JsonData = Union[dict[str, JsonData], list[JsonData], str, int, bool]

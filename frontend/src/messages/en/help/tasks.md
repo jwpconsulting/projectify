@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 JWP Consulting GK
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Create a task
 
 Tasks are the backbone of Projectify. In order to create a task simply click

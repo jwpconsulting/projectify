@@ -8,3 +8,5 @@ Policy: https://www.projectifyapp.com/security/disclosure
 
 # Languages that our team speaks and understands
 Preferred-Languages: en, ja, de
+# SPDX-FileCopyrightText: 2024 JWP Consulting GK
+# SPDX-License-Identifier: AGPL-3.0-or-later

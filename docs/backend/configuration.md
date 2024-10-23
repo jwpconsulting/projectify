@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 JWP Consulting GK
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Configuring the Projectify backend
 
 This document contains a listing of all required backend (including worker

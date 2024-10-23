@@ -1,3 +1,5 @@
+{# SPDX-FileCopyrightText: 2024 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load i18n %}
 {% include "email/_salutation.txt" %}{% blocktranslate with title=object.workspace.title %}
 You have been invited by {{ invited_by }} on {{ when }} to join the following workspace on Projectify:

@@ -1,6 +1,0 @@
-#!/usr/bin/env sh
-# Maybe set -e, -o pipefail or -u
-npx syncpack fix-mismatches \
-    --indent "    " \
-    --source ../stories/package.json \
-    --source ../frontend/package.json

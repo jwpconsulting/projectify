@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 JWP Consulting GK
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # API design (2023-10-03)
 
 Some ideas on null and undefined semantics. Nothing definite or final.

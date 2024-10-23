@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 JWP Consulting GK
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Traffic control testing
 
 We want to be able to test Projectify under various network conditions, such

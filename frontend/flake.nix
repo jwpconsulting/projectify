@@ -1,19 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# SPDX-FileCopyrightText: 2023 JWP Consulting GK
 # Nix Flakes file
-# Copyright (C) 2024 JWP Consulting GK
-
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published
-# by the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 {
   description = "Projectify frontend";
   inputs = {
@@ -35,11 +23,20 @@
           # to this derivation
           pkgs.buildNpmPackage {
             name = "projectify-frontend";
-            src = ./.;
-            npmDepsHash = "sha256-Ci4Sw6X+NM+xTL4xgBufLPP1qtBZQ8tfXh9XxFxItYk=";
+            srcs = [
+              ./.
+              ../LICENSES
+            ];
+            sourceRoot = "frontend";
+            npmDepsHash = "sha256-0a5hHG6uBDzCpqOb14TZG+7PTC16//o9ywit7+ZKZR4=";
             buildInputs = [
               nodejs
             ];
+            prePatch = ''
+              # Patch LICENSES folder into here, removing the symlink first
+              rm LICENSES
+              cp -r ../LICENSES .
+            '';
 
             preConfigure = ''
               export VITE_WS_ENDPOINT=${wsEndpoint}

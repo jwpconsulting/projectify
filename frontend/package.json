@@ -46,7 +46,7 @@
         "esm-loader-import-alias": "~1.0.9",
         "esm-loader-import-relative-extension": "~1.0.11",
         "esm-loader-typescript": "~1.0.6",
-        "knip": "~2.23.0",
+        "knip": "~5.33.3",
         "node-esm-loader": "~0.3.0",
         "npm-run-all2": "~6.2.0",
         "openapi-typescript": "~6.7.6",

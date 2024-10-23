@@ -1,19 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2021-2024 JWP Consulting GK
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published
-# by the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2021-2024 JWP Consulting GK
 """
 Django settings for projectify project.
 
@@ -115,8 +102,6 @@ class Base(Configuration):
         "cloudinary",
         "cloudinary_storage",
         "django_celery_results",
-        # TODO I think this is ours, not third party
-        "projectify.premail",
         "rest_framework",
         "rules.apps.AutodiscoverRulesConfig",
         "pgtrigger",
@@ -130,6 +115,7 @@ class Base(Configuration):
         "projectify.user.apps.UserConfig",
         "projectify.workspace.apps.WorkspaceConfig",
         "projectify.corporate.apps.CorporateConfig",
+        "projectify.premail",
     )
 
     INSTALLED_APPS: Sequence[str] = (
@@ -323,6 +309,9 @@ class Base(Configuration):
 
     # drf-spectacular
     SERVE_SPECTACULAR = False
+
+    # premail
+    PREMAIL_PREVIEW = False
 
     # simulate slow and unreliable connections
     SLEEP_MIN_MAX_MS: Optional[tuple[int, int]] = None
