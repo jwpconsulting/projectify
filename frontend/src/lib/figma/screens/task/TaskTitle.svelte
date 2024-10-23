@@ -5,6 +5,8 @@
     import { _ } from "svelte-i18n";
 
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import { Icon } from "@steeze-ui/svelte-icon";
+    import { Pencil } from "@steeze-ui/heroicons";
 
     export let title: string | undefined;
     export let onInteract: (() => void) | undefined = undefined;
@@ -12,13 +14,25 @@
     export let readonly = false;
 </script>
 
-<InputField
-    name="title"
-    style={{ inputType: "text" }}
-    bind:value={title}
-    label={undefined}
-    placeholder={$_("task-screen.form.title.placeholder")}
-    onClick={onInteract}
-    {readonly}
-    required
-/>
+{#if readonly}
+    <div class="flex flex-row gap-4">
+        {title}
+        <button
+            class="flex flex-row"
+            on:click|preventDefault={onInteract}
+            type="button"
+        >
+            <Icon src={Pencil} theme="outline" class="h-4 w-4" />
+        </button>
+    </div>
+{:else}
+    <InputField
+        name="title"
+        style={{ inputType: "text" }}
+        bind:value={title}
+        label={undefined}
+        placeholder={$_("task-screen.form.title.placeholder")}
+        onClick={onInteract}
+        required
+    />
+{/if}
