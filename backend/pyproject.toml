@@ -17,7 +17,7 @@ exclude = [
 celery = {extras = ["redis"], version = "~5.2.7"}
 channels = {version = "^4.1.0", extras = ["daphne"]}
 channels-redis = "^4.2"
-cryptography = "42.0.4"
+cryptography = "^43.0.1"
 dj-database-url = "~2.1.0"
 django = "^5.0.7"
 django-anymail = {extras = ["mailgun"], version = "~10.3"}

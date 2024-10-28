@@ -28,7 +28,7 @@
               ../LICENSES
             ];
             sourceRoot = "frontend";
-            npmDepsHash = "sha256-0a5hHG6uBDzCpqOb14TZG+7PTC16//o9ywit7+ZKZR4=";
+            npmDepsHash = "sha256-UOs3pJXcgWE+z6Jqkkkz8yu2t8pKOQ4+l4PrJC6C8gY=";
             buildInputs = [
               nodejs
             ];

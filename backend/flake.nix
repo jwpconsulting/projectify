@@ -52,9 +52,15 @@
               inherit (old) src;
               name = "${old.pname}-${old.version}";
               sourceRoot = "${old.pname}-${old.version}/${cargoRoot}";
-              sha256 = "sha256-qaXQiF1xZvv4sNIiR2cb5TfD7oNiYdvUwcm37nh2P2M=";
+              sha256 = "sha256-d3Gt4VrBWk6qowwX0Epp4mc1PbySARVU9YMsHYKImCs=";
             };
             cargoRoot = "src/rust";
+            # Thx to
+            # https://github.com/nix-community/poetry2nix/issues/731#issuecomment-1260184515
+            nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
+              pkgs.rustPlatform.cargoSetupHook
+              pkgs.rustPlatform.maturinBuildHook
+            ];
           });
         } // (builtins.mapAttrs
           (package: build-requirements: (
