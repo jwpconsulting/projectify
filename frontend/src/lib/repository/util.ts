@@ -17,6 +17,10 @@ const baseUrl = __API_ENDPOINT__;
 
 const csrfMiddleWare: Middleware = {
     onRequest(request: Request) {
+        // If GET then no CSRF token is required anyway
+        if (request.method === "GET") {
+            return request;
+        }
         const csrftoken = getCookie("csrftoken");
         if (csrftoken === undefined) {
             console.warn("No csrf token found");

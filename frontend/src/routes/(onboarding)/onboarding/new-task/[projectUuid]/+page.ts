@@ -20,8 +20,7 @@ export async function load({
     workspace: WorkspaceDetail;
     section?: ProjectDetail["sections"][number];
 }> {
-    const { userAwaitable } = await parent();
-    const user = await userAwaitable;
+    const { user } = await parent();
     const project = await getProject(projectUuid);
     if (!project) {
         error(404, `No project could be found for UUID ${projectUuid}.`);

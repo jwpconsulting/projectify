@@ -17,7 +17,7 @@
     export let onUncheck: () => void;
     export let onEdit: (() => void) | undefined = undefined;
 
-    const id = self.crypto.randomUUID();
+    const id = crypto.randomUUID();
 
     async function onDelete() {
         if (label.kind !== "label") {

@@ -3,35 +3,29 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import Loading from "$lib/components/Loading.svelte";
     import SectionC from "$lib/figma/cards/Section.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { currentProject } from "$lib/stores/dashboard/project";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
-    import type {
-        ProjectDetail,
-        ProjectDetailSection,
-    } from "$lib/types/workspace";
+    import type { ProjectDetailSection } from "$lib/types/workspace";
     import { currentSections } from "$lib/stores/dashboard/section";
     import { handleKey } from "$lib/utils/keyboard";
     import { onMount } from "svelte";
     import { selectInProject } from "$lib/stores/dashboard/ui";
+    import type { PageData } from "./$types";
 
-    export let data: { injectProject?: ProjectDetail } | undefined = undefined;
+    export let data: PageData;
 
-    let project: ProjectDetail | undefined = undefined;
-    $: project = $currentProject.value ?? data?.injectProject;
+    let { project } = data;
+    $: project = $currentProject.or(data.project);
 
-    $: hasSections = project ? project.sections.length > 0 : false;
+    $: hasSections = project.sections.length > 0;
 
     let sections: readonly ProjectDetailSection[];
-    $: sections = $currentSections ?? data?.injectProject?.sections ?? [];
+    $: sections = $currentSections ?? [];
 
     async function onAddNewSection() {
-        if (!project) {
-            throw new Error("Expected project");
-        }
         await openConstructiveOverlay({
             kind: "createSection",
             project,
@@ -56,37 +50,31 @@
 </script>
 
 <svelte:head>
-    {#if project && data?.injectProject === undefined}<title
-            >{$_("dashboard.title", {
-                values: { title: project.title },
-            })}</title
-        >{/if}
+    <title
+        >{$_("dashboard.title", {
+            values: { title: project.title },
+        })}</title
+    >
 </svelte:head>
 
 <!-- Sections -->
-{#if project}
-    {#each sections as section (section.uuid)}
-        <SectionC {project} {section} />
-    {:else}
-        <section
-            class="py-2 px-4 gap-8 bg-foreground rounded-lg flex flex-col"
-        >
-            <p>
-                {$_("dashboard.no-sections.message")}
-            </p>
-            <Button
-                style={{ kind: "primary" }}
-                color="blue"
-                size="medium"
-                grow={false}
-                label={$_("dashboard.no-sections.prompt")}
-                action={{ kind: "button", action: onAddNewSection }}
-            />
-        </section>
-    {/each}
+{#each sections as section (section.uuid)}
+    <SectionC {project} {section} />
 {:else}
-    <Loading />
-{/if}
+    <section class="py-2 px-4 gap-8 bg-foreground rounded-lg flex flex-col">
+        <p>
+            {$_("dashboard.no-sections.message")}
+        </p>
+        <Button
+            style={{ kind: "primary" }}
+            color="blue"
+            size="medium"
+            grow={false}
+            label={$_("dashboard.no-sections.prompt")}
+            action={{ kind: "button", action: onAddNewSection }}
+        />
+    </section>
+{/each}
 
 {#if hasSections && $currentTeamMemberCan("create", "section")}
     <div class="sticky bottom-0 self-end p-2">

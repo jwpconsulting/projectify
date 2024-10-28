@@ -4,7 +4,6 @@ import { readonly, writable } from "svelte/store";
 
 import type { CurrentUser } from "$lib/types/user";
 import { dataOrThrow, openApiClient } from "$lib/repository/util";
-import { browser } from "$app/environment";
 import { backOff } from "exponential-backoff";
 import { currentWorkspaces } from "./dashboard/workspace";
 import type { Unsubscriber } from "svelte/motion";
@@ -13,9 +12,6 @@ const fetchUserBackOff = () =>
     backOff(() => dataOrThrow(openApiClient.GET("/user/user/current-user")));
 
 const _user = writable<CurrentUser>({ kind: "start" }, (set) => {
-    if (!browser) {
-        return;
-    }
     fetchUserBackOff()
         .then(({ data: user }) => {
             set(user);

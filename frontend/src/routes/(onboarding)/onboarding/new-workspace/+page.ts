@@ -12,8 +12,7 @@ export async function load({
     parent,
     url,
 }: PageLoadEvent): Promise<{ user: User; workspace?: UserWorkspace }> {
-    const { userAwaitable } = await parent();
-    const user = await userAwaitable;
+    const { user } = await parent();
     if (user.kind !== "authenticated") {
         redirect(302, getLogInWithNextUrl(url.pathname));
     }

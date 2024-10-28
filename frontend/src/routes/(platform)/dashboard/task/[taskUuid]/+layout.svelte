@@ -10,17 +10,13 @@
 
     export let data: LayoutData;
 
-    $: task = $currentTask.orPromise(data.task);
+    $: task = $currentTask.or(data.task);
 </script>
 
 <svelte:head>
-    {#await task}
-        <title>{$_("task.title-loading")}</title>
-    {:then task}
-        <title>
-            {$_("task.title", { values: { title: task.title } })}
-        </title>
-    {/await}
+    <title>
+        {$_("task.title", { values: { title: task.title } })}
+    </title>
 </svelte:head>
 
 <slot />
