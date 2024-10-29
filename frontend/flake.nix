@@ -18,6 +18,7 @@
           , apiEndpoint ? "/api"
           , projectifyDomain ? "https://www.projectify.com"
           , adapter ? "node"
+          , visualize ? false
           }:
           # TODO make WS_ENDPOINT, API_ENDPOINT and PROJECITYF_DOMAIN arguments
           # to this derivation
@@ -48,16 +49,22 @@
               export PROJECTIFY_FRONTEND_ADAPTER=${adapter}
               export NODE_ENV=production
             '';
+            npmBuildFlags = if visualize then "-- --mode staging" else "";
 
             postBuild =
               if adapter == "node" then ''
                 cp -a package.json node_modules build/
               '' else "";
 
-            installPhase = ''
-              mkdir -p $out
-              cp -a build/. $out/
-            '';
+            installPhase =
+              if visualize then ''
+                mkdir -p $out
+                cp .svelte-kit/output/client/bundle.html $out/client-bundle.html
+                cp .svelte-kit/output/server/bundle.html $out/server-bundle.html
+              '' else ''
+                mkdir -p $out
+                cp -a build/. $out/
+              '';
             meta = with pkgs.lib; {
               description = "Frontend for the Projectify project management software";
               homepage = "https://www.projectifyapp.com";
@@ -94,6 +101,10 @@
         packages = {
           inherit projectify-frontend-static;
           inherit projectify-frontend-node;
+          projectify-frontend-bundle-viz = mkFrontend {
+            adapter = "node";
+            visualize = true;
+          };
         };
         devShell = pkgs.mkShell {
           buildInputs = [
