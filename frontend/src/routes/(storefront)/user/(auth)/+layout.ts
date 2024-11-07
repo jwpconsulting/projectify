@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
 import { redirect } from "@sveltejs/kit";
 import type { LayoutLoadEvent } from "./$types";
-import { currentUserAwaitable } from "$lib/stores/user";
 import { dashboardUrl } from "$lib/urls/dashboard";
+import { currentUser } from "$lib/stores/user";
 
 interface Data {
     redirectTo: string | undefined;
@@ -12,7 +12,7 @@ interface Data {
 export async function load({ url }: LayoutLoadEvent): Promise<Data> {
     // TODO might want to default to dashboardUrl here with redirectTo
     const redirectTo = url.searchParams.get("next") ?? undefined;
-    const user = await currentUserAwaitable();
+    const user = await currentUser.load();
     if (user.kind === "authenticated") {
         redirect(302, redirectTo ?? dashboardUrl);
     }
