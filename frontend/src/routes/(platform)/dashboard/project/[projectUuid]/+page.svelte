@@ -3,16 +3,23 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import SectionC from "$lib/figma/cards/Section.svelte";
+    import { getNewTaskUrl } from "$lib/urls";
+    import SectionTitle from "$lib/figma/cards/section-bar/SectionTitle.svelte";
+    import TaskCard from "$lib/figma/cards/TaskCard.svelte";
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { currentProject } from "$lib/stores/dashboard/project";
+    import {
+        sectionClosed,
+        currentSectionTask,
+        selectInProject,
+    } from "$lib/stores/dashboard/ui";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type { ProjectDetailSection } from "$lib/types/workspace";
     import { currentSections } from "$lib/stores/dashboard/section";
     import { handleKey } from "$lib/utils/keyboard";
     import { onMount } from "svelte";
-    import { selectInProject } from "$lib/stores/dashboard/ui";
     import type { PageData } from "./$types";
 
     export let data: PageData;
@@ -59,7 +66,32 @@
 
 <!-- Sections -->
 {#each sections as section (section.uuid)}
-    <SectionC {project} {section} />
+    {@const open = !$sectionClosed.has(section.uuid)}
+    {@const isCurrentSection =
+        $currentSectionTask?.sectionUuid === section.uuid}
+    <section class="flex flex-col" class:ring={isCurrentSection}>
+        <SectionTitle {project} {section} {open} />
+        {#if open}
+            <table
+                class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4 lg:grid lg:grid-cols-[8fr_3fr_max-content] lg:gap-4"
+            >
+                <tbody class="contents">
+                    {#each section.tasks as task (task.uuid)}
+                        <TaskCard {project} {task} {section} />
+                    {:else}
+                        <p>
+                            {$_("dashboard.section.empty.message")}
+                            <Anchor
+                                label={$_("dashboard.section.empty.prompt")}
+                                size="normal"
+                                href={getNewTaskUrl(section)}
+                            />
+                        </p>
+                    {/each}
+                </tbody>
+            </table>
+        {/if}
+    </section>
 {:else}
     <section class="py-2 px-4 gap-8 bg-foreground rounded-lg flex flex-col">
         <p>
