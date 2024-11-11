@@ -36,19 +36,7 @@ const lock = withLock(10);
 
 export function overrideClient(fetch: typeof global.fetch) {
     const wrapped = async (...args: Parameters<typeof global.fetch>) => {
-        return await lock(async () => {
-            console.log("Lock acquired");
-            console.log("Request args", args);
-            try {
-                const result = await fetch(...args);
-                return result;
-            } catch (e) {
-                console.error(e);
-                throw e;
-            } finally {
-                console.log("Releasing lock");
-            }
-        });
+        return lock(() => fetch(...args));
     };
     openApiClient = createClientCustom(wrapped);
 }
