@@ -2,13 +2,13 @@
 // SPDX-FileCopyrightText: 2023 JWP Consulting GK
 import { error, redirect } from "@sveltejs/kit";
 
-import { getWorkspace } from "$lib/repository/workspace/workspace";
-import { getProject } from "$lib/repository/workspace/project";
 import type { ProjectDetail, WorkspaceDetail } from "$lib/types/workspace";
 
 import type { PageLoadEvent } from "./$types";
 import { getLogInWithNextUrl } from "$lib/urls/user";
 import type { User } from "$lib/types/user";
+import { currentProject } from "$lib/stores/dashboard/project";
+import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 
 export async function load({
     params: { projectUuid },
@@ -21,7 +21,7 @@ export async function load({
     section?: ProjectDetail["sections"][number];
 }> {
     const { user } = await parent();
-    const project = await getProject(projectUuid);
+    const project = await currentProject.loadUuid(projectUuid);
     if (!project) {
         error(404, `No project could be found for UUID ${projectUuid}.`);
     }
@@ -29,7 +29,7 @@ export async function load({
         redirect(302, getLogInWithNextUrl(url.pathname));
     }
     const { uuid: workspaceUuid } = project.workspace;
-    const workspace = await getWorkspace(workspaceUuid);
+    const workspace = await currentWorkspace.loadUuid(workspaceUuid);
     if (!workspace) {
         // If this happens something is very wrong
         error(

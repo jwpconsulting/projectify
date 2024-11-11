@@ -2,7 +2,6 @@
 // SPDX-FileCopyrightText: 2023 JWP Consulting GK
 import { error } from "@sveltejs/kit";
 
-import { getProject } from "$lib/repository/workspace/project";
 import { currentTask } from "$lib/stores/dashboard/task";
 import type {
     Label,
@@ -15,6 +14,7 @@ import type {
 import { unwrap } from "$lib/utils/type";
 
 import type { PageLoadEvent } from "./$types";
+import { currentProject } from "$lib/stores/dashboard/project";
 
 interface returnType {
     task: TaskDetail;
@@ -38,7 +38,7 @@ export async function load({
             project: { uuid: projectUuid },
         },
     } = task;
-    const project = await getProject(projectUuid);
+    const project = await currentProject.loadUuid(projectUuid);
     if (!project) {
         throw new Error("Expected project");
     }
