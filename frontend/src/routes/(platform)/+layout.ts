@@ -28,3 +28,4 @@ export async function load({ url }: LayoutLoadEvent): Promise<Data> {
 }
 
 export const ssr = true;
+export const prerender = false;
