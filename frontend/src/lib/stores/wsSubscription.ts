@@ -370,7 +370,6 @@ export function createWsStore<T extends HasUuid>(
             return;
         }
         if (state.kind === "ssr") {
-            console.error("SSR rendering");
             return;
         }
         console.debug("Resetting resource", resource, "uuid", state.uuid);
@@ -389,7 +388,9 @@ export function createWsStore<T extends HasUuid>(
         if (state.kind === "start") {
             return;
         }
-        console.debug("Stopping");
+        if (state.kind === "ssr") {
+            return;
+        }
         resetAndUnsubscribe().catch((error: unknown) =>
             console.error("Error when resetting", error),
         );

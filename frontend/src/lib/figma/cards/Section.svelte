@@ -30,18 +30,20 @@
         <table
             class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4 lg:grid lg:grid-cols-[8fr_3fr_max-content] lg:gap-4"
         >
-            {#each section.tasks as task (task.uuid)}
-                <TaskCard {project} {task} {section} />
-            {:else}
-                <p>
-                    {$_("dashboard.section.empty.message")}
-                    <Anchor
-                        label={$_("dashboard.section.empty.prompt")}
-                        size="normal"
-                        href={getNewTaskUrl(section)}
-                    />
-                </p>
-            {/each}
+            <tbody class="contents">
+                {#each section.tasks as task (task.uuid)}
+                    <TaskCard {project} {task} {section} />
+                {:else}
+                    <p>
+                        {$_("dashboard.section.empty.message")}
+                        <Anchor
+                            label={$_("dashboard.section.empty.prompt")}
+                            size="normal"
+                            href={getNewTaskUrl(section)}
+                        />
+                    </p>
+                {/each}
+            </tbody>
         </table>
     {/if}
 </section>
