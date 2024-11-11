@@ -16,6 +16,7 @@
         mkFrontend =
           { wsEndpoint ? "/ws"
           , apiEndpoint ? "/api"
+          , apiEndpointRewriteTo ? "/api"
           , projectifyDomain ? "https://www.projectify.com"
           , adapter ? "node"
           , visualize ? false
@@ -42,6 +43,7 @@
             preConfigure = ''
               export VITE_WS_ENDPOINT=${wsEndpoint}
               export VITE_API_ENDPOINT=${apiEndpoint}
+              export VITE_API_ENDPOINT_REWRITE_TO=${apiEndpointRewriteTo}
               export VITE_PROJECTIFY_DOMAIN=${projectifyDomain}
               export VITE_GIT_COMMIT_DATE=${self.lastModifiedDate}
               export VITE_GIT_BRANCH_NAME=nix
