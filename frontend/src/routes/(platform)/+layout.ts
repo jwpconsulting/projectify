@@ -14,16 +14,15 @@ interface Data {
 }
 
 export async function load({ url }: LayoutLoadEvent): Promise<Data> {
-    const user = await currentUser.load();
-    console.log({ user });
+    const [user, _currentWorkspaces] = await Promise.all([
+        currentUser.load(),
+        currentWorkspaces.load(),
+    ]);
     if (user.kind === "unauthenticated") {
         const next = getLogInWithNextUrl(url.pathname);
         console.log("Not logged in, redirecting to", next);
         redirect(302, next);
     }
-    currentWorkspaces.load().catch((error: unknown) => {
-        console.error("Error when loading currentWorkspaces", error);
-    });
     return { user };
 }
 
