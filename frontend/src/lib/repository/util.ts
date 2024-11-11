@@ -9,6 +9,7 @@ import type { Middleware } from "openapi-fetch";
 
 import type { paths } from "$lib/types/schema";
 import { invalidate } from "$app/navigation";
+import { withLock } from "superlock";
 
 const baseUrl = __API_ENDPOINT__;
 
@@ -31,8 +32,25 @@ const csrfMiddleWare: Middleware = {
     },
 };
 
+const lock = withLock(10);
+
 export function overrideClient(fetch: typeof global.fetch) {
-    openApiClient = createClientCustom(fetch);
+    const wrapped = async (...args: Parameters<typeof global.fetch>) => {
+        return await lock(async () => {
+            console.log("Lock acquired");
+            console.log("Request args", args);
+            try {
+                const result = await fetch(...args);
+                return result;
+            } catch (e) {
+                console.error(e);
+                throw e;
+            } finally {
+                console.log("Releasing lock");
+            }
+        });
+    };
+    openApiClient = createClientCustom(wrapped);
 }
 
 function createClientCustom(fetch?: typeof global.fetch) {

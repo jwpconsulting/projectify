@@ -82,6 +82,7 @@
         "pikaday": "~1.8.2",
         "rollup-plugin-visualizer": "~5.12",
         "sass": "^1.77",
+        "superlock": "^1.2.1",
         "svelte": "~4.2.19",
         "svelte-i18n": "~4.0.0",
         "svelte-local-storage-store": "~0.6.4",
