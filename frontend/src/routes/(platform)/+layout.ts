@@ -3,21 +3,16 @@
 import { redirect } from "@sveltejs/kit";
 
 import { currentWorkspaces } from "$lib/stores/dashboard/workspace";
-import type { CurrentUser } from "$lib/types/user";
 import { getLogInWithNextUrl } from "$lib/urls/user";
 
 import type { LayoutLoadEvent } from "./$types";
-import { currentUser } from "$lib/stores/user";
+import type { CurrentUser } from "$lib/types/user";
 
-interface Data {
-    user: CurrentUser;
-}
-
-export async function load({ url }: LayoutLoadEvent): Promise<Data> {
-    const [user, _currentWorkspaces] = await Promise.all([
-        currentUser.load(),
-        currentWorkspaces.load(),
-    ]);
+export async function load({ parent, url }: LayoutLoadEvent): Promise<{
+    user: CurrentUser & { kind: "authenticated" };
+}> {
+    await currentWorkspaces.load();
+    const { user } = await parent();
     if (user.kind === "unauthenticated") {
         const next = getLogInWithNextUrl(url.pathname);
         console.log("Not logged in, redirecting to", next);

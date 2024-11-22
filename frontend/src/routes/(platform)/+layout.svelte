@@ -24,11 +24,14 @@ wouldn't need min-h-screen, really.
         rejectDestructiveOverlay,
         rejectConstructiveOverlay,
     } from "$lib/stores/globalUi";
-    import { currentUser } from "$lib/stores/user";
+    import type { PageData } from "./dashboard/$types";
+
+    export let data: PageData;
+    const { user } = data;
 </script>
 
 <div class="flex min-h-screen grow flex-col">
-    <HeaderDashboard user={$currentUser} />
+    <HeaderDashboard {user} />
     {#if $mobileMenuState.kind === "visible"}
         <MobileMenuOverlay target={$mobileMenuState.target} />
     {/if}
@@ -65,4 +68,4 @@ wouldn't need min-h-screen, really.
 
 <ContextMenuContainer />
 
-<Footer />
+<Footer {user} />
