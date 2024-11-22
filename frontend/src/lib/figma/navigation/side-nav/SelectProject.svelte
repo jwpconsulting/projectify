@@ -6,7 +6,11 @@
     import { _ } from "svelte-i18n";
 
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
-    import { currentProject } from "$lib/stores/dashboard/project";
+    import type { WsResource } from "$lib/types/stores";
+    import type { ProjectDetail } from "$lib/types/workspace";
+
+    const currentProject =
+        getContext<WsResource<ProjectDetail>>("currentProject");
     import { openContextMenu } from "$lib/stores/globalUi";
     import type {
         WorkspaceDetail,

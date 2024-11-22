@@ -4,7 +4,7 @@ import type { ProjectDetail } from "$lib/types/workspace";
 
 import type { LayoutLoadEvent } from "./$types";
 
-import { currentProject } from "$lib/stores/dashboard/project";
+import { getProject } from "$lib/stores/dashboard/project";
 import { error } from "@sveltejs/kit";
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 
@@ -15,8 +15,7 @@ interface Data {
 export async function load({
     params: { projectUuid },
 }: LayoutLoadEvent): Promise<Data> {
-    const project: ProjectDetail | undefined =
-        await currentProject.loadUuid(projectUuid);
+    const project: ProjectDetail | undefined = await getProject(projectUuid);
     if (project === undefined) {
         error(404, `No project could be found for UUID '${projectUuid}'`);
     }

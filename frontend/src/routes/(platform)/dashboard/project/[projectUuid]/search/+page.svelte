@@ -5,10 +5,15 @@
 
     import TaskCard from "$lib/figma/cards/TaskCard.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { currentProject } from "$lib/stores/dashboard/project";
     import { getDashboardProjectUrl } from "$lib/urls";
 
     import type { PageData } from "./$types";
+    import { getContext } from "svelte";
+    import type { WsResource } from "$lib/types/stores";
+    import type { ProjectDetail } from "$lib/types/workspace";
+
+    const currentProject =
+        getContext<WsResource<ProjectDetail>>("currentProject");
 
     export let data: PageData;
     $: project = $currentProject.value;

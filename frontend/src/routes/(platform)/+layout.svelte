@@ -30,15 +30,19 @@ wouldn't need min-h-screen, really.
     } from "$lib/stores/globalUi";
     import type { PageData } from "./dashboard/$types";
     import { currentWorkspace } from "$lib/stores/dashboard/workspace";
-    import { currentProject } from "$lib/stores/dashboard/project";
     import {
         type CurrentTeamMember,
         type CurrentTeamMemberCan,
     } from "$lib/stores/dashboard/teamMember";
     import type { WorkspaceDetailTeamMember } from "$lib/types/workspace";
+    import { createWsStore } from "$lib/stores/wsSubscription";
+    import { getProject } from "$lib/stores/dashboard/project";
 
     export let data: PageData;
     const { user } = data;
+
+    const currentProject = createWsStore("project", getProject);
+    setContext("currentProject", currentProject);
 
     /**
      * Find current team member belonging to logged in user
