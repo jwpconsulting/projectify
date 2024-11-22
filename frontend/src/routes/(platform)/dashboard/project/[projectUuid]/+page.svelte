@@ -14,13 +14,17 @@
         currentSectionTask,
         selectInProject,
     } from "$lib/stores/dashboard/ui";
-    import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type { ProjectDetailSection } from "$lib/types/workspace";
     import { currentSections } from "$lib/stores/dashboard/section";
     import { handleKey } from "$lib/utils/keyboard";
-    import { onMount } from "svelte";
+    import { onMount, getContext } from "svelte";
     import type { PageData } from "./$types";
+    import type { CurrentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
+
+    const currentTeamMemberCan = getContext<CurrentTeamMemberCan>(
+        "currentTeamMemberCan",
+    );
 
     export let data: PageData;
 

@@ -7,6 +7,7 @@ TODO evaluate whether grow is still necessary. Seems that with grow set, we
 wouldn't need min-h-screen, really.
 -->
 <script lang="ts">
+    import { derived } from "svelte/store";
     import ConnectionStatus from "$lib/components/ConnectionStatus.svelte";
     import ContextMenuContainer from "$lib/components/ContextMenuContainer.svelte";
     import OverlayContainer from "$lib/components/OverlayContainer.svelte";
@@ -16,6 +17,9 @@ wouldn't need min-h-screen, really.
     import ConstructiveOverlay from "$lib/figma/overlays/constructive/ConstructiveOverlay.svelte";
     import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
     import MobileMenuOverlay from "$lib/figma/overlays/MobileMenuOverlay.svelte";
+    import { setContext } from "svelte";
+
+    import { can, type Resource, type Verb } from "$lib/rules/workspace";
     import {
         mobileMenuState,
         resolveConstructiveOverlay,
@@ -25,9 +29,82 @@ wouldn't need min-h-screen, really.
         rejectConstructiveOverlay,
     } from "$lib/stores/globalUi";
     import type { PageData } from "./dashboard/$types";
+    import { currentWorkspace } from "$lib/stores/dashboard/workspace";
+    import { currentProject } from "$lib/stores/dashboard/project";
+    import {
+        type CurrentTeamMember,
+        type CurrentTeamMemberCan,
+    } from "$lib/stores/dashboard/teamMember";
+    import type { WorkspaceDetailTeamMember } from "$lib/types/workspace";
 
     export let data: PageData;
     const { user } = data;
+
+    /**
+     * Find current team member belonging to logged in user
+     */
+    const currentTeamMember: CurrentTeamMember = derived<
+        [typeof currentWorkspace, typeof currentProject],
+        WorkspaceDetailTeamMember | undefined
+    >(
+        [currentWorkspace, currentProject],
+        ([$currentWorkspace, $currentProject], set) => {
+            const teamMembers =
+                $currentWorkspace.value?.team_members ??
+                $currentProject.value?.workspace.team_members;
+            if (teamMembers === undefined) {
+                set(undefined);
+                return;
+            }
+            const wsUser = teamMembers.find(
+                (wsUser) => wsUser.user.email === user.email,
+            );
+            if (wsUser === undefined) {
+                throw new Error("Couldn't find currentTeamMember");
+            }
+            set(wsUser);
+        },
+        undefined,
+    );
+
+    /**
+     * A store that returns a function that allows permission checking for the
+     * currently active, logged in user's team member.
+     */
+    const currentTeamMemberCan: CurrentTeamMemberCan = derived<
+        [
+            typeof currentTeamMember,
+            typeof currentWorkspace,
+            typeof currentProject,
+        ],
+        (verb: Verb, resource: Resource) => boolean
+    >(
+        [currentTeamMember, currentWorkspace, currentProject],
+        ([$currentTeamMember, $currentWorkspace, $currentProject], set) => {
+            if ($currentTeamMember === undefined) {
+                console.warn("teamMember was undefined");
+                set(() => false);
+                return;
+            }
+            const quota =
+                $currentWorkspace.value?.quota ??
+                $currentProject.value?.workspace.quota;
+            if (quota === undefined) {
+                console.warn("no quota found");
+                set(() => false);
+                return;
+            }
+            const fn = (verb: Verb, resource: Resource) =>
+                can(verb, resource, $currentTeamMember, quota);
+            set(fn);
+        },
+        () => false,
+    );
+    setContext<CurrentTeamMember>("currentTeamMember", currentTeamMember);
+    setContext<CurrentTeamMemberCan>(
+        "currentTeamMemberCan",
+        currentTeamMemberCan,
+    );
 </script>
 
 <div class="flex min-h-screen grow flex-col">

@@ -12,9 +12,14 @@
     } from "$lib/stores/dashboard/ui";
     import { selectedTeamMember } from "$lib/stores/dashboard/teamMemberFilter";
     import { currentWorkspace } from "$lib/stores/dashboard/workspace";
-    import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import { getSettingsUrl } from "$lib/urls";
+    import type { CurrentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
+    import { getContext } from "svelte";
+
+    const currentTeamMemberCan = getContext<CurrentTeamMemberCan>(
+        "currentTeamMemberCan",
+    );
 </script>
 
 <SideNavMenuCategory

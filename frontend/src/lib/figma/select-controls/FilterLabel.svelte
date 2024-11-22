@@ -6,9 +6,14 @@
     import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
     import type { SelectLabel } from "$lib/figma/types";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
-    import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
     import { openApiClient } from "$lib/repository/util";
+    import type { CurrentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
+    import { getContext } from "svelte";
+
+    const currentTeamMemberCan = getContext<CurrentTeamMemberCan>(
+        "currentTeamMemberCan",
+    );
 
     export let label: SelectLabel;
     export let checked: boolean;
