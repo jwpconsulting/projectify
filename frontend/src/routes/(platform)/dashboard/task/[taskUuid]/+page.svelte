@@ -15,7 +15,6 @@
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
-    import { currentTask } from "$lib/stores/dashboard/task";
     import { openContextMenu } from "$lib/stores/globalUi";
     import {
         getDashboardSectionUrl,
@@ -30,12 +29,16 @@
     import { goto } from "$app/navigation";
     import type { CurrentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { getContext } from "svelte";
+    import type { TaskDetail } from "$lib/types/workspace";
+    import type { WsResource } from "$lib/types/stores";
 
     const currentTeamMemberCan = getContext<CurrentTeamMemberCan>(
         "currentTeamMemberCan",
     );
 
     export let data: PageData;
+
+    const currentTask = getContext<WsResource<TaskDetail>>("currentTask");
 
     $: task = $currentTask.or(data.task);
 

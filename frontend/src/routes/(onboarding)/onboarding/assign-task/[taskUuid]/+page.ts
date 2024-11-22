@@ -2,7 +2,6 @@
 // SPDX-FileCopyrightText: 2023 JWP Consulting GK
 import { error } from "@sveltejs/kit";
 
-import { currentTask } from "$lib/stores/dashboard/task";
 import type {
     Label,
     ProjectDetailWorkspace,
@@ -15,6 +14,7 @@ import { unwrap } from "$lib/utils/type";
 
 import type { PageLoadEvent } from "./$types";
 import { currentProject } from "$lib/stores/dashboard/project";
+import { openApiClient } from "$lib/repository/util";
 
 interface returnType {
     task: TaskDetail;
@@ -27,7 +27,10 @@ interface returnType {
 export async function load({
     params: { taskUuid },
 }: PageLoadEvent): Promise<returnType> {
-    const task = await currentTask.loadUuid(taskUuid);
+    const { data: task } = await openApiClient.GET(
+        "/workspace/task/{task_uuid}",
+        { params: { path: { task_uuid: taskUuid } } },
+    );
     if (!task) {
         // TODO find out if we can i18n this?
         error(404, `No task could be found for task UUID '${taskUuid}'.`);
