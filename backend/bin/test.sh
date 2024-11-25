@@ -31,10 +31,26 @@ else
     exit 1
 fi
 
+if djlint --check .
+then
+    echo "djlint --check ran successfully"
+else
+    echo "There was an error running djlint --check"
+    exit 1
+fi
+
 if ruff check --fix "$target"; then
     echo "ruff ran successfully"
 else
     echo "ruff didn't finish successfully"
+    exit 1
+fi
+
+if djlint --lint .
+then
+    echo "djlint --lint ran successfully"
+else
+    echo "There was an error running djlint --lint"
     exit 1
 fi
 

@@ -7,3 +7,4 @@
 set -e
 ruff format .
 ruff check --fix .
+djlint --reformat .
