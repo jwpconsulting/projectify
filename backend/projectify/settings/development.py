@@ -132,10 +132,10 @@ class Development(SpectacularSettings, Base):
     }
 
     # Settings for slow connection emulation
-    SLEEP_MIN_MAX_MS = 200, 500
-    ERROR_RATE_PCT = 20
-    CHANNEL_ERROR = 20
-    ASGI_APPLICATION = "projectify.test.asgi.error_application"
+    # SLEEP_MIN_MAX_MS = 200, 500
+    # ERROR_RATE_PCT = 20
+    # CHANNEL_ERROR = 20
+    # ASGI_APPLICATION = "projectify.test.asgi.error_application"
 
     # Show preview of all email types
     PREMAIL_PREVIEW = True

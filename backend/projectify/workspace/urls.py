@@ -10,6 +10,7 @@ from projectify.workspace.views.project import (
     ProjectArchive,
     ProjectArchivedList,
     ProjectCreate,
+    ProjectDetailView,
     ProjectReadUpdateDelete,
 )
 from projectify.workspace.views.section import (
@@ -92,6 +93,12 @@ team_member_patterns = (
 )
 
 project_patterns = (
+    # HTML
+    path(
+        "<uuid:project_uuid>/view",
+        ProjectDetailView.as_view(),
+        name="view",
+    ),
     # Create
     path(
         "",
