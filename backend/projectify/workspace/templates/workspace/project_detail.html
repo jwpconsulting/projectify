@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>{{ object.title }}</h1>
+    <p>Sections:</p>
+    <ol>
+        {% for section in object.section_set.all %}
+            <li>
+                Section: {{ section.title }}
+                Tasks:
+                <ol>
+                    {% for task in section.task_set.all %}<li>{{ task.title }}</li>{% endfor %}
+                </ol>
+            </li>
+        {% endfor %}
+    </ol>
+{% endblock %}
