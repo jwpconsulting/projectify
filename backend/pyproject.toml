@@ -75,6 +75,9 @@ djlint = "^1.36.1"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.djlint]
+profile = "django"
+
 [tool.ruff]
 line-length=79
 extend-exclude = [
