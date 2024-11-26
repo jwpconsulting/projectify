@@ -267,3 +267,34 @@ or otherwise only usable from the dashboard or task view are:
 - Keyboard shortcuts: Maybe https://htmx.org/examples/keyboard-shortcuts/
 - Label search: Either replace with alpinejs, or remove for now
 - User search: Either replace with alpinejs, or remove for now
+
+# Work log
+
+Here's is my work log for this project.
+
+## 2024-11-25
+
+I created a project detail view showing the sections and tasks in a project.
+It was very easy to make using the Django `generic.detail.DetailView`. The
+template naming is somewhat implicit, and the template is automatically
+picked up from `workspace/project_detail.html` inside the
+`projectify/workspace/templates` directory.
+
+The url is temporary for now:
+
+```
+workspace/project/<uuid>/view
+```
+
+It was pleasant to work with Django, there even is a debug toolbar which I have
+added a long time ago for admin panel debugging.
+
+## 2024-11-26
+
+I would like to see if Tailwind works with Django. I'm following the
+instructions here:
+
+https://django-tailwind.readthedocs.io/en/latest/installation.html
+
+Result: It is integrated into the backend flake build process (after a lot of
+experimentation and various Nix path issues)
