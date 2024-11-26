@@ -89,16 +89,19 @@ class Base(Configuration):
         "pgtrigger",
         "rest_framework",
         "rules.apps.AutodiscoverRulesConfig",
+        "tailwind",
     )
 
     INSTALLED_APPS_FIRST_PARTY = (
         "projectify",
+        # TODO check if this can be alphabetized
         # Replaces 'django.contrib.admin'
         "projectify.admin.apps.ProjectifyAdminConfig",
         "projectify.corporate.apps.CorporateConfig",
         "projectify.premail",
         "projectify.user.apps.UserConfig",
         "projectify.workspace.apps.WorkspaceConfig",
+        "projectify.theme",
     )
 
     INSTALLED_APPS: Sequence[str] = (
@@ -301,6 +304,11 @@ class Base(Configuration):
     ERROR_RATE_PCT: Optional[int] = None
     # N seconds after which 100% of requests time out
     CHANNEL_ERROR: Optional[int] = None
+
+    # tailwind
+    # https://django-tailwind.readthedocs.io/en/latest/installation.html
+    TAILWIND_APP_NAME = "projectify.theme"
+    BROWSER_RELOAD = False
 
     @classmethod
     def post_setup(cls) -> None:

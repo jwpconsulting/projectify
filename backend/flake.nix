@@ -35,6 +35,7 @@
           twisted = [ "hatchling" "hatch-fancy-pypi-readme" ];
           types-stripe = [ "setuptools" ];
           djlint = [ "hatchling" ];
+          django-tailwind = [ "poetry" ];
         };
         overrides = defaultPoetryOverrides.extend (self: super: {
           # poetry2nix is being sunset. instead fixing the build for the
@@ -88,6 +89,7 @@
           inherit projectDir;
           inherit overrides;
           inherit python;
+          buildInputs = [ pkgs.nodejs ];
           groups = [ "main" ];
           checkGroups = [ ];
           outputs = [ "out" "static" ];
@@ -98,6 +100,11 @@
             cp gunicorn.conf.py gunicorn-error.log $out/etc/
 
             mkdir -p $static
+            env \
+              DJANGO_SETTINGS_MODULE=projectify.settings.collect_static \
+              DJANGO_CONFIGURATION=CollectStatic \
+              STATIC_ROOT=$static \
+              python $out/bin/manage.py tailwind build
             env \
               DJANGO_SETTINGS_MODULE=projectify.settings.collect_static \
               DJANGO_CONFIGURATION=CollectStatic \
@@ -144,6 +151,7 @@
         devShell = poetryEnv.env.overrideAttrs (oldattrs: {
           buildInputs = [
             postgresql
+            pkgs.nodejs
             pkgs.heroku
             pkgs.openssl
           ];
