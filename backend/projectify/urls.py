@@ -72,6 +72,12 @@ if settings.DEBUG_TOOLBAR:
         path("__debug__/", include("debug_toolbar.urls")),
     )
 
+if settings.BROWSER_RELOAD:
+    urlpatterns = (
+        *urlpatterns,
+        path("__reload__/", include("django_browser_reload.urls")),
+    )
+
 if settings.SERVE_SPECTACULAR:
     try:
         from drf_spectacular.views import (

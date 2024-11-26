@@ -28,6 +28,9 @@ node_modules/
 /backend/.coverage
 # Nix build
 /backend/result
+# Django Tailwind
+/backend/projectify/theme/static_src/node_modules
+/backend/projectify/theme/static/css/dist/styles.css
 
 # Frontend
 # ========

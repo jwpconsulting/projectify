@@ -57,6 +57,7 @@ class Development(SpectacularSettings, Base):
         "debug_toolbar",
         "drf_spectacular",
         "drf_spectacular_sidecar",
+        "django_browser_reload",
         "django_extensions",
     )
 
@@ -139,6 +140,9 @@ class Development(SpectacularSettings, Base):
 
     # Show preview of all email types
     PREMAIL_PREVIEW = True
+
+    # Enable live reloading
+    BROWSER_RELOAD = True
 
     @classmethod
     def pre_setup(cls) -> None:
