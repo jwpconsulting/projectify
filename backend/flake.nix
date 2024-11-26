@@ -85,6 +85,23 @@
           inherit python;
           groups = [ "main" "dev" ];
         };
+        tailwind-deps = pkgs.buildNpmPackage {
+          name = "tailwind-deps";
+          src = ./.;
+          npmDeps = pkgs.importNpmLock {
+            npmRoot = ./projectify/theme/static_src;
+          };
+          buildInputs = [ pkgs.nodejs ];
+          preConfigure = ''
+            cd projectify/theme/static_src
+          '';
+          installPhase = ''
+            mkdir -p $out
+            cp ../static/css/dist/styles.css $out/styles.css
+          '';
+          npmConfigHook = pkgs.importNpmLock.npmConfigHook;
+        };
+        # https://github.com/nix-community/poetry2nix?tab=readme-ov-file#mkpoetryapplication
         projectify-bundle = mkPoetryApplication {
           inherit projectDir;
           inherit overrides;
@@ -93,6 +110,10 @@
           groups = [ "main" ];
           checkGroups = [ ];
           outputs = [ "out" "static" ];
+          preConfigure = ''
+            mkdir -p projectify/theme/static/css
+            cp ${tailwind-deps}/styles.css projectify/theme/static/css
+          '';
           postInstall = ''
             mkdir -p $out/bin $out/etc
             cp manage.py "$out/bin"
@@ -100,11 +121,6 @@
             cp gunicorn.conf.py gunicorn-error.log $out/etc/
 
             mkdir -p $static
-            env \
-              DJANGO_SETTINGS_MODULE=projectify.settings.collect_static \
-              DJANGO_CONFIGURATION=CollectStatic \
-              STATIC_ROOT=$static \
-              python $out/bin/manage.py tailwind build
             env \
               DJANGO_SETTINGS_MODULE=projectify.settings.collect_static \
               DJANGO_CONFIGURATION=CollectStatic \
