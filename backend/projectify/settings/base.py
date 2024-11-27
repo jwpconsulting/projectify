@@ -86,6 +86,7 @@ class Base(Configuration):
         "cloudinary",
         "cloudinary_storage",
         "django_celery_results",
+        "django_htmx",
         "pgtrigger",
         "rest_framework",
         "rules.apps.AutodiscoverRulesConfig",
@@ -120,6 +121,7 @@ class Base(Configuration):
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
+        "django_htmx.middleware.HtmxMiddleware",
     ]
 
     ROOT_URLCONF = "projectify.urls"

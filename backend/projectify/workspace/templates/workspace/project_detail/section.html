@@ -4,7 +4,11 @@ Tasks:
     {% for task in section.task_set.all %}
         <li>
             {{ task.title }}
-            <form action="{% url 'workspace:tasks:move' task.uuid %}" method="post">
+            <form hx-target="closest [data-section]"
+                  hx-swap="inmerHtml"
+                  hx-post="{% url 'workspace:tasks:move' task.uuid %}"
+                  action="{% url 'workspace:tasks:move' task.uuid %}"
+                  method="post">
                 <input type="submit" name="up" value="up" />
                 <input type="submit" name="down" value="down" />
                 {% csrf_token %}
