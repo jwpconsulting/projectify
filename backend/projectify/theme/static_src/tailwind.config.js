@@ -97,7 +97,7 @@ const colors = {
 const config = {
     darkmode: "class",
     mode: "jit",
-    content: ["../../templates/**/*.html"],
+    content: ["../../*/templates/**/*.html"],
     theme: {
         extend: {
             borderRadius: {

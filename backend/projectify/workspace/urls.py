@@ -24,6 +24,7 @@ from .views.task import (
     TaskMoveAfterTask,
     TaskMoveToSection,
     TaskRetrieveUpdateDelete,
+    task_move,
 )
 from .views.team_member import TeamMemberReadUpdateDelete
 from .views.workspace import (
@@ -141,6 +142,8 @@ section_patterns = (
 )
 
 task_patterns = (
+    # Form
+    path("<uuid:task_uuid>/move", task_move, name="move"),
     # Create
     path(
         "",
