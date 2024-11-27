@@ -28,7 +28,7 @@ use of HTMX, which seems to be beloved
 
 - Figure out how to pack backend in single executable binary with `nix bundle`
 
-# SWOOOOOT
+# SWOT Analysis
 
 ## Strengths
 
@@ -265,8 +265,8 @@ or otherwise only usable from the dashboard or task view are:
 ## Migrating other interactive features:
 
 - Keyboard shortcuts: Maybe https://htmx.org/examples/keyboard-shortcuts/
-- Label search: Either replace with alpinejs, or remove for now
-- User search: Either replace with alpinejs, or remove for now
+- Label search: Either replace with `Alpine.js`, or remove for now
+- User search: Either replace with `Alpine.js`, or remove for now
 
 # Work log
 
@@ -280,7 +280,7 @@ template naming is somewhat implicit, and the template is automatically
 picked up from `workspace/project_detail.html` inside the
 `projectify/workspace/templates` directory.
 
-The url is temporary for now:
+The URL is temporary for now:
 
 ```
 workspace/project/<uuid>/view
@@ -298,3 +298,21 @@ https://django-tailwind.readthedocs.io/en/latest/installation.html
 
 Result: It is integrated into the backend flake build process (after a lot of
 experimentation and various Nix path issues)
+
+## 2024-11-27
+
+I tested out `django-htmx`.
+
+https://django-htmx.readthedocs.io/en/latest/installation.html
+
+It was very easy to add.
+
+There was an issue with tailwind not recognizing the templates. It was solved
+by correcting the `contents` variable and give it the right glob to scan for
+templates in Projectify. It was a bit confusing to correct since it uses
+a relative path from within `projectify/theme/static_src`.
+
+With `django-htmx` I now have sections where tasks can be moved up or down,
+and only the contents of the section are replaced. Even better: It still
+works with JavaScript turned off, in which case it moves tasks and then reloads the
+whole page.
