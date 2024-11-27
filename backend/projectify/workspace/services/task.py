@@ -195,7 +195,7 @@ def task_delete(*, task: Task, who: User) -> None:
 @transaction.atomic
 def task_move_in_direction(
     *, who: User, task: Task, direction: Literal["up", "down", "top", "bottom"]
-) -> None:
+) -> Task:
     """
     Move a task up, down, to top or bottom.
 
@@ -224,7 +224,7 @@ def task_move_in_direction(
             neighbor = tasks[-1]
         case "top":
             neighbor = section
-    task_move_after(who=who, task=task, after=neighbor)
+    return task_move_after(who=who, task=task, after=neighbor)
 
 
 @transaction.atomic

@@ -3,15 +3,16 @@
 # SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
 """Task CRUD views."""
 
-from typing import Union
+from typing import Literal, Union
 from uuid import UUID
 
 from django import forms
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 
+from django_htmx.middleware import HtmxDetails
 from rest_framework import serializers, status
 from rest_framework.exceptions import NotFound
 from rest_framework.request import Request
@@ -50,6 +51,7 @@ class AuthenticatedHttpRequest(HttpRequest):
     """Authenticated HTTP request."""
 
     user: User
+    htmx: HtmxDetails
 
 
 def get_object(
@@ -87,14 +89,25 @@ def task_move(
     if not form.is_valid():
         # TODO
         raise Exception()
-    print(form.cleaned_data)
+    direction: Literal["up", "down"]
     if form.cleaned_data["up"]:
-        task_move_in_direction(who=request.user, task=task, direction="up")
+        direction = "up"
     elif form.cleaned_data["down"]:
-        task_move_in_direction(who=request.user, task=task, direction="down")
+        direction = "down"
     else:
         # TODO
         raise Exception()
+
+    task = task_move_in_direction(
+        who=request.user, task=task, direction=direction
+    )
+
+    if request.htmx:
+        return render(
+            request,
+            "workspace/project_detail/section.html",
+            {"section": task.section},
+        )
 
     return redirect("workspace:projects:view", task.section.project.uuid)
 
