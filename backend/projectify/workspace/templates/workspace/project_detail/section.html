@@ -1,0 +1,14 @@
+Section: {{ section.title }}
+Tasks:
+<ol class="list-inside list-decimal">
+    {% for task in section.task_set.all %}
+        <li>
+            {{ task.title }}
+            <form action="{% url 'workspace:tasks:move' task.uuid %}" method="post">
+                <input type="submit" name="up" value="up" />
+                <input type="submit" name="down" value="down" />
+                {% csrf_token %}
+            </form>
+        </li>
+    {% endfor %}
+</ol>

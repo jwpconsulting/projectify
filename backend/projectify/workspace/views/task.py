@@ -3,9 +3,14 @@
 # SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
 """Task CRUD views."""
 
+from typing import Union
 from uuid import UUID
 
+from django import forms
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
+from django.views.decorators.http import require_POST
 
 from rest_framework import serializers, status
 from rest_framework.exceptions import NotFound
@@ -15,6 +20,7 @@ from rest_framework.views import APIView
 
 from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.schema import extend_schema
+from projectify.user.models.user import User
 from projectify.workspace.models.label import Label
 from projectify.workspace.models.section import Section
 from projectify.workspace.models.task import Task
@@ -35,11 +41,20 @@ from projectify.workspace.services.task import (
     task_create_nested,
     task_delete,
     task_move_after,
+    task_move_in_direction,
     task_update_nested,
 )
 
 
-def get_object(request: Request, task_uuid: UUID) -> Task:
+class AuthenticatedHttpRequest(HttpRequest):
+    """Authenticated HTTP request."""
+
+    user: User
+
+
+def get_object(
+    request: Union[Request, AuthenticatedHttpRequest], task_uuid: UUID
+) -> Task:
     """Get object for user and uuid."""
     user = request.user
     obj = task_find_by_task_uuid(
@@ -52,6 +67,36 @@ def get_object(request: Request, task_uuid: UUID) -> Task:
             )
         )
     return obj
+
+
+# Form
+class TaskMoveForm(forms.Form):
+    """Form that captures whether task shall be moved up or down."""
+
+    up = forms.CharField(required=False)
+    down = forms.CharField(required=False)
+
+
+@require_POST
+def task_move(
+    request: AuthenticatedHttpRequest, task_uuid: UUID
+) -> HttpResponse:
+    """Move a task depending on form input."""
+    task = get_object(request, task_uuid)
+    form = TaskMoveForm(request.POST)
+    if not form.is_valid():
+        # TODO
+        raise Exception()
+    print(form.cleaned_data)
+    if form.cleaned_data["up"]:
+        task_move_in_direction(who=request.user, task=task, direction="up")
+    elif form.cleaned_data["down"]:
+        task_move_in_direction(who=request.user, task=task, direction="down")
+    else:
+        # TODO
+        raise Exception()
+
+    return redirect("workspace:projects:view", task.section.project.uuid)
 
 
 # Create
