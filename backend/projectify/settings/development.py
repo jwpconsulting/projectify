@@ -30,6 +30,7 @@ def add_dev_middleware(middleware: Sequence[str]) -> Iterable[str]:
             yield "debug_toolbar.middleware.DebugToolbarMiddleware"
             yield "projectify.middleware.microsloth"
             yield "projectify.middleware.errorsloth"
+            yield "django_browser_reload.middleware.BrowserReloadMiddleware"
         else:
             yield m
 
