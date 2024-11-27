@@ -12,6 +12,7 @@ Tasks:
                 <input type="submit" name="up" value="up" />
                 <input type="submit" name="down" value="down" />
                 {% csrf_token %}
+                <p class="htmx-indicator">saving...</p>
             </form>
         </li>
     {% endfor %}
