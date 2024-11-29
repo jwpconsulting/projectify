@@ -27,9 +27,6 @@ from .types import ChannelLayers, StoragesConfig, TemplatesConfig
 
 patch()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 class Base(Configuration):
     """
@@ -40,6 +37,9 @@ class Base(Configuration):
 
     See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
     """
+
+    # Build paths inside the project like this: BASE_DIR / 'subdir'.
+    BASE_DIR = Path(__file__).resolve().parent.parent
 
     # Used in admin site to show which environment we are using
     SITE_TITLE: Optional[str] = None
@@ -86,6 +86,7 @@ class Base(Configuration):
         "cloudinary",
         "cloudinary_storage",
         "django_celery_results",
+        "django_components",
         "django_htmx",
         "pgtrigger",
         "rest_framework",
@@ -198,6 +199,13 @@ class Base(Configuration):
     # https://docs.djangoproject.com/en/3.2/howto/static-files/
     STATIC_URL = "/static/django/"
     STATIC_ROOT = Path(BASE_DIR, "staticfiles")
+    STATICFILES_FINDERS = [
+        # Default finders
+        "django.contrib.staticfiles.finders.FileSystemFinder",
+        "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+        # Django components
+        "django_components.finders.ComponentsFileSystemFinder",
+    ]
 
     # Default primary key field type
     # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -208,8 +216,20 @@ class Base(Configuration):
     TEMPLATES: TemplatesConfig = [
         {
             "BACKEND": "django.template.backends.django.DjangoTemplates",
-            "APP_DIRS": True,
             "OPTIONS": {
+                "loaders": [
+                    (
+                        "django.template.loaders.cached.Loader",
+                        [
+                            # Default Django loader
+                            "django.template.loaders.filesystem.Loader",
+                            # Inluding this is the same as APP_DIRS=True
+                            "django.template.loaders.app_directories.Loader",
+                            # Components loader
+                            "django_components.template_loader.Loader",
+                        ],
+                    )
+                ],
                 "context_processors": (
                     "projectify.context_processors.frontend_url",
                     "django.template.context_processors.debug",
@@ -311,6 +331,12 @@ class Base(Configuration):
     # https://django-tailwind.readthedocs.io/en/latest/installation.html
     TAILWIND_APP_NAME = "projectify.theme"
     BROWSER_RELOAD = False
+
+    # django-components
+    # https://emilstenstrom.github.io/django-components/latest/#installation
+    COMPONENTS = {
+        "dirs": [BASE_DIR / "components"],
+    }
 
     @classmethod
     def post_setup(cls) -> None:
