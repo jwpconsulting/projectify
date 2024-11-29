@@ -316,3 +316,9 @@ With `django-htmx` I now have sections where tasks can be moved up or down,
 and only the contents of the section are replaced. Even better: It still
 works with JavaScript turned off, in which case it moves tasks and then reloads the
 whole page.
+
+## 2024-11-29
+
+Today I will try `django-components`:
+
+https://github.com/EmilStenstrom/django-components

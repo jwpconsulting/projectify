@@ -36,6 +36,8 @@
           types-stripe = [ "setuptools" ];
           djlint = [ "hatchling" ];
           django-tailwind = [ "poetry" ];
+          selectolax = [ "setuptools" ];
+          django-components = [ "setuptools" ];
         };
         overrides = defaultPoetryOverrides.extend (self: super: {
           # poetry2nix is being sunset. instead fixing the build for the
