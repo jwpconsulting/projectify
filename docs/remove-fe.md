@@ -274,10 +274,10 @@ Here's is my work log for this project.
 
 ## 2024-11-25
 
-I created a project detail view showing the sections and tasks in a project.
-It was very easy to make using the Django `generic.detail.DetailView`. The
-template naming is somewhat implicit, and the template is automatically
-picked up from `workspace/project_detail.html` inside the
+I created a project detail view showing the sections and tasks in a project. It
+was very easy to make using the Django `generic.detail.DetailView`. The
+template naming is somewhat implicit, and the template is automatically picked
+up from `workspace/project_detail.html` inside the
 `projectify/workspace/templates` directory.
 
 The URL is temporary for now:
@@ -309,13 +309,13 @@ It was very easy to add.
 
 There was an issue with tailwind not recognizing the templates. It was solved
 by correcting the `contents` variable and give it the right glob to scan for
-templates in Projectify. It was a bit confusing to correct since it uses
-a relative path from within `projectify/theme/static_src`.
+templates in Projectify. It was a bit confusing to correct since it uses a
+relative path from within `projectify/theme/static_src`.
 
-With `django-htmx` I now have sections where tasks can be moved up or down,
-and only the contents of the section are replaced. Even better: It still
-works with JavaScript turned off, in which case it moves tasks and then reloads the
-whole page.
+With `django-htmx` I now have sections where tasks can be moved up or down, and
+only the contents of the section are replaced. Even better: It still works with
+JavaScript turned off, in which case it moves tasks and then reloads the whole
+page.
 
 ## 2024-11-29
 
@@ -323,10 +323,85 @@ Today I will try `django-components`:
 
 https://github.com/EmilStenstrom/django-components
 
-I find that a large part of frontend components props exist to configure behavior,
-not style. It might be possible to re-implement components in the backend
-and only add a few style props here and there. It might also be a good opportunity
-to simplify the styling in general.
+I find that a large part of frontend components props exist to configure
+behavior, not style. It might be possible to re-implement components in the
+backend and only add a few style props here and there. It might also be a good
+opportunity to simplify the styling in general.
 
 `django-components` seems very complex, and could almost be too much for our
 purposes.
+
+Let's consider for a second what the alternatives to migrating everything to
+Django are:
+
+### Keep SvelteKit and Django architecture
+
+Doesn't change anything. Initial page loads are slow. Maintaining two different
+applications is too much for a single developer.
+
+### Migrate everything to be in SvelteKit
+
+The Django ORM alone, and all the security stuff in it make Django worth it
+even if just used for a backend. Using SvelteKit to take over the backend part
+would not only mean having to re-implement well-tested business logic, it would
+also mean compromising on security and quality.
+
+### Migrate everything to a completely different framework/language/library
+
+Why not re-implement everything and make it a slick single binary Go app? Sure,
+but again, Django is incredibly powerful when it comes to database-centric
+web-apps. Yes, I might also just use Rails or Laravel, but given that I haven't
+used Rails in a long time, and don't know Laravel, these aren't good options
+either. Go is a great programming language and the fact that it's so simple
+would allow me to focus on the "important bits", like making an app that is
+useful.
+
+Re-implementing everything using something different means that the work
+doubles, since both frontend and backend have to be rewritten. Rewriting the
+frontend alone is already a lot of work, and more than that could be
+devastating for motivation.
+
+### Fix SSR in SvelteKit
+
+> SvelteKit is a framework for rapidly developing robust, performant web
+> applications using Svelte. If you’re coming from React, SvelteKit is similar
+> to Next. If you’re coming from Vue, SvelteKit is similar to Nuxt.
+
+I have tried to fix SSR by shifting around stores and so on to eliminate global
+state. Yes, it's possible, but I feel like SvelteKit just hasn't been made to
+guide you in the right direction and do those things properly from the
+beginning. This makes me doubt that SvelteKit is a framework for making web
+applications. A framework for making web applications should come with guard
+rails that make accidentally embedding global state into your app difficult.
+
+The **State management** [docs](https://svelte.dev/docs/kit/state-management)
+were added quite late, and are not helpful after having made a full app. It
+makes me question whether there won't be any other surprises.
+
+There are other ideological points where I don't like SvelteKit's direction.
+There is a subtle push to use VS Code to write SvelteKit, and despite the
+complaints of many users, SvelteKit 1.0 uses square brackets and parentheses to
+configure route paths.
+
+The fact that the deploy documentation barely describes the self-hosted use
+case also says a lot. I don't like being subtly pushed to using Vercel or
+whatever other surprise-1000-USD charge service. Projectify is supposed to be a
+self-hostable project management app. Creating all these proprietary lock-ins
+doesn't help at all.
+
+Backend/Frontend is an embarrassingly bad pattern for what is essentially a skin
+for a database, a glorified excel spreadsheet with some authentication
+sprinkled on top (I exaggerate, of course).
+
+In the end all these ideological disagreements also strengthen my desire to
+migrate away from SvelteKit. Making Projectify simple, even if that means
+giving up a few features, is a net-positive for users and of course the solo
+developer working on this project right now.
+
+Django is quite mature, its documentation is translated into many languages,
+and in general a good thing to use when trying to create something and opening
+it up to the people.
+
+If Projectify is supposed to be maintained for years to come, then going
+through the painful process of a rewrite is a one-time thing, and everything
+good after that will be a gift that keeps on giving.
