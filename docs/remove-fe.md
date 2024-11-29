@@ -322,3 +322,11 @@ whole page.
 Today I will try `django-components`:
 
 https://github.com/EmilStenstrom/django-components
+
+I find that a large part of frontend components props exist to configure behavior,
+not style. It might be possible to re-implement components in the backend
+and only add a few style props here and there. It might also be a good opportunity
+to simplify the styling in general.
+
+`django-components` seems very complex, and could almost be too much for our
+purposes.
