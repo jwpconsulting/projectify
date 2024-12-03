@@ -2,6 +2,20 @@
 {% block content %}
     <p>Alpine test section</p>
     <h1 x-data="{ message: 'I ❤️ Alpine' }" x-text="message"></h1>
+    <section x-data="{ search: '', items: JSON.parse(document.getElementById('labels').textContent), get filteredItems() { return this.items.filter( i => i.name.includes(this.search) ) }  }">
+        <h1>Labels</h1>
+        {{ labels|json_script:"labels" }}
+        <form class="hidden" :class="{ 'hidden': ! items }">
+            <label for="filter-label">Filter labels</label>
+            <input x-model="search" id="filter-label" type="text" />
+        </form>
+        <ol class="list-decimal list-inside">
+            <template x-for="item in filteredItems" :key="item.uuid">
+                <li x-text="item.name"></li>
+            </template>
+            {% for label in object.workspace.label_set.all %}<li x-show="false">{{ label }}</li>{% endfor %}
+        </ol>
+    </section>
     <h1>{{ object.title }}</h1>
     <p>Sections:</p>
     <ol>

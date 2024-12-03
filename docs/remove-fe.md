@@ -389,8 +389,8 @@ whatever other surprise-1000-USD charge service. Projectify is supposed to be a
 self-hostable project management app. Creating all these proprietary lock-ins
 doesn't help at all.
 
-Backend/Frontend is an embarrassingly bad pattern for what is essentially a skin
-for a database, a glorified excel spreadsheet with some authentication
+Backend/Frontend is an embarrassingly bad pattern for what is essentially a
+skin for a database, a glorified excel spreadsheet with some authentication
 sprinkled on top (I exaggerate, of course).
 
 In the end all these ideological disagreements also strengthen my desire to
@@ -405,3 +405,22 @@ it up to the people.
 If Projectify is supposed to be maintained for years to come, then going
 through the painful process of a rewrite is a one-time thing, and everything
 good after that will be a gift that keeps on giving.
+
+## 2024-12-03
+
+Today I will try `Alpine.js`.
+
+https://alpinejs.dev/start-here
+
+I copied the unified JavaScript file from
+https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js
+
+Then, I've tried adding a label search that only renders when `Alpine.js` has
+loaded using the docs at
+https://alpinejs.dev/start-here#building-a-search-input
+
+Using `:class`, I can make a search form that is only shown when Alpine loads.
+See https://alpinejs.dev/directives/bind#class-object-syntax
+
+Having interactive search is pretty nice, it might allow taking over the user
+and label filter from the SPA.
