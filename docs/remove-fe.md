@@ -1,6 +1,7 @@
 ---
 title: SvelteKit Frontend removal plan
 ---
+
 <!--
 SPDX-FileCopyrightText: 2024 JWP Consulting GK
 
@@ -75,69 +76,67 @@ use of HTMX, which seems to be beloved
 
 ## Analysis
 
-1. Test out HTMX. Thoroughly. Make sure you are comfortable.
-2. Take inventory of all frontend pages
-3. Identify remaining risks
-4. Determine acceptance criteria.
-5. Consider alternatives.
-6. Understand if Tailwind can be used with Django
-7. Find out way to use something like frontend components in Django.
+- [x] Test out HTMX. Thoroughly. Make sure you are comfortable.
+- [x] Take inventory of all frontend pages
+- [ ] Identify remaining risks
+- [ ] Determine acceptance criteria.
+- [x] Consider alternatives.
+- [x] Understand if Tailwind can be used with Django
+- [x] Find out way to use something like frontend components in Django.
 
 ## Planning
 
 Subject to change.
 
-1. Plan base template structure
-2. Write out which views need to be created.
-3. Write out which forms need to be created. See how DRF serializers can be
-   turned into forms.
-4. Write out which templates need to be created.
-5. Identify all JavaScript only/frontend only functions that need to be
-   recreated in Django
+- [ ] Plan base template structure
+- [ ] Write out which views need to be created.
+- [ ] Write out which forms need to be created. See how DRF serializers can be
+- [ ] turned into forms.
+- [ ] Write out which templates need to be created.
+- [ ] Identify all JavaScript only/frontend only functions that need to be
+      recreated in Django
 
 ## Implementation
 
 Subject to change.
 
-1. Create views, templates and forms in tandem. Write test cases as you go.
-
-- It's OK if it's bare-bones here. Structure over looks.
-
-2. Port components to Django
-3. Create form widgets
-4. Features removed? Update help. Update landing page.
-5. Update all architecture docs.
+- [ ] Create views, templates and forms in tandem. Write test cases as you go.
+      It's OK if it's bare-bones here. Structure over looks.
+- [ ] Port components to Django
+- [ ] Create form widgets
+- [ ] Features removed? Update help. Update landing page.
+- [ ] Update all architecture docs.
 
 ### Removal steps
 
 These are sub-steps of the implementation stage.
 
-1. Remove `frontend/`
-2. Remove frontend Docker builds
-3. Remove reverse proxy
-4. Remove frontend stuff from GitHub actions and CircleCI config
-5. Remove frontend from render.com blueprint
-6. Remove WebSocket API
-7. Remove REST API
+- [ ] Remove `frontend/`
+- [ ] Remove frontend Docker builds
+- [ ] Remove reverse proxy
+- [ ] Remove frontend stuff from GitHub actions and CircleCI config
+- [ ] Remove frontend from render.com blueprint
+- [ ] Remove WebSocket API
+- [ ] Remove REST API
 
 ## Testing
 
-1. Test and compare the two implementations.
-2. Perform thorough test of billing logic.
-3. Security audit. Check CSPs and other gotchas. Update security docs.
-4. Good enough? Continue. Broken? Go back to Analysis
-5. User tests.
+- [ ] Test and compare the two implementations.
+- [ ] Perform thorough test of billing logic.
+- [ ] Security audit. Check CSPs and other gotchas. Update security docs.
+- [ ] Good enough? Continue. Broken? Go back to Analysis
+- [ ] User tests.
 
 ## Deployment
 
-1. Deploy on render.com. Test thoroughly.
-2. Security audit for Projectify on render.com
+- [ ] Deploy on render.com. Test thoroughly.
+- [ ] Security audit for Projectify on render.com
 
 ## Acceptance test
 
-1. Perform user tests.
-2. Gather user feedback.
-3. Understand if this was a success.
+- [ ] Perform user tests.
+- [ ] Gather user feedback.
+- [ ] Understand if this was a success.
 
 # Description of present Projectify
 
