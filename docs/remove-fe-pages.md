@@ -2,6 +2,7 @@
 title: Frontend pages to be re-implemented in backend
 date: 2024-11-29
 ---
+
 <!--
 SPDX-FileCopyrightText: 2024 JWP Consulting GK
 
