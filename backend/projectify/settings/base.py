@@ -335,7 +335,7 @@ class Base(Configuration):
     # https://emilstenstrom.github.io/django-components/latest/#installation
     COMPONENTS = {
         "autodiscover": False,
-        "dirs": [BASE_DIR / "components"],
+        "libraries": ["projectify.components"],
     }
 
     @classmethod
