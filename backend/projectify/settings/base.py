@@ -334,6 +334,7 @@ class Base(Configuration):
     # django-components
     # https://emilstenstrom.github.io/django-components/latest/#installation
     COMPONENTS = {
+        "autodiscover": False,
         "dirs": [BASE_DIR / "components"],
     }
 
