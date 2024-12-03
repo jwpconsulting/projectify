@@ -2,6 +2,11 @@
 title: Frontend pages to be re-implemented in backend
 date: 2024-11-29
 ---
+<!--
+SPDX-FileCopyrightText: 2024 JWP Consulting GK
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 This document describes all pages in the frontend which will be replaced by an
 equivalent page in the backend.

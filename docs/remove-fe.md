@@ -1,6 +1,11 @@
 ---
 title: SvelteKit Frontend removal plan
 ---
+<!--
+SPDX-FileCopyrightText: 2024 JWP Consulting GK
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 
 SvelteKit SSR didn't turn out to be thing I thought it would be. Managing
 global state through `getContext` and `setContext` means having to rewrite,
