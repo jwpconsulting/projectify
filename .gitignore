@@ -83,3 +83,8 @@ supervisord.pid
 # podman-compose containers
 # =========================
 /build/
+
+# aspell stuff
+# ============
+*.bak
+
