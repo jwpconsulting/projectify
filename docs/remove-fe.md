@@ -78,7 +78,7 @@ use of HTMX, which seems to be beloved
 
 - [x] Test out HTMX. Thoroughly. Make sure you are comfortable.
 - [x] Take inventory of all frontend pages
-- [ ] Identify remaining risks
+- [x] Identify remaining risks
 - [ ] Determine acceptance criteria.
 - [x] Consider alternatives.
 - [x] Understand if Tailwind can be used with Django

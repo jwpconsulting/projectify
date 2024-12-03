@@ -1,5 +1,5 @@
 ---
-title: SvelteKit Frontend removal worklog
+title: SvelteKit Frontend removal work log
 ---
 
 <!--
@@ -8,11 +8,9 @@ SPDX-FileCopyrightText: 2024 JWP Consulting GK
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-# Work log
-
 Here's is my work log for this project.
 
-## 2024-11-25
+# 2024-11-25
 
 I created a project detail view showing the sections and tasks in a project. It
 was very easy to make using the Django `generic.detail.DetailView`. The
@@ -29,7 +27,7 @@ workspace/project/<uuid>/view
 It was pleasant to work with Django, there even is a debug toolbar which I have
 added a long time ago for admin panel debugging.
 
-## 2024-11-26
+# 2024-11-26
 
 I would like to see if Tailwind works with Django. I'm following the
 instructions here:
@@ -39,7 +37,7 @@ https://django-tailwind.readthedocs.io/en/latest/installation.html
 Result: It is integrated into the backend flake build process (after a lot of
 experimentation and various Nix path issues)
 
-## 2024-11-27
+# 2024-11-27
 
 I tested out `django-htmx`.
 
@@ -57,7 +55,7 @@ only the contents of the section are replaced. Even better: It still works with
 JavaScript turned off, in which case it moves tasks and then reloads the whole
 page.
 
-## 2024-11-29
+# 2024-11-29
 
 Today I will try `django-components`:
 
@@ -74,19 +72,19 @@ purposes.
 Let's consider for a second what the alternatives to migrating everything to
 Django are:
 
-### Keep SvelteKit and Django architecture
+## Keep SvelteKit and Django architecture
 
 Doesn't change anything. Initial page loads are slow. Maintaining two different
 applications is too much for a single developer.
 
-### Migrate everything to be in SvelteKit
+## Migrate everything to be in SvelteKit
 
 The Django ORM alone, and all the security stuff in it make Django worth it
 even if just used for a backend. Using SvelteKit to take over the backend part
 would not only mean having to re-implement well-tested business logic, it would
 also mean compromising on security and quality.
 
-### Migrate everything to a completely different framework/language/library
+## Migrate everything to a completely different framework/language/library
 
 Why not re-implement everything and make it a slick single binary Go app? Sure,
 but again, Django is incredibly powerful when it comes to database-centric
@@ -101,7 +99,7 @@ doubles, since both frontend and backend have to be rewritten. Rewriting the
 frontend alone is already a lot of work, and more than that could be
 devastating for motivation.
 
-### Fix SSR in SvelteKit
+## Fix SSR in SvelteKit
 
 > SvelteKit is a framework for rapidly developing robust, performant web
 > applications using Svelte. If you’re coming from React, SvelteKit is similar
@@ -146,7 +144,7 @@ If Projectify is supposed to be maintained for years to come, then going
 through the painful process of a rewrite is a one-time thing, and everything
 good after that will be a gift that keeps on giving.
 
-## 2024-12-03
+# 2024-12-03
 
 Today I will try `Alpine.js`.
 
@@ -165,7 +163,7 @@ See https://alpinejs.dev/directives/bind#class-object-syntax
 Having interactive search is pretty nice, it might allow taking over the user
 and label filter from the SPA.
 
-### Identify remaining risks
+## Identify remaining risks
 
 Here are some of the remaining risks that I have identified over the last few
 days of writing this document and experimenting with various libraries:
@@ -180,4 +178,64 @@ days of writing this document and experimenting with various libraries:
 
 I will address each concern:
 
-Yep,
+### Modal-less difficulties
+
+Yep, a few pages have to be crafted for the constructive and destructive
+modals. This will cause extra architecture, UX design, and coding work. This is
+well worth it, since not only will it be pretty HTML with URLs as state, it
+will most likely have better accessibility that Projectify's homebrew focus
+trap that I've used before.
+
+### Bloat
+
+Yes, this is a real risk. Already, having added the tailwind and django
+components library, Django has become a bit bloated.
+
+I think it's not necessary to use a components library. I might just use
+partials for everything. The settings are a bit non-intuitive and I've
+encountered a strange error message that was difficult to debug:
+
+```
+  File "/.../django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/.../django/apps/registry.py", line 124, in populate
+    app_config.ready()
+  File "/.../django_components/apps.py", line 24, in ready
+    autodiscover()
+  File "/.../django_components/autodiscovery.py", line 38, in autodiscover
+    return _import_modules([entry.dot_path for entry in modules], map_module)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/.../django_components/autodiscovery.py", line 93, in _import_modules
+    importlib.import_module(module_name)
+  File "/.../importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'components'
+```
+
+The solution was to disable `autodiscover` for Django components.
+
+The Django Tailwind integration on the other hand is well worth it. Adjusting
+the Nix build was not very intuitive, but it works.
+
+### Abandonware worries
+
+Sometimes Django libraries get abandoned. This might happen with the Tailwind
+integration used here, or the Django components. Tailwind itself will not
+likely become abandonware, so it's not a big issue. I think I might even get
+away just running Tailwind directly without any extras.
+
+Alpine.js and HTMX might slow down in development at some point. The two
+libraries are already extremely mature. I don't think abandonment is a big
+issue to worry about with these widely used libraries. Both of them seem to
+have stable funding as well.
+
+### Time sinkhole
+
+No one said it would be quick, but we're not in it to make a quick buck. I'd
+like to create a rock-solid icebreaker, not a Rube Goldberg Machine that
+constantly breaks because of 3rd order transient NPM dependencies. Also, this
+thing is supposed to be a To Do list?
