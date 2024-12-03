@@ -7,12 +7,11 @@ from typing import Literal, Union
 from uuid import UUID
 
 from django import forms
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 
-from django_htmx.middleware import HtmxDetails
 from rest_framework import serializers, status
 from rest_framework.exceptions import NotFound
 from rest_framework.request import Request
@@ -21,7 +20,7 @@ from rest_framework.views import APIView
 
 from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.schema import extend_schema
-from projectify.user.models.user import User
+from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.workspace.models.section import Section
 from projectify.workspace.selectors.section import (
     section_find_for_user_and_uuid,
@@ -45,13 +44,6 @@ from projectify.workspace.services.task import (
 )
 
 from .. import models
-
-
-class AuthenticatedHttpRequest(HttpRequest):
-    """Authenticated HTTP request."""
-
-    user: User
-    htmx: HtmxDetails
 
 
 def get_object(

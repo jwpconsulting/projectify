@@ -3,12 +3,11 @@
 # SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
 """Project views."""
 
-from typing import Optional, cast
 from uuid import UUID
 
-from django.db.models import QuerySet
+from django.http import Http404, HttpResponse
+from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DetailView
 
 from rest_framework import serializers, status
 from rest_framework.exceptions import NotFound
@@ -18,7 +17,7 @@ from rest_framework.views import APIView
 
 from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.schema import extend_schema
-from projectify.user.models.user import User
+from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.workspace.models import Project
 from projectify.workspace.selectors.project import (
     ProjectDetailQuerySet,
@@ -40,25 +39,21 @@ from projectify.workspace.services.project import (
 
 
 # HTML
-class ProjectDetailView(DetailView):
+def project_detail_view(
+    request: AuthenticatedHttpRequest, project_uuid: UUID
+) -> HttpResponse:
     """Show project details."""
-
-    pk_url_kwar = "project_uuid"
-
-    def get_object(
-        self, queryset: Optional[QuerySet[Project]] = None
-    ) -> Project:
-        """Get the right project for the current user."""
-        project_uuid = self.kwargs["project_uuid"]
-        project = project_find_by_project_uuid(
-            who=cast(User, self.request.user),
-            project_uuid=project_uuid,
-            qs=queryset or ProjectDetailQuerySet,
-        )
-        if project is None:
-            raise NotFound(_("No project found for this uuid"))
-        project.workspace.quota = workspace_get_all_quotas(project.workspace)
-        return project
+    project = project_find_by_project_uuid(
+        who=request.user, project_uuid=project_uuid, qs=ProjectDetailQuerySet
+    )
+    if project is None:
+        raise Http404(_("No project found for this uuid"))
+    project.workspace.quota = workspace_get_all_quotas(project.workspace)
+    context = {
+        "object": project,
+        "labels": list(project.workspace.label_set.values()),
+    }
+    return render(request, "workspace/project_detail.html", context)
 
 
 # Create
