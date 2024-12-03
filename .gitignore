@@ -78,7 +78,6 @@ supervisord.log
 supervisord.pid
 *.rdb
 *.sqlite
-*/static/
 
 # podman-compose containers
 # =========================
