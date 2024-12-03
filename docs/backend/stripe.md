@@ -7,6 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 # Stripe testing
 
 Login with
+
 ```
 stripe login
 ```

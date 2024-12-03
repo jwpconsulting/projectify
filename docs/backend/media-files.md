@@ -14,8 +14,11 @@ When a logged in user, let's call them $USER, retrieves their profile
 information using the `/user/user` endpoint, they will first receive a (JSON)
 response, that will look something like this:
 
-```json { "profile_picture":
-"https://api.projectifyapp.com/media/link/to/picture.webp" } ```
+```json
+{
+  "profile_picture": "https://api.projectifyapp.com/media/link/to/picture.webp"
+}
+```
 
 This URL points at an endpoint provided by
 [django-downloadview](https://github.com/jazzband/django-downloadview).
@@ -26,8 +29,8 @@ path. This way we can avoid people accessing random S3 bucket-like URLs despite
 being logged / removed from an org / etc. [Broken Access Control]
 (https://owasp.org/Top10/A01_2021-Broken_Access_Control/) is a problem, yo.
 
-Then, using the streaming optimization setting [included in
-django-downloadview](https://django-downloadview.readthedocs.io/en/latest/optimizations/index.html),
+Then, using the streaming optimization setting
+[included in django-downloadview](https://django-downloadview.readthedocs.io/en/latest/optimizations/index.html),
 we can have the application server tell the web server to handle the request,
 and serve a file.
 
@@ -46,25 +49,28 @@ The way this works is as follows
 More specifically, if we plan to use caddy, we can implement it using the
 `handle_response` directive. Some documentation links are as follows:
 
-- [Caddy json config docs on
-  handle-response](hhttps://caddyserver.com/docs/json/apps/http/servers/routes/handle/reverse_proxy/handle_response/)
-- [Pull request that added this
-  functionality](https://github.com/caddyserver/caddy/pull/4021)
-- [Issue in caddy that asked for this
-  functionality](https://github.com/caddyserver/caddy/issues/3828)
+- [Caddy json config docs on handle-response](hhttps://caddyserver.com/docs/json/apps/http/servers/routes/handle/reverse_proxy/handle_response/)
+- [Pull request that added this functionality](https://github.com/caddyserver/caddy/pull/4021)
+- [Issue in caddy that asked for this functionality](https://github.com/caddyserver/caddy/issues/3828)
 
 We check the current caddy version in Debian 12:
 
-``` Package: caddy Version: 2.6.2-5 ```
+```
+Package: caddy Version: 2.6.2-5
+```
 
 Cloning the [git repo](https://github.com/caddyserver/caddy) we can easily see
 that the merge commit is part of 2.6.2-5:
 
-``` $git log v2.6.2 | grep "#3710" reverseproxy: Add `handle_response` blocks
-to `reverse_proxy` (#3710) (#4021)
+```bash
+git log v2.6.2 | grep "#3710"
+```
+
+```
+    reverseproxy: Add `handle_response` blocks to `reverse_proxy` (#3710) (#4021)
     * reverseproxy: Add `handle_response` blocks to `reverse_proxy` (#3710)
-      reverseproxy: Add `buffer_requests` option to `reverse_proxy` directive
-      (#3710) ```
+    reverseproxy: Add `buffer_requests` option to `reverse_proxy` directive (#3710)
+```
 
 Looks good!
 
@@ -81,7 +87,7 @@ local environment.
 
 # Challenges
 
-We should ensure that path traversal is impossible. This should be fine as
-long as the application server only outputs valid header responses.
+We should ensure that path traversal is impossible. This should be fine as long
+as the application server only outputs valid header responses.
 
 Not using cloudinary means that we have to resize and convert images ourselves.

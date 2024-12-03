@@ -6,8 +6,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Traffic control testing
 
-We want to be able to test Projectify under various network conditions, such
-as unreliable or slow TCP connections, where
+We want to be able to test Projectify under various network conditions, such as
+unreliable or slow TCP connections, where
 
 - packets arrive too late (latency)
 - packets are transmitted slowly (throughput)
@@ -21,17 +21,17 @@ our app.
 
 # Traffic control with tc
 
-In local development, the Projectify backend is accessed on the primary loop back
-interface, meaning localhost / 127.0.0.1.
+In local development, the Projectify backend is accessed on the primary loop
+back interface, meaning localhost / 127.0.0.1.
 
-If we develop using the frontend proxy, the flow of packets from browser to
-the backend is
+If we develop using the frontend proxy, the flow of packets from browser to the
+backend is
 
 1. The browser loads a page, let that page be the dashboard, and requests that
    page and all its resources from the Vite dev server
 2. The Vite dev server sends the page and its resources back to the browser.
-3. The page contents get loaded, parsed and the Svelte Kit application boots up,
-   and fires off several fetch requests for Projectify resources such as
+3. The page contents get loaded, parsed and the Svelte Kit application boots
+   up, and fires off several fetch requests for Projectify resources such as
    workspace, or current user, to the Vite dev server.
 4. The Vite dev server proxies that request the the Django backend
 5. The Django backend does its thing, connects to the database, and returns
@@ -42,11 +42,13 @@ the backend is
 
 With traffic control, we are interested in two of the above steps, 4. and 5.
 Namely, the steps where the backend receives and transmits HTTP data. The
-Django backend communicates through the loopback interface, and we can use
-tc to shape ingress and egress traffic.
+Django backend communicates through the loopback interface, and we can use tc
+to shape ingress and egress traffic.
 
 # Environment
+
 We are on
+
 - Debian 12 (bookworm), with
 - Linux 6.1.0-18-amd64. We use
 - iproute2-6.1.0,
@@ -144,7 +146,7 @@ This gives us:
 qdisc netem 8001: root refcnt 2 limit 1000 delay 1s
 ```
 
-For the backend, we can confirm that it is __very__ slow, as a matter of fact,
+For the backend, we can confirm that it is **very** slow, as a matter of fact,
 we had to limit to `--num-conn 5` to get httperf to finish in time. Note that
 Httperf executes connections sequentially, and not in parallel.
 
@@ -279,8 +281,8 @@ sudo tc qdisc del dev lo root
 
 # Packet loss
 
-Now, to introduce a packet loss of 15% (Bernoulli distribution), we can configure the queuing discipline
-like so:
+Now, to introduce a packet loss of 15% (Bernoulli distribution), we can
+configure the queuing discipline like so:
 
 ```bash
 sudo tc qdisc add dev lo root netem loss random 15%
@@ -320,9 +322,8 @@ Again, we observe that packet loss influences Net I/O significantly.
 
 Finally, we would like to only restrict port 8000, where the Django application
 lives. For this, we need to host the Django application from a different
-virtual interface. Researching this topic and finding [this ArchWiki article on
-this
-topic](https://wiki.archlinux.org/title/Advanced_traffic_control#Using_tc_only),
+virtual interface. Researching this topic and finding
+[this ArchWiki article on this topic](https://wiki.archlinux.org/title/Advanced_traffic_control#Using_tc_only),
 I concluded that iptables or tc-u32 filtering will be too fiddly, since
 loopback is not an Ethernet interface with the full packet stack available.
 

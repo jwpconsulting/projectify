@@ -23,8 +23,8 @@ The schema is generated using
 ./manage.py spectacular --file schema/schema.yml
 ```
 
-within the backend folder and has to be updated after any change to the API.
-An additional step in the continuous integration will check if the API OpenAPI
+within the backend folder and has to be updated after any change to the API. An
+additional step in the continuous integration will check if the API OpenAPI
 schema is up to date or not.
 
 ## Annotating APIViews
@@ -33,8 +33,8 @@ Right now, no APIViews are annotated. This means that the generated
 `schema.yml` does not contain any useful information on which fields can be
 passed as JSON data.
 
-The `@extend_schema` decorator, [documented
-here](https://drf-spectacular.readthedocs.io/en/latest/readme.html#customization-by-using-extend-schema)
+The `@extend_schema` decorator,
+[documented here](https://drf-spectacular.readthedocs.io/en/latest/readme.html#customization-by-using-extend-schema)
 can be used to annotate every API with possible return values.
 
 # Frontend: openapi-typescript and existing code
@@ -49,9 +49,9 @@ regressions.
 
 ## Using the generated schema `.d.ts` file
 
-For now, we can try to use the resulting `schema.d.ts` file to guarantee the URLs
-used for `fetch()` are correct. The schema file contains URLs in the exported
-interface `paths`:
+For now, we can try to use the resulting `schema.d.ts` file to guarantee the
+URLs used for `fetch()` are correct. The schema file contains URLs in the
+exported interface `paths`:
 
 ```typescript
 export interface paths {

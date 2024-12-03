@@ -24,14 +24,14 @@ The four fundamental operations for our resources are
 - Delete
 
 In DRF, they are called Create, Retrieve, Update and Destroy, but we go with
-the [more
-common](https://en.wikipedia.org/wiki/Create,_read,_update,_and_delete)
+the
+[more common](https://en.wikipedia.org/wiki/Create,_read,_update,_and_delete)
 terminology.
 
 ## URLs
 
-Given a resource, we give assign CRUD operation URLs to it as follows, and
-also designate the required HTTP verb:
+Given a resource, we give assign CRUD operation URLs to it as follows, and also
+designate the required HTTP verb:
 
 - Create: `/resource_name/` (POST)
 - Read (Detail): `/resource_name/<resource_identifier>` (GET)
@@ -42,10 +42,9 @@ also designate the required HTTP verb:
 ## Updating content
 
 We do not allow partial updates (HTTP PATCH). We want updates to be as complete
-as possible. The thought process here is that we will be able to catch
-a client having incomplete state earlier, rather than later on finding out
-that client and server had a very different idea of what the application state
-was.
+as possible. The thought process here is that we will be able to catch a client
+having incomplete state earlier, rather than later on finding out that client
+and server had a very different idea of what the application state was.
 
 If a resource has properties that are themselves singular resources (nested
 singular resources), we handle updates as follows when handling a JSON PUT
@@ -57,10 +56,10 @@ request, such as a picture resource being referred to by a user profile:
 - Resource is specified: Replace current foreign key with new resource
 
 What happens to the nested resource with its foreign key set to null is not
-specified here. In the case of a Django application this will typically
-mean that that nested resource needs to be deleted. In the case of a picture
-resource not pointing at a just updated user profile, the picture resource
-will get deleted.
+specified here. In the case of a Django application this will typically mean
+that that nested resource needs to be deleted. In the case of a picture
+resource not pointing at a just updated user profile, the picture resource will
+get deleted.
 
 If a property is a list, then the semantics are similar:
 
@@ -76,9 +75,9 @@ implementation-specific, as with the singular case.
 ## RPC operations
 
 There are plenty of operations that do not neatly fit into the ideas behind
-RESTful resources. In that case, we use a URL suffix for a given resource.
-The URL suffix should have follow verb-noun, so for example, updating
-a user's profile picture will be accessible via:
+RESTful resources. In that case, we use a URL suffix for a given resource. The
+URL suffix should have follow verb-noun, so for example, updating a user's
+profile picture will be accessible via:
 
 ```
 ┌──────┬───┬──────┬───┬────────────────────────┐

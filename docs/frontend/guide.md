@@ -59,9 +59,9 @@ const theUrl = "/";
 throw redirect(302, theUrl)
 ```
 
-Some of the redirect codes you might consider can be found in the [mdn web
-docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Redirections). 302
-isn't too bad.
+Some of the redirect codes you might consider can be found in the
+[mdn web docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Redirections).
+302 isn't too bad.
 
 # Opening context menu
 
