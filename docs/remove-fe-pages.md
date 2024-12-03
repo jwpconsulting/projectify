@@ -344,3 +344,6 @@ A brief description of the platform pages follows:
   confirm new email address
 - `user/profile/update-email-address/confirmed`: Success status page shown when
   email address updated successfully.
+
+The above pages are all highly dynamic and do not use content derived from
+Markdown files.
