@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
+    <p>Alpine test section</p>
+    <h1 x-data="{ message: 'I ❤️ Alpine' }" x-text="message"></h1>
     <h1>{{ object.title }}</h1>
     <p>Sections:</p>
     <ol>
