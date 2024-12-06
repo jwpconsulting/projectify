@@ -79,22 +79,38 @@ use of HTMX, which seems to be beloved
 - [x] Test out HTMX. Thoroughly. Make sure you are comfortable.
 - [x] Take inventory of all frontend pages
 - [x] Identify remaining risks
-- [ ] Determine acceptance criteria.
+- [x] Determine acceptance criteria.
 - [x] Consider alternatives.
 - [x] Understand if Tailwind can be used with Django
 - [x] Find out way to use something like frontend components in Django.
+
+### Alternatives
+
+The following alternatives to a full rewrite were identified and discussed:
+
+- Change nothing
+- Migrate the backend from Django to SvelteKit
+- Migrate to completely different framework/language/library
+- Fix SSR implementation in SvelteKit
+
+Out of the above, all were deemed as worse options than the current plan. The
+only alternative with some merit was to fix the SSR implementation in
+SvelteKit. It would bring short term relief, but not eliminate any of the
+additional concerns regarding architecture bloat, performance, and dependency
+bloat.
 
 ## Planning
 
 Subject to change.
 
-- [ ] Plan base template structure
+- [x] Plan base template structure
+- [x] Write out which templates need to be created.
 - [ ] Write out which views need to be created.
 - [ ] Write out which forms need to be created. See how DRF serializers can be
-- [ ] turned into forms.
-- [ ] Write out which templates need to be created.
+      turned into forms.
 - [ ] Identify all JavaScript only/frontend only functions that need to be
       recreated in Django
+- [ ] Identify form widget templates required
 
 ## Implementation
 
@@ -134,9 +150,58 @@ These are sub-steps of the implementation stage.
 
 ## Acceptance test
 
+An acceptance test shall be performed to ensure that the frontend rewrite went
+as planned, and to identify any fixes necessary.
+
 - [ ] Perform user tests.
 - [ ] Gather user feedback.
 - [ ] Understand if this was a success.
+
+### Acceptance criteria:
+
+The following functional requirements shall be fulfilled and verified during
+the acceptance test:
+
+- Email confirmation flow works
+- Onboarding works: Ensure that users go through onboarding if no workspace
+  exists
+- Billing with Stripe can be used (subscribe, cancel, change)
+- New projects can be created, updated and archived
+- Tasks can be created
+- Sub task management works
+- Task re-ordering works
+- Project section creation and ordering works
+- Workspaces can be managed
+- Team member management works
+- Password change flow works
+- Email address change flow works
+
+To be acceptable, a new frontend would have the following non-functional
+requirements:
+
+- [ ] Landing page load with < 500 kB transferred, finishes in 1000 ms
+- [ ] PageSpeed Insights shall not deteriorate by more than 5 points for both
+      mobile and desktop
+
+Regarding security:
+
+- [ ] Absolutely no new CSP, Clickjacking, or `iframe`-related vulnerability
+      shall be introduced.
+- [ ] Absolutely no new XSS or SQL injection vulnerability shall be introduced.
+- [ ] CSRF checking shall be increasingly strict and non-cookie based in the
+      best case.
+- [ ] The django backend, embedded in an application server, shall interface
+      with the web in a secure manner.
+- [ ] Any redirect mechanism shall not impact user privacy (especially HTTPS
+      redirects)
+- [ ] Referrer-related privacy shall improve
+- [ ] Any caching mechanisms shall not expose user information.
+
+Regarding the application and network architecture
+
+- [ ] The complexity of the current deployment on Render.com shall not be
+      increased.
+- [ ] All of the frontend-specific API endpoints shall be removed.
 
 # Description of present Projectify
 
