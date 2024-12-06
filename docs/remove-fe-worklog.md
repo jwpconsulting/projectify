@@ -239,3 +239,77 @@ No one said it would be quick, but we're not in it to make a quick buck. I'd
 like to create a rock-solid icebreaker, not a Rube Goldberg Machine that
 constantly breaks because of 3rd order transient NPM dependencies. Also, this
 thing is supposed to be a To Do list?
+
+# 2024-12-06
+
+Now I am determining the acceptance criteria.
+
+## Functional requirements
+
+Naturally, a regression in functionality shall be avoided at any cost, but not
+realistic. Bugs will always sneak in, and the UI will change and the migration
+will introduce new usability issues. Still, to set a minimum standard, we want
+to ensure few things. I've added these to `docs/remove-fe.md`.
+
+## Non-functional requirements
+
+A performance degradation should be avoided.
+
+The landing page was tested with PageSpeed Insights:
+
+https://pagespeed.web.dev/analysis/https-www-projectifyapp-com/bhyke2wc99?form_factor=mobile
+
+The following values were measures:
+
+| Measurement    | Mobile | Browser |
+| -------------- | ------ | ------- |
+| Performance    | 98     | 100     |
+| Accessibility  | 93     | 98      |
+| Best Practices | 100    | 100     |
+| SEO            | 100    | 100     |
+
+![PageSpeed Insights for mobile landing page (see table)](./lighthouse_2024-12-06_mobile.png)
+![PageSpeed Insights for desktop landing page (see table)](./lighthouse_2024-12-06_desktop.png.png)
+
+These, of course, are measurements for the landing page.
+
+Comparing this to Firefox running on my NixOS workstation, I see, for `/` the
+following values in the network tab in a cache-less load:
+
+- 84 requests
+- 1.04 MB / 427.63 kB transferred
+- Finish: 961 ms
+- `DOMContentLoaded`: 390 ms
+- `load`: 690 ms
+
+With throttling set to "Good 3G", I see:
+
+- 84 requests
+- 1.08 MB / 405.88 kB transferred
+- Finish: 2.52 ms
+- `DOMContentLoaded`: 572 ms
+- `load`: 1.57 s
+
+These measurements should be interpreted with caution. PageSpeed Insights
+emulates a "Moto G Power" with "Slow 4G throttling".
+
+Furthermore, using Firefox's network tab, I measure a load from `/dashboard`,
+which will always be slow since there is a long redirect chain to the actual
+project happening.
+
+- 87 requests
+- 712.68kb / 319.08 kb transferred
+- Finish: 2.79s
+- `DOMContentLoaded`: 170 ms
+- `load`: 170 ms
+
+With throttling set to "Good 3G", I see:
+
+- 86 requests
+- 721.47 kB / 249.85 kB transferred
+- Finish: 3.28 s
+- `DOMContentLoaded`: 222 ms
+- `load`: 222 ms
+
+Based on the above values, some speed requirements were defined in
+`docs/remove-fe.md`.
