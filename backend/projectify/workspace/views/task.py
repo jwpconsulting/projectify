@@ -40,7 +40,10 @@ from projectify.workspace.serializers.task_detail import (
     TaskDetailSerializer,
     TaskUpdateSerializer,
 )
-from projectify.workspace.services.sub_task import ValidatedData
+from projectify.workspace.services.sub_task import (
+    ValidatedData,
+    ValidatedDatum,
+)
 from projectify.workspace.services.task import (
     task_create_nested,
     task_delete,
@@ -84,6 +87,16 @@ class TaskCreateForm(forms.Form):
         self.fields["labels"].queryset = workspace.label_set.all()
 
 
+class TaskCreateSubTaskForm(forms.Form):
+    """Form for creating sub tasks as part of task creation."""
+
+    title = forms.CharField()
+    done = forms.BooleanField(required=False)
+
+
+TaskCreateSubTaskForms = forms.formset_factory(TaskCreateSubTaskForm)
+
+
 @platform_view
 @require_http_methods(["GET", "POST"])
 def task_create(
@@ -102,20 +115,25 @@ def task_create(
             "workspace/task_create.html",
             {
                 "form": TaskCreateForm(workspace=section.project.workspace),
+                "formset": TaskCreateSubTaskForms(),
                 "section": section,
             },
         )
     form = TaskCreateForm(section.project.workspace, request.POST)
-    if not form.is_valid():
+    formset = TaskCreateSubTaskForms(request.POST)
+    all_valid = form.is_valid() and formset.is_valid()
+    if not all_valid:
         return render(
             request,
             "workspace/task_create.html",
-            {
-                "form": form,
-                "section": section,
-            },
+            {"form": form, "formset": formset, "section": section},
             status=400,
         )
+
+    sub_tasks: list[ValidatedDatum] = [
+        {"title": d["title"], "done": d["done"], "_order": i}
+        for i, d in enumerate(formset.cleaned_data)
+    ]
 
     task_create_nested(
         who=request.user,
@@ -125,7 +143,7 @@ def task_create(
         assignee=form.cleaned_data.get("assignee"),
         due_date=form.cleaned_data.get("due_date"),
         labels=form.cleaned_data["labels"],
-        sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
+        sub_tasks={"create_sub_tasks": sub_tasks, "update_sub_tasks": []},
     )
     return redirect(
         reverse("workspace:projects:view", args=(section.project.uuid,))
