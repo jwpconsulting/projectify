@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
 """Task CRUD views."""
 
-from typing import Literal, Union
+from typing import Any, Literal, Union
 from uuid import UUID
 
 from django import forms
@@ -27,6 +27,7 @@ from projectify.lib.views import platform_view
 from projectify.workspace.models.label import Label
 from projectify.workspace.models.section import Section
 from projectify.workspace.models.task import Task
+from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.selectors.section import (
     section_find_for_user_and_uuid,
 )
@@ -66,19 +67,18 @@ def get_object(
     return obj
 
 
-class TaskCreateForm(forms.ModelForm):
+class TaskCreateForm(forms.Form):
     """Form for task creation."""
 
-    class Meta:
-        """Meta."""
+    title = forms.CharField()
+    description = forms.CharField(required=False, widget=forms.Textarea)
+    due_date = forms.DateTimeField(required=False)
+    assignee = forms.ModelChoiceField(queryset=None)
 
-        model = Task
-        fields = (
-            "title",
-            "description",
-            "assignee",
-            "due_date",
-        )
+    def __init__(self, workspace: Workspace, *args: Any, **kwargs: Any):
+        """Populate available assignees."""
+        super().__init__(*args, **kwargs)
+        self.fields["assignee"].queryset = workspace.teammember_set.all()
 
 
 @platform_view
@@ -98,14 +98,23 @@ def task_create(
             request,
             "workspace/task_create.html",
             {
-                "form": TaskCreateForm,
+                "form": TaskCreateForm(workspace=section.project.workspace),
                 "section": section,
             },
         )
-    form = TaskCreateForm(request.POST)
+    form = TaskCreateForm(section.project.workspace, request.POST)
     if not form.is_valid():
-        return HttpResponse(400)
+        return render(
+            request,
+            "workspace/task_create.html",
+            {
+                "form": form,
+                "section": section,
+            },
+            status=400,
+        )
     validated_data = form.cleaned_data
+    # labels = validated_data["labels"]
 
     task_create_nested(
         who=request.user,
