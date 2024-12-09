@@ -330,3 +330,6 @@ The most complex serializer that Projectify has is the
 `TaskCreateUpdateSerializer` in
 `projectify/workspace/serializers/task_detail.py`. That thing is really, really
 complex.
+
+I've added a form for tasks. It was quite simple, including the related
+fields. Next time I will work on the dynamic sub task creation.
