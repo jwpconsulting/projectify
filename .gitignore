@@ -38,6 +38,7 @@ node_modules/
 # --------
 /frontend/static/yandex*
 /frontend/static/favicon*
+/frontend/static/shortcut1*
 /frontend/static/mstile*
 /frontend/static/browserconfig.xml
 /frontend/static/manifest.webmanifest
