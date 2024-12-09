@@ -8,9 +8,11 @@ from uuid import UUID
 
 from django import forms
 from django.http import HttpResponse
+from django.http.response import Http404
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_http_methods, require_POST
 
 from rest_framework import serializers, status
 from rest_framework.exceptions import NotFound
@@ -21,6 +23,7 @@ from rest_framework.views import APIView
 from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
+from projectify.lib.views import platform_view
 from projectify.workspace.models.label import Label
 from projectify.workspace.models.section import Section
 from projectify.workspace.models.task import Task
@@ -61,6 +64,62 @@ def get_object(
             )
         )
     return obj
+
+
+class TaskCreateForm(forms.ModelForm):
+    """Form for task creation."""
+
+    class Meta:
+        """Meta."""
+
+        model = Task
+        fields = (
+            "title",
+            "description",
+            "assignee",
+            "due_date",
+        )
+
+
+@platform_view
+@require_http_methods(["GET", "POST"])
+def task_create(
+    request: AuthenticatedHttpRequest, section_uuid: UUID
+) -> HttpResponse:
+    """Create a task. Render form error if unsuccessful."""
+    section = section_find_for_user_and_uuid(
+        user=request.user,
+        section_uuid=section_uuid,
+    )
+    if section is None:
+        raise Http404(_("Section not found"))
+    if request.method == "GET":
+        return render(
+            request,
+            "workspace/task_create.html",
+            {
+                "form": TaskCreateForm,
+                "section": section,
+            },
+        )
+    form = TaskCreateForm(request.POST)
+    if not form.is_valid():
+        return HttpResponse(400)
+    validated_data = form.cleaned_data
+
+    task_create_nested(
+        who=request.user,
+        section=section,
+        title=validated_data["title"],
+        description=validated_data.get("description"),
+        assignee=validated_data.get("assignee"),
+        due_date=validated_data.get("due_date"),
+        labels=[],
+        sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
+    )
+    return redirect(
+        reverse("workspace:projects:view", args=(section.project.uuid,))
+    )
 
 
 # Form

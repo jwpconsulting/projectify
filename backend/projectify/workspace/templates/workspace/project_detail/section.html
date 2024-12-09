@@ -1,6 +1,7 @@
 {# SPDX-FileCopyrightText: 2024 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 Section: {{ section.title }}
+<a href="{% url "workspace:sections:create-task" section.uuid %}">Create task</a>
 Tasks:
 <ol class="list-inside list-decimal">
     {% for task in section.task_set.all %}

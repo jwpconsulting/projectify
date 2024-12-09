@@ -313,3 +313,20 @@ With throttling set to "Good 3G", I see:
 
 Based on the above values, some speed requirements were defined in
 `docs/remove-fe.md`.
+
+# 2024-12-09
+
+I noticed that I haven't investigated adding widget templates for Django
+forms. I also have to figure out how easy it is to reimplement the
+more complex serializers as Django forms.
+
+The widgets can be overwritten by creating templates in
+`django/forms/templates`. Reference:
+
+- https://docs.djangoproject.com/en/5.1/ref/forms/renderers/#djangotemplates
+- https://github.com/django/django/tree/main/django/forms/templates/django/forms
+
+The most complex serializer that Projectify has is the
+`TaskCreateUpdateSerializer` in
+`projectify/workspace/serializers/task_detail.py`. That thing is really, really
+complex.

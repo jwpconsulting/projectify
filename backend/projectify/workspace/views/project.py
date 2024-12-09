@@ -18,6 +18,7 @@ from rest_framework.views import APIView
 from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
+from projectify.lib.views import platform_view
 from projectify.workspace.models import Project
 from projectify.workspace.selectors.project import (
     ProjectDetailQuerySet,
@@ -39,6 +40,7 @@ from projectify.workspace.services.project import (
 
 
 # HTML
+@platform_view
 def project_detail_view(
     request: AuthenticatedHttpRequest, project_uuid: UUID
 ) -> HttpResponse:
