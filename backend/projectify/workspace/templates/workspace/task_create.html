@@ -4,13 +4,18 @@
 {% block content %}
     <p>Create task for section {{ section.title }}</p>
     <form action="{% url 'workspace:sections:create-task' section.uuid %}"
-          method="post">
+          method="post"
+          x-data="{ addSubTask() { } }">
         {{ form }}
         <p>create your subtasks here</p>
         {{ formset.management_form }}
+        <template>
+            {{ formset.empty_form }}
+        </template>
         <table>
             {% for form in formset %}{{ form }}{% endfor %}
         </table>
+        <button type="button" @click="addSubTask()">Add sub task</button>
         <input type="submit" value="Create">
         {% csrf_token %}
     </form>
