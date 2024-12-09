@@ -6,6 +6,11 @@
     <form action="{% url 'workspace:sections:create-task' section.uuid %}"
           method="post">
         {{ form }}
+        <p>create your subtasks here</p>
+        {{ formset.management_form }}
+        <table>
+            {% for form in formset %}{{ form }}{% endfor %}
+        </table>
         <input type="submit" value="Create">
         {% csrf_token %}
     </form>
