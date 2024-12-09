@@ -73,12 +73,15 @@ class TaskCreateForm(forms.Form):
     title = forms.CharField()
     description = forms.CharField(required=False, widget=forms.Textarea)
     due_date = forms.DateTimeField(required=False)
-    assignee = forms.ModelChoiceField(queryset=None)
+    assignee = forms.ModelChoiceField(required=False, queryset=None)
+    # Django stub for ModelMultipleChoiceField does not accept None
+    labels = forms.ModelMultipleChoiceField(required=False, queryset=None)  # type: ignore[arg-type]
 
     def __init__(self, workspace: Workspace, *args: Any, **kwargs: Any):
         """Populate available assignees."""
         super().__init__(*args, **kwargs)
         self.fields["assignee"].queryset = workspace.teammember_set.all()
+        self.fields["labels"].queryset = workspace.label_set.all()
 
 
 @platform_view
@@ -113,17 +116,15 @@ def task_create(
             },
             status=400,
         )
-    validated_data = form.cleaned_data
-    # labels = validated_data["labels"]
 
     task_create_nested(
         who=request.user,
         section=section,
-        title=validated_data["title"],
-        description=validated_data.get("description"),
-        assignee=validated_data.get("assignee"),
-        due_date=validated_data.get("due_date"),
-        labels=[],
+        title=form.cleaned_data["title"],
+        description=form.cleaned_data.get("description"),
+        assignee=form.cleaned_data.get("assignee"),
+        due_date=form.cleaned_data.get("due_date"),
+        labels=form.cleaned_data["labels"],
         sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
     )
     return redirect(
