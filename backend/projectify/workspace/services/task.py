@@ -11,6 +11,7 @@ from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
@@ -215,10 +216,12 @@ def task_move_in_direction(
 
         case "down":
             maybe_neighbor = tasks.filter(_order=task._order + 1)
-            if maybe_neighbor.exists():
-                neighbor = maybe_neighbor.get()
-            else:
-                neighbor = section
+            # TODO, maybe we just want to move it to the next section
+            if not maybe_neighbor.exists():
+                raise ValidationError(
+                    _("Can't move task down, there is no next task")
+                )
+            neighbor = maybe_neighbor.get()
 
         case "bottom":
             neighbor = tasks[-1]
