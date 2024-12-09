@@ -24,6 +24,7 @@ from .views.task import (
     TaskMoveAfterTask,
     TaskMoveToSection,
     TaskRetrieveUpdateDelete,
+    task_create,
     task_move,
 )
 from .views.team_member import TeamMemberReadUpdateDelete
@@ -121,6 +122,8 @@ project_patterns = (
 )
 
 section_patterns = (
+    # Create task
+    path("<uuid:section_uuid>/create-task", task_create, name="create-task"),
     # Create
     path(
         "",

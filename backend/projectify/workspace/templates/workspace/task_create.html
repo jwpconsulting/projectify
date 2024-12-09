@@ -1,0 +1,12 @@
+{# SPDX-FileCopyrightText: 2024 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "base.html" %}
+{% block content %}
+    <p>Create task for section {{ section.title }}</p>
+    <form action="{% url 'workspace:sections:create-task' section.uuid %}"
+          method="post">
+        {{ form }}
+        <input type="submit" value="Create">
+        {% csrf_token %}
+    </form>
+{% endblock content %}
