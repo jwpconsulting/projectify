@@ -83,7 +83,7 @@ use of HTMX, which seems to be beloved
 - [x] Consider alternatives.
 - [x] Understand if Tailwind can be used with Django
 - [x] Find out way to use something like frontend components in Django.
-- [ ] Try out Django forms and see if they fit our use case
+- [x] Try out Django forms and see if they fit our use case
 - [ ] Try overriding Django widget templates
 
 ### Alternatives
