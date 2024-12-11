@@ -94,7 +94,23 @@ class TaskCreateSubTaskForm(forms.Form):
     done = forms.BooleanField(required=False)
 
 
-TaskCreateSubTaskForms = forms.formset_factory(TaskCreateSubTaskForm)
+TaskCreateSubTaskForms = forms.formset_factory(TaskCreateSubTaskForm, extra=0)
+
+
+@platform_view
+def task_create_sub_task_form(
+    request: AuthenticatedHttpRequest,
+    sub_tasks: int,
+) -> HttpResponse:
+    """Return a single form for a sub task."""
+    formset = TaskCreateSubTaskForms().empty_form
+    formset.prefix = f"form-{sub_tasks}"
+    new_sub_tasks = sub_tasks + 1
+    return render(
+        request,
+        "workspace/task_create/sub_task.html",
+        {"empty_formset": formset, "formset_total": new_sub_tasks},
+    )
 
 
 @platform_view
@@ -133,6 +149,7 @@ def task_create(
     sub_tasks: list[ValidatedDatum] = [
         {"title": d["title"], "done": d["done"], "_order": i}
         for i, d in enumerate(formset.cleaned_data)
+        if d.get("title")
     ]
 
     task_create_nested(

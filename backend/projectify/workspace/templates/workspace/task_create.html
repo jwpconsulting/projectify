@@ -7,16 +7,12 @@
           method="post"
           x-data="{ addSubTask() { } }">
         {{ form }}
-        <p>create your subtasks here</p>
-        {{ formset.management_form }}
-        <template>
-            {{ formset.empty_form }}
-        </template>
-        <table>
-            {% for form in formset %}{{ form }}{% endfor %}
-        </table>
-        <button type="button" @click="addSubTask()">Add sub task</button>
-        <input type="submit" value="Create">
+        <div>
+            <p>create your subtasks here</p>
+            {{ formset.management_form }}
+            {% include "workspace/task_create/sub_task.html" with formset_html=formset formset_total=0 %}
+        </div>
         {% csrf_token %}
+        <input type="submit" value="Create">
     </form>
 {% endblock content %}

@@ -333,3 +333,30 @@ complex.
 
 I've added a form for tasks. It was quite simple, including the related
 fields. Next time I will work on the dynamic sub task creation.
+
+## 2024-12-11
+
+Todays' goal was to find out how to dynamically populate a form with extra
+lines. The use case I have in mind is dynamic sub task creation when creating
+tasks. Doing this with an SPA is straightforward in the beginning. Updating
+tasks and not deleting sub tasks is a different challenge, of course.
+
+The solution was to create a sub task formset view that renders the next
+required Django `FormSet` item by passing back an `empty_form`. We also have
+to keep track of how many sub tasks have been created. Luckily, HTMX has an
+"out of band" insertion feature
+
+https://htmx.org/docs/#oob_swaps
+
+With this, we can append a new sub task after the existing sub tasks,
+update the button that is used to request new sub task lines, and update a
+hidden input field containing the total number of sub tasks. Does this work
+without JavaScript enabled? Unfortunately not. But it was still extremely
+straight forward to implement. A JS-less way of appending sub tasks would be
+to have the user create the task first, and then add sub tasks while updating
+the task.
+
+We could of course have a very complicated mechanism here to re-render the task
+creation page server-side when a new sub task is required. That would
+definitely be more complicated to implement. And the fact that this works
+without reloading the page is great.

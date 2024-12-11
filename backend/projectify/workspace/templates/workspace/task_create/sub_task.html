@@ -1,0 +1,16 @@
+<div id="subtasks">
+    {% if empty_formset %}<div data-formset>{{ empty_formset }}</div>{% endif %}
+</div>
+<input type="hidden"
+       name="form-TOTAL_FORMS"
+       value="{{ formset_total }}"
+       id="total-subtasks">
+<button type="button"
+        id="add-subtask"
+        hx-select-oob="#total-subtasks,#add-subtask"
+        hx-trigger="click"
+        hx-target="#subtasks"
+        hx-select="[data-formset] div"
+        hx-swap="beforeend"
+        hx-get="{% url 'workspace:tasks:create-task-sub-task' formset_total %}"
+        hx-swap="outerHTML">Add subtask</button>
