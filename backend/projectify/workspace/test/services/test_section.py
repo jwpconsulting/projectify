@@ -6,15 +6,10 @@
 import pytest
 
 from projectify.workspace.models import Project
-from projectify.workspace.models.section import (
-    Section,
-)
+from projectify.workspace.models.section import Section
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.services.section import (
-    section_delete,
-    section_move,
-)
+from projectify.workspace.services.section import section_delete, section_move
 
 
 @pytest.mark.django_db

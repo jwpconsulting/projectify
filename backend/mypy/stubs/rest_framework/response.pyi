@@ -2,14 +2,9 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import (
-    Any,
-    Optional,
-)
+from typing import Any, Optional
 
-from django.template.response import (
-    SimpleTemplateResponse,
-)
+from django.template.response import SimpleTemplateResponse
 
 class Response(SimpleTemplateResponse):
     data: Any

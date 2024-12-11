@@ -19,44 +19,20 @@ dropdb projectify && \
     poetry run ./manage.py seeddb
 """
 
-from argparse import (
-    ArgumentParser,
-)
-from datetime import (
-    timezone,
-)
-from itertools import (
-    count,
-    groupby,
-)
-from random import (
-    choice,
-    randint,
-    sample,
-)
-from typing import (
-    Any,
-    TypedDict,
-)
+from argparse import ArgumentParser
+from datetime import timezone
+from itertools import count, groupby
+from random import choice, randint, sample
+from typing import Any, TypedDict
 
-from django.core.management.base import (
-    BaseCommand,
-)
-from django.db import (
-    transaction,
-)
+from django.core.management.base import BaseCommand
+from django.db import transaction
 
-from faker import (
-    Faker,
-)
+from faker import Faker
 
-from projectify.corporate.models import (
-    Customer,
-)
+from projectify.corporate.models import Customer
 from projectify.corporate.types import CustomerSubscriptionStatus
-from projectify.user.models import (
-    User,
-)
+from projectify.user.models import User
 from projectify.user.services.internal import (
     user_create,
     user_create_superuser,
@@ -71,12 +47,8 @@ from projectify.workspace.models import (
     Workspace,
 )
 from projectify.workspace.models.const import TeamMemberRoles
-from projectify.workspace.models.sub_task import (
-    SubTask,
-)
-from projectify.workspace.models.team_member import (
-    TeamMember,
-)
+from projectify.workspace.models.sub_task import SubTask
+from projectify.workspace.models.team_member import TeamMember
 
 Altogether = TypedDict(
     "Altogether",

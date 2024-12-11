@@ -9,15 +9,9 @@ from django.core.mail import EmailMessage
 
 import pytest
 
-from projectify.user.services.internal import (
-    Token,
-    user_check_token,
-)
+from projectify.user.services.internal import Token, user_check_token
 
-from ..emails import (
-    UserEmailConfirmationEmail,
-    UserPasswordResetEmail,
-)
+from ..emails import UserEmailConfirmationEmail, UserPasswordResetEmail
 from ..models import User
 
 

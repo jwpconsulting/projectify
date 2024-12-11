@@ -5,21 +5,15 @@
 
 from unittest.mock import ANY
 
-from django.urls import (
-    reverse,
-)
+from django.urls import reverse
 
 import pytest
 from rest_framework import status
-from rest_framework.test import (
-    APIClient,
-)
+from rest_framework.test import APIClient
 
 from pytest_types import DjangoAssertNumQueries
 
-from ...models.team_member import (
-    TeamMember,
-)
+from ...models.team_member import TeamMember
 
 
 @pytest.mark.django_db

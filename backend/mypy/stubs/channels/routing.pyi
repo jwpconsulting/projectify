@@ -2,19 +2,11 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from collections.abc import (
-    Sequence,
-)
-from typing import (
-    TypedDict,
-)
+from collections.abc import Sequence
+from typing import TypedDict
 
-from django.core.handlers.asgi import (
-    ASGIHandler,
-)
-from django.urls import (
-    URLPattern,
-)
+from django.core.handlers.asgi import ASGIHandler
+from django.urls import URLPattern
 
 class ProtocolRoutes(TypedDict):
     http: ASGIHandler

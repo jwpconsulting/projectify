@@ -17,29 +17,19 @@ Anything that is unrelated can be used to test if users see only objects that
 they are allowed to see.
 """
 
-from datetime import (
-    datetime,
-)
-from datetime import (
-    timezone as dt_timezone,
-)
+from datetime import datetime
+from datetime import timezone as dt_timezone
 
-from django.utils import (
-    timezone,
-)
+from django.utils import timezone
 
 import pytest
 from faker import Faker
 
-from projectify.corporate.services.stripe import (
-    customer_activate_subscription,
-)
+from projectify.corporate.services.stripe import customer_activate_subscription
 from projectify.user.models import User, UserInvite
 from projectify.workspace.models.label import Label
 from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.models.team_member_invite import (
-    TeamMemberInvite,
-)
+from projectify.workspace.models.team_member_invite import TeamMemberInvite
 from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.selectors.team_member import (
     team_member_find_for_workspace,
@@ -50,9 +40,7 @@ from projectify.workspace.services.project import (
     project_archive,
     project_create,
 )
-from projectify.workspace.services.section import (
-    section_create,
-)
+from projectify.workspace.services.section import section_create
 from projectify.workspace.services.sub_task import sub_task_create
 from projectify.workspace.services.task import task_create
 from projectify.workspace.services.team_member_invite import (
@@ -63,9 +51,7 @@ from projectify.workspace.services.workspace import (
     workspace_create,
 )
 
-from .. import (
-    models,
-)
+from .. import models
 
 
 @pytest.fixture

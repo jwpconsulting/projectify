@@ -3,14 +3,8 @@
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 """Types used for settings."""
 
-from collections.abc import (
-    Sequence,
-)
-from typing import (
-    Any,
-    Mapping,
-    TypedDict,
-)
+from collections.abc import Sequence
+from typing import Any, Mapping, TypedDict
 
 ChannelLayer = Mapping[str, Any]
 ChannelLayers = Mapping[str, ChannelLayer]

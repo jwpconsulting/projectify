@@ -9,9 +9,7 @@ from uuid import UUID
 from django.db.models import QuerySet
 
 from projectify.user.models import User
-from projectify.workspace.models.section import (
-    Section,
-)
+from projectify.workspace.models.section import Section
 
 SectionDetailQuerySet = Section.objects.prefetch_related(
     "task_set",

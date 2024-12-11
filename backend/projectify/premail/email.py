@@ -4,29 +4,15 @@
 """Premail email templates."""
 
 import re
-from typing import (
-    Any,
-    Generic,
-    NewType,
-    TypeVar,
-    Union,
-)
+from typing import Any, Generic, NewType, TypeVar, Union
 
-from django.conf import (
-    settings,
-)
-from django.template import (
-    loader,
-)
+from django.conf import settings
+from django.template import loader
 
-from projectify.context_processors import (
-    frontend_url,
-)
+from projectify.context_processors import frontend_url
 from projectify.user.models.user import User
 
-from .tasks import (
-    send_mail,
-)
+from .tasks import send_mail
 
 Context = dict[str, Any]
 

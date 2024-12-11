@@ -5,32 +5,18 @@
 
 from uuid import uuid4
 
-from django.urls import (
-    reverse,
-)
+from django.urls import reverse
 
 import pytest
 from rest_framework import status
-from rest_framework.response import (
-    Response,
-)
-from rest_framework.test import (
-    APIClient,
-)
+from rest_framework.response import Response
+from rest_framework.test import APIClient
 
-from projectify.workspace.models.section import (
-    Section,
-)
-from projectify.workspace.models.task import (
-    Task,
-)
-from pytest_types import (
-    DjangoAssertNumQueries,
-)
+from projectify.workspace.models.section import Section
+from projectify.workspace.models.task import Task
+from pytest_types import DjangoAssertNumQueries
 
-from ... import (
-    models,
-)
+from ... import models
 
 
 class UnauthenticatedTestMixin:

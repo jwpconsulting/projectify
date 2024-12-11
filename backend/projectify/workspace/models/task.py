@@ -5,12 +5,7 @@
 
 import logging
 import uuid
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Optional,
-    cast,
-)
+from typing import TYPE_CHECKING, Any, Optional, cast
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _

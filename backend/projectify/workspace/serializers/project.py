@@ -11,10 +11,7 @@ from ..models.project import Project
 from ..models.section import Section
 from ..models.task import Task
 from ..models.team_member import TeamMember
-from ..serializers.base import (
-    LabelBaseSerializer,
-    ProjectBaseSerializer,
-)
+from ..serializers.base import LabelBaseSerializer, ProjectBaseSerializer
 from ..serializers.workspace import WorkspaceDetailSerializer
 
 

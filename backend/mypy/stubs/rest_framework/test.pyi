@@ -2,21 +2,14 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import (
-    Any,
-    Optional,
-)
+from typing import Any, Optional
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
+from django.contrib.auth.models import AbstractBaseUser
 from django.test.client import Client as DjangoClient
 
 import requests
 from rest_framework.request import Request
-from rest_framework.response import (
-    Response,
-)
+from rest_framework.response import Response
 
 # TODO would be cool if we could have data be the same SerializerData thing
 # from serializers.pyi

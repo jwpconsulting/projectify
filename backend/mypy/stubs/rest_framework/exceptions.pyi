@@ -5,10 +5,7 @@
 # Taken from
 # https://raw.githubusercontent.com/encode/django-rest-framework/3.14.0/rest_framework/exceptions.py
 from collections.abc import Mapping, Sequence
-from typing import (
-    Optional,
-    Union,
-)
+from typing import Optional, Union
 
 ErrorMessage = Union[str, Sequence[ErrorMessage], Mapping[str, ErrorMessage]]
 Code = str

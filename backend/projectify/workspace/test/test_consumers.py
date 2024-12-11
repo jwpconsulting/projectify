@@ -8,29 +8,17 @@
 # - put instance .delete() calls in each fixture
 import logging
 from collections.abc import AsyncIterable
-from typing import (
-    Any,
-    Union,
-    cast,
-)
+from typing import Any, Union, cast
 from unittest import mock
 
 from django.contrib.auth.models import AnonymousUser
 
 import pytest
-from channels.db import (
-    database_sync_to_async,
-)
-from channels.testing import (
-    WebsocketCommunicator,
-)
+from channels.db import database_sync_to_async
+from channels.testing import WebsocketCommunicator
 
-from projectify.asgi import (
-    websocket_application,
-)
-from projectify.corporate.services.stripe import (
-    customer_activate_subscription,
-)
+from projectify.asgi import websocket_application
+from projectify.corporate.services.stripe import customer_activate_subscription
 from projectify.user.models import User
 from projectify.user.models.user_invite import UserInvite
 from projectify.user.services.internal import user_create
@@ -69,10 +57,7 @@ from ..services.task import (
     task_move_after,
     task_update_nested,
 )
-from ..services.team_member import (
-    team_member_delete,
-    team_member_update,
-)
+from ..services.team_member import team_member_delete, team_member_update
 from ..services.team_member_invite import (
     team_member_invite_create,
     team_member_invite_delete,

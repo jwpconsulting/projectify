@@ -2,14 +2,9 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import (
-    Any,
-    Optional,
-)
+from typing import Any, Optional
 
-from rest_framework.fields import (
-    Field,
-)
+from rest_framework.fields import Field
 
 class RelatedField(Field):
     def __init__(self, **kwargs: Any) -> None: ...

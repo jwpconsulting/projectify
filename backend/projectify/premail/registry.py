@@ -7,13 +7,9 @@ import importlib
 import inspect
 from typing import Any
 
-from django.apps import (
-    apps,
-)
+from django.apps import apps
 
-from .email import (
-    TemplateEmail,
-)
+from .email import TemplateEmail
 
 registry: dict[str, Any] = {
     # 'user-email-confirmation': user_emails.UserEmailConfirmationEmail,

@@ -3,10 +3,7 @@
 # SPDX-FileCopyrightText: 2022, 2023 JWP Consulting GK
 """Corporate app urls."""
 
-from django.urls import (
-    include,
-    path,
-)
+from django.urls import include, path
 
 from projectify.corporate.views.coupon import CouponRedeem
 from projectify.corporate.views.customer import (

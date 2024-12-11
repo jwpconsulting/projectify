@@ -10,9 +10,7 @@ from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
-from stripe.billing_portal import (
-    Session as BillingPortalSession,
-)
+from stripe.billing_portal import Session as BillingPortalSession
 from stripe.checkout import Session
 
 from projectify.corporate.lib.stripe import stripe_client

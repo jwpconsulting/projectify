@@ -3,10 +3,7 @@
 # SPDX-FileCopyrightText: 2022, 2023 JWP Consulting GK
 """User url patterns."""
 
-from django.urls import (
-    include,
-    path,
-)
+from django.urls import include, path
 
 from projectify.user.views.auth import (
     ConfirmEmail,

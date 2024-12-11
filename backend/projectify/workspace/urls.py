@@ -3,10 +3,7 @@
 # SPDX-FileCopyrightText: 2022, 2023 JWP Consulting GK
 """Workspace url patterns."""
 
-from django.urls import (
-    include,
-    path,
-)
+from django.urls import include, path
 
 from projectify.workspace.views.label import LabelCreate, LabelUpdateDelete
 from projectify.workspace.views.project import (
@@ -27,9 +24,7 @@ from .views.task import (
     TaskMoveToSection,
     TaskRetrieveUpdateDelete,
 )
-from .views.team_member import (
-    TeamMemberReadUpdateDelete,
-)
+from .views.team_member import TeamMemberReadUpdateDelete
 from .views.workspace import (
     InviteUserToWorkspace,
     UninviteUserFromWorkspace,

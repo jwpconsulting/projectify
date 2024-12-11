@@ -4,29 +4,16 @@
 """Contain workspace model and qs."""
 
 import uuid
-from typing import (
-    TYPE_CHECKING,
-    Optional,
-)
+from typing import TYPE_CHECKING, Optional
 
-from django.conf import (
-    settings,
-)
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
-from django.db import (
-    models,
-    transaction,
-)
+from django.conf import settings
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models, transaction
 from django.utils.translation import gettext_lazy as _
 
 import pgtrigger
 
-from projectify.lib.models import (
-    BaseModel,
-    TitleDescriptionModel,
-)
+from projectify.lib.models import BaseModel, TitleDescriptionModel
 
 from ..types import WorkspaceQuota
 
@@ -34,18 +21,10 @@ if TYPE_CHECKING:
     from django.db.models.fields.related import RelatedField  # noqa: F401
     from django.db.models.manager import RelatedManager  # noqa: F401
 
-    from projectify.corporate.models import (
-        Customer,
-    )
+    from projectify.corporate.models import Customer
 
-    from . import (
-        Label,
-        Project,
-        TeamMember,
-    )
-    from .team_member_invite import (
-        TeamMemberInvite,
-    )
+    from . import Label, Project, TeamMember
+    from .team_member_invite import TeamMemberInvite
 
 
 class Workspace(TitleDescriptionModel, BaseModel):

@@ -5,11 +5,7 @@
 
 from django.utils import timezone
 
-from projectify.premail.email import (
-    Context,
-    EmailAddress,
-    TemplateEmail,
-)
+from projectify.premail.email import Context, EmailAddress, TemplateEmail
 from projectify.user.models.user import User
 
 from .models.team_member_invite import TeamMemberInvite

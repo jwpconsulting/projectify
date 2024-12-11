@@ -9,18 +9,10 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
 from django_ratelimit.decorators import ratelimit
-from rest_framework import (
-    parsers,
-    serializers,
-    views,
-)
+from rest_framework import parsers, serializers, views
 from rest_framework.exceptions import NotFound
-from rest_framework.request import (
-    Request,
-)
-from rest_framework.response import (
-    Response,
-)
+from rest_framework.request import Request
+from rest_framework.response import Response
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_201_CREATED,
@@ -31,30 +23,20 @@ from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.schema import extend_schema
 from projectify.workspace.selectors.quota import workspace_get_all_quotas
 
-from ..exceptions import (
-    UserAlreadyAdded,
-    UserAlreadyInvited,
-)
+from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
 from ..models import Workspace
 from ..selectors.workspace import (
     WorkspaceDetailQuerySet,
     workspace_find_by_workspace_uuid,
     workspace_find_for_user,
 )
-from ..serializers.base import (
-    WorkspaceBaseSerializer,
-)
-from ..serializers.workspace import (
-    WorkspaceDetailSerializer,
-)
+from ..serializers.base import WorkspaceBaseSerializer
+from ..serializers.workspace import WorkspaceDetailSerializer
 from ..services.team_member_invite import (
     team_member_invite_create,
     team_member_invite_delete,
 )
-from ..services.workspace import (
-    workspace_create,
-    workspace_update,
-)
+from ..services.workspace import workspace_create, workspace_update
 
 
 # Create

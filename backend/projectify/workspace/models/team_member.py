@@ -4,34 +4,17 @@
 """Team member models."""
 
 import uuid
-from typing import (
-    TYPE_CHECKING,
-    ClassVar,
-    Self,
-    cast,
-)
+from typing import TYPE_CHECKING, ClassVar, Self, cast
 
-from django.conf import (
-    settings,
-)
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
-from django.db import (
-    models,
-)
+from django.conf import settings
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
 
 from projectify.lib.models import BaseModel
 
-from .const import (
-    TeamMemberRoles,
-)
-from .types import (
-    Pks,
-)
-from .workspace import (
-    Workspace,
-)
+from .const import TeamMemberRoles
+from .types import Pks
+from .workspace import Workspace
 
 # TODO Here we could be using __all__
 
@@ -39,10 +22,7 @@ from .workspace import (
 if TYPE_CHECKING:
     from django.db.models.fields.related import RelatedField  # noqa: F401
 
-    from projectify.user.models import (  # noqa: F401
-        User,
-        UserInvite,
-    )
+    from projectify.user.models import User, UserInvite  # noqa: F401
 
 
 class TeamMemberQuerySet(models.QuerySet["TeamMember"]):

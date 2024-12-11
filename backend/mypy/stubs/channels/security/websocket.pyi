@@ -6,13 +6,9 @@
 
 from collections.abc import Sequence
 
-from django.core.handlers.asgi import (
-    ASGIHandler,
-)
+from django.core.handlers.asgi import ASGIHandler
 
-from channels.middleware import (
-    BaseMiddleware,
-)
+from channels.middleware import BaseMiddleware
 
 class OriginValidator(BaseMiddleware):
     def __init__(

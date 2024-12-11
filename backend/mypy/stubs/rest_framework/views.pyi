@@ -5,9 +5,7 @@
 from collections.abc import Sequence
 from typing import Type, Union
 
-from django.views import (
-    View,
-)
+from django.views import View
 
 from rest_framework.permissions import BasePermission
 from rest_framework.request import Request

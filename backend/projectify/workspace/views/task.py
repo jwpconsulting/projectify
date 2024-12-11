@@ -7,24 +7,15 @@ from uuid import UUID
 
 from django.utils.translation import gettext_lazy as _
 
-from rest_framework import (
-    serializers,
-    status,
-)
+from rest_framework import serializers, status
 from rest_framework.exceptions import NotFound
-from rest_framework.request import (
-    Request,
-)
-from rest_framework.response import (
-    Response,
-)
+from rest_framework.request import Request
+from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.schema import extend_schema
-from projectify.workspace.models.section import (
-    Section,
-)
+from projectify.workspace.models.section import Section
 from projectify.workspace.selectors.section import (
     section_find_for_user_and_uuid,
 )
@@ -45,9 +36,7 @@ from projectify.workspace.services.task import (
     task_update_nested,
 )
 
-from .. import (
-    models,
-)
+from .. import models
 
 
 def get_object(request: Request, task_uuid: UUID) -> models.Task:

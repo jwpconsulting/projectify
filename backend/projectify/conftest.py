@@ -6,21 +6,13 @@
 import base64
 import random
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
-from django.core.files.uploadedfile import (
-    SimpleUploadedFile,
-)
-from django.test import (
-    client,
-)
+from django.contrib.auth.models import AbstractBaseUser
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import client
 
 import pytest
 from faker import Faker
-from rest_framework.test import (
-    APIClient,
-)
+from rest_framework.test import APIClient
 
 from projectify.user import models as user_models
 from projectify.user.services.internal import (

@@ -31,9 +31,7 @@ from projectify.corporate.selectors.customer import (
 )
 from projectify.workspace.models.chat_message import ChatMessage
 from projectify.workspace.models.label import Label
-from projectify.workspace.models.section import (
-    Section,
-)
+from projectify.workspace.models.section import Section
 from projectify.workspace.models.sub_task import SubTask
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.task_label import TaskLabel

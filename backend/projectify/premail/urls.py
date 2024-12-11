@@ -3,14 +3,9 @@
 # SPDX-FileCopyrightText: 2021, 2023 JWP Consulting GK
 """Premail urlpatterns."""
 
-from django.urls import (
-    path,
-)
+from django.urls import path
 
-from .views import (
-    EmailList,
-    EmailPreview,
-)
+from .views import EmailList, EmailPreview
 
 app_name = "premail"
 

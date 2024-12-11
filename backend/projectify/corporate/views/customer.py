@@ -8,10 +8,7 @@ from uuid import UUID
 
 from django.utils.translation import gettext_lazy as _
 
-from rest_framework import (
-    exceptions,
-    serializers,
-)
+from rest_framework import exceptions, serializers
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK

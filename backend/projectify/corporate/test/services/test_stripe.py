@@ -12,12 +12,8 @@ from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.models.workspace import Workspace
 
 from ...models import Customer
-from ...selectors.customer import (
-    customer_check_active_for_workspace,
-)
-from ...services.customer import (
-    create_billing_portal_session_for_customer,
-)
+from ...selectors.customer import customer_check_active_for_workspace
+from ...services.customer import create_billing_portal_session_for_customer
 from ...services.stripe import (
     customer_activate_subscription,
     customer_cancel_subscription,

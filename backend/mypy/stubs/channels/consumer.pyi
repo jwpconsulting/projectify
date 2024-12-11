@@ -2,17 +2,11 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import (
-    Any,
-)
+from typing import Any
 
-from django.core.handlers.asgi import (
-    ASGIHandler,
-)
+from django.core.handlers.asgi import ASGIHandler
 
-from .layers import (
-    BaseChannelLayer,
-)
+from .layers import BaseChannelLayer
 
 class AsyncConsumer:
     scope: dict[str, Any]

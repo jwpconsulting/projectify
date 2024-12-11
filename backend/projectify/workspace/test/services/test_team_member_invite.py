@@ -11,9 +11,7 @@ from projectify.user.models import User
 from projectify.user.models.user_invite import UserInvite
 from projectify.user.services.internal import user_create
 from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.models.team_member_invite import (
-    TeamMemberInvite,
-)
+from projectify.workspace.models.team_member_invite import TeamMemberInvite
 from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.services.team_member import team_member_delete
 from projectify.workspace.services.team_member_invite import (
@@ -21,10 +19,7 @@ from projectify.workspace.services.team_member_invite import (
     team_member_invite_delete,
 )
 
-from ...exceptions import (
-    UserAlreadyAdded,
-    UserAlreadyInvited,
-)
+from ...exceptions import UserAlreadyAdded, UserAlreadyInvited
 
 
 @pytest.mark.django_db

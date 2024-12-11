@@ -3,17 +3,10 @@
 # SPDX-FileCopyrightText: 2022, 2023 JWP Consulting GK
 """Ensure unique Task number for current Task objects."""
 
-from typing import (
-    Any,
-    cast,
-)
+from typing import Any, cast
 
-from django.apps.registry import (
-    Apps,
-)
-from django.db import (
-    migrations,
-)
+from django.apps.registry import Apps
+from django.db import migrations
 
 
 def add_workspace_to_task(apps: Apps, schema_editor: object) -> None:

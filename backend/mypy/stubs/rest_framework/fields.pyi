@@ -2,15 +2,9 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import (
-    Any,
-    Optional,
-    Union,
-)
+from typing import Any, Optional, Union
 
-from rest_framework import (
-    serializers,
-)
+from rest_framework import serializers
 
 class empty: ...
 

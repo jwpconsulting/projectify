@@ -6,9 +6,7 @@
 from typing import Any, Optional
 
 from django import forms
-from django.contrib import (
-    admin,
-)
+from django.contrib import admin
 from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
@@ -16,9 +14,7 @@ from projectify.corporate.models.coupon import Coupon
 from projectify.corporate.services.coupon import coupon_create
 from projectify.user.models import User
 
-from . import (
-    models,
-)
+from . import models
 
 
 @admin.register(models.Customer)

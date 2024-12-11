@@ -6,12 +6,7 @@
 from typing import Optional
 from uuid import UUID
 
-from django.db.models import (
-    Count,
-    Prefetch,
-    Q,
-    QuerySet,
-)
+from django.db.models import Count, Prefetch, Q, QuerySet
 from django.db.models.functions import NullIf
 
 from projectify.user.models import User

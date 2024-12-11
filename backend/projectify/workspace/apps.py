@@ -3,9 +3,7 @@
 # SPDX-FileCopyrightText: 2021, 2022, 2023 JWP Consulting GK
 """Workspace app configs."""
 
-from django.apps import (
-    AppConfig,
-)
+from django.apps import AppConfig
 
 
 class WorkspaceConfig(AppConfig):

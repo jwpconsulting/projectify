@@ -12,16 +12,9 @@ https://docs.djangoproject.com/en/3.2/howto/deployment/asgi/
 
 import os
 
-from channels.auth import (
-    AuthMiddlewareStack,
-)
-from channels.routing import (
-    ProtocolTypeRouter,
-    URLRouter,
-)
-from configurations.asgi import (
-    get_asgi_application,
-)
+from channels.auth import AuthMiddlewareStack
+from channels.routing import ProtocolTypeRouter, URLRouter
+from configurations.asgi import get_asgi_application
 
 from projectify.middleware import CsrfTrustedOriginsOriginValidator
 
@@ -35,9 +28,7 @@ asgi_application = get_asgi_application()
 # I believe we had to move this down here so that all applications can be
 # mounted correctly, since importing the URLs could otherwise import views
 # that use unitialized Django models. Justus 2023-10-18
-from .urls import (  # noqa: E402
-    websocket_urlpatterns,
-)
+from .urls import websocket_urlpatterns  # noqa: E402
 
 websocket_application = CsrfTrustedOriginsOriginValidator(
     AuthMiddlewareStack(URLRouter(websocket_urlpatterns))

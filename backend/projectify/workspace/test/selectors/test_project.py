@@ -5,9 +5,7 @@
 
 import pytest
 
-from projectify.workspace.services.project import (
-    project_archive,
-)
+from projectify.workspace.services.project import project_archive
 
 from ...models.project import Project
 from ...models.team_member import TeamMember

@@ -6,9 +6,7 @@
 from collections.abc import Iterable
 from unittest import mock
 
-from django.urls import (
-    reverse,
-)
+from django.urls import reverse
 
 import pytest
 from faker import Faker

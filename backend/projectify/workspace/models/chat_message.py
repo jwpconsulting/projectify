@@ -4,25 +4,15 @@
 """Chat message model."""
 
 import uuid
-from typing import (
-    ClassVar,
-    Self,
-    cast,
-)
+from typing import ClassVar, Self, cast
 
 from django.contrib.auth.models import AbstractBaseUser
-from django.db import (
-    models,
-)
+from django.db import models
 
 from projectify.lib.models import BaseModel
 
-from .task import (
-    Task,
-)
-from .team_member import (
-    TeamMember,
-)
+from .task import Task
+from .team_member import TeamMember
 from .types import Pks
 
 

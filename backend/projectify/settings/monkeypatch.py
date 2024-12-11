@@ -3,12 +3,8 @@
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 """Patch classes to support generic typing."""
 
-from collections.abc import (
-    Iterable,
-)
-from typing import (
-    Any,
-)
+from collections.abc import Iterable
+from typing import Any
 
 from django.contrib import admin  # For patching
 from django.db import models  # For patching

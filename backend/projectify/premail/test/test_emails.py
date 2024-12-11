@@ -8,9 +8,7 @@ import pytest
 from projectify.user.models.user import User
 from pytest_types import Mailbox
 
-from ..emails import (
-    SampleEmail,
-)
+from ..emails import SampleEmail
 
 
 @pytest.mark.django_db

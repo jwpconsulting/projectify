@@ -3,24 +3,14 @@
 # SPDX-FileCopyrightText: 2021, 2022, 2023 JWP Consulting GK
 """Task label model."""
 
-from typing import (
-    ClassVar,
-    Self,
-    cast,
-)
+from typing import ClassVar, Self, cast
 
-from django.db import (
-    models,
-)
+from django.db import models
 
 from projectify.lib.models import BaseModel
 
-from .label import (
-    Label,
-)
-from .task import (
-    Task,
-)
+from .label import Label
+from .task import Task
 from .types import Pks
 
 

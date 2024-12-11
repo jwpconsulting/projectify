@@ -3,22 +3,13 @@
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 """User invite model in user app."""
 
-from typing import (
-    ClassVar,
-    cast,
-)
+from typing import ClassVar, cast
 
-from django.conf import (
-    settings,
-)
-from django.db import (
-    models,
-)
+from django.conf import settings
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from typing_extensions import (
-    Self,
-)
+from typing_extensions import Self
 
 from projectify.lib.models import BaseModel
 

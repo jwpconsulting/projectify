@@ -2,14 +2,8 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from collections.abc import (
-    Awaitable,
-)
-from typing import (
-    Callable,
-    ParamSpec,
-    TypeVar,
-)
+from collections.abc import Awaitable
+from typing import Callable, ParamSpec, TypeVar
 
 T = TypeVar("T")
 R = TypeVar("R")

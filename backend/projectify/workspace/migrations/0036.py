@@ -3,17 +3,10 @@
 # SPDX-FileCopyrightText: 2022, 2023 JWP Consulting GK
 """Ensure unique Task number for current Task objects, part two."""
 
-from typing import (
-    TYPE_CHECKING,
-    cast,
-)
+from typing import TYPE_CHECKING, cast
 
-from django.apps.registry import (
-    Apps,
-)
-from django.db import (
-    migrations,
-)
+from django.apps.registry import Apps
+from django.db import migrations
 
 if TYPE_CHECKING:
     from projectify.workspace.models import Task as _Task

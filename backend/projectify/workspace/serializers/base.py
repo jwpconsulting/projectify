@@ -8,25 +8,15 @@ We define base serializer as a serializer that does not serialize
 related model fields, and thus will not cause circular import issues.
 """
 
-from collections.abc import (
-    Sequence,
-)
-from typing import (
-    Optional,
-)
+from collections.abc import Sequence
+from typing import Optional
 
-from rest_framework import (
-    serializers,
-)
+from rest_framework import serializers
 
-from projectify import (
-    utils,
-)
+from projectify import utils
 from projectify.user import serializers as user_serializers
 
-from .. import (
-    models,
-)
+from .. import models
 
 timestamps: Sequence[str] = (
     "created",

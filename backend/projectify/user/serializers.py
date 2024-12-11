@@ -3,22 +3,13 @@
 # SPDX-FileCopyrightText: 2022, 2023 JWP Consulting GK
 """User app serializers."""
 
-from typing import (
-    Optional,
-    Sequence,
-)
+from typing import Optional, Sequence
 
-from rest_framework import (
-    serializers,
-)
+from rest_framework import serializers
 
-from projectify import (
-    utils,
-)
+from projectify import utils
 
-from . import (
-    models,
-)
+from . import models
 
 
 class UserSerializer(serializers.ModelSerializer[models.User]):
