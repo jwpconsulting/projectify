@@ -360,3 +360,15 @@ We could of course have a very complicated mechanism here to re-render the task
 creation page server-side when a new sub task is required. That would
 definitely be more complicated to implement. And the fact that this works
 without reloading the page is great.
+
+## 2024-12-12
+
+Today's goal is to figure out how to customize Django widgets. Reference:
+
+https://docs.djangoproject.com/en/5.1/ref/forms/widgets/
+
+This seems to be the template name for `TextInput`:
+
+```
+django/forms/widgets/text.html
+```
