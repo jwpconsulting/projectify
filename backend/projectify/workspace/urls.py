@@ -36,11 +36,18 @@ from .views.workspace import (
     WorkspaceCreate,
     WorkspacePictureUploadView,
     WorkspaceReadUpdate,
+    workspace_list_view,
 )
 
 app_name = "workspace"
 
 workspace_patterns = (
+    # HTML
+    path(
+        "user-workspaces/view",
+        workspace_list_view,
+        name="user-workspaces-view",
+    ),
     # Create
     path(
         "",
