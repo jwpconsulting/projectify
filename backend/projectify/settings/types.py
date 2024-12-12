@@ -4,7 +4,7 @@
 """Types used for settings."""
 
 from collections.abc import Sequence
-from typing import Any, Mapping, NotRequired, TypedDict
+from typing import Any, Mapping, TypedDict
 
 ChannelLayer = Mapping[str, Any]
 ChannelLayers = Mapping[str, ChannelLayer]
@@ -14,7 +14,7 @@ class TemplateConfig(TypedDict):
     """Configure one templating module."""
 
     BACKEND: str
-    APP_DIRS: NotRequired[bool]
+    APP_DIRS: bool
     OPTIONS: Mapping[str, Any]
 
 
