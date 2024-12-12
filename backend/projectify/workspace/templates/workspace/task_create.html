@@ -3,7 +3,7 @@
 {% extends "base.html" %}
 {% block content %}
     <p>Create task for section {{ section.title }}</p>
-    <form action="{% url 'workspace:sections:create-task' section.uuid %}"
+    <form action="{% url 'dashboard:sections:create-task' section.uuid %}"
           method="post"
           x-data="{ addSubTask() { } }">
         {{ form }}

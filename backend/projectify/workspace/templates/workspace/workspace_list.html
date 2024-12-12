@@ -2,14 +2,12 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "base.html" %}
 {% block content %}
-    {% for workspace in workspaces %}
-        <h1>Workspace: {{ workspace.title }}</h1>
-        <ol class="flex flex-col list-disc list-inside">
-            {% for project in workspace.project_set.all %}
-                <li>
-                    <a href="{% url "workspace:projects:view" project.uuid %}">{{ project.title }}</a>
-                </li>
-            {% endfor %}
-        </ol>
-    {% endfor %}
+    <ol class="list-inside list-disc">
+        {% for workspace in workspaces %}
+            <li>
+                Workspace: {{ workspace.title }}
+                <a href="{% url "dashboard:workspaces:detail" workspace.uuid %}">View workspace</a>
+            </li>
+        {% endfor %}
+    </ol>
 {% endblock content %}

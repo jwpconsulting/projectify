@@ -1,15 +1,15 @@
 {# SPDX-FileCopyrightText: 2024 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 Section: {{ section.title }}
-<a href="{% url "workspace:sections:create-task" section.uuid %}">Create task</a>
+<a href="{% url "dashboard:sections:create-task" section.uuid %}">Create task</a>
 Tasks:
 <ol class="list-inside list-decimal">
     {% for task in section.task_set.all %}
         <li>
             {{ task.title }}
             <form hx-target="closest [data-section]"
-                  hx-post="{% url 'workspace:tasks:move' task.uuid %}"
-                  action="{% url 'workspace:tasks:move' task.uuid %}"
+                  hx-post="{% url 'dashboard:tasks:move' task.uuid %}"
+                  action="{% url 'dashboard:tasks:move' task.uuid %}"
                   method="post">
                 <input type="submit" name="up" value="up" />
                 <input type="submit" name="down" value="down" />

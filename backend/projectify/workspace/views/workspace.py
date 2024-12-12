@@ -5,7 +5,7 @@
 
 from uuid import UUID
 
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
@@ -48,6 +48,19 @@ def workspace_list_view(request: AuthenticatedHttpRequest) -> HttpResponse:
     workspaces = workspace_find_for_user(who=request.user)
     context = {"workspaces": workspaces}
     return render(request, "workspace/workspace_list.html", context)
+
+
+def workspace_view(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Show workspace."""
+    workspace = workspace_find_by_workspace_uuid(
+        who=request.user, workspace_uuid=workspace_uuid
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+    context = {"workspace": workspace}
+    return render(request, "workspace/workspace_detail.html", context)
 
 
 # Create

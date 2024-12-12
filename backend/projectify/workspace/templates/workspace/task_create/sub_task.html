@@ -14,5 +14,5 @@
         hx-target="#subtasks"
         hx-select="[data-formset] div"
         hx-swap="beforeend"
-        hx-get="{% url 'workspace:tasks:create-task-sub-task' formset_total %}"
+        hx-get="{% url 'dashboard:tasks:create-task-sub-task' formset_total %}"
         hx-swap="outerHTML">Add subtask</button>

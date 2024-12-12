@@ -45,6 +45,10 @@ urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
         "workspace/",
         include("projectify.workspace.urls"),
     ),
+    path(
+        "dashboard/",
+        include("projectify.workspace.dashboard_urls"),
+    ),
     path("corporate/", include("projectify.corporate.urls")),
 )
 

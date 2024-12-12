@@ -11,7 +11,6 @@ from projectify.workspace.views.project import (
     ProjectArchivedList,
     ProjectCreate,
     ProjectReadUpdateDelete,
-    project_detail_view,
 )
 from projectify.workspace.views.section import (
     SectionCreate,
@@ -24,9 +23,6 @@ from .views.task import (
     TaskMoveAfterTask,
     TaskMoveToSection,
     TaskRetrieveUpdateDelete,
-    task_create,
-    task_create_sub_task_form,
-    task_move,
 )
 from .views.team_member import TeamMemberReadUpdateDelete
 from .views.workspace import (
@@ -36,18 +32,11 @@ from .views.workspace import (
     WorkspaceCreate,
     WorkspacePictureUploadView,
     WorkspaceReadUpdate,
-    workspace_list_view,
 )
 
 app_name = "workspace"
 
 workspace_patterns = (
-    # HTML
-    path(
-        "user-workspaces/view",
-        workspace_list_view,
-        name="user-workspaces-view",
-    ),
     # Create
     path(
         "",
@@ -103,12 +92,6 @@ team_member_patterns = (
 )
 
 project_patterns = (
-    # HTML
-    path(
-        "<uuid:project_uuid>/view",
-        project_detail_view,
-        name="view",
-    ),
     # Create
     path(
         "",
@@ -130,8 +113,6 @@ project_patterns = (
 )
 
 section_patterns = (
-    # Create task
-    path("<uuid:section_uuid>/create-task", task_create, name="create-task"),
     # Create
     path(
         "",
@@ -153,13 +134,6 @@ section_patterns = (
 )
 
 task_patterns = (
-    # Form
-    path("<uuid:task_uuid>/move", task_move, name="move"),
-    path(
-        "sub-task/<int:sub_tasks>",
-        task_create_sub_task_form,
-        name="create-task-sub-task",
-    ),
     # Create
     path(
         "",
