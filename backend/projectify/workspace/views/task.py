@@ -73,12 +73,20 @@ def get_object(
 class TaskCreateForm(forms.Form):
     """Form for task creation."""
 
-    title = forms.CharField()
-    description = forms.CharField(required=False, widget=forms.Textarea)
-    due_date = forms.DateTimeField(required=False)
+    title = forms.CharField(
+        label=_("Task title"),
+        widget=forms.TextInput(attrs={"placeholder": _("Task title")}),
+    )
     assignee = forms.ModelChoiceField(required=False, queryset=None)
     # Django stub for ModelMultipleChoiceField does not accept None
     labels = forms.ModelMultipleChoiceField(required=False, queryset=None)  # type: ignore[arg-type]
+    due_date = forms.DateTimeField(required=False)
+    description = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={"placeholder": _("Enter a description for your task")}
+        ),
+    )
 
     def __init__(self, workspace: Workspace, *args: Any, **kwargs: Any):
         """Populate available assignees."""

@@ -76,15 +76,24 @@ use of HTMX, which seems to be beloved
 
 ## Analysis
 
-- [x] Test out HTMX. Thoroughly. Make sure you are comfortable.
 - [x] Take inventory of all frontend pages
 - [x] Identify remaining risks
 - [x] Determine acceptance criteria.
 - [x] Consider alternatives.
+
+### Prototyping
+
+The following things need to be evaluated to make sure we can implement
+everything.
+
+- [x] Test out HTMX. Thoroughly. Make sure you are comfortable.
 - [x] Understand if Tailwind can be used with Django
 - [x] Find out way to use something like frontend components in Django.
 - [x] Try out Django forms and see if they fit our use case
-- [ ] Try overriding Django widget templates
+- [x] Try overriding Django widget templates
+- [ ] Completely implement task site (copy HTML over from frontend)
+- [ ] Try conditionally showing UI functionality based on user permissions
+- [ ] Find out how to properly integrate icon pack used in frontend
 
 ### Alternatives
 

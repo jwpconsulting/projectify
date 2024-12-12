@@ -20,7 +20,9 @@
     <p>Sections:</p>
     <ol>
         {% for section in object.section_set.all %}
-            <li data-section>{% include "workspace/project_detail/section.html" with section=section %}</li>
+            <li id="{{ section.uuid }}" data-section>
+                {% include "workspace/project_detail/section.html" with section=section %}
+            </li>
         {% endfor %}
     </ol>
 {% endblock %}
