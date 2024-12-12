@@ -372,3 +372,9 @@ This seems to be the template name for `TextInput`:
 ```
 django/forms/widgets/text.html
 ```
+
+I followed the advice from here:
+
+https://docs.djangoproject.com/en/5.1/ref/forms/renderers/#django.forms.renderers.TemplatesSetting
+
+I can now override Django widgets. Great.
