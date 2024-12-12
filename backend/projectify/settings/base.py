@@ -94,6 +94,9 @@ class Base(Configuration):
 
     INSTALLED_APPS_FIRST_PARTY = (
         "projectify",
+        # XXX django.forms is added here so that we have a chance to override
+        # templates
+        "django.forms",
         # TODO check if this can be alphabetized
         # Replaces 'django.contrib.admin'
         "projectify.admin.apps.ProjectifyAdminConfig",
@@ -219,6 +222,7 @@ class Base(Configuration):
             },
         }
     ]
+    FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
     # Celery
     CELERY_TIMEZONE = "Asia/Tokyo"

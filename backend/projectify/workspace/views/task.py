@@ -163,7 +163,7 @@ def task_create(
         sub_tasks={"create_sub_tasks": sub_tasks, "update_sub_tasks": []},
     )
     return redirect(
-        reverse("workspace:projects:view", args=(section.project.uuid,))
+        reverse("dashboard:projects:detail", args=(section.project.uuid,))
     )
 
 
