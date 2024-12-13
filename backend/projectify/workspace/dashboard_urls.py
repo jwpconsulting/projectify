@@ -5,6 +5,7 @@
 
 from django.urls import include, path
 
+from projectify.workspace.views.dashboard import redirect_to_dashboard
 from projectify.workspace.views.project import project_detail_view
 from projectify.workspace.views.task import (
     task_create,
@@ -52,6 +53,11 @@ task_patterns = (
     ),
 )
 urlpatterns = (
+    path(
+        "",
+        redirect_to_dashboard,
+        name="dashboard",
+    ),
     # Workspace
     path(
         "workspace/",
