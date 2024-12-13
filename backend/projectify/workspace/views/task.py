@@ -29,6 +29,7 @@ from projectify.workspace.models.section import Section
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.selectors.section import (
+    SectionDetailQuerySet,
     section_find_for_user_and_uuid,
 )
 from projectify.workspace.selectors.task import (
@@ -91,7 +92,9 @@ class TaskCreateForm(forms.Form):
     def __init__(self, workspace: Workspace, *args: Any, **kwargs: Any):
         """Populate available assignees."""
         super().__init__(*args, **kwargs)
-        self.fields["assignee"].queryset = workspace.teammember_set.all()
+        self.fields[
+            "assignee"
+        ].queryset = workspace.teammember_set.select_related("user")
         self.fields["labels"].queryset = workspace.label_set.all()
 
 
@@ -128,8 +131,7 @@ def task_create(
 ) -> HttpResponse:
     """Create a task. Render form error if unsuccessful."""
     section = section_find_for_user_and_uuid(
-        user=request.user,
-        section_uuid=section_uuid,
+        user=request.user, section_uuid=section_uuid, qs=SectionDetailQuerySet
     )
     if section is None:
         raise Http404(_("Section not found"))
