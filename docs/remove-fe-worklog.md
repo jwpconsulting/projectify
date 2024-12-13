@@ -378,3 +378,9 @@ I followed the advice from here:
 https://docs.djangoproject.com/en/5.1/ref/forms/renderers/#django.forms.renderers.TemplatesSetting
 
 I can now override Django widgets. Great.
+
+## 2024-12-13
+
+I've fully mocked up the task creation page:
+
+![HTML from frontend copied into task creation page](./2024-12-13_task_creation_mockup.png)
