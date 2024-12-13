@@ -69,9 +69,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
 
     def __str__(self) -> str:
         """Return printable user name."""
-        if self.preferred_name is not None:
-            return f"{self.preferred_name} ({self.email})"
-        return self.email
+        return self.preferred_name or self.email
 
     class Meta(BaseModel.Meta, AbstractBaseUser.Meta):
         """Add constraints."""
