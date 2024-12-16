@@ -145,6 +145,9 @@ class Development(SpectacularSettings, Base):
     # Enable live reloading
     BROWSER_RELOAD = True
 
+    # Feature flags
+    ENABLE_DJANGO_DASHBOARD = True
+
     @classmethod
     def pre_setup(cls) -> None:
         """Load environment variables from .env."""
