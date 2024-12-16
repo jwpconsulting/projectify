@@ -315,6 +315,9 @@ class Base(Configuration):
     TAILWIND_APP_NAME = "projectify.theme"
     BROWSER_RELOAD = False
 
+    # Feature flags
+    ENABLE_DJANGO_DASHBOARD = False
+
     @classmethod
     def post_setup(cls) -> None:
         """Warn if FRONTEND_URL ends on '/'."""

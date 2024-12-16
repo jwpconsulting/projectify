@@ -51,6 +51,14 @@ urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     ),
     path("corporate/", include("projectify.corporate.urls")),
 )
+if settings.ENABLE_DJANGO_DASHBOARD:
+    urlpatterns = (
+        *urlpatterns,
+        path(
+            "dashboard/",
+            include("projectify.workspace.dashboard_urls"),
+        ),
+    )
 
 if settings.PREMAIL_PREVIEW:
     urlpatterns = (
