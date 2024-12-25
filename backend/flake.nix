@@ -36,8 +36,14 @@
           types-stripe = [ "setuptools" ];
         };
         overrides = defaultPoetryOverrides.extend (self: super: {
+          # poetry2nix is being sunset. instead fixing the build for the
+          # following packages, I'm just including the ones from nixos instead
+          # Since these are transient dependencies, I don't believe we'll
+          # be affected too much by changes within them.
+          # Justus 2024-12-25
           constantly = pkgs.python312Packages.constantly;
           cffi = pkgs.python312Packages.cffi;
+          pyyaml = pkgs.python312Packages.pyyaml;
           psycopg-c = super.psycopg-c.overridePythonAttrs (
             old: {
               nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
