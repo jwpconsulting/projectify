@@ -81,7 +81,7 @@
           inherit projectDir;
           inherit overrides;
           inherit python;
-          groups = [ ];
+          groups = [ "main" ];
           checkGroups = [ ];
           outputs = [ "out" "static" ];
           postInstall = ''
