@@ -75,7 +75,7 @@
           inherit projectDir;
           inherit overrides;
           inherit python;
-          groups = [ "dev" "test" ];
+          groups = [ "dev" ];
         };
         projectify-bundle = mkPoetryApplication {
           inherit projectDir;
