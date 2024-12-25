@@ -738,13 +738,13 @@ video = ["python-magic (>=0.4.12)"]
 
 [[package]]
 name = "django-configurations"
-version = "2.4.1"
+version = "2.5.1"
 description = "A helper for organizing Django settings."
 optional = false
-python-versions = ">=3.7, <4.0"
+python-versions = "<4.0,>=3.8"
 files = [
-    {file = "django-configurations-2.4.1.tar.gz", hash = "sha256:a6c25c143834e67b20d34751512d08b3290684f25098ee212b1ee36804a59085"},
-    {file = "django_configurations-2.4.1-py3-none-any.whl", hash = "sha256:8bf8866ae29db89ecf93a7743450b5d8974073cf7c194fd98764fd16deac218d"},
+    {file = "django-configurations-2.5.1.tar.gz", hash = "sha256:6e5083757e2bbdf9bb7850567536b96a93515f6b17503d74928ff628db2e0e94"},
+    {file = "django_configurations-2.5.1-py3-none-any.whl", hash = "sha256:ceb84858da2dac846b15e715c2fd936cfc4c7917c074aff8d31700564093955e"},
 ]
 
 [package.dependencies]
