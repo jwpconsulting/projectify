@@ -20,7 +20,7 @@
         inherit (poetry2nix.lib.mkPoetry2Nix { inherit pkgs; }) mkPoetryApplication mkPoetryEnv defaultPoetryOverrides;
         projectDir = ./.;
         postgresql = pkgs.postgresql_15;
-        python = pkgs.python311;
+        python = pkgs.python312;
         # Thanks to
         # https://github.com/nix-community/poetry2nix/blob/master/docs/edgecases.md#modulenotfounderror-no-module-named-packagename
         pypkgs-build-requirements = {
@@ -36,6 +36,8 @@
           types-stripe = [ "setuptools" ];
         };
         overrides = defaultPoetryOverrides.extend (self: super: {
+          constantly = pkgs.python312Packages.constantly;
+          cffi = pkgs.python312Packages.cffi;
           psycopg-c = super.psycopg-c.overridePythonAttrs (
             old: {
               nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
