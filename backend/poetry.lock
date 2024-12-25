@@ -2337,17 +2337,6 @@ files = [
 urllib3 = ">=2"
 
 [[package]]
-name = "types-tqdm"
-version = "4.66.0.2"
-description = "Typing stubs for tqdm"
-optional = false
-python-versions = "*"
-files = [
-    {file = "types-tqdm-4.66.0.2.tar.gz", hash = "sha256:9553a5e44c1d485fce19f505b8bd65c0c3e87e870678d1f2ed764ae59a55d45f"},
-    {file = "types_tqdm-4.66.0.2-py3-none-any.whl", hash = "sha256:13dddd38908834abdf0acdc2b70cab7ac4bcc5ad7356ced450471662e58a0ffc"},
-]
-
-[[package]]
 name = "typing-extensions"
 version = "4.7.1"
 description = "Backported and Experimental Type Hints for Python 3.7+"
@@ -2573,4 +2562,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.12.7"
-content-hash = "d5520e6e9aa8be4319bb085dc465221b7f75eb06b919f9f28689b1ff896b03a8"
+content-hash = "bc571f1a92b193e849839cd6000ec747103cb5807176be3325396ac8f4b9b243"
