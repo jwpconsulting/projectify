@@ -8,14 +8,14 @@ orbs:
 executors:
   python:
     docker:
-      - image: python:3.11.6
+      - image: python:3.12.7
         environment:
           DJANGO_SETTINGS_MODULE: projectify.settings.test
           DJANGO_CONFIGURATION: Test
           DATABASE_URL: "postgres://projectify:projectify@localhost:5432/projectify"
   python_and_postgres:
     docker:
-      - image: python:3.11.6
+      - image: python:3.12.7
         environment:
           DJANGO_SETTINGS_MODULE: projectify.settings.test
           DJANGO_CONFIGURATION: Test
@@ -102,7 +102,7 @@ jobs:
           command: poetry run ruff format --check .
       - run:
           name: Run ruff
-          command: poetry run ruff .
+          command: poetry run ruff check .
   backend_mypy:
     executor: python
     working_directory: ~/projectify/backend

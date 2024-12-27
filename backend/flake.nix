@@ -5,7 +5,7 @@
 
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     poetry2nix = {
       url = "github:nix-community/poetry2nix/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -20,7 +20,7 @@
         inherit (poetry2nix.lib.mkPoetry2Nix { inherit pkgs; }) mkPoetryApplication mkPoetryEnv defaultPoetryOverrides;
         projectDir = ./.;
         postgresql = pkgs.postgresql_15;
-        python = pkgs.python311;
+        python = pkgs.python312;
         # Thanks to
         # https://github.com/nix-community/poetry2nix/blob/master/docs/edgecases.md#modulenotfounderror-no-module-named-packagename
         pypkgs-build-requirements = {
@@ -36,6 +36,14 @@
           types-stripe = [ "setuptools" ];
         };
         overrides = defaultPoetryOverrides.extend (self: super: {
+          # poetry2nix is being sunset. instead fixing the build for the
+          # following packages, I'm just including the ones from nixos instead
+          # Since these are transient dependencies, I don't believe we'll
+          # be affected too much by changes within them.
+          # Justus 2024-12-25
+          constantly = pkgs.python312Packages.constantly;
+          cffi = pkgs.python312Packages.cffi;
+          pyyaml = pkgs.python312Packages.pyyaml;
           psycopg-c = super.psycopg-c.overridePythonAttrs (
             old: {
               nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
@@ -73,13 +81,13 @@
           inherit projectDir;
           inherit overrides;
           inherit python;
-          groups = [ "dev" "test" ];
+          groups = [ "main" "dev" ];
         };
         projectify-bundle = mkPoetryApplication {
           inherit projectDir;
           inherit overrides;
           inherit python;
-          groups = [ ];
+          groups = [ "main" ];
           checkGroups = [ ];
           outputs = [ "out" "static" ];
           postInstall = ''
