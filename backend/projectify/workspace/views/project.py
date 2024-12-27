@@ -26,9 +26,7 @@ from projectify.workspace.selectors.workspace import (
     workspace_find_by_workspace_uuid,
 )
 from projectify.workspace.serializers.base import ProjectBaseSerializer
-from projectify.workspace.serializers.project import (
-    ProjectDetailSerializer,
-)
+from projectify.workspace.serializers.project import ProjectDetailSerializer
 from projectify.workspace.services.project import (
     project_archive,
     project_create,

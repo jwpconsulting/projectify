@@ -4,32 +4,16 @@
 """Contain sub task model and manager."""
 
 import uuid
-from typing import (
-    ClassVar,
-    Self,
-    cast,
-)
+from typing import ClassVar, Self, cast
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
-from django.db import (
-    models,
-    transaction,
-)
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models, transaction
 from django.utils.translation import gettext_lazy as _
 
-from projectify.lib.models import (
-    BaseModel,
-    TitleDescriptionModel,
-)
+from projectify.lib.models import BaseModel, TitleDescriptionModel
 
-from .task import (
-    Task,
-)
-from .types import (
-    Pks,
-)
+from .task import Task
+from .types import Pks
 from .workspace import Workspace as Workspace
 
 

@@ -5,32 +5,20 @@
 
 import unittest.mock
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-    AbstractUser,
-)
-from django.core.files import (
-    File,
-)
-from django.urls import (
-    reverse,
-)
+from django.contrib.auth.models import AbstractBaseUser, AbstractUser
+from django.core.files import File
+from django.urls import reverse
 
 import pytest
 from rest_framework import status
-from rest_framework.test import (
-    APIClient,
-)
+from rest_framework.test import APIClient
 
 from projectify.corporate.services.stripe import customer_cancel_subscription
 from projectify.user.models.user import User
 from projectify.workspace.services.team_member_invite import (
     team_member_invite_create,
 )
-from pytest_types import (
-    DjangoAssertNumQueries,
-    Headers,
-)
+from pytest_types import DjangoAssertNumQueries, Headers
 
 from ...models.const import TeamMemberRoles
 from ...models.project import Project

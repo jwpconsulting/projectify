@@ -15,27 +15,15 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 import os
 import warnings
-from collections.abc import (
-    Sequence,
-)
-from pathlib import (
-    Path,
-)
+from collections.abc import Sequence
+from pathlib import Path
 from typing import Optional
 
 import dj_database_url
-from configurations.base import (
-    Configuration,
-)
+from configurations.base import Configuration
 
-from .monkeypatch import (
-    patch,
-)
-from .types import (
-    ChannelLayers,
-    StoragesConfig,
-    TemplatesConfig,
-)
+from .monkeypatch import patch
+from .types import ChannelLayers, StoragesConfig, TemplatesConfig
 
 patch()
 

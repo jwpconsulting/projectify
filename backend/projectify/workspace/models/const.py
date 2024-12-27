@@ -3,9 +3,7 @@
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 """Contains enums and other constant values."""
 
-from django.db import (
-    models,
-)
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 

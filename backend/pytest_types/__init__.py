@@ -4,14 +4,8 @@
 """Useful types for pytest fixtures."""
 
 import contextlib
-from collections.abc import (
-    Callable,
-    Mapping,
-    Sequence,
-)
-from typing import (
-    Any,
-)
+from collections.abc import Callable, Mapping, Sequence
+from typing import Any
 
 from django.core.mail import EmailMessage
 

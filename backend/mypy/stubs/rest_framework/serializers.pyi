@@ -2,30 +2,13 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from collections.abc import (
-    Mapping,
-    Sequence,
-)
-from typing import (
-    Any,
-    Generic,
-    Literal,
-    Optional,
-    TypeVar,
-    Union,
-)
+from collections.abc import Mapping, Sequence
+from typing import Any, Generic, Literal, Optional, TypeVar, Union
 
-from django.core.exceptions import (
-    ValidationError as DjangoValidationError,
-)
-from django.db.models import (
-    Model,
-)
+from django.core.exceptions import ValidationError as DjangoValidationError
+from django.db.models import Model
 
-from .exceptions import (
-    ErrorDetail,
-    ValidationError,
-)
+from .exceptions import ErrorDetail, ValidationError
 from .fields import *  # noqa: F403
 from .fields import Field, empty
 from .relations import *  # noqa: F403

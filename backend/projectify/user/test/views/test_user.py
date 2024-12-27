@@ -3,19 +3,11 @@
 # SPDX-FileCopyrightText: 2022, 2023 JWP Consulting GK
 """User view tests."""
 
-from collections.abc import (
-    Mapping,
-)
-from typing import (
-    Any,
-)
+from collections.abc import Mapping
+from typing import Any
 
-from django.core.files import (
-    File,
-)
-from django.urls import (
-    reverse,
-)
+from django.core.files import File
+from django.urls import reverse
 
 import pytest
 from rest_framework.status import (

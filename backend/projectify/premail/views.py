@@ -3,30 +3,18 @@
 # SPDX-FileCopyrightText: 2021, 2023 JWP Consulting GK
 """Premail views."""
 
-from inspect import (
-    getdoc,
-)
-from typing import (
-    Any,
-    Dict,
-    cast,
-)
+from inspect import getdoc
+from typing import Any, Dict, cast
 
-from django.contrib.auth.mixins import (
-    UserPassesTestMixin,
-)
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import (
-    TemplateView,
-)
+from django.views.generic import TemplateView
 
 from projectify.admin.admin import ProjectifyAdmin
 from projectify.user.models.user import User
 
-from .registry import (
-    registry,
-)
+from .registry import registry
 
 
 class SuperUserTestMixin(UserPassesTestMixin):

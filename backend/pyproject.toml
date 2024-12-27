@@ -122,6 +122,7 @@ section-order = [
     "first-party",
     "local-folder",
 ]
+split-on-trailing-comma = false
 
 [tool.ruff.lint.isort.sections]
 django = [

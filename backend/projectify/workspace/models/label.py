@@ -4,27 +4,15 @@
 """Label manager and model."""
 
 import uuid
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    ClassVar,
-    Self,
-    cast,
-)
+from typing import TYPE_CHECKING, Any, ClassVar, Self, cast
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
-from django.db import (
-    models,
-)
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import BaseModel
 
-from .types import (
-    Pks,
-)
+from .types import Pks
 from .workspace import Workspace as Workspace
 
 # TODO Here we could be using __all__

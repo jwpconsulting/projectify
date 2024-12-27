@@ -2,8 +2,6 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.core.handlers.asgi import (
-    ASGIHandler,
-)
+from django.core.handlers.asgi import ASGIHandler
 
 def get_asgi_application() -> ASGIHandler: ...

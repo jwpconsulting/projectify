@@ -3,15 +3,11 @@
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 """Test task model and manager."""
 
-from django import (
-    db,
-)
+from django import db
 
 import pytest
 
-from ... import (
-    models,
-)
+from ... import models
 
 
 @pytest.mark.django_db

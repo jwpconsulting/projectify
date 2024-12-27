@@ -2,13 +2,9 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import (
-    Any,
-)
+from typing import Any
 
-from django.http import (
-    HttpRequest,
-)
+from django.http import HttpRequest
 
 # Cheat and use our own user type
 from projectify.user.models import User

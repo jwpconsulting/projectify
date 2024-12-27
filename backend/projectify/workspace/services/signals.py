@@ -3,17 +3,10 @@
 # SPDX-FileCopyrightText: 2024 JWP Consulting GK
 """Functions to handle signals."""
 
-from typing import (
-    Any,
-    Literal,
-    Union,
-    cast,
-)
+from typing import Any, Literal, Union, cast
 
 from asgiref.sync import async_to_sync as _async_to_sync
-from channels.layers import (
-    get_channel_layer,
-)
+from channels.layers import get_channel_layer
 
 from ..models.project import Project
 from ..models.task import Task

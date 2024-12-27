@@ -5,10 +5,7 @@
 
 import logging
 import os
-from collections.abc import (
-    Iterable,
-    Sequence,
-)
+from collections.abc import Iterable, Sequence
 from typing import Optional
 
 try:

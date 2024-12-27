@@ -3,10 +3,7 @@
 # SPDX-FileCopyrightText: 2022-2024 JWP Consulting GK
 """User app user model views."""
 
-from typing import (
-    Union,
-    cast,
-)
+from typing import Union, cast
 
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import AnonymousUser

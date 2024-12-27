@@ -8,9 +8,7 @@ from rest_framework import serializers
 from projectify.user.serializers import UserSerializer
 from projectify.workspace.models.team_member import TeamMember
 
-from . import (
-    base,
-)
+from . import base
 
 
 class AssigneeSerializer(serializers.ModelSerializer[TeamMember]):

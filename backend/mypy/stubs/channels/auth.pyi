@@ -2,13 +2,9 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from django.core.handlers.asgi import (
-    ASGIHandler,
-)
+from django.core.handlers.asgi import ASGIHandler
 
-from channels.middleware import (
-    BaseMiddleware,
-)
+from channels.middleware import BaseMiddleware
 
 class AuthMiddlewareStack(BaseMiddleware):
     def __init__(self, inner: ASGIHandler) -> None: ...

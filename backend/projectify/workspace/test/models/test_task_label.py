@@ -5,9 +5,7 @@
 
 import pytest
 
-from ... import (
-    models,
-)
+from ... import models
 
 
 # TODO rename TestTaskLabelQuerySet

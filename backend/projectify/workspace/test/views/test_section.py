@@ -3,30 +3,18 @@
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 """Test section CRUD views."""
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
-from django.urls import (
-    reverse,
-)
+from django.contrib.auth.models import AbstractBaseUser
+from django.urls import reverse
 
 import pytest
 from rest_framework import status
-from rest_framework.test import (
-    APIClient,
-)
+from rest_framework.test import APIClient
 
-from projectify.workspace.models import (
-    Project,
-    Section,
-    TaskLabel,
-)
+from projectify.workspace.models import Project, Section, TaskLabel
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.models.workspace import Workspace
-from pytest_types import (
-    DjangoAssertNumQueries,
-)
+from pytest_types import DjangoAssertNumQueries
 
 
 # Create

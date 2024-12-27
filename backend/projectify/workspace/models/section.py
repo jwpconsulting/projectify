@@ -4,34 +4,15 @@
 """Section model."""
 
 import uuid
-from typing import (
-    TYPE_CHECKING,
-    Callable,
-    ClassVar,
-    Self,
-    cast,
-)
+from typing import TYPE_CHECKING, Callable, ClassVar, Self, cast
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
-from django.db import (
-    models,
-)
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
 
-from projectify.lib.models import (
-    BaseModel,
-    TitleDescriptionModel,
-)
+from projectify.lib.models import BaseModel, TitleDescriptionModel
 
-from .task import (
-    Task,
-)
-from .types import (
-    GetOrder,
-    Pks,
-    SetOrder,
-)
+from .task import Task
+from .types import GetOrder, Pks, SetOrder
 
 if TYPE_CHECKING:
     from django.db.models.manager import RelatedManager  # noqa: F401

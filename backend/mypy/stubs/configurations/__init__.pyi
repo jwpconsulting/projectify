@@ -2,9 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from .base import (
-    Configuration,
-)
+from .base import Configuration
 
 __all__ = ["Configuration"]
 

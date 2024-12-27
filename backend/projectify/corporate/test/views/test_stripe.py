@@ -3,13 +3,9 @@
 # SPDX-FileCopyrightText: 2022, 2023 JWP Consulting GK
 """Test stripe webhook."""
 
-from unittest import (
-    mock,
-)
+from unittest import mock
 
-from django.urls import (
-    reverse,
-)
+from django.urls import reverse
 
 import pytest
 from rest_framework.test import APIClient

@@ -3,17 +3,12 @@
 # SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
 """Test sub task model services."""
 
-from typing import (
-    Sequence,
-)
+from typing import Sequence
 from uuid import UUID
 
 import pytest
 
-from ...models import (
-    SubTask,
-    Task,
-)
+from ...models import SubTask, Task
 from ...models.team_member import TeamMember
 from ...services.sub_task import (
     ValidatedDatum,

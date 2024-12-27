@@ -7,9 +7,7 @@ import pytest
 
 from projectify.workspace.models.project import Project
 from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.services.project import (
-    project_archive,
-)
+from projectify.workspace.services.project import project_archive
 
 
 @pytest.mark.django_db

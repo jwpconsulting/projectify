@@ -4,20 +4,14 @@
 """Test projectify utils."""
 
 import os
-from typing import (
-    Any,
-)
-from unittest import (
-    mock,
-)
+from typing import Any
+from unittest import mock
 
 from django.db.models.fields.files import FieldFile
 
 import pytest
 
-from .. import (
-    utils,
-)
+from .. import utils
 
 
 class TestCropImage:

@@ -12,10 +12,7 @@ from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 from projectify.workspace.models.workspace import Workspace
 
-from ..types import (
-    CustomerSubscriptionStatus,
-    WorkspaceFeatures,
-)
+from ..types import CustomerSubscriptionStatus, WorkspaceFeatures
 
 logger = logging.getLogger(__name__)
 

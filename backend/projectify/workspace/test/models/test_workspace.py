@@ -3,9 +3,7 @@
 # SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
 """Test Workspace model."""
 
-from django import (
-    db,
-)
+from django import db
 from django.core.exceptions import ValidationError
 
 import psycopg.errors

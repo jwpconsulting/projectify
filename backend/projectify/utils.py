@@ -4,18 +4,11 @@
 """Projectify utils."""
 
 # TODO move me into projectify/lib/utils.py
-from typing import (
-    TYPE_CHECKING,
-    Optional,
-)
+from typing import TYPE_CHECKING, Optional
 
-from django.conf import (
-    settings,
-)
+from django.conf import settings
 
-from cloudinary import (
-    CloudinaryImage,
-)
+from cloudinary import CloudinaryImage
 
 if TYPE_CHECKING:
     from django.db.models import FieldFile  # noqa: F401

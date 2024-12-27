@@ -8,9 +8,7 @@ import pytest
 from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.services.sub_task import sub_task_create
 
-from .. import (
-    models,
-)
+from .. import models
 
 
 # TODO extract into workspace/test/models/test_label.py

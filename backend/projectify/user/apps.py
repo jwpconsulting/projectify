@@ -3,9 +3,7 @@
 # SPDX-FileCopyrightText: 2021 JWP Consulting GK
 """User apps."""
 
-from django.apps import (
-    AppConfig,
-)
+from django.apps import AppConfig
 
 
 class UserConfig(AppConfig):

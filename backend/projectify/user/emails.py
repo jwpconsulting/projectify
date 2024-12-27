@@ -3,10 +3,7 @@
 # SPDX-FileCopyrightText: 2021, 2022, 2023 JWP Consulting GK
 """User emails."""
 
-from projectify.premail.email import (
-    Context,
-    TemplateEmail,
-)
+from projectify.premail.email import Context, TemplateEmail
 from projectify.user.services.internal import user_make_token
 
 from .models import User

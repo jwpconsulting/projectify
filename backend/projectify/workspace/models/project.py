@@ -4,26 +4,15 @@
 """Project model."""
 
 import uuid
-from typing import (
-    TYPE_CHECKING,
-)
+from typing import TYPE_CHECKING
 
-from django.db import (
-    models,
-)
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from projectify.lib.models import (
-    BaseModel,
-    TitleDescriptionModel,
-)
+from projectify.lib.models import BaseModel, TitleDescriptionModel
 
-from .section import (
-    Section,
-)
-from .workspace import (
-    Workspace,
-)
+from .section import Section
+from .workspace import Workspace
 
 # TODO Here we could be using __all__
 
@@ -31,10 +20,7 @@ from .workspace import (
 if TYPE_CHECKING:
     from django.db.models.manager import RelatedManager  # noqa: F401
 
-    from .types import (
-        GetOrder,
-        SetOrder,
-    )
+    from .types import GetOrder, SetOrder
 
 
 class Project(TitleDescriptionModel, BaseModel):

@@ -2,13 +2,8 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from abc import (
-    ABCMeta,
-    abstractmethod,
-)
-from typing import (
-    Optional,
-)
+from abc import ABCMeta, abstractmethod
+from typing import Optional
 
 class BaseChannelLayer(metaclass=ABCMeta):
     async def group_send(

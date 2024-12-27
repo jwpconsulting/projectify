@@ -12,32 +12,22 @@ from projectify.user.models import User
 from projectify.user.services.internal import user_create
 from projectify.workspace.models.const import TeamMemberRoles
 from projectify.workspace.models.project import Project
-from projectify.workspace.models.section import (
-    Section,
-)
+from projectify.workspace.models.section import Section
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.services.chat_message import chat_message_create
 from projectify.workspace.services.label import label_create
-from projectify.workspace.services.project import (
-    project_create,
-)
-from projectify.workspace.services.section import (
-    section_create,
-)
+from projectify.workspace.services.project import project_create
+from projectify.workspace.services.section import section_create
 from projectify.workspace.services.sub_task import sub_task_create
 from projectify.workspace.services.task import task_create
 from projectify.workspace.services.team_member_invite import (
     team_member_invite_create,
 )
-from projectify.workspace.services.workspace import (
-    workspace_add_user,
-)
+from projectify.workspace.services.workspace import workspace_add_user
 
-from .. import (
-    rules,
-)
+from .. import rules
 
 
 @pytest.fixture

@@ -2,9 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import (
-    Optional,
-)
+from typing import Optional
 
 class ConfigurationBase(type): ...
 

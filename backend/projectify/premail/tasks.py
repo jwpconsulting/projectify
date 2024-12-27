@@ -3,16 +3,10 @@
 # SPDX-FileCopyrightText: 2021, 2023 JWP Consulting GK
 """Premail tasks."""
 
-from django.conf import (
-    settings,
-)
-from django.core import (
-    mail,
-)
+from django.conf import settings
+from django.core import mail
 
-from projectify.celery import (
-    app,
-)
+from projectify.celery import app
 
 
 # TODO turn into shared_task

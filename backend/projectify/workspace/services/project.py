@@ -6,9 +6,7 @@
 from datetime import datetime
 from typing import Optional
 
-from django.utils.timezone import (
-    now,
-)
+from django.utils.timezone import now
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User

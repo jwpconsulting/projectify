@@ -7,13 +7,8 @@
 import uuid
 
 import django.db.models.deletion
-from django.conf import (
-    settings,
-)
-from django.db import (
-    migrations,
-    models,
-)
+from django.conf import settings
+from django.db import migrations, models
 
 import projectify.lib.models
 

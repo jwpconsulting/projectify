@@ -3,21 +3,14 @@
 # SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
 """Team member invite services."""
 
-from typing import (
-    Optional,
-    Union,
-)
+from typing import Optional, Union
 
-from django.db import (
-    transaction,
-)
+from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 
-from projectify.lib.auth import (
-    validate_perm,
-)
+from projectify.lib.auth import validate_perm
 from projectify.premail.email import EmailAddress
 from projectify.user.models import User, UserInvite
 from projectify.user.services.user_invite import user_invite_create

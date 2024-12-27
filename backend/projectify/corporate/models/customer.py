@@ -4,19 +4,10 @@
 """Customer model for corporate app."""
 
 import uuid
-from typing import (
-    TYPE_CHECKING,
-    ClassVar,
-    Self,
-    cast,
-)
+from typing import TYPE_CHECKING, ClassVar, Self, cast
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
-from django.db import (
-    models,
-)
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
 
 from projectify.corporate.types import CustomerSubscriptionStatus
 from projectify.lib.models import BaseModel

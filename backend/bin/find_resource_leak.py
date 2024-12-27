@@ -64,12 +64,8 @@ that we don't catch using an audit hook.
 
 import inspect
 import sys
-from collections.abc import (
-    Sequence,
-)
-from pathlib import (
-    Path,
-)
+from collections.abc import Sequence
+from pathlib import Path
 
 import pytest
 

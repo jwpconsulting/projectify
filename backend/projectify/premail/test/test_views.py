@@ -3,9 +3,7 @@
 # SPDX-FileCopyrightText: 2021 JWP Consulting GK
 """Test premail views."""
 
-from django.urls import (
-    reverse,
-)
+from django.urls import reverse
 
 import pytest
 
