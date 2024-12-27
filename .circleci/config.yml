@@ -102,7 +102,7 @@ jobs:
           command: poetry run ruff format --check .
       - run:
           name: Run ruff
-          command: poetry run ruff .
+          command: poetry run ruff check .
   backend_mypy:
     executor: python
     working_directory: ~/projectify/backend
