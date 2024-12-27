@@ -822,21 +822,6 @@ files = [
 Django = ">=3.2"
 
 [[package]]
-name = "django-htmx"
-version = "1.21.0"
-description = "Extensions for using Django with htmx."
-optional = false
-python-versions = ">=3.9"
-files = [
-    {file = "django_htmx-1.21.0-py3-none-any.whl", hash = "sha256:64bc31463017a80552b767bc216ee5700248fa72e7ccd2963495e69afbdb6abe"},
-    {file = "django_htmx-1.21.0.tar.gz", hash = "sha256:6ed3b42effd5980f22e68f36cd14ee4311bff3b6cb8435a89e27f45995691572"},
-]
-
-[package.dependencies]
-asgiref = ">=3.6"
-django = ">=4.2"
-
-[[package]]
 name = "django-pgtrigger"
 version = "4.11.0"
 description = "Postgres trigger support integrated with Django models."
@@ -2818,4 +2803,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.12.7"
-content-hash = "a182b05d80aae06be1480a8dfa06457643887110192ac7ea39f02e88e7c95889"
+content-hash = "63cd7aa02f338236d806aae143bfbf76fbad78ef3a9d47c4e942a76c9ccc3186"
