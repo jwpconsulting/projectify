@@ -4,9 +4,9 @@
 
 from django.http import HttpRequest
 
-from django_htmx.middleware import HtmxDetails
-
 from projectify.user.models.user import User
+
+from .htmx import HtmxDetails
 
 
 class AuthenticatedHttpRequest(HttpRequest):
