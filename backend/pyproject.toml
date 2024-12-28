@@ -14,7 +14,7 @@ exclude = [
 ]
 
 [tool.poetry.dependencies]
-celery = {extras = ["redis"], version = "~5.2.7"}
+celery = {extras = ["redis"], version = "~5.4"}
 channels = {version = "^4.1.0", extras = ["daphne"]}
 channels-redis = "^4.2"
 cryptography = "^43.0.1"
