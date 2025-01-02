@@ -93,9 +93,6 @@ class Production(Base):
     # Doing so, we can switch over domain records to the new host and have it
     # immediately be ready to accept new requests
     # In ALLOWED_HOSTS we have already had this mechanism.
-    CORS_ALLOWED_ORIGINS = os.getenv("SECURITY_ORIGINS", FRONTEND_URL).split(
-        ","
-    )
     CSRF_TRUSTED_ORIGINS = os.getenv("SECURITY_ORIGINS", FRONTEND_URL).split(
         ","
     )

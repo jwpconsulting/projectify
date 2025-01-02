@@ -85,18 +85,6 @@ class Development(SpectacularSettings, Base):
     # XXX this might have to revised, not sure what the correct suffix is
     # MEDIA_URL = f"http://{LOCAL_DOMAIN}.local:3000/media/"
 
-    # If all requests are proxied through vite, I'm not sure if this is
-    # relevant or not:
-    CORS_ALLOWED_ORIGINS = (
-        # Vite dev
-        "http://localhost:3000",
-        # Caddy rev proxy
-        "http://localhost:5000",
-        # Storybook
-        "http://localhost:6006",
-    )
-    # On the other hand, local tests showed me that CSRF_TRUSTED_ORIGINS has to
-    # be adjusted when serving from another local domain
     CSRF_TRUSTED_ORIGINS = (
         # Vite dev
         "http://localhost:3000",
