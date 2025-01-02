@@ -28,7 +28,8 @@
               ../LICENSES
             ];
             sourceRoot = "frontend";
-            npmDepsHash = "sha256-UOs3pJXcgWE+z6Jqkkkz8yu2t8pKOQ4+l4PrJC6C8gY=";
+            npmDeps = pkgs.importNpmLock { npmRoot = ./.; };
+            npmConfigHook = pkgs.importNpmLock.npmConfigHook;
             buildInputs = [
               nodejs
             ];
