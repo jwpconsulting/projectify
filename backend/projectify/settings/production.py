@@ -81,6 +81,7 @@ class Production(Base):
     ANYMAIL = {
         "MAILGUN_API_KEY": os.environ["MAILGUN_API_KEY"],
         "MAILGUN_SENDER_DOMAIN": os.environ["MAILGUN_DOMAIN"],
+        "MAILGUN_API_URL": "https://api.eu.mailgun.net/v3",
     }
     EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
