@@ -27,9 +27,6 @@ from .types import ChannelLayers, StoragesConfig, TemplatesConfig
 
 patch()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 class Base(Configuration):
     """
@@ -40,6 +37,9 @@ class Base(Configuration):
 
     See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
     """
+
+    # Build paths inside the project like this: BASE_DIR / 'subdir'.
+    BASE_DIR = Path(__file__).resolve().parent.parent
 
     # Used in admin site to show which environment we are using
     SITE_TITLE: Optional[str] = None
@@ -86,20 +86,25 @@ class Base(Configuration):
         "cloudinary",
         "cloudinary_storage",
         "django_celery_results",
+        "pgtrigger",
         "rest_framework",
         "rules.apps.AutodiscoverRulesConfig",
-        "pgtrigger",
+        "tailwind",
     )
 
     INSTALLED_APPS_FIRST_PARTY = (
+        "projectify",
+        # XXX django.forms is added here so that we have a chance to override
+        # templates
+        "django.forms",
         # TODO check if this can be alphabetized
         # Replaces 'django.contrib.admin'
         "projectify.admin.apps.ProjectifyAdminConfig",
-        "projectify",
-        "projectify.user.apps.UserConfig",
-        "projectify.workspace.apps.WorkspaceConfig",
         "projectify.corporate.apps.CorporateConfig",
         "projectify.premail",
+        "projectify.user.apps.UserConfig",
+        "projectify.workspace.apps.WorkspaceConfig",
+        "projectify.theme",
     )
 
     INSTALLED_APPS: Sequence[str] = (
@@ -118,6 +123,7 @@ class Base(Configuration):
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
+        "projectify.lib.htmx.HtmxMiddleware",
     ]
 
     ROOT_URLCONF = "projectify.urls"
@@ -216,6 +222,7 @@ class Base(Configuration):
             },
         }
     ]
+    FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
     # Celery
     CELERY_TIMEZONE = "Asia/Tokyo"
@@ -302,6 +309,14 @@ class Base(Configuration):
     ERROR_RATE_PCT: Optional[int] = None
     # N seconds after which 100% of requests time out
     CHANNEL_ERROR: Optional[int] = None
+
+    # tailwind
+    # https://django-tailwind.readthedocs.io/en/latest/installation.html
+    TAILWIND_APP_NAME = "projectify.theme"
+    BROWSER_RELOAD = False
+
+    # Feature flags
+    ENABLE_DJANGO_DASHBOARD = False
 
     @classmethod
     def post_setup(cls) -> None:

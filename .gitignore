@@ -28,6 +28,9 @@ node_modules/
 /backend/.coverage
 # Nix build
 /backend/result
+# Django Tailwind
+/backend/projectify/theme/static_src/node_modules
+/backend/projectify/theme/static/css/dist/styles.css
 
 # Frontend
 # ========
@@ -35,6 +38,7 @@ node_modules/
 # --------
 /frontend/static/yandex*
 /frontend/static/favicon*
+/frontend/static/shortcut1*
 /frontend/static/mstile*
 /frontend/static/browserconfig.xml
 /frontend/static/manifest.webmanifest
@@ -75,8 +79,12 @@ supervisord.log
 supervisord.pid
 *.rdb
 *.sqlite
-*/static/
 
 # podman-compose containers
 # =========================
 /build/
+
+# aspell stuff
+# ============
+*.bak
+

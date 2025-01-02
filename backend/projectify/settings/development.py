@@ -30,6 +30,7 @@ def add_dev_middleware(middleware: Sequence[str]) -> Iterable[str]:
             yield "debug_toolbar.middleware.DebugToolbarMiddleware"
             yield "projectify.middleware.microsloth"
             yield "projectify.middleware.errorsloth"
+            yield "django_browser_reload.middleware.BrowserReloadMiddleware"
         else:
             yield m
 
@@ -57,6 +58,7 @@ class Development(SpectacularSettings, Base):
         "debug_toolbar",
         "drf_spectacular",
         "drf_spectacular_sidecar",
+        "django_browser_reload",
         "django_extensions",
     )
 
@@ -132,13 +134,19 @@ class Development(SpectacularSettings, Base):
     }
 
     # Settings for slow connection emulation
-    SLEEP_MIN_MAX_MS = 200, 500
-    ERROR_RATE_PCT = 20
-    CHANNEL_ERROR = 20
-    ASGI_APPLICATION = "projectify.test.asgi.error_application"
+    # SLEEP_MIN_MAX_MS = 200, 500
+    # ERROR_RATE_PCT = 20
+    # CHANNEL_ERROR = 20
+    # ASGI_APPLICATION = "projectify.test.asgi.error_application"
 
     # Show preview of all email types
     PREMAIL_PREVIEW = True
+
+    # Enable live reloading
+    BROWSER_RELOAD = True
+
+    # Feature flags
+    ENABLE_DJANGO_DASHBOARD = True
 
     @classmethod
     def pre_setup(cls) -> None:
