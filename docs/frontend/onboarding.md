@@ -38,12 +38,12 @@ When a user signs up for Projectify, we have to make them aware of
 - Projectify being in trial mode unless they subscribe, and
 - how to subscribe
 
-We need a welcome page that summarizes what Projectify is and what the user
-can do with it, and what the trial encompasses.
+We need a welcome page that summarizes what Projectify is and what the user can
+do with it, and what the trial encompasses.
 
-It is important to explain to the user at the end of the onboarding
-how to upgrade from trial mode. In the future, it could also be helpful
-to point them to various starter resources like FAQs or help pages.
+It is important to explain to the user at the end of the onboarding how to
+upgrade from trial mode. In the future, it could also be helpful to point them
+to various starter resources like FAQs or help pages.
 
 The onboarding steps should be:
 
@@ -56,16 +56,15 @@ The onboarding steps should be:
 - Assign task: /onboarding/assign-task
 
 Furthermore, after _New project_, the user should be able to skip the
-onboarding and go directly to the newly created project. It is
-not possible at the moment to skip project creation, since that
-would make the UI look pretty awkward; the dashboard does not correctly
-render when no project is selected.
+onboarding and go directly to the newly created project. It is not possible at
+the moment to skip project creation, since that would make the UI look pretty
+awkward; the dashboard does not correctly render when no project is selected.
 
 ### Welcome
 
 The welcome onboarding page is the first page a user sees after logging in and
-not added to any workspace. (no team member exists for this user) Here,
-we explain to the user that:
+not added to any workspace. (no team member exists for this user) Here, we
+explain to the user that:
 
 - They have successfully signed up and logged in on Projectify
 - In the following steps, they will perform the necessary data entry to get
@@ -75,49 +74,49 @@ we explain to the user that:
 ### About you
 
 The about you page allows us to learn more about the user. For now, we will
-only ask them to enter their preferred name, if they want to. They can
-also go ahead without entering a preferred name. We explain to them, that
-the preferred name will be used when showing that a task has been assigned to
-them and in other parts of Projectify as well to indicate that something is
-relevant to the user.
+only ask them to enter their preferred name, if they want to. They can also go
+ahead without entering a preferred name. We explain to them, that the preferred
+name will be used when showing that a task has been assigned to them and in
+other parts of Projectify as well to indicate that something is relevant to the
+user.
 
 ### New workspace
 
 Without a workspace, there are no meaningful actions a user can perform in
 Projectify. In this step, we ask the user to provide a name for the workspace
-that they want to create. We create the workspace and automatically assign
-the user as the workspace's owner.
+that they want to create. We create the workspace and automatically assign the
+user as the workspace's owner.
 
-If a workspace already exists, we tell them that they may continue setting
-up this workspace instead of creating a new one. A link is shown that brings
-them to the next onboarding step (project creation) for the already
-existing workspace.
+If a workspace already exists, we tell them that they may continue setting up
+this workspace instead of creating a new one. A link is shown that brings them
+to the next onboarding step (project creation) for the already existing
+workspace.
 
 ### New project
 
 After a workspace has been created, the user is now asked to specify the name
 for a project that we will create for them.
 
-Again, should the user already have created a project, they can
-continue from this step directly with Projectify telling the user that
-they have already created a project and asking them whether they want
-to continue using it in the next step.
+Again, should the user already have created a project, they can continue from
+this step directly with Projectify telling the user that they have already
+created a project and asking them whether they want to continue using it in the
+next step.
 
 ### New task
 
 We assume that the user wants to try putting their first task in this workspace
-board, so we create a section "To Do" for them, and ask them
-what they want their task to be.
+board, so we create a section "To Do" for them, and ask them what they want
+their task to be.
 
-If a task has been created before, it should support continuation. This is
-not implemented at the time of writing. (2023-12-06)
+If a task has been created before, it should support continuation. This is not
+implemented at the time of writing. (2023-12-06)
 
 The task will be automatically assigned to them.
 
 ### New label
 
-Here, we create a new label that will be assigned to the newly created task
-in the previous step.
+Here, we create a new label that will be assigned to the newly created task in
+the previous step.
 
 Bug: If a label has already been created (in a previous onboarding run), the
 user might try to create a label with the same name. This will lead to a 500
@@ -136,5 +135,5 @@ workspace in trial mode, and guide them to where they can activate a
 subscription in the workspace settings.
 
 We also direct the user to a contact page where they can ask for help, with
-either the onboarding, or any issues or questions they encounter when using
-the Projectify dashboard.
+either the onboarding, or any issues or questions they encounter when using the
+Projectify dashboard.

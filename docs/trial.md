@@ -44,8 +44,8 @@ they have, we want to give them more than 30 days to come up with a decision on
 whether to or not to continue with Projectify. Pressure-based sales tactics are
 not cool anyway.
 
-Therefore, the first requirement for our trial mode is that it is __without
-time restriction__, but of course without the SLA of a paid-for service
+Therefore, the first requirement for our trial mode is that it is **without
+time restriction**, but of course without the SLA of a paid-for service
 agreement. Naturally, providing a bad service during trial mode is bad business
 and we would like to make a great impression to our users here.
 
@@ -64,15 +64,13 @@ limitations are as follows:
 
 - A user can create as many trial workspaces as they would like
 - A trial workspace can have 2 team members at most, including the
-  creator/owner of the workspace. This also includes open invites. (i.e., sum
-  invite
-  + user <= 2)
+  creator/owner of the workspace. This also includes open invites. (i.e.,
+  `sum invite + user <= 2`)
 - A trial workspace can hold 10 projects
-- A trial workspace can hold 100 sections in total, with no
-  per-project limitations
+- A trial workspace can hold 100 sections in total, with no per-project
+  limitations
 - A trial workspace can hold 1000 tasks. Again, there is no limitation where
-  those tasks can be put, they could all be in the same project or
-  section.
+  those tasks can be put, they could all be in the same project or section.
 - A trial workspace can hold 10 labels
 - A trial workspace can not have any chat messages (they are not supported by
   the application right now)
@@ -84,10 +82,10 @@ There are no limitations for reading, updating and deleting.
 # Implementation of workspace trial mode
 
 The most important thing is to ensure that the backend rules implement the
-above trial restrictions. Then, we have to show to the user in the frontend
-how many more objects of each resource they can create. We can combine this
-into a quota API, or as an enhancement to the existing `/workspace/<uuid>/`
-GET and also the WebSocket result for a WebSocket subscription.
+above trial restrictions. Then, we have to show to the user in the frontend how
+many more objects of each resource they can create. We can combine this into a
+quota API, or as an enhancement to the existing `/workspace/<uuid>/` GET and
+also the WebSocket result for a WebSocket subscription.
 
 One can imagine structured data coming back like so, for a workspace object:
 

@@ -1,18 +1,18 @@
-<!--
-SPDX-FileCopyrightText: 2024 JWP Consulting GK
-
-SPDX-License-Identifier: AGPL-3.0-or-later
--->
-
 ---
 title: Projectify Architecture
 author: Justus Perlwitz
 date: 2024-03-18
 ---
 
-This document describes the software architecture of the Projectify software. It
-was written with a deployment on Heroku in mind, so certain parts might change
-when deployed on a different infrastructure.
+<!--
+SPDX-FileCopyrightText: 2024 JWP Consulting GK
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
+This document describes the software architecture of the Projectify software.
+It was written with a deployment on Heroku in mind, so certain parts might
+change when deployed on a different infrastructure.
 
 The Projectify software is divided into two main parts that in turn interface
 with external components. These two parts are a
@@ -23,12 +23,14 @@ with external components. These two parts are a
 # General run time requirements
 
 The frontend relies on
+
 - a browser being able to run a recent version of ECMAScript (basically
   JavaScript, but with more standardization),
 - a stable internet connection to the backend, and asset storage, and
 - a modest amount of computing resources (imagine a laptop computer from 2010).
 
 The backend requires
+
 - a PostgreSQL database instance,
 - a Redis instance (for queuing, caching, and WebSocket connections),
 - a modest amount of computing resources, and
@@ -45,8 +47,8 @@ is used.
 
 To style the frontend, Tailwind CSS [^4] is used.
 
-There are dozens of helper libraries used in the frontend as well, so a look
-at `frontend/package.json` under `dependencies` will show what else is used.
+There are dozens of helper libraries used in the frontend as well, so a look at
+`frontend/package.json` under `dependencies` will show what else is used.
 
 # Backend components
 
@@ -144,13 +146,23 @@ according to the following criteria:
   guide the user to restart or reset the frontend to a known good state
 
 [^1]: SvelteKit: https://kit.svelte.dev/
+
 [^2]: Svelte: https://svelte.dev/
+
 [^3]: Sarus: https://github.com/anephenix/sarus/
+
 [^4]: Tailwind CSS: https://tailwindcss.com/
+
 [^5]: Django: https://www.djangoproject.com/
+
 [^6]: Django REST Framework: https://www.django-rest-framework.org/
+
 [^7]: Django Channels: https://channels.readthedocs.io/en/latest/
+
 [^8]: PostgreSQL: https://www.postgresql.org/
+
 [^9]: Psycopg: https://www.psycopg.org/
+
 [^10]: Django-Styleguide: https://github.com/HackSoftware/Django-Styleguide
+
 [^11]: rules: https://github.com/dfunckt/django-rules

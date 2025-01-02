@@ -6,8 +6,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Podman / Docker
 
-This assumes that you are using [Podman](https://podman.io/). The five
-commands contained in their respective containers
+This assumes that you are using [Podman](https://podman.io/). The five commands
+contained in their respective containers
 
 - projectify-backend (contains projectify-manage as well)
 - projectify-celery

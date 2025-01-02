@@ -6,8 +6,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Service layer
 
-We largely model how we write the service layer based on the [Django
-Styleguide](https://github.com/HackSoftware/Django-Styleguide).
+We largely model how we write the service layer based on the
+[Django Styleguide](https://github.com/HackSoftware/Django-Styleguide).
 
 Some specifications:
 
@@ -19,8 +19,8 @@ transaction, if an atomic transaction is needed.
 ## Permissions
 
 Although it is usually called authorization, in the Django world we call it
-permission. The method to see if a user has permission to perform an action
-is called `has_perm` (if PermissionsMixin is subclasses).
+permission. The method to see if a user has permission to perform an action is
+called `has_perm` (if PermissionsMixin is subclasses).
 
 A service layer function MUST perform authorization. This allows ut to keep it
 authorization logc in one location. A service layer function MUST perform
@@ -28,8 +28,7 @@ authorization with a given `who: User` argument. The `User` class MUST be
 importedd from `user/models.py`.
 
 Drawback: This couples our service layer tightly to the User model. Any
-checking of service functions must create team members with the correct
-roles.
+checking of service functions must create team members with the correct roles.
 
 ## Selectors
 
@@ -41,8 +40,8 @@ called
 <resource_name>_find_by_<most significant filter criterion>
 ```
 
-For example, to define a function that find all projects in a
-workspace, one would name it
+For example, to define a function that find all projects in a workspace, one
+would name it
 
 ```
 project_find_by_workspace

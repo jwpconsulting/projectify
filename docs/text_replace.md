@@ -52,7 +52,6 @@ ag "([wW]orkspace[_\- ]?[bB]oard)s?" .
 Similarly, we can find all instances of _workspace board section_, if we'd like
 to rename it to just _section_:
 
-
 ```fish
 ag "([wW]orkspace[_ -]?[bB]oard[_ -][sS]ection)s?" .
 ```
@@ -67,9 +66,9 @@ anyway.
 # Interactive replace
 
 It's better to interactively replace strings, to have some more control and
-feedback over the result. We pass the `--files-with-matches` flag to ag
-to get just the filenames. Then we can use nvim to go over each file and edit
-it like so:
+feedback over the result. We pass the `--files-with-matches` flag to ag to get
+just the filenames. Then we can use nvim to go over each file and edit it like
+so:
 
 ```fish
 nvim (ag \
@@ -108,7 +107,10 @@ nvim (ag \
 ```
 
 One more tweak, since the author's nvim has `gdefault` enabled, _by default_,
-the `/gce` flag _deactivates_ the global replace flag ([see nvim docs](https://neovim.io/doc/user/options.html#'gdefault')), so we remove the `g` flag. Some more fixes:
+the `/gce` flag _deactivates_ the global replace flag
+([see nvim docs](https://neovim.io/doc/user/options.html#'gdefault')), so we
+remove the `g` flag. Some more fixes:
+
 - We tell `ag` to ignore paths with the name `migrations` as well, and
 - to ignore this very markdown file that we are editing.
 - We add a forgotten `?` character after the second character class that
@@ -141,10 +143,10 @@ nvim (ag \
 ```
 
 The next thing to do is rename all file names, starting with folders. We use
-fdfind here, and pass the `--exec` flag to rename each result. Like ag,
-fdfind respects `.gitignore` files, wheres grep/find do not. That makes our
-lives as developers easier. We can list all folders containing a workspace
-board section name like so:
+fdfind here, and pass the `--exec` flag to rename each result. Like ag, fdfind
+respects `.gitignore` files, wheres grep/find do not. That makes our lives as
+developers easier. We can list all folders containing a workspace board section
+name like so:
 
 ```fish
 fd --type directory \
@@ -252,8 +254,8 @@ end
 
 # Renaming member to contributor
 
-In order to rename workspace users to members, we want to first change
-the role member to be contributor, to remove ambiguity.
+In order to rename workspace users to members, we want to first change the role
+member to be contributor, to remove ambiguity.
 
 ```fish
 nvim (ag \

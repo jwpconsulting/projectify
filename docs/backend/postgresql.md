@@ -11,14 +11,17 @@ and 15 so far.
 
 ## Use PostgreSQL with unix domain sockets
 
-Referring to the [dj-database-url documentation on URL schema](https://github.com/jazzband/dj-database-url?tab=readme-ov-file#url-schema), we see that we can write unix domain socket paths like so:
+Referring to the
+[dj-database-url documentation on URL schema](https://github.com/jazzband/dj-database-url?tab=readme-ov-file#url-schema),
+we see that we can write unix domain socket paths like so:
 
 ```
 postgres://%2Fvar%2Flib%2Fpostgresql/dbname
 ```
 
-In our case, running PostgreSQL 15 installed through Nix on macOS, we see
-that there is a socket in `/tmp/.s.PGSQL.5432`. We therefore craft the following link:
+In our case, running PostgreSQL 15 installed through Nix on macOS, we see that
+there is a socket in `/tmp/.s.PGSQL.5432`. We therefore craft the following
+link:
 
 ```
 DATABASE_URL = postgres://%2Ftmp/projectify
@@ -43,7 +46,7 @@ env PATH="/opt/local/lib/postgresql15/bin:$PATH" poetry install
 
 ## No user role
 
-> psql: error: FATAL:  role "$USER" does not exist
+> psql: error: FATAL: role "$USER" does not exist
 
 ```
 CREATE USER $USER WITH CREATEDB;
@@ -76,8 +79,8 @@ Make sure to run `createdb` if you'd like the bare `psql` command to work.
 
 ## PostgreSQL started, but can't connect
 
-Systemctl showed PostgreSQL 15 started, but `psql` couln't connect, not even
-as `sudo -u postgres psql`:
+Systemctl showed PostgreSQL 15 started, but `psql` couln't connect, not even as
+`sudo -u postgres psql`:
 
 ```
 psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory

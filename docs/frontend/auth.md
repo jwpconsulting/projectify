@@ -8,9 +8,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## Log In
 
-The act of using user credentials to authenticate with Projectify and create
-a session to be used for further authentication, e.g., when performing
-API requests as a user.
+The act of using user credentials to authenticate with Projectify and create a
+session to be used for further authentication, e.g., when performing API
+requests as a user.
 
 The verb is
 
@@ -35,7 +35,8 @@ that, too.
 
 ## Sign Up
 
-The act of requesting a new user account to be created using the specified credentials.
+The act of requesting a new user account to be created using the specified
+credentials.
 
 The verb is
 
@@ -45,15 +46,15 @@ The adjective form is
 
 > Click here to proceed to the _signup_ form
 
-We try to avoid using the noun form _signup_, but do not use _sign-up_,
-for the same reason we do not use _log-in_.
+We try to avoid using the noun form _signup_, but do not use _sign-up_, for the
+same reason we do not use _log-in_.
 
 ## Log out
 
-The act of removing an authenticated user session. The application
-server instructs the browser to remove the session cookie from its cookie jar.
-The application server purges the record of this authenticated sessionm from its session
-storage.
+The act of removing an authenticated user session. The application server
+instructs the browser to remove the session cookie from its cookie jar. The
+application server purges the record of this authenticated sessionm from its
+session storage.
 
 Same as Log in. As a verb we can use it like
 

@@ -24,9 +24,9 @@ JSON.stringify({hello: undefined})
 For updating objects on the server side this can have different interpretations
 but we want to pick one approach.
 
-If there is an optional value in a table, let's say a task's assignee, then
-not passing it in a task update should be interpreted as unassigning that user.
-(If keeping the assignment was important, you'd be passing the user - 2AM API
+If there is an optional value in a table, let's say a task's assignee, then not
+passing it in a task update should be interpreted as unassigning that user. (If
+keeping the assignment was important, you'd be passing the user - 2AM API
 logic)
 
 As a matter of fact, we should see it as undesirable to pass null at all! Right
@@ -36,7 +36,7 @@ first place counted as unassignment.
 
 It's a good habit to pass data as completely as you can. We are talking about
 passing in a tasks complete data set (excluding comments/attachments/etc.),
-which can't be more than 1-2 kb, optimistically. That's doable. Adding
-optional arguments where leaving them out in some cases has different semantics
-creates too much ambiguity and makes the developer think twice every time
-they call an API.
+which can't be more than 1-2 kb, optimistically. That's doable. Adding optional
+arguments where leaving them out in some cases has different semantics creates
+too much ambiguity and makes the developer think twice every time they call an
+API.

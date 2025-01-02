@@ -6,7 +6,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Rate limiting implementation:
 
-We use [Django Ratelimit, since the documentation specifically  mentions security](https://django-ratelimit.readthedocs.io/en/stable/security.html) to implement rate limiting. Requests we want to rate limit are:
+We use
+[Django Ratelimit, since the documentation specifically mentions security](https://django-ratelimit.readthedocs.io/en/stable/security.html)
+to implement rate limiting. Requests we want to rate limit are:
 
 - Requests that send emails as a consequence
 - Log in / sign up requests
@@ -25,11 +27,11 @@ throttlable themselves. For now, we will keep throttling to views only.
 # TODO
 
 - [ ] Handle properly in frontend based on 429 status for ChangePassword,
-  RequestEmailAddressUpdate and InviteUserToWorkspace
+      RequestEmailAddressUpdate and InviteUserToWorkspace
 
 # Views to be rate limited
 
-Views to be rate limited in the __user__ app:
+Views to be rate limited in the **user** app:
 
 - `RequestEmailAddressUpdate`, it sends an email with a confirm link
 - `SignUp`, it sends an email with a confirm link
@@ -42,7 +44,7 @@ different email and password combinations, so limiting purely based on email is
 futile. For dictionary attacks, we want to monitor the amount of failed
 attempts per email address.
 
-Views to be rate limited in the __workspace__ app:
+Views to be rate limited in the **workspace** app:
 
 - `InviteUserToWorkspace`, sends an email to a user if they haven't created an
   account yet
@@ -77,13 +79,13 @@ Rate limits should be:
 - `RequestEmailAddressUpdate`, 5 times per hour _per user_
 - `ChangePassword`, 5 times per hour _per user_
 - `InviteUserToWorkspace`, 10 times per hour _per user_
-- `LogIn`, 10 times per minute _per IP, 60 times per hour _per request email_,
+- `LogIn`, 10 times per minute _per IP, 60 times per hour \_per request email_,
   5 times per minute _per request email_ on failure.
 
 # How to rate limit services instead (idea)
 
-If we want to enforce n times per email address per hour for authentication services, we
-can rate limit inside the service code instead.
+If we want to enforce n times per email address per hour for authentication
+services, we can rate limit inside the service code instead.
 
 For example, `user_sign_up`, could be something like this:
 
