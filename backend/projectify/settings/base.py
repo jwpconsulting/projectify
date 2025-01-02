@@ -62,10 +62,6 @@ class Base(Configuration):
     CSRF_COOKIE_SECURE = True
     CSRF_TRUSTED_ORIGINS: Optional[Sequence[str]]
 
-    # CORS
-    CORS_ALLOW_CREDENTIALS = True
-    CORS_ALLOWED_ORIGINS: Optional[Sequence[str]]
-
     # HSTS
     SECURE_HSTS_SECONDS = 3600
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
@@ -116,7 +112,6 @@ class Base(Configuration):
         "django.middleware.security.SecurityMiddleware",
         "projectify.middleware.reverse_proxy",
         "django.middleware.gzip.GZipMiddleware",
-        "corsheaders.middleware.CorsMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
         "django.middleware.common.CommonMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
