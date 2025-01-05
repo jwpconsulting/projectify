@@ -86,9 +86,9 @@ class Base(Configuration):
         "cloudinary",
         "cloudinary_storage",
         "django_celery_results",
+        "pgtrigger",
         "rest_framework",
         "rules.apps.AutodiscoverRulesConfig",
-        "pgtrigger",
     )
 
     INSTALLED_APPS_FIRST_PARTY = (
