@@ -1,0 +1,13 @@
+{# SPDX-FileCopyrightText: 2024 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "base.html" %}
+{% block content %}
+    <ol class="list-inside list-disc">
+        {% for workspace in workspaces %}
+            <li>
+                Workspace: {{ workspace.title }}
+                <a href="{% url "dashboard:workspaces:detail" workspace.uuid %}">View workspace</a>
+            </li>
+        {% endfor %}
+    </ol>
+{% endblock content %}

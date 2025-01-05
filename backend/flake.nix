@@ -35,6 +35,10 @@
           twisted = [ "hatchling" "hatch-fancy-pypi-readme" ];
           types-stripe = [ "setuptools" ];
           djlint = [ "hatchling" ];
+          django-tailwind = [ "poetry" ];
+          selectolax = [ "setuptools" ];
+          django-components = [ "setuptools" ];
+          django-browser-reload = [ "setuptools" ];
         };
         overrides = defaultPoetryOverrides.extend (self: super: {
           # poetry2nix is being sunset. instead fixing the build for the
@@ -84,13 +88,35 @@
           inherit python;
           groups = [ "main" "dev" ];
         };
+        tailwind-deps = pkgs.buildNpmPackage {
+          name = "tailwind-deps";
+          src = ./.;
+          npmDeps = pkgs.importNpmLock {
+            npmRoot = ./projectify/theme/static_src;
+          };
+          buildInputs = [ pkgs.nodejs ];
+          preConfigure = ''
+            cd projectify/theme/static_src
+          '';
+          installPhase = ''
+            mkdir -p $out
+            cp ../static/css/dist/styles.css $out/styles.css
+          '';
+          npmConfigHook = pkgs.importNpmLock.npmConfigHook;
+        };
+        # https://github.com/nix-community/poetry2nix?tab=readme-ov-file#mkpoetryapplication
         projectify-bundle = mkPoetryApplication {
           inherit projectDir;
           inherit overrides;
           inherit python;
+          buildInputs = [ pkgs.nodejs ];
           groups = [ "main" ];
           checkGroups = [ ];
           outputs = [ "out" "static" ];
+          preConfigure = ''
+            mkdir -p projectify/theme/static/css
+            cp ${tailwind-deps}/styles.css projectify/theme/static/css
+          '';
           postInstall = ''
             mkdir -p $out/bin $out/etc
             cp manage.py "$out/bin"
@@ -144,6 +170,7 @@
         devShell = poetryEnv.env.overrideAttrs (oldattrs: {
           buildInputs = [
             postgresql
+            pkgs.nodejs
             pkgs.heroku
             pkgs.openssl
           ];

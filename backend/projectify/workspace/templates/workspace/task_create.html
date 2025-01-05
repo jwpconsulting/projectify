@@ -1,0 +1,227 @@
+{# SPDX-FileCopyrightText: 2024 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "dashboard_base.html" %}
+{% block dashboard_content %}
+    <div class="flex min-h-0 shrink grow flex-row">
+        <div class="hidden h-full shrink-0 md:block">
+            <div class="max-w-xs 2xl:max-w-md">
+                <nav class="flex flex-col py-4">
+                    <div class="flex flex-col gap-2 px-4 pb-4">
+                        <div class="flex flex-row items-center justify-between gap-4">
+                            <div class="min-w-0 grow">
+                                <button class="flex w-full flex-row items-center justify-between gap-2 rounded-lg border border-border p-2 hover:bg-secondary-hover">
+                                    <div class="flex min-w-0 flex-row items-center gap-2">
+                                        <svg fill="none"
+                                             viewBox="0 0 24 24"
+                                             stroke="currentColor"
+                                             aria-hidden="true"
+                                             xmlns="http://www.w3.org/2000/svg"
+                                             width="100%"
+                                             height="100%"
+                                             class="h-4 w-4 shrink-0">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                                            </path>
+                                        </svg>
+                                        <div class="min-w-0 truncate font-bold">{{ section.project.workspace.title }}</div>
+                                    </div>
+                                    <svg fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke="currentColor"
+                                         aria-hidden="true"
+                                         xmlns="http://www.w3.org/2000/svg"
+                                         width="100%"
+                                         height="100%"
+                                         class="h-4 w-4 shrink-0">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div>
+                                <button aria-label="Open workspace context menu"
+                                        class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
+                                    <svg fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke="currentColor"
+                                         aria-hidden="true"
+                                         xmlns="http://www.w3.org/2000/svg"
+                                         width="100%"
+                                         height="100%">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z">
+                                        </path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="px-4">
+                        <strong>Trial workspace</strong> <a href="#"
+    class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
+    target="_blank">Learn more<span class="sr-only">(Opens in new tab)</span>
+                        <svg fill="none"
+                             viewBox="0 0 24 24"
+                             stroke="currentColor"
+                             aria-hidden="true"
+                             xmlns="http://www.w3.org/2000/svg"
+                             width="100%"
+                             height="100%"
+                             class="inline-block h-4 w-4 px-px">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
+                            </path>
+                        </svg>
+                    </a>
+                </p>
+                <div class="flex flex-col">
+                    <button class="flex w-full flex-row items-center justify-between gap-2 px-4 py-2 text-utility hover:text-base-content">
+                        <div class="flex flex-row items-center gap-4">
+                            <div class="flex flex-row items-center gap-2">
+                                <svg fill="none"
+                                     viewBox="0 0 24 24"
+                                     stroke="currentColor"
+                                     aria-hidden="true"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     width="100%"
+                                     height="100%"
+                                     class="h-5 w-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z">
+                                    </path>
+                                </svg>
+                                <div class="font-bold">Projects</div>
+                            </div>
+                        </div>
+                        <svg fill="none"
+                             viewBox="0 0 24 24"
+                             stroke="currentColor"
+                             aria-hidden="true"
+                             xmlns="http://www.w3.org/2000/svg"
+                             width="100%"
+                             height="100%"
+                             class="h-4 w-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                        </svg>
+                    </button>
+                    <div class="flex shrink flex-col">
+                        {% for project in section.project.workspace.project_set.all %}
+                            <a class="group block flex w-full flex-row justify-between gap-1 px-4 py-1 hover:bg-base-200"
+                               href="{% url "dashboard:projects:detail" project.uuid %}">
+                                <div class="flex min-w-0 flex-row items-center gap-2">
+                                    <div class="rounded-md p-1 bg-primary-focus">
+                                        <svg fill="none"
+                                             viewBox="0 0 24 24"
+                                             stroke="currentColor"
+                                             aria-hidden="true"
+                                             xmlns="http://www.w3.org/2000/svg"
+                                             width="100%"
+                                             height="100%"
+                                             class="h-4 w-4 text-base-100">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <div class="line-clamp-1 min-w-0 font-bold">{{ project.title }}</div>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <form action="{% url 'dashboard:sections:create-task' section.uuid %}"
+          method="post"
+          class="min-w-0 grow"
+          role="presentation">
+        <div class="flex h-full flex-col p-4 pt-0">
+            <div class="sticky top-0 flex flex-row flex-wrap items-center justify-between gap-x-2 gap-y-4 bg-foreground pb-8 pt-4 lg:flex-nowrap">
+                <div class="flex shrink flex-row items-center gap-6">
+                    <div class="shrink-0">
+                        <a href="{% url "dashboard:projects:detail" section.project.uuid %}"
+                           class="block w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background"
+                           aria-label="Go back to section">
+                            <svg fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke="currentColor"
+                                 aria-hidden="true"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 width="100%"
+                                 height="100%">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="font-bold text-utility">
+                        <a href="{% url "dashboard:projects:detail" section.project.uuid %}"
+                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{{ section.project.title }}</a>
+                        &gt;
+                        <a href="{% url "dashboard:projects:detail" section.project.uuid %}#{{ section.uuid }}"
+                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{{ section.title }}</a>
+                        &gt; <a href="{% url "dashboard:sections:create-task" section.uuid %}"
+    class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">New task (currently creating)</a>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between gap-4 sm:flex-row">
+                    <input type="submit"
+                           class="bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold "
+                           value="Create task" />
+                    <button type="button"
+                            class=" text-secondary-content hover:bg-secondary-hover hover:text-secondary-content-hover active:bg-secondary-pressed active:text-secondary-content-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
+                        Create task and stay
+                    </button>
+                </div>
+            </div>
+            <div class="flex flex-col gap-8">
+                <table class="flex w-full max-w-xl flex-col gap-y-4 sm:grid sm:grid-cols-4">
+                    <tbody class="contents">
+                        <tr class="contents">
+                            <th scope="row" class="col-span-1 text-left font-bold">{{ form.title.label_tag }}</th>
+                            <td class="col-span-3">
+                                <div class="flex flex-col items-start gap-2">
+                                    <div class="flex w-full flex-row items-center gap-2">{{ form.title }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="contents">
+                            <th scope="row" class="col-span-1 text-left font-bold">{{ form.assignee.label_tag }}</th>
+                            <td class="col-span-3">{{ form.assignee }}</td>
+                        </tr>
+                        <tr class="contents">
+                            <th scope="row" class="col-span-1 text-left font-bold">{{ form.labels.label_tag }}</th>
+                            <td class="col-span-3">{{ form.labels }}</td>
+                        </tr>
+                        <tr class="contents">
+                            <th scope="row" class="col-span-1 text-left font-bold">{{ form.due_date.label_tag }}</th>
+                            <td class="col-span-3">
+                                <div class="flex flex-row items-center gap-4">
+                                    <div class="flex flex-col items-start gap-2">
+                                        <div class="flex w-full flex-row items-center gap-2">
+                                            <input type="text"
+                                                   class="placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2"
+                                                   id="due-date"
+                                                   name="due-date"
+                                                   placeholder="Select due date">
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="contents">
+                            <th scope="row" class="col-span-1 text-left font-bold">{{ form.description.label_tag }}</th>
+                            <td class="col-span-3">{{ form.description }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="flex flex-col gap-4">
+                    <div class="flex flex-row items-center justify-between">
+                        <div class="flex flex-row items-center gap-4">
+                            <h4 class="text-xl font-bold">Sub tasks</h4>
+                        </div>
+                        {% include "workspace/task_create/sub_task.html" with formset_html=formset formset_total=0 %}
+                    </div>
+                    <div id="subtasks"></div>
+                </div>
+                {{ formset.management_form }}
+                {% csrf_token %}
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock dashboard_content %}

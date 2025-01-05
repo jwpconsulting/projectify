@@ -89,16 +89,22 @@ class Base(Configuration):
         "pgtrigger",
         "rest_framework",
         "rules.apps.AutodiscoverRulesConfig",
+        "tailwind",
     )
 
     INSTALLED_APPS_FIRST_PARTY = (
         "projectify",
+        # XXX django.forms is added here so that we have a chance to override
+        # templates
+        "django.forms",
+        # TODO check if this can be alphabetized
         # Replaces 'django.contrib.admin'
         "projectify.admin.apps.ProjectifyAdminConfig",
         "projectify.corporate.apps.CorporateConfig",
         "projectify.premail",
         "projectify.user.apps.UserConfig",
         "projectify.workspace.apps.WorkspaceConfig",
+        "projectify.theme",
     )
 
     INSTALLED_APPS: Sequence[str] = (
@@ -117,6 +123,7 @@ class Base(Configuration):
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
+        "projectify.lib.htmx.HtmxMiddleware",
     ]
 
     ROOT_URLCONF = "projectify.urls"
@@ -215,6 +222,7 @@ class Base(Configuration):
             },
         }
     ]
+    FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
     # Celery
     CELERY_TIMEZONE = "Asia/Tokyo"
@@ -301,6 +309,14 @@ class Base(Configuration):
     ERROR_RATE_PCT: Optional[int] = None
     # N seconds after which 100% of requests time out
     CHANNEL_ERROR: Optional[int] = None
+
+    # tailwind
+    # https://django-tailwind.readthedocs.io/en/latest/installation.html
+    TAILWIND_APP_NAME = "projectify.theme"
+    BROWSER_RELOAD = False
+
+    # Feature flags
+    ENABLE_DJANGO_DASHBOARD = False
 
     @classmethod
     def post_setup(cls) -> None:

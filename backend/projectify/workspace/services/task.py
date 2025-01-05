@@ -5,12 +5,13 @@
 
 import logging
 from datetime import datetime
-from typing import Optional, Sequence, Union
+from typing import Literal, Optional, Sequence, Union
 
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
@@ -190,6 +191,43 @@ def task_delete(*, task: Task, who: User) -> None:
     task.delete()
     send_change_signal("changed", task.section.project)
     send_change_signal("gone", task)
+
+
+@transaction.atomic
+def task_move_in_direction(
+    *, who: User, task: Task, direction: Literal["up", "down", "top", "bottom"]
+) -> Task:
+    """
+    Move a task up, down, to top or bottom.
+
+    Uses task_move_after.
+    """
+    validate_perm("workspace.update_task", who, task.workspace)
+    section = task.section
+    tasks = section.task_set
+    neighbor: Union[Task, Section]
+    match direction:
+        case "up":
+            maybe_neighbor = tasks.filter(_order=task._order - 1)
+            if maybe_neighbor.exists():
+                neighbor = maybe_neighbor.get()
+            else:
+                neighbor = section
+
+        case "down":
+            maybe_neighbor = tasks.filter(_order=task._order + 1)
+            # TODO, maybe we just want to move it to the next section
+            if not maybe_neighbor.exists():
+                raise ValidationError(
+                    _("Can't move task down, there is no next task")
+                )
+            neighbor = maybe_neighbor.get()
+
+        case "bottom":
+            neighbor = tasks[-1]
+        case "top":
+            neighbor = section
+    return task_move_after(who=who, task=task, after=neighbor)
 
 
 @transaction.atomic

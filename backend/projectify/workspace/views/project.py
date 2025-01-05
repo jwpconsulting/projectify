@@ -5,6 +5,8 @@
 
 from uuid import UUID
 
+from django.http import Http404, HttpResponse
+from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers, status
@@ -15,6 +17,8 @@ from rest_framework.views import APIView
 
 from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.schema import extend_schema
+from projectify.lib.types import AuthenticatedHttpRequest
+from projectify.lib.views import platform_view
 from projectify.workspace.models import Project
 from projectify.workspace.selectors.project import (
     ProjectDetailQuerySet,
@@ -33,6 +37,25 @@ from projectify.workspace.services.project import (
     project_delete,
     project_update,
 )
+
+
+# HTML
+@platform_view
+def project_detail_view(
+    request: AuthenticatedHttpRequest, project_uuid: UUID
+) -> HttpResponse:
+    """Show project details."""
+    project = project_find_by_project_uuid(
+        who=request.user, project_uuid=project_uuid, qs=ProjectDetailQuerySet
+    )
+    if project is None:
+        raise Http404(_("No project found for this uuid"))
+    project.workspace.quota = workspace_get_all_quotas(project.workspace)
+    context = {
+        "object": project,
+        "labels": list(project.workspace.label_set.values()),
+    }
+    return render(request, "workspace/project_detail.html", context)
 
 
 # Create

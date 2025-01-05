@@ -1,0 +1,28 @@
+{# SPDX-FileCopyrightText: 2024 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "base.html" %}
+{% block content %}
+    <p>Alpine test section</p>
+    <h1 x-data="{ message: 'I ❤️ Alpine' }" x-text="message"></h1>
+    <section x-data="{ search: '' }">
+        <h1>Labels</h1>
+        <form class="hidden" :class="{ 'hidden': false }">
+            <label for="filter-label">Filter labels</label>
+            <input x-model="search" id="filter-label" type="text" />
+        </form>
+        <ol class="list-decimal list-inside">
+            {% for label in object.workspace.label_set.all %}
+                <li x-show="$el.innerHTML.toLocaleLowerCase().includes(search.toLocaleLowerCase())">{{ label }}</li>
+            {% endfor %}
+        </ol>
+    </section>
+    <h1>{{ object.title }}</h1>
+    <p>Sections:</p>
+    <ol>
+        {% for section in object.section_set.all %}
+            <li id="{{ section.uuid }}" data-section>
+                {% include "workspace/project_detail/section.html" with section=section %}
+            </li>
+        {% endfor %}
+    </ol>
+{% endblock %}

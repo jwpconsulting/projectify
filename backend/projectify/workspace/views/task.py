@@ -3,9 +3,16 @@
 # SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
 """Task CRUD views."""
 
+from typing import Any, Literal, Union
 from uuid import UUID
 
+from django import forms
+from django.http import HttpResponse
+from django.http.response import Http404
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django.views.decorators.http import require_http_methods, require_POST
 
 from rest_framework import serializers, status
 from rest_framework.exceptions import NotFound
@@ -15,10 +22,14 @@ from rest_framework.views import APIView
 
 from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.schema import extend_schema
+from projectify.lib.types import AuthenticatedHttpRequest
+from projectify.lib.views import platform_view
 from projectify.workspace.models.label import Label
 from projectify.workspace.models.section import Section
 from projectify.workspace.models.task import Task
+from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.selectors.section import (
+    SectionDetailQuerySet,
     section_find_for_user_and_uuid,
 )
 from projectify.workspace.selectors.task import (
@@ -30,16 +41,22 @@ from projectify.workspace.serializers.task_detail import (
     TaskDetailSerializer,
     TaskUpdateSerializer,
 )
-from projectify.workspace.services.sub_task import ValidatedData
+from projectify.workspace.services.sub_task import (
+    ValidatedData,
+    ValidatedDatum,
+)
 from projectify.workspace.services.task import (
     task_create_nested,
     task_delete,
     task_move_after,
+    task_move_in_direction,
     task_update_nested,
 )
 
 
-def get_object(request: Request, task_uuid: UUID) -> Task:
+def get_object(
+    request: Union[Request, AuthenticatedHttpRequest], task_uuid: UUID
+) -> Task:
     """Get object for user and uuid."""
     user = request.user
     obj = task_find_by_task_uuid(
@@ -52,6 +69,153 @@ def get_object(request: Request, task_uuid: UUID) -> Task:
             )
         )
     return obj
+
+
+class TaskCreateForm(forms.Form):
+    """Form for task creation."""
+
+    title = forms.CharField(
+        label=_("Task title"),
+        widget=forms.TextInput(attrs={"placeholder": _("Task title")}),
+    )
+    assignee = forms.ModelChoiceField(required=False, queryset=None)
+    # Django stub for ModelMultipleChoiceField does not accept None
+    labels = forms.ModelMultipleChoiceField(required=False, queryset=None)  # type: ignore[arg-type]
+    due_date = forms.DateTimeField(required=False)
+    description = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={"placeholder": _("Enter a description for your task")}
+        ),
+    )
+
+    def __init__(self, workspace: Workspace, *args: Any, **kwargs: Any):
+        """Populate available assignees."""
+        super().__init__(*args, **kwargs)
+        self.fields[
+            "assignee"
+        ].queryset = workspace.teammember_set.select_related("user")
+        self.fields["labels"].queryset = workspace.label_set.all()
+
+
+class TaskCreateSubTaskForm(forms.Form):
+    """Form for creating sub tasks as part of task creation."""
+
+    title = forms.CharField()
+    done = forms.BooleanField(required=False)
+
+
+TaskCreateSubTaskForms = forms.formset_factory(TaskCreateSubTaskForm, extra=0)
+
+
+@platform_view
+def task_create_sub_task_form(
+    request: AuthenticatedHttpRequest,
+    sub_tasks: int,
+) -> HttpResponse:
+    """Return a single form for a sub task."""
+    formset = TaskCreateSubTaskForms().empty_form
+    formset.prefix = f"form-{sub_tasks}"
+    new_sub_tasks = sub_tasks + 1
+    return render(
+        request,
+        "workspace/task_create/sub_task.html",
+        {"empty_formset": formset, "formset_total": new_sub_tasks},
+    )
+
+
+@platform_view
+@require_http_methods(["GET", "POST"])
+def task_create(
+    request: AuthenticatedHttpRequest, section_uuid: UUID
+) -> HttpResponse:
+    """Create a task. Render form error if unsuccessful."""
+    section = section_find_for_user_and_uuid(
+        user=request.user, section_uuid=section_uuid, qs=SectionDetailQuerySet
+    )
+    if section is None:
+        raise Http404(_("Section not found"))
+    if request.method == "GET":
+        return render(
+            request,
+            "workspace/task_create.html",
+            {
+                "form": TaskCreateForm(workspace=section.project.workspace),
+                "formset": TaskCreateSubTaskForms(),
+                "section": section,
+            },
+        )
+    form = TaskCreateForm(section.project.workspace, request.POST)
+    formset = TaskCreateSubTaskForms(request.POST)
+    all_valid = form.is_valid() and formset.is_valid()
+    if not all_valid:
+        return render(
+            request,
+            "workspace/task_create.html",
+            {"form": form, "formset": formset, "section": section},
+            status=400,
+        )
+
+    sub_tasks: list[ValidatedDatum] = [
+        {"title": d["title"], "done": d["done"], "_order": i}
+        for i, d in enumerate(formset.cleaned_data)
+        if d.get("title")
+    ]
+
+    task_create_nested(
+        who=request.user,
+        section=section,
+        title=form.cleaned_data["title"],
+        description=form.cleaned_data.get("description"),
+        assignee=form.cleaned_data.get("assignee"),
+        due_date=form.cleaned_data.get("due_date"),
+        labels=form.cleaned_data["labels"],
+        sub_tasks={"create_sub_tasks": sub_tasks, "update_sub_tasks": []},
+    )
+    return redirect(
+        reverse("dashboard:projects:detail", args=(section.project.uuid,))
+    )
+
+
+# Form
+class TaskMoveForm(forms.Form):
+    """Form that captures whether task shall be moved up or down."""
+
+    up = forms.CharField(required=False)
+    down = forms.CharField(required=False)
+
+
+@require_POST
+def task_move(
+    request: AuthenticatedHttpRequest, task_uuid: UUID
+) -> HttpResponse:
+    """Move a task depending on form input."""
+    task = get_object(request, task_uuid)
+    form = TaskMoveForm(request.POST)
+    if not form.is_valid():
+        # TODO
+        raise Exception()
+    direction: Literal["up", "down"]
+    if form.cleaned_data["up"]:
+        direction = "up"
+    elif form.cleaned_data["down"]:
+        direction = "down"
+    else:
+        # TODO
+        raise Exception()
+
+    task = task_move_in_direction(
+        who=request.user, task=task, direction=direction
+    )
+
+    if request.htmx:
+        return render(
+            request,
+            "workspace/project_detail/section.html",
+            {"section": task.section},
+        )
+
+    return redirect("workspace:projects:view", task.section.project.uuid)
 
 
 # Create
