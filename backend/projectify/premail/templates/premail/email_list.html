@@ -13,9 +13,10 @@
                 <tr>
                     <td>
                         <a href="{% url 'premail:email-preview' email.slug %}">{{ email.slug }}</a>
-                        <td>{{ email.doc }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endblock content %}
+                    </td>
+                    <td>{{ email.doc }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}
