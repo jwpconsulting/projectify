@@ -384,3 +384,10 @@ I can now override Django widgets. Great.
 I've fully mocked up the task creation page:
 
 ![HTML from frontend copied into task creation page](./2024-12-13_task_creation_mockup.png)
+
+## 2025-01-05
+
+Happy new year.
+
+I want to create the task update page as well in the prototyping phase
+to make sure that the sub task diffing works well.
