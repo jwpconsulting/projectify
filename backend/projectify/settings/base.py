@@ -92,14 +92,13 @@ class Base(Configuration):
     )
 
     INSTALLED_APPS_FIRST_PARTY = (
-        # TODO check if this can be alphabetized
+        "projectify",
         # Replaces 'django.contrib.admin'
         "projectify.admin.apps.ProjectifyAdminConfig",
-        "projectify",
-        "projectify.user.apps.UserConfig",
-        "projectify.workspace.apps.WorkspaceConfig",
         "projectify.corporate.apps.CorporateConfig",
         "projectify.premail",
+        "projectify.user.apps.UserConfig",
+        "projectify.workspace.apps.WorkspaceConfig",
     )
 
     INSTALLED_APPS: Sequence[str] = (
