@@ -35,6 +35,7 @@ node_modules/
 # --------
 /frontend/static/yandex*
 /frontend/static/favicon*
+/frontend/static/shortcut1*
 /frontend/static/mstile*
 /frontend/static/browserconfig.xml
 /frontend/static/manifest.webmanifest
@@ -75,7 +76,6 @@ supervisord.log
 supervisord.pid
 *.rdb
 *.sqlite
-*/static/
 
 # podman-compose containers
 # =========================

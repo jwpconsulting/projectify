@@ -15,7 +15,9 @@ from rest_framework.views import APIView
 
 from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.schema import extend_schema
+from projectify.workspace.models.label import Label
 from projectify.workspace.models.section import Section
+from projectify.workspace.models.task import Task
 from projectify.workspace.selectors.section import (
     section_find_for_user_and_uuid,
 )
@@ -36,10 +38,8 @@ from projectify.workspace.services.task import (
     task_update_nested,
 )
 
-from .. import models
 
-
-def get_object(request: Request, task_uuid: UUID) -> models.Task:
+def get_object(request: Request, task_uuid: UUID) -> Task:
     """Get object for user and uuid."""
     user = request.user
     obj = task_find_by_task_uuid(
@@ -78,7 +78,7 @@ class TaskCreate(APIView):
         else:
             sub_tasks = {"create_sub_tasks": [], "update_sub_tasks": []}
 
-        labels: list[models.Label] = validated_data.pop("labels")
+        labels: list[Label] = validated_data.pop("labels")
         task = task_create_nested(
             who=request.user,
             section=section,
@@ -133,7 +133,7 @@ class TaskRetrieveUpdateDelete(APIView):
         )
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
-        labels: list[models.Label] = validated_data.pop("labels")
+        labels: list[Label] = validated_data.pop("labels")
 
         sub_tasks: ValidatedData
         if "sub_tasks" in validated_data:

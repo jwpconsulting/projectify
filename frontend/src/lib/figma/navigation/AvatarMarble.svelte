@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: MIT -->
-<!-- SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK -->
 <!-- SPDX-FileCopyrightText: 2023 paolotiu -->
+<!-- SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK -->
 <script lang="ts" context="module">
     function getNumber(name: string): number {
         const charactersArray = Array.from(name);

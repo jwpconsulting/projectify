@@ -81,7 +81,7 @@ class TeamMember(BaseModel):
 
     def __str__(self) -> str:
         """Return title."""
-        return self.user.email
+        return str(self.user)
 
     class Meta:
         """Meta."""
