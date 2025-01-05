@@ -103,9 +103,17 @@ jobs:
       - run:
           name: Run ruff
           command: poetry run ruff check .
+  backend_djlint:
+    executor: python
+    working_directory: ~/projectify/backend
+    steps:
+      - prepare_poetry
       - run:
-          name: Run djlint
+          name: Run djlint --check
           command: poetry run djlint --check .
+      - run:
+          name: Run djlint --lint
+          command: poetry run djlint --lint .
   backend_mypy:
     executor: python
     working_directory: ~/projectify/backend
