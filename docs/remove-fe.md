@@ -91,7 +91,8 @@ everything.
 - [x] Find out way to use something like frontend components in Django.
 - [x] Try out Django forms and see if they fit our use case
 - [x] Try overriding Django widget templates
-- [ ] Completely implement task site (copy HTML over from frontend)
+- [x] Completely implement task create site (copy HTML over from frontend)
+- [ ] Completely implement task update site (copy HTML over from frontend)
 - [ ] Try conditionally showing UI functionality based on user permissions
 - [ ] Find out how to properly integrate icon pack used in frontend
 
