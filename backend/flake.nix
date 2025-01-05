@@ -34,6 +34,7 @@
           sqlparse = [ "hatchling" ];
           twisted = [ "hatchling" "hatch-fancy-pypi-readme" ];
           types-stripe = [ "setuptools" ];
+          djlint = [ "hatchling" ];
         };
         overrides = defaultPoetryOverrides.extend (self: super: {
           # poetry2nix is being sunset. instead fixing the build for the
