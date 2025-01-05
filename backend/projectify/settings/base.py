@@ -27,9 +27,6 @@ from .types import ChannelLayers, StoragesConfig, TemplatesConfig
 
 patch()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 class Base(Configuration):
     """
@@ -40,6 +37,9 @@ class Base(Configuration):
 
     See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
     """
+
+    # Build paths inside the project like this: BASE_DIR / 'subdir'.
+    BASE_DIR = Path(__file__).resolve().parent.parent
 
     # Used in admin site to show which environment we are using
     SITE_TITLE: Optional[str] = None
