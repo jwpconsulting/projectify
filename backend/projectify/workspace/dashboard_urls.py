@@ -10,6 +10,7 @@ from projectify.workspace.views.project import project_detail_view
 from projectify.workspace.views.task import (
     task_create,
     task_create_sub_task_form,
+    task_detail,
     task_move,
 )
 from projectify.workspace.views.workspace import (
@@ -44,6 +45,7 @@ section_patterns = (
     path("<uuid:section_uuid>/create-task", task_create, name="create-task"),
 )
 task_patterns = (
+    path("<uuid:task_uuid>", task_detail, name="detail"),
     # Form
     path("<uuid:task_uuid>/move", task_move, name="move"),
     path(

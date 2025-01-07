@@ -177,6 +177,20 @@ def task_create(
     )
 
 
+@platform_view
+def task_detail(
+    request: AuthenticatedHttpRequest, task_uuid: UUID
+) -> HttpResponse:
+    """View a task. Accept POST for task updates."""
+    task = task_find_by_task_uuid(
+        who=request.user, task_uuid=task_uuid, qs=TaskDetailQuerySet
+    )
+    if task is None:
+        raise Http404(_(f"Could not find task with uuid {task_uuid}"))
+    context = {"task": task}
+    return render(request, "workspace/task_detail.html", context)
+
+
 # Form
 class TaskMoveForm(forms.Form):
     """Form that captures whether task shall be moved up or down."""
