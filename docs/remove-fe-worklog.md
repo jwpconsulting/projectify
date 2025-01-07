@@ -391,3 +391,9 @@ Happy new year.
 
 I want to create the task update page as well in the prototyping phase
 to make sure that the sub task diffing works well.
+
+## 2025-01-06
+
+Working on the task update page now. The goal is to make sure we have all
+the functinoality needed to diff sub tasks updates. In the beginning, the
+previous API had some issues with losing sub tasks when updating tasks.

@@ -34,7 +34,7 @@ workspace_patterns = (
 project_patterns = (
     # HTML
     path(
-        "<uuid:project_uuid>/view",
+        "<uuid:project_uuid>",
         project_detail_view,
         name="detail",
     ),
