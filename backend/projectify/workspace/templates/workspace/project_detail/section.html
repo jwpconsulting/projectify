@@ -53,32 +53,37 @@
             </div>
         </header>
         <table class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4 lg:grid lg:grid-cols-[8fr_3fr_max-content] lg:gap-4">
-            {% for task in section.task_set.all %}
-                <tr class="flex w-full flex-col items-center gap-1 rounded-lg border border-border p-3 lg:contents">
-                    <td class="contents">
-                        <a href="{% url 'dashboard:tasks:detail' task.uuid %}">{{ task.title }}</a>
-                    </td>
-                    <td class="contents">
-                        <button class="flex flex-row items-center self-start rounded-full px-4 py-1 font-bold text-primary outline-dashed outline-1 outline-primary focus:outline focus:outline-inherit">
-                            Assign label
-                        </button>
-                        <!--<Labels>-->
-                    </td>
-                    <td class="flex flex-row items-center justify-end gap-2 self-end">
-                        <div class="flex shrink-0 flex-row items-center gap-2 px-2 py-1"></div>
-                        <!--<SubTaskProgress>-->
-                        <div class="flex flex-row items-center gap-2">
-                            <button>
-                                <div class="flex flex-row h-6 w-6 items-center rounded-full border border-primary bg-background"></div>
-                                <!--<AvatarVariant>-->
-                                <div class="sr-only">Currently not assigned. Activate to assign to team member.</div>
+            <tbody class="contents">
+                {% for task in section.task_set.all %}
+                    <tr class="flex w-full flex-col items-center gap-1 rounded-lg border border-border p-3 lg:contents">
+                        <td class="contents">
+                            <a href="{% url 'dashboard:tasks:detail' task.uuid %}"
+                               class="flex flex-row items-start items-center gap-1 self-start sm:gap-6 lg:self-center ">
+                                <span class="shrink-0 font-bold">#{{ task.number }}</span>
+                                <span class="line-clamp-3 justify-self-start hover:text-primary lg:line-clamp-1 lg:h-6">{{ task.title }}</span>
+                            </a>
+                        </td>
+                        <td class="contents">
+                            <button class="flex flex-row items-center self-start rounded-full px-4 py-1 font-bold text-primary outline-dashed outline-1 outline-primary focus:outline focus:outline-inherit">
+                                Assign label
                             </button>
-                            <!--<TeamMember>-->
-                            <div class="flex flex-row items-center">
-                                <div class="flex flex-row items-center gap-1">
+                            <!--<Labels>-->
+                        </td>
+                        <td class="flex flex-row items-center justify-end gap-2 self-end">
+                            <div class="flex shrink-0 flex-row items-center gap-2 px-2 py-1"></div>
+                            <!--<SubTaskProgress>-->
+                            <div class="flex flex-row items-center gap-2">
+                                <button>
+                                    <div class="flex flex-row h-6 w-6 items-center rounded-full border border-primary bg-background"></div>
+                                    <!--<AvatarVariant>-->
+                                    <div class="sr-only">Currently not assigned. Activate to assign to team member.</div>
+                                </button>
+                                <!--<TeamMember>-->
+                                <div class="flex flex-row items-center">
                                     <form hx-target="closest [data-section]"
                                           hx-post="{% url 'dashboard:tasks:move' task.uuid %}"
                                           action="{% url 'dashboard:tasks:move' task.uuid %}"
+                                          class="flex flex-row items-center gap-1"
                                           method="post">
                                         <button name="up"
                                                 value="up"
@@ -116,30 +121,30 @@
                                         {% csrf_token %}
                                         <p class="htmx-indicator">saving...</p>
                                     </form>
+                                    <!--<Chevrons>-->
+                                    <div>
+                                        <button aria-label="Open context menu"
+                                                class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
+                                            <svg fill="none"
+                                                 viewBox="0 0 24 24"
+                                                 stroke="currentColor"
+                                                 aria-hidden="true"
+                                                 xmlns="http://www.w3.org/2000/svg"
+                                                 width="100%"
+                                                 height="100%">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                        <!--<CircleIcon>-->
+                                    </div>
+                                    <!--<MenuButton>-->
                                 </div>
-                                <!--<Chevrons>-->
-                                <div>
-                                    <button aria-label="Open context menu"
-                                            class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                        <svg fill="none"
-                                             viewBox="0 0 24 24"
-                                             stroke="currentColor"
-                                             aria-hidden="true"
-                                             xmlns="http://www.w3.org/2000/svg"
-                                             width="100%"
-                                             height="100%">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                    <!--<CircleIcon>-->
-                                </div>
-                                <!--<MenuButton>-->
                             </div>
-                        </div>
-                    </td>
-                </tr>
-            {% endfor %}
-            <!--<TaskCard>-->
+                        </td>
+                    </tr>
+                {% endfor %}
+                <!--<TaskCard>-->
+            </tbody>
         </table>
     </section>
