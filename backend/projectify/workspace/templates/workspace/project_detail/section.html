@@ -55,7 +55,9 @@
         <table class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4 lg:grid lg:grid-cols-[8fr_3fr_max-content] lg:gap-4">
             {% for task in section.task_set.all %}
                 <tr class="flex w-full flex-col items-center gap-1 rounded-lg border border-border p-3 lg:contents">
-                    <td class="contents">{{ task.title }}</td>
+                    <td class="contents">
+                        <a href="{% url 'dashboard:tasks:detail' task.uuid %}">{{ task.title }}</a>
+                    </td>
                     <td class="contents">
                         <button class="flex flex-row items-center self-start rounded-full px-4 py-1 font-bold text-primary outline-dashed outline-1 outline-primary focus:outline focus:outline-inherit">
                             Assign label
