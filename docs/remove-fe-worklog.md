@@ -384,3 +384,41 @@ I can now override Django widgets. Great.
 I've fully mocked up the task creation page:
 
 ![HTML from frontend copied into task creation page](./2024-12-13_task_creation_mockup.png)
+
+## 2025-01-05
+
+Happy new year.
+
+I want to create the task update page as well in the prototyping phase
+to make sure that the sub task diffing works well.
+
+## 2025-01-06
+
+Working on the task update page now. The goal is to make sure we have all
+the functinoality needed to diff sub tasks updates. In the beginning, the
+previous API had some issues with losing sub tasks when updating tasks.
+
+## 2025-01-07
+
+I've started working on the update task view. I also went back and fixed some
+minor issues in the project view. One issue was that the table containing
+each section's tasks had a `<tbody>` element that was preventing the grid
+style from working. The browser inserts `<tbody>` where you don't add it
+yourself in the HTML. Since I work with `display: contents`, I need to add
+my own table body element with `display: contents` applied to it as well.
+
+I've also spent some time on adding a Django template filter for formatting
+percentages. I did this hoping that it would make percentages easier to
+localize in the future.
+
+The task update view lets you update basic task information. Sub tasks updates
+are not possible yet. I want to break apart the remaining steps like so:
+
+1. Make it possible to update existing sub tasks
+2. Make it possible to delete existing sub tasks
+3. Write code for changing order of existing sub tasks
+4. Write code for adding new sub tasks at the end
+5. Write code for changing order of new and existing sub tasks
+
+Most of this work can then be re-used in the new task view.
+

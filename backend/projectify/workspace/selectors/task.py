@@ -6,7 +6,8 @@
 from typing import Optional
 from uuid import UUID
 
-from django.db.models import Prefetch, QuerySet
+from django.db.models import Count, Prefetch, Q, QuerySet
+from django.db.models.functions import NullIf
 
 from projectify.user.models import User
 
@@ -31,6 +32,14 @@ TaskDetailQuerySet: QuerySet[Task] = (
                 "author__user",
             ),
         ),
+    )
+    .annotate(
+        sub_task_progress=Count(
+            "subtask",
+            filter=Q(subtask__done=True),
+        )
+        * 100.0
+        / NullIf(Count("subtask"), 0),
     )
 )
 

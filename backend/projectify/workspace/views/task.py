@@ -50,6 +50,7 @@ from projectify.workspace.services.task import (
     task_delete,
     task_move_after,
     task_move_in_direction,
+    task_update,
     task_update_nested,
 )
 
@@ -175,6 +176,104 @@ def task_create(
     return redirect(
         reverse("dashboard:projects:detail", args=(section.project.uuid,))
     )
+
+
+@platform_view
+def task_detail(
+    request: AuthenticatedHttpRequest, task_uuid: UUID
+) -> HttpResponse:
+    """View a task. Accept POST for task updates."""
+    task = task_find_by_task_uuid(
+        who=request.user, task_uuid=task_uuid, qs=TaskDetailQuerySet
+    )
+    if task is None:
+        raise Http404(_(f"Could not find task with uuid {task_uuid}"))
+    context = {"task": task}
+    return render(request, "workspace/task_detail.html", context)
+
+
+class TaskUpdateForm(forms.Form):
+    """Form for task creation."""
+
+    title = forms.CharField(
+        label=_("Task title"),
+        widget=forms.TextInput(attrs={"placeholder": _("Task title")}),
+    )
+    assignee = forms.ModelChoiceField(required=False, queryset=None)
+    # Django stub for ModelMultipleChoiceField does not accept None
+    labels = forms.ModelMultipleChoiceField(required=False, queryset=None)  # type: ignore[arg-type]
+    due_date = forms.DateTimeField(required=False)
+    description = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={"placeholder": _("Enter a description for your task")}
+        ),
+    )
+    submit = forms.CharField(required=False)
+    submit_stay = forms.CharField(required=False)
+
+    def __init__(self, *args: Any, workspace: Workspace, **kwargs: Any):
+        """Populate available assignees."""
+        super().__init__(*args, **kwargs)
+        self.fields[
+            "assignee"
+        ].queryset = workspace.teammember_set.select_related("user")
+        self.fields["labels"].queryset = workspace.label_set.all()
+
+
+@platform_view
+@require_http_methods(["GET", "POST"])
+def task_update_view(
+    request: AuthenticatedHttpRequest, task_uuid: UUID
+) -> HttpResponse:
+    """Update task. Render errors."""
+    task = task_find_by_task_uuid(
+        who=request.user, task_uuid=task_uuid, qs=TaskDetailQuerySet
+    )
+    if task is None:
+        raise Http404(_(f"Could not find task with uuid {task_uuid}"))
+    project = task.section.project
+    workspace = project.workspace
+    match request.method:
+        case "GET":
+            form = TaskUpdateForm(
+                initial={
+                    "title": task.title,
+                    "assignee": task.assignee,
+                    "labels": task.labels.all(),
+                    "due_date": task.due_date,
+                    "description": task.description,
+                },
+                workspace=workspace,
+            )
+            context = {"form": form, "task": task}
+            return render(request, "workspace/task_update.html", context)
+        case "POST":
+            form = TaskUpdateForm(
+                data=request.POST, initial=task, workspace=workspace
+            )
+            form.full_clean()
+            if not form.is_valid():
+                context = {"form": form, "task": task}
+                return render(request, "workspace/task_update.html", context)
+            cleaned_data = form.cleaned_data
+            task_update(
+                who=request.user,
+                task=task,
+                title=cleaned_data["title"],
+                description=cleaned_data["description"],
+                due_date=cleaned_data["due_date"],
+                assignee=cleaned_data["assignee"],
+            )
+            if cleaned_data["submit_stay"]:
+                n = reverse("dashboard:tasks:detail", args=(task.uuid,))
+            elif cleaned_data["submit"]:
+                n = reverse("dashboard:projects:detail", args=(project.uuid,))
+            else:
+                raise ValueError(cleaned_data)
+            return redirect(n)
+        case _:
+            raise ValueError("Unknown method")
 
 
 # Form

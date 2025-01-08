@@ -2,7 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "dashboard_base.html" %}
 {% block dashboard_content %}
-    <form action="{% url 'dashboard:sections:create-task' section.uuid %}"
+    <form action="{% url 'dashboard:tasks:update' task.uuid %}"
           method="post"
           class="min-w-0 grow"
           role="presentation">
@@ -10,7 +10,7 @@
             <div class="sticky top-0 flex flex-row flex-wrap items-center justify-between gap-x-2 gap-y-4 bg-foreground pb-8 pt-4 lg:flex-nowrap">
                 <div class="flex shrink flex-row items-center gap-6">
                     <div class="shrink-0">
-                        <a href="{% url "dashboard:projects:detail" section.project.uuid %}"
+                        <a href="{% url "dashboard:projects:detail" task.section.project.uuid %}"
                            class="block w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background"
                            aria-label="Go back to section">
                             <svg fill="none"
@@ -25,23 +25,24 @@
                         </a>
                     </div>
                     <div class="font-bold text-utility">
-                        <a href="{% url "dashboard:projects:detail" section.project.uuid %}"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{{ section.project.title }}</a>
+                        <a href="{% url "dashboard:projects:detail" task.section.project.uuid %}"
+                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{{ task.section.project.title }}</a>
                         &gt;
-                        <a href="{% url "dashboard:projects:detail" section.project.uuid %}#{{ section.uuid }}"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{{ section.title }}</a>
-                        &gt; <a href="{% url "dashboard:sections:create-task" section.uuid %}"
+                        <a href="{% url "dashboard:projects:detail" task.section.project.uuid %}#{{ section.uuid }}"
+                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{{ task.section.title }}</a>
+                        &gt; <a href="{% url "dashboard:sections:create-task" task.section.uuid %}"
     class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">New task (currently creating)</a>
                     </div>
                 </div>
                 <div class="flex items-center justify-between gap-4 sm:flex-row">
                     <input type="submit"
-                           class="bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold "
-                           value="Create task" />
-                    <button type="button"
-                            class=" text-secondary-content hover:bg-secondary-hover hover:text-secondary-content-hover active:bg-secondary-pressed active:text-secondary-content-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                        Create task and stay
-                    </button>
+                           value="Update task"
+                           name="submit"
+                           class=" bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content" />
+                    <input type="submit"
+                           name="submit_stay"
+                           value="Update task and stay"
+                           class=" bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content" />
                 </div>
             </div>
             <div class="flex flex-col gap-8">

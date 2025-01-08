@@ -1,28 +1,58 @@
 {# SPDX-FileCopyrightText: 2024 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "base.html" %}
-{% block content %}
-    <p>Alpine test section</p>
-    <h1 x-data="{ message: 'I ❤️ Alpine' }" x-text="message"></h1>
-    <section x-data="{ search: '' }">
-        <h1>Labels</h1>
-        <form class="hidden" :class="{ 'hidden': false }">
-            <label for="filter-label">Filter labels</label>
-            <input x-model="search" id="filter-label" type="text" />
-        </form>
-        <ol class="list-decimal list-inside">
-            {% for label in object.workspace.label_set.all %}
-                <li x-show="$el.innerHTML.toLocaleLowerCase().includes(search.toLocaleLowerCase())">{{ label }}</li>
-            {% endfor %}
-        </ol>
-    </section>
-    <h1>{{ object.title }}</h1>
-    <p>Sections:</p>
-    <ol>
-        {% for section in object.section_set.all %}
-            <li id="{{ section.uuid }}" data-section>
-                {% include "workspace/project_detail/section.html" with section=section %}
-            </li>
-        {% endfor %}
-    </ol>
-{% endblock %}
+{% extends "dashboard_base.html" %}
+{% block dashboard_content %}
+    <div class="min-w-0 grow" role="presentation">
+        <main class="flex h-full flex-col items-center gap-4 bg-background py-4">
+            <form role="search"
+                  action="{% url "dashboard:projects:detail" project_uuid=object.uuid %}"
+                  class="flex w-full max-w-md flex-col gap-2 rounded-xl bg-foreground px-4 py-4">
+                <div class="flex flex-col items-start gap-2">
+                    <div class="flex w-full flex-row items-center justify-between">
+                        <label for="search"
+                               class="font-bold text-base-content first-letter:uppercase">Task search</label>
+                    </div>
+                    <div class="flex w-full flex-row items-center gap-2">
+                        <input type="search"
+                               class="placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2"
+                               id="search"
+                               name="search"
+                               placeholder="Enter search terms"
+                               required="" />
+                    </div>
+                </div>
+                <!--<InputField>-->
+                <button type="submit"
+                        class="text-tertiary-content hover:text-tertiary-content-hover active:bg-tertiary-pressed active:text-tertiary-content-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-transparent disabled:text-disabled-content">
+                    <svg fill="none"
+                         viewBox="0 0 24 24"
+                         stroke="currentColor"
+                         aria-hidden="true"
+                         xmlns="http://www.w3.org/2000/svg"
+                         width="100%"
+                         height="100%"
+                         class="h-6 w-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">
+                        </path>
+                    </svg>
+                    Search tasks
+                </button>
+                <!--<button>-->
+            </form>
+            <div class="flex w-full grow flex-col gap-4 md:p-2">
+                {% for section in object.section_set.all %}
+                    {% include "workspace/project_detail/section.html" with section=section %}
+                {% endfor %}
+                <div class="sticky bottom-0 self-end p-2">
+                    <button type="button"
+                            class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
+                        Add section
+                    </button>
+                    <!--<button>-->
+                </div>
+                <!--<+page>-->
+            </div>
+        </main>
+        <!--<+layout>-->
+    </div>
+{% endblock dashboard_content %}
