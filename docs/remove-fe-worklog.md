@@ -422,3 +422,13 @@ are not possible yet. I want to break apart the remaining steps like so:
 
 Most of this work can then be re-used in the new task view.
 
+## 2025-01-08
+
+I've added the sub task formset rendering to the task update page. It's not
+done yet. Some validation error seems to occur, so I want to render that
+in the UI. This might be helpful:
+
+https://docs.djangoproject.com/en/5.1/topics/forms/formsets/#using-a-formset-in-views-and-templates
+
+I noticed that Django calls everything `object`, `form`, and `formset`. I want
+to call things what they are instead. Gotta think on this one.
