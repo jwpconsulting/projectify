@@ -227,7 +227,9 @@
                             </div>
                             <div class="flex flex-row items-center gap-4">
                                 <div class="h-2 w-full overflow-hidden rounded bg-disabled">
-                                    <div class="h-full bg-primary"></div>
+                                    {# djlint:off H021 #}
+                                    <div class="h-full bg-primary"
+                                         style="width: {{ task.sub_task_progress|percent }}"></div>
                                 </div>
                                 <p class="min-w-max font-bold">{{ task.sub_task_progress|percent }}</p>
                             </div>
