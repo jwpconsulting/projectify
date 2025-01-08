@@ -38,7 +38,7 @@ TaskDetailQuerySet: QuerySet[Task] = (
             "subtask",
             filter=Q(subtask__done=True),
         )
-        * 100.0
+        * 1.0
         / NullIf(Count("subtask"), 0),
     )
 )
