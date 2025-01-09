@@ -282,7 +282,7 @@ def task_update_view(
             "title": f["title"],
             "done": f["done"],
             "_order": i,
-            "uuid": UUID(f["uuid"]),
+            "uuid": f["uuid"],
         }
         for i, f in enumerate(formset.cleaned_data)
     ]
@@ -301,10 +301,8 @@ def task_update_view(
     )
     if cleaned_data["submit_stay"]:
         n = reverse("dashboard:tasks:detail", args=(task.uuid,))
-    elif cleaned_data["submit"]:
-        n = reverse("dashboard:projects:detail", args=(project.uuid,))
     else:
-        raise ValueError(cleaned_data)
+        n = reverse("dashboard:projects:detail", args=(project.uuid,))
     return redirect(n)
 
 

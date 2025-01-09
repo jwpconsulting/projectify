@@ -435,5 +435,13 @@ to call things what they are instead. Gotta think on this one.
 
 ## 2025-01-9
 
-Today I try to finish the formset -> sub task update conversion and make the
+Today I finished the formset -> sub task update conversion and make the
 basic use case 1. "Make it possible to update existing sub tasks" work.
+
+There are no error messages or anything right now.
+
+I can use this
+
+https://docs.djangoproject.com/en/5.1/topics/forms/#looping-over-the-form-s-fields
+
+and make the template for the form a bit more maintainable. This is the way.

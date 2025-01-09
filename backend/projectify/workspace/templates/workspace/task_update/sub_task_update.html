@@ -12,6 +12,9 @@
                     <div class="flex w-full flex-row items-center gap-2">{{ form.title }}</div>
                 </div>
             </div>
+            <input type="hidden"
+                   name="{{ form.uuid.html_name }}"
+                   value="{{ form.uuid.initial }}">
         </div>
     </div>
 {% endfor %}
