@@ -24,6 +24,9 @@ from rest_framework.status import (
 from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
+from projectify.workspace.selectors.project import (
+    project_find_by_workspace_uuid,
+)
 from projectify.workspace.selectors.quota import workspace_get_all_quotas
 
 from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
@@ -57,9 +60,14 @@ def workspace_view(
     workspace = workspace_find_by_workspace_uuid(
         who=request.user, workspace_uuid=workspace_uuid
     )
+    projects = project_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        archived=False,
+    )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    context = {"workspace": workspace}
+    context = {"workspace": workspace, "projects": projects}
     return render(request, "workspace/workspace_detail.html", context)
 
 

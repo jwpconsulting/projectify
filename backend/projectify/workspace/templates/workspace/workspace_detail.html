@@ -1,13 +1,15 @@
 {# SPDX-FileCopyrightText: 2024 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "base.html" %}
-{% block content %}
-    <h1>Workspace: {{ workspace.title }}</h1>
-    <ol class="flex flex-col list-disc list-inside">
-        {% for project in workspace.project_set.all %}
-            <li>
-                <a href="{% url "dashboard:projects:detail" project.uuid %}">{{ project.title }}</a>
-            </li>
-        {% endfor %}
-    </ol>
-{% endblock content %}
+{% extends "dashboard_base.html" %}
+{% block dashboard_content %}
+    <main>
+        <h1>Workspace: {{ workspace.title }}</h1>
+        <ol class="flex flex-col list-disc list-inside">
+            {% for project in projects %}
+                <li>
+                    <a href="{% url "dashboard:projects:detail" project.uuid %}">{{ project.title }}</a>
+                </li>
+            {% endfor %}
+        </ol>
+    </main>
+{% endblock dashboard_content %}

@@ -432,3 +432,8 @@ https://docs.djangoproject.com/en/5.1/topics/forms/formsets/#using-a-formset-in-
 
 I noticed that Django calls everything `object`, `form`, and `formset`. I want
 to call things what they are instead. Gotta think on this one.
+
+## 2025-01-9
+
+Today I try to finish the formset -> sub task update conversion and make the
+basic use case 1. "Make it possible to update existing sub tasks" work.
