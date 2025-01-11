@@ -115,6 +115,11 @@ class TaskUpdateSubTaskForm(forms.Form):
     title = forms.CharField()
     done = forms.BooleanField(required=False)
     uuid = forms.UUIDField(widget=forms.HiddenInput)
+    delete = forms.BooleanField(
+        required=False,
+        label=_("Delete task"),
+        initial=False,
+    )
 
 
 TaskUpdateSubTaskForms = forms.formset_factory(TaskUpdateSubTaskForm, extra=0)
@@ -285,6 +290,7 @@ def task_update_view(
             "uuid": f["uuid"],
         }
         for i, f in enumerate(formset.cleaned_data)
+        if not f["delete"]
     ]
     task_update_nested(
         who=request.user,

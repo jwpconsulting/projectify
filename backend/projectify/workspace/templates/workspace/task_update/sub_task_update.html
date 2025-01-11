@@ -15,6 +15,10 @@
             <input type="hidden"
                    name="{{ form.uuid.html_name }}"
                    value="{{ form.uuid.initial }}">
+            <div>
+                {{ form.delete }}
+                <label for="{{ form.delete.id_for_label }}">{{ form.delete.label }}</label>
+            </div>
         </div>
     </div>
 {% endfor %}
