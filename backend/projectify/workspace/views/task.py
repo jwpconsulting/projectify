@@ -44,13 +44,13 @@ from projectify.workspace.serializers.task_detail import (
 from projectify.workspace.services.sub_task import (
     ValidatedData,
     ValidatedDatum,
+    ValidatedDatumWithUuid,
 )
 from projectify.workspace.services.task import (
     task_create_nested,
     task_delete,
     task_move_after,
     task_move_in_direction,
-    task_update,
     task_update_nested,
 )
 
@@ -107,6 +107,22 @@ class TaskCreateSubTaskForm(forms.Form):
 
 
 TaskCreateSubTaskForms = forms.formset_factory(TaskCreateSubTaskForm, extra=0)
+
+
+class TaskUpdateSubTaskForm(forms.Form):
+    """Form for creating sub tasks as part of task creation."""
+
+    title = forms.CharField()
+    done = forms.BooleanField(required=False)
+    uuid = forms.UUIDField(widget=forms.HiddenInput)
+    delete = forms.BooleanField(
+        required=False,
+        label=_("Delete task"),
+        initial=False,
+    )
+
+
+TaskUpdateSubTaskForms = forms.formset_factory(TaskUpdateSubTaskForm, extra=0)
 
 
 @platform_view
@@ -234,46 +250,66 @@ def task_update_view(
         raise Http404(_(f"Could not find task with uuid {task_uuid}"))
     project = task.section.project
     workspace = project.workspace
-    match request.method:
-        case "GET":
-            form = TaskUpdateForm(
-                initial={
-                    "title": task.title,
-                    "assignee": task.assignee,
-                    "labels": task.labels.all(),
-                    "due_date": task.due_date,
-                    "description": task.description,
-                },
-                workspace=workspace,
-            )
-            context = {"form": form, "task": task}
-            return render(request, "workspace/task_update.html", context)
-        case "POST":
-            form = TaskUpdateForm(
-                data=request.POST, initial=task, workspace=workspace
-            )
-            form.full_clean()
-            if not form.is_valid():
-                context = {"form": form, "task": task}
-                return render(request, "workspace/task_update.html", context)
-            cleaned_data = form.cleaned_data
-            task_update(
-                who=request.user,
-                task=task,
-                title=cleaned_data["title"],
-                description=cleaned_data["description"],
-                due_date=cleaned_data["due_date"],
-                assignee=cleaned_data["assignee"],
-            )
-            if cleaned_data["submit_stay"]:
-                n = reverse("dashboard:tasks:detail", args=(task.uuid,))
-            elif cleaned_data["submit"]:
-                n = reverse("dashboard:projects:detail", args=(project.uuid,))
-            else:
-                raise ValueError(cleaned_data)
-            return redirect(n)
-        case _:
-            raise ValueError("Unknown method")
+    task_initial = {
+        "title": task.title,
+        "assignee": task.assignee,
+        "labels": task.labels.all(),
+        "due_date": task.due_date,
+        "description": task.description,
+    }
+    sub_tasks = task.subtask_set.all()
+    sub_tasks_initial = [
+        {"title": sub_task.title, "done": sub_task.done, "uuid": sub_task.uuid}
+        for sub_task in sub_tasks
+    ]
+    if request.method == "GET":
+        form = TaskUpdateForm(initial=task_initial, workspace=workspace)
+        formset = TaskUpdateSubTaskForms(initial=sub_tasks_initial)
+        context = {"form": form, "task": task, "formset": formset}
+        return render(request, "workspace/task_update.html", context)
+
+    form = TaskUpdateForm(
+        data=request.POST, initial=task_initial, workspace=workspace
+    )
+    form.full_clean()
+    formset = TaskUpdateSubTaskForms(
+        data=request.POST,
+        initial=sub_tasks_initial,
+    )
+    formset.full_clean()
+    if not form.is_valid() or not formset.is_valid():
+        context = {"form": form, "task": task, "formset": formset}
+        return render(request, "workspace/task_update.html", context)
+
+    cleaned_data = form.cleaned_data
+    update_sub_tasks: list[ValidatedDatumWithUuid] = [
+        {
+            "title": f["title"],
+            "done": f["done"],
+            "_order": i,
+            "uuid": f["uuid"],
+        }
+        for i, f in enumerate(formset.cleaned_data)
+        if not f["delete"]
+    ]
+    task_update_nested(
+        who=request.user,
+        task=task,
+        title=cleaned_data["title"],
+        description=cleaned_data["description"],
+        due_date=cleaned_data["due_date"],
+        assignee=cleaned_data["assignee"],
+        labels=[],
+        sub_tasks={
+            "update_sub_tasks": update_sub_tasks,
+            "create_sub_tasks": [],
+        },
+    )
+    if cleaned_data["submit_stay"]:
+        n = reverse("dashboard:tasks:detail", args=(task.uuid,))
+    else:
+        n = reverse("dashboard:projects:detail", args=(project.uuid,))
+    return redirect(n)
 
 
 # Form

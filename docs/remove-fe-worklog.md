@@ -422,3 +422,30 @@ are not possible yet. I want to break apart the remaining steps like so:
 
 Most of this work can then be re-used in the new task view.
 
+## 2025-01-08
+
+I've added the sub task formset rendering to the task update page. It's not
+done yet. Some validation error seems to occur, so I want to render that
+in the UI. This might be helpful:
+
+https://docs.djangoproject.com/en/5.1/topics/forms/formsets/#using-a-formset-in-views-and-templates
+
+I noticed that Django calls everything `object`, `form`, and `formset`. I want
+to call things what they are instead. Gotta think on this one.
+
+## 2025-01-09
+
+Today I finished the formset -> sub task update conversion and make the
+basic use case 1. "Make it possible to update existing sub tasks" work.
+
+There are no error messages or anything right now.
+
+I can use this
+
+https://docs.djangoproject.com/en/5.1/topics/forms/#looping-over-the-form-s-fields
+
+and make the template for the form a bit more maintainable. This is the way.
+
+## 2025-01-11
+
+I've now added a checkbox that lets you delete an existing sub task
