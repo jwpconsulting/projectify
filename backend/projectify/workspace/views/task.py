@@ -259,7 +259,7 @@ def task_update_view(
     ]
     if request.method == "GET":
         form = TaskUpdateForm(initial=task_initial, workspace=workspace)
-        formset = TaskCreateSubTaskForms(initial=sub_tasks_initial)
+        formset = TaskUpdateSubTaskForms(initial=sub_tasks_initial)
         context = {"form": form, "task": task, "formset": formset}
         return render(request, "workspace/task_update.html", context)
 
