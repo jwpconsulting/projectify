@@ -322,6 +322,7 @@ def task_update_view(
         return render(request, "workspace/task_update.html", context)
 
     cleaned_data = form.cleaned_data
+    formset_cleaned_data = formset.cleaned_data
     update_sub_tasks: list[ValidatedDatumWithUuid] = [
         {
             "title": f["title"],
@@ -329,8 +330,17 @@ def task_update_view(
             "_order": i,
             "uuid": f["uuid"],
         }
-        for i, f in enumerate(formset.cleaned_data)
-        if not f["delete"]
+        for i, f in enumerate(formset_cleaned_data)
+        if f and f["uuid"] and not f["delete"]
+    ]
+    create_sub_tasks: list[ValidatedDatum] = [
+        {
+            "title": f["title"],
+            "done": f["done"],
+            "_order": i,
+        }
+        for i, f in enumerate(formset_cleaned_data)
+        if f and not f["uuid"] and not f["delete"]
     ]
     task_update_nested(
         who=request.user,
@@ -342,7 +352,7 @@ def task_update_view(
         labels=[],
         sub_tasks={
             "update_sub_tasks": update_sub_tasks,
-            "create_sub_tasks": [],
+            "create_sub_tasks": create_sub_tasks,
         },
     )
     if action == "submit_stay":

@@ -477,3 +477,32 @@ request will then let the backend know that this button has been pressed. The
 backend then knows that this isn't a request to update a task based on the form
 data. Instead, it will render a new form using all the task draft information,
 with a new sub tasks row added at the end.
+
+# 2025-01-15
+
+Yesterday, I found a solution to make adding new sub task fields work. The
+idea is to increase the total formset count by manually updating the POST
+data. This is the relevant code:
+
+```python
+def view(request: HttpRequest) -> HttpResponse:
+    post = request.POST.copy()
+    sub_task_count_raw: str = post.get("form-" + TOTAL_FORM_COUNT, "0")
+    try:
+        sub_task_count = int(sub_task_count_raw)
+    except ValueError as e:
+        logger.error(
+            "Unexpected error when getting total form count", exc_info=e
+        )
+        sub_task_count = 0
+    post["form-TOTAL_FORMS"] = str(sub_task_count + 1)
+    logger.info("Adding sub task")
+    form = TaskUpdateForm(data=post, workspace=workspace)
+    formset = TaskUpdateSubTaskForms(data=post)
+    context = {"form": form, "task": task, "formset": formset}
+    return render(request, "workspace/task_update.html", context)
+```
+
+Furthermore, I've decided to not implement sub task reordering. I question
+the utility of sub task reordering in general, so I want to hold off on that
+feature for now.
