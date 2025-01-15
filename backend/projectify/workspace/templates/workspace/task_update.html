@@ -125,10 +125,10 @@
                                             <div class="flex w-full flex-row items-center gap-2">{{ form.title }}</div>
                                         </div>
                                     </div>
-                                    {% if form.uuid.initial %}
+                                    {% if form.uuid.value %}
                                         <input type="hidden"
                                                name="{{ form.uuid.html_name }}"
-                                               value="{{ form.uuid.initial }}">
+                                               value="{{ form.uuid.value }}">
                                     {% endif %}
                                     <div>
                                         {{ form.delete }}
