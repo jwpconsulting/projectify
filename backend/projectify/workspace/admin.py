@@ -85,7 +85,9 @@ class TeamMemberAdmin(admin.ModelAdmin[TeamMember]):
         "user_email",
         "created",
         "modified",
+        "role",
     )
+    list_filter = ("role",)
     list_select_related = (
         "workspace",
         "user",
