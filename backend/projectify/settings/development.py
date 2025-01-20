@@ -148,6 +148,13 @@ class Development(SpectacularSettings, Base):
     # Feature flags
     ENABLE_DJANGO_DASHBOARD = True
 
+    # Enable template debugging
+    TEMPLATES = Base.TEMPLATES
+    TEMPLATES[0]["OPTIONS"] = {
+        **TEMPLATES[0]["OPTIONS"],
+        "debug": True,
+    }
+
     @classmethod
     def pre_setup(cls) -> None:
         """Load environment variables from .env."""
