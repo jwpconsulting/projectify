@@ -506,3 +506,55 @@ def view(request: HttpRequest) -> HttpResponse:
 Furthermore, I've decided to not implement sub task reordering. I question
 the utility of sub task reordering in general, so I want to hold off on that
 feature for now.
+
+## 2025-01-20
+
+Today I will try out hiding Projectify UI features using `django-rules`.
+Users can have different roles depending on which workspace they belong to.
+For example, if a user has the *Observer* role, they can only look at
+tasks, but not change them. So, if someone has the Observer role, Projectify
+should hide the *Edit task* button. If someone has at least the *Contributor*
+role, Projectify should show them the *Edit task* button.
+
+To query `django-rules` inside a template, add the following at the
+top of the HTML template file:
+
+```
+{% load rules %}
+```
+
+Here, I change the `task_detail.html` file and make the *Edit task* button
+only visible when a user can update the current task. First, I add
+a line that calls the `has_perm` template function from `django_rules.` It
+takes a variable number of arguments. Here, it takes the user and the task
+in question.
+
+```
+{% has_perm "workspace.update_task" user task.workspace as can_update_task %}
+{% if can_update_task %}
+    <a href="{% url "dashboard:tasks:update" task.uuid %}"
+       class="...">
+        Edit
+    </a><!--<button>-->
+{% endif %}
+```
+
+When checking for permissions, be careful with the following:
+
+1. If you test as a superuser, all permission checks will evaluate to true.
+   Check as another user.
+2. The permission checks are purely visual, any real permission checks
+   should happen in the services or selectors Python modules.
+3. A permission check always takes a user and a workspace instance. If the
+   current object is a project, dereference `project.workspace`. Dereference
+   `Section` and other models similarly.
+
+This is, for example, how to check permissions on a project:
+
+```
+{% has_perm "workspace.update_project" user project.workspace as can_update_project %}
+```
+
+I visually confirmed that the above works by signing in as `guest@localhost`.
+While switching this user between Maintainer and Observer, I verified that
+the *Edit task* button disappears and re-appears.

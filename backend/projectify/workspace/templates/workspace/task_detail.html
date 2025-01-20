@@ -1,7 +1,7 @@
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "dashboard_base.html" %}
-{% load projectify %}
+{% load projectify rules %}
 {% block dashboard_content %}
     <div class="min-w-0 grow" role="presentation">
         <div class="flex h-full flex-col p-4 pt-0">
@@ -25,10 +25,13 @@
                     {% include "workspace/task/breadcrumbs.html" with task=task %}
                 </div>
                 <div class="flex items-center justify-between gap-4 sm:flex-row">
-                    <a href="{% url "dashboard:tasks:update" task.uuid %}"
-                       class=" bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                        Edit
-                    </a><!--<button>-->
+                    {% has_perm "workspace.update_task" user task.workspace as can_update_task %}
+                    {% if can_update_task %}
+                        <a href="{% url "dashboard:tasks:update" task.uuid %}"
+                           class=" bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
+                            Edit
+                        </a><!--<button>-->
+                    {% endif %}
                     <div>
                         <button aria-label="Open task context menu"
                                 class="focus:base-content relative h-8 w-8 rounded-lg border border-transparent p-1 focus:border-base-content focus:outline-none active:text-display enabled:hover:bg-secondary-hover enabled:active:bg-primary text-base-content">
