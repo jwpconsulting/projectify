@@ -334,7 +334,7 @@ complex.
 I've added a form for tasks. It was quite simple, including the related
 fields. Next time I will work on the dynamic sub task creation.
 
-## 2024-12-11
+# 2024-12-11
 
 Todays' goal was to find out how to dynamically populate a form with extra
 lines. The use case I have in mind is dynamic sub task creation when creating
@@ -361,7 +361,7 @@ creation page server-side when a new sub task is required. That would
 definitely be more complicated to implement. And the fact that this works
 without reloading the page is great.
 
-## 2024-12-12
+# 2024-12-12
 
 Today's goal is to figure out how to customize Django widgets. Reference:
 
@@ -379,20 +379,20 @@ https://docs.djangoproject.com/en/5.1/ref/forms/renderers/#django.forms.renderer
 
 I can now override Django widgets. Great.
 
-## 2024-12-13
+# 2024-12-13
 
 I've fully mocked up the task creation page:
 
 ![HTML from frontend copied into task creation page](./2024-12-13_task_creation_mockup.png)
 
-## 2025-01-05
+# 2025-01-05
 
 Happy new year.
 
 I want to create the task update page as well in the prototyping phase
 to make sure that the sub task diffing works well.
 
-## 2025-01-06
+# 2025-01-06
 
 Working on the task update page now. The goal is to make sure we have all
 the functinoality needed to diff sub tasks updates. In the beginning, the
@@ -422,7 +422,7 @@ are not possible yet. I want to break apart the remaining steps like so:
 
 Most of this work can then be re-used in the new task view.
 
-## 2025-01-08
+# 2025-01-08
 
 I've added the sub task formset rendering to the task update page. It's not
 done yet. Some validation error seems to occur, so I want to render that
@@ -433,7 +433,7 @@ https://docs.djangoproject.com/en/5.1/topics/forms/formsets/#using-a-formset-in-
 I noticed that Django calls everything `object`, `form`, and `formset`. I want
 to call things what they are instead. Gotta think on this one.
 
-## 2025-01-09
+# 2025-01-09
 
 Today I finished the formset -> sub task update conversion and make the
 basic use case 1. "Make it possible to update existing sub tasks" work.
@@ -446,7 +446,7 @@ https://docs.djangoproject.com/en/5.1/topics/forms/#looping-over-the-form-s-fiel
 
 and make the template for the form a bit more maintainable. This is the way.
 
-## 2025-01-11
+# 2025-01-11
 
 I've now added a checkbox that lets you delete an existing sub task
 
@@ -507,7 +507,7 @@ Furthermore, I've decided to not implement sub task reordering. I question
 the utility of sub task reordering in general, so I want to hold off on that
 feature for now.
 
-## 2025-01-20
+# 2025-01-20
 
 Today I will try out hiding Projectify UI features using `django-rules`.
 Users can have different roles depending on which workspace they belong to.
