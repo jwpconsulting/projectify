@@ -1,7 +1,7 @@
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "dashboard_base.html" %}
-{% load projectify %}
+{% load projectify rules %}
 {% block dashboard_content %}
     <div class="min-w-0 grow" role="presentation">
         <div class="flex h-full flex-col p-4 pt-0">
@@ -22,54 +22,153 @@
                             </svg>
                         </a><!--<CircleIcon>-->
                     </div>
-                    <div class="font-bold text-utility">
-                        <a href="{% url "dashboard:projects:detail" task.section.project.uuid %}"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{{ task.section.project.title }}</a><!--<Anchor>-->
-                        &gt;
-                        <a href="{% url "dashboard:projects:detail" task.section.project.uuid %}#{{ task.section.uuid }}"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{{ task.section.title }}</a><!--<Anchor>-->
-                        &gt;
-                        <a href="{% url "dashboard:tasks:detail" task.uuid %}"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{{ task.number }}</a><!--<Anchor>-->
-                    </div>
-                    <!--<Breadcrumbs>-->
+                    {% include "workspace/task/breadcrumbs.html" with task=task %}
                 </div>
                 <div class="flex items-center justify-between gap-4 sm:flex-row">
-                    <a href="{% url "dashboard:tasks:update" task.uuid %}"
-                       class=" bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                        Edit </a><!--<button>-->
-                        <div>
-                            <button aria-label="Open task context menu"
-                                    class="focus:base-content relative h-8 w-8 rounded-lg border border-transparent p-1 focus:border-base-content focus:outline-none active:text-display enabled:hover:bg-secondary-hover enabled:active:bg-primary text-base-content">
-                                <svg fill="none"
-                                     viewBox="0 0 24 24"
-                                     stroke="currentColor"
-                                     aria-hidden="true"
-                                     xmlns="http://www.w3.org/2000/svg"
-                                     width="100%"
-                                     height="100%">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z">
-                                    </path>
-                                </svg>
-                            </button>
-                            <!--<SquovalIcon>-->
-                        </div>
+                    {% has_perm "workspace.update_task" user task.workspace as can_update_task %}
+                    {% if can_update_task %}
+                        <a href="{% url "dashboard:tasks:update" task.uuid %}"
+                           class=" bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
+                            Edit
+                        </a><!--<button>-->
+                    {% endif %}
+                    <div>
+                        <button aria-label="Open task context menu"
+                                class="focus:base-content relative h-8 w-8 rounded-lg border border-transparent p-1 focus:border-base-content focus:outline-none active:text-display enabled:hover:bg-secondary-hover enabled:active:bg-primary text-base-content">
+                            <svg fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke="currentColor"
+                                 aria-hidden="true"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 width="100%"
+                                 height="100%">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z">
+                                </path>
+                            </svg>
+                        </button>
+                        <!--<SquovalIcon>-->
                     </div>
                 </div>
-                <!--<TopBar>-->
-                <div class="flex flex-col gap-8">
-                    <table class="flex w-full max-w-xl flex-col gap-y-4 sm:grid sm:grid-cols-4">
-                        <tbody class="contents">
+            </div>
+            <!--<TopBar>-->
+            <div class="flex flex-col gap-8">
+                <table class="flex w-full max-w-xl flex-col gap-y-4 sm:grid sm:grid-cols-4">
+                    <tbody class="contents">
+                        <tr class="contents">
+                            <th scope="row" class="col-span-1 text-left font-bold">
+                                <label for="title">
+                                    Task
+                                    title
+                                </label>
+                            </th>
+                            <td class="col-span-3">
+                                <div class="flex flex-row gap-4">
+                                    {{ task.title }}
+                                    <button class="flex flex-row" type="button">
+                                        <svg fill="none"
+                                             viewBox="0 0 24 24"
+                                             stroke="currentColor"
+                                             aria-hidden="true"
+                                             xmlns="http://www.w3.org/2000/svg"
+                                             width="100%"
+                                             height="100%"
+                                             class="h-4 w-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <!--<TaskTitle>-->
+                            </td>
+                        </tr>
+                        <tr class="contents">
+                            <th scope="row" class="col-span-1 text-left font-bold">
+                                <label for="assignee">Assignee</label>
+                            </th>
+                            <td class="col-span-3">
+                                <div class="flex flex-row gap-2">
+                                    <button class="flex w-full flex-row items-center gap-2 rounded-2.5xl border border-dashed border-primary px-2 py-1 font-bold text-primary bg-task-hover"
+                                            type="button"
+                                            disabled="">
+                                        <div class="flex flex-row h-6 w-6 items-center rounded-full border border-primary">
+                                            <svg viewBox="0 0 80 80"
+                                                 fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg"
+                                                 width="32"
+                                                 height="32"
+                                                 data-testid="avatar-marble">
+                                                <title>{{ task.assignee }}</title><mask id="mask__marble59,73,148,4,197,127,93,132" maskUnits="userSpaceOnUse" x="0" y="0" width="80" height="80"><rect width="80" height="80" rx="160" fill="white"></rect></mask>
+                                                    <g mask="url(#mask__marble59,73,148,4,197,127,93,132)">
+                                                    <rect width="80" height="80" rx="2" fill="#92A1C6"></rect>
+                                                    <path filter="url(#prefix__filter0_f34,150,158,13,53,103,32,44)" d="M32.414 59.35L50.376 70.5H72.5v-71H33.728L26.5 13.381l19.057 27.08L32.414 59.35z" fill="#146A7C" transform="translate(0 0) rotate(-160 40 40) scale(1.2)">
+                                                    </path>
+                                                    <path filter="url(#prefix__filter0_f34,150,158,13,53,103,32,44)" d="M22.216 24L0 46.75l14.108 38.129L78 86l-3.081-59.276-22.378 4.005 12.972 20.186-23.35 27.395L22.215 24z" fill="#F0AB3D" transform="translate(0 0) rotate(-240 40 40) scale(1.2)">
+                                                    </path>
+                                                    </g>
+                                                    <defs><filter id="prefix__filter0_f34,150,158,13,53,103,32,44" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend><feGaussianBlur stdDeviation="7" result="effect1_foregroundBlur"></feGaussianBlur></filter></defs>
+                                                </svg>
+                                                <!--<AvatarMarble>-->
+                                            </div>
+                                            <!--<AvatarVariant>-->
+                                            <div class="truncate">{{ task.assignee }}</div>
+                                        </button>
+                                        <button type="button">
+                                            <svg fill="none"
+                                                 viewBox="0 0 24 24"
+                                                 stroke="currentColor"
+                                                 aria-hidden="true"
+                                                 xmlns="http://www.w3.org/2000/svg"
+                                                 width="100%"
+                                                 height="100%"
+                                                 class="h-4 w-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <!--<TaskUser>-->
+                                </td>
+                            </tr>
                             <tr class="contents">
                                 <th scope="row" class="col-span-1 text-left font-bold">
-                                    <label for="title">
-                                        Task
-                                        title
-                                    </label>
+                                    <label for="labels">Labels</label>
+                                </th>
+                                <td class="col-span-3">
+                                    <div class="flex flex-row items-start">
+                                        <div class="flex flex-row flex-wrap items-center gap-x-1 gap-y-2">
+                                            {% for label in task.labels.all %}
+                                                <div class="shrink-0">
+                                                    <button class="group rounded-2.5xl border border-dashed border-primary px-3 py-1 font-bold bg-label-blue text-label-text-blue"
+                                                            type="button"
+                                                            disabled="">{{ label.name }}</button>
+                                                    <!--<label>-->
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <button type="button">
+                                            <svg fill="none"
+                                                 viewBox="0 0 24 24"
+                                                 stroke="currentColor"
+                                                 aria-hidden="true"
+                                                 xmlns="http://www.w3.org/2000/svg"
+                                                 width="100%"
+                                                 height="100%"
+                                                 class="h-4 w-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <!--<TaskLabel>-->
+                                </td>
+                            </tr>
+                            <tr class="contents">
+                                <th scope="row" class="col-span-1 text-left font-bold">
+                                    <label for="due-date">Due date</label>
                                 </th>
                                 <td class="col-span-3">
                                     <div class="flex flex-row gap-4">
-                                        {{ task.title }}
+                                        {{ task.due_date.date.isoformat }}
                                         <button class="flex flex-row" type="button">
                                             <svg fill="none"
                                                  viewBox="0 0 24 24"
@@ -84,215 +183,110 @@
                                             </svg>
                                         </button>
                                     </div>
-                                    <!--<TaskTitle>-->
+                                    <!--<TaskDueDate>-->
                                 </td>
                             </tr>
                             <tr class="contents">
                                 <th scope="row" class="col-span-1 text-left font-bold">
-                                    <label for="assignee">Assignee</label>
+                                    <label for="description">Description</label>
                                 </th>
                                 <td class="col-span-3">
-                                    <div class="flex flex-row gap-2">
-                                        <button class="flex w-full flex-row items-center gap-2 rounded-2.5xl border border-dashed border-primary px-2 py-1 font-bold text-primary bg-task-hover"
-                                                type="button"
-                                                disabled="">
-                                            <div class="flex flex-row h-6 w-6 items-center rounded-full border border-primary">
-                                                <svg viewBox="0 0 80 80"
-                                                     fill="none"
-                                                     xmlns="http://www.w3.org/2000/svg"
-                                                     width="32"
-                                                     height="32"
-                                                     data-testid="avatar-marble">
-                                                    <title>{{ task.assignee }}</title><mask id="mask__marble59,73,148,4,197,127,93,132" maskUnits="userSpaceOnUse" x="0" y="0" width="80" height="80"><rect width="80" height="80" rx="160" fill="white"></rect></mask>
-                                                        <g mask="url(#mask__marble59,73,148,4,197,127,93,132)">
-                                                        <rect width="80" height="80" rx="2" fill="#92A1C6"></rect>
-                                                        <path filter="url(#prefix__filter0_f34,150,158,13,53,103,32,44)" d="M32.414 59.35L50.376 70.5H72.5v-71H33.728L26.5 13.381l19.057 27.08L32.414 59.35z" fill="#146A7C" transform="translate(0 0) rotate(-160 40 40) scale(1.2)">
+                                    <div class="flex w-full flex-row items-start gap-4">
+                                        <p>{{ task.description }}</p>
+                                        <button type="button">
+                                            <svg fill="none"
+                                                 viewBox="0 0 24 24"
+                                                 stroke="currentColor"
+                                                 aria-hidden="true"
+                                                 xmlns="http://www.w3.org/2000/svg"
+                                                 width="100%"
+                                                 height="100%"
+                                                 class="h-4 w-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <!--<TaskDescription>-->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!--<Fields>-->
+                    <div class="flex flex-col gap-4">
+                        <div class="flex flex-row items-center justify-between">
+                            <div class="flex flex-row items-center gap-4">
+                                <h4 class="text-xl font-bold">Sub tasks</h4>
+                            </div>
+                        </div>
+                        {% if task.sub_task_progress %}
+                            <div class="flex flex-row items-center gap-4">
+                                <div class="h-2 w-full overflow-hidden rounded bg-disabled">
+                                    {# djlint:off H021 #}
+                                    <div class="h-full bg-primary"
+                                         style="width: {{ task.sub_task_progress|percent }}"></div>
+                                </div>
+                                <p class="min-w-max font-bold">{{ task.sub_task_progress|percent }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <!--<SubTaskBar>-->
+                    <div class="flex grow flex-col">
+                        {% for sub_task in task.subtask_set.all %}
+                            <div class="flex w-full flex-row items-center justify-between gap-2 px-2 py-1">
+                                <div class="flex grow flex-row items-center gap-2">
+                                    <label for="checkbox-d33464d9-083e-4e76-ac8d-42d35aed6c79" class="sr-only">
+                                        Sub
+                                        task done
+                                    </label>
+                                    <div class="relative m-0.5 h-4 w-4 rounded border border-secondary-hover ">
+                                        <input class="absolute -left-[3px] -top-[3px] h-5 w-5 appearance-none rounded-md border border-transparent"
+                                               type="checkbox"
+                                               id="checkbox-d33464d9-083e-4e76-ac8d-42d35aed6c79"
+                                               checked="{{ sub_task.done|yesno:"true,false" }}"
+                                               disabled="">
+                                    </div>
+                                    <!--<Checkbox>-->
+                                    <div class="grow">
+                                        <label for="d33464d9-083e-4e76-ac8d-42d35aed6c79" class="sr-only">
+                                            Enter
+                                            a
+                                            subtask
+                                        </label>
+                                        <div class="flex flex-col items-start gap-2">
+                                            <div class="flex w-full flex-row items-center gap-2">
+                                                <input type="text"
+                                                       class="placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2"
+                                                       id="d33464d9-083e-4e76-ac8d-42d35aed6c79"
+                                                       name="sub-task-d33464d9-083e-4e76-ac8d-42d35aed6c79"
+                                                       value="{{ sub_task.title }}"
+                                                       placeholder="Enter a subtask"
+                                                       readonly="true">
+                                                <button class="flex flex-row" type="button">
+                                                    <svg fill="none"
+                                                         viewBox="0 0 24 24"
+                                                         stroke="currentColor"
+                                                         aria-hidden="true"
+                                                         xmlns="http://www.w3.org/2000/svg"
+                                                         width="100%"
+                                                         height="100%"
+                                                         class="h-4 w-4">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
                                                         </path>
-                                                        <path filter="url(#prefix__filter0_f34,150,158,13,53,103,32,44)" d="M22.216 24L0 46.75l14.108 38.129L78 86l-3.081-59.276-22.378 4.005 12.972 20.186-23.35 27.395L22.215 24z" fill="#F0AB3D" transform="translate(0 0) rotate(-240 40 40) scale(1.2)">
-                                                        </path>
-                                                        </g>
-                                                        <defs><filter id="prefix__filter0_f34,150,158,13,53,103,32,44" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend><feGaussianBlur stdDeviation="7" result="effect1_foregroundBlur"></feGaussianBlur></filter></defs>
                                                     </svg>
-                                                    <!--<AvatarMarble>-->
-                                                </div>
-                                                <!--<AvatarVariant>-->
-                                                <div class="truncate">{{ task.assignee }}</div>
-                                            </button>
-                                            <button type="button">
-                                                <svg fill="none"
-                                                     viewBox="0 0 24 24"
-                                                     stroke="currentColor"
-                                                     aria-hidden="true"
-                                                     xmlns="http://www.w3.org/2000/svg"
-                                                     width="100%"
-                                                     height="100%"
-                                                     class="h-4 w-4">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-                                                    </path>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                        <!--<TaskUser>-->
-                                    </td>
-                                </tr>
-                                <tr class="contents">
-                                    <th scope="row" class="col-span-1 text-left font-bold">
-                                        <label for="labels">Labels</label>
-                                    </th>
-                                    <td class="col-span-3">
-                                        <div class="flex flex-row items-start">
-                                            <div class="flex flex-row flex-wrap items-center gap-x-1 gap-y-2">
-                                                {% for label in task.labels.all %}
-                                                    <div class="shrink-0">
-                                                        <button class="group rounded-2.5xl border border-dashed border-primary px-3 py-1 font-bold bg-label-blue text-label-text-blue"
-                                                                type="button"
-                                                                disabled="">{{ label.name }}</button>
-                                                        <!--<label>-->
-                                                    </div>
-                                                {% endfor %}
+                                                </button>
                                             </div>
-                                            <button type="button">
-                                                <svg fill="none"
-                                                     viewBox="0 0 24 24"
-                                                     stroke="currentColor"
-                                                     aria-hidden="true"
-                                                     xmlns="http://www.w3.org/2000/svg"
-                                                     width="100%"
-                                                     height="100%"
-                                                     class="h-4 w-4">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-                                                    </path>
-                                                </svg>
-                                            </button>
                                         </div>
-                                        <!--<TaskLabel>-->
-                                    </td>
-                                </tr>
-                                <tr class="contents">
-                                    <th scope="row" class="col-span-1 text-left font-bold">
-                                        <label for="due-date">Due date</label>
-                                    </th>
-                                    <td class="col-span-3">
-                                        <div class="flex flex-row gap-4">
-                                            {{ task.due_date.date.isoformat }}
-                                            <button class="flex flex-row" type="button">
-                                                <svg fill="none"
-                                                     viewBox="0 0 24 24"
-                                                     stroke="currentColor"
-                                                     aria-hidden="true"
-                                                     xmlns="http://www.w3.org/2000/svg"
-                                                     width="100%"
-                                                     height="100%"
-                                                     class="h-4 w-4">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-                                                    </path>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                        <!--<TaskDueDate>-->
-                                    </td>
-                                </tr>
-                                <tr class="contents">
-                                    <th scope="row" class="col-span-1 text-left font-bold">
-                                        <label for="description">Description</label>
-                                    </th>
-                                    <td class="col-span-3">
-                                        <div class="flex w-full flex-row items-start gap-4">
-                                            <p>{{ task.description }}</p>
-                                            <button type="button">
-                                                <svg fill="none"
-                                                     viewBox="0 0 24 24"
-                                                     stroke="currentColor"
-                                                     aria-hidden="true"
-                                                     xmlns="http://www.w3.org/2000/svg"
-                                                     width="100%"
-                                                     height="100%"
-                                                     class="h-4 w-4">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-                                                    </path>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                        <!--<TaskDescription>-->
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <!--<Fields>-->
-                        <div class="flex flex-col gap-4">
-                            <div class="flex flex-row items-center justify-between">
-                                <div class="flex flex-row items-center gap-4">
-                                    <h4 class="text-xl font-bold">Sub tasks</h4>
+                                        <!--<InputField>-->
+                                    </div>
                                 </div>
                             </div>
-                            {% if task.sub_task_progress %}
-                                <div class="flex flex-row items-center gap-4">
-                                    <div class="h-2 w-full overflow-hidden rounded bg-disabled">
-                                        {# djlint:off H021 #}
-                                        <div class="h-full bg-primary"
-                                             style="width: {{ task.sub_task_progress|percent }}"></div>
-                                    </div>
-                                    <p class="min-w-max font-bold">{{ task.sub_task_progress|percent }}</p>
-                                </div>
-                            {% endif %}
-                        </div>
-                        <!--<SubTaskBar>-->
-                        <div class="flex grow flex-col">
-                            {% for sub_task in task.subtask_set.all %}
-                                <div class="flex w-full flex-row items-center justify-between gap-2 px-2 py-1">
-                                    <div class="flex grow flex-row items-center gap-2">
-                                        <label for="checkbox-d33464d9-083e-4e76-ac8d-42d35aed6c79" class="sr-only">
-                                            Sub
-                                            task done
-                                        </label>
-                                        <div class="relative m-0.5 h-4 w-4 rounded border border-secondary-hover ">
-                                            <input class="absolute -left-[3px] -top-[3px] h-5 w-5 appearance-none rounded-md border border-transparent"
-                                                   type="checkbox"
-                                                   id="checkbox-d33464d9-083e-4e76-ac8d-42d35aed6c79"
-                                                   checked="{{ sub_task.done|yesno:"true,false" }}"
-                                                   disabled="">
-                                        </div>
-                                        <!--<Checkbox>-->
-                                        <div class="grow">
-                                            <label for="d33464d9-083e-4e76-ac8d-42d35aed6c79" class="sr-only">
-                                                Enter
-                                                a
-                                                subtask
-                                            </label>
-                                            <div class="flex flex-col items-start gap-2">
-                                                <div class="flex w-full flex-row items-center gap-2">
-                                                    <input type="text"
-                                                           class="placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2"
-                                                           id="d33464d9-083e-4e76-ac8d-42d35aed6c79"
-                                                           name="sub-task-d33464d9-083e-4e76-ac8d-42d35aed6c79"
-                                                           value="{{ sub_task.title }}"
-                                                           placeholder="Enter a subtask"
-                                                           readonly="true">
-                                                    <button class="flex flex-row" type="button">
-                                                        <svg fill="none"
-                                                             viewBox="0 0 24 24"
-                                                             stroke="currentColor"
-                                                             aria-hidden="true"
-                                                             xmlns="http://www.w3.org/2000/svg"
-                                                             width="100%"
-                                                             height="100%"
-                                                             class="h-4 w-4">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-                                                            </path>
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <!--<InputField>-->
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--<SubTaskLine>-->
-                            {% endfor %}
-                        </div>
-                        <!--<ReadSubTasks>-->
+                            <!--<SubTaskLine>-->
+                        {% endfor %}
                     </div>
+                    <!--<ReadSubTasks>-->
                 </div>
-                <!--<Layout>--><!--<+page>--><!--<+layout>-->
             </div>
-        {% endblock dashboard_content %}
+            <!--<Layout>--><!--<+page>--><!--<+layout>-->
+        </div>
+    {% endblock dashboard_content %}

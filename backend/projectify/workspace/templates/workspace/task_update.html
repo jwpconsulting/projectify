@@ -25,15 +25,7 @@
                             </svg>
                         </a>
                     </div>
-                    <div class="font-bold text-utility">
-                        <a href="{% url "dashboard:projects:detail" task.section.project.uuid %}"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{{ task.section.project.title }}</a>
-                        &gt;
-                        <a href="{% url "dashboard:projects:detail" task.section.project.uuid %}#{{ section.uuid }}"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{{ task.section.title }}</a>
-                        &gt; <a href="{% url "dashboard:tasks:detail" task.uuid %}"
-    class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{{ task.title }}</a>
-                    </div>
+                    {% include "workspace/task/breadcrumbs.html" with task=task %}
                 </div>
                 <div class="flex items-center justify-between gap-4 sm:flex-row">
                     <input type="submit"

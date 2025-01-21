@@ -2328,13 +2328,13 @@ files = [
 
 [[package]]
 name = "rules"
-version = "3.3"
+version = "3.5"
 description = "Awesome Django authorization, without the database"
 optional = false
 python-versions = "*"
 files = [
-    {file = "rules-3.3-py2.py3-none-any.whl", hash = "sha256:12c8bbab5f54560e68528fcca7abc0e162c35ac882e3cc0daed40ac49c963070"},
-    {file = "rules-3.3.tar.gz", hash = "sha256:bf7bea8b724b73c36a622714c1b3557620c187a2ee05321a2ac8ab7472dc4464"},
+    {file = "rules-3.5-py2.py3-none-any.whl", hash = "sha256:0f00fc9ee448b3f82e9aff9334ab0c56c76dce4dfa14f1598f57969f1022acc0"},
+    {file = "rules-3.5.tar.gz", hash = "sha256:f01336218f4561bab95f53672d22418b4168baea271423d50d9e8490d64cb27a"},
 ]
 
 [[package]]
@@ -2896,4 +2896,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.12.7"
-content-hash = "0a57e43fe336fc4fa3a5d247d773e51b11c7a27abf885f3691a5b9ad23574a89"
+content-hash = "95c87261cb4adaebad712bf233e51e80bef5164442138359c527de72888b1e4a"

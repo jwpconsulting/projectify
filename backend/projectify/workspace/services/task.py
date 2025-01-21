@@ -126,26 +126,6 @@ def task_create_nested(
 
 
 # Update
-def task_update(
-    *,
-    who: User,
-    task: Task,
-    title: str,
-    description: Optional[str] = None,
-    due_date: Optional[datetime] = None,
-    assignee: Optional[TeamMember] = None,
-) -> Task:
-    """Add a task to this section."""
-    validate_perm("workspace.update_task", who, task.workspace)
-    task.title = title
-    task.description = description
-    task.due_date = due_date
-    task.assignee = assignee
-    task.save()
-    return task
-
-
-# TODO make this method replace the above task_update
 @transaction.atomic
 def task_update_nested(
     *,
@@ -160,14 +140,12 @@ def task_update_nested(
     sub_tasks: Optional[ValidatedData] = None,
 ) -> Task:
     """Assign labels, assign assignee."""
-    task = task_update(
-        who=who,
-        task=task,
-        title=title,
-        description=description,
-        due_date=due_date,
-        assignee=assignee,
-    )
+    validate_perm("workspace.update_task", who, task.workspace)
+    task.title = title
+    task.description = description
+    task.due_date = due_date
+    task.assignee = assignee
+    task.save()
     task_assign_labels(task=task, labels=labels)
     if sub_tasks:
         sub_task_instances = list(task.subtask_set.all())

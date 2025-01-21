@@ -32,7 +32,7 @@ pillow = "^10.3.0"
 psycopg = {version = "^3.1.18", extras = ["c"]}
 python = "~3.12.7"
 redis = "^5"
-rules = "~3.3"
+rules = "^3.3"
 stripe = "^8"
 uvicorn = "~0.17.6"
 websockets = "~10.3"
