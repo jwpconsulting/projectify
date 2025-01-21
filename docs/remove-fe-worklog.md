@@ -558,3 +558,15 @@ This is, for example, how to check permissions on a project:
 I visually confirmed that the above works by signing in as `guest@localhost`.
 While switching this user between Maintainer and Observer, I verified that
 the *Edit task* button disappears and re-appears.
+
+# 2025-01-21
+
+Today I am evaluating how to add the hero icons font pack into the backend.
+
+A search through the frontend code reveals that Projectify only ever uses the
+"outline" theme in icons.
+
+I've written down the icons that we use in `docs/remove-fe-heroicons.md`.
+
+I use a fish script and loop over the icons that the frontend uses to copy
+them to `backend/projecityf/static/heroicons`.
