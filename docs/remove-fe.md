@@ -93,7 +93,7 @@ everything.
 - [x] Try overriding Django widget templates
 - [x] Completely implement task create site (copy HTML over from frontend)
 - [x] Completely implement task update site (copy HTML over from frontend)
-- [ ] Try conditionally showing UI functionality based on user permissions
+- [x] Try conditionally showing UI functionality based on user permissions
 - [ ] Find out how to properly integrate icon pack used in frontend
 
 ### Alternatives
