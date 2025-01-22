@@ -570,3 +570,25 @@ I've written down the icons that we use in `docs/remove-fe-heroicons.md`.
 
 I use a fish script and loop over the icons that the frontend uses to copy
 them to `backend/projecityf/static/heroicons`.
+
+# 2025-01-22
+
+The following adjustments were made on the icons
+
+- Set width and height to 100%
+- Make stroke color `currentColor`
+- Make icons `aria-hidden`
+- Place in templates instead of static directory
+
+This is the script to automate the SVG adjustments:
+
+```fish
+for s in backend/projectify/templates/heroicons/*.svg
+    echo $s
+    sed -i -e 's/#4A5568/currentColor/' \
+      -e 's/#111827/currentColor/' \
+      -e 's/width="24" height="24"/width="100%" height="100%"/' \
+      -e 's/<svg /<svg aria-hidden="true" /' \
+      $s
+end
+```

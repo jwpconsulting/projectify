@@ -1,6 +1,7 @@
 {# SPDX-FileCopyrightText: 2024 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "dashboard_base.html" %}
+{% load static %}
 {% block dashboard_content %}
     <form action="{% url 'dashboard:tasks:update' task.uuid %}"
           method="post"
@@ -13,17 +14,7 @@
                     <div class="shrink-0">
                         <a href="{% url "dashboard:projects:detail" task.section.project.uuid %}"
                            class="block w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background"
-                           aria-label="Go back to section">
-                            <svg fill="none"
-                                 viewBox="0 0 24 24"
-                                 stroke="currentColor"
-                                 aria-hidden="true"
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 width="100%"
-                                 height="100%">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </a>
+                           aria-label="Go back to section">{% include "heroicons/x.svg" %}</a>
                     </div>
                     {% include "workspace/task/breadcrumbs.html" with task=task %}
                 </div>
@@ -89,16 +80,7 @@
                                     name="add_sub_task"
                                     value="add_sub_task"
                                     class="w-full text-tertiary-content hover:text-tertiary-content-hover active:bg-tertiary-pressed active:text-tertiary-content-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-transparent disabled:text-disabled-content">
-                                <svg fill="none"
-                                     viewBox="0 0 24 24"
-                                     stroke="currentColor"
-                                     aria-hidden="true"
-                                     xmlns="http://www.w3.org/2000/svg"
-                                     width="100%"
-                                     height="100%"
-                                     class="h-6 w-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                </svg>
+                                <div class="h-6 w-6">{% include "heroicons/plus.svg" %}</div>
                                 Add sub task
                             </button>
                         </div>
