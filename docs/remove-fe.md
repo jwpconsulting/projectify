@@ -94,7 +94,7 @@ everything.
 - [x] Completely implement task create site (copy HTML over from frontend)
 - [x] Completely implement task update site (copy HTML over from frontend)
 - [x] Try conditionally showing UI functionality based on user permissions
-- [ ] Find out how to properly integrate icon pack used in frontend
+- [x] Find out how to properly integrate icon pack used in frontend
 
 ### Alternatives
 
@@ -115,11 +115,16 @@ bloat.
 
 Subject to change.
 
-- [x] Plan base template structure
-- [x] Write out which templates need to be created.
-- [ ] Write out which views need to be created.
-- [ ] Write out which forms need to be created. See how DRF serializers can be
-      turned into forms.
+- [x] Plan base template structure in `docs/remove-fe-templates.md`
+- [x] Write out which templates the backend needs and document them in
+  `docs/remove-fe-templates.md`.
+- [ ] Write out which context menus and overlays need to be recreated using new
+  pages in `docs/remove-fe-overlays.md`.
+- [ ] Add template partials from prototyped backend templates to `docs/remove-fe-templates.md`.
+- [ ] Analyze which views Django needs and list them in `docs/remove-fe-views.md`.
+- [ ] Analyze and list which forms the views need in `docs/remove-fe-forms.md`.
+- [ ] Understand if the Django views can use DRF serializers for forms. Add any viable
+DRF serializers to the form list in `docs/remove-fe-forms.md`.
 - [ ] Identify all JavaScript only/frontend only functions that need to be
       recreated in Django
 - [ ] Identify form widget templates required
@@ -289,7 +294,7 @@ Once a task is opened, the following features are present:
 Features that are not accessible from a separate page but are somehow overlaid
 or otherwise only usable from the dashboard or task view are:
 
-- Create and update tasks
+- Create and update labels
 - Assigning labels and users in project dashboard or task view
 - Moving task to new section in project dashboard
 - Various creation/deletion/archival confirmation screens accessible from
@@ -314,29 +319,39 @@ or otherwise only usable from the dashboard or task view are:
 
 ## Migrating modal views
 
-- Add/Create/Update/Archive modals can all be made into separate pages
-- Logout, edit profile - make regular links for now
-- Workspace settings, archive - make regular links
-- Minimize sidebar: Consider removing
+- Make separate pages for creating and updating labels
+- Turn all Add/Create/Update/Archive modals into separate pages
+  - Add new section: New form page
+  - Add new project: Create new form page
+  - Archive project: Create new confirmation page
+  - Delete task: Create new confirmation page
+  - Rename project: Create new form page
+  - Rename section: Create new form page
+  - Restore project: Create new confirmation page
+- Turn *Logout* and *edit profile* into regular links
+- Turn *Workspace settings* and *go to archive* into regular links
+- Remove *Minimize side nav* feature entirely
 - Task context menu:
-  - Open task: Remove
-  - Move to section: Better to solve this through introducing the _bulk edit_
-    feature planned previously, need a top bar for this
-  - Move to top/bottom: Either remove or add bulk edit
-  - Copy link: Remove
-  - Delete task: Replace _bulk edit_
+  - Open task: Remove this button
+  - Copy link: Remove this button
+  - Implement new page with a form containing the following buttons and accept
+    POST requests:
+    1. Move to section. Includes `<select>` menu for each section.
+    2. Move to top/bottom
+    3. Delete task
 - Section context menu:
   - Ordering sections can be solved by adding up/down buttons.
-  - Collapse section: Remove
-  - Edit section title: Add pencil icon thing to section instead.
-  - Delete section: This should be on its own page. Perhaps we can have a new
-    page for editing project information on which sections can be deleted
+  - Collapse section: Remove this button
+  - Edit section title: Make a new page for this.
+  - Delete section: Make this a standalone deletion confirmation page.
 - Assign label context menu:
-  - Make this a `<select multiple>` HTML element. Consider removing from
-    dashboard or replacing with corresponding bulk edit.
+  - Make this a `<select multiple>` HTML element on the task update page.
+  Remove this feature from the dashboard.
 - Assign user context menu:
-  - Make this a `<select>` as well. Consider removing from dashboard or replace
-    with corresponding bulk edit.
+  - Make this a `<select>` on the task update page. Remove this feature
+  from the dashboard.
+- Mobile navigation overlay: Remove entirely for now. Tweak layout to work with
+mobile.
 
 ## Other interactive features
 
