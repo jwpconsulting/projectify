@@ -60,21 +60,7 @@
               ];
             }
           );
-          cryptography = super.cryptography.overridePythonAttrs (old: rec {
-            cargoDeps = pkgs.rustPlatform.fetchCargoTarball {
-              inherit (old) src;
-              name = "${old.pname}-${old.version}";
-              sourceRoot = "${old.pname}-${old.version}/${cargoRoot}";
-              sha256 = "sha256-d3Gt4VrBWk6qowwX0Epp4mc1PbySARVU9YMsHYKImCs=";
-            };
-            cargoRoot = "src/rust";
-            # Thx to
-            # https://github.com/nix-community/poetry2nix/issues/731#issuecomment-1260184515
-            nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
-              pkgs.rustPlatform.cargoSetupHook
-              pkgs.rustPlatform.maturinBuildHook
-            ];
-          });
+          cryptography = pkgs.python312Packages.cryptography;
         } // (builtins.mapAttrs
           (package: build-requirements: (
             (builtins.getAttr package super).overridePythonAttrs (old: {
