@@ -1,10 +1,20 @@
 <!--
-SPDX-FileCopyrightText: 2024 JWP Consulting GK
+SPDX-FileCopyrightText: 2024-2025 JWP Consulting GK
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 # Changelog
+
+## 2025.3.6
+
+### Fixed
+
+- Updated outdated dependencies in frontend and backend
+
+### Internal
+
+- Started frontend rewrite in Django
 
 ## 2024.8.20
 

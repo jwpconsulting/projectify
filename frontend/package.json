@@ -1,6 +1,6 @@
 {
     "name": "projectify-frontend",
-    "version": "2024.8.20",
+    "version": "2025.3.6",
     "scripts": {
         "build": "vite build",
         "check": "run-p --max-parallel 4 check:*",
