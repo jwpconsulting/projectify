@@ -4,7 +4,7 @@
 
 [tool.poetry]
 name = "projectify"
-version = "2024.8.20"
+version = "2025.3.6"
 description = "Projectify Backend"
 maintainers = ["Justus Perlwitz <justus@jwpconsulting.net>"]
 authors = ["The Projectify Authors"]
