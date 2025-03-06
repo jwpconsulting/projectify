@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
 import Accessiblity from "./en/accessibility.md?raw";
+import Download from "./en/download.md?raw";
 import FreeSoftware from "./en/free-software.md?raw";
 import BasicsHelpPage from "./en/help/basics.md?raw";
 import BillingHelpPage from "./en/help/billing.md?raw";
@@ -1443,6 +1444,11 @@ const messages: MessageDirectory = {
         },
         content: Accessiblity,
     },
+    "download": {
+        title: "Download and install - Projectify",
+        header: "Download and install Projectify",
+        content: Download,
+    },
     "security": {
         disclose: {
             title: "Vulnerability Disclosure Policy",
@@ -1574,6 +1580,7 @@ const messages: MessageDirectory = {
                     "keyboard-shortcuts": "Keyboard shortcuts",
                     "blog": "Blog",
                     "github": "GitHub Repository",
+                    "download": "Download and install",
                 },
                 company: {
                     "title": "Company",

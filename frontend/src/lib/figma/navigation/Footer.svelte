@@ -18,8 +18,11 @@
     };
 </script>
 
-<footer class="flex w-full flex-col gap-6 border-t border-border p-8">
-    <div class="flex flex-col gap-8 sm:flex-row sm:flex-wrap">
+<footer
+    class="flex w-full gap-6 gap-8 border-t border-border p-8 sm:flex-row sm:flex-wrap"
+>
+    <!-- Nav -->
+    <nav class="flex flex-col flex-wrap gap-12 sm:flex-row">
         <!-- Header -->
         <div class="flex flex-col gap-6">
             <a class="flex flex-col gap-2" href={backToHomeUrl}>
@@ -42,175 +45,166 @@
                 />
             {/if}
         </div>
-        <!-- Nav -->
-        <nav class="flex flex-col gap-12 sm:flex-row">
-            <section class="flex flex-col gap-1">
-                <h6 class="font-bold">
-                    {$_("navigation.footer.nav.product.title")}
-                </h6>
-                <ul class="flex flex-col gap-2">
-                    <li>
-                        <Anchor
-                            href="/pricing"
-                            label={$_("navigation.footer.nav.product.pricing")}
-                        />
-                    </li>
-                    <li>
-                        <Anchor
-                            href="/solutions"
-                            label={$_(
-                                "navigation.footer.nav.product.solutions",
-                            )}
-                        />
-                    </li>
-                </ul>
-            </section>
-            <section class="flex flex-col gap-1">
-                <h6 class="font-bold">
-                    {$_("navigation.footer.nav.resources.title")}
-                </h6>
-                <ul class="flex flex-col gap-2">
-                    <li>
-                        <Anchor
-                            href="/help"
-                            label={$_(
-                                "navigation.footer.nav.resources.help-and-tips",
-                            )}
-                            openBlank
-                        />
-                    </li>
-                    <li>
-                        <Anchor
-                            href="/help/keyboard-shortcuts"
-                            label={$_(
-                                "navigation.footer.nav.resources.keyboard-shortcuts",
-                            )}
-                            openBlank
-                        />
-                    </li>
-                    <li>
-                        <Anchor
-                            href="https://www.jwpconsulting.net/tags/projectify/"
-                            label={$_("navigation.footer.nav.resources.blog")}
-                            openBlank
-                        />
-                    </li>
-                    <li>
-                        <Anchor
-                            href="https://github.com/jwpconsulting/projectify"
-                            label={$_(
-                                "navigation.footer.nav.resources.github",
-                            )}
-                            openBlank
-                        />
-                    </li>
-                </ul>
-            </section>
-            <section class="flex flex-col gap-1">
-                <h6 class="font-bold">
-                    {$_("navigation.footer.nav.company.title")}
-                </h6>
-                <ul class="flex flex-col gap-2">
-                    <li>
-                        <Anchor
-                            href="/accessibility"
-                            label={$_(
-                                "navigation.footer.nav.company.accessibility-statement",
-                            )}
-                        />
-                    </li>
-                    <li>
-                        <Anchor
-                            href="/contact-us"
-                            label={$_(
-                                "navigation.footer.nav.company.contact-us",
-                            )}
-                        />
-                    </li>
-                    <li>
-                        <Anchor
-                            href="https://www.jwpconsulting.net"
-                            label={$_(
-                                "navigation.footer.nav.company.corporate-info",
-                            )}
-                            openBlank
-                        />
-                    </li>
-                </ul>
-            </section>
-            <section class="flex flex-col gap-1">
-                <h6 class="font-bold">
-                    {$_("navigation.footer.nav.security.title")}
-                </h6>
-                <ul class="flex flex-col gap-2">
-                    <li>
-                        <Anchor
-                            label={$_(
-                                "navigation.footer.nav.security.general",
-                            )}
-                            href="/security/general"
-                        />
-                    </li>
-                    <li>
-                        <Anchor
-                            label={$_(
-                                "navigation.footer.nav.security.disclose",
-                            )}
-                            href="/security/disclose"
-                        />
-                    </li>
-                </ul>
-            </section>
-            <section class="flex flex-col gap-1">
-                <h6 class="font-bold">
-                    {$_("navigation.footer.nav.legal.title")}
-                </h6>
-                <ul class="flex flex-col gap-2">
-                    <li>
-                        <Anchor
-                            label={$_("navigation.footer.nav.legal.privacy")}
-                            href="/privacy"
-                        />
-                    </li>
-                    <li>
-                        <Anchor
-                            label={$_("navigation.footer.nav.legal.tos")}
-                            href="/tos"
-                        />
-                    </li>
-                    <li>
-                        <Anchor
-                            label={$_("navigation.footer.nav.legal.credits")}
-                            href="/credits"
-                        />
-                    </li>
-                    <li>
-                        <Anchor
-                            label={$_(
-                                "navigation.footer.nav.legal.free-software",
-                            )}
-                            href="/free-software"
-                        />
-                    </li>
-                </ul>
-            </section>
-        </nav>
-        <!-- epilogue -->
-        <section class="flex flex-col gap-4">
-            <p>
-                {$_("navigation.footer.epilogue.copyright")}
-                <br />
-                {$_("navigation.footer.epilogue.free-software")}
-                <Anchor
-                    href="/free-software"
-                    label={$_("navigation.footer.epilogue.details")}
-                />
-            </p>
-            <p class="text-utility">
-                {$_("navigation.footer.epilogue.build", {
-                    values: buildData,
-                })}
-            </p>
+        <section class="flex flex-col gap-1">
+            <h6 class="font-bold">
+                {$_("navigation.footer.nav.product.title")}
+            </h6>
+            <ul class="flex flex-col gap-2">
+                <li>
+                    <Anchor
+                        href="/pricing"
+                        label={$_("navigation.footer.nav.product.pricing")}
+                    />
+                </li>
+                <li>
+                    <Anchor
+                        href="/solutions"
+                        label={$_("navigation.footer.nav.product.solutions")}
+                    />
+                </li>
+            </ul>
         </section>
-    </div>
+        <section class="flex flex-col gap-1">
+            <h6 class="font-bold">
+                {$_("navigation.footer.nav.resources.title")}
+            </h6>
+            <ul class="flex flex-col gap-2">
+                <li>
+                    <Anchor
+                        href="/help"
+                        label={$_(
+                            "navigation.footer.nav.resources.help-and-tips",
+                        )}
+                        openBlank
+                    />
+                </li>
+                <li>
+                    <Anchor
+                        href="/help/keyboard-shortcuts"
+                        label={$_(
+                            "navigation.footer.nav.resources.keyboard-shortcuts",
+                        )}
+                        openBlank
+                    />
+                </li>
+                <li>
+                    <Anchor
+                        href="https://www.jwpconsulting.net/tags/projectify/"
+                        label={$_("navigation.footer.nav.resources.blog")}
+                        openBlank
+                    />
+                </li>
+                <li>
+                    <Anchor
+                        href="https://github.com/jwpconsulting/projectify"
+                        label={$_("navigation.footer.nav.resources.github")}
+                        openBlank
+                    />
+                </li>
+                <li>
+                    <Anchor
+                        href="/download"
+                        label={$_("navigation.footer.nav.resources.download")}
+                    />
+                </li>
+            </ul>
+        </section>
+        <section class="flex flex-col gap-1">
+            <h6 class="font-bold">
+                {$_("navigation.footer.nav.company.title")}
+            </h6>
+            <ul class="flex flex-col gap-2">
+                <li>
+                    <Anchor
+                        href="/accessibility"
+                        label={$_(
+                            "navigation.footer.nav.company.accessibility-statement",
+                        )}
+                    />
+                </li>
+                <li>
+                    <Anchor
+                        href="/contact-us"
+                        label={$_("navigation.footer.nav.company.contact-us")}
+                    />
+                </li>
+                <li>
+                    <Anchor
+                        href="https://www.jwpconsulting.net"
+                        label={$_(
+                            "navigation.footer.nav.company.corporate-info",
+                        )}
+                        openBlank
+                    />
+                </li>
+            </ul>
+        </section>
+        <section class="flex flex-col gap-1">
+            <h6 class="font-bold">
+                {$_("navigation.footer.nav.security.title")}
+            </h6>
+            <ul class="flex flex-col gap-2">
+                <li>
+                    <Anchor
+                        label={$_("navigation.footer.nav.security.general")}
+                        href="/security/general"
+                    />
+                </li>
+                <li>
+                    <Anchor
+                        label={$_("navigation.footer.nav.security.disclose")}
+                        href="/security/disclose"
+                    />
+                </li>
+            </ul>
+        </section>
+        <section class="flex flex-col gap-1">
+            <h6 class="font-bold">
+                {$_("navigation.footer.nav.legal.title")}
+            </h6>
+            <ul class="flex flex-col gap-2">
+                <li>
+                    <Anchor
+                        label={$_("navigation.footer.nav.legal.privacy")}
+                        href="/privacy"
+                    />
+                </li>
+                <li>
+                    <Anchor
+                        label={$_("navigation.footer.nav.legal.tos")}
+                        href="/tos"
+                    />
+                </li>
+                <li>
+                    <Anchor
+                        label={$_("navigation.footer.nav.legal.credits")}
+                        href="/credits"
+                    />
+                </li>
+                <li>
+                    <Anchor
+                        label={$_("navigation.footer.nav.legal.free-software")}
+                        href="/free-software"
+                    />
+                </li>
+            </ul>
+        </section>
+    </nav>
+    <!-- epilogue -->
+    <section class="flex flex-col gap-4">
+        <p>
+            {$_("navigation.footer.epilogue.copyright")}
+            <br />
+            {$_("navigation.footer.epilogue.free-software")}
+            <Anchor
+                href="/free-software"
+                label={$_("navigation.footer.epilogue.details")}
+            />
+        </p>
+        <p class="text-utility">
+            {$_("navigation.footer.epilogue.build", {
+                values: buildData,
+            })}
+        </p>
+    </section>
 </footer>
