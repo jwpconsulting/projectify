@@ -26,7 +26,7 @@ django-cloudinary-storage = "~0.3.0"
 django-configurations = "^2.5.1"
 django-pgtrigger = "~4.11.0"
 djangorestframework = "^3"
-gunicorn = "^22"
+gunicorn = "^23"
 newrelic = "^9"
 pillow = "^10.3.0"
 psycopg = {version = "^3.1.18", extras = ["c"]}
