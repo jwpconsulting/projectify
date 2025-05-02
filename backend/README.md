@@ -31,6 +31,25 @@ asdf plugin-add python
 asdf install python 3.11.6
 ```
 
+# MacOS installation (Using homebrew)
+
+Make sure you have Postgres 15 and its dev library installed.
+
+```
+brew install postgresql@15
+brew install libpq
+```
+
+Managing Python is convenient using asdf:
+
+```
+asdf plugin-add python
+# This is the version used at the time of writing, subject to change
+asdf install python 3.11.6
+```
+
+
+
 # Quickstart
 
 To get started, you have to
@@ -49,8 +68,7 @@ To get started, you have to
 The commands to run are these:
 
 ```
-git clone git@github.com:jwp-consulting/projectify-backend.git
-cd projectify-backend/backend
+cd backend
 poetry install --with dev --with test --no-root
 cp .env.template .env
 vim .env
@@ -65,6 +83,12 @@ poetry shell
 ./manage.py seeddb
 ./manage.py runserver
 ```
+
+Go to Django admin page and login at `localhost:8000/admin/`
+
+username: `admin@localhost` \
+password: `password`
+
 
 Furthermore, to run a celery worker:
 

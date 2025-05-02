@@ -19,14 +19,14 @@ channels = {version = "^4.1.0", extras = ["daphne"]}
 channels-redis = "^4.2"
 cryptography = "^44.0.1"
 dj-database-url = "~2.1.0"
-django = "^5.1.5"
+django = "^5.1.8"
 django-anymail = {extras = ["mailgun"], version = "~10.3"}
 django-celery-results = "~2.5.0"
 django-cloudinary-storage = "~0.3.0"
 django-configurations = "^2.5.1"
 django-pgtrigger = "~4.11.0"
 djangorestframework = "^3"
-gunicorn = "^22"
+gunicorn = "^23"
 newrelic = "^9"
 pillow = "^10.3.0"
 psycopg = {version = "^3.1.18", extras = ["c"]}
