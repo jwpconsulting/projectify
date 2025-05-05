@@ -7,7 +7,8 @@ def contact_us(request: HttpRequest):
     return render(request, 'storefront/contact_us.html')
 def credits(request: HttpRequest):
     return render(request, 'storefront/credits.html')
-def ethicalads(request: HttpRequest): pass
+def ethicalads(request: HttpRequest):
+    return render(request, 'storefront/ethicalads.html')
 def free_software(request: HttpRequest): pass
 def pricing(request: HttpRequest) -> HttpResponse: pass
 def privacy(request: HttpRequest) -> HttpResponse: pass
