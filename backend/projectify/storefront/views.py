@@ -5,7 +5,8 @@ def accessibility(request: HttpRequest):
     return render(request, 'storefront/accessibility.html')
 def contact_us(request: HttpRequest):
     return render(request, 'storefront/contact_us.html')
-def credits(request: HttpRequest): pass
+def credits(request: HttpRequest):
+    return render(request, 'storefront/credits.html')
 def ethicalads(request: HttpRequest): pass
 def free_software(request: HttpRequest): pass
 def pricing(request: HttpRequest) -> HttpResponse: pass
