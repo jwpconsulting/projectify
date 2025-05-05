@@ -126,5 +126,6 @@ def tos(request: HttpRequest) -> HttpResponse:
     return render(request, "storefront/tos.html")
 
 
-def ethicalads(request: HttpRequest):
-    pass
+def ethicalads(request: HttpRequest) -> HttpResponse:
+    """Show landing."""
+    return render(request, "storefront/index.html")
