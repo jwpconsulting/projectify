@@ -4,9 +4,10 @@
 """Projectify context processors."""
 
 from typing import Mapping
+import os
 
 from django.conf import settings
-
+from typing import Optional
 
 def frontend_url(request: object) -> Mapping[str, str]:
     """Add FRONTEND_URL to context."""
