@@ -1,0 +1,96 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- SPDX-FileCopyrightText: 2024 JWP Consulting GK -->
+{% extends "storefront_base.html" %}
+
+{% load static %}
+{% block storefront_content %}
+<div class="flex w-full flex-col items-center bg-background">
+    <div class="w-full max-w-4xl px-6 py-6 sm:py-12">
+        <header class="flex w-full flex-col items-center gap-4 sm:grid sm:grid-cols-2">
+            <div class="flex flex-col gap-8 text-center font-bold sm:text-left">
+                <h1 class="text-4xl lg:text-6xl">Accessibility statement</h1>
+            </div>
+            <div class="w-full max-w-xs justify-self-center">
+                <picture>
+                    <source type="image/png"><img src="{% static "hero-accessibility.png" %}" alt="Accessibility logo"
+                        width="300" height="300">
+                </picture>
+            </div>
+        </header>
+    </div>
+</div>
+<div class="w-full p-6 max-w-4xl">
+    <main class="prose" slot="content">
+
+        <h1 id="accessibility-goals">Accessibility goals</h1>
+        <p>Projectify is committed to ensuring digital inclusivity and accessibility for
+            people with diverse disabilities. We are continually improving the user
+            experience for everyone, and applying the relevant accessibility standards.</p>
+        <p>We are also aiming to improve the use of both our website and platform for
+            users who employ assistive technologies.</p>
+        <h1 id="measures-we-take-to-support-accessibility">Measures we take to support accessibility</h1>
+        <ul>
+            <li>Include accessibility as part of our mission statement</li>
+            <li>Ensure designs meet a minimum accessibility level (WCAG 2.1 level AA)</li>
+            <li>Compatibility with different web browsers and assistive technology</li>
+            <li>Include people with disabilities in our user personas</li>
+            <li>Conduct usability tests with people who have disabilities</li>
+        </ul>
+        <h1 id="conformance-status">Conformance status</h1>
+        <p>The Web Content Accessibility Guidelines (WCAG) standard defines requirements
+            to improve accessibility for people with disabilities. It defines three levels
+            of conformance: Level A, Level AA, and Level AAA. 'Fully conforms' means that
+            the content meets all of the WCAG requirements at the specified Level without
+            exceptions. Although our goal is WCAG 2.1 Level AA conformance, we have also
+            applied some Level AAA Success Criteria: Images of text are only used for
+            decorative purposes.</p>
+        <p>Content posted since May 2022 fully conforms to WCAG 2.1 Level AA. It partially
+            conforms to Level AAA. Older content conforms to earlier versions of WCAG, for
+            example, WCAG 2.0.</p>
+        <h1 id="compatibility-with-browsers-and-assistive-technologies">Compatibility with browsers and assistive
+            technologies</h1>
+        <p>The Projectify website and platform is designed to be compatible with assistive
+            technologies and the last two versions of major browsers. The website and
+            platform are not designed for Internet Explorer 11 and earlier versions.</p>
+        <h1 id="platform">Platform</h1>
+        <p>We are currently in the process of making our platform conform to accessibility
+            standards. Our main focus is to improve color contrast in both the light and
+            dark modes of our platform, increase discoverability of features for users with
+            vision impairments and enhance the usability of our main components.</p>
+        <h1 id="website">Website</h1>
+        <ul>
+            <li>Keyboard navigation: All menus, buttons, inputs and actions are accessible
+                from a keyboard.</li>
+            <li>Screen reader compatibility: Our code supports the use of screen readers for
+                users who digest information through audio means.</li>
+            <li>Images: All images are supported with descriptive and accurate alternative
+                text which can be read by screen readers.</li>
+            <li>Text: Our text size, weight and font style have been carefully chosen to be
+                accessible to users with dyslexia and/or visual impairment. WCAG 2.0 level AA
+                requires a contrast ratio of at least 4.5:1 for normal text and 3:1 for large
+                text.</li>
+            <li>Color: WCAG 2.1 requires a contrast ratio of at least 3:1 for graphics and
+                user interface components, which we meet.</li>
+            <li>Magnification: For sight impaired users, all pages and content can be
+                magnified using standard browser controls or magnification software.</li>
+        </ul>
+        <h1 id="limitations">Limitations</h1>
+        <p>We are aware that, despite our best efforts, there may be limitations to the
+            accessibility of both the platform and website. Below is a description of known
+            limitations. Please contact us if you discover an issue not listed below.</p>
+        <p>Known limitations of the platform:</p>
+        <ul>
+            <li>Tab selection not working on the calendar menu</li>
+            <li>Not all screen readers can read placeholder text</li>
+        </ul>
+        <h1 id="evaluation-report">Evaluation report</h1>
+        <p>An evaluation report will be carried out by self-evaluation and a link to the
+            report be published here.</p>
+        <h1 id="contact-us">Contact us</h1>
+        <p>We welcome feedback on the accessibility of Projectify. If you encounter any
+            accessibility barriers whilst using the platform or website, please email
+            <a href="mailto:hello@projectify.com">hello@projectify.com</a>.
+        </p>
+    </main>
+</div>
+{% endblock storefront_content %}

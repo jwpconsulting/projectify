@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
 
-def accessibility(request: HttpRequest): pass
+def accessibility(request: HttpRequest):
+    return render(request, 'storefront/accessibility.html')
 def contact_us(request: HttpRequest):
     return render(request, 'storefront/contact_us.html')
 def credits(request: HttpRequest): pass
