@@ -124,3 +124,7 @@ def solutions_detail(request: HttpRequest, page: str) -> HttpResponse:
 def tos(request: HttpRequest) -> HttpResponse:
     """Serve TOS page."""
     return render(request, "storefront/tos.html")
+
+
+def ethicalads(request: HttpRequest):
+    pass
