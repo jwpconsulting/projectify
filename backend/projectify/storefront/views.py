@@ -9,7 +9,8 @@ def credits(request: HttpRequest):
     return render(request, 'storefront/credits.html')
 def ethicalads(request: HttpRequest):
     return render(request, 'storefront/ethicalads.html')
-def free_software(request: HttpRequest): pass
+def free_software(request: HttpRequest):
+    return render(request, 'storefront/free_software.html')
 def pricing(request: HttpRequest) -> HttpResponse: pass
 def privacy(request: HttpRequest) -> HttpResponse: pass
 def security_disclose(request: HttpRequest) -> HttpResponse: pass

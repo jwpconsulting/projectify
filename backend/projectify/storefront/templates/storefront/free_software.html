@@ -1,0 +1,43 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- SPDX-FileCopyrightText: 2024 JWP Consulting GK -->
+{% extends "storefront_base.html" %}
+
+{% load static %}
+{% block storefront_content %}
+<div class="flex w-full flex-col items-center bg-background">
+    <div class="w-full max-w-4xl px-6 py-6 sm:py-12">
+        <div slot="hero">
+            <h1 class="text-3xl font-bold">Free Software and License Information</h1>
+        </div>
+    </div>
+</div>
+<div class="w-full p-6 max-w-4xl">
+    <div slot="content" class="prose">
+        <p>Projectify project management software is created by:</p>
+        <ul>
+            <li>Copyright 2021-2024 JWP Consulting GK</li>
+        </ul>
+        <p>This program is free software: you can redistribute it and/or modify it under
+            the terms of the GNU Affero General Public License as published by the Free
+            Software Foundation, either version 3 of the License, or (at your option) any
+            later version.,</p>
+        <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY
+            WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+            PARTICULAR PURPOSE. See the <a href="https://github.com/jwpconsulting/projectify/blob/main/LICENSE">GNU
+                Affero General Public
+                License</a> for
+            more details.</p>
+        <p>You can retrieve a copy of the License and source code here: <a
+                href="https://github.com/jwpconsulting/projectify">Projectify
+                Repository</a></p>
+        <p><strong>Projectify</strong> is a registered trademark in the EU, USA, and Japan. Permission
+            is required before using this trademark. Please contact us via email if you
+            have any questions:
+            <a href="mailto:trademark@projectifyapp.com">trademark@projectifyapp.com</a>
+        </p>
+        <h2 id="third-party-attributions">Third party attributions</h2>
+        <p>For third party attributions, please view the following page:</p>
+        <p><a href="/credits">Credits and attributions</a></p>
+    </div>
+</div>
+{% endblock storefront_content %}
