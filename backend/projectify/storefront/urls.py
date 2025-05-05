@@ -4,7 +4,8 @@ from projectify.storefront.views import (
     accessibility,
     credits,
     ethicalads,
-    free_software
+    free_software,
+    pricing
 )
 
 urlpatterns = [
@@ -12,5 +13,6 @@ urlpatterns = [
     path('accessibility/', accessibility),
     path('credits/', credits),
     path('ethicalads/', ethicalads),
-    path('free-software/', free_software)
+    path('free-software/', free_software),
+    path('pricing/', pricing)
 ]
