@@ -100,6 +100,12 @@ To run neovim with the correct pyright:
 poetry run nvim
 ```
 
+# Formatting
+```
+cd backend
+poetry run bin/format.sh
+```
+
 # Nix
 
 The Projectify backend can be run using Nix. There are three entry points to
