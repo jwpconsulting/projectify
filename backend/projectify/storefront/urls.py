@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
 # SPDX-FileCopyrightText: 2025 JWP Consulting GK
+"""Storefront urlpatterns."""
+
 from django.urls import path
 
 from projectify.storefront.views import accessibility
