@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <p class="absolute left-0 top-0 w-full bg-destructive/30 text-center font-bold">Development preview</p>
+    <div class="flex grow flex-col">
+        <nav class="flex-row items-center justify-between border-b-2 border-border bg-foreground px-6 py-4 md:flex">
+            <div class="flex flex-row items-center gap-4">
+                <a href="/" class="shrink">
+                    <img src="{{ FRONTEND_URL }}/src/lib/figma/navigation/polylogo.svg"
+                         alt="Projectify">
+                </a>
+                <div class="flex flex-row gap-2">
+                    <a href="/solutions"
+                       class="text-base-content flex flex-row items-center gap-2 rounded-lg p-2 hover:text-primary active:text-primary">
+                        <div class="text-base font-bold">Solutions</div>
+                    </a>
+                    <a href="/pricing"
+                       class="text-base-content flex flex-row items-center gap-2 rounded-lg p-2 hover:text-primary active:text-primary">
+                        <div class="text-base font-bold">Pricing</div>
+                    </a><a href="/help"
+   class="text-base-content flex flex-row items-center gap-2 rounded-lg p-2 hover:text-primary active:text-primary">
+                    <div class="text-base font-bold">Help</div>
+                </a>
+            </div>
+        </div>
+        <div class="flex shrink-0 flex-row items-center gap-2">
+            <a href="/dashboard"
+               class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content"> Continue to dashboard </a>
+        </div>
+    </nav>
+    <div class="flex grow flex-col">
+        <div class="flex grow flex-col justify-between">
+            {% block storefront_content %}
+            {% endblock storefront_content %}
+        </div>
+    </div>
+</div>
+<footer class="flex w-full gap-6 gap-8 border-t border-border p-8 sm:flex-row sm:flex-wrap">
+    <nav class="flex flex-col flex-wrap gap-12 sm:flex-row">
+        <div class="flex flex-col gap-6">
+            <a class="flex flex-col gap-2" href="/">
+                <div class="flex flex-row items-center gap-2">
+                    <img src="{{ FRONTEND_URL }}//src/lib/figma/navigation/polylogo.svg"
+                         alt="Projectify">
+                </div>
+                <p>Project management at pace.</p>
+            </a>
+        </div>
+        <section class="flex flex-col gap-1">
+            <h6 class="font-bold">Product</h6>
+            <ul class="flex flex-col gap-2">
+                <li>
+                    <a href="/pricing"
+                       class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">Pricing</a>
+                </li>
+                <li>
+                    <a href="/solutions"
+                       class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">Solutions</a>
+                </li>
+            </ul>
+        </section>
+        <section class="flex flex-col gap-1">
+            <h6 class="font-bold">Resources</h6>
+            <ul class="flex flex-col gap-2">
+                <li>
+                <a href="/help"
+                   class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
+                   target="_blank">Help and tips<span class="sr-only">(Opens in new tab)</span>
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="100%"
+                     height="100%"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor"
+                     aria-hidden="true"
+                     class="inline-block h-4 w-4 px-px">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
+                    </path>
+                </svg>
+            </a>
+        </li>
+        <li>
+        <a href="/help/keyboard-shortcuts"
+           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
+           target="_blank">Keyboard shortcuts<span class="sr-only">(Opens in new tab)</span>
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="100%"
+             height="100%"
+             fill="none"
+             viewBox="0 0 24 24"
+             stroke="currentColor"
+             aria-hidden="true"
+             class="inline-block h-4 w-4 px-px">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
+            </path>
+        </svg>
+    </a>
+</li>
+<li>
+<a href="https://www.jwpconsulting.net/tags/projectify/"
+   class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
+   target="_blank">Blog<span class="sr-only">(Opens in new tab)</span>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%"
+     height="100%"
+     fill="none"
+     viewBox="0 0 24 24"
+     stroke="currentColor"
+     aria-hidden="true"
+     class="inline-block h-4 w-4 px-px">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
+    </path>
+</svg>
+</a>
+</li>
+<li>
+<a href="https://github.com/jwpconsulting/projectify"
+   class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
+   target="_blank">GitHub Repository<span class="sr-only">(Opens in new tab)</span>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%"
+     height="100%"
+     fill="none"
+     viewBox="0 0 24 24"
+     stroke="currentColor"
+     aria-hidden="true"
+     class="inline-block h-4 w-4 px-px">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
+    </path>
+</svg>
+</a>
+</li>
+<li>
+    <a href="/download"
+       class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">Download and install</a>
+</li>
+</ul>
+</section>
+<section class="flex flex-col gap-1">
+    <h6 class="font-bold">Company</h6>
+    <ul class="flex flex-col gap-2">
+        <li>
+            <a href="/accessibility"
+               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">Accessibility statement</a>
+        </li>
+        <li>
+            <a href="/contact-us"
+               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">Contact us</a>
+        </li>
+        <li>
+        <a href="https://www.jwpconsulting.net"
+           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
+           target="_blank">Corporate information<span class="sr-only">(Opens in new tab)</span>
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="100%"
+             height="100%"
+             fill="none"
+             viewBox="0 0 24 24"
+             stroke="currentColor"
+             aria-hidden="true"
+             class="inline-block h-4 w-4 px-px">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
+            </path>
+        </svg>
+    </a>
+</li>
+</ul>
+</section>
+<section class="flex flex-col gap-1">
+    <h6 class="font-bold">Security</h6>
+    <ul class="flex flex-col gap-2">
+        <li>
+            <a href="/security/general"
+               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">General information</a>
+        </li>
+        <li>
+            <a href="/security/disclose"
+               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">Disclosure Policy</a>
+        </li>
+    </ul>
+</section>
+<section class="flex flex-col gap-1">
+    <h6 class="font-bold">Legal</h6>
+    <ul class="flex flex-col gap-2">
+        <li>
+            <a href="/privacy"
+               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">Privacy Policy</a>
+        </li>
+        <li>
+            <a href="/tos"
+               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">Terms of Service</a>
+        </li>
+        <li>
+            <a href="/credits"
+               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">Credits</a>
+        </li>
+        <li>
+            <a href="/free-software"
+               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">Free Software</a>
+        </li>
+    </ul>
+</section>
+</nav>
+<section class="flex flex-col gap-4">
+    <p>
+        Copyright 2021-2024 JWP Consulting GK
+        <br>
+        The Projectify application is free software, and you are welcome to redistribute it under certain conditions; <a href="/free-software"
+    class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">see here for details</a>
+    </p>
+    <p class="text-utility">
+        This version was built on 2025-05-05 from commit 3898a21a on branch feat/remove-fe-storefront-pages committed on 2025-05-05.
+    </p>
+</section>
+</footer>
+{% endblock content %}

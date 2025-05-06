@@ -103,6 +103,7 @@ class Base(Configuration):
         "projectify.admin.apps.ProjectifyAdminConfig",
         "projectify.corporate.apps.CorporateConfig",
         "projectify.premail",
+        "projectify.storefront",
         "projectify.user.apps.UserConfig",
         "projectify.workspace.apps.WorkspaceConfig",
         "projectify.theme",
