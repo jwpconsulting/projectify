@@ -6,95 +6,167 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Projectify Backend
 
-# Requirements
+# Development Requirements
 
-- Python ~3.11.6 (I recommend using [asdf](https://asdf-vm.com/))
+- Python 3.12 (I recommend using [asdf](https://asdf-vm.com/))
 - [poetry](https://python-poetry.org/docs/)
-- PostgreSQL >= 15.5
-- Redis (6 >= for production)
+- [PostgreSQL](https://www.postgresql.org/) >= 15.5
+- [Node.js 22](https://github.com/nodejs/node)
 
-## Debian 12 (bullseye) installation
+## Installing Python 3.12 and Node.js 22
 
-Make sure you have Postgres 15 and its dev library installed.
+Managing Python and Node.js versions is convenient using [asdf](https://asdf-vm.com/):
 
+```bash
+asdf plugin-add python
+asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+# These are the version used at the time of writing, subject to change
+asdf install python 3.12.7
+asdf install node.js 22.15.0
 ```
+
+[Here's how to install asdf](https://asdf-vm.com/guide/getting-started.html)
+on your computer.
+
+## Installing PostgreSQL on Debian 12 (bullseye)
+
+Run the following commands to install PostgreSQL 15 on Debian 12:
+
+```bash
 sudo apt install postgresql-15 libpq-dev
 # Optionally run this, if not using nix flake
 sudo apt install libpq-dev
 ```
 
-Managing Python is convenient using asdf:
+Check whether you can connect to your local PostgreSQL instance by using the
+following command:
 
+```bash
+psql
 ```
-asdf plugin-add python
-# This is the version used at the time of writing, subject to change
-asdf install python 3.11.6
-```
 
-# MacOS installation (Using homebrew)
+# Installing PostgreSQL on macOS using homebrew
 
-Make sure you have Postgres 15 and its dev library installed.
+Run the following commands to install PostgreSQL 15 on macOS:
 
-```
+```bash
 brew install postgresql@15
 brew install libpq
 ```
 
-Managing Python is convenient using asdf:
-
-```
-asdf plugin-add python
-# This is the version used at the time of writing, subject to change
-asdf install python 3.11.6
-```
-
-
+Make sure that you can connect to your local PostgreSQL instance by using the
+`psql` command.
 
 # Quickstart
 
-To get started, you have to
+To get started, you have to perform the following steps:
 
-1. Clone the repository,
-2. cd into `backend` directory,
-3. create a `.env` file from `.env.template`,
-4. edit the `.env` file to add a `DATABASE_URL` and `REDIS_TLS_URL` for a local
-   Redis and PostgreSQL 15 instance, and
-5. create the projectify PostgreSQL database. Then,
-6. inside a poetry shell,
-  a. migrate the database,
-  b. seed it with test data, and then
-  c. run the development server
+1. Clone the repository.
+2. Change into the `backend` directory using `cd`.
+3. Install all dependencies using the Python `poetry` tool.
+4. Create a `.env` environemtn file by copying the `.env.template` file.
+5. Edit the `DATABASE_URL` variable in the `.env` file and point it to your
+   local PostgreSQL 15 instance.
+6. Create a `projectify` PostgreSQL database inside your local PostgreSQL 15
+   instance using the `createdb` command.
+7. Then, inside a `poetry` shell, perform the following:
+  a. Migrate the `projectify` database that you have just created.
+  b. Seed the `projectify` database with test data using the `seeddb` command.
+  c. Start the development server
+  d. Start the tailwind development tool
 
-The commands to run are these:
+Run the following commands in your terminal to perform these steps:
 
-```
+```bash
+# Clone the repository
+git clone git@github.com:jwpconsulting/projectify.git
+# Change into the backend directory
 cd backend
+# Install dependencies
 poetry install --with dev --with test --no-root
+# Create your `.env` file
 cp .env.template .env
+# Edit the `.env` file using your preferred editor:
 vim .env
-# Inside .env:
-# 1) Edit DATABASE_URL
-# 2) Edit REDIS_TLS_URL
-# Create the database
+# Inside .env, edit the DATABASE_URL, then save your changes.
+# Create the database using the PostgreSQL `createdb` command
 createdb projectify
-# Now you can run the server
+# Switch into a poetry shell
 poetry shell
+# Run the Django migration command
 ./manage.py migrate
+# Seed the database with test data using `seeddb`
 ./manage.py seeddb
+# Start the development server
 ./manage.py runserver
 ```
 
-Go to Django admin page and login at `localhost:8000/admin/`
+In a separate shell, run the following:
 
-username: `admin@localhost` \
-password: `password`
+```bash
+# Make sure that you are in the backend/ directory
+# Launch a poetry shell
+poetry shell
+# Run the tailwind development tool
+./manage.py tailwind start
+```
 
+Once you have done all of this, go to Django administration page at
+<http://localhost:8000/admin/>. The `seeddb` command created an administrator
+account with the following credentials for you:
 
-Furthermore, to run a celery worker:
+- Username: `admin@localhost`
+- Password: `password`
 
-`celery -A projectify worker -c 1`
+Log in using these credentials and you have full access to the administration
+page.
 
-To run neovim with the correct pyright:
+## Celery
+
+If you need to run the celery worker, make sure that you have KeyDB or Redis installed.
+KeyDB is compatible with Redis.
+
+- [KeyDB installation instructions](https://docs.keydb.dev/docs/open-source-getting-started)
+- [Redis installation instructions](https://redis.io/docs/latest/operate/oss_and_stack/install/archive/install-redis/)
+
+Make sure that you can access your KeyDB or Redis at the following URL:
+
+```
+redis://localhost:6379/0
+```
+
+If you have Redis installed, this is how you can test whether the Redis server
+is available:
+
+```bash
+redis-cli -u redis://localhost:6379/0
+```
+
+If you see a message like the following, please check whether Redis is running
+correctly:
+
+```
+Could not connect to Redis at localhost:6379: Connection refused
+```
+
+Now, add the following variable to your `.env` file:
+
+```
+REDIS_TLS_URL = redis://localhost:6379/0
+```
+
+Once you have made sure that KeyDB or Redis runs correctly, start the `celery`
+worker like so:
+
+```bash
+# Make sure that you are inside a poetry shell
+celery -A projectify worker -c 1
+```
+
+## Neovim
+
+You can use Neovim with the [Pyright](https://github.com/microsoft/pyright) Language Server Protococol (LSP) server. To make sure that Neovim uses the right Pyright from
+this repository, run neovim inside a poetry environment like so:
 
 ```
 poetry run nvim
