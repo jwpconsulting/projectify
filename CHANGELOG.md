@@ -6,6 +6,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Changelog
 
+## 2025.5.6
+
+### Fixed
+
+- Updated vulnerable dependencies in frontend and backend
+
 ## 2025.3.6
 
 ### Fixed
