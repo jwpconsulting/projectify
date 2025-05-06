@@ -73,7 +73,8 @@ To get started, you have to perform the following steps:
   a. Migrate the `projectify` database that you have just created.
   b. Seed the `projectify` database with test data using the `seeddb` command.
   c. Start the development server
-  d. Start the tailwind development tool
+  d. Install the Django-Tailwind tool dependencies
+  e. Start the Django-Tailwind tool
 
 Run the following commands in your terminal to perform these steps:
 
@@ -91,6 +92,11 @@ vim .env
 # Inside .env, edit the DATABASE_URL, then save your changes.
 # Create the database using the PostgreSQL `createdb` command
 createdb projectify
+```
+
+Configure Projectify using the following management commands:
+
+```bash
 # Switch into a poetry shell
 poetry shell
 # Run the Django migration command
@@ -101,12 +107,17 @@ poetry shell
 ./manage.py runserver
 ```
 
-In a separate shell, run the following:
+Projectify uses [Django-Tailwind](https://django-tailwind.readthedocs.io/en/latest/installation.html) to generate CSS utility classes.
+Django-Tailwind uses [tailwindcss](https://tailwindcss.com/).
+To configure and start Django-Tailwind in a separate shell, run
+the following commands:
 
 ```bash
 # Make sure that you are in the backend/ directory
 # Launch a poetry shell
 poetry shell
+# Install the tailwind development tool dependencies
+./manage.py tailwind install
 # Run the tailwind development tool
 ./manage.py tailwind start
 ```
