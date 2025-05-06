@@ -90,6 +90,7 @@ class Base(Configuration):
         "rest_framework",
         "rules.apps.AutodiscoverRulesConfig",
         "tailwind",
+        "markdownify.apps.MarkdownifyConfig",
     )
 
     INSTALLED_APPS_FIRST_PARTY = (
@@ -102,6 +103,7 @@ class Base(Configuration):
         "projectify.admin.apps.ProjectifyAdminConfig",
         "projectify.corporate.apps.CorporateConfig",
         "projectify.premail",
+        "projectify.storefront",
         "projectify.user.apps.UserConfig",
         "projectify.workspace.apps.WorkspaceConfig",
         "projectify.theme",
@@ -317,6 +319,27 @@ class Base(Configuration):
 
     # Feature flags
     ENABLE_DJANGO_DASHBOARD = False
+
+    # Markdownify
+    MARKDOWNIFY = {
+        "default": {
+            "WHITELIST_TAGS": [
+                "a",
+                "abbr",
+                "acronym",
+                "b",
+                "blockquote",
+                "em",
+                "i",
+                "li",
+                "ol",
+                "p",
+                "strong",
+                "ul",
+                "h1",
+            ]
+        }
+    }
 
     @classmethod
     def post_setup(cls) -> None:
