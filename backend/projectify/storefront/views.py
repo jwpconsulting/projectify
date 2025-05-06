@@ -23,54 +23,54 @@ def accessibility(request: HttpRequest):
 
 def contact_us(request: HttpRequest):
     """Serve Contact us page."""
-    pass
+    return HttpResponse("TODO")
 
 
 def credits(request: HttpRequest):
     """Serve Credits page."""
-    pass
+    return HttpResponse("TODO")
 
 
 def ethicalads(request: HttpRequest):
     """Serve Ethicalads page."""
-    pass
+    return HttpResponse("TODO")
 
 
 def free_software(request: HttpRequest):
     """Serve Free Software page."""
-    pass
+    return HttpResponse("TODO")
 
 
 def pricing(request: HttpRequest) -> HttpResponse:
     """Serve Pricing page."""
-    pass
+    return HttpResponse("TODO")
 
 
 def privacy(request: HttpRequest) -> HttpResponse:
     """Serve Privacy page."""
-    pass
+    return HttpResponse("TODO")
 
 
 def security_disclose(request: HttpRequest) -> HttpResponse:
     """Serve Security Disclose page."""
-    pass
+    return HttpResponse("TODO")
 
 
 def escurity_general(request: HttpRequest) -> HttpResponse:
     """Serve Escurity Genaral page."""
-    pass
+    return HttpResponse("TODO")
 
 
 def solutions_index(request: HttpRequest) -> HttpResponse:
     """Serve Solutions Index page."""
-    pass
+    return HttpResponse("TODO")
 
 
 def solutions_detail(request: HttpRequest, page: str) -> HttpResponse:
     """Serve Solutions Detail page."""
-    pass
+    return HttpResponse("TODO")
 
 
 def tos(request: HttpRequest) -> HttpResponse:
     """Serve TOS page."""
-    pass
+    return HttpResponse("TODO")
