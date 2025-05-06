@@ -9,7 +9,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
 
-def accessibility(request: HttpRequest):
+def accessibility(request: HttpRequest) -> HttpResponse:
     """Serve Accessibility page."""
     markdowntext = open(
         os.path.join(
@@ -21,22 +21,22 @@ def accessibility(request: HttpRequest):
     return render(request, "storefront/accessibility.html", context)
 
 
-def contact_us(request: HttpRequest):
+def contact_us(request: HttpRequest) -> HttpResponse:
     """Serve Contact us page."""
     return HttpResponse("TODO")
 
 
-def credits(request: HttpRequest):
+def credits(request: HttpRequest) -> HttpResponse:
     """Serve Credits page."""
     return HttpResponse("TODO")
 
 
-def ethicalads(request: HttpRequest):
+def ethicalads(request: HttpRequest) -> HttpResponse:
     """Serve Ethicalads page."""
     return HttpResponse("TODO")
 
 
-def free_software(request: HttpRequest):
+def free_software(request: HttpRequest) -> HttpResponse:
     """Serve Free Software page."""
     return HttpResponse("TODO")
 
