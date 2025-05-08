@@ -130,8 +130,18 @@ requires authentication.
 These are the pre-rendered pages:
 
 - `accessibility`: Uses a Markdown document
-- `contact-us`: Uses a Markdown document
-- `credits`: Shows frontend packages used, the rest is written in Markdown
+- `contact-us`: The original is written in HTML, but we want to use Markdown
+  for the backend version. Convert the HTML to markdown and store it in
+  `messages/en/contact-us.md`.
+- `credits`: This page shows the licenses for all NPM packages that we use in
+  the frontend. The rest of the document is written in HTML. We
+  don't need to show the frontend licenses anymore. The license text is
+  automatically generated using a vite plugin.
+  The backend bundles HTMX and Alpine.js when it serves pages. The two licenses must
+  be added to the **vendored** section on the credits page.
+  To make it easier to maintain, the contents of the credit page should be in
+  a markdown document as well. The markdown document should be in
+  `messages/en/credits.md`.
 - `ethicalads`: This is an exact copy of the landing page.
 - `free-software`: Uses a Markdown document
 - `help`: Has some structured JavaScript information that we can just render in
@@ -323,9 +333,9 @@ up.
 
 # Platform
 
-Platform pages require for the user to be authenticated.
+Before a user can see platform pages, they have to log in first.
 
-A brief description of the platform pages follows:
+This is a brief description of the platform pages:
 
 - `dashboard`: Redirects to the first workspace and project we find for a
   logged in user
