@@ -61,6 +61,9 @@
             }
           );
           cryptography = pkgs.python312Packages.cryptography;
+          # This refuses to build because Poetry can't deal with the syntax
+          # of project.license in markdown's pyproject.toml file
+          markdown = pkgs.python312Packages.markdown;
         } // (builtins.mapAttrs
           (package: build-requirements: (
             (builtins.getAttr package super).overridePythonAttrs (old: {

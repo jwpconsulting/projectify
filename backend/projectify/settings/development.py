@@ -100,8 +100,12 @@ class Development(SpectacularSettings, Base):
         # f"http://{LOCAL_DOMAIN}.local:6006",
     )
 
+    # We don't need CELERY_BROKER_URL here because Celery runs tasks
+    # immediately.
     CELERY_TASK_ALWAYS_EAGER = True
-    # TODO if celery is eager, a broker should not be necessary, right?
+    # If you need to set the URL, make sure to include the `REDIS_TLS_URL`
+    # environment variable. You can also update your `.env` file to achieve
+    # this.
     CELERY_BROKER_URL = os.environ.get("REDIS_TLS_URL")
 
     # Email

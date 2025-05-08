@@ -32,15 +32,15 @@ the backend performs the desired action, such as moving a task up or down.
 In `backend/projectify/storefront/views.py`, add the following views:
 
 ```python
-def accessibility(request: HttpRequest): pass
-def contact_us(request: HttpRequest): pass
-def credits(request: HttpRequest): pass
-def ethicalads(request: HttpRequest): pass
-def free_software(request: HttpRequest): pass
+def accessibility(request: HttpRequest) -> HttpResponse: pass
+def contact_us(request: HttpRequest) -> HttpResponse: pass
+def credits(request: HttpRequest) -> HttpResponse: pass
+def ethicalads(request: HttpRequest) -> HttpResponse: pass
+def free_software(request: HttpRequest) -> HttpResponse: pass
 def pricing(request: HttpRequest) -> HttpResponse: pass
 def privacy(request: HttpRequest) -> HttpResponse: pass
 def security_disclose(request: HttpRequest) -> HttpResponse: pass
-def escurity_general(request: HttpRequest) -> HttpResponse: pass
+def security_general(request: HttpRequest) -> HttpResponse: pass
 def solutions_index(request: HttpRequest) -> HttpResponse: pass
 def solutions_detail(request: HttpRequest, page: str) -> HttpResponse: pass
 def tos(request: HttpRequest) -> HttpResponse: pass
@@ -54,7 +54,7 @@ documents easier.
 In `backend/projectify/help/views.py`, add the following views:
 
 ```python
-def help_index(request: HttpRequest): pass
+def help_index(request: HttpRequest) -> HttpResponse: pass
 def help_detail(request: HttpRequest, page: str) -> HttpResponse: pass
 ```
 
@@ -65,12 +65,81 @@ All views during onboarding require the user to be logged in.
 In `backend/projectify/onboarding/views.py`, add the following views:
 
 ```python
-def about_you(request: HttpRequest) -> HttpResponse: pass
-def new_workspace(request: HttpRequest) -> HttpResponse: pass
-def new_project(request: HttpRequest, workspace_uuid: UUID) -> HttpResponse: pass
-def new_task(request: HttpRequest, project_uuid: UUID) -> HttpResponse: pass
-def new_label(request: HttpRequest, task_uuid: UUID) -> HttpResponse: pass
-def assign_task(request: HttpRequest, task_uuid: UUID) -> HttpResponse: pass
+@require_http_methods(["GET", "POST"])
+def about_you(request: HttpRequest) -> HttpResponse:
+    """
+    Add a preferred name and profile picture for the current user,
+
+    GET:
+    Show page with form
+    POST:
+    On success: Update user profile. Redirect user to /onboarding/new-workspace
+    On failure: Show this page again with errors
+    """
+
+@require_http_methods(["GET", "POST"])
+def new_workspace(request: HttpRequest) -> HttpResponse:
+    """
+    Create a new workspace.
+
+    GET:
+    Show page with workspace creation form
+    POST:
+    On success: Create a new workspace. Redirect user to
+    /onboarding/new-project/<workspace-uuid> with the workspace UUID coming
+    from the newly created workspace.
+    """
+
+
+@require_http_methods(["GET", "POST"])
+def new_project(request: HttpRequest, workspace_uuid: UUID) -> HttpResponse:
+    """
+    Create a new project inside the newly created workspace.
+
+    GET: Show project creation form for `workspace_uuid`
+    POST:
+    On success: Create new project inside the workspace. Redirect user to
+    /onboarding/new-task/<project-uuid> with the project UUID coming from the
+    newly created project.
+    On error: Show project creation form with errors
+    """
+
+
+@require_http_methods(["GET", "POST"])
+def new_task(request: HttpRequest, project_uuid: UUID) -> HttpResponse:
+    """
+    Create a new task inside the newly created project.
+
+    Put the task in a To Do section. Create this section before creating the
+    task.
+
+    GET:
+    Show task creation form for project `project_uuid`
+    POST:
+    On success: Creates a section and task and assigns it to the user. Redirect
+    user to onboarding/new-label/<task-uuid> with the task uuid coming
+    from the newly created task
+    On error: Show task creation form with errors
+    """
+
+@require_http_methods(["GET", "POST"])
+def new_label(request: HttpRequest, task_uuid: UUID) -> HttpResponse:
+    """
+    Ask the user to give the newly created task a label.
+
+    GET:
+    Show label creation form for task `task_uuid`
+
+    POST:
+    On success:
+    Creates a label and adds it to the task. Redirect to
+    onboarding/assign-task/<task_uuid>.
+    On failure:
+    Show label creation form with errors
+    """
+
+def assign_task(request: HttpRequest, task_uuid: UUID) -> HttpResponse:
+    """Show the user that Projectify assigned the task to them."""
 ```
 
 # Platform
