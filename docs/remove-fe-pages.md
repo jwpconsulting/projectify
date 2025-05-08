@@ -333,9 +333,9 @@ up.
 
 # Platform
 
-Platform pages require for the user to be authenticated.
+Before a user can see platform pages, they have to log in first.
 
-A brief description of the platform pages follows:
+This is a brief description of the platform pages:
 
 - `dashboard`: Redirects to the first workspace and project we find for a
   logged in user
