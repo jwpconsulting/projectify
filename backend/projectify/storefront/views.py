@@ -57,7 +57,7 @@ def free_software(request: HttpRequest) -> HttpResponse:
 
 def pricing(request: HttpRequest) -> HttpResponse:
     """Serve Pricing page."""
-    return HttpResponse("TODO")
+    return render(request, "storefront/pricing.html")
 
 
 def privacy(request: HttpRequest) -> HttpResponse:
