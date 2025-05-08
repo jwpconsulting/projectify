@@ -8,6 +8,7 @@ from django.urls import path
 from projectify.storefront.views import (
     accessibility,
     contact_us,
+    credits,
     free_software,
 )
 
@@ -15,4 +16,5 @@ urlpatterns = [
     path("accessibility/", accessibility),
     path("contact-us/", contact_us),
     path("free-software/", free_software),
+    path("credits/", credits),
 ]

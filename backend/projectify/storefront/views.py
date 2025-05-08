@@ -35,7 +35,7 @@ def contact_us(request: HttpRequest) -> HttpResponse:
 
 def credits(request: HttpRequest) -> HttpResponse:
     """Serve Credits page."""
-    return HttpResponse("TODO")
+    return render(request, "storefront/credits.html")
 
 
 def ethicalads(request: HttpRequest) -> HttpResponse:
