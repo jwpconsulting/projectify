@@ -337,6 +337,7 @@ class Base(Configuration):
                 "strong",
                 "ul",
                 "h1",
+                "h2",
             ]
         }
     }

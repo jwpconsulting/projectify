@@ -23,7 +23,14 @@ def accessibility(request: HttpRequest) -> HttpResponse:
 
 def contact_us(request: HttpRequest) -> HttpResponse:
     """Serve Contact us page."""
-    return HttpResponse("TODO")
+    markdowntext = open(
+        os.path.join(
+            os.path.dirname(__file__),
+            "../../../frontend/src/messages/en/contact-us.md",
+        )
+    ).read()
+    context = {"markdowntext": markdowntext}
+    return render(request, "storefront/contact_us.html", context)
 
 
 def credits(request: HttpRequest) -> HttpResponse:
