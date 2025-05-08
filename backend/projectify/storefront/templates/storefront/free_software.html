@@ -4,13 +4,7 @@
 {% load markdownify %}
 {% block storefront_content %}
     <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
-        <div class="flex w-full flex-col items-center bg-background">
-            <div class="w-full max-w-4xl px-6 py-6 sm:py-12">
-                <div slot="hero">
-                    <h1 class="text-3xl font-bold">Free Software and License Information</h1>
-                </div>
-            </div>
-        </div>
+        {% include "storefront/header/storefront_header.html" with title="Free Software and License Information" %}
         <div class="w-full p-6 max-w-4xl">
             <div class="prose">
                 <p>Projectify project management software is created by:</p>
