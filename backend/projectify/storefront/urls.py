@@ -10,6 +10,7 @@ from projectify.storefront.views import (
     contact_us,
     credits,
     free_software,
+    security_disclose,
     security_general,
 )
 
@@ -19,4 +20,5 @@ urlpatterns = [
     path("free-software/", free_software),
     path("credits/", credits),
     path("security/general/", security_general),
+    path("security/disclose/", security_disclose),
 ]

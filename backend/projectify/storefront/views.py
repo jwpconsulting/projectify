@@ -67,7 +67,14 @@ def privacy(request: HttpRequest) -> HttpResponse:
 
 def security_disclose(request: HttpRequest) -> HttpResponse:
     """Serve Security Disclose page."""
-    return HttpResponse("TODO")
+    markdowntext = open(
+        os.path.join(
+            os.path.dirname(__file__),
+            "../../../frontend/src/messages/en/security/disclose.md",
+        )
+    ).read()
+    context = {"markdowntext": markdowntext}
+    return render(request, "storefront/security/disclose.html", context)
 
 
 def security_general(request: HttpRequest) -> HttpResponse:
