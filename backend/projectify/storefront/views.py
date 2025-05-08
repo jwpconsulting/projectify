@@ -70,9 +70,16 @@ def security_disclose(request: HttpRequest) -> HttpResponse:
     return HttpResponse("TODO")
 
 
-def escurity_general(request: HttpRequest) -> HttpResponse:
+def security_general(request: HttpRequest) -> HttpResponse:
     """Serve Escurity Genaral page."""
-    return HttpResponse("TODO")
+    markdowntext = open(
+        os.path.join(
+            os.path.dirname(__file__),
+            "../../../frontend/src/messages/en/security/general.md",
+        )
+    ).read()
+    context = {"markdowntext": markdowntext}
+    return render(request, "storefront/security/general.html", context)
 
 
 def solutions_index(request: HttpRequest) -> HttpResponse:

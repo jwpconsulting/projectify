@@ -338,7 +338,12 @@ class Base(Configuration):
                 "ul",
                 "h1",
                 "h2",
-            ]
+                "pre",
+                "code",
+            ],
+            "MARKDOWN_EXTENSIONS": [
+                "fenced_code",
+            ],
         }
     }
 
