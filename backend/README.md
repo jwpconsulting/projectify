@@ -183,6 +183,22 @@ this repository, run neovim inside a poetry environment like so:
 poetry run nvim
 ```
 
+# Formatting
+```
+cd backend
+poetry run bin/format.sh
+```
+
+# Copyright and licencing information
+To look for files missing copyright and licencing information:
+
+```
+# Assume you are in backend directory
+cd ../tools
+poetry install
+poetry run reuse lint
+```
+
 # Nix
 
 The Projectify backend can be run using Nix. There are three entry points to
