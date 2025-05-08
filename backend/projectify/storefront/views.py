@@ -45,7 +45,14 @@ def ethicalads(request: HttpRequest) -> HttpResponse:
 
 def free_software(request: HttpRequest) -> HttpResponse:
     """Serve Free Software page."""
-    return HttpResponse("TODO")
+    markdowntext = open(
+        os.path.join(
+            os.path.dirname(__file__),
+            "../../../frontend/src/messages/en/free-software.md",
+        )
+    ).read()
+    context = {"markdowntext": markdowntext}
+    return render(request, "storefront/free_software.html", context)
 
 
 def pricing(request: HttpRequest) -> HttpResponse:

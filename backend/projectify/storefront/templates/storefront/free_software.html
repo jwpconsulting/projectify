@@ -1,0 +1,24 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- SPDX-FileCopyrightText: 2025 JWP Consulting GK -->
+{% extends "storefront_base.html" %}
+{% load markdownify %}
+{% block storefront_content %}
+    <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
+        <div class="flex w-full flex-col items-center bg-background">
+            <div class="w-full max-w-4xl px-6 py-6 sm:py-12">
+                <div slot="hero">
+                    <h1 class="text-3xl font-bold">Free Software and License Information</h1>
+                </div>
+            </div>
+        </div>
+        <div class="w-full p-6 max-w-4xl">
+            <div class="prose">
+                <p>Projectify project management software is created by:</p>
+                <ul>
+                    <li>Copyright 2021-2024 JWP Consulting GK</li>
+                </ul>
+                {{ markdowntext|markdownify }}
+            </div>
+        </div>
+    </main>
+{% endblock storefront_content %}
