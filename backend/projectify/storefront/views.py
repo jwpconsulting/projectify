@@ -62,7 +62,7 @@ def pricing(request: HttpRequest) -> HttpResponse:
 
 def privacy(request: HttpRequest) -> HttpResponse:
     """Serve Privacy page."""
-    return HttpResponse("TODO")
+    return render(request, "storefront/privacy.html")
 
 
 def security_disclose(request: HttpRequest) -> HttpResponse:
