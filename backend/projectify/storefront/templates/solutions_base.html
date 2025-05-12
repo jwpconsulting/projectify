@@ -1,0 +1,18 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "base.html" %}
+{% block content %}
+    {% if debug %}
+        {% include "storefront/common/development_view_bar.html" %}
+    {% endif %}
+    <div class="flex grow flex-col">
+        {% include "storefront/common/storefront_navbar.html" %}
+        <div class="flex grow flex-col">
+            <div class="flex grow flex-col justify-between">
+                {% block solutions_content %}
+                {% endblock solutions_content %}
+            </div>
+        </div>
+    </div>
+    {% include "storefront/common/storefront_footer.html" %}
+{% endblock content %}

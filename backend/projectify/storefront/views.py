@@ -91,7 +91,7 @@ def security_general(request: HttpRequest) -> HttpResponse:
 
 def solutions_index(request: HttpRequest) -> HttpResponse:
     """Serve Solutions Index page."""
-    return HttpResponse("TODO")
+    return render(request, "storefront/solutions/solutions_index.html")
 
 
 def solutions_detail(request: HttpRequest, page: str) -> HttpResponse:
