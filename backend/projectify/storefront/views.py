@@ -78,7 +78,7 @@ def security_disclose(request: HttpRequest) -> HttpResponse:
 
 
 def security_general(request: HttpRequest) -> HttpResponse:
-    """Serve Escurity Genaral page."""
+    """Serve Security Genaral page."""
     markdowntext = open(
         os.path.join(
             os.path.dirname(__file__),
@@ -96,7 +96,26 @@ def solutions_index(request: HttpRequest) -> HttpResponse:
 
 def solutions_detail(request: HttpRequest, page: str) -> HttpResponse:
     """Serve Solutions Detail page."""
-    return HttpResponse("TODO")
+    match page:
+        case "development-teams":
+            return render(
+                request, "storefront/solutions/development-teams.html"
+            )
+        case "research":
+            return render(request, "storefront/solutions/research.html")
+        case "project-management":
+            return render(
+                request, "storefront/solutions/project-management.html"
+            )
+        case "academic":
+            return render(request, "storefront/solutions/academic.html")
+        case "remote-work":
+            return render(request, "storefront/solutions/remote-work.html")
+        case "personal-use":
+            return render(request, "storefront/solutions/personal-use.html")
+        case _:
+            # TODO:Add proper solutions detail route implementations
+            return HttpResponse("Solution page does not exist.", status=404)
 
 
 def tos(request: HttpRequest) -> HttpResponse:

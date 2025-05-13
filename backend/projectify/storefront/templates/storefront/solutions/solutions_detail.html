@@ -1,0 +1,15 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "solutions_base.html" %}
+{% load static %}
+{% block solutions_content %}
+    <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
+        {% include "storefront/common/solutions_header.html" with title="Solutions for every type of user" text="Explore the different ways users are using Projectify to meet due dates, reach targets and be productive." src="solutions/hero-solutions.png" alt="An illustration showing users of different backgrounds" %}
+        <div class="w-full p-6 max-w-4xl">
+            <div slot="content"
+                 class="flex w-full flex-col items-center gap-6 sm:gap-16">
+                {% if page is "development-team" %}<p>HOHOHO</p>{% endif %}
+            </div>
+        </div>
+    </main>
+{% endblock solutions_content %}

@@ -14,6 +14,7 @@ from projectify.storefront.views import (
     privacy,
     security_disclose,
     security_general,
+    solutions_detail,
     solutions_index,
     tos,
 )
@@ -29,4 +30,5 @@ urlpatterns = [
     path("pricing/", pricing),
     path("privacy/", privacy),
     path("solutions/", solutions_index),
+    path("solutions/<slug:page>/", solutions_detail),
 ]
