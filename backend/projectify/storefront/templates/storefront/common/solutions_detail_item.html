@@ -6,6 +6,10 @@
         <div class="flex flex-col gap-6 sm:order-last">
             <h4 class="text-xl font-bold sm:text-4xl">{{ title }}</h4>
             <p class="text-l">{{ text }}</p>
+            {% if learnmore_url %}
+                <a href="{{ learnmore_url }}"
+                   class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">Learn more here</a>
+            {% endif %}
         </div>
         <div class="w-full max-w-xs justify-self-center">
             <picture>
@@ -18,6 +22,10 @@
         <div class="flex flex-col gap-6">
             <h4 class="text-xl font-bold sm:text-4xl">{{ title }}</h4>
             <p class="text-l">{{ text }}</p>
+            {% if learnmore_url %}
+                <a href="{{ learnmore_url }}"
+                   class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">Learn more here</a>
+            {% endif %}
         </div>
         <div class="w-full max-w-xs justify-self-center">
             <picture>

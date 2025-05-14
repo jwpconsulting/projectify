@@ -9,6 +9,7 @@ from projectify.storefront.views import (
     accessibility,
     contact_us,
     credits,
+    ethicalads,
     free_software,
     pricing,
     privacy,
@@ -31,4 +32,5 @@ urlpatterns = [
     path("privacy/", privacy),
     path("solutions/", solutions_index),
     path("solutions/<slug:page>/", solutions_detail),
+    path("ethicalads/", ethicalads),
 ]

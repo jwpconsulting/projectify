@@ -40,7 +40,7 @@ def credits(request: HttpRequest) -> HttpResponse:
 
 def ethicalads(request: HttpRequest) -> HttpResponse:
     """Serve Ethicalads page."""
-    return HttpResponse("TODO")
+    return render(request, "storefront/ethicalads.html")
 
 
 def free_software(request: HttpRequest) -> HttpResponse:
