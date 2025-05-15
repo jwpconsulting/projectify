@@ -1,35 +1,42 @@
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load static %}
+{% load i18n %}
 {% if imgPosition == "left" %}
     <section class="flex flex-col items-center gap-6 sm:grid sm:grid-cols-2">
         <div class="flex flex-col gap-6 sm:order-last">
-            <h4 class="text-xl font-bold sm:text-4xl">{{ title }}</h4>
-            <p class="text-l">{{ text }}</p>
+            <h4 class="text-xl font-bold sm:text-4xl">{% trans title %}</h4>
+            <p class="text-l">{% trans text %}</p>
             {% if learnmore_url %}
                 <a href="{{ learnmore_url }}"
-                   class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">Learn more here</a>
+                   class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Learn more here" %}</a>
             {% endif %}
         </div>
         <div class="w-full max-w-xs justify-self-center">
             <picture>
-                <img src="{% static src %}" alt="{{ alt }}" width="1279" height="548">
+                <img src="{% static src %}"
+                     alt="{% trans alt %}"
+                     width="1279"
+                     height="548">
             </picture>
         </div>
     </section>
 {% else %}
     <section class="flex flex-col items-center gap-6 sm:grid sm:grid-cols-2">
         <div class="flex flex-col gap-6">
-            <h4 class="text-xl font-bold sm:text-4xl">{{ title }}</h4>
-            <p class="text-l">{{ text }}</p>
+            <h4 class="text-xl font-bold sm:text-4xl">{% trans title %}</h4>
+            <p class="text-l">{% trans text %}</p>
             {% if learnmore_url %}
                 <a href="{{ learnmore_url }}"
-                   class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">Learn more here</a>
+                   class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Learn more here" %}</a>
             {% endif %}
         </div>
         <div class="w-full max-w-xs justify-self-center">
             <picture>
-                <img src="{% static src %}" alt="{{ alt }}" width="1279" height="548">
+                <img src="{% static src %}"
+                     alt="{% trans alt %}"
+                     width="1279"
+                     height="548">
             </picture>
         </div>
     </section>

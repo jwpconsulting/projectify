@@ -2,6 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "storefront_base.html" %}
 {% load markdownify %}
+{% load i18n %}
 {% block storefront_content %}
     <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
         {% include "storefront/common/storefront_header.html" with title="Contact" %}
@@ -14,7 +15,7 @@
                     <picture>
                         {# TODO: Add proper static assets #}
                         <img src="{{ FRONTEND_URL }}/src/routes/(storefront)/contact-us/illustration.png"
-                             alt="An illustration of a phone booth"
+                             alt="{% trans "An illustration of a phone booth" %}"
                              width="818"
                              height="1000">
                     </picture>

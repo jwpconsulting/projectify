@@ -1,68 +1,70 @@
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "storefront_base.html" %}
+{% load i18n %}
 {% block storefront_content %}
     <main class="flex w-full flex-col items-center px-8 py-10">
         <div class="flex w-full max-w-xl flex-col gap-4 sm:items-center sm:gap-8">
             <!-- explain that we have one price to rule them all -->
             <header class="flex w-full flex-col gap-4">
-                <h1 class="text-4xl font-bold sm:text-center sm:text-6xl">Pricing</h1>
-                <p class="sm:text-center sm:text-3xl sm:font-bold">One plan. One price. All features.</p>
+                <h1 class="text-4xl font-bold sm:text-center sm:text-6xl">{% trans "Pricing" %}</h1>
+                <p class="sm:text-center sm:text-3xl sm:font-bold">{% trans "One plan. One price. All features." %}</p>
             </header>
             <!-- list the features -->
             <section class="flex flex-col gap-2">
-                <h2 class="text-2xl">What's included?</h2>
+                <h2 class="text-2xl">{% trans "What's included?" %}</h2>
                 <ul class="list-inside list-disc">
-                    <li>Unlimited tasks</li>
-                    <li>Unlimited projects</li>
-                    <li>Collaborate with team members</li>
-                    <li>Add multiple labels</li>
-                    <li>Role permissions</li>
-                    <li>Customize your workspace</li>
-                    <li>Archive completed projects</li>
-                    <li>Filter by label or assignee</li>
-                    <li>Accessible interface</li>
+                    <li>{% trans "Unlimited tasks" %}</li>
+                    <li>{% trans "Unlimited projects" %}</li>
+                    <li>{% trans "Collaborate with team members" %}</li>
+                    <li>{% trans "Add multiple labels" %}</li>
+                    <li>{% trans "Role permissions" %}</li>
+                    <li>{% trans "Customize your workspace" %}</li>
+                    <li>{% trans "Archive completed projects" %}</li>
+                    <li>{% trans "Filter by label or assignee" %}</li>
+                    <li>{% trans "Accessible interface" %}</li>
                 </ul>
             </section>
             <!-- colorful box with CTA -->
             <section class="flex w-full max-w-xl flex-col gap-4 rounded-xl bg-background px-4 py-6 sm:items-center sm:gap-8">
                 <div class="flex flex-col gap-4">
-                    <h2 class="text-xl font-bold sm:text-center">Universal Plan</h2>
-                    <strong class="text-4xl font-bold">$8.00 / seat per month</strong>
+                    <h2 class="text-xl font-bold sm:text-center">{% trans "Universal Plan" %}</h2>
+                    <strong class="text-4xl font-bold">{% trans "$8.00 / seat per month" %}</strong>
                 </div>
                 {% if user.is_authenticated %}
                     <a href="/help/billing"
-                       class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content"> Learn more </a>
+                       class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Learn more" %}</a>
                 {% else %}
                     <a href="/user/sign-up"
-                       class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content"> Start a free trial </a>
+                       class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Start a free trial" %}</a>
                 {% endif %}
             </section>
             <!-- explain trial mode -->
             <section id="trial-mode" class="flex flex-col gap-2">
-                <h2 class="text-2xl sm:text-center">Trial mode available</h2>
+                <h2 class="text-2xl sm:text-center">{% trans "Trial mode available" %}</h2>
                 <p>
-                    You can use a Projectify workspace in trial mode free of charge. The trial allows you to evaluate whether the Projectify project management software suits your needs. While your workspace is in trial mode, the following limitations will apply.
+                    {% trans "You can use a Projectify workspace in trial mode free of charge. The trial allows you to evaluate whether the Projectify project management software suits your needs. While your workspace is in trial mode, the following limitations will apply.
+                    " %}
                 </p>
-                <h3 class="text-xl sm:text-center">Trial mode limitations</h3>
+                <h3 class="text-xl sm:text-center">{% trans "Trial mode limitations" %}</h3>
                 <ul class="list-inside list-disc sm:self-center">
                     <li>
-                        A workspace can have up to <strong>2</strong> team members
+                        {% trans "A workspace can have up to " %}<strong>2</strong>{% trans " team members" %}
                     </li>
                     <li>
-                        A workspace can hold up to <strong>10</strong> projects
+                        {% trans "A workspace can hold up to " %}<strong>10</strong>{% trans " projects" %}
                     </li>
                     <li>
-                        You can create up to <strong>100</strong> sections
+                        {% trans " You can create up to " %}<strong>100</strong>{% trans " sections" %}
                     </li>
                     <li>
-                        You can create up to <strong>1000</strong> tasks
+                        {% trans "You can create up to " %}<strong>1000</strong>{% trans " tasks" %}
                     </li>
                     <li>
-                        You can create up to <strong>1000</strong> sub tasks
+                        {% trans "You can create up to " %}<strong>1000</strong>{% trans " sub tasks" %}
                     </li>
                     <li>
-                        You can create up to <strong>10</strong> labels
+                        {% trans "You can create up to " %}<strong>10</strong>{% trans " labels" %}
                     </li>
                 </ul>
             </section>

@@ -1,10 +1,11 @@
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% load i18n %}
 <div class="flex w-full flex-col items-center bg-background">
     <div class="w-full max-w-4xl px-6 py-6 sm:py-12">
         <header class="flex w-full flex-col items-center gap-4 justify-center">
             <div class="flex flex-col gap-8 text-center font-bold items-center">
-                <h1 class="text-4xl lg:text-6xl">{{ title }}</h1>
+                <h1 class="text-4xl lg:text-6xl">{% trans title %}</h1>
             </div>
         </header>
     </div>

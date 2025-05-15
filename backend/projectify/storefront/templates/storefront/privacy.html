@@ -2,27 +2,28 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "storefront_base.html" %}
 {% load markdownify %}
+{% load i18n %}
 {% block storefront_content %}
     <main class="flex flex-col items-center gap-10 bg-foreground pb-20 pt-10">
         <div class="flex w-full max-w-5xl grow flex-col gap-4 bg-foreground p-6 sm:flex-row sm:gap-8">
             <nav slot="side" class="flex max-w-xs grow flex-col gap-2">
-                <p id="top" class="font-bold">Privacy Policy</p>
+                <p id="top" class="font-bold">{% trans "Privacy Policy" %}</p>
                 <ol class="list-inside list-disc">
                     <li>
                         <a href="#japanese"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">Japanese Privacy Policy (original)</a><!--<Anchor>-->
+                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Japanese Privacy Policy (original)" %}</a>
                     </li>
                     <li>
                         <a href="#english"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">English Privacy Policy (translation)</a><!--<Anchor>-->
+                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "English Privacy Policy (translation)" %}</a>
                     </li>
                     <li>
                         <a href="#japanese-gdpr"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">Japanese GDPR Privacy Policy (original)</a><!--<Anchor>-->
+                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Japanese GDPR Privacy Policy (original)" %}</a>
                     </li>
                     <li>
                         <a href="#english-gdpr"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">English GDPR Privacy Policy (translation)</a><!--<Anchor>-->
+                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "English GDPR Privacy Policy (translation)" %}</a>
                     </li>
                 </ol>
             </nav>
