@@ -1,0 +1,16 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "solutions_base.html" %}
+{% load static %}
+{% block solutions_content %}
+    <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
+        {% include "storefront/common/solutions_header.html" with title="Project management solutions" src="solutions/hero-project-management.png" text="How project managers can use Projectify to efficiently manage tasks, projects and team members of their team." %}
+        <div class="w-full p-6 max-w-4xl">
+            <div class="flex w-full flex-col items-center gap-6 sm:gap-16">
+                {% include "storefront/common/solutions_detail_item.html" with title="An ethical approach to management" text="View how many tasks a team member has assigned to them, so the workload can be divided equally. Filter by team member to see what individual colleagues are working on." src="solutions/project-management-team-member.png" alt="An illustration showing how Projectify displays each team members assigned task count" %}
+                {% include "storefront/common/solutions_detail_item.html" with title="Full control of your workspaces" text="List and column views allow you to organise workflows and see the bigger picture. Split your workspace into projects to enable multi-project management. Filter by labels, users or keyboards to focus on specific tasks." src="solutions/filters.png" alt="An illustration showing a collapsed dashboard side bar and various team members and labels" %}
+                {% include "storefront/common/solutions_detail_item.html" with title="Permissions to control access" text="Make sure nothing important gets deleted. With permission roles - Owner, Maintainer, Contributor and Observer, you can be safe in knowing there won't be any accidentally data loss." src="solutions/project-management-permissions.png" alt="An illustration of a settings screen showing team members belonging to a team member and their role within the workspace. The illustration also shows a button allowing filtering by role and another button letting a user invite new team members" imgPosition="left" %}
+            </div>
+        </div>
+    </main>
+{% endblock solutions_content %}
