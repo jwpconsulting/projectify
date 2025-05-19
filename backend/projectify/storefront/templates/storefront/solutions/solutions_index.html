@@ -5,7 +5,10 @@
 {% load i18n %}
 {% block solutions_content %}
     <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
-        {% include "storefront/common/solutions_header.html" with title="Solutions for every type of user" text="Explore the different ways users are using Projectify to meet due dates, reach targets and be productive." src="solutions/hero-solutions.png" alt="An illustration showing users of different backgrounds" %}
+        {% trans "Solutions for every type of user" as title %}
+        {% trans "Explore the different ways users are using Projectify to meet due dates, reach targets and be productive." as text %}
+        {% trans "An illustration showing users of different backgrounds" as alt %}
+        {% include "storefront/common/solutions_header.html" with title=title text=text src="solutions/hero-solutions.png" alt=alt %}
         <div class="w-full p-6 max-w-4xl">
             <div class="flex flex-col items-center gap-12 md:grid md:grid-cols-3 md:gap-8">
                 <section class="flex h-full flex-col justify-between gap-4">

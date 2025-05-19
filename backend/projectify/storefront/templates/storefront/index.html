@@ -45,10 +45,22 @@
                             {% trans "The go-to project management tool for developers." %}
                         </h4>
                     </section>
-                    {% include "storefront/common/solutions_detail_item.html" with title="task cards that are accessible and keyboard friendly" text="no more drag and drop disasters! Create and move tasks around the board with ease and speed. Organize and prioritize your workload with peace of mind." src="task-menu.png" alt="A screenshot from the Projectify dashboard showing how the interface can be used without drag and drop" %}
-                    {% include "storefront/common/solutions_detail_item.html" with title="Transform mammoth tasks into smaller, feasible ones" text="Sub tasks break up the workload to allow for large tasks and progress to become more realistic and achievable. Add, reorder, edit and delete limitless sub tasks." src="sub-task.png" alt="A screenshot from a task in the Projectify UI showing how sub tasks can be assigned to tasks" imgPosition="left" %}
-                    {% include "storefront/common/solutions_detail_item.html" with title="Full control of your workspaces" text="Split your workspace into projects to enable multi-project management. Filter by labels, team members, or keywords to focus on specific tasks." src="filters.png" alt="An illustration showing how tasks can be filtered by team members or labels" %}
-                    {% include "storefront/common/solutions_detail_item.html" with title="Responsive for on-the-go" text="Need to access your projects while away from the office? No app. No problem. A fully responsive experience to stay connected and keep projects on track." src="responsive.png" alt="An illustration of a smartphone showing the Projectify UI in a landscape orientation." %}
+                    {% trans "task cards that are accessible and keyboard friendly" as title %}
+                    {% trans "no more drag and drop disasters! Create and move tasks around the board with ease and speed. Organize and prioritize your workload with peace of mind." as text %}
+                    {% trans "A screenshot from the Projectify dashboard showing how the interface can be used without drag and drop" as alt %}
+                    {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="task-menu.png" alt=alt %}
+                    {% trans "Transform mammoth tasks into smaller, feasible ones" as title %}
+                    {% trans "Sub tasks break up the workload to allow for large tasks and progress to become more realistic and achievable. Add, reorder, edit and delete limitless sub tasks." as text %}
+                    {% trans "A screenshot from a task in the Projectify UI showing how sub tasks can be assigned to tasks" as alt %}
+                    {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="sub-task.png" alt=alt imgPosition="left" %}
+                    {% trans "Full control of your workspaces" as title %}
+                    {% trans "Split your workspace into projects to enable multi-project management. Filter by labels, team members, or keywords to focus on specific tasks." as text %}
+                    {% trans "An illustration showing how tasks can be filtered by team members or labels" as alt %}
+                    {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="filters.png" alt=alt %}
+                    {% trans "Responsive for on-the-go" as title %}
+                    {% trans "Need to access your projects while away from the office? No app. No problem. A fully responsive experience to stay connected and keep projects on track." as text %}
+                    {% trans "An illustration of a smartphone showing the Projectify UI in a landscape orientation." as alt %}
+                    {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="responsive.png" alt=alt %}
                     <section class="flex flex-col gap-7">
                         <header class="flex flex-col gap-3">
                             <h2 class="text-2xl font-bold sm:text-4xl">{% trans "Meeting diverse needs with practical solutions." %}</h2>
@@ -84,8 +96,14 @@
                                class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg">{% trans "See more use cases" %}</a><!--<Anchor>-->
                         </div>
                     </section>
-                    {% include "storefront/common/solutions_detail_item.html" with title="We never sell your data. Ever." text="Our platform fully complies with GDPR regulations, amongst others, so you can be rest assured that your private information stays private." src="privacy.png" alt="An illustration showing our mascot Poly safekeeping your data" %}
-                    {% include "storefront/common/solutions_detail_item.html" with title="Projectify is 100% Free Software" text="We respect your freedom and privacy and provide you the source code under a Free Software license. The Projectify application is licensed under the GNU Affero General Public License (AGPL) version 3.0 or later." src="open-source.png" alt="Birds freed from their gilded cage" imgPosition="left" learnmore_url="/free-software" %}
+                    {% trans "We never sell your data. Ever." as title %}
+                    {% trans "Our platform fully complies with GDPR regulations, amongst others, so you can be rest assured that your private information stays private." as text %}
+                    {% trans "An illustration showing our mascot Poly safekeeping your data" as alt %}
+                    {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="privacy.png" alt=alt %}
+                    {% trans "Projectify is 100% Free Software" as title %}
+                    {% trans "We respect your freedom and privacy and provide you the source code under a Free Software license. The Projectify application is licensed under the GNU Affero General Public License (AGPL) version 3.0 or later." as text %}
+                    {% trans "Birds freed from their gilded cage" as alt %}
+                    {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="open-source.png" alt=alt imgPosition="left" learnmore_url="/free-software" %}
                 </div>
             </div>
         </main>

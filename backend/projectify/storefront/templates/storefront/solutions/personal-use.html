@@ -2,14 +2,27 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "solutions_base.html" %}
 {% load static %}
+{% load i18n %}
 {% block solutions_content %}
     <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
-        {% include "storefront/common/solutions_header.html" with title="Personal solutions" text="How people can use Projectify for everyday life, whether it be keeping track fo your health or creating an itinerary for a trip." src="solutions/hero-remote-work.png" alt="Our mascot Poly thinking about all the things they want to do, among them being running, taking pictures and eating something tasty, each thing symbolized by a thought bubble" %}
+        {% trans "Personal solutions" as title %}
+        {% trans "How people can use Projectify for everyday life, whether it be keeping track fo your health or creating an itinerary for a trip." as text %}
+        {% trans "Our mascot Poly thinking about all the things they want to do, among them being running, taking pictures and eating something tasty, each thing symbolized by a thought bubble" as alt %}
+        {% include "storefront/common/solutions_header.html" with title=title text=text src="solutions/hero-remote-work.png" alt=alt %}
         <div class="w-full p-6 max-w-4xl">
             <div class="flex w-full flex-col items-center gap-6 sm:gap-16">
-                {% include "storefront/common/solutions_detail_item.html" with title="Create tasks with ease" text="Organise your tasks into individual projects with sections such as 'To do', 'In progress' and 'Done'. Provide descriptions for each task and set due dates. Labels simplify the process of catergorizing tasks." src="solutions/personal-tasks.png" alt="An illustration showing a 'To do' and 'Done' section, showing personal tasks that a user assigned to themselves, such as 'Book a ticket to Paris' or 'Learn French for beginners'" %}
-                {% include "storefront/common/solutions_detail_item.html" with title="Check off sub tasks as you go" text="Need to plan an event? Want to create a list of achievements? Sub tasks help you to check off small tasks bit by bite." src="solutions/personal-sub-task.png" alt="An illustration showing various sub tasks that a user has created within a task, such as 'Swim freestyle for 10 lengths'" imgPosition="left" %}
-                {% include "storefront/common/solutions_detail_item.html" with title="Add friends and family to your space" text="Get everyone on the same page by assigning task to different team members." src="solutions/personal-task-collab.png" alt="An illustration showing how different tasks in the 'In progress' section of a project have been assigned to friends and family. The tasks are 'Trim back overgrown hedges', 'Polish wooden furnishings', and 'Replace extractor fan grating'" %}
+                {% trans "Create tasks with ease" as title %}
+                {% trans "Organise your tasks into individual projects with sections such as 'To do', 'In progress' and 'Done'. Provide descriptions for each task and set due dates. Labels simplify the process of catergorizing tasks." as text %}
+                {% trans "An illustration showing a 'To do' and 'Done' section, showing personal tasks that a user assigned to themselves, such as 'Book a ticket to Paris' or 'Learn French for beginners'" as alt %}
+                {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="solutions/personal-tasks.png" alt=alt %}
+                {% trans "Check off sub tasks as you go" as title %}
+                {% trans "Need to plan an event? Want to create a list of achievements? Sub tasks help you to check off small tasks bit by bite." as text %}
+                {% trans "An illustration showing various sub tasks that a user has created within a task, such as 'Swim freestyle for 10 lengths'" as alt %}
+                {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="solutions/personal-sub-task.png" alt=alt imgPosition="left" %}
+                {% trans "Add friends and family to your space" as title %}
+                {% trans "Get everyone on the same page by assigning task to different team members." as text %}
+                {% trans "An illustration showing how different tasks in the 'In progress' section of a project have been assigned to friends and family. The tasks are 'Trim back overgrown hedges', 'Polish wooden furnishings', and 'Replace extractor fan grating'" as alt %}
+                {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="solutions/personal-task-collab.png" alt=alt %}
             </div>
         </div>
     </main>

@@ -2,13 +2,23 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "solutions_base.html" %}
 {% load static %}
+{% load i18n %}
 {% block solutions_content %}
     <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
-        {% include "storefront/common/solutions_header.html" with title="Development solutions" text="How development teams can use Projectify to create tasks, monitor pulls requests and deploy faster." src="solutions/hero-development-teams.png" alt="Our mascot Poly sitting in front of a computer, developing software and looking content" %}
+        {% trans "Development solutions" as title %}
+        {% trans "How development teams can use Projectify to create tasks, monitor pulls requests and deploy faster." as text %}
+        {% trans "Our mascot Poly sitting in front of a computer, developing software and looking content" as alt %}
+        {% include "storefront/common/solutions_header.html" with title=title text=text src="solutions/hero-development-teams.png" alt=alt %}
         <div class="w-full p-6 max-w-4xl">
             <div class="flex w-full flex-col items-center gap-6 sm:gap-16">
-                {% include "storefront/common/solutions_detail_item.html" with title="Organise with labels and task numbers" text="Use labels with terms like bug, enhancement or backend to categorize tasks. Filter with labels or search by task number to quickly locate what you're looking for." src="solutions/development-teams-filter.png" alt="A illustration showing the label context menu used in Projectify" %}
-                {% include "storefront/common/solutions_detail_item.html" with title="Plan and execute" text="Set up and monitor pull requests, merges, bug fixes and more for multiple team members of your team." src="solutions/development-teams-tasks.png" alt="An illlustration showing tasks in a section called 'In Progress'" %}
+                {% trans "Organise with labels and task numbers" as title %}
+                {% trans "Use labels with terms like bug, enhancement or backend to categorize tasks. Filter with labels or search by task number to quickly locate what you're looking for." as text %}
+                {% trans "A illustration showing the label context menu used in Projectify" as alt %}
+                {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="solutions/development-teams-filter.png" alt=alt %}
+                {% trans "Plan and execute" as title %}
+                {% trans "Set up and monitor pull requests, merges, bug fixes and more for multiple team members of your team." as text %}
+                {% trans "An illlustration showing tasks in a section called 'In Progress'" as alt %}
+                {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="solutions/development-teams-tasks.png" alt=alt %}
             </div>
         </div>
     </main>

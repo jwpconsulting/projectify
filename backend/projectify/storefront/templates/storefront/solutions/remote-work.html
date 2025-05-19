@@ -2,12 +2,19 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "solutions_base.html" %}
 {% load static %}
+{% load i18n %}
 {% block solutions_content %}
     <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
-        {% include "storefront/common/solutions_header.html" with title="Remote solutions" text="How remote workers can use Projectify to keep in tune with projects and stay connected." src="solutions/hero-remote-work.png" alt="Our mascot Poly working at the beach looking happy" %}
+        {% trans "Remote solutions" as title %}
+        {% trans "How remote workers can use Projectify to keep in tune with projects and stay connected." as text %}
+        {% trans "Our mascot Poly working at the beach looking happy" as alt %}
+        {% include "storefront/common/solutions_header.html" with title=title text=text src="solutions/hero-remote-work.png" alt=alt %}
         <div class="w-full p-6 max-w-4xl">
             <div class="flex w-full flex-col items-center gap-6 sm:gap-16">
-                {% include "storefront/common/solutions_detail_item.html" with title="Assign tasks to users all over the world" text="Whether it's Leo in the Phillipines or Valerie in Brazil, once you assign a task to someone they will be notified immediately with a pop-up." src="solutions/remote-work-tasks.png" alt="An illustration showing the 'In Progress' section of a project with tasks being assigned to different users" %}
+                {% trans "Assign tasks to users all over the world" as title %}
+                {% trans "Whether it's Leo in the Phillipines or Valerie in Brazil, once you assign a task to someone they will be notified immediately with a pop-up." as text %}
+                {% trans "An illustration showing the 'In Progress' section of a project with tasks being assigned to different users" as alt %}
+                {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="solutions/remote-work-tasks.png" alt=alt %}
             </div>
         </div>
     </main>
