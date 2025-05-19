@@ -1,0 +1,1 @@
+../../../../frontend/src/messages/en/accessibility.md

@@ -3,32 +3,33 @@
 # SPDX-FileCopyrightText: 2025 JWP Consulting GK
 """Storefront Views."""
 
-import os
-
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
+from django.utils.translation import gettext_lazy as _
+
+from projectify.lib.settings import get_settings
 
 
 def accessibility(request: HttpRequest) -> HttpResponse:
     """Serve Accessibility page."""
-    markdowntext = open(
-        os.path.join(
-            os.path.dirname(__file__),
-            "../../../frontend/src/messages/en/accessibility.md",
-        )
-    ).read()
+    markdowntext = (
+        get_settings().BASE_DIR
+        / "storefront"
+        / "markdown_en"
+        / "accessibility.md"
+    ).read_text()
     context = {"markdowntext": markdowntext}
     return render(request, "storefront/accessibility.html", context)
 
 
 def contact_us(request: HttpRequest) -> HttpResponse:
     """Serve Contact us page."""
-    markdowntext = open(
-        os.path.join(
-            os.path.dirname(__file__),
-            "../../../frontend/src/messages/en/contact-us.md",
-        )
-    ).read()
+    markdowntext = (
+        get_settings().BASE_DIR
+        / "storefront"
+        / "markdown_en"
+        / "contact-us.md"
+    ).read_text()
     context = {"markdowntext": markdowntext}
     return render(request, "storefront/contact_us.html", context)
 
@@ -45,12 +46,12 @@ def ethicalads(request: HttpRequest) -> HttpResponse:
 
 def free_software(request: HttpRequest) -> HttpResponse:
     """Serve Free Software page."""
-    markdowntext = open(
-        os.path.join(
-            os.path.dirname(__file__),
-            "../../../frontend/src/messages/en/free-software.md",
-        )
-    ).read()
+    markdowntext = (
+        get_settings().BASE_DIR
+        / "storefront"
+        / "markdown_en"
+        / "free-software.md"
+    ).read_text()
     context = {"markdowntext": markdowntext}
     return render(request, "storefront/free_software.html", context)
 
@@ -67,24 +68,26 @@ def privacy(request: HttpRequest) -> HttpResponse:
 
 def security_disclose(request: HttpRequest) -> HttpResponse:
     """Serve Security Disclose page."""
-    markdowntext = open(
-        os.path.join(
-            os.path.dirname(__file__),
-            "../../../frontend/src/messages/en/security/disclose.md",
-        )
-    ).read()
+    markdowntext = (
+        get_settings().BASE_DIR
+        / "storefront"
+        / "markdown_en"
+        / "security"
+        / "disclose.md"
+    ).read_text()
     context = {"markdowntext": markdowntext}
     return render(request, "storefront/security/disclose.html", context)
 
 
 def security_general(request: HttpRequest) -> HttpResponse:
     """Serve Security Genaral page."""
-    markdowntext = open(
-        os.path.join(
-            os.path.dirname(__file__),
-            "../../../frontend/src/messages/en/security/general.md",
-        )
-    ).read()
+    markdowntext = (
+        get_settings().BASE_DIR
+        / "storefront"
+        / "markdown_en"
+        / "security"
+        / "general.md"
+    ).read_text()
     context = {"markdowntext": markdowntext}
     return render(request, "storefront/security/general.html", context)
 
@@ -115,7 +118,7 @@ def solutions_detail(request: HttpRequest, page: str) -> HttpResponse:
             return render(request, "storefront/solutions/personal-use.html")
         case _:
             # TODO:Add proper solutions detail route implementations
-            return HttpResponse("Solution page does not exist.", status=404)
+            return Http404(_("Solution page does not exist."))
 
 
 def tos(request: HttpRequest) -> HttpResponse:
