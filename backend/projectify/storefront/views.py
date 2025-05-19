@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2025 JWP Consulting GK
 """Storefront Views."""
 
-from django.http import HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
 
@@ -118,7 +118,7 @@ def solutions_detail(request: HttpRequest, page: str) -> HttpResponse:
             return render(request, "storefront/solutions/personal-use.html")
         case _:
             # TODO:Add proper solutions detail route implementations
-            return Http404(_("Solution page does not exist."))
+            raise Http404(_("Solution page does not exist."))
 
 
 def tos(request: HttpRequest) -> HttpResponse:
