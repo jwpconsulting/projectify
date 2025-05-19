@@ -249,6 +249,17 @@ There is a nix flake in this repository.
 - https://github.com/nix-community/poetry2nix
 - https://github.com/nix-community/nix-direnv
 
+# Translations
+
+Projectify uses Django's built-in GNU gettext-based translation. Learn more
+about Django's translation features [here](https://docs.djangoproject.com/en/5.1/topics/i18n/translation/#translate-template-tag).
+
+You can update the translation files by running the following commands:
+
+```bash
+./manage.py makemessages --ignore=bin/ -l en --ignore='gunicorn.conf.py' --ignore=manage.py
+```
+
 # License
 
 This project is licensed under AGPL. See the LICENSE file in this repository.
