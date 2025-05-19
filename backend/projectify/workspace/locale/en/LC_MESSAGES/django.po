@@ -1,0 +1,284 @@
+# SOME DESCRIPTIVE TITLE.
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# SPDX-FileCopyrightText: 2025 JWP Consulting GK
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-19 07:09+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: projectify/workspace/admin.py:51
+msgid "You can search by workspace title"
+msgstr ""
+
+#: projectify/workspace/admin.py:65 projectify/workspace/admin.py:104
+#: projectify/workspace/admin.py:141 projectify/workspace/admin.py:175
+#: projectify/workspace/admin.py:221 projectify/workspace/admin.py:239
+#: projectify/workspace/admin.py:276 projectify/workspace/admin.py:313
+msgid "Workspace title"
+msgstr ""
+
+#: projectify/workspace/admin.py:101
+msgid "You can seach by workspace title, user email and preferred name"
+msgstr ""
+
+#: projectify/workspace/admin.py:109
+msgid "User email"
+msgstr ""
+
+#: projectify/workspace/admin.py:170 projectify/workspace/admin.py:216
+#: projectify/workspace/admin.py:271 projectify/workspace/admin.py:308
+msgid "Project title"
+msgstr ""
+
+#: projectify/workspace/admin.py:211 projectify/workspace/admin.py:266
+#: projectify/workspace/admin.py:303
+msgid "Section title"
+msgstr ""
+
+#: projectify/workspace/admin.py:261 projectify/workspace/admin.py:298
+#: projectify/workspace/views/task.py:83 projectify/workspace/views/task.py:84
+#: projectify/workspace/views/task.py:219
+#: projectify/workspace/views/task.py:220
+msgid "Task title"
+msgstr ""
+
+#: projectify/workspace/models/const.py:13
+msgid "Observer"
+msgstr ""
+
+#: projectify/workspace/models/const.py:14
+msgid "Contributor"
+msgstr ""
+
+#: projectify/workspace/models/const.py:15
+msgid "Maintainer"
+msgstr ""
+
+#: projectify/workspace/models/const.py:16
+msgid "Owner"
+msgstr ""
+
+#: projectify/workspace/models/label.py:41
+msgid "Color index"
+msgstr ""
+
+#: projectify/workspace/models/project.py:37
+msgid "Archival timestamp of this workspace board."
+msgstr ""
+
+#: projectify/workspace/models/project.py:42
+msgid "Due date for this workspace board"
+msgstr ""
+
+#: projectify/workspace/models/sub_task.py:48
+msgid "Designate whether this sub task is done"
+msgstr ""
+
+#: projectify/workspace/models/task.py:51
+msgid "Team member this task is assigned to."
+msgstr ""
+
+#: projectify/workspace/models/task.py:56
+msgid "Due date for this task"
+msgstr ""
+
+#: projectify/workspace/models/team_member_invite.py:32
+msgid "Has this invite been redeemed?"
+msgstr ""
+
+#: projectify/workspace/models/team_member_invite.py:39
+msgid "When has this invite been redeemed?"
+msgstr ""
+
+#: projectify/workspace/models/workspace.py:99
+msgid ""
+"Workspace title can only contain '.' or ':' if followed by whitespace or if "
+"located at the end."
+msgstr ""
+
+#: projectify/workspace/serializers/task_detail.py:217
+msgid ""
+"Sub tasks to be updated have been specified, but no sub task instances were "
+"provided."
+msgstr ""
+
+#: projectify/workspace/serializers/task_detail.py:233
+msgid "Duplicate UUID found among sub tasks to be updated"
+msgstr ""
+
+#: projectify/workspace/serializers/task_detail.py:255
+msgid ""
+"Sub task {v['uuid']} could not be found amount the instance data. Check "
+"whether you have correctly passed all task's sub task instances."
+msgstr ""
+
+#: projectify/workspace/serializers/task_detail.py:294
+msgid "This label could not be found"
+msgstr ""
+
+#: projectify/workspace/serializers/task_detail.py:308
+msgid "The assignee could not be found"
+msgstr ""
+
+#: projectify/workspace/serializers/task_detail.py:370
+msgid "Section does not exist"
+msgstr ""
+
+#: projectify/workspace/services/task.py:79
+msgid "The team member to be assigned belongs to a different workspace"
+msgstr ""
+
+#: projectify/workspace/services/task.py:200
+msgid "Can't move task down, there is no next task"
+msgstr ""
+
+#: projectify/workspace/services/team_member.py:58
+msgid "Can't delete own team member"
+msgstr ""
+
+#: projectify/workspace/services/team_member_invite.py:125
+msgid "Email is already invited"
+msgstr ""
+
+#: projectify/workspace/services/team_member_invite.py:164
+msgid "User with this email was never invited"
+msgstr ""
+
+#: projectify/workspace/services/workspace.py:95
+msgid "Can only delete workspace with one remaining team member"
+msgstr ""
+
+#: projectify/workspace/services/workspace.py:99
+msgid "Can only delete workspace with no outstanding invites"
+msgstr ""
+
+#: projectify/workspace/services/workspace.py:103
+msgid "Can only delete workspace with no projects"
+msgstr ""
+
+#: projectify/workspace/templates/workspace/email/team_member_invite_body.txt:4
+#, python-format
+msgid ""
+"\n"
+"You have been invited by %(invited_by)s on %(when)s to join the following "
+"workspace on Projectify:\n"
+"\n"
+"%(workspace_title)s\n"
+"\n"
+"You can sign up by clicking the following link. You will be automatically "
+"added\n"
+"to the workspace upon following the sign up process.\n"
+msgstr ""
+
+#: projectify/workspace/templates/workspace/email/team_member_invite_subject.txt:3
+msgid "Invitation to join workspace"
+msgstr ""
+
+#: projectify/workspace/views/label.py:69
+msgid "No workspace could be found for given workspace_uuid"
+msgstr ""
+
+#: projectify/workspace/views/project.py:52
+#: projectify/workspace/views/project.py:121
+#: projectify/workspace/views/project.py:150
+#: projectify/workspace/views/project.py:177
+msgid "No project found for this uuid"
+msgstr ""
+
+#: projectify/workspace/views/project.py:92
+#: projectify/workspace/views/project.py:212
+#: projectify/workspace/views/workspace.py:243
+#: projectify/workspace/views/workspace.py:291
+msgid "No workspace found for this UUID"
+msgstr ""
+
+#: projectify/workspace/views/project.py:251
+msgid "No project found for this UUID where archived={}"
+msgstr ""
+
+#: projectify/workspace/views/section.py:65
+msgid "Could not find a project with this uuid"
+msgstr ""
+
+#: projectify/workspace/views/section.py:94
+#: projectify/workspace/views/section.py:119
+#: projectify/workspace/views/section.py:143
+#: projectify/workspace/views/section.py:176
+msgid "Section not found for this UUID"
+msgstr ""
+
+#: projectify/workspace/views/task.py:72
+#, python-brace-format
+msgid "Task with uuid {task_uuid} not found"
+msgstr ""
+
+#: projectify/workspace/views/task.py:93 projectify/workspace/views/task.py:229
+msgid "Enter a description for your task"
+msgstr ""
+
+#: projectify/workspace/views/task.py:124
+msgid "Delete task"
+msgstr ""
+
+#: projectify/workspace/views/task.py:158
+msgid "Section not found"
+msgstr ""
+
+#: projectify/workspace/views/task.py:210
+#: projectify/workspace/views/task.py:270
+#, python-brace-format
+msgid "Could not find task with uuid {task_uuid}"
+msgstr ""
+
+#: projectify/workspace/views/task.py:543
+#: projectify/workspace/views/task.py:582
+msgid "Task for this UUID not found"
+msgstr ""
+
+#: projectify/workspace/views/task.py:550
+msgid "No section was found for the given uuid"
+msgstr ""
+
+#: projectify/workspace/views/task.py:586
+msgid "No task was found for the given uuid"
+msgstr ""
+
+#: projectify/workspace/views/team_member.py:64
+#: projectify/workspace/views/team_member.py:89
+#: projectify/workspace/views/team_member.py:115
+msgid "Could not find team member for given UUID"
+msgstr ""
+
+#: projectify/workspace/views/workspace.py:72
+msgid "Workspace not found"
+msgstr ""
+
+#: projectify/workspace/views/workspace.py:146
+#: projectify/workspace/views/workspace.py:172
+msgid "Could not find workspace with this UUID"
+msgstr ""
+
+#: projectify/workspace/views/workspace.py:210
+msgid "Could not find workspace with UUID for picture upload"
+msgstr ""
+
+#: projectify/workspace/views/workspace.py:256
+#, python-brace-format
+msgid "User with email {email} has already been invited to this workspace."
+msgstr ""
+
+#: projectify/workspace/views/workspace.py:265
+#, python-brace-format
+msgid "User with email {email} has already been added to this workspace."
+msgstr ""
