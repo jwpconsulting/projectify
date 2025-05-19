@@ -3,104 +3,132 @@
 # SPDX-FileCopyrightText: 2025 JWP Consulting GK
 """Help Views."""
 
-from django.conf import settings
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from pathlib import Path
 
-help_topics = [
-    {
-        "title": "Overview",
-        "description": "",
-        "href": "/help",
+from django.conf import settings
+from django.http import Http404, HttpRequest, HttpResponse
+from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
+
+help_topics = {
+    "basics": {
+        "title": _("Basics"),
+        "description": _("Your first steps towards productivity"),
+        "markdown_file": Path("basics.md"),
+        "href": reverse_lazy("help:detail", args=("basics",)),
     },
-    {
-        "title": "Basics",
-        "description": "Your first steps towards productivity",
-        "href": "/help/basics/",
+    "workspaces": {
+        "title": _("Workspaces"),
+        "description": _("Independent spaces at your fingertips"),
+        "markdown_file": Path("workspaces.md"),
+        "href": reverse_lazy("help:detail", args=("workspaces",)),
     },
-    {
-        "title": "Workspaces",
-        "description": "Independent spaces at your fingertips",
-        "href": "/help/workspaces/",
+    "projects": {
+        "title": _("Projects"),
+        "description": _("Separate projects from each other"),
+        "markdown_file": Path("projects.md"),
+        "href": reverse_lazy("help:detail", args=("projects",)),
     },
-    {
-        "title": "Projects",
-        "description": "Separate projects from each other",
-        "href": "/help/projects/",
+    "sections": {
+        "title": _("Sections"),
+        "description": _("Maximize the efficiency of your tasks"),
+        "markdown_file": Path("sections.md"),
+        "href": reverse_lazy("help:detail", args=("sections",)),
     },
-    {
-        "title": "Sections",
-        "description": "Maximize the efficiency of your tasks",
-        "href": "/help/sections/",
+    "tasks": {
+        "title": _("Tasks"),
+        "description": _("All the ins and outs of task creation"),
+        "markdown_file": Path("tasks.md"),
+        "href": reverse_lazy("help:detail", args=("tasks",)),
     },
-    {
-        "title": "Tasks",
-        "description": "All the ins and outs of task creation",
-        "href": "/help/tasks/",
+    "labels": {
+        "title": _("Labels"),
+        "description": _("Create categories for your tasks"),
+        "markdown_file": Path("labels.md"),
+        "href": reverse_lazy("help:detail", args=("labels",)),
     },
-    {
-        "title": "Labels",
-        "description": "Create categories for your tasks",
-        "href": "/help/labels/",
+    "team-members": {
+        "title": _("Team members"),
+        "description": _("Collaboration starts with an invite"),
+        "markdown_file": Path("team-members.md"),
+        "href": reverse_lazy("help:detail", args=("team-members",)),
     },
-    {
-        "title": "Team members",
-        "description": "Collaboration starts with an invite",
-        "href": "/help/team-members/",
+    "filters": {
+        "title": _("Filters"),
+        "description": _("Streamline your workflow with filters"),
+        "markdown_file": Path("filters.md"),
+        "href": reverse_lazy("help:detail", args=("filters",)),
     },
-    {
-        "title": "Filters",
-        "description": "Streamline your workflow with filters",
-        "href": "/help/filters/",
+    "billing": {
+        "title": _("Billing"),
+        "description": _("Billing and payment information"),
+        "markdown_file": Path("billing.md"),
+        "href": reverse_lazy("help:detail", args=("billing",)),
     },
-    {
-        "title": "Billing",
-        "description": "Billing and payment information",
-        "href": "/help/billing/",
+    "trial": {
+        "title": _("Trial workspace"),
+        "description": _("How to set up a trial workspace"),
+        "markdown_file": Path("trial.md"),
+        "href": reverse_lazy("help:detail", args=("trial",)),
     },
-    {
-        "title": "Trial workspace",
-        "description": "How to set up a trial workspace",
-        "href": "/help/trial/",
+    "quota": {
+        "title": _("Workspace quotas"),
+        "description": _("Understand workspace resource quotas"),
+        "markdown_file": Path("quota.md"),
+        "href": reverse_lazy("help:detail", args=("quota",)),
     },
-    {
-        "title": "Workspace quotas",
-        "description": "Understand workspace resource quotas",
-        "href": "/help/quota/",
+    "roles": {
+        "title": _("Roles"),
+        "description": _("Divide up roles between team members"),
+        "markdown_file": Path("roles.md"),
+        "href": reverse_lazy("help:detail", args=("roles",)),
     },
-    {
-        "title": "Roles",
-        "description": "Divide up roles between team members",
-        "href": "/help/roles/",
+    "keyboard-shortcuts": {
+        "title": _("Keyboard shortcuts"),
+        "description": _("Use keyboard shortcuts to improve productivity"),
+        "markdown_file": Path("keyboard-shortcuts.md"),
+        "href": reverse_lazy("help:detail", args=("keyboard-shortcuts",)),
     },
-    {
-        "title": "Keyboard shortcuts",
-        "description": "Use keyboard shortcuts to improve productivity",
-        "href": "/help/keyboard-shortcuts/",
+}
+
+help_topics_with_index = {
+    "index": {
+        "title": _("Overview"),
+        "description": _("Help overview"),
+        "markdown_file": Path("overview.md"),
+        "href": reverse_lazy("help:list"),
     },
-]
+    **help_topics,
+}
 
 
 def help_list(request: HttpRequest) -> HttpResponse:
     """Serve Help list page."""
-    topics = help_topics[1:]
-    context = {"helptopics": topics}
+    context = {"helptopics": help_topics.values()}
     return render(request, "help/help_list.html", context)
 
 
 def help_detail(request: HttpRequest, page: str) -> HttpResponse:
-    """Serve Help list page."""
-    help_page = (
-        settings.BASE_DIR.parent.parent
-        / "frontend/src/messages/en/help/page.md"
-    ).with_stem(page)
-    markdowntext = help_page.read_text()
-    helptopic = [
-        topic for topic in help_topics if topic["href"] == request.path
+    """
+    Serve a help detail page for a given topic.
+
+    Because `page` is used to load a markdown file, extra care needs to be
+    taken to not let the user load arbitrary files.
+    """
+    topic = help_topics.get(page)
+    if topic is None:
+        raise Http404(
+            _("{page} is not a valid help page title").format(page=page)
+        )
+    help_page = (settings.BASE_DIR / "help/markdown_en") / topic[
+        "markdown_file"
     ]
+    markdowntext = help_page.read_text()
+
     context = {
         "help_text": markdowntext,
-        "helptopics": help_topics,
-        "helptopic": helptopic[0],
+        "helptopics": help_topics_with_index.values(),
+        "helptopic": topic,
     }
     return render(request, "help/help_detail.html", context)

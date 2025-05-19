@@ -7,8 +7,10 @@ from django.urls import path
 
 from projectify.help.views import help_detail, help_list
 
+app_name = "help"
+
 urlpatterns = [
-    path("help/", help_list),
+    path("help/", help_list, name="list"),
     # TODO: Add safe urls for help detail pages
-    path("help/<slug:page>/", help_detail),
+    path("help/<slug:page>/", help_detail, name="detail"),
 ]
