@@ -39,9 +39,9 @@ def credits(request: HttpRequest) -> HttpResponse:
     return render(request, "storefront/credits.html")
 
 
-def ethicalads(request: HttpRequest) -> HttpResponse:
-    """Serve Ethicalads page."""
-    return render(request, "storefront/ethicalads.html")
+def index(request: HttpRequest) -> HttpResponse:
+    """Serve landing page."""
+    return render(request, "storefront/index.html")
 
 
 def free_software(request: HttpRequest) -> HttpResponse:
