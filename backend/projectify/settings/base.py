@@ -105,6 +105,7 @@ class Base(Configuration):
         "projectify.premail",
         "projectify.storefront",
         "projectify.help",
+        "projectify.onboarding",
         "projectify.user.apps.UserConfig",
         "projectify.workspace.apps.WorkspaceConfig",
         "projectify.theme",

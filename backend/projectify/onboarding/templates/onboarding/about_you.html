@@ -1,0 +1,43 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!-- SPDX-FileCopyrightText: 2025 JWP Consulting GK -->
+{% extends "onboarding_base.html" %}
+{% load i18n %}
+{% block onboarding_content %}
+    <form class="col-span-1 flex shrink grow flex-col gap-16 px-12 py-20 pb-8">
+        <!-- Message -->
+        <div class="flex flex-col gap-4">
+            <h1 class="min-w-fit max-w-lg text-4xl font-bold">{% trans "About you" %}</h1>
+            <div class="flex flex-col gap-2 text-lg">
+                {% trans "Tell us your preferred name. You can also keep it empty and continue by clicking the button below." %}
+            </div>
+        </div>
+        <div class="flex flex-col">
+            <div class="flex flex-col items-start gap-2">
+                <div class="flex w-full flex-row items-center justify-between">
+                    <label for="full-name"
+                           class="font-bold text-base-content first-letter:uppercase">Preferred name (optional)</label>
+                </div>
+                <div class="flex w-full flex-row items-center gap-2">
+                    <input type="text"
+                           class="placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2"
+                           id="full-name"
+                           name="full-name"
+                           placeholder="Your preferred name">
+                </div>
+            </div>
+            <!--<InputField>-->
+        </div>
+        <!-- Navigation buttons -->
+        <div class="flex flex-col gap-2">
+            <div class="flex gap-2">
+                <button type="submit"
+                        class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
+                    Continue
+                </button>
+            </div>
+        </div>
+    </form>
+    <div class="hidden h-full min-w-0 shrink grow flex-col items-center justify-center overflow-hidden bg-background md:flex xl:col-span-2">
+        <h1 class="w-full overflow-hidden text-ellipsis text-center text-4xl font-bold">Welcome👋</h1>
+    </div>
+{% endblock onboarding_content %}
