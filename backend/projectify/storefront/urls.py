@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2025 JWP Consulting GK
 """Storefront urlpatterns."""
 
-from django.urls import path
+from django.urls import include, path
 
 from projectify.storefront.views import (
     accessibility,
@@ -20,6 +20,13 @@ from projectify.storefront.views import (
     tos,
 )
 
+app_name = "storefront"
+
+solution_patterns = [
+    path("", solutions_index, name="list"),
+    path("<slug:page>/", solutions_detail, name="detail"),
+]
+
 urlpatterns = [
     path("accessibility/", accessibility),
     path("contact-us/", contact_us),
@@ -30,7 +37,6 @@ urlpatterns = [
     path("tos/", tos),
     path("pricing/", pricing),
     path("privacy/", privacy),
-    path("solutions/", solutions_index),
-    path("solutions/<slug:page>/", solutions_detail),
+    path("solutions/", include((solution_patterns, "solutions"))),
     path("", index),
 ]

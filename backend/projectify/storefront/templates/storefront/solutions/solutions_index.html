@@ -1,5 +1,6 @@
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# TODO The below 6 items can be refactored using a for loop #}
 {% extends "solutions_base.html" %}
 {% load static %}
 {% load i18n %}
@@ -17,12 +18,12 @@
                             <img src="{% static "solutions/hero-development-teams.png" %}" alt="{% trans "Our mascot Poly sitting in front of a computer, developing software and looking content" %}" class="rounded-lg" width="728" height="492" />
                         </picture>
                         <div class="flex h-full flex-col gap-4">
-                            <h2 class="font-bold">{% trans "development teams" %}</h2>
+                            <h2 class="font-bold">{% trans "Development teams" %}</h2>
                             <p class="font-normal">{% trans "Monitor team progress throughout the whole software lifecyle." %}</p>
                         </div>
                     </div>
                     <a class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
-                       href="/solutions/development-teams">{% trans "Learn more" %}</a>
+                       href="{% url "storefront:solutions:detail" page="development-teams" %}">{% trans "Learn more" %}</a>
                 </section>
                 <section class="flex h-full flex-col justify-between gap-4">
                     <div class="flex flex-col gap-4">
@@ -35,7 +36,7 @@
                         </div>
                     </div>
                     <a class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
-                       href="/solutions/research">{% trans "Learn more" %}</a>
+                       href="{% url "storefront:solutions:detail" page="research" %}">{% trans "Learn more" %}</a>
                 </section>
                 <section class="flex h-full flex-col justify-between gap-4">
                     <div class="flex flex-col gap-4">
@@ -48,7 +49,7 @@
                         </div>
                     </div>
                     <a class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
-                       href="/solutions/project-management">{% trans "Learn more" %}</a>
+                       href="{% url "storefront:solutions:detail" page="project-management" %}">{% trans "Learn more" %}</a>
                 </section>
                 <section class="flex h-full flex-col justify-between gap-4">
                     <div class="flex flex-col gap-4">
@@ -61,7 +62,7 @@
                         </div>
                     </div>
                     <a class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
-                       href="/solutions/academic">{% trans "Learn more" %}</a>
+                       href="{% url "storefront:solutions:detail" page="academic" %}">{% trans "Learn more" %}</a>
                 </section>
                 <section class="flex h-full flex-col justify-between gap-4">
                     <div class="flex flex-col gap-4">
@@ -74,7 +75,7 @@
                         </div>
                     </div>
                     <a class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
-                       href="/solutions/remote-work">{% trans "Learn more" %}</a>
+                       href="{% url "storefront:solutions:detail" page="remote-work" %}">{% trans "Learn more" %}</a>
                 </section>
                 <section class="flex h-full flex-col justify-between gap-4">
                     <div class="flex flex-col gap-4">
@@ -89,7 +90,7 @@
                         </div>
                     </div>
                     <a class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
-                       href="/solutions/personal-use">{% trans "Learn more" %}</a>
+                       href="{% url "storefront:solutions:detail" page="personal-use" %}">{% trans "Learn more" %}</a>
                 </section>
             </div>
         </div>
