@@ -29,7 +29,7 @@
             <section class="flex w-full max-w-xl flex-col gap-4 rounded-xl bg-background px-4 py-6 sm:items-center sm:gap-8">
                 <div class="flex flex-col gap-4">
                     <h2 class="text-xl font-bold sm:text-center">{% trans "Universal Plan" %}</h2>
-                    <strong class="text-4xl font-bold">{% trans "$8.00 / seat per month" %}</strong>
+                    <strong class="text-4xl font-bold">{% blocktranslate with price="$8.00" %}{{ price }} / seat per month{% endblocktranslate %}</strong>
                 </div>
                 {% if user.is_authenticated %}
                     <a href="/help/billing"
@@ -43,28 +43,33 @@
             <section id="trial-mode" class="flex flex-col gap-2">
                 <h2 class="text-2xl sm:text-center">{% trans "Trial mode available" %}</h2>
                 <p>
-                    {% trans "You can use a Projectify workspace in trial mode free of charge. The trial allows you to evaluate whether the Projectify project management software suits your needs. While your workspace is in trial mode, the following limitations will apply.
-                    " %}
+                    {% blocktranslate %}
+                    You can use a Projectify workspace in trial mode free of
+                    charge. The trial allows you to evaluate whether the
+                    Projectify project management software suits your needs.
+                    While your workspace is in trial mode, the following
+                    limitations will apply.
+                    {% endblocktranslate %}
                 </p>
                 <h3 class="text-xl sm:text-center">{% trans "Trial mode limitations" %}</h3>
                 <ul class="list-inside list-disc sm:self-center">
                     <li>
-                        {% trans "A workspace can have up to " %}<strong>2</strong>{% trans " team members" %}
+                        {% blocktranslate with team_members=2 %}A workspace can have up to <strong>{{ team_members }}</strong> team members{% endblocktranslate %}
                     </li>
                     <li>
-                        {% trans "A workspace can hold up to " %}<strong>10</strong>{% trans " projects" %}
+                        {% blocktranslate with projects=10 %}A workspace can hold up to <strong>{{ projects }}</strong> projects{% endblocktranslate %}
                     </li>
                     <li>
-                        {% trans " You can create up to " %}<strong>100</strong>{% trans " sections" %}
+                        {% blocktranslate with sections=100 %}You can create up to <strong>{{ sections }}</strong> sections{% endblocktranslate %}
                     </li>
                     <li>
-                        {% trans "You can create up to " %}<strong>1000</strong>{% trans " tasks" %}
+                        {% blocktranslate with tasks=1000 %}You can create up to <strong>{{ tasks }}</strong> tasks{% endblocktranslate %}
                     </li>
                     <li>
-                        {% trans "You can create up to " %}<strong>1000</strong>{% trans " sub tasks" %}
+                        {% blocktranslate with sub_tasks=1000 %}You can create up to <strong>{{ sub_tasks }}</strong> sub tasks{% endblocktranslate %}
                     </li>
                     <li>
-                        {% trans "You can create up to " %}<strong>10</strong>{% trans " labels" %}
+                        {% blocktranslate with labels=10 %}You can create up to <strong>{{ labels }}</strong> labels{% endblocktranslate %}
                     </li>
                 </ul>
             </section>
