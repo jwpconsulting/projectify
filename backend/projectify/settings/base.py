@@ -104,6 +104,7 @@ class Base(Configuration):
         "projectify.corporate.apps.CorporateConfig",
         "projectify.premail",
         "projectify.storefront",
+        "projectify.help",
         "projectify.user.apps.UserConfig",
         "projectify.workspace.apps.WorkspaceConfig",
         "projectify.theme",
@@ -337,7 +338,13 @@ class Base(Configuration):
                 "strong",
                 "ul",
                 "h1",
-            ]
+                "h2",
+                "pre",
+                "code",
+            ],
+            "MARKDOWN_EXTENSIONS": [
+                "fenced_code",
+            ],
         }
     }
 

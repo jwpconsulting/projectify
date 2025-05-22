@@ -1,0 +1,38 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "help_base.html" %}
+{% load markdownify %}
+{% load i18n %}
+{% block help_content %}
+    <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
+        <div class="flex w-full flex-col items-center bg-background">
+            <div class="w-full max-w-4xl px-6 py-6 sm:py-12">
+                <header class="flex w-full flex-col items-center gap-4 justify-center">
+                    <div class="flex flex-col gap-8 text-center font-bold items-center">
+                        <h1 class="text-4xl lg:text-6xl">{% trans helptopic.title %}</h1>
+                        <p class="max-w-md text-xl">{% trans helptopic.description %}</p>
+                    </div>
+                </header>
+            </div>
+        </div>
+        <div class="flex w-full max-w-5xl grow flex-col gap-4 bg-foreground p-6 sm:flex-row sm:gap-8">
+            <nav slot="side" class="flex grow flex-col gap-4 sm:max-w-xs">
+                <h2 class="text-3xl font-bold">{% trans "Help sections" %}</h2>
+                <ul class="flex min-w-max list-inside list-disc flex-col gap-2">
+                    {% for topic in helptopics %}
+                        <li>
+                            <a href="{{ topic.href }}"
+                               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans topic.title %}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+            <div class="prose">
+                {# TODO: Add markdown index list #}
+                <main>
+                    {{ help_text|markdownify }}
+                </main>
+            </div>
+        </div>
+    </main>
+{% endblock help_content %}

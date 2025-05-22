@@ -1,0 +1,25 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "solutions_base.html" %}
+{% load static %}
+{% load i18n %}
+{% block solutions_content %}
+    <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
+        {% trans "Research solutions" as title %}
+        {% trans "How researchers teams can use Projectify to collaborate on data with colleagues and meticulously catalogue findings." as text %}
+        {% trans "Two content looking Polys (our mascot) researching in a laboratory and taking down notes on a chalkboard" as alt %}
+        {% include "storefront/common/solutions_header.html" with title=title text=text src="solutions/hero-research.png" alt=alt %}
+        <div class="w-full p-6 max-w-4xl">
+            <div class="flex w-full flex-col items-center gap-6 sm:gap-16">
+                {% trans "Categorize data with labels and numbers" as title %}
+                {% trans "Labels simplify the process of categorizing tasks. Automatically assigned task numbers take organisation one step further" as text %}
+                {% trans "An illustration showing tasks in a section called 'In Progress'" as alt %}
+                {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="solutions/research-tasks.png" alt=alt %}
+                {% trans "Create and monitor multiple projects" as title %}
+                {% trans "With unlimited projects and tasks per workspace, you're free to perform as much research and testing as you require." as text %}
+                {% trans "An illustration suggesting the different ways labels can be assigned to different team members depending on their role, such as design or marketing" as alt %}
+                {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="solutions/filters.png" alt=alt %}
+            </div>
+        </div>
+    </main>
+{% endblock solutions_content %}
