@@ -1,0 +1,42 @@
+# SOME DESCRIPTIVE TITLE.
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# SPDX-FileCopyrightText: 2025 JWP Consulting GK
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-19 07:09+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: projectify/premail/templates/premail/email_detail.html:6
+msgid "Email Subject"
+msgstr ""
+
+#: projectify/premail/templates/premail/email_detail.html:9
+msgid "Email Body"
+msgstr ""
+
+#: projectify/premail/templates/premail/email_list.html:8
+msgid "Link"
+msgstr ""
+
+#: projectify/premail/templates/premail/email_list.html:9
+msgid "Description"
+msgstr ""
+
+#: projectify/premail/views.py:48
+msgid "Emails"
+msgstr ""
+
+#: projectify/premail/views.py:76
+msgid "{} preview"
+msgstr ""

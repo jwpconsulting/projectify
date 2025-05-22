@@ -1,0 +1,200 @@
+# SOME DESCRIPTIVE TITLE.
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# SPDX-FileCopyrightText: 2025 JWP Consulting GK
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-19 07:09+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: projectify/user/admin.py:32
+msgid "You can search by email and preferred name"
+msgstr ""
+
+#: projectify/user/models/previous_email_address.py:19
+msgid "User this email address belongs to"
+msgstr ""
+
+#: projectify/user/models/previous_email_address.py:21
+msgid "Previous email address"
+msgstr ""
+
+#: projectify/user/models/user.py:23 projectify/user/models/user_invite.py:35
+msgid "Email"
+msgstr ""
+
+#: projectify/user/models/user.py:30
+msgid "If update email address requested, new, unconfirmed email"
+msgstr ""
+
+#: projectify/user/models/user.py:36
+msgid "Is active"
+msgstr ""
+
+#: projectify/user/models/user.py:50
+msgid "Terms of service agreed"
+msgstr ""
+
+#: projectify/user/models/user.py:51
+msgid "Date and time user has agreed to terms of service"
+msgstr ""
+
+#: projectify/user/models/user.py:56
+msgid "Privacy Policy agreed"
+msgstr ""
+
+#: projectify/user/models/user.py:57
+msgid "Date and time user has agreed to privacy policy"
+msgstr ""
+
+#: projectify/user/models/user.py:86
+msgid ""
+"Preferred name can only contain '.' or ':' if followed by whitespace or if "
+"located at the end."
+msgstr ""
+
+#: projectify/user/models/user_invite.py:42
+msgid "Matched user"
+msgstr ""
+
+#: projectify/user/models/user_invite.py:46
+msgid "Has this invite been redeemed?"
+msgstr ""
+
+#: projectify/user/services/auth.py:63
+msgid "A user with this email address is already registered"
+msgstr ""
+
+#: projectify/user/services/auth.py:69
+msgid "Must agree to terms of service"
+msgstr ""
+
+#: projectify/user/services/auth.py:73
+msgid "Must agree to privacy policy"
+msgstr ""
+
+#: projectify/user/services/auth.py:101 projectify/user/services/auth.py:128
+msgid "No user could be found for this email address"
+msgstr ""
+
+#: projectify/user/services/auth.py:107
+msgid "This email confirmation token is invalid"
+msgstr ""
+
+#: projectify/user/services/auth.py:137
+msgid ""
+"This email address has not been confirmed. Please check your email inbox for "
+"a confirmation email or contact our support if you need further help."
+msgstr ""
+
+#: projectify/user/services/auth.py:146
+msgid "The password is incorrect. Please try again."
+msgstr ""
+
+#: projectify/user/services/auth.py:161
+msgid "There is no logged in user"
+msgstr ""
+
+#: projectify/user/services/auth.py:174
+msgid "No user could be found for this email"
+msgstr ""
+
+#: projectify/user/services/auth.py:196
+msgid "This email is not recognized"
+msgstr ""
+
+#: projectify/user/services/auth.py:201
+msgid "This token is invalid"
+msgstr ""
+
+#: projectify/user/services/user.py:60
+msgid "Incorrect password. Check again."
+msgstr ""
+
+#: projectify/user/services/user.py:83
+msgid "Password is incorrect"
+msgstr ""
+
+#: projectify/user/services/user.py:104
+msgid "Email address update was never requested"
+msgstr ""
+
+#: projectify/user/services/user.py:110
+msgid "Provided token is not valid"
+msgstr ""
+
+#: projectify/user/templates/user/email/email_address_update_body.txt:4
+#, python-format
+msgid ""
+"\n"
+"You have requested for your email address to be updated. This email is sent "
+"to\n"
+"the your new email address '%(new_email)s'.\n"
+"\n"
+"Please confirm your new email address by visiting the link below:\n"
+msgstr ""
+
+#: projectify/user/templates/user/email/email_address_update_subject.txt:3
+msgid "Confirm new email address"
+msgstr ""
+
+#: projectify/user/templates/user/email/email_address_updated_body.txt:4
+#, python-format
+msgid ""
+"\n"
+"Your email address has been updated. You can now log in using your new email "
+"address '%(new_email)s'.\n"
+msgstr ""
+
+#: projectify/user/templates/user/email/email_address_updated_subject.txt:3
+msgid "Your email address was updated"
+msgstr ""
+
+#: projectify/user/templates/user/email/email_confirmation_body.txt:4
+msgid ""
+"\n"
+"You have recently signed up for Projectify. Please confirm your email "
+"address by\n"
+"visiting the following URL:\n"
+msgstr ""
+
+#: projectify/user/templates/user/email/email_confirmation_subject.txt:3
+msgid "Please confirm your email"
+msgstr ""
+
+#: projectify/user/templates/user/email/password_changed_body.txt:4
+msgid ""
+"\n"
+"We are writing you to confirm that your password has been changed "
+"successfully.\n"
+msgstr ""
+
+#: projectify/user/templates/user/email/password_changed_subject.txt:3
+msgid "Password changed"
+msgstr ""
+
+#: projectify/user/templates/user/email/password_reset_body.txt:4
+msgid ""
+"\n"
+"You have requested a password reset. Please reset your password by visiting "
+"the\n"
+"following URL and following the instructions:\n"
+msgstr ""
+
+#: projectify/user/templates/user/email/password_reset_subject.txt:3
+msgid "Password reset"
+msgstr ""
+
+#: projectify/user/views/user.py:89
+msgid "Must be authenticated in order to update a user"
+msgstr ""
