@@ -8,21 +8,21 @@
             <img src="{% static "polylogo.svg" %}" alt="Projectify">
         </a>
         <div class="flex flex-row gap-2">
-            <a href="/solutions"
+            <a href="{% url "storefront:solutions:list" %}"
                class="text-base-content flex flex-row items-center gap-2 rounded-lg p-2 hover:text-primary active:text-primary">
                 <div class="text-base font-bold">{% trans "Solutions" %}</div>
             </a>
-            <a href="/pricing"
+            <a href="{% url "storefront:pricing" %}"
                class="text-base-content flex flex-row items-center gap-2 rounded-lg p-2 hover:text-primary active:text-primary">
                 <div class="text-base font-bold">{% trans "Pricing" %}</div>
-            </a><a href="/help"
+            </a><a href="{% url "help:list" %}"
    class="text-base-content flex flex-row items-center gap-2 rounded-lg p-2 hover:text-primary active:text-primary">
             <div class="text-base font-bold">{% trans "Help" %}</div>
         </a>
     </div>
 </div>
 <div class="flex shrink-0 flex-row items-center gap-2">
-    <a href="/dashboard"
+    <a href="{% url "dashboard:dashboard" %}"
        class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Continue to dashboard" %}</a>
 </div>
 </nav>

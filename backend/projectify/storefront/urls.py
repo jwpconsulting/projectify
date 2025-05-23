@@ -27,16 +27,20 @@ solution_patterns = [
     path("<slug:page>/", solutions_detail, name="detail"),
 ]
 
+security_patterns = [
+    path("general/", security_general, name="general"),
+    path("disclose/", security_disclose, name="disclose"),
+]
+
 urlpatterns = [
-    path("accessibility/", accessibility),
-    path("contact-us/", contact_us),
-    path("free-software/", free_software),
-    path("credits/", credits),
-    path("security/general/", security_general),
-    path("security/disclose/", security_disclose),
-    path("tos/", tos),
-    path("pricing/", pricing),
-    path("privacy/", privacy),
+    path("accessibility/", accessibility, name="accessibility"),
+    path("contact-us/", contact_us, name="contact_us"),
+    path("free-software/", free_software, name="free_software"),
+    path("credits/", credits, name="credits"),
+    path("security/", include((security_patterns, "security"))),
+    path("tos/", tos, name="tos"),
+    path("pricing/", pricing, name="pricing"),
+    path("privacy/", privacy, name="privacy"),
     path("solutions/", include((solution_patterns, "solutions"))),
-    path("", index),
+    path("", index, name="landing"),
 ]

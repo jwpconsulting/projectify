@@ -1,0 +1,23 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% load static %}
+{% load i18n %}
+<nav class="flex-row items-center justify-between border-b-2 border-border bg-foreground px-6 py-4 md:flex">
+    <div class="flex flex-row items-center gap-4">
+        <a href="{% url "dashboard:dashboard" %}" class="shrink">
+            <img src="{% static "polylogo.svg" %}" alt="Projectify">
+        </a>
+    </div>
+    <div class="flex shrink-0 flex-row items-center gap-2">
+        {# TODO: use django url template syntax #}
+        {% if user.is_authenticated %}
+            <a href="/log-out"
+               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Log out" %}</a>
+            <a href="/profile"
+               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Profile" %}</a>
+        {% else %}
+            <a href="/log-in"
+               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Log in" %}</a>
+        {% endif %}
+    </div>
+</nav>

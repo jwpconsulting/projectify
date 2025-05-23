@@ -3,36 +3,14 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-    <p class="absolute left-0 top-0 w-full bg-destructive/30 text-center font-bold">Development preview</p>
+    {% if debug %}
+        {% include "common/navigation/header/development_view_bar.html" %}
+    {% endif %}
     <div class="flex grow flex-col">
-        <nav class="flex-row items-center justify-between border-b-2 border-border bg-foreground px-6 py-4 md:flex">
-            <div class="flex flex-row items-center gap-4">
-                <a href="/" class="shrink">
-                    <img src="{{ FRONTEND_URL }}/src/lib/figma/navigation/polylogo.svg"
-                         alt="Projectify">
-                </a>
-                <div class="flex flex-row gap-2">
-                    <a href="/solutions"
-                       class="text-base-content flex flex-row items-center gap-2 rounded-lg p-2 hover:text-primary active:text-primary">
-                        <div class="text-base font-bold">Solutions</div>
-                    </a>
-                    <a href="/pricing"
-                       class="text-base-content flex flex-row items-center gap-2 rounded-lg p-2 hover:text-primary active:text-primary">
-                        <div class="text-base font-bold">Pricing</div>
-                    </a><a href="/help"
-   class="text-base-content flex flex-row items-center gap-2 rounded-lg p-2 hover:text-primary active:text-primary">
-                    <div class="text-base font-bold">Help</div>
-                </a>
-            </div>
-        </div>
-        <div class="flex shrink-0 flex-row items-center gap-2">
-            <a href="/dashboard"
-               class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content"> Continue to dashboard </a>
-        </div>
-    </nav>
-    <main class="flex grow flex-col md:grid md:grid-cols-2 xl:grid-cols-3">
-        {% block onboarding_content %}
-        {% endblock onboarding_content %}
-    </main>
-</div>
+        {% include "common/navigation/header/dashboard.html" %}
+        <main class="flex grow flex-col md:grid md:grid-cols-2 xl:grid-cols-3">
+            {% block onboarding_content %}
+            {% endblock onboarding_content %}
+        </main>
+    </div>
 {% endblock content %}
