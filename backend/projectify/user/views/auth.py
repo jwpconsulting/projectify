@@ -6,7 +6,9 @@
 from django.contrib.auth.password_validation import (
     password_validators_help_texts,
 )
+from django.http import HttpRequest, HttpResponse
 from django.utils.decorators import method_decorator
+from django.views.decorators.http import require_http_methods
 
 from django_ratelimit.core import get_usage
 from django_ratelimit.decorators import ratelimit
@@ -33,6 +35,49 @@ from projectify.user.services.auth import (
 )
 
 
+# Django view
+def log_out(request: HttpRequest) -> HttpResponse:
+    """Log the user out. Need to be logged in first."""
+    # TODO check if logged in
+    user_log_out(request=request)
+    return HttpResponse("TODO")
+
+
+# No authentication required
+@require_http_methods(["GET", "POST"])
+def sign_up(request: HttpRequest) -> HttpResponse:
+    """Sign the user up."""
+    return HttpResponse("TODO")
+
+
+def email_confirm(
+    request: HttpRequest, email: str, token: str
+) -> HttpResponse:
+    """Confirm a new user's email address."""
+    return HttpResponse("TODO")
+
+
+@require_http_methods(["GET", "POST"])
+def log_in(request: HttpRequest) -> HttpResponse:
+    """Log the user in."""
+    return HttpResponse("TODO")
+
+
+@require_http_methods(["GET", "POST"])
+def request_password_reset(request: HttpRequest) -> HttpResponse:
+    """Request a password reset."""
+    return HttpResponse("TODO")
+
+
+@require_http_methods(["GET", "POST"])
+def confirm_password_reset(
+    request: HttpRequest, email: str, token: str
+) -> HttpResponse:
+    """Confirm a password reset request and set a new password."""
+    return HttpResponse("TODO")
+
+
+# DRF Views
 class LogOut(views.APIView):
     """Log a user out."""
 
