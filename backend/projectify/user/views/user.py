@@ -5,10 +5,16 @@
 
 from typing import Union, cast
 
+from django import forms
 from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import AnonymousUser
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
+from django.views.decorators.http import require_http_methods
 
 from django_ratelimit.decorators import ratelimit
 from rest_framework import parsers, serializers, views
@@ -31,6 +37,62 @@ from projectify.user.services.user import (
     user_request_email_address_update,
     user_update,
 )
+
+# Django views
+
+
+class UserProfileForm(forms.ModelForm):
+    """Form for user profile update."""
+
+    class Meta:
+        """Form meta."""
+
+        model = User
+        fields = ("preferred_name",)
+
+
+@require_http_methods(["GET", "POST"])
+@login_required
+def user_profile(request: HttpRequest) -> HttpResponse:
+    """Show user profile."""
+    user = request.user
+    assert isinstance(user, User)
+    if request.method == "POST":
+        form = UserProfileForm(data=request.POST, instance=user)
+        if form.is_valid():
+            user_update(
+                who=user,
+                user=user,
+                preferred_name=form.cleaned_data["preferred_name"],
+            )
+            return redirect(reverse("user:users-django:profile"))
+    else:
+        form = UserProfileForm(instance=user)
+    context = {
+        "user": user,
+        "form": form,
+    }
+    return render(request, "user/user_profile.html", context=context)
+
+
+@require_http_methods(["GET", "POST"])
+@login_required
+def password_change(request: HttpRequest) -> HttpResponse:
+    """Change user password."""
+    return HttpResponse("TODO")
+
+
+@require_http_methods(["GET", "POST"])
+@login_required
+def email_address_update(request: HttpRequest) -> HttpResponse:
+    """Start email address update process for user."""
+    return HttpResponse("TODO")
+
+
+@login_required
+def email_address_confirm(request: HttpRequest, token: str) -> HttpResponse:
+    """Confirm the user's new email address by checking the token."""
+    return HttpResponse("TODO")
 
 
 # Create
