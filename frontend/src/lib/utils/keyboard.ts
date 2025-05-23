@@ -9,6 +9,9 @@ type KeyboardKey = "Escape" | "Enter" | "j" | "k" | "h" | "l";
 // key
 function filterKey(key: KeyboardKey, fn: KeyCallback) {
     return (e: KeyboardEvent) => {
+        if (document.activeElement?.nodeName === "INPUT") {
+            return;
+        }
         if (e.key !== key) {
             return;
         }

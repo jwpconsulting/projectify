@@ -1,0 +1,98 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# TODO The below 6 items can be refactored using a for loop #}
+{% extends "solutions_base.html" %}
+{% load static %}
+{% load i18n %}
+{% block solutions_content %}
+    <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
+        {% trans "Solutions for every type of user" as title %}
+        {% trans "Explore the different ways users are using Projectify to meet due dates, reach targets and be productive." as text %}
+        {% trans "An illustration showing users of different backgrounds" as alt %}
+        {% include "storefront/common/solutions_header.html" with title=title text=text src="solutions/hero-solutions.png" alt=alt %}
+        <div class="w-full p-6 max-w-4xl">
+            <div class="flex flex-col items-center gap-12 md:grid md:grid-cols-3 md:gap-8">
+                <section class="flex h-full flex-col justify-between gap-4">
+                    <div class="flex flex-col gap-4">
+                        <picture>
+                            <img src="{% static "solutions/hero-development-teams.png" %}" alt="{% trans "Our mascot Poly sitting in front of a computer, developing software and looking content" %}" class="rounded-lg" width="728" height="492" />
+                        </picture>
+                        <div class="flex h-full flex-col gap-4">
+                            <h2 class="font-bold">{% trans "Development teams" %}</h2>
+                            <p class="font-normal">{% trans "Monitor team progress throughout the whole software lifecyle." %}</p>
+                        </div>
+                    </div>
+                    <a class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
+                       href="{% url "storefront:solutions:detail" page="development-teams" %}">{% trans "Learn more" %}</a>
+                </section>
+                <section class="flex h-full flex-col justify-between gap-4">
+                    <div class="flex flex-col gap-4">
+                        <picture>
+                            <img src="{% static "solutions/hero-research.png" %}" alt="{% trans "Two content looking Polys (our mascot) researching in a laboratory and taking down notes on a chalkboard" %}" class="rounded-lg" width="728" height="492" />
+                        </picture>
+                        <div class="flex h-full flex-col gap-4">
+                            <h2 class="font-bold">{% trans "Research" %}</h2>
+                            <p class="font-normal">{% trans "Keep track of testing processes and results with incredible detail." %}</p>
+                        </div>
+                    </div>
+                    <a class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
+                       href="{% url "storefront:solutions:detail" page="research" %}">{% trans "Learn more" %}</a>
+                </section>
+                <section class="flex h-full flex-col justify-between gap-4">
+                    <div class="flex flex-col gap-4">
+                        <picture>
+                            <img src="{% static "solutions/hero-project-management.png" %}" alt="{% trans "Two Polys in a factory pointing at machines symbolized by huge gears. The mascot on the left holds a wrench." %}" class="rounded-lg" width="728" height="492" />
+                        </picture>
+                        <div class="flex h-full flex-col gap-4">
+                            <h2 class="font-bold">{% trans "Project management" %}</h2>
+                            <p class="font-normal">{% trans "Faciliate rapid delivery across multiple projects for any industry." %}</p>
+                        </div>
+                    </div>
+                    <a class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
+                       href="{% url "storefront:solutions:detail" page="project-management" %}">{% trans "Learn more" %}</a>
+                </section>
+                <section class="flex h-full flex-col justify-between gap-4">
+                    <div class="flex flex-col gap-4">
+                        <picture>
+                            <img src="{% static "solutions/hero-academic.png" %}" alt="{% trans "Our mascot Poly celebrating their graduation from an educiational institution, wearing an academic dress, throwing a square academic cap into the air" %}" class="rounded-lg" width="728" height="492" />
+                        </picture>
+                        <div class="flex h-full flex-col gap-4">
+                            <h2 class="font-bold">{% trans "Academic endeavours" %}</h2>
+                            <p class="font-normal">{% trans "Structure a thesis, organise a project or keep track of assignments." %}</p>
+                        </div>
+                    </div>
+                    <a class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
+                       href="{% url "storefront:solutions:detail" page="academic" %}">{% trans "Learn more" %}</a>
+                </section>
+                <section class="flex h-full flex-col justify-between gap-4">
+                    <div class="flex flex-col gap-4">
+                        <picture>
+                            <img src="{% static "solutions/hero-remote-work.png" %}" alt="{% trans "Our mascot Poly working at the beach looking happy" %}" class="rounded-lg" width="728" height="492" />
+                        </picture>
+                        <div class="flex h-full flex-col gap-4">
+                            <h2 class="font-bold">{% trans "Remote work" %}</h2>
+                            <p class="font-normal">{% trans "Asynchronous communication whether you're at home or away." %}</p>
+                        </div>
+                    </div>
+                    <a class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
+                       href="{% url "storefront:solutions:detail" page="remote-work" %}">{% trans "Learn more" %}</a>
+                </section>
+                <section class="flex h-full flex-col justify-between gap-4">
+                    <div class="flex flex-col gap-4">
+                        <picture>
+                            <img src="{% static "solutions/hero-personal.png" %}" alt="{% trans "Our mascot Poly thinking about all the things they want to do, among them being running, taking pictures and eating something tasty, each thing symbolized by a thought bubble" %}" class="rounded-lg" width="728" height="492" />
+                        </picture>
+                        <div class="flex h-full flex-col gap-4">
+                            <h2 class="font-bold">{% trans "Personal use" %}</h2>
+                            <p class="font-normal">
+                                {% trans "Log an exercise routine, create a new diet or plan an adventure. The possibilities are endless." %}
+                            </p>
+                        </div>
+                    </div>
+                    <a class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
+                       href="{% url "storefront:solutions:detail" page="personal-use" %}">{% trans "Learn more" %}</a>
+                </section>
+            </div>
+        </div>
+    </main>
+{% endblock solutions_content %}

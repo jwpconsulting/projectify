@@ -162,6 +162,7 @@
             pkgs.nodejs
             pkgs.heroku
             pkgs.openssl
+            pkgs.gettext
           ];
         });
       });

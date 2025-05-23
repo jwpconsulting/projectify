@@ -1,0 +1,14 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "storefront_base.html" %}
+{% load markdownify %}
+{% load i18n %}
+{% block storefront_content %}
+    <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
+        {% trans "Credits and attribution" as title %}
+        {% include "storefront/common/storefront_header.html" with title=title %}
+        <div class="w-full p-6 max-w-4xl">
+            <div class="prose">{# TODO: Load markdown #}</div>
+        </div>
+    </main>
+{% endblock storefront_content %}

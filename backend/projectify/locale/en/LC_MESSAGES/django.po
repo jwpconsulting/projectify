@@ -1,0 +1,54 @@
+# SOME DESCRIPTIVE TITLE.
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# SPDX-FileCopyrightText: 2025 JWP Consulting GK
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-19 07:09+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: projectify/lib/models.py:104
+msgid "title"
+msgstr ""
+
+#: projectify/lib/models.py:105
+msgid "description"
+msgstr ""
+
+#: projectify/lib/models.py:122
+msgid "created"
+msgstr ""
+
+#: projectify/lib/models.py:123
+msgid "modified"
+msgstr ""
+
+#: projectify/templates/email/_greeting.txt:4
+msgid ""
+"Kind regards,\n"
+"\n"
+"Projectify Support\n"
+"\n"
+"---\n"
+"\n"
+"Write us if you have any questions:\n"
+"\n"
+"hello@projectifyapp.com\n"
+"\n"
+"https://www.projectifyapp.com"
+msgstr ""
+
+#: projectify/templates/email/_salutation.txt:3
+#, python-format
+msgid "Dear %(addressee)s,"
+msgstr ""

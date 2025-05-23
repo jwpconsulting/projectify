@@ -1,0 +1,21 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "solutions_base.html" %}
+{% load static %}
+{% load i18n %}
+{% block solutions_content %}
+    <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
+        {% trans "Academic solutions" as title %}
+        {% trans "How students can use Projectify to plan a thesis, collaborate, or keep track of assignments." as text %}
+        {% trans "Two content looking Polys (our mascot) researching in a laboratory and taking down notes on a chalkboard" as alt %}
+        {% include "storefront/common/solutions_header.html" with title=title text=text src="solutions/hero-academic.png" alt=alt %}
+        <div class="w-full p-6 max-w-4xl">
+            <div class="flex w-full flex-col items-center gap-6 sm:gap-16">
+                {% trans "Checklists that aid your progres" as title %}
+                {% trans "We know that projects and dissertations can be daunting, but we're here to help. Breaking tasks into smaller sub tasks allow you to micro-achieve your way to completion." as text %}
+                {% trans "An illustration showing how users can track subtask progress for each task" as alt %}
+                {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="solutions/academic-sub-task.png" alt=alt imgPosition="left" %}
+            </div>
+        </div>
+    </main>
+{% endblock solutions_content %}
