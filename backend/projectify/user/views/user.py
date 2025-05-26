@@ -48,7 +48,7 @@ class UserProfileForm(forms.ModelForm):
         """Form meta."""
 
         model = User
-        fields = ("preferred_name",)
+        fields = ("preferred_name", "profile_picture")
 
 
 @require_http_methods(["GET", "POST"])
@@ -58,14 +58,18 @@ def user_profile(request: HttpRequest) -> HttpResponse:
     user = request.user
     assert isinstance(user, User)
     if request.method == "POST":
-        form = UserProfileForm(data=request.POST, instance=user)
+        form = UserProfileForm(
+            data=request.POST, instance=user, files=request.FILES
+        )
         if form.is_valid():
             user_update(
                 who=user,
                 user=user,
                 preferred_name=form.cleaned_data["preferred_name"],
+                profile_picture=form.cleaned_data["profile_picture"],
             )
             return redirect(reverse("user:users-django:profile"))
+        raise ValueError()
     else:
         form = UserProfileForm(instance=user)
     context = {

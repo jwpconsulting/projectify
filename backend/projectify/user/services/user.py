@@ -36,12 +36,14 @@ def user_update(
     who: User,
     user: User,
     preferred_name: Optional[str],
+    profile_picture: Optional[object],
 ) -> User:
     """Update a user."""
     if not who == user:
         # TODO localize string
         raise PermissionDenied("User can only update own user")
     user.preferred_name = preferred_name
+    user.profile_picture = profile_picture
     user.save()
     return user
 

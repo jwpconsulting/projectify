@@ -2,14 +2,16 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "storefront_base.html" %}
 {% block storefront_content %}
-    <div class="flex flex-col">
-        <h1>Update user yo</h1>
-        <br>
-        <form method="post">
-            {% csrf_token %}
-            {{ form }}
-            {{ form.preferred_name.errors }}
-            <input type="submit" />
-        </form>
+    <div class="w-full flex flex-col items-center p-16">
+        <div class="flex flex-col p-8">
+            <h1>Update user yo</h1>
+            <br>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form }}
+                {{ form.preferred_name.errors }}
+                <input type="submit" />
+            </form>
+        </div>
     </div>
 {% endblock storefront_content %}
