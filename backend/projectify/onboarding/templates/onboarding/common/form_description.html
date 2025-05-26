@@ -1,0 +1,25 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% load i18n %}
+<div class="flex flex-col gap-4">
+    <h1 class="min-w-fit max-w-lg text-4xl font-bold">{% trans title %}</h1>
+    <div class="flex flex-col gap-2 text-lg">
+        <div class="flex flex-col gap-3">
+            <p>{% trans text_1 %}</p>
+            {% if text_2 %}
+                <p>{% trans text_2 %}</p>
+            {% endif %}
+            {% if href %}
+                {% if target_blank %}
+                    {# TODO: import external icon #}
+                    <a ref="{{ href }}"
+                       class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg"
+                       target="_blank">{% trans href_label %}<span class="sr-only">{% trans "(Opens in new tab)" %}</span></a>
+                {% else %}
+                    <a href="{{ href }}"
+                       class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg">{% trans href_label %}</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>

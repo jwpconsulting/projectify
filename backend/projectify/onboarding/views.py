@@ -5,14 +5,25 @@
 
 from uuid import UUID
 
-from django.http import HttpRequest, HttpResponse
+from django import forms
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
+
+from projectify.user.models import User
 
 
 def welcome(request: HttpRequest) -> HttpResponse:
     """Serve onboarding welcome page."""
     return render(request, "onboarding/welcome.html")
+
+
+class PreferredNameForm(forms.ModelForm):
+    """Update User's preferred name."""
+
+    class Meta:
+        model = User
+        fields = ["preferred_name"]
 
 
 @require_http_methods(["GET", "POST"])
@@ -26,7 +37,17 @@ def about_you(request: HttpRequest) -> HttpResponse:
     On success: Update user profile. Redirect user to /onboarding/new-workspace
     On failure: Show this page again with errors.
     """
-    return render(request, "onboarding/about_you.html")
+    if request.method == "POST":
+        form = PreferredNameForm(request.POST, instance=request.user)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+            # TODO: error messages?
+            return HttpResponseRedirect("/onboarding/new-workspace")
+    else:
+        form = PreferredNameForm(instance=request.user)
+
+    return render(request, "onboarding/about_you.html", {"form": form})
 
 
 @require_http_methods(["GET", "POST"])
