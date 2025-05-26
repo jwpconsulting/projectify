@@ -56,7 +56,11 @@ user_patterns_django = (
     ),
     path("sign-up", sign_up, name="sign-up"),
     path("log-out", log_out, name="log-out"),
-    path("confirm-password-reset", confirm_password_reset, name="log-out"),
+    path(
+        "confirm-password-reset",
+        confirm_password_reset,
+        name="confirm-password-reset",
+    ),
 )
 
 user_patterns = (
