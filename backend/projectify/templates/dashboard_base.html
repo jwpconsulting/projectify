@@ -15,16 +15,19 @@
             </div>
             <div class="flex shrink-0 flex-row items-center gap-2">
                 <div class="flex flex-row gap-4">
-                    <button class="flex flex-row items-center justify-center gap-2 rounded-lg px-2 py-0.5 hover:bg-secondary-hover">
+                    <a class="flex flex-row items-center justify-center gap-2 rounded-lg px-2 py-0.5 hover:bg-secondary-hover"
+                       href="{% url "user:users-django:profile" %}">
                         {{ request.user }}
                         <div class="flex flex-row h-6 w-6 items-center rounded-full border border-primary">
-                            <img src="{{ request.profile_picture.url }}"
-                                 alt="{{ request.user }}"
-                                 height="24"
-                                 width="24"
-                                 class="h-full w-full overflow-x-auto rounded-full object-cover object-center">
+                            {% if request.user.profile_picture %}
+                                <img src="{{ request.user.profile_picture.url }}"
+                                     alt="{{ request.user }}"
+                                     height="24"
+                                     width="24"
+                                     class="h-full w-full overflow-x-auto rounded-full object-cover object-center">
+                            {% endif %}
                         </div>
-                    </button>
+                    </a>
                 </div>
             </div>
         </nav>
