@@ -1,0 +1,16 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "storefront_base.html" %}
+{% block storefront_content %}
+    <div class="w-full flex flex-col items-center p-16">
+        <div class="flex flex-col p-8">
+            <h1>Log in</h1>
+            <br>
+            <form method="post">
+                {% csrf_token %}
+                {{ form }}
+                <input type="submit" />
+            </form>
+        </div>
+    </div>
+{% endblock storefront_content %}
