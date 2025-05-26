@@ -3,10 +3,12 @@
 # SPDX-FileCopyrightText: 2024 JWP Consulting GK
 """User authentication views."""
 
+from django import forms
 from django.contrib.auth.password_validation import (
     password_validators_help_texts,
 )
 from django.http import HttpRequest, HttpResponse
+from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_http_methods
 
@@ -39,8 +41,10 @@ from projectify.user.services.auth import (
 def log_out(request: HttpRequest) -> HttpResponse:
     """Log the user out. Need to be logged in first."""
     # TODO check if logged in
-    user_log_out(request=request)
-    return HttpResponse("TODO")
+    user = request.user
+    if not user.is_anonymous:
+        user_log_out(request=request)
+    return redirect("/")
 
 
 # No authentication required
@@ -57,10 +61,36 @@ def email_confirm(
     return HttpResponse("TODO")
 
 
+class LogInForm(forms.Form):
+    """Form for logging in."""
+
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
+
+
 @require_http_methods(["GET", "POST"])
 def log_in(request: HttpRequest) -> HttpResponse:
     """Log the user in."""
-    return HttpResponse("TODO")
+    next = request.GET.get("next", None)
+    if request.method == "POST":
+        # log in
+        form = LogInForm(request.POST)
+        context = {"form": form}
+        if not form.is_valid():
+            return render(request, "user/log_in.html", context=context)
+        user_log_in(
+            email=form.cleaned_data["email"],
+            password=form.cleaned_data["password"],
+            request=request,
+        )
+        form.cleaned_data
+        if next:
+            return redirect(next)
+        return redirect("/")
+    # render log in form
+    form = LogInForm()
+    context = {"form": form}
+    return render(request, "user/log_in.html", context=context)
 
 
 @require_http_methods(["GET", "POST"])
