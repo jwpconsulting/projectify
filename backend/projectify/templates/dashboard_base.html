@@ -2,6 +2,7 @@
 <!-- SPDX-FileCopyrightText: 2024 JWP Consulting GK -->
 {% extends "base.html" %}
 {% load static %}
+{% load i18n %}
 {% block content %}
     <div class="flex min-h-screen grow flex-col">
         <nav class="hidden flex-row items-center justify-between border-b-2 border-border bg-foreground px-6 py-4 md:flex">
@@ -28,6 +29,7 @@
                             {% endif %}
                         </div>
                     </a>
+                    <a href="{% url "user:users-django:log-out" %}">{% trans "Log out" %}</a>
                 </div>
             </div>
         </nav>
