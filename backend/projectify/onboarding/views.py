@@ -6,13 +6,19 @@
 from uuid import UUID
 
 from django import forms
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
 from projectify.user.models import User
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.selectors.workspace import workspace_find_for_user
+from projectify.workspace.services.workspace import workspace_create
 
 
+@login_required
 def welcome(request: HttpRequest) -> HttpResponse:
     """Serve onboarding welcome page."""
     return render(request, "onboarding/welcome.html")
@@ -22,10 +28,13 @@ class PreferredNameForm(forms.ModelForm):
     """Update User's preferred name."""
 
     class Meta:
+        """Meta."""
+
         model = User
         fields = ["preferred_name"]
 
 
+@login_required
 @require_http_methods(["GET", "POST"])
 def about_you(request: HttpRequest) -> HttpResponse:
     """
@@ -42,14 +51,24 @@ def about_you(request: HttpRequest) -> HttpResponse:
         if form.is_valid():
             user = form.save(commit=False)
             user.save()
-            # TODO: error messages?
-            return HttpResponseRedirect("/onboarding/new-workspace")
+            return redirect(reverse("onboarding:new_workspace"))
     else:
         form = PreferredNameForm(instance=request.user)
 
     return render(request, "onboarding/about_you.html", {"form": form})
 
 
+class WorkspaceForm(forms.ModelForm):
+    """Create a workspace."""
+
+    class Meta:
+        """Meta."""
+
+        model = Workspace
+        fields = ["title"]
+
+
+@login_required
 @require_http_methods(["GET", "POST"])
 def new_workspace(request: HttpRequest) -> HttpResponse:
     """
@@ -62,9 +81,29 @@ def new_workspace(request: HttpRequest) -> HttpResponse:
     /onboarding/new-project/<workspace-uuid> with the workspace UUID coming
     from the newly created workspace.
     """
-    return render(request, "onboarding/new_workspace.html")
+    if request.method == "POST":
+        form = WorkspaceForm(request.POST)
+        if form.is_valid():
+            workspace = workspace_create(
+                title=form.cleaned_data["title"],
+                description=None,
+                owner=request.user,
+            )
+            return redirect(
+                reverse("onboarding:new_project", args=[str(workspace.uuid)])
+            )
+    else:
+        form = WorkspaceForm()
+
+    context = {"form": form}
+
+    if request.user.is_authenticated:
+        workspaces = workspace_find_for_user(who=request.user)
+        context = {"form": form, "workspace": workspaces[0]}
+    return render(request, "onboarding/new_workspace.html", context)
 
 
+@login_required
 @require_http_methods(["GET", "POST"])
 def new_project(request: HttpRequest, workspace_uuid: UUID) -> HttpResponse:
     """
@@ -80,6 +119,7 @@ def new_project(request: HttpRequest, workspace_uuid: UUID) -> HttpResponse:
     return HttpResponse("TODO")
 
 
+@login_required
 @require_http_methods(["GET", "POST"])
 def new_task(request: HttpRequest, project_uuid: UUID) -> HttpResponse:
     """
@@ -99,6 +139,7 @@ def new_task(request: HttpRequest, project_uuid: UUID) -> HttpResponse:
     return HttpResponse("TODO")
 
 
+@login_required
 @require_http_methods(["GET", "POST"])
 def new_label(request: HttpRequest, task_uuid: UUID) -> HttpResponse:
     """
@@ -117,6 +158,7 @@ def new_label(request: HttpRequest, task_uuid: UUID) -> HttpResponse:
     return HttpResponse("TODO")
 
 
+@login_required
 def assign_task(request: HttpRequest, task_uuid: UUID) -> HttpResponse:
     """Show the user that Projectify assigned the task to them."""
     return HttpResponse("TODO")

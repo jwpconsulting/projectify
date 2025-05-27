@@ -5,10 +5,18 @@
 
 from django.urls import path
 
-from projectify.onboarding.views import about_you, new_workspace, welcome
+from projectify.onboarding.views import (
+    about_you,
+    new_project,
+    new_workspace,
+    welcome,
+)
+
+app_name = "onboarding"
 
 urlpatterns = [
-    path("welcome/", welcome),
-    path("about-you/", about_you),
-    path("new-workspace/", new_workspace),
+    path("welcome/", welcome, name="welcome"),
+    path("about-you/", about_you, name="about_you"),
+    path("new-workspace/", new_workspace, name="new_workspace"),
+    path("new-project/<uuid:workspace_uuid>", new_project, name="new_project"),
 ]

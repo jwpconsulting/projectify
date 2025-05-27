@@ -10,7 +10,6 @@
         {% include "onboarding/common/form_description.html" with title="About you" text_1="Tell us your preferred name. You can also keep it empty and continue by clicking the button below." %}
         <div class="flex flex-col">
             <div class="flex flex-col items-start gap-2">{{ form }}</div>
-            {% if form.errors %}<p>{{ form.errors }}</p>{% endif %}
         </div>
         <div class="flex flex-col gap-2">
             <div class="flex gap-2">

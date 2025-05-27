@@ -1,51 +1,36 @@
-<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
-<!-- SPDX-FileCopyrightText: 2025 JWP Consulting GK -->
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "onboarding_base.html" %}
 {% load i18n %}
 {% block onboarding_content %}
-    <form class="col-span-1 flex shrink grow flex-col gap-16 px-12 py-20 pb-8">
-        <!-- Message -->
+    <form action=""
+          method="POST"
+          class="col-span-1 flex shrink grow flex-col gap-16 px-12 py-20 pb-8">
+        {% csrf_token %}
         <div class="flex flex-col gap-4">
-            {# TODO: Name #}
             <h1 class="min-w-fit max-w-lg text-4xl font-bold">
-                {% if name %}
-                    {% trans "Let’s set up your first workspace, YOUR NAME." %}
+                {% trans "Let’s set up your first workspace" %}
+                {% if user %}
+                    , {{ user }}.
                 {% else %}
-                    {% trans "Let’s set up your first workspace." %}
+                    .
                 {% endif %}
             </h1>
             <div class="flex flex-col gap-2 text-lg">
                 {% if workspace %}
                     <p>{% trans "It looks like you already have a workspace, would you like to create a project?" %}</p>
                     <p>
-                        {# TODO: add uuid #}
-                        <a href="/onboarding/new-project/ed0fd9f2-e63a-4985-86c5-943a9f3c1d59"
+                        <a href="/onboarding/new-project/{{ workspace.uuid }}"
                            class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg">{% trans "Create project" %}</a>
                     </p>
                 {% else %}
-                    <p>{% trans "You can create and manage numerous workspaces" %}</p>
+                    <p>{% trans "You can create and manage numerous workspaces." %}</p>
                 {% endif %}
             </div>
         </div>
         <div class="flex flex-col">
-            <div class="flex flex-col items-start gap-2">
-                <div class="flex w-full flex-row items-center justify-between">
-                    <label for="full-name"
-                           class="font-bold text-base-content first-letter:uppercase">
-                        {% trans "Workspace name" %}
-                    </label>
-                </div>
-                <div class="flex w-full flex-row items-center gap-2">
-                    <input type="text"
-                           class="placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2"
-                           id="workspaceTitle"
-                           name="workspaceTitle"
-                           placeholder="{% trans "e.g. the name of your company" %}">
-                </div>
-            </div>
-            <!--<InputField>-->
+            <div class="flex flex-col items-start gap-2">{{ form }}</div>
         </div>
-        <!-- Navigation buttons -->
         <div class="flex flex-col gap-2">
             <div class="flex gap-2">
                 <button type="submit"
