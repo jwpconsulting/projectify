@@ -159,6 +159,7 @@
           };
         };
         devShell = poetryEnv.env.overrideAttrs (oldattrs: {
+          LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [ postgresql ];
           buildInputs = [
             postgresql
             pkgs.nodejs
