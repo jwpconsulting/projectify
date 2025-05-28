@@ -15,8 +15,10 @@ from django.views.decorators.http import require_http_methods
 
 from projectify.user.models import User
 from projectify.workspace.models.project import Project
+from projectify.workspace.models.task import Task
 from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.selectors.project import (
+    project_find_by_project_uuid,
     project_find_by_workspace_uuid,
 )
 from projectify.workspace.selectors.workspace import (
@@ -24,6 +26,8 @@ from projectify.workspace.selectors.workspace import (
     workspace_find_for_user,
 )
 from projectify.workspace.services.project import project_create
+from projectify.workspace.services.section import section_create
+from projectify.workspace.services.task import task_create
 from projectify.workspace.services.workspace import workspace_create
 
 
@@ -64,7 +68,8 @@ def about_you(request: HttpRequest) -> HttpResponse:
     else:
         form = PreferredNameForm(instance=request.user)
 
-    return render(request, "onboarding/about_you.html", {"form": form})
+    context = {"form": form}
+    return render(request, "onboarding/about_you.html", context)
 
 
 class WorkspaceForm(forms.ModelForm):
@@ -161,6 +166,18 @@ def new_project(request: HttpRequest, workspace_uuid: UUID) -> HttpResponse:
     return render(request, "onboarding/new_project.html", context)
 
 
+class TaskForm(forms.ModelForm):
+    """Create a task."""
+
+    title = forms.CharField(label="Task name")
+
+    class Meta:
+        """Meta."""
+
+        model = Task
+        fields = ["title"]
+
+
 @login_required
 @require_http_methods(["GET", "POST"])
 def new_task(request: HttpRequest, project_uuid: UUID) -> HttpResponse:
@@ -178,7 +195,46 @@ def new_task(request: HttpRequest, project_uuid: UUID) -> HttpResponse:
     from the newly created task
     On error: Show task creation form with errors.
     """
-    return HttpResponse("TODO")
+    project = project_find_by_project_uuid(
+        project_uuid=project_uuid, who=request.user
+    )
+    if project is None:
+        raise Http404("Project not found")
+
+    section = project.section_set.first()
+    section_title = "To do"
+    if section:
+        section_title = section.title
+
+    if request.method == "POST":
+        if section is None:
+            # Create a section
+            section = section_create(
+                who=request.user,
+                title=section_title,
+                description=None,
+                project=project,
+            )
+        # Create task
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            task = task_create(
+                who=request.user,
+                section=section,
+                title=form.cleaned_data["title"],
+            )
+            return redirect(
+                reverse("onboarding:new_label", args=[str(task.uuid)])
+            )
+    else:
+        form = TaskForm()
+
+    context = {
+        "form": form,
+        "section": section,
+        "section_title": section_title,
+    }
+    return render(request, "onboarding/new_task.html", context)
 
 
 @login_required

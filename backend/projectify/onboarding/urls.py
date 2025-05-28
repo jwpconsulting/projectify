@@ -7,6 +7,7 @@ from django.urls import path
 
 from projectify.onboarding.views import (
     about_you,
+    new_label,
     new_project,
     new_task,
     new_workspace,
@@ -21,4 +22,5 @@ urlpatterns = [
     path("new-workspace/", new_workspace, name="new_workspace"),
     path("new-project/<uuid:workspace_uuid>", new_project, name="new_project"),
     path("new-task/<uuid:project_uuid>", new_task, name="new_task"),
+    path("new-label/<uuid:task_uuid>", new_label, name="new_label"),
 ]
