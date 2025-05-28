@@ -4,8 +4,10 @@
 """Test user services."""
 
 import re
+from typing import cast
 
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.db.models.fields.files import FileDescriptor
 
 import pytest
 from faker import Faker
@@ -35,7 +37,7 @@ def test_user_update(
         who=user,
         user=user,
         preferred_name=new_name,
-        profile_picture=uploaded_file,
+        profile_picture=cast(FileDescriptor, uploaded_file),
     )
     user.refresh_from_db()
     assert user.preferred_name == new_name

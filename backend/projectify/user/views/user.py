@@ -161,6 +161,7 @@ class UserUpdate(views.APIView):
             who=user,
             user=user,
             preferred_name=data.get("preferred_name"),
+            profile_picture=None,
         )
         output_serializer = LoggedInUserSerializer(instance=user)
         return Response(data=output_serializer.data, status=HTTP_200_OK)
