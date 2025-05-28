@@ -10,12 +10,13 @@ from django.contrib.auth.password_validation import (
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
 from django_ratelimit.core import get_usage
 from django_ratelimit.decorators import ratelimit
 from rest_framework import serializers, views
-from rest_framework.exceptions import Throttled
+from rest_framework.exceptions import Throttled, ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -47,11 +48,72 @@ def log_out(request: HttpRequest) -> HttpResponse:
     return redirect("/")
 
 
+class SignUpForm(forms.Form):
+    """Sign up form."""
+
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
+    tos_agreed = forms.BooleanField()
+    privacy_policy_agreed = forms.BooleanField()
+
+    email.widget.attrs.update({"placeholder": _("Enter your email")})
+    password.widget.attrs.update({"placeholder": _("Enter your password")})
+
+
 # No authentication required
 @require_http_methods(["GET", "POST"])
+@ratelimit(key="ip", rate="60/h")
 def sign_up(request: HttpRequest) -> HttpResponse:
     """Sign the user up."""
-    return HttpResponse("TODO")
+    limit = get_usage(
+        request,
+        group="projectify.user.views.auth.sign_up",
+        key="ip",
+        rate="4/h",
+        increment=False,
+    )
+    if limit and limit["should_limit"]:
+        raise Throttled()
+
+    if request.method == "POST":
+        form = SignUpForm(request.POST)
+        if not form.is_valid():
+            context = {"form": form}
+            return render(request, "user/sign_up.html", context=context)
+        data = form.cleaned_data
+        try:
+            user_sign_up(
+                email=data["email"],
+                password=data["password"],
+                tos_agreed=data["tos_agreed"],
+                privacy_policy_agreed=data["privacy_policy_agreed"],
+            )
+        # TODO
+        # except ValidationError as e:
+        except ValidationError:
+            context = {"form": form}
+            # TODO
+            # assert isinstance(e.detail, dict)
+            # for k, v in e.detail.items():
+            #     assert isinstance(v, str)
+            #     form.add_error(k, v)
+            return render(request, "user/sign_up.html", context=context)
+
+        # Increment limit only on success
+        # XXX WHY?
+        get_usage(
+            request,
+            group="projectify.user.views.auth.sign_up",
+            key="ip",
+            rate="4/h",
+            increment=True,
+        )
+        # TODO figure out redirect URL
+        return redirect("/")
+    else:
+        form = SignUpForm()
+    context = {"form": form}
+    return render(request, "user/sign_up.html", context=context)
 
 
 def email_confirm(
