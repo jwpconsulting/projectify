@@ -7,14 +7,23 @@ from uuid import UUID
 
 from django import forms
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
 from projectify.user.models import User
+from projectify.workspace.models.project import Project
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.selectors.workspace import workspace_find_for_user
+from projectify.workspace.selectors.project import (
+    project_find_by_workspace_uuid,
+)
+from projectify.workspace.selectors.workspace import (
+    workspace_find_by_workspace_uuid,
+    workspace_find_for_user,
+)
+from projectify.workspace.services.project import project_create
 from projectify.workspace.services.workspace import workspace_create
 
 
@@ -95,12 +104,21 @@ def new_workspace(request: HttpRequest) -> HttpResponse:
     else:
         form = WorkspaceForm()
 
-    context = {"form": form}
-
-    if request.user.is_authenticated:
-        workspaces = workspace_find_for_user(who=request.user)
-        context = {"form": form, "workspace": workspaces[0]}
+    workspaces = workspace_find_for_user(who=request.user)
+    context = {"form": form, "workspace": workspaces[0]}
     return render(request, "onboarding/new_workspace.html", context)
+
+
+class ProjectForm(forms.ModelForm):
+    """Create a project."""
+
+    title = forms.CharField(label="Project title")
+
+    class Meta:
+        """Meta."""
+
+        model = Project
+        fields = ["title"]
 
 
 @login_required
@@ -116,7 +134,31 @@ def new_project(request: HttpRequest, workspace_uuid: UUID) -> HttpResponse:
     newly created project.
     On error: Show project creation form with errors.
     """
-    return HttpResponse("TODO")
+    workspace = workspace_find_by_workspace_uuid(
+        workspace_uuid=workspace_uuid, who=request.user
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+    projects = project_find_by_workspace_uuid(
+        workspace_uuid=workspace_uuid, who=request.user, archived=False
+    )
+
+    if request.method == "POST":
+        form = ProjectForm(request.POST)
+        if form.is_valid():
+            project = project_create(
+                who=request.user,
+                workspace=workspace,
+                title=form.cleaned_data["title"],
+            )
+            return redirect(
+                reverse("onboarding:new_task", args=[str(project.uuid)])
+            )
+    else:
+        form = ProjectForm()
+
+    context = {"form": form, "project": projects[0]}
+    return render(request, "onboarding/new_project.html", context)
 
 
 @login_required
