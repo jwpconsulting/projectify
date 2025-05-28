@@ -10,6 +10,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import PermissionDenied
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import transaction
+from django.db.models.fields.files import FileDescriptor
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
@@ -36,14 +37,15 @@ def user_update(
     who: User,
     user: User,
     preferred_name: Optional[str],
-    profile_picture: Optional[object],
+    profile_picture: Optional[FileDescriptor],
 ) -> User:
     """Update a user."""
     if not who == user:
         # TODO localize string
         raise PermissionDenied("User can only update own user")
     user.preferred_name = preferred_name
-    user.profile_picture = profile_picture
+    if profile_picture:
+        user.profile_picture = profile_picture
     user.save()
     return user
 
