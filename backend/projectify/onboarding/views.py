@@ -14,6 +14,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
 from projectify.user.models import User
+from projectify.workspace.models.label import Label
 from projectify.workspace.models.project import Project
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.workspace import Workspace
@@ -21,10 +22,12 @@ from projectify.workspace.selectors.project import (
     project_find_by_project_uuid,
     project_find_by_workspace_uuid,
 )
+from projectify.workspace.selectors.task import task_find_by_task_uuid
 from projectify.workspace.selectors.workspace import (
     workspace_find_by_workspace_uuid,
     workspace_find_for_user,
 )
+from projectify.workspace.services.label import label_create
 from projectify.workspace.services.project import project_create
 from projectify.workspace.services.section import section_create
 from projectify.workspace.services.task import task_create
@@ -237,6 +240,18 @@ def new_task(request: HttpRequest, project_uuid: UUID) -> HttpResponse:
     return render(request, "onboarding/new_task.html", context)
 
 
+class LabelForm(forms.ModelForm):
+    """Create a label."""
+
+    name = forms.CharField(label="Label name")
+
+    class Meta:
+        """Meta."""
+
+        model = Label
+        fields = ["name"]
+
+
 @login_required
 @require_http_methods(["GET", "POST"])
 def new_label(request: HttpRequest, task_uuid: UUID) -> HttpResponse:
@@ -253,7 +268,26 @@ def new_label(request: HttpRequest, task_uuid: UUID) -> HttpResponse:
     On failure:
     Show label creation form with errors.
     """
-    return HttpResponse("TODO")
+    task = task_find_by_task_uuid(task_uuid=task_uuid, who=request.user)
+    if task is None:
+        raise Http404("Task not found")
+
+    if request.method == "POST":
+        form = LabelForm(request.POST)
+        if form.is_valid():
+            label_create(
+                workspace=task.section.project.workspace,
+                name=form.cleaned_data["name"],
+                color=0,
+                who=request.user,
+            )
+            return redirect(
+                reverse("onboarding:assign_task", args=[str(task.uuid)])
+            )
+    else:
+        form = LabelForm()
+    context = {"form": form, "task": task}
+    return render(request, "onboarding/new_label.html", context)
 
 
 @login_required
