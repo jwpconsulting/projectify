@@ -113,7 +113,8 @@ def new_workspace(request: HttpRequest) -> HttpResponse:
         form = WorkspaceForm()
 
     workspaces = workspace_find_for_user(who=request.user)
-    context = {"form": form, "workspace": workspaces[0]}
+
+    context = {"form": form, "workspace": workspaces.first()}
     return render(request, "onboarding/new_workspace.html", context)
 
 
@@ -165,7 +166,7 @@ def new_project(request: HttpRequest, workspace_uuid: UUID) -> HttpResponse:
     else:
         form = ProjectForm()
 
-    context = {"form": form, "project": projects[0]}
+    context = {"form": form, "project": projects.first()}
     return render(request, "onboarding/new_project.html", context)
 
 
@@ -293,4 +294,12 @@ def new_label(request: HttpRequest, task_uuid: UUID) -> HttpResponse:
 @login_required
 def assign_task(request: HttpRequest, task_uuid: UUID) -> HttpResponse:
     """Show the user that Projectify assigned the task to them."""
-    return HttpResponse("TODO")
+    task = task_find_by_task_uuid(task_uuid=task_uuid, who=request.user)
+    if task is None:
+        raise Http404("Task not found")
+    context = {
+        "task": task,
+        "project": task.section.project,
+        "workspace": task.section.project.workspace,
+    }
+    return render(request, "onboarding/assign_task.html", context)
