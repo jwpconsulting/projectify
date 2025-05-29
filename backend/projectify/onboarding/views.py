@@ -55,7 +55,7 @@ class PreferredNameForm(forms.ModelForm):
 @require_http_methods(["GET", "POST"])
 def about_you(request: AuthenticatedHttpRequest) -> HttpResponse:
     """
-    Add a preferred name and profile picture for the current user,
+    Add a preferred name and profile picture for the current user.
 
     GET:
     Show page with form
