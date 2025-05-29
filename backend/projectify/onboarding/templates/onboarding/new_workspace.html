@@ -9,11 +9,10 @@
         {% csrf_token %}
         <div class="flex flex-col gap-4">
             <h1 class="min-w-fit max-w-lg text-4xl font-bold">
-                {% trans "Let’s set up your first workspace" %}
                 {% if user %}
-                    , {{ user }}.
+                    {% blocktrans %}Let’s set up your first workspace, {{user}}.{% endblocktrans %}
                 {% else %}
-                    .
+                    {% trans "Let’s set up your first workspace." %}
                 {% endif %}
             </h1>
             <div class="flex flex-col gap-2 text-lg">
@@ -39,6 +38,7 @@
                 </button>
             </div>
         </div>
+        {% include "onboarding/common/step_counter.html" with step=1 step_count="5" %}
     </form>
     <div class="hidden h-full min-w-0 shrink grow flex-col items-center justify-center overflow-hidden bg-background md:flex xl:col-span-2">
     </div>

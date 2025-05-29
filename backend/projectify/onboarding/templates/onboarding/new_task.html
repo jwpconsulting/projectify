@@ -10,13 +10,13 @@
         <div class="flex flex-col gap-4">
             <h1 class="min-w-fit max-w-lg text-4xl font-bold">{% trans "What is a task you’d like to complete?" %}</h1>
             <div class="flex flex-col gap-2 text-lg">
-                {% if section %}
-                    <p>
+                <p>
+                    {% if section %}
                         {% blocktrans %}It looks like you already have a section called "{{section}}". We will now create a task  and place it into that section.{% endblocktrans %}
-                    </p>
-                {% else %}
-                    <p>{% blocktrans %}This task will be placed in a section called "{{section_title}}".{% endblocktrans %}</p>
-                {% endif %}
+                    {% else %}
+                        {% blocktrans %}This task will be placed in a section called "{{section_title}}".{% endblocktrans %}
+                    {% endif %}
+                </p>
                 <p>{% trans "Tasks can be further divided into sub tasks and contain detailed descriptions." %}</p>
             </div>
         </div>
@@ -31,6 +31,7 @@
                 </button>
             </div>
         </div>
+        {% include "onboarding/common/step_counter.html" with step=3 step_count="5" %}
     </form>
     <div class="hidden h-full min-w-0 shrink grow flex-col items-center justify-center overflow-hidden bg-background md:flex xl:col-span-2">
     </div>

@@ -1,0 +1,13 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+<ul class="flex flex-row gap-2">
+    {% with ''|center:step_count as range %}
+        {% for _ in range %}
+            {% if forloop.counter <= step %}
+                <li class="h-4 w-4 rounded bg-background bg-primary"></li>
+            {% else %}
+                <li class="h-4 w-4 rounded bg-background"></li>
+            {% endif %}
+        {% endfor %}
+    {% endwith %}
+</ul>
