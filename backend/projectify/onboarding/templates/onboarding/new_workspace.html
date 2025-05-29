@@ -19,7 +19,7 @@
                 {% if workspace %}
                     <p>{% trans "It looks like you already have a workspace, would you like to create a project?" %}</p>
                     <p>
-                        <a href="/onboarding/new-project/{{ workspace.uuid }}"
+                        <a href="{% url "onboarding:new_project" workspace.uuid %}"
                            class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg">{% trans "Create project" %}</a>
                     </p>
                 {% else %}
