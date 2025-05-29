@@ -7,12 +7,13 @@ from uuid import UUID
 
 from django import forms
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpRequest, HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
+from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.user.models import User
 from projectify.workspace.models.label import Label
 from projectify.workspace.models.project import Project
@@ -30,12 +31,12 @@ from projectify.workspace.selectors.workspace import (
 from projectify.workspace.services.label import label_create
 from projectify.workspace.services.project import project_create
 from projectify.workspace.services.section import section_create
-from projectify.workspace.services.task import task_create
+from projectify.workspace.services.task import task_create, task_update_nested
 from projectify.workspace.services.workspace import workspace_create
 
 
 @login_required
-def welcome(request: HttpRequest) -> HttpResponse:
+def welcome(request: AuthenticatedHttpRequest) -> HttpResponse:
     """Serve onboarding welcome page."""
     return render(request, "onboarding/welcome.html")
 
@@ -52,7 +53,7 @@ class PreferredNameForm(forms.ModelForm):
 
 @login_required
 @require_http_methods(["GET", "POST"])
-def about_you(request: HttpRequest) -> HttpResponse:
+def about_you(request: AuthenticatedHttpRequest) -> HttpResponse:
     """
     Add a preferred name and profile picture for the current user,
 
@@ -87,7 +88,7 @@ class WorkspaceForm(forms.ModelForm):
 
 @login_required
 @require_http_methods(["GET", "POST"])
-def new_workspace(request: HttpRequest) -> HttpResponse:
+def new_workspace(request: AuthenticatedHttpRequest) -> HttpResponse:
     """
     Create a new workspace.
 
@@ -132,7 +133,9 @@ class ProjectForm(forms.ModelForm):
 
 @login_required
 @require_http_methods(["GET", "POST"])
-def new_project(request: HttpRequest, workspace_uuid: UUID) -> HttpResponse:
+def new_project(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
     """
     Create a new project inside the newly created workspace.
 
@@ -184,7 +187,9 @@ class TaskForm(forms.ModelForm):
 
 @login_required
 @require_http_methods(["GET", "POST"])
-def new_task(request: HttpRequest, project_uuid: UUID) -> HttpResponse:
+def new_task(
+    request: AuthenticatedHttpRequest, project_uuid: UUID
+) -> HttpResponse:
     """
     Create a new task inside the newly created project.
 
@@ -219,7 +224,7 @@ def new_task(request: HttpRequest, project_uuid: UUID) -> HttpResponse:
                 description=None,
                 project=project,
             )
-        # Create task
+        # Create a task
         form = TaskForm(request.POST)
         if form.is_valid():
             task = task_create(
@@ -255,7 +260,9 @@ class LabelForm(forms.ModelForm):
 
 @login_required
 @require_http_methods(["GET", "POST"])
-def new_label(request: HttpRequest, task_uuid: UUID) -> HttpResponse:
+def new_label(
+    request: AuthenticatedHttpRequest, task_uuid: UUID
+) -> HttpResponse:
     """
     Ask the user to give the newly created task a label.
 
@@ -276,12 +283,19 @@ def new_label(request: HttpRequest, task_uuid: UUID) -> HttpResponse:
     if request.method == "POST":
         form = LabelForm(request.POST)
         if form.is_valid():
-            label_create(
+            label = label_create(
                 workspace=task.section.project.workspace,
                 name=form.cleaned_data["name"],
                 color=0,
                 who=request.user,
             )
+            task_update_nested(
+                who=request.user,
+                task=task,
+                title=task.title,
+                labels=[label],
+            )
+
             return redirect(
                 reverse("onboarding:assign_task", args=[str(task.uuid)])
             )
@@ -292,7 +306,9 @@ def new_label(request: HttpRequest, task_uuid: UUID) -> HttpResponse:
 
 
 @login_required
-def assign_task(request: HttpRequest, task_uuid: UUID) -> HttpResponse:
+def assign_task(
+    request: AuthenticatedHttpRequest, task_uuid: UUID
+) -> HttpResponse:
     """Show the user that Projectify assigned the task to them."""
     task = task_find_by_task_uuid(task_uuid=task_uuid, who=request.user)
     if task is None:
