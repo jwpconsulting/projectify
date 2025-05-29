@@ -11,15 +11,16 @@
             {% endif %}
             {% if href %}
                 {% if target_blank %}
-                    {# TODO: import external icon #}
-                    <a ref="{{ href }}"
-                       class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg"
-                       target="_blank">{% trans href_label %}<span class="sr-only">{% trans "(Opens in new tab)" %}</span></a>
-                {% else %}
-                    <a href="{{ href }}"
-                       class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg">{% trans href_label %}</a>
-                {% endif %}
-            {% endif %}
-        </div>
-    </div>
+                <a href="{{ href }}"
+                   class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg"
+                   target="_blank">{% trans href_label %}<span class="sr-only">{% trans "(Opens in new tab)" %}</span>
+                {% include "heroicons/external_links.svg" %}
+            </a>
+        {% else %}
+            <a href="{{ href }}"
+               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg">{% trans href_label %}</a>
+        {% endif %}
+    {% endif %}
+</div>
+</div>
 </div>

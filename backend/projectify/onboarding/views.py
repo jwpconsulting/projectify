@@ -79,6 +79,8 @@ def about_you(request: AuthenticatedHttpRequest) -> HttpResponse:
 class WorkspaceForm(forms.ModelForm):
     """Create a workspace."""
 
+    title = forms.CharField(label="Workspace title")
+
     class Meta:
         """Meta."""
 
