@@ -32,7 +32,7 @@
           FRONTEND_HOST=localhost
           FRONTEND_PORT=1001
         '';
-        caddyfileFormatted = pkgs.runCommand "Caddyfile" {} ''
+        caddyfileFormatted = pkgs.runCommand "Caddyfile" { } ''
           mkdir $out
           ${pkgs.caddy}/bin/caddy fmt - <${./Caddyfile} > $out/Caddyfile
           ${pkgs.caddy}/bin/caddy validate \
