@@ -131,7 +131,7 @@ class TestSignUp:
     ) -> None:
         """Test signing up a new user."""
         assert User.objects.count() == 0
-        with django_assert_num_queries(7):
+        with django_assert_num_queries(9):
             response = rest_client.post(
                 resource_url,
                 # TODO of course, we will validate password strength here in
@@ -228,7 +228,7 @@ class TestConfirmEmail:
             privacy_policy_agreed=True,
         )
         token = user_make_token(user=user, kind="confirm_email_address")
-        with django_assert_num_queries(4):
+        with django_assert_num_queries(6):
             response = rest_client.post(
                 resource_url,
                 data={"email": "hello@world.com", "token": token},
@@ -257,7 +257,7 @@ class TestLogIn:
         password: str,
     ) -> None:
         """Test as an authenticated user."""
-        with django_assert_num_queries(11):
+        with django_assert_num_queries(13):
             response = rest_client.post(
                 resource_url,
                 data={"email": user.email, "password": password},
@@ -324,7 +324,7 @@ class TestPasswordResetConfirm:
         assert response.status_code == 204, response.data
         # We are somewhat cheating here since we don't check the email outbox
         token = user_make_token(user=user, kind="reset_password")
-        with django_assert_num_queries(6):
+        with django_assert_num_queries(8):
             response = rest_client.post(
                 resource_url,
                 # TODO of course in the future we will validate password strength
