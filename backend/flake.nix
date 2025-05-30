@@ -24,24 +24,10 @@
         python = pkgs.python312;
         # Thanks to
         # https://github.com/nix-community/poetry2nix/blob/master/docs/edgecases.md#modulenotfounderror-no-module-named-packagename
-        tailwind-deps = pkgs.buildNpmPackage {
-          name = "tailwind-deps";
-          src = ./.;
-          npmDeps = pkgs.importNpmLock {
-            npmRoot = ./projectify/theme/static_src;
-          };
-          buildInputs = [ pkgs.nodejs ];
-          preConfigure = ''
-            cd projectify/theme/static_src
-          '';
-          installPhase = ''
-            mkdir -p $out
-            cp ../static/css/dist/styles.css $out/styles.css
-          '';
-          npmConfigHook = pkgs.importNpmLock.npmConfigHook;
-        };
+        tailwind-deps = pkgs.callPackage ./build-tailwind-deps.nix { };
         # https://github.com/nix-community/poetry2nix?tab=readme-ov-file#mkpoetryapplication
         projectify-bundle = pkgs.callPackage ./build-projectify-bundle.nix {
+          inherit postgresql;
           inherit python;
           python3Packages = pkgs.python312Packages;
           inherit tailwind-deps;
