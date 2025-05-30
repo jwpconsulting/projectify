@@ -79,7 +79,7 @@ def about_you(request: AuthenticatedHttpRequest) -> HttpResponse:
 class WorkspaceForm(forms.ModelForm):
     """Create a workspace."""
 
-    title = forms.CharField(label="Workspace title")
+    title = forms.CharField(label=_("Workspace title"))
 
     class Meta:
         """Meta."""
@@ -124,7 +124,7 @@ def new_workspace(request: AuthenticatedHttpRequest) -> HttpResponse:
 class ProjectForm(forms.ModelForm):
     """Create a project."""
 
-    title = forms.CharField(label="Project title")
+    title = forms.CharField(label=_("Project title"))
 
     class Meta:
         """Meta."""
@@ -178,7 +178,7 @@ def new_project(
 class TaskForm(forms.ModelForm):
     """Create a task."""
 
-    title = forms.CharField(label="Task name")
+    title = forms.CharField(label=_("Task name"))
 
     class Meta:
         """Meta."""
@@ -210,10 +210,10 @@ def new_task(
         project_uuid=project_uuid, who=request.user
     )
     if project is None:
-        raise Http404("Project not found")
+        raise Http404(_("Project not found"))
 
     section = project.section_set.first()
-    section_title = "To do"
+    section_title = _("To do")
     if section:
         section_title = section.title
 
@@ -251,7 +251,7 @@ def new_task(
 class LabelForm(forms.ModelForm):
     """Create a label."""
 
-    name = forms.CharField(label="Label name")
+    name = forms.CharField(label=_("Label name"))
 
     class Meta:
         """Meta."""
@@ -280,7 +280,7 @@ def new_label(
     """
     task = task_find_by_task_uuid(task_uuid=task_uuid, who=request.user)
     if task is None:
-        raise Http404("Task not found")
+        raise Http404(_("Task not found"))
 
     if request.method == "POST":
         form = LabelForm(request.POST)
@@ -314,7 +314,7 @@ def assign_task(
     """Show the user that Projectify assigned the task to them."""
     task = task_find_by_task_uuid(task_uuid=task_uuid, who=request.user)
     if task is None:
-        raise Http404("Task not found")
+        raise Http404(_("Task not found"))
     context = {
         "task": task,
         "project": task.section.project,
