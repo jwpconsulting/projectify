@@ -17,22 +17,11 @@
   outputs = { self, nixpkgs, flake-utils, poetry2nix }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        # see https://github.com/nix-community/poetry2nix/tree/master#api for more functions and examples.
         pkgs = nixpkgs.legacyPackages.${system};
-        inherit (poetry2nix.lib.mkPoetry2Nix { inherit pkgs; }) mkPoetryApplication mkPoetryEnv defaultPoetryOverrides;
-        postgresql = pkgs.postgresql_15;
-        python = pkgs.python312;
-        # Thanks to
-        # https://github.com/nix-community/poetry2nix/blob/master/docs/edgecases.md#modulenotfounderror-no-module-named-packagename
         tailwind-deps = pkgs.callPackage ./build-tailwind-deps.nix { };
-        # https://github.com/nix-community/poetry2nix?tab=readme-ov-file#mkpoetryapplication
         projectify-bundle = pkgs.callPackage ./build-projectify-bundle.nix {
-          inherit postgresql;
-          inherit python;
-          python3Packages = pkgs.python312Packages;
           inherit tailwind-deps;
-          inherit mkPoetryApplication;
-          inherit defaultPoetryOverrides;
+          poetry2nix = poetry2nix.lib.mkPoetry2Nix { inherit pkgs; };
         };
       in
       {
@@ -68,10 +57,10 @@
           };
         };
         devShell = pkgs.mkShell {
-          LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [ postgresql ];
+          LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [ projectify-bundle.passthru.postgresql ];
           buildInputs = [
-            postgresql
-            postgresql.pg_config
+            projectify-bundle.passthru.postgresql
+            projectify-bundle.passthru.postgresql.pg_config
             pkgs.nodejs
             pkgs.heroku
             pkgs.openssl
