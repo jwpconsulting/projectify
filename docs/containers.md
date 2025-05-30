@@ -45,6 +45,18 @@ from django.db.models import Exists, OuterRef, Subquery
 /nix/store/4928ai9dfpvbh79908sll2x71xj91p9q-python3.11-projectify-0.1.0-static
 ```
 
+Here's how you can test the frontend container:
+
+```bash
+podman run projectify-frontend-node:latest
+```
+
+This should print the following:
+
+```
+Listening on http://0.0.0.0:3000
+```
+
 ## Podman-compose
 
 A sample `docker-compose.yml` file has been placed in the root folder. This
