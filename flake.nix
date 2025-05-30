@@ -19,11 +19,6 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        frontend-flake = import ./frontend/flake.nix;
-        frontend-outputs = frontend-flake.outputs {
-          inherit self nixpkgs flake-utils;
-        };
-        frontend = frontend-outputs.packages.${system}.projectify-frontend-node;
         caddyFileTestEnv = pkgs.writeText "caddy-envfile" ''
           HOST=http://localhost
           PORT=80
@@ -46,7 +41,6 @@
             exec caddy --config ${caddyfileFormatted}/Caddyfile run
           '';
         };
-        nodejs = pkgs.nodejs_20;
 
         tailwind-deps = pkgs.callPackage backend/build-tailwind-deps.nix { };
         projectify-bundle = pkgs.callPackage backend/build-projectify-bundle.nix {
@@ -56,12 +50,37 @@
       in
       {
         packages = rec {
-          projectify-frontend-node = frontend;
+          projectify-frontend-static = pkgs.callPackage frontend/build-frontend.nix {
+            adapter = "static";
+            inherit (self) lastModifiedDate;
+            rev = self.rev or "dirty";
+          };
+          projectify-frontend-node =
+            let
+              frontend = (pkgs.callPackage frontend/build-frontend.nix {
+                adapter = "node";
+                inherit (self) lastModifiedDate;
+                rev = self.rev or "dirty";
+              });
+            in
+            pkgs.writeShellApplication {
+              name = "projectify-frontend-node";
+              runtimeInputs = [
+                frontend
+                frontend.passthru.nodejs
+              ];
+              text = ''
+                exec node ${frontend}
+              '';
+              passthru = {
+                nodejs = frontend.passthru.nodejs;
+              };
+            };
           projectify-frontend-node-container = pkgs.dockerTools.streamLayeredImage {
             name = "projectify-frontend-node";
             tag = "latest";
             contents = [
-              frontend
+              projectify-frontend-node
             ];
             config = {
               Cmd = [ "projectify-frontend-node" ];
@@ -156,10 +175,12 @@
             # For backend development
             projectify-bundle.passthru.postgresql
             projectify-bundle.passthru.postgresql.pg_config
-            pkgs.nodejs
             pkgs.heroku
             pkgs.openssl
             pkgs.gettext
+
+            # For frontend and backend
+            self.outputs.packages.${system}.projectify-frontend-node.passthru.nodejs
           ];
         };
       });
