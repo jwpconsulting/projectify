@@ -51,15 +51,26 @@
           constantly = pkgs.python312Packages.constantly;
           cffi = pkgs.python312Packages.cffi;
           pyyaml = pkgs.python312Packages.pyyaml;
-           # >   running dist_info
-           # >   creating /build/pip-modern-metadata-jinlj1xa/psycopg_c.egg-info
-           # >   writing /build/pip-modern-metadata-jinlj1xa/psycopg_c.egg-info/PKG-INFO
-           # >   writing dependency_links to /build/pip-modern-metadata-jinlj1xa/psycopg_c.egg-info/dependency_links.txt
-           # >   writing top-level names to /build/pip-modern-metadata-jinlj1xa/psycopg_c.egg-info/top_level.txt
-           # >   writing manifest file '/build/pip-modern-metadata-jinlj1xa/psycopg_c.egg-info/SOURCES.txt'
-           # >   couldn't run 'pg_config' --includedir: [Errno 2] No such file or directory: 'pg_config'
-           # >   error: [Errno 2] No such file or directory: 'pg_config'
-          psycopg-c = pkgs.python312Packages.psycopg-c;
+          psycopg-c = super.psycopg-c.overridePythonAttrs (
+            old: {
+              nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
+                postgresql
+                # >   running dist_info
+                # >   creating /build/pip-modern-metadata-jinlj1xa/psycopg_c.egg-info
+                # >   writing /build/pip-modern-metadata-jinlj1xa/psycopg_c.egg-info/PKG-INFO
+                # >   writing dependency_links to /build/pip-modern-metadata-jinlj1xa/psycopg_c.egg-info/dependency_links.txt
+                # >   writing top-level names to /build/pip-modern-metadata-jinlj1xa/psycopg_c.egg-info/top_level.txt
+                # >   writing manifest file '/build/pip-modern-metadata-jinlj1xa/psycopg_c.egg-info/SOURCES.txt'
+                # >   couldn't run 'pg_config' --includedir: [Errno 2] No such file or directory: 'pg_config'
+                # >   error: [Errno 2] No such file or directory: 'pg_config'
+                postgresql.pg_config
+              ];
+              buildInputs = (old.buildInputs or [ ]) ++ [
+                super.setuptools
+                super.tomli
+              ];
+            }
+          );
           cryptography = pkgs.python312Packages.cryptography;
           # This refuses to build because Poetry can't deal with the syntax
           # of project.license in markdown's pyproject.toml file
@@ -73,12 +84,6 @@
             })
           ))
           pypkgs-build-requirements));
-        poetryEnv = mkPoetryEnv {
-          inherit projectDir;
-          inherit overrides;
-          inherit python;
-          groups = [ "main" "dev" ];
-        };
         tailwind-deps = pkgs.buildNpmPackage {
           name = "tailwind-deps";
           src = ./.;
@@ -158,15 +163,16 @@
             '';
           };
         };
-        devShell = poetryEnv.env.overrideAttrs (oldattrs: {
+        devShell = pkgs.mkShell {
           LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [ postgresql ];
           buildInputs = [
             postgresql
+            postgresql.pg_config
             pkgs.nodejs
             pkgs.heroku
             pkgs.openssl
             pkgs.gettext
           ];
-        });
+        };
       });
 }
