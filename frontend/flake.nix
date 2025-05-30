@@ -13,75 +13,24 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        nodejs = pkgs.nodejs_20;
-        mkFrontend =
-          { wsEndpoint ? "/ws"
-          , apiEndpoint ? "/api"
-          , projectifyDomain ? "https://www.projectify.com"
-          , adapter ? "node"
-          }:
-          # TODO make WS_ENDPOINT, API_ENDPOINT and PROJECITYF_DOMAIN arguments
-          # to this derivation
-          pkgs.buildNpmPackage {
-            name = "projectify-frontend";
-            srcs = [
-              ./.
-              ../LICENSES
-            ];
-            sourceRoot = "frontend";
-            npmDeps = pkgs.importNpmLock { npmRoot = ./.; };
-            npmConfigHook = pkgs.importNpmLock.npmConfigHook;
-            buildInputs = [
-              nodejs
-            ];
-            prePatch = ''
-              # Patch LICENSES folder into here, removing the symlink first
-              rm LICENSES
-              cp -r ../LICENSES .
-            '';
-
-            preConfigure = ''
-              export VITE_WS_ENDPOINT=${wsEndpoint}
-              export VITE_API_ENDPOINT=${apiEndpoint}
-              export VITE_PROJECTIFY_DOMAIN=${projectifyDomain}
-              export VITE_GIT_COMMIT_DATE=${self.lastModifiedDate}
-              export VITE_GIT_BRANCH_NAME=nix
-              export VITE_GIT_COMMIT_HASH=${self.rev or "dirty"}
-              export PROJECTIFY_FRONTEND_ADAPTER=${adapter}
-              export NODE_ENV=production
-            '';
-
-            postBuild =
-              if adapter == "node" then ''
-                cp -a package.json node_modules build/
-              '' else "";
-
-            installPhase = ''
-              mkdir -p $out
-              cp -a build/. $out/
-            '';
-            meta = with pkgs.lib; {
-              description = "Frontend for the Projectify project management software";
-              homepage = "https://www.projectifyapp.com";
-              license = with licenses; [ agpl3Only mit ];
-              maintainers = [
-                {
-                  name = "Justus Perlwitz";
-                  email = "justus@jwpconsulting.net";
-                }
-              ];
-            };
-          };
-        projectify-frontend-static = mkFrontend { adapter = "static"; };
+        projectify-frontend-static = pkgs.callPackage ./build-frontend.nix {
+          adapter = "static";
+          inherit (self) lastModifiedDate;
+          rev = self.rev or "dirty";
+        };
         projectify-frontend-node =
           let
-            frontend = (mkFrontend { adapter = "node"; });
+            frontend = (pkgs.callPackage ./build-frontend.nix {
+              adapter = "node";
+              inherit (self) lastModifiedDate;
+              rev = self.rev or "dirty";
+            });
           in
           pkgs.writeShellApplication {
             name = "projectify-frontend-node";
             runtimeInputs = [
               frontend
-              nodejs
+              frontend.passthru.nodejs
             ];
             text = ''
               exec node ${frontend}
@@ -90,16 +39,13 @@
       in
       {
         inherit self nixpkgs;
-        lib = {
-          inherit mkFrontend;
-        };
         packages = {
           inherit projectify-frontend-static;
           inherit projectify-frontend-node;
         };
         devShell = pkgs.mkShell {
           buildInputs = [
-            nodejs
+            projectify-frontend-node.passthru.nodejs
           ];
         };
       });
