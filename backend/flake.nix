@@ -4,8 +4,10 @@
   description = "Flake file for Projectify backend";
 
   inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+
     flake-utils.url = "github:numtide/flake-utils";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+
     poetry2nix = {
       url = "github:nix-community/poetry2nix/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -49,21 +51,21 @@
           constantly = pkgs.python312Packages.constantly;
           cffi = pkgs.python312Packages.cffi;
           pyyaml = pkgs.python312Packages.pyyaml;
-          psycopg-c = super.psycopg-c.overridePythonAttrs (
-            old: {
-              nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
-                postgresql
-              ];
-              buildInputs = (old.buildInputs or [ ]) ++ [
-                super.setuptools
-                super.tomli
-              ];
-            }
-          );
+           # >   running dist_info
+           # >   creating /build/pip-modern-metadata-jinlj1xa/psycopg_c.egg-info
+           # >   writing /build/pip-modern-metadata-jinlj1xa/psycopg_c.egg-info/PKG-INFO
+           # >   writing dependency_links to /build/pip-modern-metadata-jinlj1xa/psycopg_c.egg-info/dependency_links.txt
+           # >   writing top-level names to /build/pip-modern-metadata-jinlj1xa/psycopg_c.egg-info/top_level.txt
+           # >   writing manifest file '/build/pip-modern-metadata-jinlj1xa/psycopg_c.egg-info/SOURCES.txt'
+           # >   couldn't run 'pg_config' --includedir: [Errno 2] No such file or directory: 'pg_config'
+           # >   error: [Errno 2] No such file or directory: 'pg_config'
+          psycopg-c = pkgs.python312Packages.psycopg-c;
           cryptography = pkgs.python312Packages.cryptography;
           # This refuses to build because Poetry can't deal with the syntax
           # of project.license in markdown's pyproject.toml file
           markdown = pkgs.python312Packages.markdown;
+          # substituteStream() in derivation python3.12-pillow-10.3.0: ERROR: pattern AVIF_ROOT\ =\ None doesn't match anything in file 'setup.py'
+          pillow = pkgs.python312Packages.pillow;
         } // (builtins.mapAttrs
           (package: build-requirements: (
             (builtins.getAttr package super).overridePythonAttrs (old: {
