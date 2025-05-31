@@ -71,7 +71,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         """Return printable user name."""
         return self.preferred_name or self.email
 
-    class Meta(BaseModel.Meta, AbstractBaseUser.Meta):
+    class Meta(BaseModel.Meta):
         """Add constraints."""
 
         constraints = (

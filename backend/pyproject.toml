@@ -15,7 +15,7 @@ exclude = [
 
 [tool.poetry.dependencies]
 celery = {extras = ["redis"], version = "~5.4"}
-channels = {version = "^4.1.0", extras = ["daphne"]}
+channels = {version = "^4.1.0"}
 channels-redis = "^4.2"
 cryptography = "^44.0.1"
 dj-database-url = "~2.1.0"
@@ -27,8 +27,7 @@ django-configurations = "^2.5.1"
 django-pgtrigger = "~4.11.0"
 djangorestframework = "^3"
 gunicorn = "^23"
-newrelic = "^9"
-pillow = "^10.3.0"
+pillow = "^11"
 psycopg = {version = "^3.1.18", extras = ["c"]}
 python = "~3.12.7"
 redis = "^5"
@@ -39,12 +38,14 @@ websockets = "~10.3"
 whitenoise = "~6.2.0"
 django-ratelimit = "^4.1.0"
 django-tailwind = {extras = ["reload"], version = "^3.8.0"}
-django-components = "^0.114"
 django-markdownify = "^0.9.5"
 
 [tool.poetry.group.dev]
 
 [tool.poetry.group.dev.dependencies]
+# Require the same channels as in the main dependencies, except that we add
+# daphne
+channels = {version = "^4.1.0", extras = ["daphne"]}
 python-dotenv = "^1"
 faker = "^19.13.0"
 django-extensions = "~3.2.0"
@@ -205,6 +206,13 @@ exclude = [
     # spectacular classes are being overriden here, we avoid having
     # to conditonally ignore no-redef (mypy) or reportAssignmentType (pyright)
     "projectify/lib/schema.py",
+    # Pyright reports a few unknown types here that mypy doesn't catch
+    "projectify/workspace/views/task.py",
+    # Pyright thinks that Deferrable.DEFERRED, a string, is not assignable
+    # to Deferrable | None
+    "projectify/workspace/models/task.py",
+    "projectify/workspace/models/section.py",
+    "projectify/workspace/models/sub_task.py",
 
 ]
 # Mypy doesn't complain about these, so it's fine

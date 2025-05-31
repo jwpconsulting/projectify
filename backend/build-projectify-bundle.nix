@@ -25,7 +25,6 @@ let
     djlint = [ "hatchling" ];
     django-tailwind = [ "poetry" ];
     selectolax = [ "setuptools" ];
-    django-components = [ "setuptools" ];
     django-browser-reload = [ "setuptools" ];
   };
   overrides = poetry2nix.defaultPoetryOverrides.extend
@@ -101,9 +100,6 @@ in
       STATIC_ROOT=$static \
       python $out/bin/manage.py collectstatic --no-input
   '';
-  # Disable checking runtime dependencies
-  # https://github.com/nix-community/poetry2nix/issues/1441
-  dontCheckRuntimeDeps = true;
 }).overrideAttrs (super: {
   passthru = super.passthru // {
     postgresql = postgresql_15;

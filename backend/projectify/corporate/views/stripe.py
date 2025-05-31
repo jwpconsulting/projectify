@@ -95,7 +95,7 @@ def handle_session_completed(session: stripe.checkout.Session) -> None:
     stripe_customer_id = _deserialize_stripe_customer(session.customer)
 
     if stripe_customer_id is None:
-        logger.warn(
+        logger.warning(
             "A stripe checkout session was completed, but no customer was given"
         )
         return
@@ -153,7 +153,7 @@ def handle_subscription_updated(subscription: stripe.Subscription) -> None:
     """Handle Stripe customer.subscription.updated."""
     customer = _get_customer_from_stripe_customer(subscription.customer)
     if customer is None:
-        logger.warn(
+        logger.warning(
             "customer.subscription.updated event received, but no customer provded"
         )
         return
@@ -187,7 +187,7 @@ def handle_payment_failure(invoice: stripe.Invoice) -> None:
     """Handle Stripe invoice.payment_failed."""
     customer = _get_customer_from_stripe_customer(invoice.customer)
     if customer is None:
-        logger.warn(
+        logger.warning(
             "customer.subscription.updated event received, but no customer provded"
         )
         return
@@ -210,7 +210,7 @@ def handle_subscription_cancelled(subscription: stripe.Subscription) -> None:
     # https://docs.stripe.com/api/subscriptions/object#subscription_object-status
     customer = _get_customer_from_stripe_customer(subscription.customer)
     if customer is None:
-        logger.warn(
+        logger.warning(
             "customer.subscription.cancelled event received, "
             "but no customer provided"
         )

@@ -42,7 +42,7 @@ def environ_get_or_warn(key: str) -> Optional[str]:
     if value is not None:
         return value
 
-    logger.warn(f"{key} needed for settings was not set in environment")
+    logger.warning(f"{key} needed for settings was not set in environment")
     return None
 
 
@@ -54,6 +54,9 @@ class Development(SpectacularSettings, Base):
     SECRET_KEY = "development"
 
     INSTALLED_APPS: Sequence[str] = (
+        # Add daphne for ./manage.py runserver
+        # Needs to be there before django.contrib.staticfiles
+        "daphne",
         *Base.INSTALLED_APPS,
         "debug_toolbar",
         "drf_spectacular",
