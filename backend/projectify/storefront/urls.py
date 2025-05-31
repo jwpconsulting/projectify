@@ -24,23 +24,23 @@ app_name = "storefront"
 
 solution_patterns = [
     path("", solutions_index, name="list"),
-    path("<slug:page>/", solutions_detail, name="detail"),
+    path("/<slug:page>/", solutions_detail, name="detail"),
 ]
 
 security_patterns = [
-    path("general/", security_general, name="general"),
-    path("disclose/", security_disclose, name="disclose"),
+    path("/general/", security_general, name="general"),
+    path("/disclose/", security_disclose, name="disclose"),
 ]
 
 urlpatterns = [
-    path("accessibility/", accessibility, name="accessibility"),
-    path("contact-us/", contact_us, name="contact_us"),
-    path("free-software/", free_software, name="free_software"),
-    path("credits/", credits, name="credits"),
-    path("security/", include((security_patterns, "security"))),
-    path("tos/", tos, name="tos"),
-    path("pricing/", pricing, name="pricing"),
-    path("privacy/", privacy, name="privacy"),
-    path("solutions/", include((solution_patterns, "solutions"))),
+    path("accessibility", accessibility, name="accessibility"),
+    path("contact-us", contact_us, name="contact_us"),
+    path("free-software", free_software, name="free_software"),
+    path("credits", credits, name="credits"),
+    path("security", include((security_patterns, "security"))),
+    path("tos", tos, name="tos"),
+    path("pricing", pricing, name="pricing"),
+    path("privacy", privacy, name="privacy"),
+    path("solutions", include((solution_patterns, "solutions"))),
     path("", index, name="landing"),
 ]
