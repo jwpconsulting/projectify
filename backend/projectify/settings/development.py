@@ -150,7 +150,7 @@ class Development(SpectacularSettings, Base):
     BROWSER_RELOAD = True
 
     # Feature flags
-    ENABLE_DJANGO_DASHBOARD = True
+    ENABLE_DJANGO_FRONTEND = True
 
     # Enable template debugging
     TEMPLATES = Base.TEMPLATES

@@ -41,22 +41,22 @@ urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
         r"user/",
         include("projectify.user.urls"),
     ),
-    path(r"", include("projectify.storefront.urls")),
-    path(r"", include("projectify.help.urls")),
-    path("onboarding/", include("projectify.onboarding.urls")),
     path(
         "workspace/",
         include("projectify.workspace.urls"),
     ),
     path("corporate/", include("projectify.corporate.urls")),
 )
-if settings.ENABLE_DJANGO_DASHBOARD:
+if settings.ENABLE_DJANGO_FRONTEND:
     urlpatterns = (
         *urlpatterns,
         path(
             "dashboard/",
             include("projectify.workspace.dashboard_urls"),
         ),
+        path("", include("projectify.storefront.urls")),
+        path("help/", include("projectify.help.urls")),
+        path("onboarding/", include("projectify.onboarding.urls")),
     )
 
 if settings.PREMAIL_PREVIEW:

@@ -320,7 +320,7 @@ class Base(Configuration):
     BROWSER_RELOAD = False
 
     # Feature flags
-    ENABLE_DJANGO_DASHBOARD = False
+    ENABLE_DJANGO_FRONTEND = False
 
     # Markdownify
     MARKDOWNIFY = {
