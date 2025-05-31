@@ -1,0 +1,43 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "onboarding_base.html" %}
+{% load i18n %}
+{% block onboarding_content %}
+    <div class="col-span-1 flex shrink grow flex-col gap-16 px-12 py-20 pb-8">
+        {% csrf_token %}
+        <div class="flex flex-col gap-4">
+            <h1 class="min-w-fit max-w-lg text-4xl font-bold">
+                {% blocktrans %}Task "{{task}}" has been assigned to you!{% endblocktrans %}
+            </h1>
+            <div class="flex flex-col gap-2 text-lg">
+                <p>{% trans "You’re all set!" %}</p>
+                <p>
+                    {% trans "If you wish to add new team members to your workspace, please go to the workspace settings menu next to your workspace name." %}
+                </p>
+            <a href="{% url "help:detail" page="billing" %}"
+               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg"
+               target="_blank">{% trans "Learn more about workspace billing settings" %}<span class="sr-only">(Opens in new tab)</span>
+            {% include "heroicons/external_links.svg" %}
+        </a>
+        {# TODO:: Use django template url tag #}
+    <a href="/dashboard/workspace/{{ workspace.uuid }}/settings/billing"
+       class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg"
+       target="_blank">{% trans "Go to workspace billing setting" %}<span class="sr-only">(Opens in new tab)</span>
+    {% include "heroicons/external_links.svg" %}
+</a>
+</div>
+</div>
+<div class="flex flex-col">
+    <div class="flex flex-col items-start gap-2">{{ form }}</div>
+</div>
+<div class="flex flex-col gap-2">
+    <div class="flex gap-2">
+        <a href="{% url "dashboard:projects:detail" project.uuid %}"
+           class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Get started" %}</a>
+    </div>
+</div>
+{% include "onboarding/common/step_counter.html" with step=5 step_count="5" %}
+</div>
+<div class="hidden h-full min-w-0 shrink grow flex-col items-center justify-center overflow-hidden bg-background md:flex xl:col-span-2">
+</div>
+{% endblock onboarding_content %}

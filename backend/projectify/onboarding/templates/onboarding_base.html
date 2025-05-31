@@ -1,18 +1,16 @@
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
     {% if debug %}
         {% include "common/navigation/header/development_view_bar.html" %}
     {% endif %}
     <div class="flex grow flex-col">
-        {% include "common/navigation/header/landing.html" %}
-        <div class="flex grow flex-col">
-            <div class="flex grow flex-col justify-between">
-                {% block help_content %}
-                {% endblock help_content %}
-            </div>
-        </div>
+        {% include "common/navigation/header/dashboard.html" %}
+        <main class="flex grow flex-col md:grid md:grid-cols-2 xl:grid-cols-3">
+            {% block onboarding_content %}
+            {% endblock onboarding_content %}
+        </main>
     </div>
-    {% include "common/footer.html" %}
 {% endblock content %}

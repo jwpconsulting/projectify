@@ -1,0 +1,42 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "onboarding_base.html" %}
+{% load i18n %}
+{% block onboarding_content %}
+    <form action=""
+          method="POST"
+          class="col-span-1 flex shrink grow flex-col gap-16 px-12 py-20 pb-8">
+        {% csrf_token %}
+        <div class="flex flex-col gap-4">
+            <h1 class="min-w-fit max-w-lg text-4xl font-bold">{% trans "Add your first project" %}</h1>
+            <div class="flex flex-col gap-2 text-lg">
+                {% if project %}
+                    <p>
+                        {% blocktrans %}It looks like you already have a project called "{{ project }}". Would you like to continue adding a task for it?{% endblocktrans %}
+                    </p>
+                    <p>
+                        <a href="{% url "onboarding:new_task" project.uuid %}"
+                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg">{% blocktrans %}Continue adding task to "{{ project }}"{% endblocktrans %}</a>
+                    </p>
+                {% else %}
+                    <p>{% trans "You can create unlimited project per workspace." %}</p>
+                    <p>{% trans "They help you to focus on different projects you may be working on." %}</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="flex flex-col">
+            <div class="flex flex-col items-start gap-2">{{ form }}</div>
+        </div>
+        <div class="flex flex-col gap-2">
+            <div class="flex gap-2">
+                <button type="submit"
+                        class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
+                    {% trans "Continue" %}
+                </button>
+            </div>
+        </div>
+        {% include "onboarding/common/step_counter.html" with step=2 step_count="5" %}
+    </form>
+    <div class="hidden h-full min-w-0 shrink grow flex-col items-center justify-center overflow-hidden bg-background md:flex xl:col-span-2">
+    </div>
+{% endblock onboarding_content %}
