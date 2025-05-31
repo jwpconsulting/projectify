@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2022-2024 JWP Consulting GK
 """User app user model views."""
 
-from typing import Union, cast
+from typing import Any, Union, cast
 
 from django import forms
 from django.contrib.auth import update_session_auth_hash
@@ -43,6 +43,13 @@ from projectify.user.services.user import (
 
 class UserProfileForm(forms.ModelForm):
     """Form for user profile update."""
+
+    def __init__(self, *args: Any, **kwargs: Any):
+        """Override constructor and populate placeholders."""
+        super().__init__(*args, **kwargs)
+        self.fields["preferred_name"].widget.attrs.update(
+            placeholder=_("Enter your preferred name")
+        )
 
     class Meta:
         """Form meta."""
