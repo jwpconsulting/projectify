@@ -80,7 +80,7 @@ class TestUserUpdate:
         user: User,
     ) -> None:
         """Test updating."""
-        with django_assert_num_queries(3):
+        with django_assert_num_queries(5):
             response = rest_user_client.put(
                 resource_url,
                 data={},
@@ -228,7 +228,7 @@ class TestChangePassword:
         # 1 for changing the password
         # 7 for session update
         # 2 for email send
-        with django_assert_num_queries(12):
+        with django_assert_num_queries(14):
             response = rest_user_client.post(
                 resource_url,
                 data={
@@ -263,7 +263,7 @@ class TestRequestEmailAddressUpdate:
         """Test sending the correct data."""
         old_email = user.email
         new_email = "henlo-wolrd@example.com"
-        with django_assert_num_queries(5):
+        with django_assert_num_queries(7):
             response = rest_user_client.post(
                 resource_url,
                 data={"new_email": new_email, "password": password},
@@ -294,7 +294,25 @@ class TestConfirmEmailAddressUpdate:
         user.unconfirmed_email = "new-email@example.com"
         user.save()
         token = user_make_token(user=user, kind="update_email_address")
-        with django_assert_num_queries(6):
+        # Went up from 6 -> 8
+        # seems like something around the user name validation or savepoint
+        # logic changed:
+        # SAVEPOINT "s140360466458432_x51"
+        #
+        # SELECT 1 AS "a" FROM "user_user" WHERE ("user_user"."email" = 'new-email@example.com' AND NOT ("user_user"."id" = 8)) LIMIT 1
+        #
+        # SAVEPOINT "s140360466458432_x52"
+        #
+        # SELECT 1 AS "_check" WHERE COALESCE(('Chase Moore'::text ~  E'^([.:]\\s|[^.:])*[.:]?$'), true)
+        #
+        # RELEASE SAVEPOINT "s140360466458432_x52"
+        #
+        # UPDATE "user_user" SET "password" = 'pbkdf2_sha256$1000000$viwTzJ3svHyVJM2hTWHqNi$oq1K3ZSX2NuDkrgcH61k5enwUws8rV9t1I9aXgkspSQ=', "last_login" = NULL, "created" = '2025-05-30 08:00:39.436426+00:00'::timestamptz, "modified" = '2025-05-30 08:00:39.442602+00:00'::timestamptz, "email" = 'new-email@example.com', "unconfirmed_email" = 'new-email@example.com', "is_staff" = false, "is_superuser" = false, "is_active" = true, "profile_picture" = '', "preferred_name" = 'Chase Moore', "tos_agreed" = NULL, "privacy_policy_agreed" = NULL WHERE "user_user"."id" = 8
+        #
+        # INSERT INTO "user_previousemailaddress" ("created", "modified", "user_id", "email") VALUES ('2025-05-30 08:00:39.442925+00:00'::timestamptz, '2025-05-30 08:00:39.442930+00:00'::timestamptz, 8, 'millerjill@example.org') RETURNING "user_previousemailaddress"."id"
+        #
+        # RELEASE SAVEPOINT "s140360466458432_x51"
+        with django_assert_num_queries(8):
             response = rest_user_client.post(
                 resource_url,
                 data={"confirmation_token": token},
