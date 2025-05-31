@@ -27,7 +27,7 @@ django-configurations = "^2.5.1"
 django-pgtrigger = "~4.11.0"
 djangorestframework = "^3"
 gunicorn = "^23"
-pillow = "^10.3.0"
+pillow = "^11"
 psycopg = {version = "^3.1.18", extras = ["c"]}
 python = "~3.12.7"
 redis = "^5"
