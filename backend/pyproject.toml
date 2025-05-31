@@ -208,6 +208,11 @@ exclude = [
     "projectify/lib/schema.py",
     # Pyright reports a few unknown types here that mypy doesn't catch
     "projectify/workspace/views/task.py",
+    # Pyright thinks that Deferrable.DEFERRED, a string, is not assignable
+    # to Deferrable | None
+    "projectify/workspace/models/task.py",
+    "projectify/workspace/models/section.py",
+    "projectify/workspace/models/sub_task.py",
 
 ]
 # Mypy doesn't complain about these, so it's fine
