@@ -28,6 +28,7 @@ from projectify.workspace.selectors.project import (
 from projectify.workspace.selectors.quota import workspace_get_all_quotas
 from projectify.workspace.selectors.workspace import (
     workspace_find_by_workspace_uuid,
+    workspace_find_for_user,
 )
 from projectify.workspace.serializers.base import ProjectBaseSerializer
 from projectify.workspace.serializers.project import ProjectDetailSerializer
@@ -51,9 +52,16 @@ def project_detail_view(
     if project is None:
         raise Http404(_("No project found for this uuid"))
     project.workspace.quota = workspace_get_all_quotas(project.workspace)
+    projects = project_find_by_workspace_uuid(
+        workspace_uuid=project.workspace.uuid, who=request.user, archived=False
+    )
+    workspaces = workspace_find_for_user(who=request.user)
     context = {
         "object": project,
+        "projects": projects,
         "labels": list(project.workspace.label_set.values()),
+        "workspaces": workspaces,
+        "workspace": project.workspace,
     }
     return render(request, "workspace/project_detail.html", context)
 

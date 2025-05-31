@@ -1,0 +1,28 @@
+{# SPDX-FileCopyrightText: 2024 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% load i18n %}
+<div class="w-full">
+    <p class=" font-bold truncate py-2">
+        {% blocktrans with title=project.title %}Projects: {{ title }}{% endblocktrans %}
+    </p>
+    <ul class="flex flex-col max-h-80 overflow-y-auto">
+        {% for p in projects %}
+            <li class="flex items-center gap-2 max-w-2xs">
+                <a href="{% url "dashboard:projects:detail" p.uuid %}"
+                   class="flex w-full flex-row items-center gap-2 px-4 py-2 hover:bg-secondary-hover active:bg-disabled disabled:active:bg-secondary-hover text-base-content">
+                    <div {% if object.uuid == p.uuid %}class="h-6 w-6 shrink-0 rounded-md p-1 bg-primary-focus text-white"{% else %}class="h-6 w-6 shrink-0 rounded-md p-1"{% endif %}>
+                        {% include "heroicons/folder.svg" %}
+                    </div>
+                    <span class="line-clamp-1">{{ p.title }}</span>
+                </a>
+            </li>
+        {% endfor %}
+        <li class="flex items-center gap-2  max-w-2xs">
+            {# TODO: Add django template url #}
+            <a href="/"
+               class="flex w-full flex-row items-center gap-2 px-4 py-2  hover:bg-secondary-hover active:bg-disabled disabled:active:bg-secondary-hover text-base-content">
+                <div class="h-6 w-6 shrink-0 rounded-md p-1">{% include "heroicons/archive.svg" %}</div>
+            {% trans "Archived projects" %}</a>
+        </li>
+    </ul>
+</div>
