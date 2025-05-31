@@ -3,8 +3,7 @@
 {% extends "onboarding_base.html" %}
 {% load i18n %}
 {% block onboarding_content %}
-    <form action=""
-          method="POST"
+    <form method="post"
           class="col-span-1 flex shrink grow flex-col gap-16 px-12 py-20 pb-8">
         {% csrf_token %}
         {% include "onboarding/common/form_description.html" with title="About you" text_1="Tell us your preferred name. You can also keep it empty and continue by clicking the button below." %}
