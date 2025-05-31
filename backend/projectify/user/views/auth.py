@@ -75,10 +75,12 @@ def sign_up(request: HttpRequest) -> HttpResponse:
     if limit and limit["should_limit"]:
         raise Throttled()
 
+    validators = password_validators_help_texts()
+
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if not form.is_valid():
-            context = {"form": form}
+            context = {"form": form, "validators": validators}
             return render(request, "user/sign_up.html", context=context)
         data = form.cleaned_data
         try:
@@ -91,7 +93,7 @@ def sign_up(request: HttpRequest) -> HttpResponse:
         # TODO
         # except ValidationError as e:
         except ValidationError:
-            context = {"form": form}
+            context = {"form": form, "validators": validators}
             # TODO
             # assert isinstance(e.detail, dict)
             # for k, v in e.detail.items():
@@ -109,10 +111,11 @@ def sign_up(request: HttpRequest) -> HttpResponse:
             increment=True,
         )
         # TODO figure out redirect URL
+        # should be success page
         return redirect("/")
-    else:
-        form = SignUpForm()
-    context = {"form": form}
+
+    form = SignUpForm()
+    context = {"form": form, "validators": validators}
     return render(request, "user/sign_up.html", context=context)
 
 
