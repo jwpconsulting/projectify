@@ -12,28 +12,9 @@
                 <div class="max-w-xs 2xl:max-w-md">
                     <nav class="flex flex-col py-4">
                         <div class="flex flex-col gap-2 px-4 pb-4">
-                            <div class="flex flex-row items-center justify-between gap-4">
-                                {% if workspace %}
-                                    <div class="min-w-0 grow">
-                                        <button class="flex w-full flex-row items-center justify-between gap-2 rounded-lg border border-border p-2 hover:bg-secondary-hover">
-                                            <div class="flex min-w-0 flex-row items-center gap-2">
-                                                <div class="h-4 w-4 shrink-0">{% include "heroicons/briefcase.svg" %}</div>
-                                                <div class="min-w-0 truncate font-bold">{{ workspace.title }}</div>
-                                            </div>
-                                            <div class="w-4 h-4 shrink-0">{% include "heroicons/chevron-down.svg" %}</div>
-                                        </button>
-                                    </div>
-                                    <div>
-                                        <a href="{% url 'dashboard:workspaces:settings' workspace.uuid %}"
-                                           aria-label="Open workspace settings"
-                                           class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled flex items-center justify-center">
-                                            {% include "heroicons/dots-horizontal.svg" %}
-                                        </a>
-                                    </div>
-                                {% else %}
-                                    todo no workspace
-                                {% endif %}
-                            </div>
+                            {% if workspace %}
+                                <div class="min-w-0 grow">{% include "workspace/common/sidebar/workspace_details.html" %}</div>
+                            {% endif %}
                         </div>
                         <p class="px-4">
                             {% url "help:detail" page="billing" as trial_workspace_help %}
@@ -52,7 +33,7 @@
                             </button>
                             <div class="flex shrink flex-col">
                                 {% block dashboard_projects %}
-                                    {% include "dashboard_projects.html" %}
+                                    {% include "workspace/common/sidebar/project_details.html" %}
                                 {% endblock dashboard_projects %}
                             </div>
                         </div>
