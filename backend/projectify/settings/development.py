@@ -42,7 +42,7 @@ def environ_get_or_warn(key: str) -> Optional[str]:
     if value is not None:
         return value
 
-    logger.warn(f"{key} needed for settings was not set in environment")
+    logger.warning(f"{key} needed for settings was not set in environment")
     return None
 
 

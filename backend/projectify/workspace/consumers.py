@@ -372,7 +372,7 @@ class ChangeConsumer(JsonWebsocketConsumer):
                     "uuid": uuid,
                 }
             case "never_subscribed":
-                logger.warn(
+                logger.warning(
                     "Received update for resource %s and uuid %s"
                     "despite never having subscribed",
                     event["resource"],
