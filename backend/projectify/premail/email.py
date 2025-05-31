@@ -8,6 +8,7 @@ from typing import Any, Generic, NewType, TypeVar, Union
 
 from django.conf import settings
 from django.template import loader
+from django.utils.safestring import SafeText, mark_safe
 
 from projectify.context_processors import frontend_url
 from projectify.user.models.user import User
@@ -49,14 +50,14 @@ class TemplateEmail(Generic[T]):
             "addressee": self.addressee,
         }
 
-    def render_subject(self) -> str:
+    def render_subject(self) -> SafeText:
         """Render subject."""
         subject = loader.render_to_string(
             self.get_subject_template_path(),
             self.get_context(),
         )
-        subject = subject.replace("\n", "")
-        subject = subject.strip()
+        subject = mark_safe(subject.replace("\n", ""))
+        subject = mark_safe(subject.strip())
         return subject
 
     def render_body(self) -> str:

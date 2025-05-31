@@ -206,6 +206,8 @@ exclude = [
     # spectacular classes are being overriden here, we avoid having
     # to conditonally ignore no-redef (mypy) or reportAssignmentType (pyright)
     "projectify/lib/schema.py",
+    # Pyright reports a few unknown types here that mypy doesn't catch
+    "projectify/workspace/views/task.py",
 
 ]
 # Mypy doesn't complain about these, so it's fine

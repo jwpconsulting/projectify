@@ -4,7 +4,7 @@
 """Task CRUD views."""
 
 import logging
-from typing import Any, Literal, Optional, Union
+from typing import Any, Literal, Optional, Union, cast
 from uuid import UUID
 
 from django import forms
@@ -97,10 +97,10 @@ class TaskCreateForm(forms.Form):
     def __init__(self, workspace: Workspace, *args: Any, **kwargs: Any):
         """Populate available assignees."""
         super().__init__(*args, **kwargs)
-        self.fields[
-            "assignee"
-        ].queryset = workspace.teammember_set.select_related("user")
-        self.fields["labels"].queryset = workspace.label_set.all()
+        assignee = cast(forms.ModelChoiceField, self.fields["assignee"])
+        assignee.queryset = workspace.teammember_set.select_related("user")
+        labels = cast(forms.ModelChoiceField, self.fields["labels"])
+        labels.queryset = workspace.label_set.all()
 
 
 class TaskCreateSubTaskForm(forms.Form):
@@ -110,7 +110,7 @@ class TaskCreateSubTaskForm(forms.Form):
     done = forms.BooleanField(required=False)
 
 
-TaskCreateSubTaskForms = forms.formset_factory(TaskCreateSubTaskForm, extra=0)
+TaskCreateSubTaskForms = forms.formset_factory(TaskCreateSubTaskForm, extra=0)  # type: ignore[type-var]
 
 
 class TaskUpdateSubTaskForm(forms.Form):
@@ -126,7 +126,7 @@ class TaskUpdateSubTaskForm(forms.Form):
     )
 
 
-TaskUpdateSubTaskForms = forms.formset_factory(TaskUpdateSubTaskForm, extra=0)
+TaskUpdateSubTaskForms = forms.formset_factory(TaskUpdateSubTaskForm, extra=0)  # type: ignore[type-var]
 
 
 @platform_view
@@ -167,7 +167,7 @@ def task_create(
             },
         )
     form = TaskCreateForm(section.project.workspace, request.POST)
-    formset = TaskCreateSubTaskForms(request.POST)
+    formset = TaskCreateSubTaskForms(initial=request.POST.dict())
     all_valid = form.is_valid() and formset.is_valid()
     if not all_valid:
         return render(
@@ -236,10 +236,10 @@ class TaskUpdateForm(forms.Form):
     def __init__(self, *args: Any, workspace: Workspace, **kwargs: Any):
         """Populate available assignees."""
         super().__init__(*args, **kwargs)
-        self.fields[
-            "assignee"
-        ].queryset = workspace.teammember_set.select_related("user")
-        self.fields["labels"].queryset = workspace.label_set.all()
+        assignee = cast(forms.ModelChoiceField, self.fields["assignee"])
+        assignee.queryset = workspace.teammember_set.select_related("user")
+        labels = cast(forms.ModelChoiceField, self.fields["labels"])
+        labels.queryset = workspace.label_set.all()
 
 
 def determine_action(
@@ -274,7 +274,7 @@ def task_update_view(
     action = determine_action(request)
 
     if action == "add_sub_task":
-        post = request.POST.copy()
+        post: dict[str, Any] = request.POST.dict()
         sub_task_count_raw: str = post.get("form-" + TOTAL_FORM_COUNT, "0")
         try:
             sub_task_count = int(sub_task_count_raw)
@@ -304,7 +304,7 @@ def task_update_view(
     ]
     if action == "get":
         form = TaskUpdateForm(initial=task_initial, workspace=workspace)
-        formset = TaskUpdateSubTaskForms(initial=sub_tasks_initial)
+        formset = TaskUpdateSubTaskForms(initial=sub_tasks_initial)  # type: ignore[arg-type]
         context = {"form": form, "task": task, "formset": formset}
         return render(request, "workspace/task_update.html", context)
 
@@ -313,8 +313,8 @@ def task_update_view(
     )
     form.full_clean()
     formset = TaskUpdateSubTaskForms(
-        data=request.POST,
-        initial=sub_tasks_initial,
+        data=request.POST.dict(),
+        initial=sub_tasks_initial,  # type: ignore[arg-type]
     )
     formset.full_clean()
     if not form.is_valid() or not formset.is_valid():

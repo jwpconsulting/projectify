@@ -64,14 +64,14 @@ class CouponAdmin(admin.ModelAdmin[Coupon]):
     ) -> type[forms.ModelForm]:
         """Return a custom form for creation, otherwise return regular."""
         if obj:
-            return super().get_form(request, obj, change, **kwargs)  # type: ignore[no-any-return]
+            return super().get_form(request, obj, change, **kwargs)
         return self.CouponForm
 
     def save_model(
         self,
         request: HttpRequest,
         obj: Coupon,
-        form: forms.Form,
+        form: forms.ModelForm,
         change: bool = False,
     ) -> None:
         """Override save_form for creation."""
