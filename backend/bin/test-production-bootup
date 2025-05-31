@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 # Use this handy tool if you would like to test whether the production settings
 # can boot successfully
 # Bonus: It launches celery as well!
-PORT=8000
+export PORT=8001
 
 export DJANGO_SETTINGS_MODULE=projectify.settings.production
 export DJANGO_CONFIGURATION=Production
@@ -33,9 +33,9 @@ then
     exit 1
 fi
 
-poetry run newrelic-admin run-program gunicorn &
+poetry run gunicorn &
 PID1="$!"
-poetry run newrelic-admin run-program \
+poetry run \
     celery --app projectify \
     worker \
     --concurrency 1 &
