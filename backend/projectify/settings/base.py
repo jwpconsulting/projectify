@@ -73,7 +73,6 @@ class Base(Configuration):
     # Applications from Django project
     INSTALLED_APPS_DJANGO = (
         "channels",
-        "daphne",
         "django.contrib.auth",
         "django.contrib.contenttypes",
         "django.contrib.sessions",
