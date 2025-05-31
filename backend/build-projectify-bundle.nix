@@ -25,7 +25,6 @@ let
     djlint = [ "hatchling" ];
     django-tailwind = [ "poetry" ];
     selectolax = [ "setuptools" ];
-    django-components = [ "setuptools" ];
     django-browser-reload = [ "setuptools" ];
   };
   overrides = poetry2nix.defaultPoetryOverrides.extend
