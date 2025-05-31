@@ -76,6 +76,7 @@ class Production(Base):
 
     ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split(",")
 
+    # TODO remove when Svelte frontend is gone
     FRONTEND_URL = os.environ["FRONTEND_URL"]
 
     ANYMAIL = {

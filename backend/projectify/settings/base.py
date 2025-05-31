@@ -51,11 +51,13 @@ class Base(Configuration):
     DEBUG_TOOLBAR = False
     DEBUG = False
 
+    # TODO remove when Svelte frontend is gone
     FRONTEND_URL: str
 
     SESSION_COOKIE_SAMESITE = "Strict"
     SESSION_COOKIE_SECURE = True
 
+    # TODO remove when Svelte frontend is gone
     # CSRF
     CSRF_USE_SESSIONS = False
     CSRF_COOKIE_SAMESITE = "Strict"
@@ -135,6 +137,7 @@ class Base(Configuration):
     WSGI_APPLICATION = "projectify.wsgi.application"
     ASGI_APPLICATION = "projectify.asgi.application"
 
+    # TODO remove when Svelte frontend is gone
     # Channels
     CHANNEL_LAYERS: ChannelLayers = {
         "default": {
@@ -311,6 +314,7 @@ class Base(Configuration):
     SLEEP_MIN_MAX_MS: Optional[tuple[int, int]] = None
     # Percentage (int from 0 to 100) of requests that should fail
     ERROR_RATE_PCT: Optional[int] = None
+    # TODO remove when Svelte frontend is gone
     # N seconds after which 100% of requests time out
     CHANNEL_ERROR: Optional[int] = None
 
@@ -320,7 +324,7 @@ class Base(Configuration):
     BROWSER_RELOAD = False
 
     # Feature flags
-    ENABLE_DJANGO_DASHBOARD = False
+    ENABLE_DJANGO_FRONTEND = False
 
     # Markdownify
     MARKDOWNIFY = {

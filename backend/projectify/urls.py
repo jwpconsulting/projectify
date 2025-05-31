@@ -37,44 +37,32 @@ settings = get_settings()
 urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     # TODO may I use projectify.admin.admin.urls here?
     path("admin/", admin.site.urls),
-    path(
-        r"user/",
-        include("projectify.user.urls"),
-    ),
-    path(r"", include("projectify.storefront.urls")),
-    path(r"", include("projectify.help.urls")),
-    path("onboarding/", include("projectify.onboarding.urls")),
-    path(
-        "workspace/",
-        include("projectify.workspace.urls"),
-    ),
+    path("user/", include("projectify.user.urls")),
+    path("workspace/", include("projectify.workspace.urls")),
     path("corporate/", include("projectify.corporate.urls")),
 )
-if settings.ENABLE_DJANGO_DASHBOARD:
+if settings.ENABLE_DJANGO_FRONTEND:
     urlpatterns = (
         *urlpatterns,
         path(
             "dashboard/",
             include("projectify.workspace.dashboard_urls"),
         ),
+        path("", include("projectify.storefront.urls")),
+        path("help/", include("projectify.help.urls")),
+        path("onboarding/", include("projectify.onboarding.urls")),
     )
 
 if settings.PREMAIL_PREVIEW:
     urlpatterns = (
         *urlpatterns,
-        path(
-            r"premail/",
-            include("projectify.premail.urls"),
-        ),
+        path("premail/", include("projectify.premail.urls")),
     )
 
 if settings.SERVE_MEDIA:
     urlpatterns = (
         *urlpatterns,
-        *static(
-            settings.MEDIA_URL,
-            document_root=settings.MEDIA_ROOT,
-        ),
+        *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
     )
 
 if settings.DEBUG_TOOLBAR:

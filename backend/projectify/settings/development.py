@@ -73,6 +73,7 @@ class Development(SpectacularSettings, Base):
     # Add the IP you are connecting from to get SQL debug HTTP headers
     INTERNAL_IPS = os.getenv("INTERNAL_IPS", "127.0.0.1").split(",")
 
+    # TODO remove when Svelte frontend is gone
     FRONTEND_URL = "http://localhost:3000"
 
     # Workaround for connecting over .local domain
@@ -87,6 +88,7 @@ class Development(SpectacularSettings, Base):
     # XXX this might have to revised, not sure what the correct suffix is
     # MEDIA_URL = f"http://{LOCAL_DOMAIN}.local:3000/media/"
 
+    # TODO remove when Svelte frontend is gone
     CSRF_TRUSTED_ORIGINS = (
         # Vite dev
         "http://localhost:3000",
@@ -129,6 +131,7 @@ class Development(SpectacularSettings, Base):
 
     # Safari workaround for sessionid cookie
     SESSION_COOKIE_SECURE = False
+    # TODO remove after Svelte frontend is gone
     SESSION_COOKIE_SAMESITE = "Lax"
 
     # Rest Framework settings for drf-spectacular
@@ -150,7 +153,7 @@ class Development(SpectacularSettings, Base):
     BROWSER_RELOAD = True
 
     # Feature flags
-    ENABLE_DJANGO_DASHBOARD = True
+    ENABLE_DJANGO_FRONTEND = True
 
     # Enable template debugging
     TEMPLATES = Base.TEMPLATES
