@@ -3,8 +3,7 @@
 {% extends "onboarding_base.html" %}
 {% load i18n %}
 {% block onboarding_content %}
-    <form action=""
-          method="POST"
+    <form method="post"
           class="col-span-1 flex shrink grow flex-col gap-16 px-12 py-20 pb-8">
         {% csrf_token %}
         <div class="flex flex-col gap-4">

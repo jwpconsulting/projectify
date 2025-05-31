@@ -17,6 +17,9 @@
         {% tailwind_css %}
     </head>
     <body class="min-h-screen w-full max-w-full bg-foreground text-base-content">
+        {% if debug %}
+            {% include "common/navigation/header/development_view_bar.html" %}
+        {% endif %}
         <div class="flex min-h-screen flex-col" id="svelte" role="presentation">
             {% block content %}{% endblock %}
         </div>
