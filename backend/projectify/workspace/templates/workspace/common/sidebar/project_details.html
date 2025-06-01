@@ -2,10 +2,10 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load i18n %}
 <div class="w-full">
-    <p class=" font-bold truncate py-2">
+    <p class=" font-bold truncate pb-2">
         {% blocktrans with title=project.title %}Projects: {{ title }}{% endblocktrans %}
     </p>
-    <ul class="flex flex-col max-h-80 overflow-y-auto">
+    <ul class="flex flex-col max-h-60 overflow-y-auto">
         {% for p in projects %}
             <li class="flex items-center gap-2 max-w-2xs">
                 <a href="{% url "dashboard:projects:detail" p.uuid %}"

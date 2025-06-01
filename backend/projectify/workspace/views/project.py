@@ -56,12 +56,13 @@ def project_detail_view(
         workspace_uuid=project.workspace.uuid, who=request.user, archived=False
     )
     workspaces = workspace_find_for_user(who=request.user)
+
     context = {
         "object": project,
         "projects": projects,
         "labels": list(project.workspace.label_set.values()),
         "workspaces": workspaces,
-        "workspace": project.workspace,
+        "team_members": list(project.workspace.teammember_set.all()),
     }
     return render(request, "workspace/project_detail.html", context)
 

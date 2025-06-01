@@ -32,14 +32,14 @@
             <div class="hidden h-full shrink-0 md:block">
                 <div class="max-w-xs 2xl:max-w-md">
                     <nav class="flex flex-col py-4">
-                        <div class="flex flex-col gap-2 px-4 pb-4">
+                        <div class="flex flex-col gap-2 px-4">
                             <div class="min-w-0 grow">
                                 {% block workspace_select %}
                                 {% endblock workspace_select %}
                             </div>
                         </div>
-                        <p class="px-4">
-                            <strong>Trial workspace</strong> <a href="#"
+                        <p class="text-right px-4 pb-4">
+                            Trial workspace <a href="#"
     class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
     target="_blank">Learn more<span class="sr-only">(Opens in new tab)</span>
                             <svg fill="none"
@@ -58,6 +58,10 @@
                     <div class="flex flex-col px-4 pb-4">
                         {% block project_select %}
                         {% endblock project_select %}
+                    </div>
+                    <div class="flex flex-col px-4 pb-4">
+                        {% block filter_team_members %}
+                        {% endblock filter_team_members %}
                     </div>
                 </nav>
             </div>

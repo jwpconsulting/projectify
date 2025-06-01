@@ -2,11 +2,14 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "dashboard_base.html" %}
 {% block workspace_select %}
-    {% include "workspace/common/sidebar/workspace_details.html" with workspace=workspace workspaces=workspaces %}
+    {% include "workspace/common/sidebar/workspace_details.html" with workspace=object.workspace workspaces=workspaces %}
 {% endblock workspace_select %}
 {% block project_select %}
     {% include "workspace/common/sidebar/project_details.html" with project=object projects=projects %}
 {% endblock project_select %}
+{% block filter_team_members %}
+    {% include "workspace/common/sidebar/filter_team_members.html" with team_members=team_members %}
+{% endblock filter_team_members %}
 {% block dashboard_content %}
     <div class="min-w-0 grow" role="presentation">
         <main class="flex h-full flex-col items-center gap-4 bg-background py-4">
