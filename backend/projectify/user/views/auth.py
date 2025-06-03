@@ -23,6 +23,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
 from projectify.lib.error_schema import DeriveSchema
+from projectify.lib.forms import populate_form_with_drf_errors
 from projectify.lib.schema import extend_schema
 from projectify.user.serializers import (
     AnonymousUserSerializer,
@@ -65,6 +66,13 @@ class SignUpForm(forms.Form):
 @ratelimit(key="ip", rate="60/h")
 def sign_up(request: HttpRequest) -> HttpResponse:
     """Sign the user up."""
+    validators = password_validators_help_texts()
+
+    if request.method == "GET":
+        form = SignUpForm()
+        context = {"form": form, "validators": validators}
+        return render(request, "user/sign_up.html", context=context)
+
     limit = get_usage(
         request,
         group="projectify.user.views.auth.sign_up",
@@ -75,48 +83,37 @@ def sign_up(request: HttpRequest) -> HttpResponse:
     if limit and limit["should_limit"]:
         raise Throttled()
 
-    validators = password_validators_help_texts()
+    form = SignUpForm(request.POST)
+    if not form.is_valid():
+        context = {"form": form, "validators": validators}
+        return render(request, "user/sign_up.html", context=context)
+    data = form.cleaned_data
 
-    if request.method == "POST":
-        form = SignUpForm(request.POST)
-        if not form.is_valid():
-            context = {"form": form, "validators": validators}
-            return render(request, "user/sign_up.html", context=context)
-        data = form.cleaned_data
-        try:
-            user_sign_up(
-                email=data["email"],
-                password=data["password"],
-                tos_agreed=data["tos_agreed"],
-                privacy_policy_agreed=data["privacy_policy_agreed"],
-            )
-        # TODO
-        # except ValidationError as e:
-        except ValidationError:
-            context = {"form": form, "validators": validators}
-            # TODO
-            # assert isinstance(e.detail, dict)
-            # for k, v in e.detail.items():
-            #     assert isinstance(v, str)
-            #     form.add_error(k, v)
-            return render(request, "user/sign_up.html", context=context)
-
-        # Increment limit only on success
-        # XXX WHY?
-        get_usage(
-            request,
-            group="projectify.user.views.auth.sign_up",
-            key="ip",
-            rate="4/h",
-            increment=True,
+    try:
+        user_sign_up(
+            email=data["email"],
+            password=data["password"],
+            tos_agreed=data["tos_agreed"],
+            privacy_policy_agreed=data["privacy_policy_agreed"],
         )
-        # TODO figure out redirect URL
-        # should be success page
-        return redirect("/")
+    # TODO
+    except ValidationError as error:
+        populate_form_with_drf_errors(form, error)
+        context = {"form": form, "validators": validators}
+        return render(request, "user/sign_up.html", context=context)
 
-    form = SignUpForm()
-    context = {"form": form, "validators": validators}
-    return render(request, "user/sign_up.html", context=context)
+    # Increment limit only on success
+    # XXX WHY?
+    get_usage(
+        request,
+        group="projectify.user.views.auth.sign_up",
+        key="ip",
+        rate="4/h",
+        increment=True,
+    )
+    # TODO figure out redirect URL
+    # should be success page
+    return redirect("/")
 
 
 def email_confirm(
