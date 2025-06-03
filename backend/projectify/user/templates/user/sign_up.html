@@ -11,25 +11,9 @@
                         <h1 class="text-center text-4xl font-bold">{% trans "Sign up" %}</h1>
                         <h2 class="text-center">{% trans "Sign up and start a free trial" %}</h2>
                         <div class="flex flex-col gap-6">
-                            <div class="flex flex-col items-start gap-2">
-                                <div class="flex w-full flex-row items-center justify-between">
-                                    <label for="{{ form.email.id_for_label }}"
-                                           class="font-bold text-base-content first-letter:uppercase">
-                                        {{ form.email.label_tag }}
-                                    </label>
-                                </div>
-                                {{ form.email }}
-                            </div>
+                            {{ form.email.as_field_group }}
                             <section class="flex flex-col gap-2">
-                                <div class="flex flex-col items-start gap-2">
-                                    <div class="flex w-full flex-row items-center justify-between">
-                                        <label for="{{ form.password.id_for_label }}"
-                                               class="font-bold text-base-content first-letter:uppercase">
-                                            {{ form.password.label }}
-                                        </label>
-                                    </div>
-                                    {{ form.password }}
-                                </div>
+                                {{ form.password.as_field_group }}
                                 <header class="font-bold">
                                     {% trans "Rules for choosing a safe password:" %}
                                 </header>
