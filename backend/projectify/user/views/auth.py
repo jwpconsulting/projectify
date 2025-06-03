@@ -116,7 +116,6 @@ def sign_up(request: HttpRequest) -> HttpResponse:
     return redirect("/")
 
 
-
 def email_confirm(
     request: HttpRequest, email: str, token: str
 ) -> HttpResponse:
