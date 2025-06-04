@@ -74,20 +74,34 @@ def sign_up(request: HttpRequest) -> HttpResponse:
         context = {"form": form, "validators": validators}
         return render(request, "user/sign_up.html", context=context)
 
+    # XXX
+    # Originally, I wanted 4/h but there's a weird off-by-one issue here
+    # See the comment below as well.
     limit = get_usage(
         request,
         group="projectify.user.views.auth.sign_up",
         key="ip",
-        rate="4/h",
+        rate="3/h",
         increment=False,
     )
-    if limit and limit["should_limit"]:
-        raise Throttled()
 
     form = SignUpForm(request.POST)
+
+    # Rate limit and show appropraite error message
+    if limit and limit["should_limit"]:
+        context = {"form": form, "validators": validators}
+        form.add_error(
+            field=None, error=_("Too many sign up attempts. Slow down.")
+        )
+        return render(
+            request, "user/sign_up.html", context=context, status=429
+        )
+
     if not form.is_valid():
         context = {"form": form, "validators": validators}
-        return render(request, "user/sign_up.html", context=context)
+        return render(
+            request, "user/sign_up.html", context=context, status=400
+        )
     data = form.cleaned_data
 
     try:
@@ -101,15 +115,23 @@ def sign_up(request: HttpRequest) -> HttpResponse:
     except ValidationError as error:
         populate_form_with_drf_errors(form, error)
         context = {"form": form, "validators": validators}
-        return render(request, "user/sign_up.html", context=context)
+        return render(
+            request, "user/sign_up.html", context=context, status=400
+        )
 
     # Increment limit only on success
-    # XXX WHY?
-    get_usage(
+    # When you log the output here using print(limit), it prints the following:
+    # {'count': 1, 'limit': 4, 'should_limit': False, 'time_left': 1800}
+    # {'count': 2, 'limit': 4, 'should_limit': False, 'time_left': 1799}
+    # {'count': 3, 'limit': 4, 'should_limit': False, 'time_left': 1799}
+    # {'count': 4, 'limit': 4, 'should_limit': False, 'time_left': 1799}
+    # {'count': 5, 'limit': 4, 'should_limit': True, 'time_left': 1799}
+    # My expectation is that it limits when count == limit == 4, but it doesn't
+    limit = get_usage(
         request,
         group="projectify.user.views.auth.sign_up",
         key="ip",
-        rate="4/h",
+        rate="3/h",
         increment=True,
     )
     # TODO figure out redirect URL

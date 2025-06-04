@@ -5,6 +5,7 @@
 
 from typing import Any
 
+from django.test import Client
 from django.urls import reverse
 
 import pytest
@@ -20,7 +21,101 @@ from ...models import User
 
 pytestmark = pytest.mark.django_db
 
+# Django view tests
 
+
+class TestSignUpDjango:
+    """Test sign_up view."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("users-django:sign-up")
+
+    def test_signing_up(
+        self,
+        client: Client,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        faker: Faker,
+    ) -> None:
+        """Test signing up a new user."""
+        assert User.objects.count() == 0
+        with django_assert_num_queries(9):
+            response = client.post(
+                resource_url,
+                {
+                    "email": "hello@localhost",
+                    "password": faker.password(),
+                    "tos_agreed": True,
+                    "privacy_policy_agreed": True,
+                },
+                follow=True,
+            )
+        assert response.status_code == 200, response.content
+        assert User.objects.count() == 1
+        assert response.redirect_chain == [("/", 302)]
+
+    def test_rate_limit(
+        self,
+        client: Client,
+        resource_url: str,
+        faker: Faker,
+        settings: Base,
+    ) -> None:
+        """Test signing up a new user."""
+        settings.RATELIMIT_ENABLE = True
+        for i in range(4):
+            response = client.post(
+                resource_url,
+                {
+                    "email": faker.email(),
+                    "password": faker.password(),
+                    "tos_agreed": True,
+                    "privacy_policy_agreed": True,
+                },
+            )
+            assert response.status_code == 302  # Redirect status
+            assert User.objects.count() == i + 1
+        # The 5th request should be rate limited
+        response = client.post(
+            resource_url,
+            {
+                "email": faker.email(),
+                "password": faker.password(),
+                "tos_agreed": True,
+                "privacy_policy_agreed": True,
+            },
+        )
+        # The view creates no new user
+        assert User.objects.count() == 4
+        assert response.status_code == 429
+
+    def test_signing_up_weak_pw(
+        self,
+        client: Client,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test signing up a new user with a weak password."""
+        with django_assert_num_queries(1):
+            response = client.post(
+                resource_url,
+                {
+                    "email": "password@localhost",
+                    "password": "password",
+                    "tos_agreed": True,
+                    "privacy_policy_agreed": True,
+                },
+            )
+            assert response.status_code == 400
+
+        assert b"The password is too similar to the Email" in response.content
+        assert b"This password is too common" in response.content
+        assert User.objects.count() == 0
+
+
+# APIView tests
 class TestLogOut:
     """Test logging out."""
 
