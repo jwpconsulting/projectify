@@ -163,7 +163,7 @@ def dashboard(request: HttpRequest) -> HttpResponse: pass
 In `backend/projectify/workspace/views/section.py`, implement the following
 view functions:
 
-```
+```python
 # Redirect to project with this section visible
 def section(request: HttpRequest, section_uuid: UUID) -> HttpResponse: pass
 @require_http_methods(["GET", "POST"])
