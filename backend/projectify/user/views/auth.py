@@ -9,6 +9,7 @@ from django.contrib.auth.password_validation import (
 )
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
@@ -133,26 +134,24 @@ class LogInForm(forms.Form):
 @require_http_methods(["GET", "POST"])
 def log_in(request: HttpRequest) -> HttpResponse:
     """Log the user in."""
-    next = request.GET.get("next", None)
-    if request.method == "POST":
-        # log in
-        form = LogInForm(request.POST)
+    if request.method == "GET":
+        form = LogInForm()
         context = {"form": form}
-        if not form.is_valid():
-            return render(request, "user/log_in.html", context=context)
-        user_log_in(
-            email=form.cleaned_data["email"],
-            password=form.cleaned_data["password"],
-            request=request,
-        )
-        form.cleaned_data
-        if next:
-            return redirect(next)
-        return redirect("/")
-    # render log in form
-    form = LogInForm()
+        return render(request, "user/log_in.html", context=context)
+
+    form = LogInForm(request.POST)
     context = {"form": form}
-    return render(request, "user/log_in.html", context=context)
+    if not form.is_valid():
+        return render(request, "user/log_in.html", context=context)
+    user_log_in(
+        email=form.cleaned_data["email"],
+        password=form.cleaned_data["password"],
+        request=request,
+    )
+    form.cleaned_data
+
+    next = request.GET.get("next", reverse("dashboard:dashboard"))
+    return redirect(next)
 
 
 @require_http_methods(["GET", "POST"])
