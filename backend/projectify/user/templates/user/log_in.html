@@ -27,7 +27,7 @@
                         </div>
                         <div class="flex w-full flex-row items-center gap-2">{{ form.password }}</div>
                         <div class="flex w-full flex-row items-end justify-end gap-1 px-1">
-                            <a href="{% url "user:users-django:request-password-reset" %}"
+                            <a href="{% url "users-django:request-password-reset" %}"
                                class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Forgot password" %}</a>
                         </div>
                     </div>
@@ -37,7 +37,7 @@
                     </button>
                     <div class="text-center">
                         {% trans "Don't have an account yet?" %}
-                        <a href="{% url "user:users-django:sign-up" %}"
+                        <a href="{% url "users-django:sign-up" %}"
                            class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Sign up here" %}</a>
                     </div>
                 </div>
