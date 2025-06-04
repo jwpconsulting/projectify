@@ -165,12 +165,17 @@ def log_in(request: HttpRequest) -> HttpResponse:
     context = {"form": form}
     if not form.is_valid():
         return render(request, "user/log_in.html", context=context)
-    user_log_in(
-        email=form.cleaned_data["email"],
-        password=form.cleaned_data["password"],
-        request=request,
-    )
-    form.cleaned_data
+
+    try:
+        user_log_in(
+            email=form.cleaned_data["email"],
+            password=form.cleaned_data["password"],
+            request=request,
+        )
+    except ValidationError as error:
+        populate_form_with_drf_errors(form, error)
+        context = {"form": form}
+        return render(request, "user/log_in.html", context=context, status=400)
 
     next = request.GET.get("next", reverse("dashboard:dashboard"))
     return redirect(next)

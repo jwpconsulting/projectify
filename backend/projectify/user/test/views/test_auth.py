@@ -115,6 +115,77 @@ class TestSignUpDjango:
         assert User.objects.count() == 0
 
 
+class TestLogInDjango:
+    """Test django log in view."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("users-django:log-in")
+
+    def test_log_in(
+        self,
+        client: Client,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        user: User,
+        password: str,
+    ) -> None:
+        """Test logging in a user."""
+        # 13 + 3, 3 for the queries when redirecting
+        with django_assert_num_queries(16):
+            response = client.post(
+                resource_url,
+                {"email": user.email, "password": password},
+                follow=True,
+            )
+        assert response.status_code == 200, response.content
+        assert response.redirect_chain == [
+            (reverse("dashboard:dashboard"), 302),
+            (reverse("dashboard:workspaces:list"), 302),
+        ]
+        # Thx to
+        # https://stackoverflow.com/questions/22457557/how-to-test-login-process/22458380#22458380
+        assert "user" in response.context
+        assert response.context["user"].is_authenticated, response.context
+
+    def test_log_in_wrong_password(
+        self,
+        client: Client,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        user: User,
+    ) -> None:
+        """Test logging in with wrong password."""
+        with django_assert_num_queries(2):
+            response = client.post(
+                resource_url,
+                {"email": user.email, "password": "wrong_password"},
+            )
+        assert response.status_code == 400, response.content
+        assert "user" in response.context
+        assert response.context["user"].is_authenticated is False
+
+    def test_log_in_with_next(
+        self,
+        client: Client,
+        resource_url: str,
+        user: User,
+        password: str,
+    ) -> None:
+        """Test logging in with a next parameter."""
+        dashboard_url = reverse("dashboard:dashboard")
+        response = client.post(
+            f"{resource_url}?next={dashboard_url}",
+            {"email": user.email, "password": password},
+            follow=True,
+        )
+        assert response.status_code == 200, response.content
+        # There may be more than one element in this chain
+        assert response.redirect_chain[0] == (dashboard_url, 302)
+        assert response.context["user"].is_authenticated
+
+
 # APIView tests
 class TestLogOut:
     """Test logging out."""
