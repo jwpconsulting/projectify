@@ -75,7 +75,7 @@ def user_profile(request: HttpRequest) -> HttpResponse:
                 preferred_name=form.cleaned_data["preferred_name"],
                 profile_picture=form.cleaned_data["profile_picture"],
             )
-            return redirect(reverse("user:users-django:profile"))
+            return redirect(reverse("users-django:profile"))
         raise ValueError()
     else:
         form = UserProfileForm(instance=user)

@@ -48,6 +48,10 @@ if settings.ENABLE_DJANGO_FRONTEND:
             "dashboard/",
             include("projectify.workspace.dashboard_urls"),
         ),
+        path(
+            "user/",
+            include("projectify.user.dashboard_urls"),
+        ),
         path("", include("projectify.storefront.urls")),
         path("help/", include("projectify.help.urls")),
         path("onboarding/", include("projectify.onboarding.urls")),
