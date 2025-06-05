@@ -48,8 +48,12 @@ class Base(Configuration):
     ALLOWED_HOSTS: Sequence[str] = []
 
     # Debug
-    DEBUG_TOOLBAR = False
+    # Should Django run in debug mode?
     DEBUG = False
+    # Should Projectify render the Django debug toolbar?
+    DEBUG_TOOLBAR = False
+    # Should Projectify make authentication debug views available?
+    DEBUG_AUTH = False
 
     # TODO remove when Svelte frontend is gone
     FRONTEND_URL: str
@@ -191,6 +195,7 @@ class Base(Configuration):
         "rules.permissions.ObjectPermissionBackend",
         "django.contrib.auth.backends.ModelBackend",
     )
+    LOGIN_URL = "/user/log-in"
 
     # Internationalization
     # https://docs.djangoproject.com/en/3.2/topics/i18n/

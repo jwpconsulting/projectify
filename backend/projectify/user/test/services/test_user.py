@@ -4,6 +4,10 @@
 """Test user services."""
 
 import re
+from typing import cast
+
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.db.models.fields.files import FileDescriptor
 
 import pytest
 from faker import Faker
@@ -24,12 +28,20 @@ from ...services.user import (
 pytestmark = pytest.mark.django_db
 
 
-def test_user_update(user: User, faker: Faker) -> None:
+def test_user_update(
+    user: User, faker: Faker, uploaded_file: SimpleUploadedFile
+) -> None:
     """Test updating a user."""
     new_name = faker.name()
-    user_update(who=user, user=user, preferred_name=new_name)
+    user_update(
+        who=user,
+        user=user,
+        preferred_name=new_name,
+        profile_picture=cast(FileDescriptor, uploaded_file),
+    )
     user.refresh_from_db()
     assert user.preferred_name == new_name
+    assert "profile_picture/test_" in user.profile_picture.path
 
 
 def test_user_change_password_weak_password(user: User, password: str) -> None:

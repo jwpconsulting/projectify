@@ -3,21 +3,28 @@
 # SPDX-FileCopyrightText: 2024 JWP Consulting GK
 """User authentication views."""
 
+from django import forms
 from django.contrib.auth.password_validation import (
     password_validators_help_texts,
 )
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils.decorators import method_decorator
+from django.utils.translation import gettext_lazy as _
+from django.views.decorators.http import require_http_methods
 
 from django_ratelimit.core import get_usage
 from django_ratelimit.decorators import ratelimit
 from rest_framework import serializers, views
-from rest_framework.exceptions import Throttled
+from rest_framework.exceptions import Throttled, ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
 from projectify.lib.error_schema import DeriveSchema
+from projectify.lib.forms import populate_form_with_drf_errors
 from projectify.lib.schema import extend_schema
 from projectify.user.serializers import (
     AnonymousUserSerializer,
@@ -31,8 +38,185 @@ from projectify.user.services.auth import (
     user_request_password_reset,
     user_sign_up,
 )
+from projectify.user.services.internal import Token
 
 
+# Django view
+def log_out(request: HttpRequest) -> HttpResponse:
+    """Log the user out. Need to be logged in first."""
+    # TODO check if logged in
+    user = request.user
+    if not user.is_anonymous:
+        user_log_out(request=request)
+    return redirect("/")
+
+
+class SignUpForm(forms.Form):
+    """Sign up form."""
+
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
+    tos_agreed = forms.BooleanField()
+    privacy_policy_agreed = forms.BooleanField()
+
+    email.widget.attrs.update({"placeholder": _("Enter your email")})
+    password.widget.attrs.update({"placeholder": _("Enter your password")})
+
+
+# No authentication required
+@require_http_methods(["GET", "POST"])
+@ratelimit(key="ip", rate="60/h")
+def sign_up(request: HttpRequest) -> HttpResponse:
+    """Sign the user up."""
+    validators = password_validators_help_texts()
+
+    if request.method == "GET":
+        form = SignUpForm()
+        context = {"form": form, "validators": validators}
+        return render(request, "user/sign_up.html", context=context)
+
+    # XXX
+    # Originally, I wanted 4/h but there's a weird off-by-one issue here
+    # See the comment below as well.
+    limit = get_usage(
+        request,
+        group="projectify.user.views.auth.sign_up",
+        key="ip",
+        rate="3/h",
+        increment=False,
+    )
+
+    form = SignUpForm(request.POST)
+
+    # Rate limit and show appropraite error message
+    if limit and limit["should_limit"]:
+        context = {"form": form, "validators": validators}
+        form.add_error(
+            field=None, error=_("Too many sign up attempts. Slow down.")
+        )
+        return render(
+            request, "user/sign_up.html", context=context, status=429
+        )
+
+    if not form.is_valid():
+        context = {"form": form, "validators": validators}
+        return render(
+            request, "user/sign_up.html", context=context, status=400
+        )
+    data = form.cleaned_data
+
+    try:
+        user_sign_up(
+            email=data["email"],
+            password=data["password"],
+            tos_agreed=data["tos_agreed"],
+            privacy_policy_agreed=data["privacy_policy_agreed"],
+        )
+    # TODO
+    except ValidationError as error:
+        populate_form_with_drf_errors(form, error)
+        context = {"form": form, "validators": validators}
+        return render(
+            request, "user/sign_up.html", context=context, status=400
+        )
+
+    # Increment limit only on success
+    # When you log the output here using print(limit), it prints the following:
+    # {'count': 1, 'limit': 4, 'should_limit': False, 'time_left': 1800}
+    # {'count': 2, 'limit': 4, 'should_limit': False, 'time_left': 1799}
+    # {'count': 3, 'limit': 4, 'should_limit': False, 'time_left': 1799}
+    # {'count': 4, 'limit': 4, 'should_limit': False, 'time_left': 1799}
+    # {'count': 5, 'limit': 4, 'should_limit': True, 'time_left': 1799}
+    # My expectation is that it limits when count == limit == 4, but it doesn't
+    limit = get_usage(
+        request,
+        group="projectify.user.views.auth.sign_up",
+        key="ip",
+        rate="3/h",
+        increment=True,
+    )
+    # TODO figure out redirect URL
+    # should be success page
+    return redirect("/")
+
+
+def email_confirm(
+    request: HttpRequest, email: str, token: str
+) -> HttpResponse:
+    """Confirm a new user's email address."""
+    token = Token(token)
+
+    try:
+        user_confirm_email(email=email, token=token)
+        context = {}
+    except ValidationError as e:
+        match e.detail:
+            case {"email": email_error}:
+                token_error = None
+            case {"token": token_error}:
+                email_error = None
+            case _:
+                raise ValueError(
+                    "Don't know how to handle ValidationError of type "
+                    f"{type(e)}"
+                ) from e
+        context = {
+            "email_error": email_error,
+            "token_error": token_error,
+        }
+    return render(request, "user/email_confirm.html", context=context)
+
+
+class LogInForm(forms.Form):
+    """Form for logging in."""
+
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
+
+
+@require_http_methods(["GET", "POST"])
+def log_in(request: HttpRequest) -> HttpResponse:
+    """Log the user in."""
+    if request.method == "GET":
+        form = LogInForm()
+        context = {"form": form}
+        return render(request, "user/log_in.html", context=context)
+
+    form = LogInForm(request.POST)
+    context = {"form": form}
+    if not form.is_valid():
+        return render(request, "user/log_in.html", context=context)
+
+    try:
+        user_log_in(
+            email=form.cleaned_data["email"],
+            password=form.cleaned_data["password"],
+            request=request,
+        )
+    except ValidationError as error:
+        populate_form_with_drf_errors(form, error)
+        context = {"form": form}
+        return render(request, "user/log_in.html", context=context, status=400)
+
+    next = request.GET.get("next", reverse("dashboard:dashboard"))
+    return redirect(next)
+
+
+@require_http_methods(["GET", "POST"])
+def password_reset_request(request: HttpRequest) -> HttpResponse:
+    """Request a password reset."""
+    return HttpResponse("TODO")
+
+
+@require_http_methods(["GET", "POST"])
+def password_reset_confirm(
+    request: HttpRequest, email: str, token: str
+) -> HttpResponse:
+    """Confirm a password reset request and set a new password."""
+    return HttpResponse("TODO")
+
+
+# DRF Views
 class LogOut(views.APIView):
     """Log a user out."""
 
