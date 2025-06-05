@@ -101,7 +101,9 @@ def email_address_update(request: HttpRequest) -> HttpResponse:
 
 
 @login_required
-def email_address_confirm(request: HttpRequest, token: str) -> HttpResponse:
+def email_address_update_confirm(
+    request: HttpRequest, token: str
+) -> HttpResponse:
     """Confirm the user's new email address by checking the token."""
     return HttpResponse("TODO")
 

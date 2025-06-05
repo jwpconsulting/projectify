@@ -153,6 +153,62 @@ class TestSignUpDjango:
         assert User.objects.count() == 0
 
 
+class TestConfirmEmailDjango:
+    """Test confirm_email Django view."""
+
+    def test_confirm_email(
+        self,
+        client: Client,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test confirming a new user's email address."""
+        user = user_sign_up(
+            email="hello@world.com",
+            password="random_password",
+            tos_agreed=True,
+            privacy_policy_agreed=True,
+        )
+        token = user_make_token(user=user, kind="confirm_email_address")
+        with django_assert_num_queries(6):
+            response = client.get(
+                reverse(
+                    "users-django:confirm-email",
+                    args=("hello@world.com", token),
+                ),
+                follow=True,
+            )
+        assert response.status_code == 200, response.content
+
+        user.refresh_from_db()
+        assert user.is_active
+
+    def test_confirm_email_invalid_token(
+        self,
+        client: Client,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test confirming with an invalid token."""
+        user = user_sign_up(
+            email="hello@world.com",
+            password="random_password",
+            tos_agreed=True,
+            privacy_policy_agreed=True,
+        )
+        with django_assert_num_queries(1):
+            response = client.get(
+                reverse(
+                    "users-django:confirm-email",
+                    args=("hello@world.com", "invalid_token"),
+                ),
+                follow=True,
+            )
+        assert response.status_code == 200, response.content
+        assert b"could not be confirmed" in response.content
+
+        user.refresh_from_db()
+        assert not user.is_active
+
+
 class TestLogInDjango:
     """Test django log in view."""
 
