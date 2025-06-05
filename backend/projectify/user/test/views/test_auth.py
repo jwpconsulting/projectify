@@ -21,7 +21,45 @@ from ...models import User
 
 pytestmark = pytest.mark.django_db
 
+
 # Django view tests
+class TestLogOutDjango:
+    """Test log_out view."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("users-django:log-out")
+
+    def test_log_out(
+        self,
+        client: Client,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        user: User,
+        password: str,
+    ) -> None:
+        """Test logging out a user."""
+        # First log in
+        response = client.post(
+            reverse("users-django:log-in"),
+            {"email": user.email, "password": password},
+            follow=True,
+        )
+        assert response.status_code == 200, response.content
+        assert "user" in response.context, response.context
+        assert response.context["user"].is_authenticated, response.content
+
+        # Now log out
+        with django_assert_num_queries(4):
+            response = client.post(resource_url, follow=True)
+        assert response.status_code == 200, response.content
+        assert response.redirect_chain == [
+            (reverse("storefront:landing"), 302)
+        ]
+        assert (
+            response.context["user"].is_authenticated is False
+        ), response.content
 
 
 class TestSignUpDjango:
