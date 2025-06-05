@@ -48,8 +48,12 @@ class Base(Configuration):
     ALLOWED_HOSTS: Sequence[str] = []
 
     # Debug
-    DEBUG_TOOLBAR = False
+    # Should Django run in debug mode?
     DEBUG = False
+    # Should Projectify render the Django debug toolbar?
+    DEBUG_TOOLBAR = False
+    # Should Projectify make authentication debug views available?
+    DEBUG_AUTH = False
 
     # Frontend URL configuration
     # --------------------------

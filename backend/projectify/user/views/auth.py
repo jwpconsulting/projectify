@@ -38,6 +38,7 @@ from projectify.user.services.auth import (
     user_request_password_reset,
     user_sign_up,
 )
+from projectify.user.services.internal import Token
 
 
 # Django view
@@ -143,7 +144,27 @@ def email_confirm(
     request: HttpRequest, email: str, token: str
 ) -> HttpResponse:
     """Confirm a new user's email address."""
-    return HttpResponse("TODO")
+    token = Token(token)
+
+    try:
+        user_confirm_email(email=email, token=token)
+        context = {}
+    except ValidationError as e:
+        match e.detail:
+            case {"email": email_error}:
+                token_error = None
+            case {"token": token_error}:
+                email_error = None
+            case _:
+                raise ValueError(
+                    "Don't know how to handle ValidationError of type "
+                    f"{type(e)}"
+                ) from e
+        context = {
+            "email_error": email_error,
+            "token_error": token_error,
+        }
+    return render(request, "user/email_confirm.html", context=context)
 
 
 class LogInForm(forms.Form):
@@ -182,13 +203,13 @@ def log_in(request: HttpRequest) -> HttpResponse:
 
 
 @require_http_methods(["GET", "POST"])
-def request_password_reset(request: HttpRequest) -> HttpResponse:
+def password_reset_request(request: HttpRequest) -> HttpResponse:
     """Request a password reset."""
     return HttpResponse("TODO")
 
 
 @require_http_methods(["GET", "POST"])
-def confirm_password_reset(
+def password_reset_confirm(
     request: HttpRequest, email: str, token: str
 ) -> HttpResponse:
     """Confirm a password reset request and set a new password."""

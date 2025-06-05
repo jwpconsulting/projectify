@@ -81,6 +81,12 @@ if settings.BROWSER_RELOAD:
         path("__reload__/", include("django_browser_reload.urls")),
     )
 
+if settings.DEBUG_AUTH:
+    urlpatterns = [
+        *urlpatterns,
+        path("test/", include("projectify.user.testing_urls")),
+    ]
+
 if settings.SERVE_SPECTACULAR:
     try:
         from drf_spectacular.views import (
