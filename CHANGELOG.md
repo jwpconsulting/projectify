@@ -6,6 +6,16 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Changelog
 
+## 2025.5.5
+
+### Fixed
+
+- Updated vulnerable dependencies in frontend and backend
+
+### Internal
+
+- Continue frontend rewrite in Django
+
 ## 2025.5.6
 
 ### Fixed
