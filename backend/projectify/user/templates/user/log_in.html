@@ -9,28 +9,8 @@
                 {% csrf_token %}
                 <h1 class="text-center text-4xl font-bold">{% trans "Log in" %}</h1>
                 <div class="flex flex-col gap-6">
-                    <div class="flex flex-col items-start gap-2">
-                        <div class="flex w-full flex-row items-center justify-between">
-                            <label for="{{ form.email.id_for_label }}"
-                                   class="font-bold text-base-content first-letter:uppercase">
-                                {{ form.email.label }}
-                            </label>
-                        </div>
-                        <div class="flex w-full flex-row items-center gap-2">{{ form.email }}</div>
-                    </div>
-                    <div class="flex flex-col items-start gap-2">
-                        <div class="flex w-full flex-row items-center justify-between">
-                            <label for="{{ form.password.id_for_label }}"
-                                   class="font-bold text-base-content first-letter:uppercase">
-                                {{ form.password.label }}
-                            </label>
-                        </div>
-                        <div class="flex w-full flex-row items-center gap-2">{{ form.password }}</div>
-                        <div class="flex w-full flex-row items-end justify-end gap-1 px-1">
-                            <a href="{% url "users-django:request-password-reset" %}"
-                               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Forgot password" %}</a>
-                        </div>
-                    </div>
+                    {{ form.email.as_field_group }}
+                    {{ form.password.as_field_group }}
                     <button type="submit"
                             class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
                         {% trans "Log in" %}
