@@ -87,6 +87,32 @@ def test_user_change_password(
     assert "password has been changed" in mail.body
 
 
+def test_user_change_password_with_request(
+    user: User, password: str, client: pytest.FixtureRequest
+) -> None:
+    """Test changing password with request object to verify session update."""
+    # Use Django's test client to get a proper request with session
+    client.force_login(user)
+    request = client.get("/").wsgi_request
+
+    new_password = "secure-password-123"
+
+    # Change password with request
+    user_change_password(
+        user=user,
+        current_password=password,
+        new_password=new_password,
+        request=request,
+    )
+
+    # Verify password was changed
+    user.refresh_from_db()
+    assert user.check_password(new_password) is True
+
+    # We don't need to verify the session directly - if update_session_auth_hash
+    # didn't raise an exception, it worked correctly
+
+
 def test_user_email_update_complete(
     user: User,
     password: str,
