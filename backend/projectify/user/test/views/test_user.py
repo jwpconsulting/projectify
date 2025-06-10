@@ -7,6 +7,7 @@ from collections.abc import Mapping
 from typing import Any
 
 from django.core.files import File
+from django.test.client import Client
 from django.urls import reverse
 
 import pytest
@@ -25,6 +26,98 @@ from ...models import User
 pytestmark = pytest.mark.django_db
 
 Headers = Mapping[str, Any]
+
+
+# Django view tests
+
+
+class TestUserProfile:
+    """Test django user_profile view."""
+
+
+class TestPasswordChangeDjango:
+    """Test django password_change view."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("users-django:change-password")
+
+    def test_with_correct_password(
+        self,
+        user: User,
+        password: str,
+        user_client: Client,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test changing password with a good password."""
+        # 9 + 4, 4 for rendering the user profile itself
+        with django_assert_num_queries(13):
+            response = user_client.post(
+                resource_url,
+                {
+                    "current_password": password,
+                    "new_password": "hello-world123",
+                    "new_password_confirm": "hello-world123",
+                },
+                follow=True,
+            )
+            assert response.status_code == 200, response.content
+        # Assert that we stay logged in, i.e., sessionid still in cookies
+        assert "sessionid" in response.cookies
+        user.refresh_from_db()
+        assert user.check_password("hello-world123")
+
+    def test_with_incorrect_password(
+        self,
+        user: User,
+        user_client: Client,
+        resource_url: str,
+    ) -> None:
+        """Test changing password with an incorrect current password."""
+        response = user_client.post(
+            resource_url,
+            {
+                "current_password": "wrong-password",
+                "new_password": "new-password123",
+                "new_password_confirm": "new-password123",
+            },
+        )
+        # Should return to the form with an error
+        assert response.status_code == 400, response.content
+        # Check that the form has an error
+        assert "current_password" in response.context["form"].errors
+        # Verify password was not changed
+        user.refresh_from_db()
+        assert not user.check_password("new-password123")
+
+    def test_with_weak_new_password(
+        self,
+        user: User,
+        password: str,
+        user_client: Client,
+        resource_url: str,
+    ) -> None:
+        """Test changing password with a weak new password."""
+        response = user_client.post(
+            resource_url,
+            {
+                "current_password": password,
+                "new_password": "123456",
+                "new_password_confirm": "123456",
+            },
+        )
+        # Should return to the form with an error
+        assert response.status_code == 400, response.content
+        # Check that the form has an error for the new password field
+        assert "new_password" in response.context["form"].errors
+        # Verify password was not changed
+        user.refresh_from_db()
+        assert not user.check_password("123456")
+
+
+# DRF View tests
 
 
 # Create (not relevant)
