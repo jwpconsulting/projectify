@@ -6,9 +6,11 @@
 from typing import Any, Union, cast
 
 from django import forms
-from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth.password_validation import (
+    password_validators_help_texts,
+)
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -18,14 +20,16 @@ from django.views.decorators.http import require_http_methods
 
 from django_ratelimit.decorators import ratelimit
 from rest_framework import parsers, serializers, views
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
 from projectify.lib.error_schema import DeriveSchema
+from projectify.lib.forms import populate_form_with_drf_errors
 from projectify.lib.schema import PolymorphicProxySerializer, extend_schema
+from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.user.models import User
 from projectify.user.serializers import (
     AnonymousUserSerializer,
@@ -86,11 +90,63 @@ def user_profile(request: HttpRequest) -> HttpResponse:
     return render(request, "user/user_profile.html", context=context)
 
 
+class PasswordChangeForm(forms.Form):
+    """Form for changing passwords."""
+
+    current_password = forms.CharField(
+        label=_("Current password"),
+        widget=forms.PasswordInput(
+            attrs={"placeholder": _("Enter your password")}
+        ),
+    )
+    new_password = forms.CharField(
+        label=_("New password"),
+        widget=forms.PasswordInput(
+            attrs={"placeholder": _("Enter the new password")}
+        ),
+    )
+    new_password_confirm = forms.CharField(
+        label=_("Confirm password"),
+        widget=forms.PasswordInput(
+            attrs={"placeholder": _("Confirm the new password")}
+        ),
+    )
+
+
 @require_http_methods(["GET", "POST"])
 @login_required
-def password_change(request: HttpRequest) -> HttpResponse:
+def password_change(request: AuthenticatedHttpRequest) -> HttpResponse:
     """Change user password."""
-    return HttpResponse("TODO")
+    validators = password_validators_help_texts()
+    user = request.user
+
+    if request.method == "GET":
+        form = PasswordChangeForm()
+        context = {"form": form, "validators": validators}
+        return render(request, "user/password_change.html", context=context)
+    form = PasswordChangeForm(request.POST)
+
+    if not form.is_valid():
+        context = {"form": form, "validators": validators}
+        return render(
+            request, "user/password_change.html", context=context, status=400
+        )
+
+    data = form.cleaned_data
+    try:
+        user_change_password(
+            user=user,
+            current_password=data["current_password"],
+            new_password=data["new_password"],
+            new_password_confirm=data["new_password_confirm"],
+        )
+    except ValidationError as error:
+        populate_form_with_drf_errors(form, error)
+        context = {"form": form, "validators": validators}
+        return render(
+            request, "user/password_change.html", context=context, status=400
+        )
+    return redirect("users-django:profile")
 
 
 @require_http_methods(["GET", "POST"])
@@ -233,10 +289,8 @@ class ChangePassword(views.APIView):
             user=user,
             current_password=data["current_password"],
             new_password=data["new_password"],
+            request=request,
         )
-        # Ensure we stay logged in
-        # https://docs.djangoproject.com/en/5.0/topics/auth/default/#session-invalidation-on-password-change
-        update_session_auth_hash(request, user)
         return Response(status=HTTP_204_NO_CONTENT)
 
 
