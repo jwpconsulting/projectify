@@ -92,6 +92,30 @@ class TestPasswordChangeDjango:
         user.refresh_from_db()
         assert not user.check_password("new-password123")
 
+    def test_with_weak_new_password(
+        self,
+        user: User,
+        password: str,
+        user_client: Client,
+        resource_url: str,
+    ) -> None:
+        """Test changing password with a weak new password."""
+        response = user_client.post(
+            resource_url,
+            {
+                "current_password": password,
+                "new_password": "123456",
+                "new_password_confirm": "123456",
+            },
+        )
+        # Should return to the form with an error
+        assert response.status_code == 400, response.content
+        # Check that the form has an error for the new password field
+        assert "new_password" in response.context["form"].errors
+        # Verify password was not changed
+        user.refresh_from_db()
+        assert not user.check_password("123456")
+
 
 # DRF View tests
 

@@ -81,7 +81,7 @@ def user_change_password(
     try:
         validate_password(password=new_password, user=user)
     except DjangoValidationError as e:
-        raise serializers.ValidationError({"policies": e.messages})
+        raise serializers.ValidationError({"new_password": e.messages})
     user.set_password(new_password)
     user.save()
 
