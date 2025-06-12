@@ -35,6 +35,7 @@ from projectify.user.serializers import (
     AnonymousUserSerializer,
     LoggedInUserSerializer,
 )
+from projectify.user.services.internal import Token
 from projectify.user.services.user import (
     user_change_password,
     user_confirm_email_address_update,
@@ -213,10 +214,31 @@ def email_address_update(request: HttpRequest) -> HttpResponse:
 
 @login_required
 def email_address_update_confirm(
-    request: HttpRequest, token: str
+    request: AuthenticatedHttpRequest, token: str
 ) -> HttpResponse:
     """Confirm the user's new email address by checking the token."""
-    return HttpResponse("TODO")
+    user = request.user
+    old_email = user.email
+    try:
+        user_confirm_email_address_update(
+            user=user,
+            confirmation_token=Token(token),
+        )
+    except ValidationError as error:
+        context = {
+            "success": False,
+            "error": str(error),
+        }
+    else:
+        context = {
+            "success": True,
+            "old_email": old_email,
+            "new_email": user.email,
+        }
+
+    return render(
+        request, "user/email_address_update_confirm.html", context=context
+    )
 
 
 # Create
