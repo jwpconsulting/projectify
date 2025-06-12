@@ -139,6 +139,7 @@ def password_change(request: AuthenticatedHttpRequest) -> HttpResponse:
             current_password=data["current_password"],
             new_password=data["new_password"],
             new_password_confirm=data["new_password_confirm"],
+            request=request,
         )
     except ValidationError as error:
         populate_form_with_drf_errors(form, error)
