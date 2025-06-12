@@ -150,11 +150,65 @@ def password_change(request: AuthenticatedHttpRequest) -> HttpResponse:
     return redirect("users-django:profile")
 
 
+class EmailAddressUpdateForm(forms.Form):
+    """Form for updating email address."""
+
+    new_email = forms.EmailField(
+        label=_("New email"),
+        widget=forms.EmailInput(
+            attrs={"placeholder": _("Enter your new email address")}
+        ),
+    )
+    password = forms.CharField(
+        label=_("Current password"),
+        widget=forms.PasswordInput(
+            attrs={"placeholder": _("Enter your current password")}
+        ),
+    )
+
+
 @require_http_methods(["GET", "POST"])
 @login_required
 def email_address_update(request: HttpRequest) -> HttpResponse:
     """Start email address update process for user."""
-    return HttpResponse("TODO")
+    user = request.user
+    assert isinstance(user, User)
+
+    if request.method == "GET":
+        form = EmailAddressUpdateForm()
+        context = {"form": form}
+        return render(
+            request, "user/email_address_update.html", context=context
+        )
+
+    form = EmailAddressUpdateForm(request.POST)
+
+    if not form.is_valid():
+        context = {"form": form}
+        return render(
+            request,
+            "user/email_address_update.html",
+            context=context,
+            status=400,
+        )
+
+    data = form.cleaned_data
+    try:
+        user_request_email_address_update(
+            user=user,
+            password=data["password"],
+            new_email=data["new_email"],
+        )
+    except ValidationError as error:
+        populate_form_with_drf_errors(form, error)
+        context = {"form": form}
+        return render(
+            request,
+            "user/email_address_update.html",
+            context=context,
+            status=400,
+        )
+    return redirect("users-django:profile")
 
 
 @login_required
