@@ -115,6 +115,109 @@ class TestPasswordChangeDjango:
         assert not user.check_password("123456")
 
 
+class TestEmailAddressUpdateDjango:
+    """Test django email address update view."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("users-django:update-email-address")
+
+    def test_get_form(self, user_client: Client, resource_url: str) -> None:
+        """Test that the form is displayed correctly."""
+        response = user_client.get(resource_url)
+        assert response.status_code == 200
+        assert "form" in response.context
+
+    def test_happy_path(
+        self,
+        user: User,
+        password: str,
+        user_client: Client,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test submitting the form with valid data."""
+        old_email = user.email
+        new_email = "new-email@example.com"
+
+        with django_assert_num_queries(11):
+            response = user_client.post(
+                resource_url,
+                {
+                    "new_email": new_email,
+                    "password": password,
+                },
+                follow=True,
+            )
+            assert response.status_code == 200
+
+        # Check that we were redirected to the profile page
+        assert response.redirect_chain[-1][0] == reverse(
+            "users-django:profile"
+        )
+
+        # Verify the unconfirmed email was set but the actual email hasn't changed yet
+        user.refresh_from_db()
+        assert user.email == old_email
+        assert user.unconfirmed_email == new_email
+
+    def test_with_incorrect_password(
+        self,
+        user: User,
+        user_client: Client,
+        resource_url: str,
+    ) -> None:
+        """Test submitting the form with an incorrect password."""
+        old_email = user.email
+        new_email = "new-email@example.com"
+
+        response = user_client.post(
+            resource_url,
+            {
+                "new_email": new_email,
+                "password": "wrong-password",
+            },
+        )
+
+        # Should return to the form with an error
+        assert response.status_code == 400
+        # Check that the form has an error for the password field
+        assert "password" in response.context["form"].errors
+
+        # Verify email was not changed
+        user.refresh_from_db()
+        assert user.email == old_email
+        assert user.unconfirmed_email != new_email
+
+    def test_with_invalid_email(
+        self,
+        user: User,
+        password: str,
+        user_client: Client,
+        resource_url: str,
+    ) -> None:
+        """Test submitting the form with an invalid email."""
+        old_email = user.email
+
+        response = user_client.post(
+            resource_url,
+            {
+                "new_email": "not-an-email",
+                "password": password,
+            },
+        )
+
+        # Should return to the form with an error
+        assert response.status_code == 400
+        # Check that the form has an error for the email field
+        assert "new_email" in response.context["form"].errors
+
+        # Verify email was not changed
+        user.refresh_from_db()
+        assert user.email == old_email
+
+
 # DRF View tests
 
 
