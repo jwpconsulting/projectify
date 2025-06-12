@@ -1,0 +1,32 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "storefront_base.html" %}
+{% load i18n %}
+{% block storefront_content %}
+    <div class="flex h-full flex-col items-center bg-background p-8">
+        <div class="w-full max-w-lg">
+            <div class="flex flex-col gap-4">
+                <h1 class="text-2xl font-bold">{% translate "User account settings" %}</h1>
+                <div class="flex flex-col gap-12 rounded-lg bg-foreground p-4">
+                    <h1 class="text-center text-2xl font-bold">{% translate "Update email address" %}</h1>
+                    <form class="flex w-full flex-col gap-10" method="post">
+                        {% csrf_token %}
+                        <div class="flex flex-col gap-4">
+                            <p>{% blocktranslate with email=user.email %}Your current email address is '{{ email }}'.{% endblocktranslate %}</p>
+                            {{ form.new_email.as_field_group }}
+                            {{ form.password.as_field_group }}
+                        </div>
+                        <div class="flex flex-row gap-2">
+                            <a href="{% url "users-django:profile" %}"
+                               class="w-full text-secondary-content hover:bg-secondary-hover hover:text-secondary-content-hover active:bg-secondary-pressed active:text-secondary-content-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content"> {% translate "Go back" %} </a>
+                            <button type="submit"
+                                    class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
+                                {% translate "Update email" %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock storefront_content %}
