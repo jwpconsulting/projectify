@@ -8,12 +8,14 @@ from typing import cast
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db.models.fields.files import FileDescriptor
+from django.test.client import Client
 
 import pytest
 from faker import Faker
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.user.services.internal import Token, user_make_token
 from pytest_types import Mailbox
 
@@ -88,12 +90,10 @@ def test_user_change_password(
 
 
 def test_user_change_password_with_request(
-    user: User, password: str, client: pytest.FixtureRequest
+    user: User, password: str, user_client: Client
 ) -> None:
     """Test changing password with request object to verify session update."""
-    # Use Django's test client to get a proper request with session
-    client.force_login(user)
-    request = client.get("/").wsgi_request
+    request = cast(AuthenticatedHttpRequest, user_client.get("/").wsgi_request)
 
     new_password = "secure-password-123"
 
