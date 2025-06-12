@@ -6,10 +6,12 @@
 import secrets
 
 from django.conf import settings
-from django.http import HttpRequest, HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import render
 from django.urls import reverse
 
+from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.user.services.auth import user_sign_up
 from projectify.user.services.internal import Token, user_make_token
 
@@ -21,13 +23,11 @@ def email_confirm_test(request: HttpRequest) -> HttpResponse:
     This view is only available in development mode and when the user is not logged in.
     """
     if not settings.DEBUG:
-        return HttpResponse(
-            "This page is only available in development mode", status=403
+        return HttpResponseForbidden(
+            "This page is only available in development mode"
         )
     if request.user.is_authenticated:
-        return HttpResponse(
-            "You must be logged out to use this page", status=403
-        )
+        return HttpResponseForbidden("You must be logged out to use this page")
     user = user_sign_up(
         email=f"test-email-confirm-{secrets.token_hex(16)}@localhost",
         password=secrets.token_hex(32),
@@ -65,3 +65,50 @@ def email_confirm_test(request: HttpRequest) -> HttpResponse:
     }
 
     return render(request, "user/test_email_confirm.html", context=context)
+
+
+@login_required
+def email_update_confirm_test(
+    request: AuthenticatedHttpRequest,
+) -> HttpResponse:
+    """
+    Render a test page with links to test email address update confirmation.
+
+    This view is only available in development mode and when the user is authenticated.
+    It uses the current user to test email address update confirmation.
+    """
+    if not settings.DEBUG:
+        return HttpResponseForbidden(
+            "This page is only available in development mode"
+        )
+
+    user = request.user
+    old_email = user.email
+    user.unconfirmed_email = user.email
+    user.save()
+
+    valid_token = user_make_token(user=user, kind="update_email_address")
+    invalid_token = Token("invalid-token-67890")
+
+    # Generate URLs for different scenarios
+    valid_url = reverse(
+        "users-django:confirm-email-address-update", args=(valid_token,)
+    )
+
+    invalid_url = reverse(
+        "users-django:confirm-email-address-update", args=(invalid_token,)
+    )
+
+    context = {
+        "user": user,
+        "old_email": old_email,
+        "new_email": user.unconfirmed_email,
+        "valid_token": valid_token,
+        "invalid_token": invalid_token,
+        "valid_url": valid_url,
+        "invalid_url": invalid_url,
+    }
+
+    return render(
+        request, "user/test_email_update_confirm.html", context=context
+    )
