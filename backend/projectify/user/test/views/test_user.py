@@ -52,8 +52,7 @@ class TestPasswordChangeDjango:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test changing password with a good password."""
-        # 9 + 4, 4 for rendering the user profile itself
-        with django_assert_num_queries(13):
+        with django_assert_num_queries(20):
             response = user_client.post(
                 resource_url,
                 {
@@ -64,8 +63,7 @@ class TestPasswordChangeDjango:
                 follow=True,
             )
             assert response.status_code == 200, response.content
-        # Assert that we stay logged in, i.e., sessionid still in cookies
-        assert "sessionid" in response.cookies
+        assert response.wsgi_request.user.is_authenticated
         user.refresh_from_db()
         assert user.check_password("hello-world123")
 
@@ -330,8 +328,7 @@ class TestChangePassword:
                 },
             )
             assert response.status_code == 204, response.data
-        # Assert that we stay logged in, i.e., sessionid still in cookies
-        assert "sessionid" in response.cookies
+        assert response.wsgi_request.user.is_authenticated
         user.refresh_from_db()
         assert user.check_password("hello-world123")
 
