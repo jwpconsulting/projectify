@@ -50,7 +50,7 @@ urlpatterns = (
     ),
     path("log-out", log_out, name="log-out"),
     path(
-        "confirm-password-reset",
+        "confirm-password-reset/<str:email>/<str:token>",
         password_reset_confirm,
         name="confirm-password-reset",
     ),
