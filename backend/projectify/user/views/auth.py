@@ -221,7 +221,10 @@ def password_reset_request(request: HttpRequest) -> HttpResponse:
     if not form.is_valid():
         context = {"form": form}
         return render(
-            request, "user/password_reset_request.html", context=context
+            request,
+            "user/password_reset_request.html",
+            context=context,
+            status=400,
         )
 
     try:
