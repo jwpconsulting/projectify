@@ -49,16 +49,19 @@ class TestUserEmailConfirmationEmail:
 class TestUserPasswordResetEmail:
     """Test UserPasswordResetEmail."""
 
-    def test_send(self, user: User, mailoutbox: list[EmailMessage]) -> None:
+    def test_send(
+        self, client: Client, user: User, mailoutbox: list[EmailMessage]
+    ) -> None:
         """Test send."""
         mail = UserPasswordResetEmail(receiver=user, obj=user)
         mail.send()
         assert len(mailoutbox) == 1
         m = mailoutbox[0]
-        match = re.search("/user/confirm-password-reset/.+/(.+)\n", m.body)
-        assert match
-        token = Token(match.group(1))
-        assert user_check_token(token=token, user=user, kind="reset_password")
+        assert user.email in m.body
+        match = re.search("(/user/confirm-password-reset/.+/.+)\n", m.body)
+        assert match, m.body
+        response = client.get(match.group(1))
+        assert response.status_code == 200
 
 
 @pytest.mark.django_db
