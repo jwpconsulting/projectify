@@ -335,7 +335,7 @@ class Command(BaseCommand):
             ]
         )
         self.stdout.write(
-            f"Created {len(workspaces_sections)} workspace " "board sections"
+            f"Created {len(workspaces_sections)} workspace board sections"
         )
 
         # The idea here is that instead of going into each nested object in
