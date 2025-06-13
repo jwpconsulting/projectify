@@ -18,5 +18,7 @@ class LocalhostStorage(FileSystemStorage):
     def base_url(self) -> str:  # type: ignore
         """Override base url to point to localhost."""
         settings = get_settings()
+        if not settings.FRONTEND_URL:
+            raise ValueError("Need to set FRONTEND_URL to determine base_url")
         url: str = urljoin(settings.FRONTEND_URL, settings.MEDIA_URL)
         return url
