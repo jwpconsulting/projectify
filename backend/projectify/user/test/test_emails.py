@@ -10,8 +10,6 @@ from django.test.client import Client
 
 import pytest
 
-from projectify.user.services.internal import Token, user_check_token
-
 from ..emails import (
     UserEmailAddressUpdateEmail,
     UserEmailConfirmationEmail,
