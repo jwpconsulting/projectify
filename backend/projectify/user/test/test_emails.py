@@ -36,7 +36,7 @@ class TestUserEmailConfirmationEmail:
         mail.send()
         assert len(mailoutbox) == 1
         m = mailoutbox[0]
-        assert "space%40example.com" in m.body
+        assert user.email in m.body
         match = re.search("(/user/confirm-email/.+/.+)\n", m.body)
         assert match
         response = client.get(match.group(1))
@@ -68,7 +68,12 @@ class TestUserEmailAddressUpdateEmail:
     def test_send(
         self, user: User, user_client: Client, mailoutbox: list[EmailMessage]
     ) -> None:
-        """Test send."""
+        """
+        Test sending this email.
+
+        This test reimplements some of the test code in
+        `test_user_email_update_complete` in projectify/user/test/services/test_user.py.
+        """
         new_email = "new-email@example.com"
         user.unconfirmed_email = new_email
         user.save()
