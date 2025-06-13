@@ -202,10 +202,44 @@ def log_in(request: HttpRequest) -> HttpResponse:
     return redirect(next)
 
 
+class PasswordResetRequestForm(forms.Form):
+    """Form for requesting a password reset."""
+
+    email = forms.EmailField()
+    email.widget.attrs.update({"placeholder": _("Enter your email")})
+
+
 @require_http_methods(["GET", "POST"])
 def password_reset_request(request: HttpRequest) -> HttpResponse:
     """Request a password reset."""
-    return HttpResponse("TODO")
+    if request.method == "GET":
+        form = PasswordResetRequestForm()
+        context = {"form": form}
+        return render(
+            request, "user/password_reset_request.html", context=context
+        )
+
+    form = PasswordResetRequestForm(request.POST)
+    if not form.is_valid():
+        context = {"form": form}
+        return render(
+            request, "user/password_reset_request.html", context=context
+        )
+
+    try:
+        user_request_password_reset(email=form.cleaned_data["email"])
+    except ValidationError as error:
+        populate_form_with_drf_errors(form, error)
+        context = {"form": form}
+        return render(
+            request,
+            "user/password_reset_request.html",
+            context=context,
+            status=400,
+        )
+
+    # Redirect to a success page
+    return redirect("/")
 
 
 @require_http_methods(["GET", "POST"])
