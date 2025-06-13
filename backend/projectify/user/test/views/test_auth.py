@@ -280,6 +280,75 @@ class TestLogInDjango:
         assert response.context["user"].is_authenticated
 
 
+class TestPasswordResetRequestDjango:
+    """Test password reset request Django view."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("users-django:request-password-reset")
+
+    def test_get_password_reset_request(
+        self,
+        client: Client,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test GETting the password reset request form."""
+        with django_assert_num_queries(0):
+            response = client.get(resource_url)
+        assert response.status_code == 200, response.content
+        assert b"Reset your password" in response.content
+
+    def test_post_password_reset_request(
+        self,
+        client: Client,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        user: User,
+    ) -> None:
+        """Test POST request to password reset request page."""
+        with django_assert_num_queries(1):
+            response = client.post(
+                resource_url,
+                {"email": user.email},
+                follow=True,
+            )
+            assert response.status_code == 200, response.content
+        # This may be updated when this form redirects to a result page
+        assert response.redirect_chain == [("/", 302)]
+
+    def test_post_password_reset_request_invalid_email(
+        self,
+        client: Client,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test POST request with invalid email."""
+        with django_assert_num_queries(0):
+            response = client.post(
+                resource_url,
+                {"email": "invalid-email"},
+            )
+        assert response.status_code == 400, response.content
+
+    def test_post_password_reset_request_nonexistent_email(
+        self,
+        client: Client,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        faker: Faker,
+    ) -> None:
+        """Test POST request with email that doesn't exist in the system."""
+        nonexistent_email = faker.email()
+        with django_assert_num_queries(1):
+            response = client.post(
+                resource_url,
+                {"email": nonexistent_email},
+            )
+        assert response.status_code == 400, response.content
+
+
 # APIView tests
 class TestLogOut:
     """Test logging out."""
