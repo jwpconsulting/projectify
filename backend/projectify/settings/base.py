@@ -51,8 +51,14 @@ class Base(Configuration):
     DEBUG_TOOLBAR = False
     DEBUG = False
 
-    # TODO remove when Svelte frontend is gone
-    FRONTEND_URL: str
+    # Frontend URL configuration
+    # --------------------------
+    # This is used to create full URLs for emails
+    # In production, this points to the Svelte frontend. As soon as the Svelte
+    # frontend is gone, the new Django backend is available on the same
+    # hostname and port. This value doesn't need to be changed in production
+    # It's set to None by default to catch potential configuration errors.
+    FRONTEND_URL: Optional[str] = None
 
     SESSION_COOKIE_SAMESITE = "Strict"
     SESSION_COOKIE_SECURE = True
@@ -156,14 +162,6 @@ class Base(Configuration):
     #         "-c idle_in_transaction_session_timeout=5000 "
     #     ),
     # }
-
-    @classmethod
-    def setup(cls) -> None:
-        """Load database config, after environment is correctly loaded."""
-        CONN_MAX_AGE = 0
-        cls.DATABASES = {
-            "default": dj_database_url.config(conn_max_age=CONN_MAX_AGE)
-        }
 
     # Password validation
     # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -353,11 +351,22 @@ class Base(Configuration):
     }
 
     @classmethod
+    def setup(cls) -> None:
+        """Load database config, after environment is correctly loaded."""
+        CONN_MAX_AGE = 0
+        cls.DATABASES = {
+            "default": dj_database_url.config(conn_max_age=CONN_MAX_AGE)
+        }
+
+    @classmethod
     def post_setup(cls) -> None:
         """Warn if FRONTEND_URL ends on '/'."""
         # Technically, this won't catch multiple trailing slashes... but who
         # would specify a URL like that?
-        if not cls.FRONTEND_URL.endswith("/"):
-            return
-        warnings.warn("Please ensure FRONTEND_URL does not end on a '/'")
-        cls.FRONTEND_URL = cls.FRONTEND_URL[:-1]
+        if cls.FRONTEND_URL is None:
+            warnings.warn(
+                "FRONTEND_URL is not set. This might cause template rendering to break"
+            )
+        elif cls.FRONTEND_URL.endswith("/"):
+            warnings.warn("Please ensure FRONTEND_URL does not end on a '/'")
+            cls.FRONTEND_URL = cls.FRONTEND_URL[:-1]
