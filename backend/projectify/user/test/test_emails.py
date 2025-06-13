@@ -24,21 +24,25 @@ from ..models import User
 class TestUserEmailConfirmationEmail:
     """Test UserEmailConfirmationEmail."""
 
-    def test_send(self, user: User, mailoutbox: list[EmailMessage]) -> None:
+    def test_send(
+        self, client: Client, user: User, mailoutbox: list[EmailMessage]
+    ) -> None:
         """Test send."""
+        user.is_active = False
         user.email = "space@example.com"
         user.save()
+        assert not user.is_active
         mail = UserEmailConfirmationEmail(receiver=user, obj=user)
         mail.send()
         assert len(mailoutbox) == 1
         m = mailoutbox[0]
         assert "space%40example.com" in m.body
-        match = re.search("/user/confirm-email/.+/(.+)\n", m.body)
+        match = re.search("(/user/confirm-email/.+/.+)\n", m.body)
         assert match
-        token = Token(match.group(1))
-        assert user_check_token(
-            token=token, user=user, kind="confirm_email_address"
-        )
+        response = client.get(match.group(1))
+        user.refresh_from_db()
+        assert response.status_code == 200
+        assert user.is_active
 
 
 @pytest.mark.django_db
