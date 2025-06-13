@@ -44,7 +44,6 @@ from projectify.user.services.internal import Token
 # Django view
 def log_out(request: HttpRequest) -> HttpResponse:
     """Log the user out. Need to be logged in first."""
-    # TODO check if logged in
     user = request.user
     if not user.is_anonymous:
         user_log_out(request=request)
@@ -112,7 +111,6 @@ def sign_up(request: HttpRequest) -> HttpResponse:
             tos_agreed=data["tos_agreed"],
             privacy_policy_agreed=data["privacy_policy_agreed"],
         )
-    # TODO
     except ValidationError as error:
         populate_form_with_drf_errors(form, error)
         context = {"form": form, "validators": validators}
@@ -238,6 +236,7 @@ def password_reset_request(request: HttpRequest) -> HttpResponse:
             status=400,
         )
 
+    # TODO
     # Redirect to a success page
     return redirect("/")
 
