@@ -18,7 +18,6 @@ from rest_framework import serializers
 from rest_framework.request import Request
 
 from projectify.lib.types import AuthenticatedHttpRequest
-from projectify.premail.email import EmailAddress
 from projectify.user.emails import (
     UserEmailAddressUpdatedEmail,
     UserEmailAddressUpdateEmail,
@@ -108,10 +107,7 @@ def user_request_email_address_update(
         )
     user.unconfirmed_email = new_email
     user.save()
-    UserEmailAddressUpdateEmail(
-        receiver=EmailAddress(new_email),
-        obj=user,
-    ).send()
+    UserEmailAddressUpdateEmail(receiver=user, obj=user).send()
 
 
 @transaction.atomic
