@@ -28,7 +28,7 @@ class ChatMessageQuerySet(models.QuerySet["ChatMessage"]):
     ) -> Self:
         """Get for a specific team member and uuid."""
         kwargs = {
-            "task__section__project__" "workspace__users": user,
+            "task__section__project__workspace__users": user,
             "uuid": uuid,
         }
         return self.filter(**kwargs)

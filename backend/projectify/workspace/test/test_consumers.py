@@ -268,7 +268,7 @@ async def make_communicator(
     data = cast(ClientResponse, serializer.validated_data)
     if data["kind"] != "subscribed":
         await clean_up_communicator(communicator)
-        raise Exception(f'Could not connect, {data["kind"]}')
+        raise Exception(f"Could not connect, {data['kind']}")
     assert data == {
         "kind": "subscribed",
         "uuid": resource.uuid,
