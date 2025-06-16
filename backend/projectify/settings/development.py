@@ -70,14 +70,17 @@ class Development(SpectacularSettings, Base):
     # Debug
     DEBUG = True
     DEBUG_TOOLBAR = True
+    DEBUG_AUTH = True
+
     ALLOWED_HOSTS = os.getenv(
         "ALLOWED_HOSTS", ".localhost,127.0.0.1,[::1]"
     ).split(",")
     # Add the IP you are connecting from to get SQL debug HTTP headers
     INTERNAL_IPS = os.getenv("INTERNAL_IPS", "127.0.0.1").split(",")
 
-    # TODO remove when Svelte frontend is gone
-    FRONTEND_URL = "http://localhost:3000"
+    # XXX while developing the new frontend, this is set to
+    # match Django's ./manage.py runserver port
+    FRONTEND_URL = "http://localhost:8000"
 
     # Workaround for connecting over .local domain
     # ============================================

@@ -25,6 +25,7 @@ from projectify.user.views.user import (
 
 app_name = "user"
 
+
 user_patterns = (
     # Create
     # Read

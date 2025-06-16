@@ -65,6 +65,17 @@ class UserEmailAddressUpdateEmail(TemplateEmail[User]):
     model = User
     template_prefix = "user/email/email_address_update"
 
+    @property
+    def to(self) -> str:
+        """Returns new, unconfirmed email address."""
+        match self.receiver:
+            case User() if self.receiver.unconfirmed_email:
+                return self.receiver.unconfirmed_email
+            case _:
+                raise ValueError(
+                    "Must pass User() with unconfirmed_email as receiver"
+                )
+
     def get_context(self) -> Context:
         """Add reset password token."""
         return {

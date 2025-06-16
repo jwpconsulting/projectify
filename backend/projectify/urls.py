@@ -48,6 +48,10 @@ if settings.ENABLE_DJANGO_FRONTEND:
             "dashboard/",
             include("projectify.workspace.dashboard_urls"),
         ),
+        path(
+            "user/",
+            include("projectify.user.dashboard_urls"),
+        ),
         path("", include("projectify.storefront.urls")),
         path("help/", include("projectify.help.urls")),
         path("onboarding/", include("projectify.onboarding.urls")),
@@ -76,6 +80,12 @@ if settings.BROWSER_RELOAD:
         *urlpatterns,
         path("__reload__/", include("django_browser_reload.urls")),
     )
+
+if settings.DEBUG_AUTH:
+    urlpatterns = [
+        *urlpatterns,
+        path("test/", include("projectify.user.testing_urls")),
+    ]
 
 if settings.SERVE_SPECTACULAR:
     try:

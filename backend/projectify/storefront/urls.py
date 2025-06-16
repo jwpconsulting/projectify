@@ -33,14 +33,14 @@ security_patterns = [
 ]
 
 urlpatterns = [
-    path("accessibility/", accessibility, name="accessibility"),
-    path("contact-us/", contact_us, name="contact_us"),
-    path("free-software/", free_software, name="free_software"),
-    path("credits/", credits, name="credits"),
+    path("accessibility", accessibility, name="accessibility"),
+    path("contact-us", contact_us, name="contact_us"),
+    path("free-software", free_software, name="free_software"),
+    path("credits", credits, name="credits"),
     path("security/", include((security_patterns, "security"))),
-    path("tos/", tos, name="tos"),
-    path("pricing/", pricing, name="pricing"),
-    path("privacy/", privacy, name="privacy"),
+    path("tos", tos, name="tos"),
+    path("pricing", pricing, name="pricing"),
+    path("privacy", privacy, name="privacy"),
     path("solutions/", include((solution_patterns, "solutions"))),
     path("", index, name="landing"),
 ]
