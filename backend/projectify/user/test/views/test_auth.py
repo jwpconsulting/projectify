@@ -350,6 +350,31 @@ class TestPasswordResetRequestDjango:
         assert response.status_code == 400, response.content
 
 
+class TestPasswordResetRequestedDjango:
+    """Test password reset requested Django view."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("users-django:requested-password-reset")
+
+    def test_get_password_reset_requested(
+        self,
+        client: Client,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test GETting the password reset requested page."""
+        with django_assert_num_queries(0):
+            response = client.get(resource_url)
+        assert response.status_code == 200, response.content
+        assert b"Password reset requested" in response.content
+        assert (
+            b"You have requested for your password to be reset"
+            in response.content
+        )
+
+
 # APIView tests
 class TestLogOut:
     """Test logging out."""
