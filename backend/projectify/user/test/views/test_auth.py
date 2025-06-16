@@ -315,8 +315,9 @@ class TestPasswordResetRequestDjango:
                 follow=True,
             )
             assert response.status_code == 200, response.content
-        # This may be updated when this form redirects to a result page
-        assert response.redirect_chain == [("/", 302)]
+        assert response.redirect_chain == [
+            (reverse("users-django:requested-password-reset"), 302)
+        ]
 
     def test_post_password_reset_request_invalid_email(
         self,
