@@ -11,6 +11,7 @@ from projectify.user.views.auth import (
     log_out,
     password_reset_confirm,
     password_reset_request,
+    password_reset_requested,
     sign_up,
 )
 from projectify.user.views.user import (
@@ -53,5 +54,10 @@ urlpatterns = (
         "confirm-password-reset/<str:email>/<str:token>",
         password_reset_confirm,
         name="confirm-password-reset",
+    ),
+    path(
+        "requested-password-reset",
+        password_reset_requested,
+        name="requested-password-reset",
     ),
 )
