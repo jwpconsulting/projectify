@@ -244,7 +244,7 @@ def password_reset_request(request: HttpRequest) -> HttpResponse:
 
 def password_reset_requested(request: HttpRequest) -> HttpResponse:
     """Confirm that user has requested a password reset."""
-    return HttpResponse("TODO")
+    return render(request, "user/password_reset_requested.html")
 
 
 @require_http_methods(["GET", "POST"])
