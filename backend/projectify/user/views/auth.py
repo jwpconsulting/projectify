@@ -239,9 +239,12 @@ def password_reset_request(request: HttpRequest) -> HttpResponse:
             status=400,
         )
 
-    # TODO
-    # Redirect to a success page
-    return redirect("/")
+    return redirect("users-django:requested-password-reset")
+
+
+def password_reset_requested(request: HttpRequest) -> HttpResponse:
+    """Confirm that user has requested a password reset."""
+    return HttpResponse("TODO")
 
 
 @require_http_methods(["GET", "POST"])
