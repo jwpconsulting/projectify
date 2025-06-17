@@ -92,7 +92,9 @@ class TestSignUpDjango:
             )
         assert response.status_code == 200, response.content
         assert User.objects.count() == 1
-        assert response.redirect_chain == [("/", 302)]
+        assert response.redirect_chain == [
+            (reverse("users-django:sent-email-confirmation-link"), 302)
+        ]
 
     def test_rate_limit(
         self,
@@ -151,6 +153,27 @@ class TestSignUpDjango:
         assert b"The password is too similar to the Email" in response.content
         assert b"This password is too common" in response.content
         assert User.objects.count() == 0
+
+
+class TestEmailConfirmationLinkSent:
+    """Test sign up confirmation view."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("users-django:sent-email-confirmation-link")
+
+    def test_get_email_confirmation_link_sent(
+        self,
+        client: Client,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test GETting the email confirmation link sent page."""
+        with django_assert_num_queries(0):
+            response = client.get(resource_url)
+        assert response.status_code == 200, response.content
+        assert b"Email confirmation link sent" in response.content
 
 
 class TestConfirmEmailDjango:

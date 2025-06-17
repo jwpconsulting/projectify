@@ -135,9 +135,12 @@ def sign_up(request: HttpRequest) -> HttpResponse:
         rate="3/h",
         increment=True,
     )
-    # TODO figure out redirect URL
-    # should be success page
-    return redirect("/")
+    return redirect("users-django:sent-email-confirmation-link")
+
+
+def email_confirmation_link_sent(request: HttpRequest) -> HttpResponse:
+    """Confirm sign up and tell user about confirmation email."""
+    return render(request, "user/email_confirmation_link_sent.html")
 
 
 def email_confirm(
@@ -182,7 +185,7 @@ class LogInForm(forms.Form):
         self.fields[
             "password"
         ].help_text = '<a class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base" href="{href}">{text}</a>'.format(
-            href=reverse_lazy("users-django:reset-password"),
+            href=reverse_lazy("users-django:request-password-reset"),
             text=_("Forgot password"),
         )
 

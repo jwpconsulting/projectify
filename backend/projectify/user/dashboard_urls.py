@@ -7,6 +7,7 @@ from django.urls import path
 
 from projectify.user.views.auth import (
     email_confirm,
+    email_confirmation_link_sent,
     log_in,
     log_out,
     password_reset,
@@ -45,6 +46,11 @@ urlpatterns = (
         name="request-password-reset",
     ),
     path("sign-up", sign_up, name="sign-up"),
+    path(
+        "sent-email-confirmation-link",
+        email_confirmation_link_sent,
+        name="sent-email-confirmation-link",
+    ),
     path(
         "confirm-email/<str:email>/<str:token>",
         email_confirm,
