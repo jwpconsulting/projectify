@@ -10,15 +10,16 @@
         {% else %}
             {% if field.label %}{{ field.label_tag }}{% endif %}
         {% endif %}
-        {% if field.help_text %}
-            <div class="helptext"
-                 {% if field.auto_id %}id="{{ field.auto_id }}_helptext"{% endif %}>{{ field.help_text|safe }}</div>
-        {% endif %}
         {{ field }}
-        {% if field.errors %}
-            <div class="flex w-full flex-row items-end justify-start gap-1 px-1">
-                <p class="text-error">{{ field.errors.as_text }}</p>
-                {# TODO add back anchorBottom to the right of the error text #}
+        {% if field.errors or field.help_text %}
+            <div class="flex w-full flex-row items-end {% if field.errors and not field.help_text %}justify-start{% elif field.errors and field.help_text %}justify-between{% else %}justify-end{% endif %} gap-1 px-1">
+                {% if field.errors %}<p class="text-error">{{ field.errors.as_text }}</p>{% endif %}
+                {% if field.help_text %}
+                    <span class="helptext"
+                          {% if field.auto_id %}id="{{ field.auto_id }}_helptext"{% endif %}>
+                        {{ field.help_text|safe }}
+                    </span>
+                {% endif %}
             </div>
         {% endif %}
         {% if field.use_fieldset %}</fieldset>{% endif %}

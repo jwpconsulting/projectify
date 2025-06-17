@@ -3,13 +3,15 @@
 # SPDX-FileCopyrightText: 2024 JWP Consulting GK
 """User authentication views."""
 
+from typing import Any
+
 from django import forms
 from django.contrib.auth.password_validation import (
     password_validators_help_texts,
 )
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
@@ -170,6 +172,19 @@ class LogInForm(forms.Form):
 
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
+    email.widget.attrs.update({"placeholder": _("Enter your email")})
+    password.widget.attrs.update({"placeholder": _("Enter your password")})
+
+    def __init__(self, *args: Any, **kwargs: Any):
+        """Override constructor."""
+        super().__init__(*args, **kwargs)
+        # Refactor the anchor tag creation and make a Django template tag
+        self.fields[
+            "password"
+        ].help_text = '<a class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base" href="{href}">{text}</a>'.format(
+            href=reverse_lazy("users-django:reset-password"),
+            text=_("Forgot password"),
+        )
 
 
 @require_http_methods(["GET", "POST"])
