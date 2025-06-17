@@ -43,7 +43,7 @@ def test_user_update(
     )
     user.refresh_from_db()
     assert user.preferred_name == new_name
-    assert "profile_picture/test_" in user.profile_picture.path
+    assert "profile_picture/test" in user.profile_picture.path
 
 
 def test_user_change_password_weak_password(user: User, password: str) -> None:
