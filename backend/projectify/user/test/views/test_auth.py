@@ -375,6 +375,135 @@ class TestPasswordResetRequestedDjango:
         )
 
 
+class TestPasswordResetConfirmDjango:
+    """Test password_reset_confirm view."""
+
+    def test_confirm_password_reset(
+        self,
+        client: Client,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        user: User,
+    ) -> None:
+        """Test confirming the password reset for a user."""
+        token = user_make_token(user=user, kind="reset_password")
+        with django_assert_num_queries(8):
+            response = client.post(
+                reverse(
+                    "users-django:confirm-password-reset",
+                    args=(user.email, token),
+                ),
+                {
+                    "new_password": "evenmoresecurepassword123",
+                    "new_password_confirm": "evenmoresecurepassword123",
+                },
+            )
+            assert response.status_code == 302, response.content
+
+        user.refresh_from_db()
+        assert user.check_password("evenmoresecurepassword123")
+
+    def test_confirm_password_reset_get(
+        self,
+        client: Client,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        user: User,
+    ) -> None:
+        """Test GET request to password reset confirm page."""
+        token = user_make_token(user=user, kind="reset_password")
+
+        with django_assert_num_queries(0):
+            response = client.get(
+                reverse(
+                    "users-django:confirm-password-reset",
+                    args=(user.email, token),
+                ),
+            )
+            assert response.status_code == 200, response.content
+
+        assert b"Reset your password" in response.content
+
+    def test_confirm_password_reset_passwords_dont_match(
+        self,
+        client: Client,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        user: User,
+    ) -> None:
+        """Test confirming with mismatched passwords."""
+        token = user_make_token(user=user, kind="reset_password")
+
+        with django_assert_num_queries(3):
+            response = client.post(
+                reverse(
+                    "users-django:confirm-password-reset",
+                    args=(user.email, token),
+                ),
+                {
+                    "new_password": "password123",
+                    "new_password_confirm": "differentpassword123",
+                },
+            )
+            assert response.status_code == 400, response.content
+
+        assert b"New passwords must match" in response.content
+
+        user.refresh_from_db()
+        assert not user.check_password("password123")
+        assert not user.check_password("differentpassword123")
+
+    def test_confirm_password_reset_invalid_token(
+        self,
+        client: Client,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        user: User,
+    ) -> None:
+        """Test confirming with an invalid token."""
+        with django_assert_num_queries(4):
+            response = client.post(
+                reverse(
+                    "users-django:confirm-password-reset",
+                    args=(user.email, "invalid_token"),
+                ),
+                {
+                    "new_password": "evenmoresecurepassword123",
+                    "new_password_confirm": "evenmoresecurepassword123",
+                },
+            )
+            assert response.status_code == 400, response.content
+
+        assert b"This token is invalid" in response.content
+
+        user.refresh_from_db()
+        assert not user.check_password("evenmoresecurepassword123")
+
+    def test_confirm_password_reset_wrong_email(
+        self,
+        client: Client,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        user: User,
+        faker: Faker,
+    ) -> None:
+        """Test confirming with the wrong email address."""
+        token = user_make_token(user=user, kind="reset_password")
+        wrong_email = faker.email()
+
+        with django_assert_num_queries(4):
+            response = client.post(
+                reverse(
+                    "users-django:confirm-password-reset",
+                    args=(wrong_email, token),
+                ),
+                {
+                    "new_password": "evenmoresecurepassword123",
+                    "new_password_confirm": "evenmoresecurepassword123",
+                },
+            )
+            assert response.status_code == 400, response.content
+        assert b"email is not recognized" in response.content
+
+        user.refresh_from_db()
+        assert not user.check_password("evenmoresecurepassword123")
+
+
 # APIView tests
 class TestLogOut:
     """Test logging out."""
@@ -672,6 +801,7 @@ class TestPasswordResetConfirm:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test confirming the password reset for a user."""
+        # XXX We don't have to request a reset if we don't use the token
         response = rest_client.post(
             request_url,
             data={"email": user.email},

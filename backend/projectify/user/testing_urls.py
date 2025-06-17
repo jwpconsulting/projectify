@@ -9,6 +9,7 @@ from projectify.lib.settings import get_settings
 from projectify.user.views.view_tests import (
     email_confirm_test,
     email_update_confirm_test,
+    password_reset_confirm_test,
 )
 
 settings = get_settings()
@@ -18,4 +19,5 @@ assert settings.DEBUG_AUTH, "Can't import this if DEBUG_AUTH isn't set"
 urlpatterns = [
     path("email-confirm-test/", email_confirm_test),
     path("email-update-confirm-test/", email_update_confirm_test),
+    path("confirm-password-reset-test/", password_reset_confirm_test),
 ]
