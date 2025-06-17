@@ -247,12 +247,70 @@ def password_reset_requested(request: HttpRequest) -> HttpResponse:
     return render(request, "user/password_reset_requested.html")
 
 
+class PasswordResetConfirmForm(forms.Form):
+    """Form to take in new password for user."""
+
+    new_password = forms.CharField(
+        label=_("New password"), widget=forms.PasswordInput
+    )
+    new_password_confirm = forms.CharField(
+        label=_("Confirm new password"), widget=forms.PasswordInput
+    )
+
+    new_password.widget.attrs.update({"placeholder": _("Enter new password")})
+    new_password_confirm.widget.attrs.update(
+        {"placeholder": _("Confirm new password")}
+    )
+
+
 @require_http_methods(["GET", "POST"])
 def password_reset_confirm(
     request: HttpRequest, email: str, token: str
 ) -> HttpResponse:
     """Confirm a password reset request and set a new password."""
-    return HttpResponse("TODO")
+    token = Token(token)
+    # TODO add validators
+
+    if request.method == "GET":
+        form = PasswordResetConfirmForm()
+        context = {"form": form}
+        return render(
+            request, "user/password_reset_confirm.html", context=context
+        )
+
+    form = PasswordResetConfirmForm(request.POST)
+    if not form.is_valid():
+        context = {"form": form}
+        return render(
+            request,
+            "user/password_reset_confirm.html",
+            context=context,
+            status=400,
+        )
+
+    try:
+        user_confirm_password_reset(
+            email=email,
+            token=token,
+            new_password=form.cleaned_data["new_password"],
+            new_password_confirm=form.cleaned_data["new_password_confirm"],
+        )
+    except ValidationError as error:
+        populate_form_with_drf_errors(form, error)
+        context = {"form": form}
+        return render(
+            request,
+            "user/password_reset_confirm.html",
+            context=context,
+            status=400,
+        )
+
+    return redirect("users-django:reset-password")
+
+
+def password_reset(request: HttpRequest) -> HttpResponse:
+    """Notify the user that they have changed their password."""
+    return render(request, "user/password_reset.html")
 
 
 # DRF Views

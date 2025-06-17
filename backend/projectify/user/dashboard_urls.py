@@ -9,6 +9,7 @@ from projectify.user.views.auth import (
     email_confirm,
     log_in,
     log_out,
+    password_reset,
     password_reset_confirm,
     password_reset_request,
     password_reset_requested,
@@ -59,5 +60,10 @@ urlpatterns = (
         "requested-password-reset",
         password_reset_requested,
         name="requested-password-reset",
+    ),
+    path(
+        "reset-password",
+        password_reset,
+        name="reset-password",
     ),
 )
