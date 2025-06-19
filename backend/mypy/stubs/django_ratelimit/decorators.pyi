@@ -5,16 +5,16 @@
 """Django-ratelimit decorators."""
 
 from collections.abc import Callable
-from typing import Any, Literal, Optional, TypeVar
+from typing import Any, Optional, TypeVar
+
+from django_ratelimit.core import Method
 
 F = TypeVar("F", bound=Callable[..., Any])
-
-Methods = Literal["DELETE", "PATCH", "POST", "PUT"]
 
 def ratelimit(
     group: Optional[str] = None,
     key: Optional[str] = None,
     rate: Optional[str] = None,
-    method: Optional[Methods] = None,
+    method: Optional[Method] = None,
     block: Optional[bool] = True,
 ) -> Callable[[F], F]: ...
