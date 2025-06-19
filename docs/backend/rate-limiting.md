@@ -75,7 +75,7 @@ Rate limits should be:
 - `SignUp`, 5 times per hour _per IP_ (if successful), 60 times per hour _per
   IP_ (regardless of success)
 - `PasswordResetRequest`, 5 times per hour _per IP_, 5 times per hour _per
-  request email_, 1 time per minute _per IP_
+  request email_
 - `RequestEmailAddressUpdate`, 5 times per hour _per user_
 - `ChangePassword`, 5 times per hour _per user_
 - `InviteUserToWorkspace`, 10 times per hour _per user_

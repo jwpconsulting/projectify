@@ -412,6 +412,56 @@ class TestPasswordResetRequestDjango:
             )
         assert response.status_code == 400, response.content
 
+    def test_password_reset_request_rate_limit_by_email(
+        self, client: Client, resource_url: str, user: User, settings: Base
+    ) -> None:
+        """Test rate limiting by email address (5/h)."""
+        cache.clear()
+        settings.RATELIMIT_ENABLE = True
+
+        data = {"email": user.email}
+        i = 0
+        for i in range(5):
+            # Use a different IP to bypass the IP rate limit
+            response = client.post(
+                resource_url, data, REMOTE_ADDR=f"127.0.0.{i}"
+            )
+            assert response.status_code == 302, f"Attempt {i}"
+
+        response = client.post(resource_url, data, REMOTE_ADDR=f"127.0.0.{i}")
+        assert response.status_code == 429
+
+    def test_password_reset_request_rate_limit_by_ip(
+        self, client: Client, resource_url: str, settings: Base, faker: Faker
+    ) -> None:
+        """Test rate limiting by IP address (5/h)."""
+        cache.clear()
+        settings.RATELIMIT_ENABLE = True
+
+        # Create 6 users for testing
+        *first_users, last_user = [
+            user_sign_up(
+                email=faker.email(),
+                password=faker.password(),
+                tos_agreed=True,
+                privacy_policy_agreed=True,
+            )
+            for _ in range(6)
+        ]
+
+        for i, user in enumerate(first_users):
+            response = client.post(
+                resource_url,
+                {"email": user.email},
+            )
+            assert response.status_code == 302, f"Attempt {i}"
+
+        response = client.post(
+            resource_url,
+            {"email": last_user.email},
+        )
+        assert response.status_code == 429
+
 
 class TestPasswordResetRequestedDjango:
     """Test password reset requested Django view."""

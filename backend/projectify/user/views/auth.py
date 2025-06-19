@@ -253,6 +253,8 @@ class PasswordResetRequestForm(forms.Form):
 
 
 @require_http_methods(["GET", "POST"])
+@ratelimit(key="post:email", rate="5/h")
+@ratelimit(key="ip", rate="5/h")
 def password_reset_request(request: HttpRequest) -> HttpResponse:
     """Request a password reset."""
     if request.method == "GET":
