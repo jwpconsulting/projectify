@@ -116,6 +116,43 @@ class TestPasswordChangeDjango:
         user.refresh_from_db()
         assert not user.check_password("123456")
 
+    def test_rate_limit(
+        self,
+        user: User,
+        password: str,
+        user_client: Client,
+        resource_url: str,
+        faker: Faker,
+        settings: Base,
+    ) -> None:
+        """Test that rate limiting is enforced correctly."""
+        settings.RATELIMIT_ENABLE = True
+
+        # Make 5 requests (the limit is 5/h)
+        for _ in range(5):
+            response = user_client.post(
+                resource_url,
+                {
+                    "current_password": password,
+                    "new_password": faker.password(),
+                    "new_password_confirm": faker.password(),
+                },
+                follow=True,
+            )
+            # These should succeed (even if password validation fails)
+            assert response.status_code in [200, 400]
+
+        # The 6th request should be rate limited
+        response = user_client.post(
+            resource_url,
+            {
+                "current_password": password,
+                "new_password": faker.password(),
+                "new_password_confirm": faker.password(),
+            },
+        )
+        assert response.status_code == 429
+
 
 class TestEmailAddressUpdateDjango:
     """Test django email address update view."""

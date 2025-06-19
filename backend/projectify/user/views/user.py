@@ -117,7 +117,8 @@ class PasswordChangeForm(forms.Form):
 
 
 @require_http_methods(["GET", "POST"])
-@login_required
+@platform_view
+@ratelimit(key="user", rate="5/h", method=UNSAFE)
 def password_change(request: AuthenticatedHttpRequest) -> HttpResponse:
     """Change user password."""
     validators = password_validators_help_texts()
