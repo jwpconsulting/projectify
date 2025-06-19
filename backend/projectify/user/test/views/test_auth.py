@@ -97,6 +97,29 @@ class TestSignUpDjango:
             (reverse("users-django:sent-email-confirmation-link"), 302)
         ]
 
+    def test_signing_up_weak_pw(
+        self,
+        client: Client,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test signing up a new user with a weak password."""
+        with django_assert_num_queries(1):
+            response = client.post(
+                resource_url,
+                {
+                    "email": "password@localhost",
+                    "password": "password",
+                    "tos_agreed": True,
+                    "privacy_policy_agreed": True,
+                },
+            )
+            assert response.status_code == 400
+
+        assert b"The password is too similar to the Email" in response.content
+        assert b"This password is too common" in response.content
+        assert User.objects.count() == 0
+
     def test_rate_limit(
         self,
         client: Client,
@@ -132,27 +155,41 @@ class TestSignUpDjango:
         assert User.objects.count() == 4
         assert response.status_code == 429
 
-    def test_signing_up_weak_pw(
+    def test_rate_limit_per_ip_regardless_of_success(
         self,
         client: Client,
         resource_url: str,
-        django_assert_num_queries: DjangoAssertNumQueries,
+        faker: Faker,
+        settings: Base,
     ) -> None:
-        """Test signing up a new user with a weak password."""
-        with django_assert_num_queries(1):
+        """Test rate limiting by IP address (10/h regardless of success)."""
+        cache.clear()
+        settings.RATELIMIT_ENABLE = True
+
+        # Make 10 requests with invalid data (should all fail but count towards limit)
+        for i in range(10):
             response = client.post(
                 resource_url,
                 {
-                    "email": "password@localhost",
-                    "password": "password",
+                    "email": "invalid-email",  # Invalid email format
+                    "password": faker.password(),
                     "tos_agreed": True,
                     "privacy_policy_agreed": True,
                 },
             )
-            assert response.status_code == 400
+            assert response.status_code == 400, f"Attempt {i}"
 
-        assert b"The password is too similar to the Email" in response.content
-        assert b"This password is too common" in response.content
+        # The 11th request should be rate limited
+        response = client.post(
+            resource_url,
+            {
+                "email": faker.email(),
+                "password": faker.password(),
+                "tos_agreed": True,
+                "privacy_policy_agreed": True,
+            },
+        )
+        assert response.status_code == 429
         assert User.objects.count() == 0
 
 

@@ -66,7 +66,7 @@ class SignUpForm(forms.Form):
 
 # No authentication required
 @require_http_methods(["GET", "POST"])
-@ratelimit(key="ip", rate="60/h")
+@ratelimit(key="ip", rate="10/h", method=UNSAFE)
 def sign_up(request: HttpRequest) -> HttpResponse:
     """Sign the user up."""
     validators = password_validators_help_texts()
