@@ -23,7 +23,9 @@ class Ratelimit(TypedDict):
 Group = str
 Rate = Union[str, tuple[int, int]]
 RateFn = Callable[[Group, HttpRequest], Rate]
-Method = Literal["DELETE", "PATCH", "POST", "PUT"]
+ALL = (None,)
+UNSAFE = []
+Method = Literal["DELETE", "PATCH", "POST", "PUT", UNSAFE, ALL]
 ViewFunction = Callable[..., HttpResponse]
 
 def get_usage(
