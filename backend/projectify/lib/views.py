@@ -3,12 +3,25 @@
 # SPDX-FileCopyrightText: 2024 JWP Consulting GK
 """View decorators."""
 
-from typing import Any, Callable
+from typing import Any, Protocol
 
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+
+from projectify.lib.types import AuthenticatedHttpRequest
 
 
-def platform_view(func: Callable[..., Any]) -> Callable[..., Any]:
+class LoggedInViewP(Protocol):
+    """Django view method that takes an AuthenticatedHttpRequest."""
+
+    def __call__(
+        self, request: AuthenticatedHttpRequest, *args: Any, **kwargs: Any
+    ) -> HttpResponse:
+        """Take a request and respond."""
+        ...
+
+
+def platform_view(func: LoggedInViewP) -> LoggedInViewP:
     """
     Wrap view in login_required.
 
