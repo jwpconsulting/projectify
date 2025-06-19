@@ -23,9 +23,12 @@ class Ratelimit(TypedDict):
 Group = str
 Rate = Union[str, tuple[int, int]]
 RateFn = Callable[[Group, HttpRequest], Rate]
+# I'm sure there's a way to implement the marker pattern with typings,
+# but whatever
 ALL = (None,)
-UNSAFE = []
-Method = Literal["DELETE", "PATCH", "POST", "PUT", UNSAFE, ALL]
+MethodSingle = Literal["DELETE", "PATCH", "POST", "PUT"]
+UNSAFE: list[MethodSingle] = []
+Method = Union[MethodSingle, list[MethodSingle], tuple[None]]
 ViewFunction = Callable[..., HttpResponse]
 
 def get_usage(
