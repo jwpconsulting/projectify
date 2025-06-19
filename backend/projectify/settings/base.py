@@ -304,7 +304,6 @@ class Base(Configuration):
 
     # django-ratelimit
     RATELIMIT_ENABLE = True
-    RATELIMIT_EXCEPTION_CLASS = "rest_framework.exceptions.Throttled"
 
     # drf-spectacular
     SERVE_SPECTACULAR = False

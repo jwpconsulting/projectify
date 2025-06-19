@@ -5,6 +5,7 @@
 
 from typing import Any
 
+from django.core.cache import cache
 from django.test import Client
 from django.urls import reverse
 
@@ -301,6 +302,45 @@ class TestLogInDjango:
         # There may be more than one element in this chain
         assert response.redirect_chain[0] == (dashboard_url, 302)
         assert response.context["user"].is_authenticated
+
+    def test_log_in_rate_limit_by_email(
+        self, client: Client, resource_url: str, user: User, settings: Base
+    ) -> None:
+        """Test rate limiting by failed log in for email address (5/h)."""
+        cache.clear()
+        settings.RATELIMIT_ENABLE = True
+
+        data = {"email": user.email, "password": "wrong_password"}
+        i = 0
+        for i in range(5):
+            # Use a different IP to bypass the IP rate limit
+            response = client.post(
+                resource_url, data, REMOTE_ADDR=f"127.0.0.{i}"
+            )
+            assert response.status_code == 400, f"Attempt {i}"
+
+        response = client.post(resource_url, data, REMOTE_ADDR=f"127.0.0.{i}")
+        assert response.status_code == 429
+
+    def test_log_in_rate_limit_by_ip(
+        self, client: Client, resource_url: str, settings: Base, faker: Faker
+    ) -> None:
+        """Test rate limiting by IP address."""
+        cache.clear()
+        settings.RATELIMIT_ENABLE = True
+
+        for i in range(5):
+            response = client.post(
+                resource_url,
+                {"email": faker.email(), "password": "wrong"},
+            )
+            assert response.status_code == 400, f"Attempt {i}"
+
+        response = client.post(
+            resource_url,
+            {"email": faker.email(), "password": "wrong"},
+        )
+        assert response.status_code == 429
 
 
 class TestPasswordResetRequestDjango:
