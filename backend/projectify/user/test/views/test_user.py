@@ -19,7 +19,7 @@ from rest_framework.status import (
 )
 from rest_framework.test import APIClient
 
-from projectify.lib.settings import Base
+from projectify.settings.base import Base
 from projectify.user.services.internal import user_make_token
 from pytest_types import DjangoAssertNumQueries
 
