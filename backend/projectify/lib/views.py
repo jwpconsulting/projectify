@@ -8,6 +8,8 @@ from typing import Any, Callable
 from django.contrib.auth.decorators import login_required
 
 
+# TODO make this pass an AuthenticatedHttpRequest as the first argument by
+# default
 def platform_view(func: Callable[..., Any]) -> Callable[..., Any]:
     """
     Wrap view in login_required.

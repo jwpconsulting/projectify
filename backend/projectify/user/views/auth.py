@@ -16,7 +16,7 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
-from django_ratelimit.core import get_usage
+from django_ratelimit.core import UNSAFE, get_usage
 from django_ratelimit.decorators import ratelimit
 from rest_framework import serializers, views
 from rest_framework.exceptions import Throttled, ValidationError
@@ -191,17 +191,37 @@ class LogInForm(forms.Form):
 
 
 @require_http_methods(["GET", "POST"])
+@ratelimit(key="ip", rate="5/m", method=UNSAFE)
 def log_in(request: HttpRequest) -> HttpResponse:
     """Log the user in."""
+    FAILED_GROUP = "projectify.user.views.auth.log_in.fail"
+    FAILED_KEY = "post:email"
+    FAILED_RATE = "4/h"
     if request.method == "GET":
         form = LogInForm()
         context = {"form": form}
         return render(request, "user/log_in.html", context=context)
 
+    limit = get_usage(
+        request,
+        group=FAILED_GROUP,
+        key=FAILED_KEY,
+        rate=FAILED_RATE,
+        increment=False,
+    )
+
     form = LogInForm(request.POST)
     context = {"form": form}
+
+    if limit and limit["should_limit"]:
+        context = {"form": form}
+        form.add_error(
+            field=None, error=_("Too many log in attempts. Slow down.")
+        )
+        return render(request, "user/log_in.html", context=context, status=429)
+
     if not form.is_valid():
-        return render(request, "user/log_in.html", context=context)
+        return render(request, "user/log_in.html", context=context, status=400)
 
     try:
         user_log_in(
@@ -212,6 +232,13 @@ def log_in(request: HttpRequest) -> HttpResponse:
     except ValidationError as error:
         populate_form_with_drf_errors(form, error)
         context = {"form": form}
+        get_usage(
+            request,
+            group=FAILED_GROUP,
+            key=FAILED_KEY,
+            rate=FAILED_RATE,
+            increment=True,
+        )
         return render(request, "user/log_in.html", context=context, status=400)
 
     next = request.GET.get("next", reverse("dashboard:dashboard"))

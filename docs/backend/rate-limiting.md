@@ -79,8 +79,7 @@ Rate limits should be:
 - `RequestEmailAddressUpdate`, 5 times per hour _per user_
 - `ChangePassword`, 5 times per hour _per user_
 - `InviteUserToWorkspace`, 10 times per hour _per user_
-- `LogIn`, 10 times per minute _per IP, 60 times per hour \_per request email_,
-  5 times per minute _per request email_ on failure.
+- `LogIn`, 5 times per minute _per IP_, 5 times per hour _per request email_ on failure.
 
 # How to rate limit services instead (idea)
 
