@@ -11,6 +11,7 @@ from django.test.client import Client
 from django.urls import reverse
 
 import pytest
+from faker import Faker
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_400_BAD_REQUEST,
@@ -18,6 +19,7 @@ from rest_framework.status import (
 )
 from rest_framework.test import APIClient
 
+from projectify.lib.settings import Base
 from projectify.user.services.internal import user_make_token
 from pytest_types import DjangoAssertNumQueries
 
@@ -188,7 +190,35 @@ class TestEmailAddressUpdateDjango:
         # Verify email was not changed
         user.refresh_from_db()
         assert user.email == old_email
-        assert user.unconfirmed_email != new_email
+
+    def test_rate_limit(
+        self,
+        user: User,
+        password: str,
+        user_client: Client,
+        resource_url: str,
+        faker: Faker,
+        settings: Base,
+    ) -> None:
+        """Test that rate limiting is enforced correctly."""
+        settings.RATELIMIT_ENABLE = True
+
+        # Make 5 requests (the limit is 5/h)
+        for _ in range(5):
+            response = user_client.post(
+                resource_url,
+                {"new_email": faker.email(), "password": password},
+                follow=True,
+            )
+            assert response.status_code == 200
+
+        # The 6th request should be rate limited
+        response = user_client.post(
+            resource_url,
+            {"new_email": faker.email(), "password": password},
+        )
+        assert response.status_code == 429
+        assert user.unconfirmed_email is None
 
     def test_with_invalid_email(
         self,

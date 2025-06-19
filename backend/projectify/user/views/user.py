@@ -18,6 +18,7 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
+from django_ratelimit.core import UNSAFE
 from django_ratelimit.decorators import ratelimit
 from rest_framework import parsers, serializers, views
 from rest_framework.exceptions import PermissionDenied, ValidationError
@@ -30,6 +31,7 @@ from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.forms import populate_form_with_drf_errors
 from projectify.lib.schema import PolymorphicProxySerializer, extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
+from projectify.lib.views import platform_view
 from projectify.user.models import User
 from projectify.user.serializers import (
     AnonymousUserSerializer,
@@ -169,8 +171,9 @@ class EmailAddressUpdateForm(forms.Form):
 
 
 @require_http_methods(["GET", "POST"])
-@login_required
-def email_address_update(request: HttpRequest) -> HttpResponse:
+@platform_view
+@ratelimit(key="user", rate="5/h", method=UNSAFE)
+def email_address_update(request: AuthenticatedHttpRequest) -> HttpResponse:
     """Start email address update process for user."""
     user = request.user
     assert isinstance(user, User)
