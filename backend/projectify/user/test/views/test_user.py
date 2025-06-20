@@ -4,9 +4,10 @@
 """User view tests."""
 
 from collections.abc import Mapping
-from typing import Any
+from typing import Any, cast
 
 from django.core.files import File
+from django.db.models.fields.files import FileDescriptor
 from django.test.client import Client
 from django.urls import reverse
 
@@ -35,6 +36,70 @@ Headers = Mapping[str, Any]
 
 class TestUserProfile:
     """Test django user_profile view."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("users-django:profile")
+
+    def test_get_form(
+        self, user: User, user_client: Client, resource_url: str
+    ) -> None:
+        """Test that the profile form is displayed correctly on GET."""
+        response = user_client.get(resource_url)
+        assert response.status_code == 200
+        assert str(user).encode() in response.content
+
+    def test_update_profile_and_preferred_name(
+        self,
+        user: User,
+        user_client: Client,
+        resource_url: str,
+        uploaded_file: File,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test updating both preferred name and profile picture."""
+        with django_assert_num_queries(12):
+            response = user_client.post(
+                resource_url,
+                {
+                    "preferred_name": "New Preferred Name",
+                    "profile_picture": uploaded_file,
+                },
+                follow=True,
+            )
+            assert response.status_code == 200
+            assert response.redirect_chain[-1][0] == reverse(
+                "users-django:profile"
+            )
+
+        user.refresh_from_db()
+        assert user.preferred_name == "New Preferred Name"
+        assert user.profile_picture is not None
+
+    def test_clear_profile_picture(
+        self,
+        user: User,
+        user_client: Client,
+        resource_url: str,
+        uploaded_file: File,
+    ) -> None:
+        """Test clearing the profile picture."""
+        user.profile_picture = cast(FileDescriptor, uploaded_file)
+        user.save()
+
+        response = user_client.post(
+            resource_url,
+            {"preferred_name": "Test User", "profile_picture-clear": "1"},
+            follow=True,
+        )
+        assert response.status_code == 200
+        assert response.redirect_chain[-1][0] == reverse(
+            "users-django:profile"
+        )
+
+        user.refresh_from_db()
+        assert not user.profile_picture
 
 
 class TestPasswordChangeDjango:
