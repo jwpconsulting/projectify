@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-19 07:09+0000\n"
+"POT-Creation-Date: 2025-06-20 09:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: projectify/user/admin.py:32
 msgid "You can search by email and preferred name"
 msgstr ""
@@ -109,27 +110,31 @@ msgstr ""
 msgid "No user could be found for this email"
 msgstr ""
 
-#: projectify/user/services/auth.py:196
+#: projectify/user/services/auth.py:195 projectify/user/services/user.py:71
+msgid "New passwords must match. Please check again"
+msgstr ""
+
+#: projectify/user/services/auth.py:207
 msgid "This email is not recognized"
 msgstr ""
 
-#: projectify/user/services/auth.py:201
+#: projectify/user/services/auth.py:212
 msgid "This token is invalid"
 msgstr ""
 
-#: projectify/user/services/user.py:60
-msgid "Incorrect password. Check again."
+#: projectify/user/services/user.py:78
+msgid "Incorrect password. Please check again."
 msgstr ""
 
-#: projectify/user/services/user.py:83
+#: projectify/user/services/user.py:106
 msgid "Password is incorrect"
 msgstr ""
 
-#: projectify/user/services/user.py:104
+#: projectify/user/services/user.py:124
 msgid "Email address update was never requested"
 msgstr ""
 
-#: projectify/user/services/user.py:110
+#: projectify/user/services/user.py:130
 msgid "Provided token is not valid"
 msgstr ""
 
@@ -195,6 +200,353 @@ msgstr ""
 msgid "Password reset"
 msgstr ""
 
-#: projectify/user/views/user.py:89
+#: projectify/user/templates/user/email_address_update.html:9
+#: projectify/user/templates/user/email_address_update_confirm.html:9
+#: projectify/user/templates/user/password_change.html:9
+#: projectify/user/templates/user/user_profile.html:9
+msgid "User account settings"
+msgstr ""
+
+#: projectify/user/templates/user/email_address_update.html:11
+#: projectify/user/templates/user/user_profile.html:37
+msgid "Update email address"
+msgstr ""
+
+#: projectify/user/templates/user/email_address_update.html:15
+#, python-format
+msgid "Your current email address is '%(email)s'."
+msgstr ""
+
+#: projectify/user/templates/user/email_address_update.html:21
+msgid "Go back"
+msgstr ""
+
+#: projectify/user/templates/user/email_address_update.html:24
+msgid "Update email"
+msgstr ""
+
+#: projectify/user/templates/user/email_address_update_confirm.html:11
+msgid "Confirming new email address"
+msgstr ""
+
+#: projectify/user/templates/user/email_address_update_confirm.html:13
+msgid ""
+"An unknown error has occurred and your email address could not be updated."
+msgstr ""
+
+#: projectify/user/templates/user/email_address_update_confirm.html:15
+#, python-format
+msgid ""
+"The confirmation token provided in the URL you used to open this page is not "
+"valid. This means that you might have already changed your email address, or "
+"that you have requested for your email address to be changed multiple times. "
+"Please try updating your email address one more time by following the link "
+"below. The error was: '%(error)s'."
+msgstr ""
+
+#: projectify/user/templates/user/email_address_update_confirm.html:18
+msgid "What to do"
+msgstr ""
+
+#: projectify/user/templates/user/email_address_update_confirm.html:22
+msgid "Try updating your email address one more time"
+msgstr ""
+
+#: projectify/user/templates/user/email_address_update_confirm.html:26
+msgid "Contact us via email"
+msgstr ""
+
+#: projectify/user/templates/user/email_address_update_confirm.html:33
+#: projectify/user/templates/user/email_address_update_confirmed.html:11
+#: projectify/user/templates/user/email_address_update_requested.html:17
+msgid "Go back to profile"
+msgstr ""
+
+#: projectify/user/templates/user/email_address_update_confirmed.html:7
+msgid "Email address updated successfully"
+msgstr ""
+
+#: projectify/user/templates/user/email_address_update_confirmed.html:9
+msgid ""
+"Your email address has been updated succesfully. You may now use your new "
+"email address to log in."
+msgstr ""
+
+#: projectify/user/templates/user/email_address_update_requested.html:11
+msgid "Email address update requested"
+msgstr ""
+
+#: projectify/user/templates/user/email_address_update_requested.html:14
+msgid ""
+"We will send an email with to your new email address containing a link that "
+"you can click to confirm your new email address. Please follow the "
+"instructions in the email."
+msgstr ""
+
+#: projectify/user/templates/user/email_confirm.html:10
+msgid "Error while confirming email address"
+msgstr ""
+
+#: projectify/user/templates/user/email_confirm.html:12
+msgid "Unfortunately your email address could not be confirmed."
+msgstr ""
+
+#: projectify/user/templates/user/email_confirm.html:14
+#, python-format
+msgid "Error with email address: %(email_error)s"
+msgstr ""
+
+#: projectify/user/templates/user/email_confirm.html:17
+#, python-format
+msgid "Error with token: %(token_error)s"
+msgstr ""
+
+#: projectify/user/templates/user/email_confirm.html:21
+msgid "Contact support"
+msgstr ""
+
+#: projectify/user/templates/user/email_confirm.html:25
+msgid "Email address confirmed"
+msgstr ""
+
+#: projectify/user/templates/user/email_confirm.html:27
+msgid ""
+"Your email address was confirmed successfully. You may now proceed to log in."
+msgstr ""
+
+#: projectify/user/templates/user/email_confirm.html:30
+#: projectify/user/templates/user/password_reset.html:15
+msgid "Continue to log in"
+msgstr ""
+
+#: projectify/user/templates/user/email_confirmation_link_sent.html:10
+msgid "Email confirmation link sent"
+msgstr ""
+
+#: projectify/user/templates/user/email_confirmation_link_sent.html:12
+msgid ""
+"Happy bird mascot indicating that a email confirm email is on its way to you"
+msgstr ""
+
+#: projectify/user/templates/user/email_confirmation_link_sent.html:13
+msgid ""
+"Please go to your email and follow the instructions to activate your account"
+msgstr ""
+
+#: projectify/user/templates/user/email_confirmation_link_sent.html:16
+msgid "Back to homepage"
+msgstr ""
+
+#: projectify/user/templates/user/log_in.html:10
+#: projectify/user/templates/user/log_in.html:16
+msgid "Log in"
+msgstr ""
+
+#: projectify/user/templates/user/log_in.html:19
+msgid "Don't have an account yet?"
+msgstr ""
+
+#: projectify/user/templates/user/log_in.html:21
+msgid "Sign up here"
+msgstr ""
+
+#: projectify/user/templates/user/password_change.html:11
+#: projectify/user/templates/user/password_change.html:30
+#: projectify/user/templates/user/user_profile.html:52
+msgid "Change password"
+msgstr ""
+
+#: projectify/user/templates/user/password_change.html:19
+#: projectify/user/templates/user/sign_up.html:18
+msgid "Rules for choosing a safe password:"
+msgstr ""
+
+#: projectify/user/templates/user/password_reset.html:10
+msgid "Password reset complete"
+msgstr ""
+
+#: projectify/user/templates/user/password_reset.html:12
+msgid ""
+"Your password was reset successfully. You may now proceed and log in with "
+"your email address and the password that you have just entered."
+msgstr ""
+
+#: projectify/user/templates/user/password_reset_confirm.html:11
+#: projectify/user/templates/user/password_reset_request.html:11
+msgid "Reset your password"
+msgstr ""
+
+#: projectify/user/templates/user/password_reset_confirm.html:23
+msgid "Reset password"
+msgstr ""
+
+#: projectify/user/templates/user/password_reset_confirm.html:27
+#: projectify/user/templates/user/password_reset_requested.html:21
+msgid "Request password reset again"
+msgstr ""
+
+#: projectify/user/templates/user/password_reset_confirm.html:31
+#: projectify/user/templates/user/password_reset_request.html:24
+msgid "Return to log in"
+msgstr ""
+
+#: projectify/user/templates/user/password_reset_request.html:13
+msgid ""
+"Enter the email associated with your account and we'll send you a link to "
+"reset your password."
+msgstr ""
+
+#: projectify/user/templates/user/password_reset_request.html:20
+msgid "Send password reset link"
+msgstr ""
+
+#: projectify/user/templates/user/password_reset_requested.html:11
+msgid "Password reset requested"
+msgstr ""
+
+#: projectify/user/templates/user/password_reset_requested.html:14
+msgid ""
+"You have requested for your password to be reset and will receive an email "
+"with password reset instructions soon. Please check your email inbox."
+msgstr ""
+
+#: projectify/user/templates/user/password_reset_requested.html:17
+msgid ""
+"If you do not receive any email, you can request a new password email to be "
+"sent by using the email. Please contact support if you have any questions."
+msgstr ""
+
+#: projectify/user/templates/user/sign_up.html:11
+#: projectify/user/templates/user/sign_up.html:49
+msgid "Sign up"
+msgstr ""
+
+#: projectify/user/templates/user/sign_up.html:12
+msgid "Sign up and start a free trial"
+msgstr ""
+
+#: projectify/user/templates/user/sign_up.html:30
+msgid "I agree to the Terms of Service"
+msgstr ""
+
+#: projectify/user/templates/user/sign_up.html:31
+#: projectify/user/templates/user/sign_up.html:42
+msgid "(Opens in new tab)"
+msgstr ""
+
+#: projectify/user/templates/user/sign_up.html:41
+msgid "I agree to the Privacy Policy"
+msgstr ""
+
+#: projectify/user/templates/user/sign_up.html:52
+msgid "Already have an account?"
+msgstr ""
+
+#: projectify/user/templates/user/sign_up.html:54
+msgid "Log in here"
+msgstr ""
+
+#: projectify/user/templates/user/user_profile.html:24
+msgid "Your current profile picture"
+msgstr ""
+
+#: projectify/user/templates/user/user_profile.html:27
+msgid "You currently have no profile picture"
+msgstr ""
+
+#: projectify/user/templates/user/user_profile.html:33
+msgid "Your current email address"
+msgstr ""
+
+#: projectify/user/templates/user/user_profile.html:44
+msgid "Save changes"
+msgstr ""
+
+#: projectify/user/templates/user/user_profile.html:50
+msgid "Other settings"
+msgstr ""
+
+#: projectify/user/templates/user/user_profile.html:55
+msgid "Account deletion"
+msgstr ""
+
+#: projectify/user/templates/user/user_profile.html:57
+msgid ""
+"If you would like to delete your account, please send us an email using the "
+"link below. We have not implemented self-serve account deletion at this "
+"point, and would like to apologize for the inconvenience."
+msgstr ""
+
+#: projectify/user/templates/user/user_profile.html:61
+msgid "Request account deletion (opens email client)"
+msgstr ""
+
+#: projectify/user/views/auth.py:63 projectify/user/views/auth.py:178
+#: projectify/user/views/auth.py:252
+msgid "Enter your email"
+msgstr ""
+
+#: projectify/user/views/auth.py:64 projectify/user/views/auth.py:179
+#: projectify/user/views/user.py:102
+msgid "Enter your password"
+msgstr ""
+
+#: projectify/user/views/auth.py:96
+msgid "Too many sign up attempts. Slow down."
+msgstr ""
+
+#: projectify/user/views/auth.py:189
+msgid "Forgot password"
+msgstr ""
+
+#: projectify/user/views/auth.py:219
+msgid "Too many log in attempts. Slow down."
+msgstr ""
+
+#: projectify/user/views/auth.py:301 projectify/user/views/user.py:106
+msgid "New password"
+msgstr ""
+
+#: projectify/user/views/auth.py:304 projectify/user/views/auth.py:309
+msgid "Confirm new password"
+msgstr ""
+
+#: projectify/user/views/auth.py:307
+msgid "Enter new password"
+msgstr ""
+
+#: projectify/user/views/user.py:58
+msgid "Enter your preferred name"
+msgstr ""
+
+#: projectify/user/views/user.py:100 projectify/user/views/user.py:167
+msgid "Current password"
+msgstr ""
+
+#: projectify/user/views/user.py:108
+msgid "Enter the new password"
+msgstr ""
+
+#: projectify/user/views/user.py:112
+msgid "Confirm password"
+msgstr ""
+
+#: projectify/user/views/user.py:114
+msgid "Confirm the new password"
+msgstr ""
+
+#: projectify/user/views/user.py:161
+msgid "New email"
+msgstr ""
+
+#: projectify/user/views/user.py:163
+msgid "Enter your new email address"
+msgstr ""
+
+#: projectify/user/views/user.py:169
+msgid "Enter your current password"
+msgstr ""
+
+#: projectify/user/views/user.py:311
 msgid "Must be authenticated in order to update a user"
 msgstr ""
