@@ -29,7 +29,7 @@ class SubTaskQuerySet(models.QuerySet["SubTask"]):
     ) -> Self:
         """Get sub task for a certain user and sub task uuid."""
         kwargs = {
-            "task__section__project__" "workspace__users": user,
+            "task__section__project__workspace__users": user,
             "uuid": uuid,
         }
         return self.filter(**kwargs)
