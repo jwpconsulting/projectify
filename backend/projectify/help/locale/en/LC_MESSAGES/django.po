@@ -1,0 +1,155 @@
+# SOME DESCRIPTIVE TITLE.
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# SPDX-FileCopyrightText: 2025 JWP Consulting GK
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-20 08:57+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: projectify/help/templates/help/help_detail.html:20
+msgid "Help sections"
+msgstr ""
+
+#: projectify/help/templates/help/help_list.html:11
+msgid "Help and tips"
+msgstr ""
+
+#: projectify/help/templates/help/help_list.html:12
+msgid "Learn to fly through projects with speed and agility"
+msgstr ""
+
+#: projectify/help/templates/help/help_list.html:18
+msgid "Our mascot poly flying into the air using a jetpack"
+msgstr ""
+
+#: projectify/help/templates/help/help_list.html:34
+msgid "View this section"
+msgstr ""
+
+#: projectify/help/views.py:16
+msgid "Basics"
+msgstr ""
+
+#: projectify/help/views.py:17
+msgid "Your first steps towards productivity"
+msgstr ""
+
+#: projectify/help/views.py:22
+msgid "Workspaces"
+msgstr ""
+
+#: projectify/help/views.py:23
+msgid "Independent spaces at your fingertips"
+msgstr ""
+
+#: projectify/help/views.py:28
+msgid "Projects"
+msgstr ""
+
+#: projectify/help/views.py:29
+msgid "Separate projects from each other"
+msgstr ""
+
+#: projectify/help/views.py:34
+msgid "Sections"
+msgstr ""
+
+#: projectify/help/views.py:35
+msgid "Maximize the efficiency of your tasks"
+msgstr ""
+
+#: projectify/help/views.py:40
+msgid "Tasks"
+msgstr ""
+
+#: projectify/help/views.py:41
+msgid "All the ins and outs of task creation"
+msgstr ""
+
+#: projectify/help/views.py:46
+msgid "Labels"
+msgstr ""
+
+#: projectify/help/views.py:47
+msgid "Create categories for your tasks"
+msgstr ""
+
+#: projectify/help/views.py:52
+msgid "Team members"
+msgstr ""
+
+#: projectify/help/views.py:53
+msgid "Collaboration starts with an invite"
+msgstr ""
+
+#: projectify/help/views.py:58
+msgid "Filters"
+msgstr ""
+
+#: projectify/help/views.py:59
+msgid "Streamline your workflow with filters"
+msgstr ""
+
+#: projectify/help/views.py:64
+msgid "Billing"
+msgstr ""
+
+#: projectify/help/views.py:65
+msgid "Billing and payment information"
+msgstr ""
+
+#: projectify/help/views.py:70
+msgid "Trial workspace"
+msgstr ""
+
+#: projectify/help/views.py:71
+msgid "How to set up a trial workspace"
+msgstr ""
+
+#: projectify/help/views.py:76
+msgid "Workspace quotas"
+msgstr ""
+
+#: projectify/help/views.py:77
+msgid "Understand workspace resource quotas"
+msgstr ""
+
+#: projectify/help/views.py:82
+msgid "Roles"
+msgstr ""
+
+#: projectify/help/views.py:83
+msgid "Divide up roles between team members"
+msgstr ""
+
+#: projectify/help/views.py:88
+msgid "Keyboard shortcuts"
+msgstr ""
+
+#: projectify/help/views.py:89
+msgid "Use keyboard shortcuts to improve productivity"
+msgstr ""
+
+#: projectify/help/views.py:97
+msgid "Overview"
+msgstr ""
+
+#: projectify/help/views.py:98
+msgid "Help overview"
+msgstr ""
+
+#: projectify/help/views.py:122
+#, python-brace-format
+msgid "{page} is not a valid help page title"
+msgstr ""

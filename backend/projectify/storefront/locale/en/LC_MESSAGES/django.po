@@ -1,0 +1,732 @@
+# SOME DESCRIPTIVE TITLE.
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# SPDX-FileCopyrightText: 2025 JWP Consulting GK
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-20 08:57+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: projectify/storefront/templates/storefront/accessibility.html:12
+msgid "Accessibility statement"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/accessibility.html:18
+msgid "Accessibility logo"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/common/solutions_detail_item.html:12
+#: projectify/storefront/templates/storefront/common/solutions_detail_item.html:31
+msgid "Learn more here"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/contact_us.html:8
+msgid "Contact"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/contact_us.html:19
+msgid "An illustration of a phone booth"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/credits.html:8
+msgid "Credits and attribution"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/free_software.html:8
+msgid "Free Software and License Information"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/free_software.html:12
+msgid "Projectify project management software is created by:"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/free_software.html:14
+msgid "Copyright 2021-2024 JWP Consulting GK"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:14
+msgid "Manage projects the right way."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:16
+msgid ""
+"Warp drive your way to success with software that helps you to collaborate "
+"on and manage projects efficiently, with speed."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:21
+msgid "Continue to dashboard"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:24
+#: projectify/storefront/templates/storefront/pricing.html:39
+msgid "Start a free trial"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:30
+msgid ""
+"An illustration showing the look and feel of tasks in Projectify's user "
+"interface"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:42
+msgid "Everything you need to"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:42
+msgid "stay organized"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:42
+msgid "deliver faster"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:45
+msgid "The go-to project management tool for developers."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:48
+msgid "task cards that are accessible and keyboard friendly"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:49
+msgid ""
+"no more drag and drop disasters! Create and move tasks around the board with "
+"ease and speed. Organize and prioritize your workload with peace of mind."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:50
+msgid ""
+"A screenshot from the Projectify dashboard showing how the interface can be "
+"used without drag and drop"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:52
+msgid "Transform mammoth tasks into smaller, feasible ones"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:53
+msgid ""
+"Sub tasks break up the workload to allow for large tasks and progress to "
+"become more realistic and achievable. Add, reorder, edit and delete "
+"limitless sub tasks."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:54
+msgid ""
+"A screenshot from a task in the Projectify UI showing how sub tasks can be "
+"assigned to tasks"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:56
+#: projectify/storefront/templates/storefront/solutions/project-management.html:18
+msgid "Full control of your workspaces"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:57
+msgid ""
+"Split your workspace into projects to enable multi-project management. "
+"Filter by labels, team members, or keywords to focus on specific tasks."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:58
+msgid ""
+"An illustration showing how tasks can be filtered by team members or labels"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:60
+msgid "Responsive for on-the-go"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:61
+msgid ""
+"Need to access your projects while away from the office? No app. No problem. "
+"A fully responsive experience to stay connected and keep projects on track."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:62
+msgid ""
+"An illustration of a smartphone showing the Projectify UI in a landscape "
+"orientation."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:66
+msgid "Meeting diverse needs with practical solutions."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:68
+msgid ""
+"From companies big and small to individuals working alone, Projectify can be "
+"used to manage all kinds of tasks."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:75
+msgid "An illustration showing our mascot Poly working at a computer"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:78
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:21
+msgid "Development teams"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:82
+msgid "An illustration showing our mascot researching in a laboratory"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:85
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:34
+msgid "Research"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:89
+msgid "An illustration showing our mascot overseeing our factory"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:92
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:47
+msgid "Project management"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:96
+msgid "See more use cases"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:99
+msgid "We never sell your data. Ever."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:100
+msgid ""
+"Our platform fully complies with GDPR regulations, amongst others, so you "
+"can be rest assured that your private information stays private."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:101
+msgid "An illustration showing our mascot Poly safekeeping your data"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:103
+#, python-format
+msgid "Projectify is 100%% Free Software"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:104
+msgid ""
+"We respect your freedom and privacy and provide you the source code under a "
+"Free Software license. The Projectify application is licensed under the GNU "
+"Affero General Public License (AGPL) version 3.0 or later."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/index.html:105
+msgid "Birds freed from their gilded cage"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:10
+msgid "Pricing"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:11
+msgid "One plan. One price. All features."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:15
+msgid "What's included?"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:17
+msgid "Unlimited tasks"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:18
+msgid "Unlimited projects"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:19
+msgid "Collaborate with team members"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:20
+msgid "Add multiple labels"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:21
+msgid "Role permissions"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:22
+msgid "Customize your workspace"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:23
+msgid "Archive completed projects"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:24
+msgid "Filter by label or assignee"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:25
+msgid "Accessible interface"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:31
+msgid "Universal Plan"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:32
+#, python-format
+msgid "%(price)s / seat per month"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:36
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:26
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:39
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:52
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:65
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:78
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:93
+msgid "Learn more"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:44
+msgid "Trial mode available"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:46
+msgid ""
+"\n"
+"                    You can use a Projectify workspace in trial mode free "
+"of\n"
+"                    charge. The trial allows you to evaluate whether the\n"
+"                    Projectify project management software suits your "
+"needs.\n"
+"                    While your workspace is in trial mode, the following\n"
+"                    limitations will apply.\n"
+"                    "
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:54
+msgid "Trial mode limitations"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:57
+#, python-format
+msgid ""
+"A workspace can have up to <strong>%(team_members)s</strong> team members"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:60
+#, python-format
+msgid "A workspace can hold up to <strong>%(projects)s</strong> projects"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:63
+#, python-format
+msgid "You can create up to <strong>%(sections)s</strong> sections"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:66
+#, python-format
+msgid "You can create up to <strong>%(tasks)s</strong> tasks"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:69
+#, python-format
+msgid "You can create up to <strong>%(sub_tasks)s</strong> sub tasks"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/pricing.html:72
+#, python-format
+msgid "You can create up to <strong>%(labels)s</strong> labels"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/privacy.html:10
+msgid "Privacy Policy"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/privacy.html:14
+msgid "Japanese Privacy Policy (original)"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/privacy.html:18
+msgid "English Privacy Policy (translation)"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/privacy.html:22
+msgid "Japanese GDPR Privacy Policy (original)"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/privacy.html:26
+msgid "English GDPR Privacy Policy (translation)"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/academic.html:8
+msgid "Academic solutions"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/academic.html:9
+msgid ""
+"How students can use Projectify to plan a thesis, collaborate, or keep track "
+"of assignments."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/academic.html:10
+#: projectify/storefront/templates/storefront/solutions/research.html:10
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:31
+msgid ""
+"Two content looking Polys (our mascot) researching in a laboratory and "
+"taking down notes on a chalkboard"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/academic.html:14
+msgid "Checklists that aid your progres"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/academic.html:15
+msgid ""
+"We know that projects and dissertations can be daunting, but we're here to "
+"help. Breaking tasks into smaller sub tasks allow you to micro-achieve your "
+"way to completion."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/academic.html:16
+msgid ""
+"An illustration showing how users can track subtask progress for each task"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/development-teams.html:8
+msgid "Development solutions"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/development-teams.html:9
+msgid ""
+"How development teams can use Projectify to create tasks, monitor pulls "
+"requests and deploy faster."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/development-teams.html:10
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:18
+msgid ""
+"Our mascot Poly sitting in front of a computer, developing software and "
+"looking content"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/development-teams.html:14
+msgid "Organise with labels and task numbers"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/development-teams.html:15
+msgid ""
+"Use labels with terms like bug, enhancement or backend to categorize tasks. "
+"Filter with labels or search by task number to quickly locate what you're "
+"looking for."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/development-teams.html:16
+msgid "A illustration showing the label context menu used in Projectify"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/development-teams.html:18
+msgid "Plan and execute"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/development-teams.html:19
+msgid ""
+"Set up and monitor pull requests, merges, bug fixes and more for multiple "
+"team members of your team."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/development-teams.html:20
+msgid "An illlustration showing tasks in a section called 'In Progress'"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/personal-use.html:8
+msgid "Personal solutions"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/personal-use.html:9
+msgid ""
+"How people can use Projectify for everyday life, whether it be keeping track "
+"fo your health or creating an itinerary for a trip."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/personal-use.html:10
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:83
+msgid ""
+"Our mascot Poly thinking about all the things they want to do, among them "
+"being running, taking pictures and eating something tasty, each thing "
+"symbolized by a thought bubble"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/personal-use.html:14
+msgid "Create tasks with ease"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/personal-use.html:15
+msgid ""
+"Organise your tasks into individual projects with sections such as 'To do', "
+"'In progress' and 'Done'. Provide descriptions for each task and set due "
+"dates. Labels simplify the process of catergorizing tasks."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/personal-use.html:16
+msgid ""
+"An illustration showing a 'To do' and 'Done' section, showing personal tasks "
+"that a user assigned to themselves, such as 'Book a ticket to Paris' or "
+"'Learn French for beginners'"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/personal-use.html:18
+msgid "Check off sub tasks as you go"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/personal-use.html:19
+msgid ""
+"Need to plan an event? Want to create a list of achievements? Sub tasks help "
+"you to check off small tasks bit by bite."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/personal-use.html:20
+msgid ""
+"An illustration showing various sub tasks that a user has created within a "
+"task, such as 'Swim freestyle for 10 lengths'"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/personal-use.html:22
+msgid "Add friends and family to your space"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/personal-use.html:23
+msgid ""
+"Get everyone on the same page by assigning task to different team members."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/personal-use.html:24
+msgid ""
+"An illustration showing how different tasks in the 'In progress' section of "
+"a project have been assigned to friends and family. The tasks are 'Trim back "
+"overgrown hedges', 'Polish wooden furnishings', and 'Replace extractor fan "
+"grating'"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/project-management.html:8
+msgid "Project management solutions"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/project-management.html:9
+msgid ""
+"How project managers can use Projectify to efficiently manage tasks, "
+"projects and team members of their team."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/project-management.html:10
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:44
+msgid ""
+"Two Polys in a factory pointing at machines symbolized by huge gears. The "
+"mascot on the left holds a wrench."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/project-management.html:14
+msgid "An ethical approach to management"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/project-management.html:15
+msgid ""
+"View how many tasks a team member has assigned to them, so the workload can "
+"be divided equally. Filter by team member to see what individual colleagues "
+"are working on."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/project-management.html:16
+msgid ""
+"An illustration showing how Projectify displays each team members assigned "
+"task count"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/project-management.html:19
+msgid ""
+"List and column views allow you to organise workflows and see the bigger "
+"picture. Split your workspace into projects to enable multi-project "
+"management. Filter by labels, users or keyboards to focus on specific tasks."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/project-management.html:20
+msgid ""
+"An illustration showing a collapsed dashboard side bar and various team "
+"members and labels"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/project-management.html:22
+msgid "Permissions to control access"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/project-management.html:23
+msgid ""
+"Make sure nothing important gets deleted. With permission roles - Owner, "
+"Maintainer, Contributor and Observer, you can be safe in knowing there won't "
+"be any accidentally data loss."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/project-management.html:24
+msgid ""
+"An illustration of a settings screen showing team members belonging to a "
+"team member and their role within the workspace. The illustration also shows "
+"a button allowing filtering by role and another button letting a user invite "
+"new team members"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/remote-work.html:8
+msgid "Remote solutions"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/remote-work.html:9
+msgid ""
+"How remote workers can use Projectify to keep in tune with projects and stay "
+"connected."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/remote-work.html:10
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:70
+msgid "Our mascot Poly working at the beach looking happy"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/remote-work.html:14
+msgid "Assign tasks to users all over the world"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/remote-work.html:15
+msgid ""
+"Whether it's Leo in the Phillipines or Valerie in Brazil, once you assign a "
+"task to someone they will be notified immediately with a pop-up."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/remote-work.html:16
+msgid ""
+"An illustration showing the 'In Progress' section of a project with tasks "
+"being assigned to different users"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/research.html:8
+msgid "Research solutions"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/research.html:9
+msgid ""
+"How researchers teams can use Projectify to collaborate on data with "
+"colleagues and meticulously catalogue findings."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/research.html:14
+msgid "Categorize data with labels and numbers"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/research.html:15
+msgid ""
+"Labels simplify the process of categorizing tasks. Automatically assigned "
+"task numbers take organisation one step further"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/research.html:16
+msgid "An illustration showing tasks in a section called 'In Progress'"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/research.html:18
+msgid "Create and monitor multiple projects"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/research.html:19
+msgid ""
+"With unlimited projects and tasks per workspace, you're free to perform as "
+"much research and testing as you require."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/research.html:20
+msgid ""
+"An illustration suggesting the different ways labels can be assigned to "
+"different team members depending on their role, such as design or marketing"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:9
+msgid "Solutions for every type of user"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:10
+msgid ""
+"Explore the different ways users are using Projectify to meet due dates, "
+"reach targets and be productive."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:11
+msgid "An illustration showing users of different backgrounds"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:22
+msgid "Monitor team progress throughout the whole software lifecyle."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:35
+msgid "Keep track of testing processes and results with incredible detail."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:48
+msgid "Faciliate rapid delivery across multiple projects for any industry."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:57
+msgid ""
+"Our mascot Poly celebrating their graduation from an educiational "
+"institution, wearing an academic dress, throwing a square academic cap into "
+"the air"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:60
+msgid "Academic endeavours"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:61
+msgid "Structure a thesis, organise a project or keep track of assignments."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:73
+msgid "Remote work"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:74
+msgid "Asynchronous communication whether you're at home or away."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:86
+msgid "Personal use"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/solutions/solutions_index.html:88
+msgid ""
+"Log an exercise routine, create a new diet or plan an adventure. The "
+"possibilities are endless."
+msgstr ""
+
+#: projectify/storefront/templates/storefront/tos.html:10
+msgid "Terms of service"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/tos.html:14
+msgid "Japanese (original)"
+msgstr ""
+
+#: projectify/storefront/templates/storefront/tos.html:18
+msgid "English (translation)"
+msgstr ""
+
+#: projectify/storefront/views.py:121
+msgid "Solution page does not exist."
+msgstr ""
