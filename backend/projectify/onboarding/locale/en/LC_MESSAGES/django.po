@@ -1,0 +1,172 @@
+# SOME DESCRIPTIVE TITLE.
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# SPDX-FileCopyrightText: 2025 JWP Consulting GK
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-20 08:58+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: projectify/onboarding/templates/onboarding/about_you.html:17
+#: projectify/onboarding/templates/onboarding/new_label.html:22
+#: projectify/onboarding/templates/onboarding/new_project.html:33
+#: projectify/onboarding/templates/onboarding/new_task.html:29
+#: projectify/onboarding/templates/onboarding/new_workspace.html:36
+#: projectify/onboarding/templates/onboarding/welcome.html:11
+msgid "Continue"
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/about_you.html:23
+msgid "Welcome👋"
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/assign_task.html:10
+#, python-format
+msgid "Task \"%(task)s\" has been assigned to you!"
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/assign_task.html:13
+msgid "You’re all set!"
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/assign_task.html:15
+msgid ""
+"If you wish to add new team members to your workspace, please go to the "
+"workspace settings menu next to your workspace name."
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/assign_task.html:19
+msgid "Learn more about workspace billing settings"
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/assign_task.html:25
+msgid "Go to workspace billing setting"
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/assign_task.html:36
+msgid "Get started"
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/common/form_description.html:16
+msgid "(Opens in new tab)"
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/new_label.html:10
+#, python-format
+msgid "Create a label for \"%(task)s\""
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/new_label.html:12
+msgid "Labels help you to filter between the types of tasks."
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/new_project.html:10
+msgid "Add your first project"
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/new_project.html:14
+#, python-format
+msgid ""
+"It looks like you already have a project called \"%(project)s\". Would you "
+"like to continue adding a task for it?"
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/new_project.html:18
+#, python-format
+msgid "Continue adding task to \"%(project)s\""
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/new_project.html:21
+msgid "You can create unlimited project per workspace."
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/new_project.html:22
+msgid "They help you to focus on different projects you may be working on."
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/new_task.html:10
+msgid "What is a task you’d like to complete?"
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/new_task.html:14
+#, python-format
+msgid ""
+"It looks like you already have a section called \"%(section)s\". We will now "
+"create a task  and place it into that section."
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/new_task.html:16
+#, python-format
+msgid "This task will be placed in a section called \"%(section_title)s\"."
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/new_task.html:19
+msgid ""
+"Tasks can be further divided into sub tasks and contain detailed "
+"descriptions."
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/new_workspace.html:12
+#, python-format
+msgid "Let’s set up your first workspace, %(user)s."
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/new_workspace.html:14
+msgid "Let’s set up your first workspace."
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/new_workspace.html:19
+msgid ""
+"It looks like you already have a workspace, would you like to create a "
+"project?"
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/new_workspace.html:22
+msgid "Create project"
+msgstr ""
+
+#: projectify/onboarding/templates/onboarding/new_workspace.html:25
+msgid "You can create and manage numerous workspaces."
+msgstr ""
+
+#: projectify/onboarding/views.py:82
+msgid "Workspace title"
+msgstr ""
+
+#: projectify/onboarding/views.py:127
+msgid "Project title"
+msgstr ""
+
+#: projectify/onboarding/views.py:155
+msgid "Workspace not found"
+msgstr ""
+
+#: projectify/onboarding/views.py:181
+msgid "Task name"
+msgstr ""
+
+#: projectify/onboarding/views.py:213
+msgid "Project not found"
+msgstr ""
+
+#: projectify/onboarding/views.py:216
+msgid "To do"
+msgstr ""
+
+#: projectify/onboarding/views.py:254
+msgid "Label name"
+msgstr ""
+
+#: projectify/onboarding/views.py:283 projectify/onboarding/views.py:317
+msgid "Task not found"
+msgstr ""
