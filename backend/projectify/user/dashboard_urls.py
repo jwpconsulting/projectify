@@ -19,6 +19,8 @@ from projectify.user.views.auth import (
 from projectify.user.views.user import (
     email_address_update,
     email_address_update_confirm,
+    email_address_update_confirmed,
+    email_address_update_requested,
     password_change,
     user_profile,
 )
@@ -37,6 +39,16 @@ urlpatterns = (
         "profile/update-email-address/confirm/<str:token>",
         email_address_update_confirm,
         name="confirm-email-address-update",
+    ),
+    path(
+        "profile/update-email-address/requested",
+        email_address_update_requested,
+        name="requested-email-address-update",
+    ),
+    path(
+        "profile/update-email-address/confirmed",
+        email_address_update_confirmed,
+        name="confirmed-email-address-update",
     ),
     # auth views
     path("log-in", log_in, name="log-in"),

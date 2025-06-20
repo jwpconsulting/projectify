@@ -1,0 +1,14 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "storefront_base.html" %}
+{% load i18n %}
+{% block storefront_content %}
+    <div class="prose">
+        <h1 class="text-center text-2xl font-bold">{% trans "Email address updated successfully" %}</h1>
+        <div class="flex flex-col gap-4">
+            {% trans "Your email address has been updated succesfully. You may now use your new email address to log in." %}
+            <a href="{% url "users-django:profile" %}"
+               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Go back to profile" %}</a>
+        </div>
+    </div>
+{% endblock storefront_content %}

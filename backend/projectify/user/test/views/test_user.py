@@ -248,20 +248,16 @@ class TestEmailAddressUpdateDjango:
         with django_assert_num_queries(11):
             response = user_client.post(
                 resource_url,
-                {
-                    "new_email": new_email,
-                    "password": password,
-                },
+                {"new_email": new_email, "password": password},
                 follow=True,
             )
             assert response.status_code == 200
 
-        # Check that we were redirected to the profile page
         assert response.redirect_chain[-1][0] == reverse(
-            "users-django:profile"
+            "users-django:requested-email-address-update"
         )
 
-        # Verify the unconfirmed email was set but the actual email hasn't changed yet
+        # Verify that this doesn't update the email, yet
         user.refresh_from_db()
         assert user.email == old_email
         assert user.unconfirmed_email == new_email
@@ -348,6 +344,84 @@ class TestEmailAddressUpdateDjango:
         # Verify email was not changed
         user.refresh_from_db()
         assert user.email == old_email
+
+
+class TestEmailAddressUpdateConfirm:
+    """Test email_address_update_confirm view."""
+
+    def test_valid_token(
+        self,
+        user: User,
+        user_client: Client,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test confirming email with a valid token."""
+        user.unconfirmed_email = "new-email@example.com"
+        user.save()
+
+        resource_url = reverse(
+            "users-django:confirm-email-address-update",
+            args=(user_make_token(user=user, kind="update_email_address"),),
+        )
+
+        with django_assert_num_queries(12):
+            response = user_client.get(resource_url, follow=True)
+            assert response.status_code == 200
+
+        assert response.redirect_chain[-1][0] == reverse(
+            "users-django:confirmed-email-address-update"
+        )
+
+        user.refresh_from_db()
+        assert user.email == "new-email@example.com"
+
+    def test_invalid_token(self, user: User, user_client: Client) -> None:
+        """Test confirming with an invalid token."""
+        old_email = user.email
+        user.unconfirmed_email = "new-email@example.com"
+        user.save()
+
+        resource_url = reverse(
+            "users-django:confirm-email-address-update",
+            args=("invalid-token-123",),
+        )
+
+        response = user_client.get(resource_url)
+        assert response.status_code == 400
+
+        user.refresh_from_db()
+        assert user.email == old_email
+        assert user.unconfirmed_email == "new-email@example.com"
+
+    def test_no_unconfirmed_email(
+        self, user: User, user_client: Client
+    ) -> None:
+        """Test what happens when no unconfirmed email is set."""
+        old_email = user.email
+
+        resource_url = reverse(
+            "users-django:confirm-email-address-update",
+            args=(user_make_token(user=user, kind="update_email_address"),),
+        )
+
+        response = user_client.get(resource_url)
+        assert response.status_code == 400
+
+        # Verify the email was not changed
+        user.refresh_from_db()
+        assert user.email == old_email
+
+
+class TestEmailAddressUpdateRequested:
+    """Test email_address_update_requested view."""
+
+    # TODO
+
+
+class TestEmailAddressUpdateConfirmed:
+    """Test email_address_update_confirmed view."""
+
+    # TODO
 
 
 # DRF View tests
