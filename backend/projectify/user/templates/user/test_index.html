@@ -1,0 +1,42 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{% extends "storefront_base.html" %}
+{% block storefront_content %}
+    <div class="prose">
+        <h1>Test Views Index</h1>
+        <p>This page provides access to various test views for development and testing purposes.</p>
+        <h2>Authentication Status</h2>
+        <p>
+            {% if user.is_authenticated %}
+                You are currently <strong>logged in</strong>.
+            {% else %}
+                You are currently <strong>logged out</strong>.
+            {% endif %}
+        </p>
+        <h2>Available Test Views</h2>
+        <h3>Email Confirmation Test</h3>
+        <p>
+            Test email confirmation functionality with various scenarios.
+            <strong>Note:</strong> You must be logged out to access this test.
+        </p>
+        <p>
+            <a href="{% url 'users-testing:email-confirm-test' %}">Go to Email Confirmation Test</a>
+        </p>
+        <h3>Email Address Update Confirmation Test</h3>
+        <p>
+            Test email address update confirmation functionality.
+            <strong>Note:</strong> You must be logged in to access this test.
+        </p>
+        <p>
+            <a href="{% url 'users-testing:email-update-confirm-test' %}">Go to Email Update Confirmation Test</a>
+        </p>
+        <h3>Password Reset Confirmation Test</h3>
+        <p>
+            Test password reset confirmation functionality with various scenarios.
+            <strong>Note:</strong> You must be logged out to access this test.
+        </p>
+        <p>
+            <a href="{% url 'users-testing:confirm-password-reset-test' %}">Go to Password Reset Confirmation Test</a>
+        </p>
+    </div>
+{% endblock %}

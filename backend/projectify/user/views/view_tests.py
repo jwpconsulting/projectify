@@ -19,13 +19,27 @@ settings = get_settings()
 assert settings.DEBUG_AUTH, "Can't import this if DEBUG_AUTH isn't set"
 
 
+def test_index(request: HttpRequest) -> HttpResponse:
+    """
+    Render an index page with links to all available test views.
+
+    This view is only available in development mode.
+    """
+    if not settings.DEBUG_AUTH:
+        return HttpResponseForbidden(
+            "This page is only available in development mode"
+        )
+
+    return render(request, "user/test_index.html")
+
+
 def email_confirm_test(request: HttpRequest) -> HttpResponse:
     """
     Render a test page with links to test email confirmation.
 
     This view is only available in development mode and when the user is not logged in.
     """
-    if not settings.DEBUG:
+    if not settings.DEBUG_AUTH:
         return HttpResponseForbidden(
             "This page is only available in development mode"
         )
@@ -76,7 +90,7 @@ def password_reset_confirm_test(request: HttpRequest) -> HttpResponse:
 
     This view is only available in development mode and when the user is not logged in.
     """
-    if not settings.DEBUG:
+    if not settings.DEBUG_AUTH:
         return HttpResponseForbidden(
             "This page is only available in development mode"
         )
@@ -134,7 +148,7 @@ def email_update_confirm_test(
     This view is only available in development mode and when the user is authenticated.
     It uses the current user to test email address update confirmation.
     """
-    if not settings.DEBUG:
+    if not settings.DEBUG_AUTH:
         return HttpResponseForbidden(
             "This page is only available in development mode"
         )
