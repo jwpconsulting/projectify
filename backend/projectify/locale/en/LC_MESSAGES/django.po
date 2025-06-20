@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-19 07:09+0000\n"
+"POT-Creation-Date: 2025-06-20 09:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: projectify/lib/models.py:104
 msgid "title"
 msgstr ""
@@ -31,6 +32,145 @@ msgstr ""
 
 #: projectify/lib/models.py:123
 msgid "modified"
+msgstr ""
+
+#: projectify/templates/common/footer.html:15
+msgid "Project management at pace."
+msgstr ""
+
+#: projectify/templates/common/footer.html:19
+msgid "Product"
+msgstr ""
+
+#: projectify/templates/common/footer.html:23
+#: projectify/templates/common/navigation/header/landing.html:17
+msgid "Pricing"
+msgstr ""
+
+#: projectify/templates/common/footer.html:27
+#: projectify/templates/common/navigation/header/landing.html:15
+msgid "Solutions"
+msgstr ""
+
+#: projectify/templates/common/footer.html:32
+msgid "Resources"
+msgstr ""
+
+#: projectify/templates/common/footer.html:37
+msgid "Help and tips"
+msgstr ""
+
+#: projectify/templates/common/footer.html:37
+#: projectify/templates/common/footer.html:44
+#: projectify/templates/common/footer.html:51
+#: projectify/templates/common/footer.html:58
+#: projectify/templates/common/footer.html:82
+msgid "(Opens in new tab)"
+msgstr ""
+
+#: projectify/templates/common/footer.html:44
+msgid "Keyboard shortcuts"
+msgstr ""
+
+#: projectify/templates/common/footer.html:51
+msgid "Blog"
+msgstr ""
+
+#: projectify/templates/common/footer.html:58
+msgid "GitHub Repository"
+msgstr ""
+
+#: projectify/templates/common/footer.html:64
+msgid "Download and install"
+msgstr ""
+
+#: projectify/templates/common/footer.html:69
+msgid "Company"
+msgstr ""
+
+#: projectify/templates/common/footer.html:73
+msgid "Accessibility statement"
+msgstr ""
+
+#: projectify/templates/common/footer.html:77
+msgid "Contact us"
+msgstr ""
+
+#: projectify/templates/common/footer.html:82
+msgid "Corporate information"
+msgstr ""
+
+#: projectify/templates/common/footer.html:89
+msgid "Security"
+msgstr ""
+
+#: projectify/templates/common/footer.html:93
+msgid "General information"
+msgstr ""
+
+#: projectify/templates/common/footer.html:97
+msgid "Disclosure Policy"
+msgstr ""
+
+#: projectify/templates/common/footer.html:102
+msgid "Legal"
+msgstr ""
+
+#: projectify/templates/common/footer.html:106
+msgid "Privacy Policy"
+msgstr ""
+
+#: projectify/templates/common/footer.html:110
+msgid "Terms of Service"
+msgstr ""
+
+#: projectify/templates/common/footer.html:114
+msgid "Credits"
+msgstr ""
+
+#: projectify/templates/common/footer.html:118
+msgid "Free Software"
+msgstr ""
+
+#: projectify/templates/common/footer.html:125
+msgid "Copyright 2021-2024 JWP Consulting GK"
+msgstr ""
+
+#: projectify/templates/common/footer.html:127
+msgid ""
+"The Projectify application is free software, and you are welcome to "
+"redistribute it under certain conditions; "
+msgstr ""
+
+#: projectify/templates/common/footer.html:128
+msgid "see here for details"
+msgstr ""
+
+#: projectify/templates/common/footer.html:131
+msgid ""
+"This version was built on 2025-05-05 from commit 3898a21a on branch feat/"
+"remove-fe-storefront-pages committed on 2025-05-05."
+msgstr ""
+
+#: projectify/templates/common/navigation/header/dashboard.html:18
+msgid "Log out"
+msgstr ""
+
+#: projectify/templates/common/navigation/header/dashboard.html:20
+msgid "Profile"
+msgstr ""
+
+#: projectify/templates/common/navigation/header/dashboard.html:23
+#: projectify/templates/common/navigation/header/landing.html:28
+msgid "Log in"
+msgstr ""
+
+#: projectify/templates/common/navigation/header/landing.html:19
+msgid "Help"
+msgstr ""
+
+#: projectify/templates/common/navigation/header/landing.html:25
+msgid "Continue to dashboard"
 msgstr ""
 
 #: projectify/templates/email/_greeting.txt:4
