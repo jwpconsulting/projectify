@@ -213,7 +213,7 @@ def email_address_update(request: AuthenticatedHttpRequest) -> HttpResponse:
             context=context,
             status=400,
         )
-    return redirect("users-django:profile")
+    return redirect("users-django:requested-email-address-update")
 
 
 @login_required
@@ -222,27 +222,37 @@ def email_address_update_confirm(
 ) -> HttpResponse:
     """Confirm the user's new email address by checking the token."""
     user = request.user
-    old_email = user.email
     try:
         user_confirm_email_address_update(
             user=user,
             confirmation_token=Token(token),
         )
     except ValidationError as error:
-        context = {
-            "success": False,
-            "error": str(error),
-        }
+        context = {"error": str(error)}
+        return render(
+            request,
+            "user/email_address_update_confirm.html",
+            context=context,
+            status=400,
+        )
     else:
-        context = {
-            "success": True,
-            "old_email": old_email,
-            "new_email": user.email,
-        }
+        return redirect("users-django:confirmed-email-address-update")
 
-    return render(
-        request, "user/email_address_update_confirm.html", context=context
-    )
+
+@login_required
+def email_address_update_requested(
+    request: AuthenticatedHttpRequest,
+) -> HttpResponse:
+    """Show confirmation that email address update was requested."""
+    return render(request, "user/email_address_update_requested.html")
+
+
+@login_required
+def email_address_update_confirmed(
+    request: AuthenticatedHttpRequest,
+) -> HttpResponse:
+    """Show confirmation that email address update was confirmed."""
+    return render(request, "user/email_address_update_confirmed.html")
 
 
 # Create

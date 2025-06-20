@@ -89,6 +89,6 @@ class TestUserEmailAddressUpdateEmail:
         )
         assert match, m.body
         response = user_client.get(match.group(1))
-        assert response.status_code == 200, response
+        assert response.status_code == 302, response
         user.refresh_from_db()
         assert user.email == new_email
