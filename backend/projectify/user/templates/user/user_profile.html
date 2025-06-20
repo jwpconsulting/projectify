@@ -6,7 +6,7 @@
     <div class="flex h-full flex-col items-center bg-background p-8">
         <div class="w-full max-w-lg">
             <div class="flex flex-col gap-4">
-                <h1 class="text-2xl font-bold">User account settings</h1>
+                <h1 class="text-2xl font-bold">{% trans "User account settings" %}</h1>
                 <div class="flex flex-col gap-12 rounded-lg bg-foreground p-4">
                     <form class="flex flex-col gap-10"
                           method="post"
@@ -21,7 +21,7 @@
                                          width="300"
                                          class="max-h-32"
                                          src="{{ request.user.profile_picture.url }}" />
-                                    <figcaption>Your current profile picture</figcaption>
+                                    <figcaption>{% trans "Your current profile picture" %}</figcaption>
                                 </figure>
                             {% else %}
                                 <p>{% trans "You currently have no profile picture" %}</p>
@@ -30,35 +30,35 @@
                         </div>
                         <div class="flex flex-col gap-4">
                             <div class="flex flex-col gap-1">
-                                <p class="font-bold">Your current email address</p>
+                                <p class="font-bold">{% trans "Your current email address" %}</p>
                                 <p>{{ request.user.email }}</p>
                                 <p>
                                     <a href="/user/profile/update-email-address"
-                                       class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">Update email address</a><!--<Anchor>-->
+                                       class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Update email address" %}</a><!--<Anchor>-->
                                 </p>
                             </div>
                             {{ form.preferred_name.as_field_group }}
                             <div class="flex flex-col gap-2">
                                 <button type="submit"
                                         class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                                    Save changes
+                                    {% trans "Save changes" %}
                                 </button>
                             </div>
                         </div>
                     </form>
                     <div class="flex flex-col gap-2">
-                        <h3 class="font-bold">Other settings</h3>
+                        <h3 class="font-bold">{% trans "Other settings" %}</h3>
                         <a href="/user/profile/change-password"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">Change password</a><!--<Anchor>-->
+                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Change password" %}</a><!--<Anchor>-->
                     </div>
                     <div class="flex flex-col gap-2">
-                        <h3 class="font-bold">Account deletion</h3>
+                        <h3 class="font-bold">{% trans "Account deletion" %}</h3>
                         <p>
-                            If you would like to delete your account, please send us an email using the link below. We have not implemented self-serve account deletion at this point, and would like to apologize for the inconvenience.
+                            {% trans "If you would like to delete your account, please send us an email using the link below. We have not implemented self-serve account deletion at this point, and would like to apologize for the inconvenience." %}
                         </p>
                         <p>
                             <a href="mailto:hello@projectifyapp.com?subject=Account+deletion"
-                               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">Request account deletion (opens email client)</a><!--<Anchor>-->
+                               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Request account deletion (opens email client)" %}</a><!--<Anchor>-->
                         </p>
                     </div>
                     <!--<+page>-->
