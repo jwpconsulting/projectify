@@ -183,9 +183,20 @@ def user_confirm_password_reset(
     email: str,
     token: Token,
     new_password: str,
+    new_password_confirm: Optional[str] = None,
     # TODO don't return anything here
 ) -> Optional[User]:
     """Reset a user's password given a new password and a reset token."""
+    if new_password_confirm is not None:
+        if new_password != new_password_confirm:
+            raise serializers.ValidationError(
+                {
+                    "new_password_confirm": _(
+                        "New passwords must match. Please check again"
+                    )
+                }
+            )
+
     user = user_find_by_email(email=email)
     if user is None:
         logger.warning(

@@ -9,5 +9,5 @@ You have been invited by {{ invited_by }} on {{ when }} to join the following wo
 You can sign up by clicking the following link. You will be automatically added
 to the workspace upon following the sign up process.
 {% endblocktranslate %}
-{{ FRONTEND_URL }}/user/sign-up/
+{{ FRONTEND_URL }}{% url 'users-django:sign-up' %}
 {% include "email/_greeting.txt" %}

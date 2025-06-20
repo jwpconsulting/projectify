@@ -1,15 +1,26 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{# SPDX-FileCopyrightText: 2024 JWP Consulting GK #}
-{% if field.use_fieldset %}
-    <fieldset {% if field.help_text and field.auto_id and "aria-describedby" not in field.field.widget.attrs %} aria-describedby="{{ field.auto_id }}_helptext"{% endif %}>
-        {% if field.label %}{{ field.legend_tag }}{% endif %}
-    {% else %}
-        {% if field.label %}{{ field.label_tag }}{% endif %}
-    {% endif %}
-    {% if field.help_text %}
-        <div class="helptext"
-             {% if field.auto_id %}id="{{ field.auto_id }}_helptext"{% endif %}>{{ field.help_text|safe }}</div>
-    {% endif %}
-    {{ field.errors }}
-    {{ field }}
-    {% if field.use_fieldset %}</fieldset>{% endif %}
+{# SPDX-FileCopyrightText: 2024-2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: BSD-3-Clause #}
+{# SPDX-FileCopyrightText: Django Software Foundation and individual contributors. #}
+<div class="flex flex-col items-start gap-2">
+    {# TODO add back the anchorTop to the right of the label #}
+    {% if field.use_fieldset %}
+        <fieldset {% if field.help_text and field.auto_id and "aria-describedby" not in field.field.widget.attrs %} aria-describedby="{{ field.auto_id }}_helptext"{% endif %}>
+            {% if field.label %}{{ field.legend_tag }}{% endif %}
+        {% else %}
+            {% if field.label %}{{ field.label_tag }}{% endif %}
+        {% endif %}
+        {{ field }}
+        {% if field.errors or field.help_text %}
+            <div class="flex w-full flex-row items-end {% if field.errors and not field.help_text %}justify-start{% elif field.errors and field.help_text %}justify-between{% else %}justify-end{% endif %} gap-1 px-1">
+                {% if field.errors %}<p class="text-error">{{ field.errors.as_text }}</p>{% endif %}
+                {% if field.help_text %}
+                    <span class="helptext"
+                          {% if field.auto_id %}id="{{ field.auto_id }}_helptext"{% endif %}>
+                        {{ field.help_text|safe }}
+                    </span>
+                {% endif %}
+            </div>
+        {% endif %}
+        {% if field.use_fieldset %}</fieldset>{% endif %}
+</div>

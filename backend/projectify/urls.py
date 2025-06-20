@@ -1,33 +1,27 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2021, 2022, 2023 JWP Consulting GK
+# SPDX-FileCopyrightText: 2021-2025 JWP Consulting GK
 """
-projectify URL Configuration.
+Projectify URL Configuration.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
 
-Examples
---------
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+Several URL patterns are hidden behind a feature flag.
 
-
+This module also contains a 500 exception handler.
 """
 
 from collections.abc import Sequence
-from typing import Union
+from typing import Optional, Union
 
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.urls import URLPattern, URLResolver, include, path
+from django.utils.translation import gettext_lazy as _
+
+from django_ratelimit.exceptions import Ratelimited
 
 from projectify.lib.settings import get_settings
 from projectify.workspace.consumers import ChangeConsumer
@@ -47,6 +41,10 @@ if settings.ENABLE_DJANGO_FRONTEND:
         path(
             "dashboard/",
             include("projectify.workspace.dashboard_urls"),
+        ),
+        path(
+            "user/",
+            include("projectify.user.dashboard_urls"),
         ),
         path("", include("projectify.storefront.urls")),
         path("help/", include("projectify.help.urls")),
@@ -76,6 +74,12 @@ if settings.BROWSER_RELOAD:
         *urlpatterns,
         path("__reload__/", include("django_browser_reload.urls")),
     )
+
+if settings.DEBUG_AUTH:
+    urlpatterns = [
+        *urlpatterns,
+        path("test/", include("projectify.user.testing_urls")),
+    ]
 
 if settings.SERVE_SPECTACULAR:
     try:
@@ -108,3 +112,14 @@ if settings.SERVE_SPECTACULAR:
 websocket_urlpatterns = (
     path("ws/workspace/change", ChangeConsumer.as_asgi()),
 )
+
+
+def handler403(
+    request: HttpRequest, exception: Optional[Exception] = None
+) -> HttpResponse:
+    """Handle Throttled exceptions."""
+    del request
+    print(f"{exception=}")
+    if isinstance(exception, Ratelimited):
+        return HttpResponse(_("Too many requests."), status=429)
+    return HttpResponseForbidden(_("Forbidden."))

@@ -4,12 +4,15 @@
 """User view tests."""
 
 from collections.abc import Mapping
-from typing import Any
+from typing import Any, cast
 
 from django.core.files import File
+from django.db.models.fields.files import FileDescriptor
+from django.test.client import Client
 from django.urls import reverse
 
 import pytest
+from faker import Faker
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_400_BAD_REQUEST,
@@ -17,6 +20,7 @@ from rest_framework.status import (
 )
 from rest_framework.test import APIClient
 
+from projectify.settings.base import Base
 from projectify.user.services.internal import user_make_token
 from pytest_types import DjangoAssertNumQueries
 
@@ -25,6 +29,402 @@ from ...models import User
 pytestmark = pytest.mark.django_db
 
 Headers = Mapping[str, Any]
+
+
+# Django view tests
+
+
+class TestUserProfile:
+    """Test django user_profile view."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("users-django:profile")
+
+    def test_get_form(
+        self, user: User, user_client: Client, resource_url: str
+    ) -> None:
+        """Test that the profile form is displayed correctly on GET."""
+        response = user_client.get(resource_url)
+        assert response.status_code == 200
+        assert str(user).encode() in response.content
+
+    def test_update_profile_and_preferred_name(
+        self,
+        user: User,
+        user_client: Client,
+        resource_url: str,
+        uploaded_file: File,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test updating both preferred name and profile picture."""
+        with django_assert_num_queries(12):
+            response = user_client.post(
+                resource_url,
+                {
+                    "preferred_name": "New Preferred Name",
+                    "profile_picture": uploaded_file,
+                },
+                follow=True,
+            )
+            assert response.status_code == 200
+            assert response.redirect_chain[-1][0] == reverse(
+                "users-django:profile"
+            )
+
+        user.refresh_from_db()
+        assert user.preferred_name == "New Preferred Name"
+        assert user.profile_picture is not None
+
+    def test_clear_profile_picture(
+        self,
+        user: User,
+        user_client: Client,
+        resource_url: str,
+        uploaded_file: File,
+    ) -> None:
+        """Test clearing the profile picture."""
+        user.profile_picture = cast(FileDescriptor, uploaded_file)
+        user.save()
+
+        response = user_client.post(
+            resource_url,
+            {"preferred_name": "Test User", "profile_picture-clear": "1"},
+            follow=True,
+        )
+        assert response.status_code == 200
+        assert response.redirect_chain[-1][0] == reverse(
+            "users-django:profile"
+        )
+
+        user.refresh_from_db()
+        assert not user.profile_picture
+
+
+class TestPasswordChangeDjango:
+    """Test django password_change view."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("users-django:change-password")
+
+    def test_with_correct_password(
+        self,
+        user: User,
+        password: str,
+        user_client: Client,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test changing password with a good password."""
+        with django_assert_num_queries(20):
+            response = user_client.post(
+                resource_url,
+                {
+                    "current_password": password,
+                    "new_password": "hello-world123",
+                    "new_password_confirm": "hello-world123",
+                },
+                follow=True,
+            )
+            assert response.status_code == 200, response.content
+        assert response.wsgi_request.user.is_authenticated
+        user.refresh_from_db()
+        assert user.check_password("hello-world123")
+
+    def test_with_incorrect_password(
+        self,
+        user: User,
+        user_client: Client,
+        resource_url: str,
+    ) -> None:
+        """Test changing password with an incorrect current password."""
+        response = user_client.post(
+            resource_url,
+            {
+                "current_password": "wrong-password",
+                "new_password": "new-password123",
+                "new_password_confirm": "new-password123",
+            },
+        )
+        # Should return to the form with an error
+        assert response.status_code == 400, response.content
+        # Check that the form has an error
+        assert "current_password" in response.context["form"].errors
+        # Verify password was not changed
+        user.refresh_from_db()
+        assert not user.check_password("new-password123")
+
+    def test_with_weak_new_password(
+        self,
+        user: User,
+        password: str,
+        user_client: Client,
+        resource_url: str,
+    ) -> None:
+        """Test changing password with a weak new password."""
+        response = user_client.post(
+            resource_url,
+            {
+                "current_password": password,
+                "new_password": "123456",
+                "new_password_confirm": "123456",
+            },
+        )
+        # Should return to the form with an error
+        assert response.status_code == 400, response.content
+        # Check that the form has an error for the new password field
+        assert "new_password" in response.context["form"].errors
+        # Verify password was not changed
+        user.refresh_from_db()
+        assert not user.check_password("123456")
+
+    def test_rate_limit(
+        self,
+        user: User,
+        password: str,
+        user_client: Client,
+        resource_url: str,
+        faker: Faker,
+        settings: Base,
+    ) -> None:
+        """Test that rate limiting is enforced correctly."""
+        settings.RATELIMIT_ENABLE = True
+
+        # Make 5 requests (the limit is 5/h)
+        for _ in range(5):
+            response = user_client.post(
+                resource_url,
+                {
+                    "current_password": password,
+                    "new_password": faker.password(),
+                    "new_password_confirm": faker.password(),
+                },
+                follow=True,
+            )
+            # These should succeed (even if password validation fails)
+            assert response.status_code in [200, 400]
+
+        # The 6th request should be rate limited
+        response = user_client.post(
+            resource_url,
+            {
+                "current_password": password,
+                "new_password": faker.password(),
+                "new_password_confirm": faker.password(),
+            },
+        )
+        assert response.status_code == 429
+
+
+class TestEmailAddressUpdateDjango:
+    """Test django email address update view."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("users-django:update-email-address")
+
+    def test_get_form(self, user_client: Client, resource_url: str) -> None:
+        """Test that the form is displayed correctly."""
+        response = user_client.get(resource_url)
+        assert response.status_code == 200
+        assert "form" in response.context
+
+    def test_happy_path(
+        self,
+        user: User,
+        password: str,
+        user_client: Client,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test submitting the form with valid data."""
+        old_email = user.email
+        new_email = "new-email@example.com"
+
+        with django_assert_num_queries(11):
+            response = user_client.post(
+                resource_url,
+                {"new_email": new_email, "password": password},
+                follow=True,
+            )
+            assert response.status_code == 200
+
+        assert response.redirect_chain[-1][0] == reverse(
+            "users-django:requested-email-address-update"
+        )
+
+        # Verify that this doesn't update the email, yet
+        user.refresh_from_db()
+        assert user.email == old_email
+        assert user.unconfirmed_email == new_email
+
+    def test_with_incorrect_password(
+        self,
+        user: User,
+        user_client: Client,
+        resource_url: str,
+    ) -> None:
+        """Test submitting the form with an incorrect password."""
+        old_email = user.email
+        new_email = "new-email@example.com"
+
+        response = user_client.post(
+            resource_url,
+            {
+                "new_email": new_email,
+                "password": "wrong-password",
+            },
+        )
+
+        # Should return to the form with an error
+        assert response.status_code == 400
+        # Check that the form has an error for the password field
+        assert "password" in response.context["form"].errors
+
+        # Verify email was not changed
+        user.refresh_from_db()
+        assert user.email == old_email
+
+    def test_rate_limit(
+        self,
+        user: User,
+        password: str,
+        user_client: Client,
+        resource_url: str,
+        faker: Faker,
+        settings: Base,
+    ) -> None:
+        """Test that rate limiting is enforced correctly."""
+        settings.RATELIMIT_ENABLE = True
+
+        # Make 5 requests (the limit is 5/h)
+        for _ in range(5):
+            response = user_client.post(
+                resource_url,
+                {"new_email": faker.email(), "password": password},
+                follow=True,
+            )
+            assert response.status_code == 200
+
+        # The 6th request should be rate limited
+        response = user_client.post(
+            resource_url,
+            {"new_email": faker.email(), "password": password},
+        )
+        assert response.status_code == 429
+        assert user.unconfirmed_email is None
+
+    def test_with_invalid_email(
+        self,
+        user: User,
+        password: str,
+        user_client: Client,
+        resource_url: str,
+    ) -> None:
+        """Test submitting the form with an invalid email."""
+        old_email = user.email
+
+        response = user_client.post(
+            resource_url,
+            {
+                "new_email": "not-an-email",
+                "password": password,
+            },
+        )
+
+        # Should return to the form with an error
+        assert response.status_code == 400
+        # Check that the form has an error for the email field
+        assert "new_email" in response.context["form"].errors
+
+        # Verify email was not changed
+        user.refresh_from_db()
+        assert user.email == old_email
+
+
+class TestEmailAddressUpdateConfirm:
+    """Test email_address_update_confirm view."""
+
+    def test_valid_token(
+        self,
+        user: User,
+        user_client: Client,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test confirming email with a valid token."""
+        user.unconfirmed_email = "new-email@example.com"
+        user.save()
+
+        resource_url = reverse(
+            "users-django:confirm-email-address-update",
+            args=(user_make_token(user=user, kind="update_email_address"),),
+        )
+
+        with django_assert_num_queries(12):
+            response = user_client.get(resource_url, follow=True)
+            assert response.status_code == 200
+
+        assert response.redirect_chain[-1][0] == reverse(
+            "users-django:confirmed-email-address-update"
+        )
+
+        user.refresh_from_db()
+        assert user.email == "new-email@example.com"
+
+    def test_invalid_token(self, user: User, user_client: Client) -> None:
+        """Test confirming with an invalid token."""
+        old_email = user.email
+        user.unconfirmed_email = "new-email@example.com"
+        user.save()
+
+        resource_url = reverse(
+            "users-django:confirm-email-address-update",
+            args=("invalid-token-123",),
+        )
+
+        response = user_client.get(resource_url)
+        assert response.status_code == 400
+
+        user.refresh_from_db()
+        assert user.email == old_email
+        assert user.unconfirmed_email == "new-email@example.com"
+
+    def test_no_unconfirmed_email(
+        self, user: User, user_client: Client
+    ) -> None:
+        """Test what happens when no unconfirmed email is set."""
+        old_email = user.email
+
+        resource_url = reverse(
+            "users-django:confirm-email-address-update",
+            args=(user_make_token(user=user, kind="update_email_address"),),
+        )
+
+        response = user_client.get(resource_url)
+        assert response.status_code == 400
+
+        # Verify the email was not changed
+        user.refresh_from_db()
+        assert user.email == old_email
+
+
+class TestEmailAddressUpdateRequested:
+    """Test email_address_update_requested view."""
+
+    # TODO
+
+
+class TestEmailAddressUpdateConfirmed:
+    """Test email_address_update_confirmed view."""
+
+    # TODO
+
+
+# DRF View tests
 
 
 # Create (not relevant)
@@ -237,8 +637,7 @@ class TestChangePassword:
                 },
             )
             assert response.status_code == 204, response.data
-        # Assert that we stay logged in, i.e., sessionid still in cookies
-        assert "sessionid" in response.cookies
+        assert response.wsgi_request.user.is_authenticated
         user.refresh_from_db()
         assert user.check_password("hello-world123")
 
