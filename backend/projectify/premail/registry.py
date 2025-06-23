@@ -28,9 +28,11 @@ def add_members(emails: object) -> None:
             registry[name] = obj
 
 
-for app in apps.app_configs:
-    try:
-        emails = importlib.import_module(f"projectify.{app}.emails")
-    except ModuleNotFoundError:
-        continue
-    add_members(emails)
+def populate_registry() -> None:
+    """Populate the registry."""
+    for app in apps.app_configs:
+        try:
+            emails = importlib.import_module(f"projectify.{app}.emails")
+        except ModuleNotFoundError:
+            continue
+        add_members(emails)

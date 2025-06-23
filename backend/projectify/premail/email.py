@@ -13,8 +13,6 @@ from django.utils.safestring import SafeText, mark_safe
 from projectify.context_processors import frontend_url
 from projectify.user.models.user import User
 
-from .tasks import send_mail
-
 Context = dict[str, Any]
 
 T = TypeVar("T")
@@ -73,6 +71,9 @@ class TemplateEmail(Generic[T]):
 
     def send(self) -> None:
         """Send email to obj."""
+        # Put import here to avoid Django populate() reentrancy problem
+        from .tasks import send_mail
+
         subject = self.render_subject()
         body = self.render_body()
         if settings.EMAIL_EAGER:
