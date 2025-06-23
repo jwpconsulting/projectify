@@ -1,0 +1,14 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "user_profile_base.html" %}
+{% load i18n %}
+{% block user_profile_content %}
+    <h1 class="text-center text-2xl font-bold">{% trans "Email address update requested" %}</h1>
+    <div class="flex flex-col gap-4">
+        <p>
+            {% trans "We will send an email with to your new email address containing a link that you can click to confirm your new email address. Please follow the instructions in the email." %}
+        </p>
+        <a href="{% url "users-django:profile" %}"
+           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Go back to profile" %}</a>
+    </div>
+{% endblock user_profile_content %}

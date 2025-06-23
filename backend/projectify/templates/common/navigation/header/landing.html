@@ -24,7 +24,7 @@
             <a href="{% url "dashboard:dashboard" %}"
                class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Continue to dashboard" %}</a>
         {% else %}
-            <a href="{% url "user:users-django:log-in" %}"
+            <a href="{% url "users-django:log-in" %}"
                class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Log in" %}</a>
         </div>
     {% endif %}

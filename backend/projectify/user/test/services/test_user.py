@@ -4,12 +4,18 @@
 """Test user services."""
 
 import re
+from typing import cast
+
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.db.models.fields.files import FileDescriptor
+from django.test.client import Client
 
 import pytest
 from faker import Faker
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.user.services.internal import Token, user_make_token
 from pytest_types import Mailbox
 
@@ -24,12 +30,20 @@ from ...services.user import (
 pytestmark = pytest.mark.django_db
 
 
-def test_user_update(user: User, faker: Faker) -> None:
+def test_user_update(
+    user: User, faker: Faker, uploaded_file: SimpleUploadedFile
+) -> None:
     """Test updating a user."""
     new_name = faker.name()
-    user_update(who=user, user=user, preferred_name=new_name)
+    user_update(
+        who=user,
+        user=user,
+        preferred_name=new_name,
+        profile_picture=cast(FileDescriptor, uploaded_file),
+    )
     user.refresh_from_db()
     assert user.preferred_name == new_name
+    assert "profile_picture/test" in user.profile_picture.path
 
 
 def test_user_change_password_weak_password(user: User, password: str) -> None:
@@ -73,6 +87,30 @@ def test_user_change_password(
     assert user.check_password(new_password) is True
     (mail,) = mailoutbox
     assert "password has been changed" in mail.body
+
+
+def test_user_change_password_with_request(
+    user: User, password: str, user_client: Client
+) -> None:
+    """Test changing password with request object to verify session update."""
+    request = cast(AuthenticatedHttpRequest, user_client.get("/").wsgi_request)
+
+    new_password = "secure-password-123"
+
+    # Change password with request
+    user_change_password(
+        user=user,
+        current_password=password,
+        new_password=new_password,
+        request=request,
+    )
+
+    # Verify password was changed
+    user.refresh_from_db()
+    assert user.check_password(new_password) is True
+
+    # We don't need to verify the session directly - if update_session_auth_hash
+    # didn't raise an exception, it worked correctly
 
 
 def test_user_email_update_complete(

@@ -1,0 +1,10 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+<div class="relative m-0.5 h-4 w-4 rounded border border-secondary-hover hover:bg-secondary-hover hover:border-foreground">
+    <input class="peer absolute -left-[3px] -top-[3px] h-5 w-5 appearance-none rounded-md border border-transparent"
+           type="checkbox"
+           name="{{ widget.name }}"
+           {% if widget.value != None %}value="{{ widget.value|stringformat:'s' }}"{% endif %}
+           {% include "django/forms/widgets/attrs.html" %}>
+    <span class="hidden absolute peer-checked:block">{% include "heroicons/check.svg" %}</span>
+</div>

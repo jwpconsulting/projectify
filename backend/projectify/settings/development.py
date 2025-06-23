@@ -70,6 +70,8 @@ class Development(SpectacularSettings, Base):
     # Debug
     DEBUG = True
     DEBUG_TOOLBAR = True
+    DEBUG_AUTH = True
+
     ALLOWED_HOSTS = os.getenv(
         "ALLOWED_HOSTS", ".localhost,127.0.0.1,[::1]"
     ).split(",")

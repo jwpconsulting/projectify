@@ -1,0 +1,30 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{% extends "storefront_base.html" %}
+{% block storefront_content %}
+    <div class="prose">
+        <h1>Email Address Update Confirmation Test Page</h1>
+        <h2>Test Data</h2>
+        <ul>
+            <li>User Email: {{ user.email }}</li>
+            <li>Old Email: {{ old_email }}</li>
+            <li>New Email: {{ new_email }}</li>
+            <li>Valid Token: {{ valid_token }}</li>
+            <li>Invalid Token: {{ invalid_token }}</li>
+        </ul>
+        <h2>Test Scenarios</h2>
+        <h3>Valid token</h3>
+        <p>
+            This should successfully confirm the email address update.
+            <a href="{{ valid_url }}">Test valid token</a>
+        </p>
+        <h3>Invalid token</h3>
+        <p>
+            This should show an invalid token error.
+            <a href="{{ invalid_url }}">Test invalid token</a>
+        </p>
+        <h3>Current User Status</h3>
+        <p>User: {{ user.email }}</p>
+        <p>Unconfirmed Email: {{ user.unconfirmed_email }}</p>
+    </div>
+{% endblock %}

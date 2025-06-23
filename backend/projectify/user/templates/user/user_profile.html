@@ -1,0 +1,60 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "user_profile_base.html" %}
+{% load i18n %}
+{% block user_profile_content %}
+    <form class="flex flex-col gap-10"
+          method="post"
+          enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="flex flex-col gap-4">
+            <label class="font-bold" for="{{ form.profile_picture.id_for_label }}">{{ form.profile_picture.label }}</label>
+            {% if request.user.profile_picture %}
+                <figure class="flex flex-col items-center gap-7">
+                    <img alt="Your profile picture"
+                         height="300"
+                         width="300"
+                         class="max-h-32"
+                         src="{{ request.user.profile_picture.url }}" />
+                    <figcaption>{% trans "Your current profile picture" %}</figcaption>
+                </figure>
+            {% else %}
+                <p>{% trans "You currently have no profile picture" %}</p>
+            {% endif %}
+            <div>{{ form.profile_picture }}</div>
+        </div>
+        <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-1">
+                <p class="font-bold">{% trans "Your current email address" %}</p>
+                <p>{{ request.user.email }}</p>
+                <p>
+                    <a href="{% url 'users-django:update-email-address' %}"
+                       class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Update email address" %}</a><!--<Anchor>-->
+                </p>
+            </div>
+            {{ form.preferred_name.as_field_group }}
+            <div class="flex flex-col gap-2">
+                <button type="submit"
+                        class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
+                    {% trans "Save changes" %}
+                </button>
+            </div>
+        </div>
+    </form>
+    <div class="flex flex-col gap-2">
+        <h3 class="font-bold">{% trans "Other settings" %}</h3>
+        <a href="{% url 'users-django:change-password' %}"
+           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Change password" %}</a><!--<Anchor>-->
+    </div>
+    <div class="flex flex-col gap-2">
+        <h3 class="font-bold">{% trans "Account deletion" %}</h3>
+        <p>
+            {% trans "If you would like to delete your account, please send us an email using the link below. We have not implemented self-serve account deletion at this point, and would like to apologize for the inconvenience." %}
+        </p>
+        <p>
+            <a href="mailto:hello@projectifyapp.com?subject=Account+deletion"
+               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Request account deletion (opens email client)" %}</a><!--<Anchor>-->
+        </p>
+    </div>
+    <!--<+page>-->
+{% endblock user_profile_content %}
