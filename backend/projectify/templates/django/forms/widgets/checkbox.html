@@ -6,14 +6,5 @@
            name="{{ widget.name }}"
            {% if widget.value != None %}value="{{ widget.value|stringformat:'s' }}"{% endif %}
            {% include "django/forms/widgets/attrs.html" %}>
-    <svg fill="none"
-         viewBox="0 0 24 24"
-         stroke="currentColor"
-         aria-hidden="true"
-         xmlns="http://www.w3.org/2000/svg"
-         width="100%"
-         height="100%"
-         class="hidden absolute peer-checked:block">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-    </svg>
+    <span class="hidden absolute peer-checked:block">{% include "heroicons/check.svg" %}</span>
 </div>
