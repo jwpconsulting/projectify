@@ -1,39 +1,30 @@
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "storefront_base.html" %}
+{% extends "user_profile_base.html" %}
 {% load i18n %}
-{% block storefront_content %}
-    <div class="flex h-full flex-col items-center bg-background p-8">
-        <div class="w-full max-w-lg">
-            <div class="flex flex-col gap-4">
-                <h1 class="text-2xl font-bold">{% translate "User account settings" %}</h1>
-                <div class="flex flex-col gap-12 rounded-lg bg-foreground p-4">
-                    <h1 class="text-center text-2xl font-bold">{% translate "Confirming new email address" %}</h1>
-                    <div class="flex flex-col gap-4">
-                        <p class="text-error">{% translate "An unknown error has occurred and your email address could not be updated." %}</p>
-                        <p>
-                            {% blocktranslate with error=error %}The confirmation token provided in the URL you used to open this page is not valid. This means that you might have already changed your email address, or that you have requested for your email address to be changed multiple times. Please try updating your email address one more time by following the link below. The error was: '{{ error }}'.{% endblocktranslate %}
-                        </p>
-                        <div class="mt-4">
-                            <h2 class="font-bold">{% translate "What to do" %}</h2>
-                            <ul class="list-disc pl-5 mt-2">
-                                <li>
-                                    <a href="{% url "users-django:update-email-address" %}"
-                                       class="text-blue-600 hover:underline">{% translate "Try updating your email address one more time" %}</a>
-                                </li>
-                                <li>
-                                    <a href="mailto:hello@projectifyapp.com?subject=Update+email+address"
-                                       class="text-blue-600 hover:underline">{% translate "Contact us via email" %}</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="flex flex-row gap-2">
-                        <a href="{% url "users-django:profile" %}"
-                           class="w-full text-secondary-content hover:bg-secondary-hover hover:text-secondary-content-hover active:bg-secondary-pressed active:text-secondary-content-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content"> {% translate "Go back to profile" %} </a>
-                    </div>
-                </div>
-            </div>
+{% block user_profile_content %}
+    <h1 class="text-center text-2xl font-bold">{% translate "Confirming new email address" %}</h1>
+    <div class="flex flex-col gap-4">
+        <p class="text-error">{% translate "An unknown error has occurred and your email address could not be updated." %}</p>
+        <p>
+            {% blocktranslate with error=error %}The confirmation token provided in the URL you used to open this page is not valid. This means that you might have already changed your email address, or that you have requested for your email address to be changed multiple times. Please try updating your email address one more time by following the link below. The error was: '{{ error }}'.{% endblocktranslate %}
+        </p>
+        <div class="mt-4">
+            <h2 class="font-bold">{% translate "What to do" %}</h2>
+            <ul class="list-disc pl-5 mt-2">
+                <li>
+                    <a href="{% url "users-django:update-email-address" %}"
+                       class="text-blue-600 hover:underline">{% translate "Try updating your email address one more time" %}</a>
+                </li>
+                <li>
+                    <a href="mailto:hello@projectifyapp.com?subject=Update+email+address"
+                       class="text-blue-600 hover:underline">{% translate "Contact us via email" %}</a>
+                </li>
+            </ul>
         </div>
     </div>
-{% endblock storefront_content %}
+    <div class="flex flex-row gap-2">
+        <a href="{% url "users-django:profile" %}"
+           class="w-full text-secondary-content hover:bg-secondary-hover hover:text-secondary-content-hover active:bg-secondary-pressed active:text-secondary-content-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content"> {% translate "Go back to profile" %} </a>
+    </div>
+{% endblock user_profile_content %}
