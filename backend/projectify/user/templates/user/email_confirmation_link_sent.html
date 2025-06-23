@@ -1,22 +1,18 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
-{% extends "storefront_base.html" %}
+{% extends "user_base.html" %}
 {% load i18n %}
 {% load static %}
-{% block storefront_content %}
-    <div class="flex grow flex-col items-center bg-background p-8 lg:p-16">
-        <div class="w-full max-w-2xl rounded-lg bg-foreground lg:w-1/2">
-            <div class="flex flex-col gap-12 p-3">
-                <h1 class="text-center text-4xl font-bold">{% trans "Email confirmation link sent" %}</h1>
-                <div class="flex flex-col gap-6 items-center">
-                    <img src="{% static "user/sent-email-confirmation-link.svg" %}" alt="{% trans "Happy bird mascot indicating that a email confirm email is on its way to you" %}" width="272" height="350" />
-                    <p class="text-center">{% trans "Please go to your email and follow the instructions to activate your account" %}</p>
-                    <a href="{% url "storefront:landing" %}"
-                       class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                        {% trans "Back to homepage" %}
-                    </a>
-                </div>
-            </div>
+{% block user_content %}
+    <div class="flex flex-col gap-12 p-3">
+        <h1 class="text-center text-4xl font-bold">{% trans "Email confirmation link sent" %}</h1>
+        <div class="flex flex-col gap-6 items-center">
+            <img src="{% static "user/sent-email-confirmation-link.svg" %}" alt="{% trans "Happy bird mascot indicating that a email confirm email is on its way to you" %}" width="272" height="350" />
+            <p class="text-center">{% trans "Please go to your email and follow the instructions to activate your account" %}</p>
+            <a href="{% url "storefront:landing" %}"
+               class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
+                {% trans "Back to homepage" %}
+            </a>
         </div>
     </div>
 {% endblock %}
