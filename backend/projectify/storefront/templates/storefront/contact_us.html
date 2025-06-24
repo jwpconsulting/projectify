@@ -3,6 +3,7 @@
 {% extends "storefront_base.html" %}
 {% load markdownify %}
 {% load i18n %}
+{% load static %}
 {% block storefront_content %}
     <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
         {% trans "Contact" as title %}
@@ -14,8 +15,7 @@
                 </main>
                 <div class="hidden shrink basis-1/4 md:block">
                     <picture>
-                        {# TODO: Add proper static assets #}
-                        <img src="{{ FRONTEND_URL }}/src/routes/(storefront)/contact-us/illustration.png"
+                        <img src="{% static "contact-us.png" %}"
                              alt="{% trans "An illustration of a phone booth" %}"
                              width="818"
                              height="1000">
