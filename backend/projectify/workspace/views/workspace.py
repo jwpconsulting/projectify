@@ -5,14 +5,16 @@
 
 from uuid import UUID
 
+from django import forms
 from django.http import Http404, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
+from django.views.decorators.http import require_http_methods
 
 from django_ratelimit.decorators import ratelimit
 from rest_framework import parsers, serializers, views
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import (
@@ -22,6 +24,7 @@ from rest_framework.status import (
 )
 
 from projectify.lib.error_schema import DeriveSchema
+from projectify.lib.forms import populate_form_with_drf_errors
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
@@ -72,6 +75,118 @@ def workspace_view(
     )
     context = {"workspace": workspace, "projects": projects}
     return render(request, "workspace/workspace_detail.html", context)
+
+
+class WorkspaceSettingsForm(forms.ModelForm):
+    """Django form for workspace settings."""
+
+    class Meta:
+        """Meta."""
+
+        fields = "title", "description", "picture"
+        model = Workspace
+
+
+@require_http_methods(["GET", "POST"])
+@platform_view
+def workspace_settings_general(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Show general workspace settings."""
+    workspace = workspace_find_by_workspace_uuid(
+        who=request.user, workspace_uuid=workspace_uuid
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+    if request.method == "GET":
+        form = WorkspaceSettingsForm(instance=workspace)
+        context = {"workspace": workspace, "form": form}
+        return render(
+            request,
+            "workspace/workspace_settings_general.html",
+            context=context,
+        )
+    form = WorkspaceSettingsForm(
+        instance=workspace, data=request.POST, files=request.FILES
+    )
+    if not form.is_valid():
+        context = {"workspace": workspace, "form": form}
+        return render(
+            request,
+            "workspace/workspace_settings_general.html",
+            context=context,
+            status=400,
+        )
+    data = form.cleaned_data
+    try:
+        workspace_update(
+            workspace=workspace,
+            title=data["title"],
+            description=data.get("description"),
+            who=request.user,
+            picture=data["picture"],
+        )
+    except ValidationError as error:
+        populate_form_with_drf_errors(form, error)
+        context = {"form": form}
+        return render(
+            request, "user/sign_up.html", context=context, status=400
+        )
+    return redirect(
+        "dashboard:workspaces:settings",
+        workspace.uuid,
+    )
+
+
+@require_http_methods(["GET", "POST"])
+@platform_view
+def workspace_settings_team_members(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Show team member settings."""
+    workspace = workspace_find_by_workspace_uuid(
+        who=request.user, workspace_uuid=workspace_uuid
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+    context = {"workspace": workspace}
+    return render(
+        request,
+        "workspace/workspace_settings_team_members.html",
+        context=context,
+    )
+
+
+@platform_view
+def workspace_settings_billing(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Show workspace billing settings."""
+    workspace = workspace_find_by_workspace_uuid(
+        who=request.user, workspace_uuid=workspace_uuid
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+    context = {"workspace": workspace}
+    return render(
+        request, "workspace/workspace_settings_billing.html", context=context
+    )
+
+
+@platform_view
+def workspace_settings_quota(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Show workspace quota."""
+    workspace = workspace_find_by_workspace_uuid(
+        who=request.user, workspace_uuid=workspace_uuid
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+    context = {"workspace": workspace}
+    return render(
+        request, "workspace/workspace_settings_quota.html", context=context
+    )
 
 
 # Create

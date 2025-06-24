@@ -4,9 +4,12 @@
 """Test workspace CRUD views."""
 
 import unittest.mock
+from typing import cast
 
 from django.contrib.auth.models import AbstractBaseUser, AbstractUser
 from django.core.files import File
+from django.db.models.fields.files import FileDescriptor
+from django.test.client import Client
 from django.urls import reverse
 
 import pytest
@@ -26,6 +29,93 @@ from ...models.team_member import TeamMember
 from ...models.workspace import Workspace
 
 pytestmark = pytest.mark.django_db
+
+
+# Django view tests
+
+
+class TestWorkspaceSettings:
+    """Test django workspace settings view."""
+
+    @pytest.fixture
+    def resource_url(self, workspace: Workspace) -> str:
+        """Return URL to this view."""
+        return reverse("dashboard:workspaces:settings", args=(workspace.uuid,))
+
+    def test_get_form(
+        self,
+        user: User,
+        user_client: Client,
+        resource_url: str,
+        workspace: Workspace,
+        team_member: TeamMember,
+    ) -> None:
+        """Test GETting the page."""
+        response = user_client.get(resource_url)
+        assert response.status_code == 200
+        assert workspace.title.encode() in response.content
+
+    def test_update_workspace_and_title(
+        self,
+        user_client: Client,
+        resource_url: str,
+        uploaded_file: File,
+        workspace: Workspace,
+        team_member: TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test updating both title and workspace picture."""
+        workspace.picture = cast(FileDescriptor, None)
+        workspace.save()
+        assert not workspace.picture
+        with django_assert_num_queries(11):
+            response = user_client.post(
+                resource_url,
+                {
+                    "title": "New Workspace Title",
+                    "description": "New workspace description",
+                    "picture": uploaded_file,
+                },
+                follow=True,
+            )
+            assert response.status_code == 200
+            assert response.redirect_chain[-1][0] == reverse(
+                "dashboard:workspaces:settings", args=(workspace.uuid,)
+            )
+
+        workspace.refresh_from_db()
+        assert workspace.title == "New Workspace Title"
+        assert workspace.description == "New workspace description"
+        assert workspace.picture.url
+
+    def test_clear_workspace_picture(
+        self,
+        user_client: Client,
+        resource_url: str,
+        uploaded_file: File,
+        workspace: Workspace,
+    ) -> None:
+        """Test clearing the workspace picture."""
+        workspace.picture = cast(FileDescriptor, uploaded_file)
+        workspace.save()
+        assert workspace.picture
+
+        response = user_client.post(
+            resource_url,
+            {
+                "title": workspace.title,
+                "description": workspace.description,
+                "picture-clear": "1",
+            },
+            follow=True,
+        )
+        assert response.status_code == 200
+        assert response.redirect_chain[-1][0] == reverse(
+            "dashboard:workspaces:settings", args=(workspace.uuid,)
+        )
+
+        workspace.refresh_from_db()
+        assert not workspace.picture
 
 
 # Create

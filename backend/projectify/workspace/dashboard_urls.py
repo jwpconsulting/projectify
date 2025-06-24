@@ -16,6 +16,7 @@ from projectify.workspace.views.task import (
 )
 from projectify.workspace.views.workspace import (
     workspace_list_view,
+    workspace_settings_general,
     workspace_view,
 )
 
@@ -31,6 +32,27 @@ workspace_patterns = (
         "<uuid:workspace_uuid>",
         workspace_view,
         name="detail",
+    ),
+    # Settings
+    path(
+        "<uuid:workspace_uuid>/settings",
+        workspace_settings_general,
+        name="settings",
+    ),
+    path(
+        "<uuid:workspace_uuid>/settings/team-members",
+        workspace_settings_general,
+        name="team-members",
+    ),
+    path(
+        "<uuid:workspace_uuid>/settings/billing",
+        workspace_settings_general,
+        name="billing",
+    ),
+    path(
+        "<uuid:workspace_uuid>/settings/quota",
+        workspace_settings_general,
+        name="quota",
     ),
 )
 project_patterns = (
