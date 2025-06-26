@@ -57,11 +57,7 @@ task_patterns = (
     ),
 )
 urlpatterns = (
-    path(
-        "",
-        redirect_to_dashboard,
-        name="dashboard",
-    ),
+    path("", redirect_to_dashboard, name="dashboard"),
     # Workspace
     path(
         "workspace/",

@@ -63,13 +63,13 @@ def workspace_view(
     workspace = workspace_find_by_workspace_uuid(
         who=request.user, workspace_uuid=workspace_uuid
     )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
     projects = project_find_by_workspace_uuid(
         who=request.user,
         workspace_uuid=workspace_uuid,
         archived=False,
     )
-    if workspace is None:
-        raise Http404(_("Workspace not found"))
     context = {"workspace": workspace, "projects": projects}
     return render(request, "workspace/workspace_detail.html", context)
 

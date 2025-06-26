@@ -25,9 +25,10 @@ from ...models.project import Project
 from ...models.team_member import TeamMember
 from ...models.workspace import Workspace
 
+pytestmark = pytest.mark.django_db
+
 
 # Create
-@pytest.mark.django_db
 class TestWorkspaceCreate:
     """Test workspace create."""
 
@@ -68,7 +69,6 @@ class TestWorkspaceCreate:
 
 
 # Read
-@pytest.mark.django_db
 class TestUserWorkspaces:
     """Test Workspace list."""
 
@@ -98,7 +98,6 @@ class TestUserWorkspaces:
         ]
 
 
-@pytest.mark.django_db
 class TestWorkspaceReadUpdate:
     """Test WorkspaceReadUpdate."""
 
@@ -267,7 +266,6 @@ class TestWorkspaceReadUpdate:
 
 
 # RPC
-@pytest.mark.django_db
 class TestWorkspacePictureUploadView:
     """Test WorkspacePictureUploadView."""
 
@@ -329,7 +327,6 @@ class TestWorkspacePictureUploadView:
         assert not workspace.picture
 
 
-@pytest.mark.django_db
 class TestInviteUserToWorkspace:
     """Test two views, InviteUserToWorkspace and UninviteUserFromWorkspace."""
 
