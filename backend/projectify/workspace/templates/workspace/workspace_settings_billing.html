@@ -1,0 +1,93 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{% extends "workspace/workspace_settings_base.html" %}
+{% load i18n %}
+{% load projectify %}
+{% block workspace_settings_content %}
+    <section class="flex flex-col gap-12 px-4 py-6">
+        {% if workspace.customer.subscription_status == "ACTIVE" %}
+            <section>
+                <p class="font-bold">{% trans "Subscription status: Paid workspace" %}</p>
+                <p>
+                    {% trans "You have a paid workspace. You can review your billing details and seat count using the 'Edit billing details' button below." %}
+                </p>
+            </section>
+            <section>
+                <p class="font-bold">
+                    {% blocktrans with price=price_per_seat %}Monthly total (${{ price }} per seat/month):{% endblocktrans %}
+                </p>
+                <p>{% blocktrans with total=monthly_total %}&dollar;{{ total }}{% endblocktrans %}</p>
+            </section>
+            <section>
+                <p class="font-bold">{% trans "Number of seats:" %}</p>
+                <p>
+                    {% blocktrans with total_seats=workspace.customer.seats remaining_seats=seats_remaining %}{{ total_seats }} seats in total, {{ remaining_seats }} seats remaining{% endblocktrans %}
+                </p>
+            </section>
+            <button type="button"
+                    class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
+                {% trans "Edit billing details" %}
+            </button>
+        {% elif workspace.customer.subscription_status == "UNPAID" or workspace.customer.subscription_status == "CANCELLED" %}
+            <section>
+                <p class="font-bold">
+                    {% if workspace.customer.subscription_status == "UNPAID" %}
+                        {% trans "Trial mode" %}
+                    {% else %}
+                        {% trans "Subscription cancelled" %}
+                    {% endif %}
+                </p>
+                <p>
+                    {% if workspace.customer.subscription_status == "UNPAID" %}
+                        {% trans "You are currently using this workspace in trial mode. To create a subscription and use all available features for this workspace, please continue using the checkout below. Alternatively, you can enter a coupon code further below." %}
+                    {% else %}
+                        {% trans "Your subscription has been cancelled. If you want to reactivate your subscription, please resubscribe using the checkout form below." %}
+                    {% endif %}
+                </p>
+            </section>
+            <form method="post" class="flex flex-col gap-4">
+                {% csrf_token %}
+                <header class="flex flex-col gap-1">
+                    <h2 class="font-bold">{% trans "Checkout" %}</h2>
+                    <p>
+                        {% trans "Select the amount of workspace seats. For each team member that is invited or added, a seat is used up." %}
+                    </p>
+                </header>
+                {{ form.seats.as_field_group }}
+                <button type="submit"
+                        name="action"
+                        value="checkout"
+                        class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
+                    {% trans "Go to checkout" %}
+                </button>
+            </form>
+            <form method="post" class="flex flex-col gap-4">
+                {% csrf_token %}
+                <header class="flex flex-col gap-1">
+                    <h2 class="font-bold">{% trans "Use a coupon code" %}</h2>
+                    <p>
+                        {% trans "If someone has given you a coupon code, you can use it here to upgrade your workspace. Please refer to the details given to you for more information on what features will be unlocked for your workspace. If you have any questions, please ask the person who gave you the coupon code or contact us." %}
+                    </p>
+                </header>
+                {{ form.code.as_field_group }}
+                <button type="submit"
+                        name="action"
+                        value="redeem_coupon"
+                        class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
+                    {% trans "Redeem coupon code" %}
+                </button>
+            </form>
+        {% elif workspace.customer.subscription_status == "CUSTOM" %}
+            <section class="flex flex-col gap-2">
+                <p class="font-bold">{% trans "Custom subscription active" %}</p>
+                <p>
+                    {% trans "You have activated a custom subscription for this workspace using a coupon code. If you have any questions about your subscription or if you would like to make changes, please contact us." %}
+                </p>
+            </section>
+        {% endif %}
+    </section>
+    <section class="flex flex-col gap-2 p-4">
+        <div class="text-base font-bold">{% trans "Contact us if you have any questions regarding billing." %}</div>
+        {% anchor href="mailto:hello@projectifyapp.com" label="hello@projectifyapp.com" %}
+    </section>
+{% endblock workspace_settings_content %}
