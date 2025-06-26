@@ -3,10 +3,11 @@
 # SPDX-FileCopyrightText: 2023, 2024 JWP Consulting GK
 """Workspace CRUD views."""
 
+from typing import Any
 from uuid import UUID
 
 from django import forms
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
@@ -23,6 +24,10 @@ from rest_framework.status import (
     HTTP_204_NO_CONTENT,
 )
 
+from projectify.corporate.services.coupon import coupon_redeem
+from projectify.corporate.services.customer import (
+    customer_create_stripe_checkout_session,
+)
 from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.forms import populate_form_with_drf_errors
 from projectify.lib.schema import extend_schema
@@ -157,6 +162,48 @@ def workspace_settings_team_members(
     )
 
 
+class WorkspaceBillingForm(forms.Form):
+    """Django form for workspace billing actions."""
+
+    action = forms.CharField(widget=forms.HiddenInput)
+    seats = forms.IntegerField(
+        min_value=1,
+        max_value=100,
+        required=False,
+        widget=forms.NumberInput(
+            attrs={"placeholder": _("Number of workspace seats")}
+        ),
+        label=_("Workspace seats"),
+    )
+    code = forms.CharField(
+        max_length=100,
+        required=False,
+        widget=forms.TextInput(attrs={"placeholder": _("Enter coupon code")}),
+        label=_("Coupon code"),
+    )
+
+    def clean(self) -> dict[str, Any]:
+        """Make sure the right values are passed based on the action."""
+        data = self.cleaned_data
+        match data["action"]:
+            case "redeem_coupon":
+                if not data["code"]:
+                    self.add_error("code", _("Must enter coupon code"))
+            case "checkout":
+                if not data["seats"]:
+                    self.add_error("seats", _("Must enter number of seats"))
+
+            case _:
+                # XXX this error is not visible
+                self.add_error(None, _("Invalid action selected"))
+        return super().clean()
+
+
+# XXX REFACTOR ME
+PRICE_PER_SEAT = 8
+
+
+@require_http_methods(["GET", "POST"])
 @platform_view
 def workspace_settings_billing(
     request: AuthenticatedHttpRequest, workspace_uuid: UUID
@@ -167,10 +214,85 @@ def workspace_settings_billing(
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    context = {"workspace": workspace}
-    return render(
-        request, "workspace/workspace_settings_billing.html", context=context
-    )
+    workspace.quota = workspace_get_all_quotas(workspace)
+
+    context: dict[str, object] = {"workspace": workspace}
+
+    if request.method == "GET":
+        match workspace.customer.subscription_status:
+            case "UNPAID" | "CANCELLED":
+                form = WorkspaceBillingForm()
+                context = {**context, "form": form}
+            case "ACTIVE":
+                quota = workspace.quota.team_members_and_invites
+                seats_remaining = (quota.limit or 0) - (quota.current or 0)
+                context = {
+                    **context,
+                    "monthly_total": workspace.customer.seats * PRICE_PER_SEAT,
+                    "seats_remaining": seats_remaining,
+                    "price_per_seat": PRICE_PER_SEAT,
+                }
+            case "CUSTOM":
+                pass
+            case other:
+                raise ValueError(f"Unexpected subscription_status {other}")
+
+        return render(
+            request,
+            "workspace/workspace_settings_billing.html",
+            context=context,
+        )
+    form = WorkspaceBillingForm(request.POST)
+
+    match workspace.customer.subscription_status:
+        case "UNPAID" | "CANCELLED":
+            pass
+        case _:
+            return HttpResponseBadRequest(
+                _(
+                    "You've already activated a subscription for this workspace"
+                ),
+            )
+    context = {**context, "form": form}
+    if not form.is_valid():
+        return render(
+            request,
+            "workspace/workspace_settings_billing.html",
+            context=context,
+        )
+    data = form.cleaned_data
+    # Checkout session
+    match data["action"]:
+        case "checkout":
+            try:
+                session = customer_create_stripe_checkout_session(
+                    customer=workspace.customer,
+                    who=request.user,
+                    seats=data["seats"],
+                )
+            except ValidationError as e:
+                populate_form_with_drf_errors(form, e)
+                return render(
+                    request,
+                    "workspace/workspace_settings_billing.html",
+                    context=context,
+                )
+            return redirect(session.url)
+        case "redeem_coupon":
+            try:
+                coupon_redeem(
+                    who=request.user, code=data["code"], workspace=workspace
+                )
+            except ValidationError as e:
+                populate_form_with_drf_errors(form, e)
+                return render(
+                    request,
+                    "workspace/workspace_settings_billing.html",
+                    context=context,
+                )
+            return redirect("dashboard:workspaces:billing", workspace.uuid)
+        case _:
+            return HttpResponseBadRequest()
 
 
 @platform_view
