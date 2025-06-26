@@ -2,6 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "dashboard_base.html" %}
 {% load i18n %}
+{% load projectify %}
 {% block dashboard_content %}
     <div class="min-w-0 grow" role="presentation">
         <div class="flex h-full flex-col items-center bg-background px-0 py-8 sm:px-2">
@@ -48,8 +49,7 @@
                         <p>
                             {% trans "If you would like to delete this workspace, please send us an email using the link below. We have not implemented self-serve workspace deletion at this point, and would like to apologize for the inconvenience." %}
                         </p>
-                        <a href="mailto:hello@projectifyapp.com?subject=Workspace+deletion"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Request workspace deletion (opens email client)" %}</a><!--<Anchor>-->
+                        {% anchor href="mailto:hello@projectifyapp.com?subject=Workspace+deletion" label=_("Request workspace deletion (opens email client)") %}
                     </section>
                     <!--<+page>-->
                 </main>
