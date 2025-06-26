@@ -343,7 +343,10 @@ class TestWorkspace:
         )
 
         await database_sync_to_async(workspace_update)(
-            workspace=workspace, who=team_member.user, title="A new hope"
+            workspace=workspace,
+            who=team_member.user,
+            title="A new hope",
+            picture=None,
         )
         assert await expect_change(workspace_communicator, workspace)
         await database_sync_to_async(workspace_delete)(

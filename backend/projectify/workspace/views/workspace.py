@@ -178,6 +178,7 @@ class WorkspaceReadUpdate(views.APIView):
             title=serializer.validated_data["title"],
             description=serializer.validated_data.get("description"),
             who=self.request.user,
+            picture=None,
         )
         return Response(status=HTTP_200_OK, data=serializer.data)
 
