@@ -1,61 +1,39 @@
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "dashboard_base.html" %}
+{% extends "workspace/workspace_settings_base.html" %}
 {% load i18n %}
 {% load projectify %}
-{% block dashboard_content %}
-    <div class="min-w-0 grow" role="presentation">
-        <div class="flex h-full flex-col items-center bg-background px-0 py-8 sm:px-2">
-            <div class="flex w-full max-w-xl flex-col gap-4">
-                <h1 class="px-2 text-2xl font-bold sm:px-0">{% trans "Workspace settings" %}</h1>
-                <main class="flex w-full max-w-xl flex-col gap-10 rounded-lg bg-foreground p-4 shadow-context-menu">
-                    <div class="flex flex-row flex-wrap">
-                        <a href="{% url 'dashboard:workspaces:settings' workspace.uuid %}"
-                           class="border-b-2 p-2.5 font-bold uppercase hover:text-base-content border-base-content text-base-content">{% trans "General" %}</a>
-                        <a href="{% url 'dashboard:workspaces:team-members' workspace.uuid %}"
-                           class="border-b-2 p-2.5 font-bold uppercase hover:text-base-content border-border text-utility">{% trans "Team members" %}</a><!--<TabElement>--> <a href="{% url 'dashboard:workspaces:billing' workspace.uuid %}"
-    class="border-b-2 p-2.5 font-bold uppercase hover:text-base-content border-border text-utility">{% trans "Billing" %}</a>
-                        <a href="{% url 'dashboard:workspaces:quota' workspace.uuid %}"
-                           class="border-b-2 p-2.5 font-bold uppercase hover:text-base-content border-border text-utility">{% trans "Quota" %}</a>
-                        <div class="grow border-b-2 border-border"></div>
-                    </div>
-                    <form class="flex flex-col gap-6"
-                          method="post"
-                          enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {# TODO format errors #}
-                        {{ form.errors }}
-                        {% if workspace.picture %}
-                            <img alt="{% trans 'A picture used to identify this workspace' %}"
-                                 height="300"
-                                 width="300"
-                                 class="max-h-32"
-                                 src="{{ workspace.picture.url }}" />
-                        {% else %}
-                            <p>{% trans "No picture uploaded" %}</p>
-                        {% endif %}
-                        {{ form.picture.as_field_group }}
-                        <div class="flex flex-col gap-6">
-                            {{ form.title.as_field_group }}
-                            {{ form.description.as_field_group }}
-                            <button type="submit"
-                                    class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                                {% trans "Save" %}
-                            </button>
-                        </div>
-                    </form>
-                    <section class="flex flex-col gap-2">
-                        <h2 class="font-bold">{% trans "Workspace deletion" %}</h2>
-                        <p>
-                            {% trans "If you would like to delete this workspace, please send us an email using the link below. We have not implemented self-serve workspace deletion at this point, and would like to apologize for the inconvenience." %}
-                        </p>
-                        {% anchor href="mailto:hello@projectifyapp.com?subject=Workspace+deletion" label=_("Request workspace deletion (opens email client)") %}
-                    </section>
-                    <!--<+page>-->
-                </main>
-            </div>
-            <!--<+layout>-->
+{% block workspace_settings_content %}
+    <form class="flex flex-col gap-6"
+          method="post"
+          enctype="multipart/form-data">
+        {% csrf_token %}
+        {# TODO format errors #}
+        {{ form.errors }}
+        {% if workspace.picture %}
+            <img alt="{% trans 'A picture used to identify this workspace' %}"
+                 height="300"
+                 width="300"
+                 class="max-h-32"
+                 src="{{ workspace.picture.url }}" />
+        {% else %}
+            <p>{% trans "No picture uploaded" %}</p>
+        {% endif %}
+        {{ form.picture.as_field_group }}
+        <div class="flex flex-col gap-6">
+            {{ form.title.as_field_group }}
+            {{ form.description.as_field_group }}
+            <button type="submit"
+                    class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
+                {% trans "Save" %}
+            </button>
         </div>
-        <!--<+layout>-->
-    </div>
-{% endblock dashboard_content %}
+    </form>
+    <section class="flex flex-col gap-2">
+        <h2 class="font-bold">{% trans "Workspace deletion" %}</h2>
+        <p>
+            {% trans "If you would like to delete this workspace, please send us an email using the link below. We have not implemented self-serve workspace deletion at this point, and would like to apologize for the inconvenience." %}
+        </p>
+        {% anchor href="mailto:hello@projectifyapp.com?subject=Workspace+deletion" label=_("Request workspace deletion (opens email client)") %}
+    </section>
+{% endblock workspace_settings_content %}
