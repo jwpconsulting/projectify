@@ -11,6 +11,8 @@ from django.utils.html import format_html
 from django.utils.safestring import SafeText
 from django.utils.translation import gettext_lazy as _
 
+from projectify.user.models.user import User
+
 register = template.Library()
 
 
@@ -43,3 +45,20 @@ def anchor(href: str, label: str, external: bool = False) -> SafeText:
         label=label,
         extra=extra,
     )
+
+
+@register.simple_tag
+def user_avatar(user: User) -> SafeText:
+    """
+    Render a user avatar image.
+
+    Takes a user object as parameter.
+    """
+    if user.profile_picture:
+        return format_html(
+            '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary"><img src="{src}" alt="{alt}" height="24" width="24" class="h-full w-full overflow-x-auto rounded-full object-cover object-center"></div>',
+            src=user.profile_picture.url,
+            alt=str(user),
+        )
+    else:
+        return format_html("")
