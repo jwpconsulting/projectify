@@ -18,6 +18,7 @@ from projectify.workspace.views.workspace import (
     workspace_list_view,
     workspace_settings_billing,
     workspace_settings_general,
+    workspace_settings_quota,
     workspace_view,
 )
 
@@ -52,7 +53,7 @@ workspace_patterns = (
     ),
     path(
         "<uuid:workspace_uuid>/settings/quota",
-        workspace_settings_general,
+        workspace_settings_quota,
         name="quota",
     ),
 )

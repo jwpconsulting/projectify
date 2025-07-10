@@ -1,0 +1,36 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "workspace/workspace_settings_base.html" %}
+{% load i18n %}
+{% load projectify %}
+{% block workspace_settings_content %}
+    <section class="flex flex-col gap-2">
+        <p>
+            <strong>{% trans "Workspace status:" %}</strong> {% trans "Full workspace" %}
+        </p>
+        <p>{% trans "These are the quotas for the 'asdasd' workspace:" %}</p>
+        <table>
+            <thead>
+                <tr>
+                    <th class="text-left">{% trans "Resource" %}</th>
+                    <th class="text-right">{% trans "Current" %}</th>
+                    <th class="text-right">{% trans "Limit" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{% trans "Team members and invites" %}</td>
+                    <td class="text-right">1</td>
+                    <td class="text-right">1</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    <section class="flex flex-col gap-2">
+        <h3 class="font-bold">{% trans "Learn more about workspace quotas" %}</h3>
+        <ul class="list-inside list-disc">
+            <li>{% anchor href="/help/quota#paid" label=_("Quotas for paid workspaces") external=True %}</li>
+            <li>{% anchor href="/help/quota#trial" label=_("Quotas for trial workspaces") external=True %}</li>
+        </ul>
+    </section>
+{% endblock workspace_settings_content %}
