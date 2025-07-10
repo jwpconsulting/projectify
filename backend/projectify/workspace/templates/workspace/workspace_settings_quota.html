@@ -6,9 +6,18 @@
 {% block workspace_settings_content %}
     <section class="flex flex-col gap-2">
         <p>
-            <strong>{% trans "Workspace status:" %}</strong> {% trans "Full workspace" %}
+            <strong>{% trans "Workspace status:" %}</strong>
+            {% if workspace.quota.workspace_status == "full" %}
+                {% trans "Full workspace" %}
+            {% elif workspace.quota.workspace_status == "trial" %}
+                {% trans "Trial workspace" %}
+            {% elif workspace.quota.workspace_status == "inactive" %}
+                {% trans "Inactive workspace" %}
+            {% endif %}
         </p>
-        <p>{% trans "These are the quotas for the 'asdasd' workspace:" %}</p>
+        <p>
+            {% blocktrans with title=workspace.title %}These are the quotas for the '{{ title }}' workspace:{% endblocktrans %}
+        </p>
         <table>
             <thead>
                 <tr>
@@ -18,11 +27,25 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>{% trans "Team members and invites" %}</td>
-                    <td class="text-right">1</td>
-                    <td class="text-right">1</td>
-                </tr>
+                {% for quota_row in quota_rows %}
+                    <tr>
+                        <td>{{ quota_row.label }}</td>
+                        <td class="text-right">
+                            {% if quota_row.quota.current == None %}
+                                {% trans "n/a" %}
+                            {% else %}
+                                {{ quota_row.quota.current }}
+                            {% endif %}
+                        </td>
+                        <td class="text-right">
+                            {% if quota_row.quota.limit == None %}
+                                {% trans "Unlimited" %}
+                            {% else %}
+                                {{ quota_row.quota.limit }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </section>
