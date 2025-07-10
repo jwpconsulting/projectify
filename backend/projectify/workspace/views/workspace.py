@@ -144,6 +144,25 @@ def workspace_settings_general(
     )
 
 
+class InviteTeamMemberForm(forms.Form):
+    """Form for inviting users."""
+
+    email = forms.EmailField(
+        label=_(
+            "Enter the email address of the user you would like to invite"
+        ),
+        widget=forms.EmailInput(
+            attrs={"placeholder": _("team-member@mail.com")}
+        ),
+    )
+
+    class Meta:
+        """Meta."""
+
+        fields = "title", "description", "picture"
+        model = Workspace
+
+
 @require_http_methods(["GET", "POST"])
 @platform_view
 def workspace_settings_team_members(
@@ -155,7 +174,14 @@ def workspace_settings_team_members(
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    context = {"workspace": workspace}
+
+    if request.method == "GET":
+        form = InviteTeamMemberForm()
+    else:
+        form = InviteTeamMemberForm(request.POST)
+        # TODO: Handle form submission
+
+    context = {"workspace": workspace, "form": form}
     return render(
         request,
         "workspace/workspace_settings_team_members.html",
