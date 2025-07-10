@@ -6,6 +6,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Changelog
 
+## 2025.7.10
+
+### Fixed
+
+- Update vulnerable Pillow dependency
+
 ## 2025.5.5
 
 ### Fixed
