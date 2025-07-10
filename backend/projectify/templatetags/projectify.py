@@ -30,17 +30,22 @@ def anchor(href: str, label: str, external: bool = False) -> SafeText:
     Render a fully styled HTML anchor.
 
     Expects label to be translated.
+
+    Set external=True when you want the link to open
     """
     if external:
+        a_extra = 'target="_blank"'
         extra = format_html(
             '<span class="sr-only">{text}</span>{svg}',
             svg=render_to_string("heroicons/external_links.svg"),
             text=_("(Opens in new tab)"),
         )
     else:
+        a_extra = ""
         extra = ""
     return format_html(
-        '<a href="{href}" class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{label}{extra}</a>',
+        '<a href="{href}" class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"{a_extra}>{label}{extra}</a>',
+        a_extra=a_extra,
         href=href,
         label=label,
         extra=extra,
