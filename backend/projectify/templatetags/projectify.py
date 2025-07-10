@@ -6,8 +6,10 @@
 from typing import Optional
 
 from django import template
+from django.template.loader import render_to_string
 from django.utils.html import format_html
 from django.utils.safestring import SafeText
+from django.utils.translation import gettext_lazy as _
 
 register = template.Library()
 
@@ -21,14 +23,23 @@ def percent(value: Optional[float]) -> Optional[str]:
 
 
 @register.simple_tag
-def anchor(href: str, label: str) -> SafeText:
+def anchor(href: str, label: str, external: bool = False) -> SafeText:
     """
     Render a fully styled HTML anchor.
 
     Expects label to be translated.
     """
+    if external:
+        extra = format_html(
+            '<span class="sr-only">{text}</span>{svg}',
+            svg=render_to_string("heroicons/external_links.svg"),
+            text=_("(Opens in new tab)"),
+        )
+    else:
+        extra = ""
     return format_html(
-        '<a href="{href}" class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{label}</a>',
+        '<a href="{href}" class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{label}{extra}</a>',
         href=href,
         label=label,
+        extra=extra,
     )
