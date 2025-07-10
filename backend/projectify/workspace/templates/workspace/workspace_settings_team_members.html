@@ -1,0 +1,79 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "workspace/workspace_settings_base.html" %}
+{% load i18n %}
+{% load projectify %}
+{% block workspace_settings_content %}
+    <section class="flex flex-col gap-4">
+        <h2 class="text-xl font-bold">Team members</h2>
+        <table class="grid w-full grid-cols-4 items-center gap-y-4">
+            <thead class="contents">
+                <tr class="contents">
+                    <th class="col-span-2 border-b border-border text-left font-bold">Team member</th>
+                    <th class="border-b border-border text-left font-bold">Role</th>
+                    <th class="border-b border-border text-left font-bold">Action</th>
+                </tr>
+            </thead>
+            <tbody class="contents">
+                {% for team_member in workspace.teammember_set.all %}
+                    <tr class="contents">
+                        <td class="col-span-2 flex flex-row items-center gap-2">
+                            {% user_avatar team_member.user %}
+                            <div class="shrink min-w-0 flex flex-col gap-1">
+                                <span class="font-bold overflow-hidden truncate">{{ team_member.user.preferred_name }}</span>
+                                <span>
+                                    {% if team_member.user.job_title %}
+                                        {{ team_member.user.job_title }}
+                                    {% else %}
+                                        No job title
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </td>
+                        <td class="flex flex-row items-center gap-2">
+                            <span>{{ team_member.get_role_display }}</span>
+                            <button aria-label="Can't edit own role"
+                                    disabled=""
+                                    class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
+                                {%include "heroicons/pencil.svg" %}
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button"
+                                    class="w-full active:bg-destructive-secondary-presed text-destructive hover:text-destructive-hover active:text-destructive-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-transparent disabled:text-disabled-content"
+                                    disabled="">
+                                <span class="w-6 h-6">
+                                    {%include "heroicons/x.svg" %}
+                                </span>
+                                Remove
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    <section class="flex flex-col gap-4">
+        <h2 class="text-xl font-bold">Team member invites</h2>
+        <table class="grid w-full grid-cols-4 items-center gap-y-4">
+            <thead class="contents">
+                <tr class="contents">
+                    <th class="col-span-2 border-b border-border text-left font-bold">Invited email</th>
+                    <th class="border-b border-border text-left font-bold">Invited on</th>
+                    <th class="border-b border-border text-left font-bold">Action</th>
+                </tr>
+            </thead>
+            <tbody class="contents">
+                <td class="col-span-3">You have no open invites</td>
+            </tbody>
+        </table>
+    </section>
+    <hr>
+    <section class="flex flex-col gap-2">
+        <strong>Help</strong>
+        <ul class="flex list-inside list-disc flex-col gap-2">
+            <li>{% anchor href="/help/team-members" label="About team members" external=True %}</li>
+            <li>{% anchor href="/help/roles" label="About roles" external=True %}</li>
+        </ul>
+    </section>
+{% endblock workspace_settings_content %}
