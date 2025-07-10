@@ -169,6 +169,9 @@ def workspace_settings_team_members(
     request: AuthenticatedHttpRequest, workspace_uuid: UUID
 ) -> HttpResponse:
     """Show team member settings."""
+    # TODO add role change form
+    # TODO add remove team member endpoint
+    # TODO add remove team member invite endpoint
     workspace = workspace_find_by_workspace_uuid(
         who=request.user, workspace_uuid=workspace_uuid
     )
