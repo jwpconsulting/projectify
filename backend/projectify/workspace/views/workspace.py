@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2023, 2024 JWP Consulting GK
 """Workspace CRUD views."""
 
-from typing import Any
+from typing import Any, TypedDict
 from uuid import UUID
 
 from django import forms
@@ -37,6 +37,7 @@ from projectify.workspace.selectors.project import (
     project_find_by_workspace_uuid,
 )
 from projectify.workspace.selectors.quota import workspace_get_all_quotas
+from projectify.workspace.types import Quota
 
 from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
 from ..models import Workspace
@@ -295,6 +296,9 @@ def workspace_settings_billing(
             return HttpResponseBadRequest()
 
 
+QuotaEntry = TypedDict("QuotaEntry", {"label": str, "quota": Quota})
+
+
 @platform_view
 def workspace_settings_quota(
     request: AuthenticatedHttpRequest, workspace_uuid: UUID
@@ -305,7 +309,41 @@ def workspace_settings_quota(
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    context = {"workspace": workspace}
+    workspace.quota = workspace_get_all_quotas(workspace)
+
+    quota_rows: list[QuotaEntry] = [
+        {
+            "label": _("Team members and invites"),
+            "quota": workspace.quota.team_members_and_invites,
+        },
+        {
+            "label": _("Projects"),
+            "quota": workspace.quota.projects,
+        },
+        {
+            "label": _("Sections"),
+            "quota": workspace.quota.sections,
+        },
+        {
+            "label": _("Tasks"),
+            "quota": workspace.quota.tasks,
+        },
+        {
+            "label": _("Labels"),
+            "quota": workspace.quota.labels,
+        },
+        {
+            "label": _("Sub tasks"),
+            "quota": workspace.quota.sub_tasks,
+        },
+        {
+            "label": _("Task labels"),
+            "quota": workspace.quota.task_labels,
+        },
+    ]
+    quota_rows = [q for q in quota_rows if q["quota"].limit is not None]
+
+    context = {"workspace": workspace, "quota_rows": quota_rows}
     return render(
         request, "workspace/workspace_settings_quota.html", context=context
     )
