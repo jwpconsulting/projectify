@@ -1,0 +1,14 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% load i18n %}
+<form class="flex flex-col gap-4"
+      method="post"
+      hx-post="{% url "dashboard:workspaces:team-members-invite" workspace.uuid %}"
+      hx-swap="outerHTML">
+    {% csrf_token %}
+    {{ form.email.as_field_group }}
+    <button type="submit"
+            class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
+        {% trans "Invite team member" %}
+    </button>
+</form>

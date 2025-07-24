@@ -168,7 +168,7 @@ class InviteTeamMemberForm(forms.Form):
         model = Workspace
 
 
-@require_http_methods(["GET", "POST"])
+@require_http_methods(["GET"])
 @platform_view
 def workspace_settings_team_members(
     request: AuthenticatedHttpRequest, workspace_uuid: UUID
@@ -188,18 +188,73 @@ def workspace_settings_team_members(
         archived=False,
     )
 
-    if request.method == "GET":
-        form = InviteTeamMemberForm()
-    else:
-        form = InviteTeamMemberForm(request.POST)
-        # TODO: Handle form submission
-
+    form = InviteTeamMemberForm()
     context = {"workspace": workspace, "form": form, "projects": projects}
     return render(
         request,
         "workspace/workspace_settings_team_members.html",
         context=context,
     )
+
+
+@require_http_methods(["POST"])
+@platform_view
+def workspace_settings_team_members_invite(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """HTMX view to invite a team member."""
+    workspace = workspace_find_by_workspace_uuid(
+        who=request.user, workspace_uuid=workspace_uuid
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+
+    form = InviteTeamMemberForm(request.POST)
+
+    if not form.is_valid():
+        context = {"workspace": workspace, "form": form}
+        return render(
+            request,
+            "workspace/workspace_settings_team_members/invite_form.html",
+            context=context,
+            status=400,
+        )
+
+    # Form is valid, try to create invite
+    email = form.cleaned_data["email"]
+    try:
+        team_member_invite_create(
+            who=request.user, workspace=workspace, email_or_user=email
+        )
+        form = InviteTeamMemberForm()
+        context = {"workspace": workspace, "form": form}
+        return render(
+            request,
+            "workspace/workspace_settings_team_members/invite_response.html",
+            context=context,
+        )
+    # TODO get rid of exceptions altogether
+    except (UserAlreadyInvited, UserAlreadyAdded) as e:
+        match e:
+            case UserAlreadyInvited():
+                form.add_error(
+                    "email",
+                    _("User has already been invited to this workspace."),
+                )
+            case UserAlreadyAdded():
+                form.add_error(
+                    "email",
+                    _("User has already been added to this workspace."),
+                )
+
+        # Return form with errors
+        context = {"workspace": workspace, "form": form}
+        return render(
+            request,
+            "workspace/workspace_settings_team_members/invite_form.html",
+            context=context,
+            status=400,
+        )
 
 
 class WorkspaceBillingForm(forms.Form):
