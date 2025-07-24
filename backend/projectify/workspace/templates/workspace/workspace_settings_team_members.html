@@ -8,15 +8,7 @@
 {# TODO: add conditional remove button#}
 {% block workspace_settings_content %}
     <section class="flex flex-col gap-4">
-        <form class="flex flex-col gap-4">
-            {{ form.email.as_field_group }}
-            <!--<InputField>-->
-            <button type="submit"
-                    class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                {% trans "Invite team member" %}
-            </button>
-            <!--<button>-->
-        </form>
+        {% include "workspace/workspace_settings_team_members/invite_form.html" %}
         <h2 class="text-xl font-bold">{% trans "Team members" %}</h2>
         <table class="grid w-full grid-cols-4 items-center gap-y-4">
             <thead class="contents">
@@ -63,37 +55,7 @@
             </tbody>
         </table>
     </section>
-    <section class="flex flex-col gap-4">
-        <h2 class="text-xl font-bold">{% trans "Team member invites" %}</h2>
-        <table class="grid w-full grid-cols-4 items-center gap-y-4">
-            <thead class="contents">
-                <tr class="contents">
-                    <th class="col-span-2 border-b border-border text-left font-bold">{% trans "Invited email" %}</th>
-                    <th class="border-b border-border text-left font-bold">{% trans "Invited on" %}</th>
-                    <th class="border-b border-border text-left font-bold">{% trans "Action" %}</th>
-                </tr>
-            </thead>
-            <tbody class="contents">
-                {% for invite in workspace.teammemberinvite_set.all %}
-                    <tr class="contents">
-                        <td class="col-span-2 overflow-x-auto">{{ invite.user_invite.email }}</td>
-                        <td>{{ invite.created|date:"Y-m-d" }}</td>
-                        <td>
-                            <button type="button"
-                                    class="w-full active:bg-destructive-secondary-presed text-destructive hover:text-destructive-hover active:text-destructive-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-transparent disabled:text-disabled-content">
-                                <span class="w-6 h-6">{% include "heroicons/x.svg" %}</span>
-                                {% trans "Uninvite" %}
-                            </button>
-                        </td>
-                    </tr>
-                {% empty %}
-                    <tr class="contents">
-                        <td class="col-span-3">{% trans "You have no open invites" %}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </section>
+    <div id="team-member-invites">{% include "workspace/workspace_settings_team_members/invites_list.html" %}</div>
     <hr>
     <section class="flex flex-col gap-2">
         <strong>{% trans "Help" %}</strong>
