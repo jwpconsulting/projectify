@@ -55,6 +55,7 @@ def project_detail_view(
         "object": project,
         "labels": list(project.workspace.label_set.values()),
         "projects": project.workspace.project_set.all(),
+        "workspace": project.workspace,
     }
     return render(request, "workspace/project_detail.html", context)
 
