@@ -3,12 +3,12 @@
 # SPDX-FileCopyrightText: 2024 JWP Consulting GK
 """Shared template tags for Projectify."""
 
-from typing import Optional
+from typing import Optional, Union
 
 from django import template
 from django.template.loader import render_to_string
 from django.utils.html import format_html
-from django.utils.safestring import SafeText
+from django.utils.safestring import SafeText, mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from projectify.user.models.user import User
@@ -33,6 +33,7 @@ def anchor(href: str, label: str, external: bool = False) -> SafeText:
 
     Set external=True when you want the link to open
     """
+    extra: Union[SafeText, str]
     if external:
         a_extra = 'target="_blank"'
         extra = format_html(
@@ -66,4 +67,6 @@ def user_avatar(user: User) -> SafeText:
             alt=str(user),
         )
     else:
-        return format_html("")
+        return mark_safe(
+            '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary bg-base-200"></div>'
+        )
