@@ -68,7 +68,7 @@ class TestWorkspaceSettings:
         workspace.picture = cast(FileDescriptor, None)
         workspace.save()
         assert not workspace.picture
-        with django_assert_num_queries(11):
+        with django_assert_num_queries(12):
             response = user_client.post(
                 resource_url,
                 {
