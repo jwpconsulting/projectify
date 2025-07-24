@@ -104,9 +104,14 @@ def workspace_settings_general(
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
+    projects = project_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        archived=False,
+    )
     if request.method == "GET":
         form = WorkspaceSettingsForm(instance=workspace)
-        context = {"workspace": workspace, "form": form}
+        context = {"workspace": workspace, "form": form, "projects": projects}
         return render(
             request,
             "workspace/workspace_settings_general.html",
@@ -116,7 +121,7 @@ def workspace_settings_general(
         instance=workspace, data=request.POST, files=request.FILES
     )
     if not form.is_valid():
-        context = {"workspace": workspace, "form": form}
+        context = {"workspace": workspace, "form": form, "projects": projects}
         return render(
             request,
             "workspace/workspace_settings_general.html",
@@ -177,6 +182,11 @@ def workspace_settings_team_members(
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
+    projects = project_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        archived=False,
+    )
 
     if request.method == "GET":
         form = InviteTeamMemberForm()
@@ -184,7 +194,7 @@ def workspace_settings_team_members(
         form = InviteTeamMemberForm(request.POST)
         # TODO: Handle form submission
 
-    context = {"workspace": workspace, "form": form}
+    context = {"workspace": workspace, "form": form, "projects": projects}
     return render(
         request,
         "workspace/workspace_settings_team_members.html",
@@ -245,8 +255,13 @@ def workspace_settings_billing(
     if workspace is None:
         raise Http404(_("Workspace not found"))
     workspace.quota = workspace_get_all_quotas(workspace)
+    projects = project_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        archived=False,
+    )
 
-    context: dict[str, object] = {"workspace": workspace}
+    context: dict[str, object] = {"workspace": workspace, "projects": projects}
 
     if request.method == "GET":
         match workspace.customer.subscription_status:
@@ -339,6 +354,11 @@ def workspace_settings_quota(
     if workspace is None:
         raise Http404(_("Workspace not found"))
     workspace.quota = workspace_get_all_quotas(workspace)
+    projects = project_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        archived=False,
+    )
 
     quota_rows: list[QuotaEntry] = [
         {
@@ -372,7 +392,11 @@ def workspace_settings_quota(
     ]
     quota_rows = [q for q in quota_rows if q["quota"].limit is not None]
 
-    context = {"workspace": workspace, "quota_rows": quota_rows}
+    context = {
+        "workspace": workspace,
+        "quota_rows": quota_rows,
+        "projects": projects,
+    }
     return render(
         request, "workspace/workspace_settings_quota.html", context=context
     )
