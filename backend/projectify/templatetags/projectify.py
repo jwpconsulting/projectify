@@ -35,7 +35,7 @@ def anchor(href: str, label: str, external: bool = False) -> SafeText:
     """
     extra: Union[SafeText, str]
     if external:
-        a_extra = 'target="_blank"'
+        a_extra = mark_safe(' target="_blank"')
         extra = format_html(
             '<span class="sr-only">{text}</span>{svg}',
             svg=render_to_string("heroicons/external_links.svg"),
