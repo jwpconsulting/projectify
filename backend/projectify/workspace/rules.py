@@ -12,6 +12,7 @@ from functools import partial
 import rules
 
 from projectify.user.models import User
+from projectify.workspace.models.team_member import TeamMember
 
 from .models.const import TeamMemberRoles
 from .models.workspace import Workspace
@@ -137,7 +138,19 @@ rules.add_perm(
 )
 rules.add_perm("workspace.read_team_member", is_at_least_observer)
 rules.add_perm("workspace.update_team_member", is_at_least_owner)
-rules.add_perm("workspace.delete_team_member", is_at_least_owner)
+
+
+def can_edit_team_member(user: User, team_member: TeamMember) -> bool:
+    """Return true if this team_member does not belong to the user."""
+    owner = is_at_least_owner(user, team_member.workspace)
+    not_self = team_member.user != user
+    return owner and not_self
+rules.add_perm(
+    "workspace.update_team_member_role", rules.predicate(can_edit_team_member)
+)
+rules.add_perm(
+    "workspace.delete_team_member", rules.predicate(can_edit_team_member)
+)
 
 # Project
 rules.add_perm(

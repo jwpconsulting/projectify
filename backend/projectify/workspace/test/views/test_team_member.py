@@ -91,9 +91,7 @@ class TestTeamMemberReadUpdateDelete:
         }
 
     def test_delete_self(
-        self,
-        rest_user_client: APIClient,
-        team_member: TeamMember,
+        self, rest_user_client: APIClient, team_member: TeamMember
     ) -> None:
         """Test that deleting oneself does not work."""
         resource_url = reverse(
@@ -101,12 +99,10 @@ class TestTeamMemberReadUpdateDelete:
             args=(str(team_member.uuid),),
         )
         response = rest_user_client.delete(resource_url)
-        assert response.status_code == 400, response.data
+        assert response.status_code == 403, response.data
         assert response.data == {
-            "status": "invalid",
-            "code": 400,
-            "details": {"team_member": "Can't delete own team member"},
-            "general": None,
+            "status": "permission_denied",
+            "code": 403,
         }
 
     def test_delete_other(
