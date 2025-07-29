@@ -34,6 +34,7 @@ def anchor(href: str, label: str, external: bool = False) -> SafeText:
     Set external=True when you want the link to open
     """
     extra: Union[SafeText, str]
+    a_extra: Union[SafeText, str]
     if external:
         a_extra = mark_safe(' target="_blank"')
         extra = format_html(
