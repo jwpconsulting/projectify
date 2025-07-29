@@ -37,6 +37,9 @@ from projectify.workspace.selectors.project import (
     project_find_by_workspace_uuid,
 )
 from projectify.workspace.selectors.quota import workspace_get_all_quotas
+from projectify.workspace.selectors.team_member import (
+    team_member_find_for_workspace,
+)
 from projectify.workspace.types import Quota
 
 from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
@@ -189,7 +192,15 @@ def workspace_settings_team_members(
     )
 
     form = InviteTeamMemberForm()
-    context = {"workspace": workspace, "form": form, "projects": projects}
+    team_member_self = team_member_find_for_workspace(
+        user=request.user, workspace=workspace
+    )
+    context = {
+        "workspace": workspace,
+        "form": form,
+        "projects": projects,
+        "team_member_self": team_member_self,
+    }
     return render(
         request,
         "workspace/workspace_settings_team_members.html",
