@@ -28,7 +28,8 @@
         </script>
         {% tailwind_css %}
     </head>
-    <body class="min-h-screen w-full max-w-full bg-foreground text-base-content">
+    <body class="min-h-screen w-full max-w-full bg-foreground text-base-content"
+          hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
         {% if debug %}
             {% include "common/navigation/header/development_view_bar.html" %}
         {% endif %}

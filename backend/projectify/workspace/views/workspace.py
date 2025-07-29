@@ -38,6 +38,7 @@ from projectify.workspace.selectors.project import (
 )
 from projectify.workspace.selectors.quota import workspace_get_all_quotas
 from projectify.workspace.selectors.team_member import (
+    team_member_find_by_team_member_uuid,
     team_member_find_for_workspace,
 )
 from projectify.workspace.types import Quota
@@ -265,6 +266,43 @@ def workspace_settings_team_members_invite(
             request,
             "workspace/workspace_settings_team_members/invite_form.html",
             context=context,
+            status=400,
+        )
+
+
+@require_http_methods(["DELETE"])
+@platform_view
+def workspace_settings_team_member_remove(
+    request: AuthenticatedHttpRequest,
+    workspace_uuid: UUID,
+    team_member_uuid: UUID,
+) -> HttpResponse:
+    """HTMX view to remove a team member."""
+    workspace = workspace_find_by_workspace_uuid(
+        who=request.user, workspace_uuid=workspace_uuid
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+
+    team_member = team_member_find_by_team_member_uuid(
+        who=request.user, team_member_uuid=team_member_uuid
+    )
+    if team_member is None:
+        raise Http404(_("Team member not found"))
+
+    # Import the service function
+    from ..services.team_member import team_member_delete
+
+    try:
+        team_member_delete(team_member=team_member, who=request.user)
+        # Return empty response to remove the row
+        return HttpResponse(status=200)
+    except ValidationError as error:
+        # Return error message if deletion fails
+        return HttpResponse(
+            _("Failed to remove team member: {error}").format(
+                error=str(error)
+            ),
             status=400,
         )
 
