@@ -33,18 +33,12 @@ from projectify.lib.forms import populate_form_with_drf_errors
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
-from projectify.workspace.selectors.project import (
-    project_find_by_workspace_uuid,
-)
-from projectify.workspace.selectors.quota import workspace_get_all_quotas
-from projectify.workspace.selectors.team_member import (
-    team_member_find_by_team_member_uuid,
-    team_member_find_for_workspace,
-)
-from projectify.workspace.types import Quota
 
 from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
 from ..models import Workspace
+from ..selectors.project import project_find_by_workspace_uuid
+from ..selectors.quota import workspace_get_all_quotas
+from ..selectors.team_member import team_member_find_by_team_member_uuid
 from ..selectors.workspace import (
     WorkspaceDetailQuerySet,
     workspace_build_detail_query_set,
@@ -53,11 +47,13 @@ from ..selectors.workspace import (
 )
 from ..serializers.base import WorkspaceBaseSerializer
 from ..serializers.workspace import WorkspaceDetailSerializer
+from ..services.team_member import team_member_delete
 from ..services.team_member_invite import (
     team_member_invite_create,
     team_member_invite_delete,
 )
 from ..services.workspace import workspace_create, workspace_update
+from ..types import Quota
 
 
 # HTML
@@ -109,14 +105,9 @@ def workspace_settings_general(
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    projects = project_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=workspace_uuid,
-        archived=False,
-    )
     if request.method == "GET":
         form = WorkspaceSettingsForm(instance=workspace)
-        context = {"workspace": workspace, "form": form, "projects": projects}
+        context = {"workspace": workspace, "form": form}
         return render(
             request,
             "workspace/workspace_settings_general.html",
@@ -126,7 +117,7 @@ def workspace_settings_general(
         instance=workspace, data=request.POST, files=request.FILES
     )
     if not form.is_valid():
-        context = {"workspace": workspace, "form": form, "projects": projects}
+        context = {"workspace": workspace, "form": form}
         return render(
             request,
             "workspace/workspace_settings_general.html",
@@ -180,8 +171,6 @@ def workspace_settings_team_members(
 ) -> HttpResponse:
     """Show team member settings."""
     # TODO add role change form
-    # TODO add remove team member endpoint
-    # TODO add remove team member invite endpoint
     workspace = workspace_find_by_workspace_uuid(
         who=request.user,
         workspace_uuid=workspace_uuid,
@@ -189,20 +178,7 @@ def workspace_settings_team_members(
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    projects = project_find_by_workspace_uuid(
-        who=request.user, workspace_uuid=workspace_uuid, archived=False
-    )
-
-    form = InviteTeamMemberForm()
-    team_member_self = team_member_find_for_workspace(
-        user=request.user, workspace=workspace
-    )
-    context = {
-        "workspace": workspace,
-        "form": form,
-        "projects": projects,
-        "team_member_self": team_member_self,
-    }
+    context = {"workspace": workspace, "form": InviteTeamMemberForm()}
     return render(
         request,
         "workspace/workspace_settings_team_members.html",
@@ -217,34 +193,29 @@ def workspace_settings_team_members_invite(
 ) -> HttpResponse:
     """HTMX view to invite a team member."""
     workspace = workspace_find_by_workspace_uuid(
-        who=request.user, workspace_uuid=workspace_uuid
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        qs=workspace_build_detail_query_set(who=request.user),
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
 
     form = InviteTeamMemberForm(request.POST)
 
+    context = {"workspace": workspace, "form": form}
     if not form.is_valid():
-        context = {"workspace": workspace, "form": form}
         return render(
             request,
-            "workspace/workspace_settings_team_members/invite_form.html",
+            "workspace/workspace_settings_team_members.html",
             context=context,
             status=400,
         )
 
-    # Form is valid, try to create invite
-    email = form.cleaned_data["email"]
     try:
         team_member_invite_create(
-            who=request.user, workspace=workspace, email_or_user=email
-        )
-        form = InviteTeamMemberForm()
-        context = {"workspace": workspace, "form": form}
-        return render(
-            request,
-            "workspace/workspace_settings_team_members/invite_response.html",
-            context=context,
+            who=request.user,
+            workspace=workspace,
+            email_or_user=form.cleaned_data["email"],
         )
     # TODO get rid of exceptions altogether
     except (UserAlreadyInvited, UserAlreadyAdded) as e:
@@ -260,14 +231,19 @@ def workspace_settings_team_members_invite(
                     _("User has already been added to this workspace."),
                 )
 
-        # Return form with errors
-        context = {"workspace": workspace, "form": form}
         return render(
             request,
-            "workspace/workspace_settings_team_members/invite_form.html",
-            context=context,
+            "workspace/workspace_settings_team_members.html",
+            context={"workspace": workspace, "form": form},
             status=400,
         )
+
+    workspace.refresh_from_db()
+    return render(
+        request,
+        "workspace/workspace_settings_team_members.html",
+        context=context,
+    )
 
 
 @require_http_methods(["DELETE"])
@@ -290,21 +266,69 @@ def workspace_settings_team_member_remove(
     if team_member is None:
         raise Http404(_("Team member not found"))
 
-    # Import the service function
-    from ..services.team_member import team_member_delete
-
     try:
         team_member_delete(team_member=team_member, who=request.user)
-        # Return empty response to remove the row
-        return HttpResponse(status=200)
     except ValidationError as error:
-        # Return error message if deletion fails
         return HttpResponse(
             _("Failed to remove team member: {error}").format(
                 error=str(error)
             ),
             status=400,
         )
+
+    workspace.refresh_from_db()
+    return render(
+        request,
+        "workspace/workspace_settings_team_members.html",
+        context={"workspace": workspace, "form": InviteTeamMemberForm()},
+    )
+
+
+class UninviteTeamMemberForm(forms.Form):
+    """Form for uninviting users."""
+
+    email = forms.EmailField(widget=forms.HiddenInput())
+
+
+@require_http_methods(["POST"])
+@platform_view
+def workspace_settings_team_member_uninvite(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """HTMX view to uninvite a team member."""
+    workspace = workspace_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        qs=workspace_build_detail_query_set(who=request.user),
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+
+    form = UninviteTeamMemberForm(request.POST)
+    if not form.is_valid():
+        return HttpResponse(_("Invalid form data"), status=400)
+
+    try:
+        team_member_invite_delete(
+            workspace=workspace,
+            who=request.user,
+            email=form.cleaned_data["email"],
+        )
+    except ValidationError as error:
+        return HttpResponse(
+            _("Failed to uninvite team member: {error}").format(
+                error=str(error)
+            ),
+            status=400,
+        )
+
+    workspace.refresh_from_db()
+    context = {"workspace": workspace, "form": InviteTeamMemberForm()}
+    return render(
+        request,
+        "workspace/workspace_settings_team_members.html",
+        context=context,
+    )
 
 
 class WorkspaceBillingForm(forms.Form):

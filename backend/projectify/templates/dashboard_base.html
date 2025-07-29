@@ -1,5 +1,5 @@
-<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
-<!-- SPDX-FileCopyrightText: 2024 JWP Consulting GK -->
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# SPDX-FileCopyrightText: 2024 JWP Consulting GK #}
 {% extends "base.html" %}
 {% load static %}
 {% load i18n %}
@@ -30,9 +30,9 @@
             <div class="hidden h-full shrink-0 md:block">
                 <div class="max-w-xs 2xl:max-w-md">
                     <nav class="flex flex-col py-4">
-                        {% if workspace %}
-                            <div class="flex flex-col gap-2 px-4 pb-4">
-                                <div class="flex flex-row items-center justify-between gap-4">
+                        <div class="flex flex-col gap-2 px-4 pb-4">
+                            <div class="flex flex-row items-center justify-between gap-4">
+                                {% if workspace %}
                                     <div class="min-w-0 grow">
                                         <button class="flex w-full flex-row items-center justify-between gap-2 rounded-lg border border-border p-2 hover:bg-secondary-hover">
                                             <div class="flex min-w-0 flex-row items-center gap-2">
@@ -49,39 +49,31 @@
                                             {% include "heroicons/dots-horizontal.svg" %}
                                         </a>
                                     </div>
-                                </div>
+                                {% else %}
+                                    todo no workspace
+                                {% endif %}
                             </div>
-                            <p class="px-4">
-                                <strong>{% trans "Trial workspace" %}</strong>
-                                {% anchor "#" _("Learn more") external=True %}
-                            </p>
-                            <div class="flex flex-col">
-                                <button class="flex w-full flex-row items-center justify-between gap-2 px-4 py-2 text-utility hover:text-base-content">
-                                    <div class="flex flex-row items-center gap-4">
-                                        <div class="flex flex-row items-center gap-2">
-                                            <div class="w-4 h-4">{% include "heroicons/folder.svg" %}</div>
-                                            <div class="font-bold">{% trans "Projects" %}</div>
-                                        </div>
+                        </div>
+                        <p class="px-4">
+                            <strong>{% trans "Trial workspace" %}</strong>
+                            {% anchor "#" _("Learn more") external=True %}
+                        </p>
+                        <div class="flex flex-col">
+                            <button class="flex w-full flex-row items-center justify-between gap-2 px-4 py-2 text-utility hover:text-base-content">
+                                <div class="flex flex-row items-center gap-4">
+                                    <div class="flex flex-row items-center gap-2">
+                                        <div class="w-4 h-4">{% include "heroicons/folder.svg" %}</div>
+                                        <div class="font-bold">{% trans "Projects" %}</div>
                                     </div>
-                                    <div class="w-4 h-4">{% include "heroicons/chevron-down.svg" %}</div>
-                                </button>
-                                <div class="flex shrink flex-col">
-                                    {% for project in projects %}
-                                        <a class="group block flex w-full flex-row justify-between gap-1 px-4 py-1 hover:bg-base-200"
-                                           href="{% url "dashboard:projects:detail" project.uuid %}">
-                                            <div class="flex min-w-0 flex-row items-center gap-2">
-                                                <div class="rounded-md p-1{% if project == object %} bg-primary-focus{% endif %}">
-                                                    <div class="h-4 w-4{% if project == object %} text-base-100{% endif %}">{% include "heroicons/folder.svg" %}</div>
-                                                </div>
-                                                <div class="line-clamp-1 min-w-0 font-bold">{{ project.title }}</div>
-                                            </div>
-                                        </a>
-                                    {% endfor %}
                                 </div>
+                                <div class="w-4 h-4">{% include "heroicons/chevron-down.svg" %}</div>
+                            </button>
+                            <div class="flex shrink flex-col">
+                                {% block dashboard_projects %}
+                                    {% include "dashboard_projects.html" %}
+                                {% endblock dashboard_projects %}
                             </div>
-                        {% else %}
-                            todo no workspace
-                        {% endif %}
+                        </div>
                     </nav>
                 </div>
             </div>

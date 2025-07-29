@@ -9,7 +9,23 @@
 {# TODO: add conditional remove button#}
 {% block workspace_settings_content %}
     <section class="flex flex-col gap-4">
-        {% include "workspace/workspace_settings_team_members/invite_form.html" %}
+        {% has_perm "workspace.create_team_member" user workspace as can_create_team_member %}
+        {% if can_create_team_member %}
+            <form class="flex flex-col gap-4"
+                  method="post"
+                  action="{% url "dashboard:workspaces:team-members-invite" workspace.uuid %}"
+                  hx-post="{% url "dashboard:workspaces:team-members-invite" workspace.uuid %}"
+                  hx-target="#settings-content"
+                  hx-select="#settings-content"
+                  hx-swap="outerHTML">
+                {% csrf_token %}
+                {{ form.email.as_field_group }}
+                <button type="submit"
+                        class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
+                    {% trans "Invite team member" %}
+                </button>
+            </form>
+        {% endif %}
         <h2 class="text-xl font-bold">{% trans "Team members" %}</h2>
         <table class="grid w-full grid-cols-4 items-center gap-y-4">
             <thead class="contents">
@@ -36,10 +52,9 @@
                             </div>
                         </td>
                         <td class="flex flex-row items-center gap-2">
-                            {% has_perm 'workspace.update_team_member' user team_member as can_update_team_member %}
+                            {% has_perm 'workspace.update_team_member_role' user team_member as can_update_team_member_role %}
                             <span>{{ team_member.get_role_display }}</span>
-                            <button {% if not can_update_team_member %}disabled{% endif %}
-                                    aria-label="{% trans "Can't edit own role"|yesno:"Edit role" %}"
+                            <button {% if not can_update_team_member_role %}disabled{% endif %}
                                     class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
                                 {% include "heroicons/pencil.svg" %}
                             </button>
@@ -47,10 +62,13 @@
                         <td>
                             {% has_perm 'workspace.delete_team_member' user team_member as can_delete_team_member %}
                             <button type="button"
-                                    aria-label="{% trans "Can't remove yourself"|yesno:"Remove team member" %}"
                                     class="w-full active:bg-destructive-secondary-presed text-destructive hover:text-destructive-hover active:text-destructive-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-transparent disabled:text-disabled-content"
                                     {% if not can_delete_team_member %}disabled{% endif %}
-                                    {% if can_delete_team_member %} hx-delete="{% url 'dashboard:workspaces:team-member-remove' workspace.uuid team_member.uuid %}" hx-confirm="{% trans "Are you sure you want to remove this team member?" %}" hx-target="closest tr" hx-swap="outerHTML" {% endif %}>
+                                    hx-delete="{% url 'dashboard:workspaces:team-member-remove' workspace.uuid team_member.uuid %}"
+                                    hx-confirm="{% blocktrans with teamMember=team_member.user %}Would you like to remove '{{ teamMember }}' from this workspace? This action cannot be undone.{% endblocktrans %}"
+                                    hx-target="#settings-content"
+                                    hx-select="#settings-content"
+                                    hx-swap="outerHTML">
                                 <span class="w-6 h-6">{% include "heroicons/x.svg" %}</span>
                                 {% trans "Remove" %}
                             </button>
@@ -60,7 +78,47 @@
             </tbody>
         </table>
     </section>
-    <div id="team-member-invites">{% include "workspace/workspace_settings_team_members/invites_list.html" %}</div>
+    <section class="flex flex-col gap-4">
+        <h2 class="text-xl font-bold">{% trans "Team member invites" %}</h2>
+        <table class="grid w-full grid-cols-4 items-center gap-y-4">
+            <thead class="contents">
+                <tr class="contents">
+                    <th class="col-span-2 border-b border-border text-left font-bold">{% trans "Invited email" %}</th>
+                    <th class="border-b border-border text-left font-bold">{% trans "Invited on" %}</th>
+                    <th class="border-b border-border text-left font-bold">{% trans "Action" %}</th>
+                </tr>
+            </thead>
+            <tbody class="contents">
+                {% for invite in workspace.teammemberinvite_set.all %}
+                    <tr class="contents">
+                        <td class="col-span-2 overflow-x-auto">{{ invite.user_invite.email }}</td>
+                        <td>{{ invite.created|date:"Y-m-d" }}</td>
+                        <td>
+                            <form action="{% url 'dashboard:workspaces:team-member-uninvite' workspace.uuid %}"
+                                  hx-post="{% url 'dashboard:workspaces:team-member-uninvite' workspace.uuid %}"
+                                  method="post"
+                                  hx-confirm="{% blocktrans with email=invite.user_invite.email %}Would you like to uninvite '{{ email }}' from this workspace? This action cannot be undone.{% endblocktrans %}"
+                                  hx-target="#settings-content"
+                                  hx-select="#settings-content"
+                                  hx-swap="outerHTML">
+                                {% csrf_token %}
+                                <input type="hidden" name="email" value="{{ invite.user_invite.email }}">
+                                <button type="submit"
+                                        class="w-full active:bg-destructive-secondary-presed text-destructive hover:text-destructive-hover active:text-destructive-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-transparent disabled:text-disabled-content">
+                                    <span class="w-6 h-6">{% include "heroicons/x.svg" %}</span>
+                                    {% trans "Uninvite" %}
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr class="contents">
+                        <td class="col-span-3">{% trans "You have no open invites" %}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
     <hr>
     <section class="flex flex-col gap-2">
         <strong>{% trans "Help" %}</strong>

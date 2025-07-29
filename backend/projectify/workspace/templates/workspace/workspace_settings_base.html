@@ -2,6 +2,9 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "dashboard_base.html" %}
 {% load i18n %}
+{% block dashboard_projects %}
+    {% include "dashboard_projects.html" with projects=workspace.project_set.all %}
+{% endblock dashboard_projects %}
 {% block dashboard_content %}
     <div class="min-w-0 grow" role="presentation">
         <div class="flex h-full flex-col items-center bg-background px-0 py-8 sm:px-2">
@@ -9,7 +12,7 @@
                 <h1 class="px-2 text-2xl font-bold sm:px-0">{% trans "Workspace settings" %}</h1>
                 <main class="flex w-full max-w-xl flex-col gap-10 rounded-lg bg-foreground p-4 shadow-context-menu">
                     <div class="flex flex-row flex-wrap">
-                        <a href="{% url 'dashboard:workspaces:settings' workspace.uuid %}"
+                        <a href="{% url "dashboard:workspaces:settings" workspace.uuid %}"
                            class="border-b-2 p-2.5 font-bold uppercase hover:text-base-content {% if request.resolver_match.url_name == 'settings' %}border-base-content text-base-content{% else %}border-border text-utility{% endif %}">{% trans "General" %}</a>
                         <a href="{% url 'dashboard:workspaces:team-members' workspace.uuid %}"
                            class="border-b-2 p-2.5 font-bold uppercase hover:text-base-content {% if request.resolver_match.url_name == 'team-members' %}border-base-content text-base-content{% else %}border-border text-utility{% endif %}">{% trans "Team members" %}</a><!--<TabElement>--> <a href="{% url 'dashboard:workspaces:billing' workspace.uuid %}"
@@ -18,8 +21,10 @@
                            class="border-b-2 p-2.5 font-bold uppercase hover:text-base-content {% if request.resolver_match.url_name == 'quota' %}border-base-content text-base-content{% else %}border-border text-utility{% endif %}">{% trans "Quota" %}</a>
                         <div class="grow border-b-2 border-border"></div>
                     </div>
-                    {% block workspace_settings_content %}
-                    {% endblock workspace_settings_content %}
+                    <div id="settings-content" class="flex flex-col gap-10">
+                        {% block workspace_settings_content %}
+                        {% endblock workspace_settings_content %}
+                    </div>
                     <!--<+page>-->
                 </main>
             </div>
