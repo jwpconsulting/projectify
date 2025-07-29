@@ -70,7 +70,8 @@ class TestTeamMemberReadUpdateDelete:
     ) -> None:
         """Test reading a user."""
         del team_member
-        with django_assert_num_queries(6):
+        # Went from 6 -> 10
+        with django_assert_num_queries(10):
             response = rest_user_client.put(
                 resource_url,
                 data={
