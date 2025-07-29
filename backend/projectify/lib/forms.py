@@ -6,14 +6,16 @@
 
 import logging
 
-from django.forms import Form
+from django.forms import BaseForm
 
 from rest_framework.exceptions import ValidationError
 
 logger = logging.getLogger(__name__)
 
 
-def populate_form_with_drf_errors(form: Form, error: ValidationError) -> None:
+def populate_form_with_drf_errors(
+    form: BaseForm, error: ValidationError
+) -> None:
     """Populate a Django form with errors from a DRF ValidationError."""
     match error.detail:
         case dict():

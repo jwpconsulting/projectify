@@ -3,6 +3,11 @@
 # SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
 """Test workspace services."""
 
+from typing import cast
+
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.db.models.fields.files import FileDescriptor
+
 import pytest
 from faker import Faker
 from rest_framework.exceptions import ValidationError
@@ -17,7 +22,10 @@ from projectify.workspace.services.team_member_invite import (
     team_member_invite_create,
     team_member_invite_delete,
 )
-from projectify.workspace.services.workspace import workspace_delete
+from projectify.workspace.services.workspace import (
+    workspace_delete,
+    workspace_update,
+)
 
 pytestmark = pytest.mark.django_db
 
@@ -70,3 +78,27 @@ def test_workspace_delete_dependencies(
     project_delete(who=user, project=project)
     workspace_delete(workspace=workspace, who=user)
     assert Workspace.objects.count() == count - 1
+
+
+def test_workspace_update(
+    workspace: Workspace,
+    user: User,
+    faker: Faker,
+    uploaded_file: SimpleUploadedFile,
+) -> None:
+    """Test updating a workspace."""
+    new_title = faker.company()
+    new_description = faker.text()
+
+    updated_workspace = workspace_update(
+        workspace=workspace,
+        title=new_title,
+        description=new_description,
+        picture=cast(FileDescriptor, uploaded_file),
+        who=user,
+    )
+
+    updated_workspace.refresh_from_db()
+    assert updated_workspace.title == new_title
+    assert updated_workspace.description == new_description
+    assert "picture/test" in updated_workspace.picture.path
