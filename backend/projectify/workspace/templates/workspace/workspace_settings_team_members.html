@@ -3,6 +3,7 @@
 {% extends "workspace/workspace_settings_base.html" %}
 {% load i18n %}
 {% load projectify %}
+{% load rules %}
 {# TODO: conditionally hide invite form #}
 {# TODO: add role change drop down #}
 {# TODO: add conditional remove button#}
@@ -20,6 +21,8 @@
             </thead>
             <tbody class="contents">
                 {% for team_member in workspace.teammember_set.all %}
+                    {% has_perm "workspace.update_team_member" user team_member as can_update_team_member %}
+                    {% has_perm "workspace.delete_team_member" user team_member as can_delete_team_member %}
                     <tr class="contents">
                         <td class="col-span-2 flex flex-row items-center gap-2">
                             {% user_avatar team_member.user %}
@@ -36,16 +39,17 @@
                         </td>
                         <td class="flex flex-row items-center gap-2">
                             <span>{{ team_member.get_role_display }}</span>
-                            <button aria-label="{% trans "Can't edit own role" %}"
-                                disabled=""
-                                class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
+                            <button {% if not can_update_team_member or team_member == team_member_self %}disabled{% endif %}
+                                    aria-label="{% if team_member.is_current_user %}{% trans "Can't edit own role" %}{% else %}{% trans "Edit role" %}{% endif %}"
+                                    class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
                                 {% include "heroicons/pencil.svg" %}
                             </button>
                         </td>
                         <td>
                             <button type="button"
+                                    aria-label="{% if team_member.is_current_user %}{% trans "Can't remove yourself" %}{% else %}{% trans "Remove team member" %}{% endif %}"
                                     class="w-full active:bg-destructive-secondary-presed text-destructive hover:text-destructive-hover active:text-destructive-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-transparent disabled:text-disabled-content"
-                                    disabled="">
+                                    {% if not can_delete_team_member or team_member == team_member_self %}disabled{% endif %}>
                                 <span class="w-6 h-6">{% include "heroicons/x.svg" %}</span>
                                 {% trans "Remove" %}
                             </button>

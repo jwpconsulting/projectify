@@ -37,12 +37,16 @@ from projectify.workspace.selectors.project import (
     project_find_by_workspace_uuid,
 )
 from projectify.workspace.selectors.quota import workspace_get_all_quotas
+from projectify.workspace.selectors.team_member import (
+    team_member_find_for_workspace,
+)
 from projectify.workspace.types import Quota
 
 from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
 from ..models import Workspace
 from ..selectors.workspace import (
     WorkspaceDetailQuerySet,
+    workspace_build_detail_query_set,
     workspace_find_by_workspace_uuid,
     workspace_find_for_user,
 )
@@ -178,18 +182,26 @@ def workspace_settings_team_members(
     # TODO add remove team member endpoint
     # TODO add remove team member invite endpoint
     workspace = workspace_find_by_workspace_uuid(
-        who=request.user, workspace_uuid=workspace_uuid
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        qs=workspace_build_detail_query_set(who=request.user),
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
     projects = project_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=workspace_uuid,
-        archived=False,
+        who=request.user, workspace_uuid=workspace_uuid, archived=False
     )
 
     form = InviteTeamMemberForm()
-    context = {"workspace": workspace, "form": form, "projects": projects}
+    team_member_self = team_member_find_for_workspace(
+        user=request.user, workspace=workspace
+    )
+    context = {
+        "workspace": workspace,
+        "form": form,
+        "projects": projects,
+        "team_member_self": team_member_self,
+    }
     return render(
         request,
         "workspace/workspace_settings_team_members.html",
