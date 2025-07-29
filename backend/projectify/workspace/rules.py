@@ -145,6 +145,8 @@ def can_edit_team_member(user: User, team_member: TeamMember) -> bool:
     owner = is_at_least_owner(user, team_member.workspace)
     not_self = team_member.user != user
     return owner and not_self
+
+
 rules.add_perm(
     "workspace.update_team_member_role", rules.predicate(can_edit_team_member)
 )
