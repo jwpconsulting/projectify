@@ -3,16 +3,19 @@
 # SPDX-FileCopyrightText: 2023, 2024 JWP Consulting GK
 """Workspace CRUD views."""
 
+from typing import Any, TypedDict
 from uuid import UUID
 
-from django.http import Http404, HttpResponse
-from django.shortcuts import render
+from django import forms
+from django.http import Http404, HttpResponse, HttpResponseBadRequest
+from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
+from django.views.decorators.http import require_http_methods
 
 from django_ratelimit.decorators import ratelimit
 from rest_framework import parsers, serializers, views
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import (
@@ -21,7 +24,12 @@ from rest_framework.status import (
     HTTP_204_NO_CONTENT,
 )
 
+from projectify.corporate.services.coupon import coupon_redeem
+from projectify.corporate.services.customer import (
+    customer_create_stripe_checkout_session,
+)
 from projectify.lib.error_schema import DeriveSchema
+from projectify.lib.forms import populate_form_with_drf_errors
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
@@ -29,6 +37,10 @@ from projectify.workspace.selectors.project import (
     project_find_by_workspace_uuid,
 )
 from projectify.workspace.selectors.quota import workspace_get_all_quotas
+from projectify.workspace.selectors.team_member import (
+    team_member_find_for_workspace,
+)
+from projectify.workspace.types import Quota
 
 from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
 from ..models import Workspace
@@ -63,15 +75,397 @@ def workspace_view(
     workspace = workspace_find_by_workspace_uuid(
         who=request.user, workspace_uuid=workspace_uuid
     )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
     projects = project_find_by_workspace_uuid(
         who=request.user,
         workspace_uuid=workspace_uuid,
         archived=False,
     )
-    if workspace is None:
-        raise Http404(_("Workspace not found"))
     context = {"workspace": workspace, "projects": projects}
     return render(request, "workspace/workspace_detail.html", context)
+
+
+class WorkspaceSettingsForm(forms.ModelForm):
+    """Django form for workspace settings."""
+
+    class Meta:
+        """Meta."""
+
+        fields = "title", "description", "picture"
+        model = Workspace
+
+
+@require_http_methods(["GET", "POST"])
+@platform_view
+def workspace_settings_general(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Show general workspace settings."""
+    workspace = workspace_find_by_workspace_uuid(
+        who=request.user, workspace_uuid=workspace_uuid
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+    projects = project_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        archived=False,
+    )
+    if request.method == "GET":
+        form = WorkspaceSettingsForm(instance=workspace)
+        context = {"workspace": workspace, "form": form, "projects": projects}
+        return render(
+            request,
+            "workspace/workspace_settings_general.html",
+            context=context,
+        )
+    form = WorkspaceSettingsForm(
+        instance=workspace, data=request.POST, files=request.FILES
+    )
+    if not form.is_valid():
+        context = {"workspace": workspace, "form": form, "projects": projects}
+        return render(
+            request,
+            "workspace/workspace_settings_general.html",
+            context=context,
+            status=400,
+        )
+    data = form.cleaned_data
+    try:
+        workspace_update(
+            workspace=workspace,
+            title=data["title"],
+            description=data.get("description"),
+            who=request.user,
+            picture=data["picture"],
+        )
+    except ValidationError as error:
+        populate_form_with_drf_errors(form, error)
+        context = {"form": form}
+        return render(
+            request, "user/sign_up.html", context=context, status=400
+        )
+    return redirect(
+        "dashboard:workspaces:settings",
+        workspace.uuid,
+    )
+
+
+class InviteTeamMemberForm(forms.Form):
+    """Form for inviting users."""
+
+    email = forms.EmailField(
+        label=_(
+            "Enter the email address of the user you would like to invite"
+        ),
+        widget=forms.EmailInput(
+            attrs={"placeholder": _("team-member@mail.com")}
+        ),
+    )
+
+    class Meta:
+        """Meta."""
+
+        fields = "title", "description", "picture"
+        model = Workspace
+
+
+@require_http_methods(["GET"])
+@platform_view
+def workspace_settings_team_members(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Show team member settings."""
+    # TODO add role change form
+    # TODO add remove team member endpoint
+    # TODO add remove team member invite endpoint
+    workspace = workspace_find_by_workspace_uuid(
+        who=request.user, workspace_uuid=workspace_uuid
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+    projects = project_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        archived=False,
+    )
+
+    form = InviteTeamMemberForm()
+    team_member_self = team_member_find_for_workspace(
+        user=request.user, workspace=workspace
+    )
+    context = {
+        "workspace": workspace,
+        "form": form,
+        "projects": projects,
+        "team_member_self": team_member_self,
+    }
+    return render(
+        request,
+        "workspace/workspace_settings_team_members.html",
+        context=context,
+    )
+
+
+@require_http_methods(["POST"])
+@platform_view
+def workspace_settings_team_members_invite(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """HTMX view to invite a team member."""
+    workspace = workspace_find_by_workspace_uuid(
+        who=request.user, workspace_uuid=workspace_uuid
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+
+    form = InviteTeamMemberForm(request.POST)
+
+    if not form.is_valid():
+        context = {"workspace": workspace, "form": form}
+        return render(
+            request,
+            "workspace/workspace_settings_team_members/invite_form.html",
+            context=context,
+            status=400,
+        )
+
+    # Form is valid, try to create invite
+    email = form.cleaned_data["email"]
+    try:
+        team_member_invite_create(
+            who=request.user, workspace=workspace, email_or_user=email
+        )
+        form = InviteTeamMemberForm()
+        context = {"workspace": workspace, "form": form}
+        return render(
+            request,
+            "workspace/workspace_settings_team_members/invite_response.html",
+            context=context,
+        )
+    # TODO get rid of exceptions altogether
+    except (UserAlreadyInvited, UserAlreadyAdded) as e:
+        match e:
+            case UserAlreadyInvited():
+                form.add_error(
+                    "email",
+                    _("User has already been invited to this workspace."),
+                )
+            case UserAlreadyAdded():
+                form.add_error(
+                    "email",
+                    _("User has already been added to this workspace."),
+                )
+
+        # Return form with errors
+        context = {"workspace": workspace, "form": form}
+        return render(
+            request,
+            "workspace/workspace_settings_team_members/invite_form.html",
+            context=context,
+            status=400,
+        )
+
+
+class WorkspaceBillingForm(forms.Form):
+    """Django form for workspace billing actions."""
+
+    action = forms.CharField(widget=forms.HiddenInput)
+    seats = forms.IntegerField(
+        min_value=1,
+        max_value=100,
+        required=False,
+        widget=forms.NumberInput(
+            attrs={"placeholder": _("Number of workspace seats")}
+        ),
+        label=_("Workspace seats"),
+    )
+    code = forms.CharField(
+        max_length=100,
+        required=False,
+        widget=forms.TextInput(attrs={"placeholder": _("Enter coupon code")}),
+        label=_("Coupon code"),
+    )
+
+    def clean(self) -> dict[str, Any]:
+        """Make sure the right values are passed based on the action."""
+        data = self.cleaned_data
+        match data["action"]:
+            case "redeem_coupon":
+                if not data["code"]:
+                    self.add_error("code", _("Must enter coupon code"))
+            case "checkout":
+                if not data["seats"]:
+                    self.add_error("seats", _("Must enter number of seats"))
+
+            case _:
+                # XXX this error is not visible
+                self.add_error(None, _("Invalid action selected"))
+        return super().clean()
+
+
+# XXX REFACTOR ME
+PRICE_PER_SEAT = 8
+
+
+@require_http_methods(["GET", "POST"])
+@platform_view
+def workspace_settings_billing(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Show workspace billing settings."""
+    workspace = workspace_find_by_workspace_uuid(
+        who=request.user, workspace_uuid=workspace_uuid
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+    workspace.quota = workspace_get_all_quotas(workspace)
+    projects = project_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        archived=False,
+    )
+
+    context: dict[str, object] = {"workspace": workspace, "projects": projects}
+
+    if request.method == "GET":
+        match workspace.customer.subscription_status:
+            case "UNPAID" | "CANCELLED":
+                form = WorkspaceBillingForm()
+                context = {**context, "form": form}
+            case "ACTIVE":
+                quota = workspace.quota.team_members_and_invites
+                seats_remaining = (quota.limit or 0) - (quota.current or 0)
+                context = {
+                    **context,
+                    "monthly_total": workspace.customer.seats * PRICE_PER_SEAT,
+                    "seats_remaining": seats_remaining,
+                    "price_per_seat": PRICE_PER_SEAT,
+                }
+            case "CUSTOM":
+                pass
+            case other:
+                raise ValueError(f"Unexpected subscription_status {other}")
+
+        return render(
+            request,
+            "workspace/workspace_settings_billing.html",
+            context=context,
+        )
+    form = WorkspaceBillingForm(request.POST)
+
+    match workspace.customer.subscription_status:
+        case "UNPAID" | "CANCELLED":
+            pass
+        case _:
+            return HttpResponseBadRequest(
+                _(
+                    "You've already activated a subscription for this workspace"
+                ),
+            )
+    context = {**context, "form": form}
+    if not form.is_valid():
+        return render(
+            request,
+            "workspace/workspace_settings_billing.html",
+            context=context,
+        )
+    data = form.cleaned_data
+    # Checkout session
+    match data["action"]:
+        case "checkout":
+            try:
+                session = customer_create_stripe_checkout_session(
+                    customer=workspace.customer,
+                    who=request.user,
+                    seats=data["seats"],
+                )
+            except ValidationError as e:
+                populate_form_with_drf_errors(form, e)
+                return render(
+                    request,
+                    "workspace/workspace_settings_billing.html",
+                    context=context,
+                )
+            return redirect(session.url)
+        case "redeem_coupon":
+            try:
+                coupon_redeem(
+                    who=request.user, code=data["code"], workspace=workspace
+                )
+            except ValidationError as e:
+                populate_form_with_drf_errors(form, e)
+                return render(
+                    request,
+                    "workspace/workspace_settings_billing.html",
+                    context=context,
+                )
+            return redirect("dashboard:workspaces:billing", workspace.uuid)
+        case _:
+            return HttpResponseBadRequest()
+
+
+QuotaEntry = TypedDict("QuotaEntry", {"label": str, "quota": Quota})
+
+
+@platform_view
+def workspace_settings_quota(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Show workspace quota."""
+    workspace = workspace_find_by_workspace_uuid(
+        who=request.user, workspace_uuid=workspace_uuid
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+    workspace.quota = workspace_get_all_quotas(workspace)
+    projects = project_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        archived=False,
+    )
+
+    quota_rows: list[QuotaEntry] = [
+        {
+            "label": _("Team members and invites"),
+            "quota": workspace.quota.team_members_and_invites,
+        },
+        {
+            "label": _("Projects"),
+            "quota": workspace.quota.projects,
+        },
+        {
+            "label": _("Sections"),
+            "quota": workspace.quota.sections,
+        },
+        {
+            "label": _("Tasks"),
+            "quota": workspace.quota.tasks,
+        },
+        {
+            "label": _("Labels"),
+            "quota": workspace.quota.labels,
+        },
+        {
+            "label": _("Sub tasks"),
+            "quota": workspace.quota.sub_tasks,
+        },
+        {
+            "label": _("Task labels"),
+            "quota": workspace.quota.task_labels,
+        },
+    ]
+    quota_rows = [q for q in quota_rows if q["quota"].limit is not None]
+
+    context = {
+        "workspace": workspace,
+        "quota_rows": quota_rows,
+        "projects": projects,
+    }
+    return render(
+        request, "workspace/workspace_settings_quota.html", context=context
+    )
 
 
 # Create
@@ -178,6 +572,7 @@ class WorkspaceReadUpdate(views.APIView):
             title=serializer.validated_data["title"],
             description=serializer.validated_data.get("description"),
             who=self.request.user,
+            picture=None,
         )
         return Response(status=HTTP_200_OK, data=serializer.data)
 
