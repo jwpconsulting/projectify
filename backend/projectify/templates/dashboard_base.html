@@ -6,26 +6,7 @@
 {% load projectify %}
 {% block content %}
     <div class="flex min-h-screen grow flex-col">
-        <nav class="hidden flex-row items-center justify-between border-b-2 border-border bg-foreground px-6 py-4 md:flex">
-            <div class="flex flex-row items-center gap-4">
-                <a href="{% url "dashboard:dashboard" %}" class="shrink">
-                    <img src="{% static "polylogo.svg" %}"
-                         width="171"
-                         height="36"
-                         alt="Projectify">
-                </a>
-            </div>
-            <div class="flex shrink-0 flex-row items-center gap-2">
-                <div class="flex flex-row gap-4">
-                    <a class="flex flex-row items-center justify-center gap-2 rounded-lg px-2 py-0.5 hover:bg-secondary-hover"
-                       href="{% url "users-django:profile" %}">
-                        {{ request.user }}
-                        {% user_avatar request.user %}
-                    </a>
-                    <a href="{% url "users-django:log-out" %}">{% trans "Log out" %}</a>
-                </div>
-            </div>
-        </nav>
+        {% include "common/navigation/header/dashboard.html" %}
         <div class="flex min-h-0 shrink grow flex-row">
             <div class="hidden h-full shrink-0 md:block">
                 <div class="max-w-xs 2xl:max-w-md">
