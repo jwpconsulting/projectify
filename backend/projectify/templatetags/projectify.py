@@ -7,6 +7,7 @@ from typing import Optional, Union
 
 from django import template
 from django.template.loader import render_to_string
+from django.urls import NoReverseMatch, reverse
 from django.utils.html import format_html
 from django.utils.safestring import SafeText, mark_safe
 from django.utils.translation import gettext_lazy as _
@@ -35,6 +36,10 @@ def anchor(href: str, label: str, external: bool = False) -> SafeText:
     """
     extra: Union[SafeText, str]
     a_extra: Union[SafeText, str]
+    try:
+        url = reverse(href)
+    except NoReverseMatch:
+        url = href
     if external:
         a_extra = mark_safe(' target="_blank"')
         extra = format_html(
@@ -46,9 +51,9 @@ def anchor(href: str, label: str, external: bool = False) -> SafeText:
         a_extra = ""
         extra = ""
     return format_html(
-        '<a href="{href}" class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"{a_extra}>{label}{extra}</a>',
+        '<a href="{url}" class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"{a_extra}>{label}{extra}</a>',
         a_extra=a_extra,
-        href=href,
+        url=url,
         label=label,
         extra=extra,
     )
