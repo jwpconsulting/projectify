@@ -27,6 +27,11 @@ def customer_activate_subscription(
     customer.subscription_status = CustomerSubscriptionStatus.ACTIVE
     customer.seats = seats
     customer.save()
+    logger.info(
+        "Activated subscription for customer %s with stripe id %s",
+        customer.uuid,
+        stripe_customer_id,
+    )
 
 
 def customer_update_seats(*, customer: Customer, seats: int) -> None:

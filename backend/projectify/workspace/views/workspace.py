@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2023, 2024 JWP Consulting GK
 """Workspace CRUD views."""
 
+import logging
 from typing import Any, TypedDict
 from uuid import UUID
 
@@ -24,8 +25,12 @@ from rest_framework.status import (
     HTTP_204_NO_CONTENT,
 )
 
+from projectify.corporate.selectors.customer import (
+    customer_find_by_workspace_uuid,
+)
 from projectify.corporate.services.coupon import coupon_redeem
 from projectify.corporate.services.customer import (
+    create_billing_portal_session_for_customer,
     customer_create_stripe_checkout_session,
 )
 from projectify.lib.error_schema import DeriveSchema
@@ -54,6 +59,8 @@ from ..services.team_member_invite import (
 )
 from ..services.workspace import workspace_create, workspace_update
 from ..types import Quota
+
+logger = logging.getLogger(__name__)
 
 
 # HTML
@@ -366,6 +373,24 @@ class WorkspaceBillingForm(forms.Form):
                 # XXX this error is not visible
                 self.add_error(None, _("Invalid action selected"))
         return super().clean()
+
+
+@require_http_methods(["POST"])
+@platform_view
+def workspace_settings_billing_edit(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Redirect user to Stripe billing portal."""
+    customer = customer_find_by_workspace_uuid(
+        workspace_uuid=workspace_uuid, who=request.user
+    )
+    if customer is None:
+        raise Http404(_("Workspace or customer not found"))
+
+    session = create_billing_portal_session_for_customer(
+        customer=customer, who=request.user
+    )
+    return redirect(session.url)
 
 
 # XXX REFACTOR ME

@@ -40,6 +40,39 @@ from ..services.stripe import (
 
 logger = logging.getLogger(__name__)
 
+# TODO
+"""
+Handle these events:
+
+WARNING [stripe] ~ Unhandled event type charge.succeeded
+INFO [_util] ~ message='Request to Stripe api' method=get url=https://api.stripe.com/v1/checkout/sessions/cs_test_...
+WARNING [stripe] ~ Unhandled event type payment_method.attached
+WARNING [stripe] ~ Unhandled event type customer.created
+WARNING [stripe] ~ Unhandled event type customer.updated
+INFO [_util] ~ message='Stripe API response' path=https://api.stripe.com/v1/checkout/sessions/cs_test_...
+WARNING [stripe] ~ Unhandled event type customer.subscription.created
+HTTP POST /corporate/stripe-webhook/ 200 [0.33, 127.0.0.1:33996]
+INFO [runserver] ~ HTTP POST /corporate/stripe-webhook/ 200 [0.33, 127.0.0.1:33996]
+HTTP POST /corporate/stripe-webhook/ 200 [0.36, 127.0.0.1:34002]
+INFO [runserver] ~ HTTP POST /corporate/stripe-webhook/ 200 [0.36, 127.0.0.1:34002]
+HTTP POST /corporate/stripe-webhook/ 200 [0.53, 127.0.0.1:33978]
+INFO [runserver] ~ HTTP POST /corporate/stripe-webhook/ 200 [0.53, 127.0.0.1:33978]
+INFO [_util] ~ message='Request to Stripe api' method=get url=https://api.stripe.com/v1/subscription_items?subscription=sub_...
+WARNING [stripe] ~ Unhandled event type payment_intent.succeeded
+HTTP POST /corporate/stripe-webhook/ 200 [0.48, 127.0.0.1:34006]
+INFO [runserver] ~ HTTP POST /corporate/stripe-webhook/ 200 [0.48, 127.0.0.1:34006]
+HTTP POST /corporate/stripe-webhook/ 200 [0.68, 127.0.0.1:33986]
+INFO [runserver] ~ HTTP POST /corporate/stripe-webhook/ 200 [0.68, 127.0.0.1:33986]
+WARNING [stripe] ~ Unhandled event type payment_intent.created
+HTTP POST /corporate/stripe-webhook/ 200 [0.42, 127.0.0.1:34022]
+INFO [runserver] ~ HTTP POST /corporate/stripe-webhook/ 200 [0.42, 127.0.0.1:34022]
+INFO [_util] ~ message='Stripe API response' path=https://api.stripe.com/v1/subscription_items?subscription=sub_...
+WARNING [stripe] ~ Customer XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX set the same number of seats (2) as before
+WARNING [stripe] ~ Unhandled event type invoice.created
+WARNING [stripe] ~ Unhandled event type invoice.finalized
+WARNING [stripe] ~ Unhandled event type invoice.updated
+"""
+
 
 def _deserialize_stripe_customer(
     customer: Union[None, str, stripe.Customer],
@@ -278,6 +311,9 @@ def _handle_event(
     except Exception:
         logger.exception("Error encountered for %s", event_type)
         return "internal_server_error"
+
+    logger.info("Handled event type %s", event_type)
+
     return "ok"
 
 

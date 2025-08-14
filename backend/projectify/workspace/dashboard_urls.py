@@ -17,6 +17,7 @@ from projectify.workspace.views.task import (
 from projectify.workspace.views.workspace import (
     workspace_list_view,
     workspace_settings_billing,
+    workspace_settings_billing_edit,
     workspace_settings_general,
     workspace_settings_quota,
     workspace_settings_team_member_remove,
@@ -69,6 +70,11 @@ workspace_patterns = (
         "<uuid:workspace_uuid>/settings/billing",
         workspace_settings_billing,
         name="billing",
+    ),
+    path(
+        "<uuid:workspace_uuid>/settings/billing/edit",
+        workspace_settings_billing_edit,
+        name="billing-edit",
     ),
     path(
         "<uuid:workspace_uuid>/settings/quota",

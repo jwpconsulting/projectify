@@ -24,10 +24,14 @@
                     {% blocktrans with total_seats=workspace.customer.seats remaining_seats=seats_remaining %}{{ total_seats }} seats in total, {{ remaining_seats }} seats remaining{% endblocktrans %}
                 </p>
             </section>
-            <button type="button"
-                    class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                {% trans "Edit billing details" %}
-            </button>
+            <form method="post"
+                  action="{% url 'dashboard:workspaces:billing-edit' workspace.uuid %}">
+                {% csrf_token %}
+                <button type="submit"
+                        class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
+                    {% trans "Edit billing details" %}
+                </button>
+            </form>
         {% elif workspace.customer.subscription_status == "UNPAID" or workspace.customer.subscription_status == "CANCELLED" %}
             <section>
                 <p class="font-bold">
