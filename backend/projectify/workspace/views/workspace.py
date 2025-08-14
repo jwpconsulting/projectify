@@ -375,6 +375,7 @@ class WorkspaceBillingForm(forms.Form):
         return super().clean()
 
 
+# XXX this should be in the corporate app
 @require_http_methods(["POST"])
 @platform_view
 def workspace_settings_billing_edit(
@@ -387,9 +388,13 @@ def workspace_settings_billing_edit(
     if customer is None:
         raise Http404(_("Workspace or customer not found"))
 
-    session = create_billing_portal_session_for_customer(
-        customer=customer, who=request.user
-    )
+    try:
+        session = create_billing_portal_session_for_customer(
+            customer=customer, who=request.user
+        )
+    except ValidationError:
+        # TODO show a more meaningful error
+        return HttpResponseBadRequest()
     return redirect(session.url)
 
 
@@ -397,6 +402,8 @@ def workspace_settings_billing_edit(
 PRICE_PER_SEAT = 8
 
 
+# XXX the part that accepts POST should be in the corporate app instead
+# TODO figure out how to break this apart
 @require_http_methods(["GET", "POST"])
 @platform_view
 def workspace_settings_billing(
