@@ -57,7 +57,11 @@ from ..services.task import (
     task_move_after,
     task_update_nested,
 )
-from ..services.team_member import team_member_delete, team_member_update
+from ..services.team_member import (
+    team_member_change_role,
+    team_member_delete,
+    team_member_update,
+)
 from ..services.team_member_invite import (
     team_member_invite_create,
     team_member_invite_delete,
@@ -343,7 +347,10 @@ class TestWorkspace:
         )
 
         await database_sync_to_async(workspace_update)(
-            workspace=workspace, who=team_member.user, title="A new hope"
+            workspace=workspace,
+            who=team_member.user,
+            title="A new hope",
+            picture=None,
         )
         assert await expect_change(workspace_communicator, workspace)
         await database_sync_to_async(workspace_delete)(
@@ -374,7 +381,14 @@ class TestTeamMember:
         await database_sync_to_async(team_member_update)(
             team_member=other_team_member,
             who=team_member.user,
-            role=TeamMemberRoles.OBSERVER,
+            job_title="asd",
+        )
+        await expect_change(workspace_communicator, workspace)
+
+        await database_sync_to_async(team_member_change_role)(
+            team_member=other_team_member,
+            who=team_member.user,
+            role=TeamMemberRoles.OWNER,
         )
         await expect_change(workspace_communicator, workspace)
 

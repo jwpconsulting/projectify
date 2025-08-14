@@ -6,9 +6,6 @@
 from typing import Optional
 
 from django.db import transaction
-from django.utils.translation import gettext_lazy as _
-
-from rest_framework import serializers
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
@@ -23,11 +20,24 @@ def team_member_update(
     team_member: TeamMember,
     who: User,
     job_title: Optional[str] = None,
-    role: TeamMemberRoles,
 ) -> TeamMember:
-    """Update a team member with new role and job title."""
+    """Update a team member."""
     validate_perm("workspace.update_team_member", who, team_member.workspace)
     team_member.job_title = job_title
+    team_member.save()
+    send_change_signal("changed", team_member.workspace)
+    return team_member
+
+
+@transaction.atomic
+def team_member_change_role(
+    *,
+    team_member: TeamMember,
+    who: User,
+    role: TeamMemberRoles,
+) -> TeamMember:
+    """Change a team member's role."""
+    validate_perm("workspace.update_team_member_role", who, team_member)
     team_member.role = role
     team_member.save()
     send_change_signal("changed", team_member.workspace)
@@ -52,10 +62,6 @@ def team_member_delete(
     On the other hand, we might introduce a proper hand-off procedure,
     so big TODO maybe?
     """
-    validate_perm("workspace.delete_team_member", who, team_member.workspace)
-    if team_member.user == who:
-        raise serializers.ValidationError(
-            {"team_member": _("Can't delete own team member")}
-        )
+    validate_perm("workspace.delete_team_member", who, team_member)
     team_member.delete()
     send_change_signal("changed", team_member.workspace)

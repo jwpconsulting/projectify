@@ -178,6 +178,7 @@
             pkgs.heroku
             pkgs.openssl
             pkgs.gettext
+            pkgs.stripe-cli
 
             # For frontend and backend
             self.outputs.packages.${system}.projectify-frontend-node.passthru.nodejs

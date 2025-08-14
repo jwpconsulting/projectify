@@ -4,9 +4,12 @@
 """Test workspace CRUD views."""
 
 import unittest.mock
+from typing import cast
 
 from django.contrib.auth.models import AbstractBaseUser, AbstractUser
 from django.core.files import File
+from django.db.models.fields.files import FileDescriptor
+from django.test.client import Client
 from django.urls import reverse
 
 import pytest
@@ -25,9 +28,171 @@ from ...models.project import Project
 from ...models.team_member import TeamMember
 from ...models.workspace import Workspace
 
+pytestmark = pytest.mark.django_db
+
+
+# Django view tests
+
+
+class TestWorkspaceSettings:
+    """Test django workspace settings view."""
+
+    @pytest.fixture
+    def resource_url(self, workspace: Workspace) -> str:
+        """Return URL to this view."""
+        return reverse("dashboard:workspaces:settings", args=(workspace.uuid,))
+
+    def test_get_form(
+        self,
+        user: User,
+        user_client: Client,
+        resource_url: str,
+        workspace: Workspace,
+        team_member: TeamMember,
+    ) -> None:
+        """Test GETting the page."""
+        response = user_client.get(resource_url)
+        assert response.status_code == 200
+        assert workspace.title.encode() in response.content
+
+    def test_update_workspace_and_title(
+        self,
+        user_client: Client,
+        resource_url: str,
+        uploaded_file: File,
+        workspace: Workspace,
+        team_member: TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test updating both title and workspace picture."""
+        workspace.picture = cast(FileDescriptor, None)
+        workspace.save()
+        assert not workspace.picture
+        with django_assert_num_queries(12):
+            response = user_client.post(
+                resource_url,
+                {
+                    "title": "New Workspace Title",
+                    "description": "New workspace description",
+                    "picture": uploaded_file,
+                },
+                follow=True,
+            )
+            assert response.status_code == 200
+            assert response.redirect_chain[-1][0] == reverse(
+                "dashboard:workspaces:settings", args=(workspace.uuid,)
+            )
+
+        workspace.refresh_from_db()
+        assert workspace.title == "New Workspace Title"
+        assert workspace.description == "New workspace description"
+        assert workspace.picture.url
+
+    def test_clear_workspace_picture(
+        self,
+        user_client: Client,
+        resource_url: str,
+        uploaded_file: File,
+        workspace: Workspace,
+    ) -> None:
+        """Test clearing the workspace picture."""
+        workspace.picture = cast(FileDescriptor, uploaded_file)
+        workspace.save()
+        assert workspace.picture
+
+        response = user_client.post(
+            resource_url,
+            {
+                "title": workspace.title,
+                "description": workspace.description,
+                "picture-clear": "1",
+            },
+            follow=True,
+        )
+        assert response.status_code == 200
+        assert response.redirect_chain[-1][0] == reverse(
+            "dashboard:workspaces:settings", args=(workspace.uuid,)
+        )
+
+        workspace.refresh_from_db()
+        assert not workspace.picture
+
+
+class TestWorkspaceSettingsTeamMembers:
+    """Test team member invite view."""
+
+    @pytest.fixture
+    def invite_url(self, workspace: Workspace) -> str:
+        """Return URL to this view."""
+        return reverse(
+            "dashboard:workspaces:team-members-invite", args=(workspace.uuid,)
+        )
+
+    def test_invite_new_user(
+        self,
+        user_client: Client,
+        invite_url: str,
+        workspace: Workspace,
+        team_member: TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test inviting a new user."""
+        initial_invite_count = workspace.teammemberinvite_set.count()
+
+        # Justus 2025-07-29 query count went up 10 -> 19 XXX
+        # Justus 2025-07-29 query count went up 19 -> 33 XXX
+        with django_assert_num_queries(33):
+            response = user_client.post(
+                invite_url, {"email": "newuser@example.com"}
+            )
+            assert response.status_code == 200
+
+        assert (
+            workspace.teammemberinvite_set.count() == initial_invite_count + 1
+        )
+
+    def test_invite_existing_user(
+        self,
+        user_client: Client,
+        invite_url: str,
+        workspace: Workspace,
+        team_member: TeamMember,
+        other_user: User,
+    ) -> None:
+        """Test inviting an existing user."""
+        initial_team_member_count = workspace.teammember_set.count()
+
+        response = user_client.post(invite_url, {"email": other_user.email})
+
+        assert response.status_code == 200
+        assert (
+            workspace.teammember_set.count() == initial_team_member_count + 1
+        )
+
+    def test_invite_already_invited_user(
+        self, user_client: Client, invite_url: str, team_member: TeamMember
+    ) -> None:
+        """Test inviting a user who was already invited."""
+        user_client.post(invite_url, {"email": "duplicate@example.com"})
+
+        response = user_client.post(
+            invite_url, {"email": "duplicate@example.com"}
+        )
+        assert response.status_code == 400
+        assert b"already been invited" in response.content
+
+    def test_invite_existing_team_member(
+        self, user_client: Client, invite_url: str, team_member: TeamMember
+    ) -> None:
+        """Test inviting someone who is already a team member."""
+        response = user_client.post(
+            invite_url, {"email": team_member.user.email}
+        )
+        assert response.status_code == 400
+        assert b"already been added" in response.content
+
 
 # Create
-@pytest.mark.django_db
 class TestWorkspaceCreate:
     """Test workspace create."""
 
@@ -68,7 +233,6 @@ class TestWorkspaceCreate:
 
 
 # Read
-@pytest.mark.django_db
 class TestUserWorkspaces:
     """Test Workspace list."""
 
@@ -98,7 +262,6 @@ class TestUserWorkspaces:
         ]
 
 
-@pytest.mark.django_db
 class TestWorkspaceReadUpdate:
     """Test WorkspaceReadUpdate."""
 
@@ -267,7 +430,6 @@ class TestWorkspaceReadUpdate:
 
 
 # RPC
-@pytest.mark.django_db
 class TestWorkspacePictureUploadView:
     """Test WorkspacePictureUploadView."""
 
@@ -329,7 +491,6 @@ class TestWorkspacePictureUploadView:
         assert not workspace.picture
 
 
-@pytest.mark.django_db
 class TestInviteUserToWorkspace:
     """Test two views, InviteUserToWorkspace and UninviteUserFromWorkspace."""
 

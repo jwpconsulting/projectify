@@ -1,164 +1,66 @@
-<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
-<!-- SPDX-FileCopyrightText: 2024 JWP Consulting GK -->
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# SPDX-FileCopyrightText: 2024 JWP Consulting GK #}
 {% extends "base.html" %}
 {% load static %}
 {% load i18n %}
+{% load projectify %}
 {% block content %}
     <div class="flex min-h-screen grow flex-col">
-        <nav class="hidden flex-row items-center justify-between border-b-2 border-border bg-foreground px-6 py-4 md:flex">
-            <div class="flex flex-row items-center gap-4">
-                <a href="{% url "dashboard:dashboard" %}" class="shrink">
-                    <img src="{% static "polylogo.svg" %}"
-                         width="171"
-                         height="36"
-                         alt="Projectify">
-                </a>
-            </div>
-            <div class="flex shrink-0 flex-row items-center gap-2">
-                <div class="flex flex-row gap-4">
-                    <a class="flex flex-row items-center justify-center gap-2 rounded-lg px-2 py-0.5 hover:bg-secondary-hover"
-                       href="{% url "users-django:profile" %}">
-                        {{ request.user }}
-                        <div class="flex flex-row h-6 w-6 items-center rounded-full border border-primary">
-                            {% if request.user.profile_picture %}
-                                <img src="{{ request.user.profile_picture.url }}"
-                                     alt="{{ request.user }}"
-                                     height="24"
-                                     width="24"
-                                     class="h-full w-full overflow-x-auto rounded-full object-cover object-center">
-                            {% endif %}
-                        </div>
-                    </a>
-                    <a href="{% url "users-django:log-out" %}">{% trans "Log out" %}</a>
-                </div>
-            </div>
-        </nav>
+        {% include "common/navigation/header/dashboard.html" %}
         <div class="flex min-h-0 shrink grow flex-row">
             <div class="hidden h-full shrink-0 md:block">
                 <div class="max-w-xs 2xl:max-w-md">
                     <nav class="flex flex-col py-4">
                         <div class="flex flex-col gap-2 px-4 pb-4">
                             <div class="flex flex-row items-center justify-between gap-4">
-                                <div class="min-w-0 grow">
-                                    <button class="flex w-full flex-row items-center justify-between gap-2 rounded-lg border border-border p-2 hover:bg-secondary-hover">
-                                        <div class="flex min-w-0 flex-row items-center gap-2">
-                                            <svg fill="none"
-                                                 viewBox="0 0 24 24"
-                                                 stroke="currentColor"
-                                                 aria-hidden="true"
-                                                 xmlns="http://www.w3.org/2000/svg"
-                                                 width="100%"
-                                                 height="100%"
-                                                 class="h-4 w-4 shrink-0">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
-                                                </path>
-                                            </svg>
-                                            {% if workspace %}<div class="min-w-0 truncate font-bold">{{ workspace.title }}</div>{% endif %}
-                                        </div>
-                                        <svg fill="none"
-                                             viewBox="0 0 24 24"
-                                             stroke="currentColor"
-                                             aria-hidden="true"
-                                             xmlns="http://www.w3.org/2000/svg"
-                                             width="100%"
-                                             height="100%"
-                                             class="h-4 w-4 shrink-0">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div>
-                                    <button aria-label="Open workspace context menu"
-                                            class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                        <svg fill="none"
-                                             viewBox="0 0 24 24"
-                                             stroke="currentColor"
-                                             aria-hidden="true"
-                                             xmlns="http://www.w3.org/2000/svg"
-                                             width="100%"
-                                             height="100%">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                </div>
+                                {% if workspace %}
+                                    <div class="min-w-0 grow">
+                                        <button class="flex w-full flex-row items-center justify-between gap-2 rounded-lg border border-border p-2 hover:bg-secondary-hover">
+                                            <div class="flex min-w-0 flex-row items-center gap-2">
+                                                <div class="h-4 w-4 shrink-0">{% include "heroicons/briefcase.svg" %}</div>
+                                                <div class="min-w-0 truncate font-bold">{{ workspace.title }}</div>
+                                            </div>
+                                            <div class="w-4 h-4 shrink-0">{% include "heroicons/chevron-down.svg" %}</div>
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <a href="{% url 'dashboard:workspaces:settings' workspace.uuid %}"
+                                           aria-label="Open workspace settings"
+                                           class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled flex items-center justify-center">
+                                            {% include "heroicons/dots-horizontal.svg" %}
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    todo no workspace
+                                {% endif %}
                             </div>
                         </div>
                         <p class="px-4">
-                            <strong>Trial workspace</strong> <a href="#"
-    class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
-    target="_blank">Learn more<span class="sr-only">(Opens in new tab)</span>
-                            <svg fill="none"
-                                 viewBox="0 0 24 24"
-                                 stroke="currentColor"
-                                 aria-hidden="true"
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 width="100%"
-                                 height="100%"
-                                 class="inline-block h-4 w-4 px-px">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
-                                </path>
-                            </svg>
-                        </a>
-                    </p>
-                    <div class="flex flex-col">
-                        <button class="flex w-full flex-row items-center justify-between gap-2 px-4 py-2 text-utility hover:text-base-content">
-                            <div class="flex flex-row items-center gap-4">
-                                <div class="flex flex-row items-center gap-2">
-                                    <svg fill="none"
-                                         viewBox="0 0 24 24"
-                                         stroke="currentColor"
-                                         aria-hidden="true"
-                                         xmlns="http://www.w3.org/2000/svg"
-                                         width="100%"
-                                         height="100%"
-                                         class="h-5 w-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z">
-                                        </path>
-                                    </svg>
-                                    <div class="font-bold">Projects</div>
-                                </div>
-                            </div>
-                            <svg fill="none"
-                                 viewBox="0 0 24 24"
-                                 stroke="currentColor"
-                                 aria-hidden="true"
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 width="100%"
-                                 height="100%"
-                                 class="h-4 w-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                            </svg>
-                        </button>
-                        <div class="flex shrink flex-col">
-                            {% for project in section.project.workspace.project_set.all %}
-                                <a class="group block flex w-full flex-row justify-between gap-1 px-4 py-1 hover:bg-base-200"
-                                   href="{% url "dashboard:projects:detail" project.uuid %}">
-                                    <div class="flex min-w-0 flex-row items-center gap-2">
-                                        <div class="rounded-md p-1 bg-primary-focus">
-                                            <svg fill="none"
-                                                 viewBox="0 0 24 24"
-                                                 stroke="currentColor"
-                                                 aria-hidden="true"
-                                                 xmlns="http://www.w3.org/2000/svg"
-                                                 width="100%"
-                                                 height="100%"
-                                                 class="h-4 w-4 text-base-100">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z">
-                                                </path>
-                                            </svg>
-                                        </div>
-                                        <div class="line-clamp-1 min-w-0 font-bold">{{ project.title }}</div>
+                            {% url "help:detail" page="billing" as trial_workspace_help %}
+                            <strong>{% trans "Trial workspace" %}</strong>
+                            {% anchor href=trial_workspace_help label=_("Learn more") external=True %}
+                        </p>
+                        <div class="flex flex-col">
+                            <button class="flex w-full flex-row items-center justify-between gap-2 px-4 py-2 text-utility hover:text-base-content">
+                                <div class="flex flex-row items-center gap-4">
+                                    <div class="flex flex-row items-center gap-2">
+                                        <div class="w-4 h-4">{% include "heroicons/folder.svg" %}</div>
+                                        <div class="font-bold">{% trans "Projects" %}</div>
                                     </div>
-                                </a>
-                            {% endfor %}
+                                </div>
+                                <div class="w-4 h-4">{% include "heroicons/chevron-down.svg" %}</div>
+                            </button>
+                            <div class="flex shrink flex-col">
+                                {% block dashboard_projects %}
+                                    {% include "dashboard_projects.html" %}
+                                {% endblock dashboard_projects %}
+                            </div>
                         </div>
-                    </div>
-                </nav>
+                    </nav>
+                </div>
             </div>
+            {% block dashboard_content %}
+            {% endblock dashboard_content %}
         </div>
-        {% block dashboard_content %}
-        {% endblock dashboard_content %}
     </div>
-</div>
 {% endblock content %}

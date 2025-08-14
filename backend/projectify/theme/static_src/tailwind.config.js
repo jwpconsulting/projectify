@@ -97,7 +97,17 @@ const colors = {
 const config = {
     darkmode: "class",
     mode: "jit",
-    content: ["../../**/templates/**/*.html"],
+    // ../../ is the projectify directory
+    content: [
+        // Apps
+        "../../../projectify/*/templates/**/*.html",
+        // Shared templates
+        "../../../projectify/templates/**/*.html",
+        // Heroicons
+        "../../../projectify/templates/heroicons/*.svg",
+        // Templatetags
+        "../../../projectify/templatetags/*.py",
+    ],
     theme: {
         extend: {
             borderRadius: {

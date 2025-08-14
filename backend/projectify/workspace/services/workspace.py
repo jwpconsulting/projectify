@@ -8,9 +8,10 @@ This is where all workspace related services will live in the future.
 """
 
 import logging
-from typing import Optional
+from typing import Literal, Optional, Union, cast
 
 from django.db import transaction
+from django.db.models.fields.files import FileDescriptor
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
@@ -56,6 +57,7 @@ def workspace_update(
     workspace: Workspace,
     title: str,
     description: Optional[str] = None,
+    picture: Union[FileDescriptor, None, Literal[False]],
     who: User,
 ) -> Workspace:
     """Update a workspace."""
@@ -66,6 +68,13 @@ def workspace_update(
     )
     workspace.title = title
     workspace.description = description
+    match picture:
+        case False:
+            workspace.picture = cast(FileDescriptor, None)
+        case None:
+            pass
+        case picture:
+            workspace.picture = picture
     workspace.save()
     send_change_signal("changed", workspace)
     return workspace

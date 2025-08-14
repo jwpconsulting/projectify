@@ -6,6 +6,7 @@
 from collections.abc import Iterable
 from unittest import mock
 
+from django.test.client import Client
 from django.urls import reverse
 
 import pytest
@@ -33,6 +34,55 @@ def patch_stripe_settings(
     settings.STRIPE_SECRET_KEY = stripe_secret_key
     settings.STRIPE_ENDPOINT_SECRET = stripe_endpoint_secret
     settings.STRIPE_PRICE_OBJECT = stripe_price_object
+
+
+# Django views
+# XXX this view should be in corporate
+class TestWorkspaceSettingsBillingEdit:
+    """Test workspace_settings_billing_edit view."""
+
+    @pytest.fixture
+    def resource_url(self, workspace: Workspace) -> str:
+        """Return URL to this view."""
+        return reverse(
+            "dashboard:workspaces:billing-edit", args=(workspace.uuid,)
+        )
+
+    @pytest.fixture(autouse=True)
+    def mock_stripe_billing_portal(self) -> Iterable[mock.MagicMock]:
+        """Mock stripe billing portal session creation."""
+        with mock.patch(
+            "stripe.billing_portal._session_service.SessionService.create"
+        ) as m:
+            m.return_value = MockSession()
+            yield m
+
+    def test_with_unpaid_customer(
+        self,
+        user_client: Client,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        unpaid_customer: Customer,
+        resource_url: str,
+    ) -> None:
+        """Assert that an unpaid customer cannot access this view."""
+        with django_assert_num_queries(5):
+            response = user_client.post(resource_url)
+            assert response.status_code == 400, response.content
+
+    def test_with_paying_customer(
+        self,
+        user_client: Client,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        paid_customer: Customer,
+        resource_url: str,
+    ) -> None:
+        """Test calling this with a paying customer."""
+        with django_assert_num_queries(5):
+            response = user_client.post(resource_url)
+            assert response.status_code == 302, response.content
+        assert (
+            response.headers["Location"] == "https://www.example.com"
+        ), response.headers
 
 
 # Read
