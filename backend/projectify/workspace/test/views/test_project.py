@@ -4,7 +4,9 @@
 """Test project CRUD views."""
 
 from unittest.mock import ANY
+from uuid import uuid4
 
+from django.test.client import Client
 from django.urls import reverse
 from django.utils.timezone import now
 
@@ -25,6 +27,131 @@ from projectify.workspace.selectors.project import (
 from projectify.workspace.services.project import project_archive
 from projectify.workspace.services.sub_task import sub_task_create
 from pytest_types import DjangoAssertNumQueries
+
+
+# HTML views
+@pytest.mark.django_db
+class TestProjectDetailView:
+    """Test html project detail view."""
+
+    @pytest.fixture
+    def resource_url(self, project: Project) -> str:
+        """Return URL to this view."""
+        return reverse("dashboard:projects:detail", args=(project.uuid,))
+
+    def test_get_project_detail(
+        self,
+        user_client: Client,
+        resource_url: str,
+        project: Project,
+        team_member: TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test GETting the project detail page."""
+        with django_assert_num_queries(14):
+            response = user_client.get(resource_url)
+            assert response.status_code == 200
+            assert project.title.encode() in response.content
+            assert project.workspace.title.encode() in response.content
+
+    def test_project_not_found(
+        self,
+        user_client: Client,
+        team_member: TeamMember,
+    ) -> None:
+        """Ensure that accessing a non-existent project returns 404."""
+        url = reverse("dashboard:projects:detail", args=(uuid4(),))
+        response = user_client.get(url)
+        assert response.status_code == 404
+
+    def test_archived_project_not_found(
+        self,
+        user_client: Client,
+        archived_project: Project,
+        team_member: TeamMember,
+    ) -> None:
+        """Ensure that the client can't access archived projects."""
+        url = reverse(
+            "dashboard:projects:detail", args=(archived_project.uuid,)
+        )
+        response = user_client.get(url)
+        assert response.status_code == 404
+
+
+@pytest.mark.django_db
+class TestProjectCreateView:
+    """Test html project create view."""
+
+    @pytest.fixture
+    def resource_url(self, workspace: Workspace) -> str:
+        """Return URL to this view."""
+        return reverse(
+            "dashboard:workspaces:create-project", args=(workspace.uuid,)
+        )
+
+    def test_get(
+        self, user_client: Client, resource_url: str, team_member: TeamMember
+    ) -> None:
+        """Test getting this page."""
+        response = user_client.get(resource_url)
+        assert response.status_code == 200
+
+    def test_create_project_success(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test successfully creating a project."""
+        initial_project_count = Project.objects.count()
+
+        # XXX 20 queries is a bit excessive
+        with django_assert_num_queries(20):
+            response = user_client.post(
+                resource_url,
+                {"title": "New Test Project"},
+                follow=True,
+            )
+            assert response.status_code == 200
+
+        assert Project.objects.count() == initial_project_count + 1
+        assert "New Test Project" in response.content.decode()
+
+    def test_create_project_invalid_form(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+    ) -> None:
+        """Test form validation with invalid data."""
+        initial_project_count = Project.objects.count()
+        response = user_client.post(resource_url, {})
+        assert response.status_code == 400
+        assert Project.objects.count() == initial_project_count
+
+    def test_workspace_not_found(
+        self,
+        user_client: Client,
+        team_member: TeamMember,
+    ) -> None:
+        """Test accessing project creation for non-existent workspace."""
+        url = reverse("dashboard:workspaces:create-project", args=(uuid4(),))
+        response = user_client.get(url)
+        assert response.status_code == 404
+
+    def test_unauthorized_workspace_access(
+        self,
+        user_client: Client,
+        unrelated_workspace: Workspace,
+    ) -> None:
+        """Test that users can't create projects in other workspaces."""
+        url = reverse(
+            "dashboard:workspaces:create-project",
+            args=(unrelated_workspace.uuid,),
+        )
+        response = user_client.get(url)
+        assert response.status_code == 404
 
 
 # Create

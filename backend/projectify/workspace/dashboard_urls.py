@@ -6,7 +6,10 @@
 from django.urls import include, path
 
 from projectify.workspace.views.dashboard import redirect_to_dashboard
-from projectify.workspace.views.project import project_detail_view
+from projectify.workspace.views.project import (
+    project_create_view,
+    project_detail_view,
+)
 from projectify.workspace.views.task import (
     task_create,
     task_create_sub_task_form,
@@ -40,6 +43,12 @@ workspace_patterns = (
         "<uuid:workspace_uuid>",
         workspace_view,
         name="detail",
+    ),
+    # Project related views:
+    path(
+        "<uuid:workspace_uuid>/create-project",
+        project_create_view,
+        name="create-project",
     ),
     # Settings
     path(
@@ -89,7 +98,6 @@ workspace_patterns = (
     ),
 )
 project_patterns = (
-    # HTML
     path(
         "<uuid:project_uuid>",
         project_detail_view,

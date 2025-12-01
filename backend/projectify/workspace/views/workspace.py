@@ -68,7 +68,7 @@ logger = logging.getLogger(__name__)
 def workspace_list_view(request: AuthenticatedHttpRequest) -> HttpResponse:
     """Show all workspaces."""
     workspaces = workspace_find_for_user(who=request.user)
-    context = {"workspaces": workspaces}
+    context = {"workspaces": workspaces, "workspace": None}
     return render(request, "workspace/workspace_list.html", context)
 
 
