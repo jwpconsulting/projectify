@@ -49,6 +49,19 @@ class Customer(BaseModel):
     )
     seats = models.PositiveIntegerField(default=1)
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+    # TODO track stripe subscription id
+    # This can help us prevent double subscriptions
+    # TODO track payment method
+    # We can show this in the billing UI
+    # TODO track last charge succeeded date
+    # We can show this in the billing UI
+    # TODO track the most recent charge ID
+    # We can track this for internal consistency checking
+    # TODO track the most recent payment intent ID
+    # We can track this for internal consistency checking
+    # TODO track when invoices are created, finalized and updated
+    # and store their URLs in a related field
+    # we can then show the URLs to the invoices in the billing view
     subscription_status = models.CharField(
         max_length=9,
         choices=CustomerSubscriptionStatus.choices,

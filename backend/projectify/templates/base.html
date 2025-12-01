@@ -14,9 +14,22 @@
         <!-- TODO header goes here -->
         <script src="{% static "htmx.min.js" %}"></script>
         <script defer src="{% static "alpine.min.js" %}"></script>
+        <script>
+            htmx.on("htmx:beforeSwap", (e) => {
+                // Thanks to
+                // https://gist.github.com/lysender/a36143c002a84ed2c166bf7567b1a913?permalink_comment_id=5307278#gistcomment-5307278
+                // Allow 400 responses to swap
+                if (e.detail.xhr.status === 400) {
+                    e.detail.shouldSwap = true;
+                    e.detail.isError = false;
+                }
+            })
+
+        </script>
         {% tailwind_css %}
     </head>
-    <body class="min-h-screen w-full max-w-full bg-foreground text-base-content">
+    <body class="min-h-screen w-full max-w-full bg-foreground text-base-content"
+          hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
         {% if debug %}
             {% include "common/navigation/header/development_view_bar.html" %}
         {% endif %}

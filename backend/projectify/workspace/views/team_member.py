@@ -20,6 +20,7 @@ from projectify.workspace.selectors.team_member import (
     team_member_find_by_team_member_uuid,
 )
 from projectify.workspace.services.team_member import (
+    team_member_change_role,
     team_member_delete,
     team_member_update,
 )
@@ -95,8 +96,12 @@ class TeamMemberReadUpdateDelete(views.APIView):
         team_member = team_member_update(
             team_member=team_member,
             who=request.user,
-            role=serializer.validated_data["role"],
             job_title=serializer.validated_data.get("job_title"),
+        )
+        team_member = team_member_change_role(
+            team_member=team_member,
+            who=request.user,
+            role=serializer.validated_data["role"],
         )
         output_serializer = self.TeamMemberDetailSerializer(
             instance=team_member

@@ -156,6 +156,7 @@ def task_create(
     )
     if section is None:
         raise Http404(_("Section not found"))
+    workspace = section.project.workspace
     if request.method == "GET":
         return render(
             request,
@@ -164,9 +165,10 @@ def task_create(
                 "form": TaskCreateForm(workspace=section.project.workspace),
                 "formset": TaskCreateSubTaskForms(),
                 "section": section,
+                "workspace": workspace,
             },
         )
-    form = TaskCreateForm(section.project.workspace, request.POST)
+    form = TaskCreateForm(workspace, request.POST)
     formset = TaskCreateSubTaskForms(initial=request.POST.dict())
     all_valid = form.is_valid() and formset.is_valid()
     if not all_valid:

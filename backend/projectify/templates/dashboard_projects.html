@@ -1,0 +1,13 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{% for project in projects %}
+    <a class="group block flex w-full flex-row justify-between gap-1 px-4 py-1 hover:bg-base-200"
+       href="{% url "dashboard:projects:detail" project.uuid %}">
+        <div class="flex min-w-0 flex-row items-center gap-2">
+            <div class="rounded-md p-1{% if project == object %} bg-primary-focus{% endif %}">
+                <div class="h-4 w-4{% if project == object %} text-base-100{% endif %}">{% include "heroicons/folder.svg" %}</div>
+            </div>
+            <div class="line-clamp-1 min-w-0 font-bold">{{ project.title }}</div>
+        </div>
+    </a>
+{% endfor %}

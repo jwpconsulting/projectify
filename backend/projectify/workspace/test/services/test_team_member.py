@@ -9,8 +9,8 @@ from rest_framework.exceptions import PermissionDenied
 from projectify.user.models import User
 from projectify.workspace.models.const import TeamMemberRoles
 from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.services.team_member import (
+    team_member_change_role,
     team_member_delete,
     team_member_update,
 )
@@ -25,31 +25,47 @@ def test_team_member_update(team_member: TeamMember) -> None:
     team_member_update(
         who=team_member.user,
         team_member=team_member,
-        role=TeamMemberRoles.OBSERVER,
+        job_title="bla",
     )
-    # Now we have demoted ourselves and we can't do it again
+
+
+def test_team_member_change_role(
+    team_member: TeamMember, unrelated_user: User
+) -> None:
+    """Test changing team member roles."""
     with pytest.raises(PermissionDenied):
-        team_member_update(
+        team_member_change_role(
             who=team_member.user,
             team_member=team_member,
-            role=TeamMemberRoles.OWNER,
+            role=TeamMemberRoles.OBSERVER,
         )
-
-
-def test_team_member_delete(
-    team_member: TeamMember,
-    workspace: Workspace,
-    unrelated_user: User,
-) -> None:
-    """Test deleting a team member after adding them."""
-    count = workspace.users.count()
     new_team_member = workspace_add_user(
-        workspace=workspace,
+        workspace=team_member.workspace,
         # TODO perm check missing in workspace_add_user
         # E who=team_member.user,
         user=unrelated_user,
         role=TeamMemberRoles.OBSERVER,
     )
-    assert workspace.users.count() == count + 1
+    team_member_change_role(
+        who=team_member.user,
+        team_member=new_team_member,
+        role=TeamMemberRoles.OWNER,
+    )
+
+
+def test_team_member_delete(
+    team_member: TeamMember,
+    unrelated_user: User,
+) -> None:
+    """Test deleting a team member after adding them."""
+    count = team_member.workspace.users.count()
+    new_team_member = workspace_add_user(
+        workspace=team_member.workspace,
+        # TODO perm check missing in workspace_add_user
+        # E who=team_member.user,
+        user=unrelated_user,
+        role=TeamMemberRoles.OBSERVER,
+    )
+    assert team_member.workspace.users.count() == count + 1
     team_member_delete(team_member=new_team_member, who=team_member.user)
-    assert workspace.users.count() == count
+    assert team_member.workspace.users.count() == count

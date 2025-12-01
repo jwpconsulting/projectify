@@ -315,7 +315,23 @@ class TestTrialRules:
         assert validate_perm(
             "workspace.create_team_member_invite", user, workspace
         )
-        # Assume team_member_invite_create handles creating an invite and potential user creation
+
+        # Current user can't remove or update themselves
+        assert not validate_perm(
+            "workspace.delete_team_member",
+            user,
+            team_member,
+            raise_exception=False,
+        )
+        assert not validate_perm(
+            "workspace.update_team_member_role",
+            user,
+            team_member,
+            raise_exception=False,
+        )
+        # But they can change other things about themselves
+        assert validate_perm("workspace.update_team_member", user, workspace)
+
         invite = team_member_invite_create(
             workspace=workspace,
             email_or_user=faker.email(),
@@ -340,12 +356,15 @@ class TestTrialRules:
         assert validate_perm(
             "workspace.create_team_member_invite", user, workspace
         )
-        team_member_invite_create(
+        new_team_member = team_member_invite_create(
             workspace=workspace,
             who=team_member.user,
             email_or_user=unrelated_user,
         )
+        assert isinstance(new_team_member, TeamMember)
         assert workspace.users.count() == count + 1
+        assert user.has_perm("workspace.delete_team_member", new_team_member)
+        assert user.has_perm("workspace.update_team_member", workspace)
 
         # Now forbidden again
         assert not validate_perm(
