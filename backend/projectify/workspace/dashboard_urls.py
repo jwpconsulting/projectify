@@ -9,6 +9,7 @@ from projectify.workspace.views.dashboard import redirect_to_dashboard
 from projectify.workspace.views.project import (
     project_create_view,
     project_detail_view,
+    project_update_view,
 )
 from projectify.workspace.views.task import (
     task_create,
@@ -102,6 +103,11 @@ project_patterns = (
         "<uuid:project_uuid>",
         project_detail_view,
         name="detail",
+    ),
+    path(
+        "<uuid:project_uuid>/update",
+        project_update_view,
+        name="update",
     ),
 )
 section_patterns = (

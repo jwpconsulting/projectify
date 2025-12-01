@@ -154,6 +154,101 @@ class TestProjectCreateView:
         assert response.status_code == 404
 
 
+@pytest.mark.django_db
+class TestProjectUpdateView:
+    """Test html project update view."""
+
+    @pytest.fixture
+    def resource_url(self, project: Project) -> str:
+        """Return URL to this view."""
+        return reverse("dashboard:projects:update", args=(project.uuid,))
+
+    def test_get_project_update(
+        self,
+        user_client: Client,
+        resource_url: str,
+        project: Project,
+        team_member: TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test GETting the project update page."""
+        with django_assert_num_queries(4):
+            response = user_client.get(resource_url)
+            assert response.status_code == 200
+            assert project.title.encode() in response.content
+
+    def test_post_success(
+        self,
+        user_client: Client,
+        resource_url: str,
+        project: Project,
+        team_member: TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test successfully updating a project."""
+        updated_title = "Updated Project Title"
+
+        with django_assert_num_queries(5):
+            response = user_client.post(
+                resource_url,
+                {"title": updated_title},
+            )
+            assert response.status_code == 302
+
+        project.refresh_from_db()
+        assert project.title == updated_title
+
+    def test_update_project_invalid_form(
+        self,
+        user_client: Client,
+        resource_url: str,
+        project: Project,
+        team_member: TeamMember,
+    ) -> None:
+        """Test form validation with invalid data."""
+        original_title = project.title
+        response = user_client.post(resource_url, {"title": ""})
+        assert response.status_code == 400
+
+        project.refresh_from_db()
+        assert project.title == original_title, "Shouldn't change"
+
+    def test_project_not_found(
+        self,
+        user_client: Client,
+        team_member: TeamMember,
+    ) -> None:
+        """Ensure that updating a non-existent project returns 404."""
+        url = reverse("dashboard:projects:update", args=(uuid4(),))
+        response = user_client.get(url)
+        assert response.status_code == 404
+
+    def test_archived_project_not_found(
+        self,
+        user_client: Client,
+        archived_project: Project,
+        team_member: TeamMember,
+    ) -> None:
+        """Ensure that the client can't update archived projects."""
+        url = reverse(
+            "dashboard:projects:update", args=(archived_project.uuid,)
+        )
+        response = user_client.get(url)
+        assert response.status_code == 404
+
+    def test_unauthorized_project_access(
+        self,
+        user_client: Client,
+        unrelated_project: Project,
+    ) -> None:
+        """Test that users can't update projects they don't have access to."""
+        url = reverse(
+            "dashboard:projects:update", args=(unrelated_project.uuid,)
+        )
+        response = user_client.get(url)
+        assert response.status_code == 404
+
+
 # Create
 @pytest.mark.django_db
 class TestProjectCreate:

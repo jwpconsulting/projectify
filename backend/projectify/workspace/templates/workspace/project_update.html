@@ -3,10 +3,10 @@
 {% extends "workspace/form_base.html" %}
 {% load i18n %}
 {% block form_title %}
-    {% translate "Create project" %}
+    {% translate "Update project" %}
 {% endblock form_title %}
 {% block form_content %}
-    <form action="{% url 'dashboard:workspaces:create-project' workspace.uuid %}"
+    <form action="{% url 'dashboard:projects:update' project.uuid %}"
           method="post"
           class="min-w-0 grow"
           role="presentation">
@@ -20,7 +20,7 @@
                     {{ form.description.as_field_group }}
                     <button type="submit"
                             class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                        {% trans "Create project" %}
+                        {% trans "Update project" %}
                     </button>
                 </div>
                 {% csrf_token %}

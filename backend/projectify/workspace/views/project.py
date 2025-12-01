@@ -42,21 +42,6 @@ from projectify.workspace.services.project import (
 )
 
 
-class ProjectCreateForm(forms.Form):
-    """Form for project creation."""
-
-    title = forms.CharField(
-        label=_("Project title"),
-        widget=forms.TextInput(attrs={"placeholder": _("Project title")}),
-    )
-    description = forms.CharField(
-        required=False,
-        widget=forms.Textarea(
-            attrs={"placeholder": _("Enter a description for your project")}
-        ),
-    )
-
-
 # HTML
 @platform_view
 def project_detail_view(
@@ -81,6 +66,21 @@ def project_detail_view(
         "workspace": project.workspace,
     }
     return render(request, "workspace/project_detail.html", context)
+
+
+class ProjectCreateForm(forms.Form):
+    """Form for project creation."""
+
+    title = forms.CharField(
+        label=_("Project title"),
+        widget=forms.TextInput(attrs={"placeholder": _("Project title")}),
+    )
+    description = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={"placeholder": _("Enter a description for your project")}
+        ),
+    )
 
 
 @platform_view
@@ -117,13 +117,83 @@ def project_create_view(
             who=request.user,
             workspace=workspace,
         )
-        # Redirect to the new project detail page
         return redirect("dashboard:projects:detail", project_uuid=project.uuid)
     except ValidationError as error:
         populate_form_with_drf_errors(form, error)
         context = {"form": form, **context}
         return render(
             request, "workspace/project_create.html", context, status=400
+        )
+
+
+class ProjectUpdateForm(forms.Form):
+    """Form for project updates."""
+
+    title = forms.CharField(
+        label=_("Project title"),
+        widget=forms.TextInput(attrs={"placeholder": _("Project title")}),
+    )
+    description = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={"placeholder": _("Enter a description for your project")}
+        ),
+    )
+    due_date = forms.DateField(
+        required=False,
+        label=_("Due date"),
+        widget=forms.DateInput(attrs={"type": "date"}),
+    )
+
+
+@platform_view
+def project_update_view(
+    request: AuthenticatedHttpRequest, project_uuid: UUID
+) -> HttpResponse:
+    """Update an existing project."""
+    project = project_find_by_project_uuid(
+        who=request.user,
+        project_uuid=project_uuid,
+        qs=Project.objects.select_related("workspace"),
+    )
+    if project is None:
+        raise Http404(_("No project found for this uuid"))
+
+    context: dict[str, Any] = {
+        "project": project,
+        "workspace": project.workspace,
+    }
+
+    if request.method == "GET":
+        form = ProjectUpdateForm(
+            initial={
+                "title": project.title,
+                "description": project.description,
+            }
+        )
+        context = {"form": form, **context}
+        return render(request, "workspace/project_update.html", context)
+
+    form = ProjectUpdateForm(request.POST)
+    if not form.is_valid():
+        context = {"form": form, **context}
+        return render(
+            request, "workspace/project_update.html", context, status=400
+        )
+
+    try:
+        project_update(
+            who=request.user,
+            project=project,
+            title=form.cleaned_data["title"],
+            description=form.cleaned_data.get("description"),
+        )
+        return redirect("dashboard:projects:detail", project_uuid=project.uuid)
+    except ValidationError as error:
+        populate_form_with_drf_errors(form, error)
+        context = {"form": form, **context}
+        return render(
+            request, "workspace/project_update.html", context, status=400
         )
 
 
