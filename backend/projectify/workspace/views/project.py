@@ -51,10 +51,15 @@ def project_detail_view(
     if project is None:
         raise Http404(_("No project found for this uuid"))
     project.workspace.quota = workspace_get_all_quotas(project.workspace)
+    projects = project_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=project.workspace.uuid,
+        archived=False,
+    )
     context = {
         "object": project,
         "labels": list(project.workspace.label_set.values()),
-        "projects": project.workspace.project_set.all(),
+        "projects": projects,
         "workspace": project.workspace,
     }
     return render(request, "workspace/project_detail.html", context)
