@@ -11,11 +11,9 @@
           method="post"
           class="min-w-0 grow"
           role="presentation">
+        {{ form.errors }}
         <div class="flex h-full flex-col p-4 pt-0">
             <div class="flex flex-col gap-8">
-                {% if error %}
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">{{ error }}</div>
-                {% endif %}
                 <div class="flex flex-col gap-6">
                     {{ form.title.as_field_group }}
                     {{ form.description.as_field_group }}

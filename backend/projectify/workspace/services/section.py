@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 """Section services."""
 
-from typing import Optional
+from typing import Literal, Optional
 
 from django.db import transaction
 
@@ -71,6 +71,22 @@ def section_delete(
     )
     section.delete()
     send_change_signal("changed", section.project)
+
+
+@transaction.atomic
+def section_move_in_direction(
+    *, who: User, section: Section, direction: Literal["up", "down"]
+) -> None:
+    """Move a section up or down within its project."""
+    validate_perm("workspace.update_section", who, section.project.workspace)
+    match direction:
+        case "up":
+            if section._order > 0:
+                section_move(
+                    section=section, who=who, order=section._order - 1
+                )
+        case "down":
+            section_move(section=section, who=who, order=section._order + 1)
 
 
 # RPC

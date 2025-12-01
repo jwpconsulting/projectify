@@ -9,7 +9,11 @@ from projectify.workspace.models import Project
 from projectify.workspace.models.section import Section
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.services.section import section_delete, section_move
+from projectify.workspace.services.section import (
+    section_delete,
+    section_move,
+    section_move_in_direction,
+)
 
 
 @pytest.mark.django_db
@@ -95,3 +99,127 @@ def test_moving_empty_section(
         section,
     ]
     assert section._order == 0
+
+
+@pytest.mark.django_db
+def test_section_move_in_direction_up(
+    project: Project,
+    section: Section,
+    other_section: Section,
+    other_other_section: Section,
+    team_member: TeamMember,
+) -> None:
+    """Test moving a section up."""
+    assert list(project.section_set.all()) == [
+        section,
+        other_section,
+        other_other_section,
+    ]
+
+    section_move_in_direction(
+        section=other_section,
+        direction="up",
+        who=team_member.user,
+    )
+    assert list(project.section_set.all()) == [
+        other_section,
+        section,
+        other_other_section,
+    ]
+
+
+@pytest.mark.django_db
+def test_section_move_in_direction_down(
+    project: Project,
+    section: Section,
+    other_section: Section,
+    other_other_section: Section,
+    team_member: TeamMember,
+) -> None:
+    """Test moving a section down."""
+    assert list(project.section_set.all()) == [
+        section,
+        other_section,
+        other_other_section,
+    ]
+
+    section_move_in_direction(
+        section=section,
+        direction="down",
+        who=team_member.user,
+    )
+    assert list(project.section_set.all()) == [
+        other_section,
+        section,
+        other_other_section,
+    ]
+
+
+@pytest.mark.django_db
+def test_section_move_in_direction_up_at_top(
+    project: Project,
+    section: Section,
+    other_section: Section,
+    team_member: TeamMember,
+) -> None:
+    """Test moving a section up when it's already at the top."""
+    assert list(project.section_set.all()) == [
+        section,
+        other_section,
+    ]
+
+    section_move_in_direction(
+        section=section,
+        direction="up",
+        who=team_member.user,
+    )
+    assert list(project.section_set.all()) == [
+        section,
+        other_section,
+    ]
+
+
+@pytest.mark.django_db
+def test_section_move_in_direction_down_at_bottom(
+    project: Project,
+    section: Section,
+    other_section: Section,
+    team_member: TeamMember,
+) -> None:
+    """Test moving a section down when it's already at the bottom."""
+    assert list(project.section_set.all()) == [
+        section,
+        other_section,
+    ]
+
+    section_move_in_direction(
+        section=other_section,
+        direction="down",
+        who=team_member.user,
+    )
+    assert list(project.section_set.all()) == [
+        section,
+        other_section,
+    ]
+
+
+@pytest.mark.django_db
+def test_section_move_in_direction_single_section(
+    project: Project,
+    section: Section,
+    team_member: TeamMember,
+) -> None:
+    """Test moving when there's only one section."""
+    assert list(project.section_set.all()) == [section]
+    section_move_in_direction(
+        section=section,
+        direction="up",
+        who=team_member.user,
+    )
+    assert list(project.section_set.all()) == [section]
+    section_move_in_direction(
+        section=section,
+        direction="down",
+        who=team_member.user,
+    )
+    assert list(project.section_set.all()) == [section]

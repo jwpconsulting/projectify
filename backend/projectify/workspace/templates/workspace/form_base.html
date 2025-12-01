@@ -3,7 +3,7 @@
 {% extends "dashboard_base.html" %}
 {% load i18n %}
 {% block dashboard_projects %}
-    {% include "dashboard_projects.html" with projects=workspace.project_set.all %}
+    {% include "dashboard_projects.html" %}
 {% endblock dashboard_projects %}
 {% block dashboard_content %}
     <div class="min-w-0 grow" role="presentation">

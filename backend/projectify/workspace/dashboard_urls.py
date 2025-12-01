@@ -14,6 +14,7 @@ from projectify.workspace.views.project import (
     project_recover_view,
     project_update_view,
 )
+from projectify.workspace.views.section import section_update_view
 from projectify.workspace.views.task import (
     task_create,
     task_create_sub_task_form,
@@ -131,6 +132,8 @@ project_patterns = (
 section_patterns = (
     # Create task
     path("<uuid:section_uuid>/create-task", task_create, name="create-task"),
+    # Update section
+    path("<uuid:section_uuid>/update", section_update_view, name="update"),
 )
 task_patterns = (
     path("<uuid:task_uuid>", task_detail, name="detail"),
