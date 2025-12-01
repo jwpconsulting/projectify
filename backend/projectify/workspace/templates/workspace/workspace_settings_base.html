@@ -15,7 +15,7 @@
                         <a href="{% url "dashboard:workspaces:settings" workspace.uuid %}"
                            class="border-b-2 p-2.5 font-bold uppercase hover:text-base-content {% if request.resolver_match.url_name == 'settings' %}border-base-content text-base-content{% else %}border-border text-utility{% endif %}">{% trans "General" %}</a>
                         <a href="{% url 'dashboard:workspaces:team-members' workspace.uuid %}"
-                           class="border-b-2 p-2.5 font-bold uppercase hover:text-base-content {% if request.resolver_match.url_name == 'team-members' %}border-base-content text-base-content{% else %}border-border text-utility{% endif %}">{% trans "Team members" %}</a><!--<TabElement>--> <a href="{% url 'dashboard:workspaces:billing' workspace.uuid %}"
+                           class="border-b-2 p-2.5 font-bold uppercase hover:text-base-content {% if request.resolver_match.url_name == 'team-members' %}border-base-content text-base-content{% else %}border-border text-utility{% endif %}">{% trans "Team" %}</a><!--<TabElement>--> <a href="{% url 'dashboard:workspaces:billing' workspace.uuid %}"
     class="border-b-2 p-2.5 font-bold uppercase hover:text-base-content {% if request.resolver_match.url_name == 'billing' %}border-base-content text-base-content{% else %}border-border text-utility{% endif %}">{% trans "Billing" %}</a>
                         <a href="{% url 'dashboard:workspaces:quota' workspace.uuid %}"
                            class="border-b-2 p-2.5 font-bold uppercase hover:text-base-content {% if request.resolver_match.url_name == 'quota' %}border-base-content text-base-content{% else %}border-border text-utility{% endif %}">{% trans "Quota" %}</a>
