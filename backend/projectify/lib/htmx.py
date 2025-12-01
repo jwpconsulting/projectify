@@ -15,7 +15,7 @@ from collections.abc import Awaitable
 from typing import Any, Callable
 from urllib.parse import unquote, urlsplit, urlunsplit
 
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from django.http.response import HttpResponseBase
 from django.utils.functional import cached_property
 
@@ -119,3 +119,8 @@ class HtmxDetails:
             except json.JSONDecodeError:
                 value = None
         return value
+
+class HttpResponseClientRefresh(HttpResponse):
+    def __init__(self) -> None:
+        super().__init__()
+        self["HX-Refresh"] = "true"

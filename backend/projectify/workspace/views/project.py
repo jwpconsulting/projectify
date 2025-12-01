@@ -215,7 +215,7 @@ def project_archive_view(
     if project is None:
         raise Http404(_("No project found for this uuid"))
     project_archive(project=project, archived=True, who=request.user)
-    return HttpResponse("")
+    return HttpResponseClientRefresh()
 
 
 @platform_view
@@ -235,9 +235,7 @@ def project_delete_view(
         raise Http404(_("No archived project found for this uuid"))
 
     project_delete(project=project, who=request.user)
-
-    # Return empty response to remove the row from the table
-    return HttpResponse("")
+    return HttpResponseClientRefresh()
 
 
 # Create
