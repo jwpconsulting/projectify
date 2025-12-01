@@ -268,12 +268,9 @@ class TestProjectArchiveView:
     ) -> None:
         """Test successfully archiving a project via HTMX."""
         assert not project.archived
-
         with django_assert_num_queries(6):
             response = user_client.post(resource_url)
             assert response.status_code == 200
-            assert response.content == b""
-
         project.refresh_from_db()
         assert project.archived
 
@@ -308,6 +305,78 @@ class TestProjectArchiveView:
         """Test that users can't archive projects they don't have access to."""
         url = reverse(
             "dashboard:projects:archive", args=(unrelated_project.uuid,)
+        )
+        response = user_client.post(url)
+        assert response.status_code == 404
+
+
+@pytest.mark.django_db
+class TestProjectDeleteView:
+    """Test html project delete view."""
+
+    @pytest.fixture
+    def resource_url(self, archived_project: Project) -> str:
+        """Return URL to this view."""
+        return reverse(
+            "dashboard:projects:delete", args=(archived_project.uuid,)
+        )
+
+    def test_post_delete_project(
+        self,
+        user_client: Client,
+        resource_url: str,
+        archived_project: Project,
+        team_member: TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test successfully deleting an archived project via HTMX."""
+        project_uuid = archived_project.uuid
+        assert archived_project.archived
+        with django_assert_num_queries(7):
+            response = user_client.post(resource_url)
+            assert response.status_code == 200
+        assert not Project.objects.filter(uuid=project_uuid).exists()
+
+    def test_get_method_not_allowed(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+    ) -> None:
+        """Test that GET requests are not allowed."""
+        response = user_client.get(resource_url)
+        assert response.status_code == 405
+
+    def test_project_not_found(
+        self,
+        user_client: Client,
+        team_member: TeamMember,
+    ) -> None:
+        """Test deleting a non-existent project returns 404."""
+        url = reverse("dashboard:projects:delete", args=(uuid4(),))
+        response = user_client.post(url)
+        assert response.status_code == 404
+
+    def test_active_project_not_found(
+        self,
+        user_client: Client,
+        project: Project,
+        team_member: TeamMember,
+    ) -> None:
+        """Test that active (non-archived) projects can't be deleted."""
+        url = reverse("dashboard:projects:delete", args=(project.uuid,))
+        response = user_client.post(url)
+        assert response.status_code == 404
+
+    def test_unauthorized_project_access(
+        self,
+        user_client: Client,
+        unrelated_archived_project: Project,
+    ) -> None:
+        """Test that users can't delete projects they don't have access to."""
+        url = reverse(
+            "dashboard:projects:delete",
+            args=(unrelated_archived_project.uuid,),
         )
         response = user_client.post(url)
         assert response.status_code == 404

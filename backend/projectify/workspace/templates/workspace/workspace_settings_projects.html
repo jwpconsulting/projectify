@@ -65,7 +65,11 @@
                         <td>
                             {% has_perm "workspace.update_project" user project as can_update_project %}
                             {% if can_update_project %}
-                                {% anchor href="#TODO" label=_("Delete") %}
+                                <button hx-post="{% url 'dashboard:projects:delete' project_uuid=archived_project.uuid %}"
+                                        hx-confirm="{% translate 'Are you sure you want to permanently delete this project? This action cannot be undone.' %}"
+                                        hx-target="closest tr"
+                                        hx-swap="outerHTML"
+                                        class="text-red-600 hover:text-red-800">{% translate "Delete" %}</button>
                             {% endif %}
                         </td>
                     </tr>

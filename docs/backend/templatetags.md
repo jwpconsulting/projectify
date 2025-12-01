@@ -69,6 +69,13 @@ This renders to the following:
   >Learn more</a>
 ```
 
+You can also use the `anchor` template tag with a view name like so:
+
+```jinja
+{% url 'dashboard:projects:update' project_uuid=project.uuid as update_url %}
+{% anchor href=update_url label=_("Update") %}
+```
+
 ## User avatar
 
 Render a user avatar using the `user_avatar` template tag:

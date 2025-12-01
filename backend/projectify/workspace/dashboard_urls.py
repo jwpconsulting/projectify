@@ -9,6 +9,7 @@ from projectify.workspace.views.dashboard import redirect_to_dashboard
 from projectify.workspace.views.project import (
     project_archive_view,
     project_create_view,
+    project_delete_view,
     project_detail_view,
     project_update_view,
 )
@@ -114,6 +115,11 @@ project_patterns = (
         "<uuid:project_uuid>/archive",
         project_archive_view,
         name="archive",
+    ),
+    path(
+        "<uuid:project_uuid>/delete",
+        project_delete_view,
+        name="delete",
     ),
 )
 section_patterns = (

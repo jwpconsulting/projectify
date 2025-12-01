@@ -74,6 +74,8 @@ For consistency, we rename this overlay to **Create section**.
 
 ## Add project
 
+Done on 2025-12-01.
+
 - **View**: Create view with the address `/dashboard/workspace/<uuid:workspace_uuid>/create-project`
 - **Link**: Copy **Create new project** button from old frontend and link to
   the address
@@ -105,35 +107,30 @@ settings screen that lets you archive projects.
 - **Link**: Place **Projects** tab in workspace settings tab list
 - **Page contents**:
   - Show active projects in a list. Active projects are projects that the user hasn't archived.
-  - Show a **Rename** and **Archive** button for every active project.
-  - When pressing the **Rename** button, redirect to this address: `/dashboard/project/<uuid:project_uuid>/update`
+  - Show a **Update** and **Archive** button for every active project.
+  - When pressing the **Update** button, redirect to this address: `/dashboard/project/<uuid:project_uuid>/update`
     For more details, see the following **Rename project** section.
-  - When pressing the **Archive** button, redirect to this address: `/dashboard/project/<uuid:project_uuid>/confirm-archive`
+  - When pressing the **Archive** button, show a confirmation screen. When the
+  user presses **Ok**, the project becomes inactive.
   - Show archived projects in the bottom with a **Recover** and **Delete**
     button for every archived project
-  - When pressing the **Recover** button, redirect to this address:
-    `/dashboard/project/<uuid:project_uuid/confirm-recover`
-  - When pressing the **Delete** button, redirect to this address:
-    `/dashboard/project/<uuid:project_uuid/confirm-delete`
-- **Archive** page contents at `.../confirm-archive`:
-  - **Archive** button: When the user presses this button and archiving the
-    project succeeds, redirect to the first available project in the workspace.
-    If all projects are archived, redirect to the projects settings view at
-    `.../settings/projects`
-  - **Cancel** button: Redirect the user back to the project settings view
-- For the **Delete** page contents at `.../confirm-delete`, see the **Delete
-  project** section.
+  - When pressing the **Recover** button, show a confirmation screen. When the
+  user presses **Ok**, the project goes back to the active projects
+  - When pressing the **Delete** button, show a confirmation screen. When the
+  user presses **Ok**, it deletes the project.
 
-## Rename project
+## Update project
 
-- **View**: Create a rename view with the address `/dashboard/project/<uuid:project_uuid>/update`
-- **Link**: Link to this page from the **rename** button on the project
+Done on 2025-12-01.
+
+- **View**: Create an update project view with the address `/dashboard/project/<uuid:project_uuid>/update`
+- **Link**: Link to this page from the **Update** link on the project
   settings view
 - **Form contents**:
   - Show project title and description fields
-  - **Save**: Save the form contents to the project. Redirect back to project
+  - **Update project**: Save the form contents to the project. Redirect back to project
     settings.
-  - **Cancel**: Discard the form contents. Redirect back to project settings.
+  - **Cancel**: Go back to project settings
 
 ## Update section
 
@@ -152,19 +149,6 @@ This replaces the **Edit section title** modal.
   - **Move down**: Move the section below the next section
 - **Delete** link: Redirect to the **delete section** view
 
-## Recover project
-
-- **View**: Create a new new view with the address
-  `/dashboard/project/<uuid:project_uuid/confirm-recover`
-- **Link**: Link to this address from the archived project list in the project
-  settings
-- **Form contents**:
-  - **Recover** and **Cancel** buttons
-- When pressing **Recover**, recover the project and redirect to the **project settings**
-for the project's workspace
-- When pressing **Cancel**, redirect to the project settings for the project's
-  workspace
-
 ## Delete section
 
 - **View**: Create a new view with the address
@@ -176,18 +160,6 @@ for the project's workspace
   project page
 - When pressing **Cancel**, redirect to the section's project and scroll to the
   section.
-
-## Delete project
-
-- **View**: Create a new view with the address
-  `/dashboard/project/<uuid:project_uuid/confirm-delete`
-- **Link**: The **Delete** button in the archived project list under the
-  project settings links to this view
-- **Form contents**:
-  - **Delete** and **Cancel** buttons
-- When pressing **Delete**, delete the project and redirect to the project
-settings.
-- When pressing **Cancel**, redirect to the project settings.
 
 ## Project archive
 

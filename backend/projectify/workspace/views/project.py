@@ -218,6 +218,28 @@ def project_archive_view(
     return HttpResponse("")
 
 
+@platform_view
+def project_delete_view(
+    request: AuthenticatedHttpRequest, project_uuid: UUID
+) -> HttpResponse:
+    """Delete an archived project via HTMX."""
+    if request.method != "POST":
+        return HttpResponse(status=405)
+
+    project = project_find_by_project_uuid(
+        who=request.user,
+        project_uuid=project_uuid,
+        archived=True,
+    )
+    if project is None:
+        raise Http404(_("No archived project found for this uuid"))
+
+    project_delete(project=project, who=request.user)
+
+    # Return empty response to remove the row from the table
+    return HttpResponse("")
+
+
 # Create
 class ProjectCreate(APIView):
     """Create a project."""
