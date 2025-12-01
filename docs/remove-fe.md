@@ -118,15 +118,15 @@ Subject to change.
 - [x] Plan base template structure in `docs/remove-fe-templates.md`
 - [x] Write out which templates the backend needs and document them in
   `docs/remove-fe-templates.md`.
-- [ ] Write out which context menus and overlays need to be recreated using new
+- [x] Write out which context menus and overlays need to be recreated using new
   pages in `docs/remove-fe-overlays.md`.
-- [ ] Add template partials from prototyped backend templates to `docs/remove-fe-templates.md`.
+- [x] Add template partials from prototyped backend templates to `docs/remove-fe-templates.md`.
+- [x] Identify all JavaScript only/frontend only functions that need to be
+      recreated in Django. Mostly documented in `docs/remove-fe-overlays.md`
 - [ ] Analyze which views Django needs and list them in `docs/remove-fe-views.md`.
 - [ ] Analyze and list which forms the views need in `docs/remove-fe-forms.md`.
 - [ ] Understand if the Django views can use DRF serializers for forms. Add any viable
 DRF serializers to the form list in `docs/remove-fe-forms.md`.
-- [ ] Identify all JavaScript only/frontend only functions that need to be
-      recreated in Django
 - [ ] Identify form widget templates required
 
 ## Implementation
