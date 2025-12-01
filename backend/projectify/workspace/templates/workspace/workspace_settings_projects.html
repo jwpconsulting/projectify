@@ -1,0 +1,70 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "workspace/workspace_settings_base.html" %}
+{% load i18n %}
+{% load projectify %}
+{% load rules %}
+{% block workspace_settings_content %}
+    <section class="flex flex-col gap-4">
+        <h2>{% translate "Projects" %}</h2>
+        <table class="grid w-full grid-cols-4">
+            <thead class="contents">
+                <tr class="contents">
+                    <th class="text-left col-span-2">{% translate "Project name" %}</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="contents">
+                {% for project in projects %}
+                    <tr class="contents">
+                        <td class="col-span-2">{{ project }}</td>
+                        <td>
+                            {% has_perm "workspace.update_project" user project as can_update_project %}
+                            {% if can_update_project %}
+                                {% anchor href="#TODO" label=_("Update") %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% has_perm "workspace.update_project" user project as can_update_project %}
+                            {% if can_update_project %}
+                                {% anchor href="#TODO" label=_("Archive") %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    <section class="flex flex-col gap-4">
+        <h2>{% translate "Archived projects" %}</h2>
+        <table class="grid w-full grid-cols-4">
+            <thead class="contents">
+                <tr class="contents">
+                    <th class="text-left col-span-2">{% translate "Project name" %}</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="contents">
+                {% for archived_project in archived_projects %}
+                    <tr class="contents">
+                        <td class="col-span-2">{{ archived_project }}</td>
+                        <td>
+                            {% has_perm "workspace.update_project" user project as can_update_project %}
+                            {% if can_update_project %}
+                                {% anchor href="#TODO" label=_("Recover") %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% has_perm "workspace.update_project" user project as can_update_project %}
+                            {% if can_update_project %}
+                                {% anchor href="#TODO" label=_("Delete") %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock workspace_settings_content %}

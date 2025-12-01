@@ -152,6 +152,39 @@ def workspace_settings_general(
     )
 
 
+@require_http_methods(["GET"])
+@platform_view
+def workspace_settings_projects(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Show projects for this workspace."""
+    workspace = workspace_find_by_workspace_uuid(
+        who=request.user, workspace_uuid=workspace_uuid
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+    projects = project_find_by_workspace_uuid(
+        workspace_uuid=workspace_uuid,
+        who=request.user,
+        archived=False,
+    )
+    archived_projects = project_find_by_workspace_uuid(
+        workspace_uuid=workspace_uuid,
+        who=request.user,
+        archived=True,
+    )
+    context = {
+        "workspace": workspace,
+        "projects": projects,
+        "archived_projects": archived_projects,
+    }
+    return render(
+        request,
+        "workspace/workspace_settings_projects.html",
+        context=context,
+    )
+
+
 class InviteTeamMemberForm(forms.Form):
     """Form for inviting users."""
 
