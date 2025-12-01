@@ -11,6 +11,7 @@ from projectify.workspace.views.project import (
     project_create_view,
     project_delete_view,
     project_detail_view,
+    project_recover_view,
     project_update_view,
 )
 from projectify.workspace.views.task import (
@@ -120,6 +121,11 @@ project_patterns = (
         "<uuid:project_uuid>/delete",
         project_delete_view,
         name="delete",
+    ),
+    path(
+        "<uuid:project_uuid>/recover",
+        project_recover_view,
+        name="recover",
     ),
 )
 section_patterns = (

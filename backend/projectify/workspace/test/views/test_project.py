@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 """Test project CRUD views."""
 
+from datetime import datetime
 from unittest.mock import ANY
 from uuid import uuid4
 
@@ -311,6 +312,83 @@ class TestProjectArchiveView:
 
 
 @pytest.mark.django_db
+class TestProjectRecoverView:
+    """Test html project recover view."""
+
+    @pytest.fixture
+    def resource_url(self, archived_project: Project) -> str:
+        """Return URL to this view."""
+        return reverse(
+            "dashboard:projects:recover", args=(archived_project.uuid,)
+        )
+
+    def test_post_recover_project(
+        self,
+        user_client: Client,
+        resource_url: str,
+        archived_project: Project,
+        team_member: TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test successfully recovering an archived project via HTMX."""
+        assert archived_project.archived
+
+        with django_assert_num_queries(6):
+            response = user_client.post(resource_url)
+            assert response.status_code == 200
+
+        archived_project.refresh_from_db()
+        assert not archived_project.archived
+
+    def test_get_method_not_allowed(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+    ) -> None:
+        """Test that GET requests are not allowed."""
+        response = user_client.get(resource_url)
+        assert response.status_code == 405
+
+    def test_project_not_found(
+        self,
+        user_client: Client,
+        team_member: TeamMember,
+    ) -> None:
+        """Test recovering a non-existent project returns 404."""
+        url = reverse("dashboard:projects:recover", args=(uuid4(),))
+        response = user_client.post(url)
+        assert response.status_code == 404
+
+    def test_active_project_not_found(
+        self,
+        user_client: Client,
+        project: Project,
+        team_member: TeamMember,
+    ) -> None:
+        """Test that active (non-archived) projects can't be recovered."""
+        url = reverse("dashboard:projects:recover", args=(project.uuid,))
+        response = user_client.post(url)
+        assert response.status_code == 404
+
+    def test_unauthorized_project_access(
+        self,
+        user_client: Client,
+        unrelated_project: Project,
+        now: datetime,
+    ) -> None:
+        """Test that users can't recover projects they don't have access to."""
+        unrelated_project.archived = now
+        unrelated_project.save()
+        url = reverse(
+            "dashboard:projects:recover",
+            args=(unrelated_project.uuid,),
+        )
+        response = user_client.post(url)
+        assert response.status_code == 404
+
+
+@pytest.mark.django_db
 class TestProjectDeleteView:
     """Test html project delete view."""
 
@@ -371,12 +449,15 @@ class TestProjectDeleteView:
     def test_unauthorized_project_access(
         self,
         user_client: Client,
-        unrelated_archived_project: Project,
+        unrelated_project: Project,
+        now: datetime,
     ) -> None:
         """Test that users can't delete projects they don't have access to."""
+        unrelated_project.archived = now
+        unrelated_project.save()
         url = reverse(
             "dashboard:projects:delete",
-            args=(unrelated_archived_project.uuid,),
+            args=(unrelated_project.uuid,),
         )
         response = user_client.post(url)
         assert response.status_code == 404

@@ -19,6 +19,7 @@ from rest_framework.views import APIView
 
 from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.forms import populate_form_with_drf_errors
+from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
@@ -215,6 +216,26 @@ def project_archive_view(
     if project is None:
         raise Http404(_("No project found for this uuid"))
     project_archive(project=project, archived=True, who=request.user)
+    return HttpResponseClientRefresh()
+
+
+@platform_view
+def project_recover_view(
+    request: AuthenticatedHttpRequest, project_uuid: UUID
+) -> HttpResponse:
+    """Recover an archived project via HTMX."""
+    if request.method != "POST":
+        return HttpResponse(status=405)
+
+    project = project_find_by_project_uuid(
+        who=request.user,
+        project_uuid=project_uuid,
+        archived=True,
+    )
+    if project is None:
+        raise Http404(_("No archived project found for this uuid"))
+
+    project_archive(project=project, archived=False, who=request.user)
     return HttpResponseClientRefresh()
 
 

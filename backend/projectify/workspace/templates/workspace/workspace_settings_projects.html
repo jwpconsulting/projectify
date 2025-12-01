@@ -59,7 +59,11 @@
                         <td>
                             {% has_perm "workspace.update_project" user project as can_update_project %}
                             {% if can_update_project %}
-                                {% anchor href="#TODO" label=_("Recover") %}
+                                <button hx-post="{% url 'dashboard:projects:recover' project_uuid=archived_project.uuid %}"
+                                        hx-confirm="{% translate 'Are you sure you want to recover this project?' %}"
+                                        hx-target="closest tr"
+                                        hx-swap="outerHTML"
+                                        class="text-green-600 hover:text-green-800">{% translate "Recover" %}</button>
                             {% endif %}
                         </td>
                         <td>

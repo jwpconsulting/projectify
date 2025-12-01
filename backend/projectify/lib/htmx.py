@@ -120,6 +120,7 @@ class HtmxDetails:
                 value = None
         return value
 
+
 class HttpResponseClientRefresh(HttpResponse):
     def __init__(self) -> None:
         super().__init__()
