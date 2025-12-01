@@ -249,6 +249,70 @@ class TestProjectUpdateView:
         assert response.status_code == 404
 
 
+@pytest.mark.django_db
+class TestProjectArchiveView:
+    """Test html project archive view."""
+
+    @pytest.fixture
+    def resource_url(self, project: Project) -> str:
+        """Return URL to this view."""
+        return reverse("dashboard:projects:archive", args=(project.uuid,))
+
+    def test_post_archive_project(
+        self,
+        user_client: Client,
+        resource_url: str,
+        project: Project,
+        team_member: TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test successfully archiving a project via HTMX."""
+        assert not project.archived
+
+        with django_assert_num_queries(6):
+            response = user_client.post(resource_url)
+            assert response.status_code == 200
+            assert response.content == b""
+
+        project.refresh_from_db()
+        assert project.archived
+
+    def test_project_not_found(
+        self,
+        user_client: Client,
+        team_member: TeamMember,
+    ) -> None:
+        """Test archiving a non-existent project returns 404."""
+        url = reverse("dashboard:projects:archive", args=(uuid4(),))
+        response = user_client.post(url)
+        assert response.status_code == 404
+
+    def test_already_archived_project_not_found(
+        self,
+        user_client: Client,
+        archived_project: Project,
+        team_member: TeamMember,
+    ) -> None:
+        """Test that already archived projects can't be archived again."""
+        url = reverse(
+            "dashboard:projects:archive", args=(archived_project.uuid,)
+        )
+        response = user_client.post(url)
+        assert response.status_code == 404
+
+    def test_unauthorized_project_access(
+        self,
+        user_client: Client,
+        unrelated_project: Project,
+    ) -> None:
+        """Test that users can't archive projects they don't have access to."""
+        url = reverse(
+            "dashboard:projects:archive", args=(unrelated_project.uuid,)
+        )
+        response = user_client.post(url)
+        assert response.status_code == 404
+
+
 # Create
 @pytest.mark.django_db
 class TestProjectCreate:

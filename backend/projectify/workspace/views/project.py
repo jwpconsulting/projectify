@@ -200,6 +200,24 @@ def project_update_view(
         )
 
 
+@platform_view
+def project_archive_view(
+    request: AuthenticatedHttpRequest, project_uuid: UUID
+) -> HttpResponse:
+    """Archive a project via HTMX."""
+    if request.method != "POST":
+        return HttpResponse(status=405)
+    project = project_find_by_project_uuid(
+        who=request.user,
+        project_uuid=project_uuid,
+        archived=False,
+    )
+    if project is None:
+        raise Http404(_("No project found for this uuid"))
+    project_archive(project=project, archived=True, who=request.user)
+    return HttpResponse("")
+
+
 # Create
 class ProjectCreate(APIView):
     """Create a project."""

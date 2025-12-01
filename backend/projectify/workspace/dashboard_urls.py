@@ -7,6 +7,7 @@ from django.urls import include, path
 
 from projectify.workspace.views.dashboard import redirect_to_dashboard
 from projectify.workspace.views.project import (
+    project_archive_view,
     project_create_view,
     project_detail_view,
     project_update_view,
@@ -108,6 +109,11 @@ project_patterns = (
         "<uuid:project_uuid>/update",
         project_update_view,
         name="update",
+    ),
+    path(
+        "<uuid:project_uuid>/archive",
+        project_archive_view,
+        name="archive",
     ),
 )
 section_patterns = (

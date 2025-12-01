@@ -28,8 +28,13 @@
                         </td>
                         <td>
                             {% has_perm "workspace.update_project" user project as can_update_project %}
+                            {# XXX limitation: This only works if javascript is enabled #}
                             {% if can_update_project %}
-                                {% anchor href="#TODO" label=_("Archive") %}
+                                <button hx-post="{% url 'dashboard:projects:archive' project_uuid=project.uuid %}"
+                                        hx-confirm="{% translate 'Are you sure you want to archive this project?' %}"
+                                        hx-target="closest tr"
+                                        hx-swap="outerHTML"
+                                        class="text-red-600 hover:text-red-800">{% translate "Archive" %}</button>
                             {% endif %}
                         </td>
                     </tr>
