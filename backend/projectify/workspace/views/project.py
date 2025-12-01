@@ -188,7 +188,7 @@ def project_update_view(
             title=form.cleaned_data["title"],
             description=form.cleaned_data.get("description"),
         )
-        return redirect("dashboard:projects:detail", project_uuid=project.uuid)
+        return redirect("dashboard:workspaces:projects", workspace_uuid=project.workspace.uuid)
     except ValidationError as error:
         populate_form_with_drf_errors(form, error)
         context = {"form": form, **context}
