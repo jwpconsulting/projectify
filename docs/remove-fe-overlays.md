@@ -149,19 +149,8 @@ This replaces the **Edit section title** modal.
 - **Section move** form:
   - **Move up**: Move the section above the previous section
   - **Move down**: Move the section below the next section
-- **Delete** link: Redirect to the **delete section** view
-
-## Delete section
-
-- **View**: Create a new view with the address
-  `/dashboard/section/<uuid:section_uuid>/confirm-delete`
-- **Link**: The **update section** page links to this view.
-- **Form contents**:
-  - **Delete** and **Cancel** buttons
-- When pressing **Delete**, delete the section and redirect to the section's
-  project page
-- When pressing **Cancel**, redirect to the section's project and scroll to the
-  section.
+- **Delete** button: Show a confirmation dialog. If the user presses **Ok**,
+  delete the section.
 
 ## Project archive
 
