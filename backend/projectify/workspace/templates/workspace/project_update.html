@@ -2,6 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "workspace/form_base.html" %}
 {% load i18n %}
+{% load projectify %}
 {% block form_title %}
     {% translate "Update project" %}
 {% endblock form_title %}
@@ -22,6 +23,8 @@
                             class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
                         {% trans "Update project" %}
                     </button>
+                    {% url 'dashboard:workspaces:projects' workspace_uuid=project.workspace.uuid as back_url %}
+                    {% anchor href=back_url label=_("Go back") %}
                 </div>
                 {% csrf_token %}
             </div>
