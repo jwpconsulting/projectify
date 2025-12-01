@@ -99,6 +99,8 @@ Done on 2025-12-01.
 
 ## Archive project
 
+Done on 2025-12-01.
+
 Instead of archiving projects from the context menu, we want to create a new
 settings screen that lets you archive projects.
 
