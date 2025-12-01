@@ -2,11 +2,25 @@
 title: Backend template tags guide
 ---
 
-This is a guide for using the Projectify's Django template tags.
+This is a guide for using the template tags in the Projectify Django app.
+
+# Permissions
+
+Use the `has_perm` template tags from django rules like so:
+
+```jinja
+{% has_perm "workspace.create_team_member" user workspace as can_create_team_member %}
+{% if can_create_team_member %}
+  ...
+{% endif %}
+```
+
+# Custom template tags
+
 You can find the source code for the template tags in
 `backend/projectify/templatetags/projectify.py`
 
-# Percent
+## Percent
 
 Formats a value as a percentage. Example:
 
@@ -20,7 +34,7 @@ Renders to
 TODO
 ```
 
-# Anchor
+## Anchor
 
 Create an anchor with Tailwind styling. Usage:
 
@@ -55,7 +69,7 @@ This renders to the following:
   >Learn more</a>
 ```
 
-# User avatar
+## User avatar
 
 Render a user avatar using the `user_avatar` template tag:
 
