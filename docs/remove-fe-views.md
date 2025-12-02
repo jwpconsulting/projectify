@@ -173,10 +173,6 @@ def section_update(request: HttpRequest, section_uuid: UUID) -> HttpResponse: pa
 @require_http_methods(["POST"])
 # POST: Moves section up or down
 def section_move(request: HttpRequest, section_uuid: UUID) -> HttpResponse: pass
-@require_http_methods(["GET", "POST"])
-# GET: Shows task creation form
-# POST: Creates task within section
-def section_create_task(request: HttpRequest, section_uuid: UUID) -> HttpResponse: pass
 ```
 
 ## Task
@@ -185,14 +181,23 @@ In `backend/projectify/workspace/views/task.py`, implement the following view
 functions:
 
 ```python
-def task(request: HttpRequest, task_uuid: UUID) -> HttpResponse: pass
-@require_http_methods(["GET", "POST"])
+
+# GET: Render a form for creating `sub_tasks` sub tasks
+task_create_sub_task_form(request, sub_tasks)
+
+# GET: Shows task creation form
+# POST: Creates task within section
+task_create(request, section_uuid)
+
+# Show a task
+task_detail(request, task_uuid)
+
 # GET: Shows task update form
 # POST: Updates task
-def task_update(request: HttpRequest, task_uuid: UUID) -> HttpResponse: pass
-@require_http_methods(["POST"])
-# Move a task up or down
-def task_move(request: HttpRequest, task_uuid: UUID) -> HttpResponse: pass
+task_update_view(request, task_uuid)
+
+# POST: Move a task up or down
+task_move(request, task_uuid)
 ```
 
 ## Workspace
