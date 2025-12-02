@@ -175,7 +175,6 @@
             # For backend development
             projectify-bundle.passthru.postgresql
             projectify-bundle.passthru.postgresql.pg_config
-            pkgs.heroku
             pkgs.openssl
             pkgs.gettext
             pkgs.stripe-cli
