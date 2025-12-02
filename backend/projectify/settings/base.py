@@ -23,7 +23,12 @@ import dj_database_url
 from configurations.base import Configuration
 
 from .monkeypatch import patch
-from .types import ChannelLayers, StoragesConfig, TemplatesConfig
+from .types import (
+    ChannelLayers,
+    LoggingConfig,
+    StoragesConfig,
+    TemplatesConfig,
+)
 
 patch()
 
@@ -262,7 +267,7 @@ class Base(Configuration):
     SERVE_MEDIA = False
 
     # Logging
-    LOGGING = {
+    LOGGING: LoggingConfig = {
         "version": 1,
         "disable_existing_loggers": False,
         "formatters": {
@@ -283,6 +288,7 @@ class Base(Configuration):
             },
         },
     }
+    ADMINS: list[str] = []
 
     # Cloudinary
     MEDIA_CLOUDINARY_STORAGE = (

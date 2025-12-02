@@ -22,6 +22,7 @@ ensure that the Projectify backend will launch correctly.
 - `SECRET_KEY`: Used for session cookie generation, Redis symmetric encryption
 - `SITE_TITLE` (**optional**): Title of site, defaults to
   `Projectify Production`
+- `ADMIN_EMAILS`: Comma separated email addresses for admin contacts. Used for error reporting.
 
 ## Networking
 
