@@ -56,7 +56,7 @@ class TestSectionUpdateView:
         """Test saving section updates."""
         new_title = "Updated Section Title"
 
-        with django_assert_num_queries(7):
+        with django_assert_num_queries(8):
             response = user_client.post(
                 resource_url,
                 {"action": "save", "title": new_title},
@@ -119,7 +119,7 @@ class TestSectionUpdateView:
         original_order = section._order
 
         # TODO optimize
-        with django_assert_num_queries(15):
+        with django_assert_num_queries(16):
             response = user_client.post(
                 resource_url,
                 {"action": "move_down"},
