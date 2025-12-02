@@ -30,23 +30,23 @@
             </div>
         </div>
     </form>
-    <h2 class="">{% translate "Section Actions" %}</h2>
+    <h2>{% translate "Section Actions" %}</h2>
     <div class="flex flex-col gap-4">
         <div>
-            <h3 class="">{% translate "Move Section" %}</h3>
+            <h3>{% translate "Move Section" %}</h3>
             <div class="flex gap-2">
                 <form method="post" class="inline">
                     {% csrf_token %}
-                    <button type="submit" name="action" value="move_up" class="">{% translate "Move Up" %}</button>
+                    <button type="submit" name="action" value="move_up">{% translate "Move Up" %}</button>
                 </form>
                 <form method="post" class="inline">
                     {% csrf_token %}
-                    <button type="submit" name="action" value="move_down" class="">{% translate "Move Down" %}</button>
+                    <button type="submit" name="action" value="move_down">{% translate "Move Down" %}</button>
                 </form>
             </div>
         </div>
         <div>
-            <h3 class="">{% translate "Delete Section" %}</h3>
+            <h3>{% translate "Delete Section" %}</h3>
             {% url 'dashboard:sections:confirm-delete' section_uuid=section.uuid as delete_url %}
             {# TODO: Add delete section link when confirm-delete view is implemented #}
         </div>
