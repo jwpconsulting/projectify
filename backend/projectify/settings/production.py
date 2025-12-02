@@ -3,8 +3,8 @@
 # SPDX-FileCopyrightText: 2021-2024 JWP Consulting GK
 """Production settings."""
 
-import logging
 import os
+import warnings
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
@@ -12,8 +12,6 @@ from typing import Any
 from projectify.lib.settings import populate_production_middleware
 
 from .base import Base
-
-logger = logging.getLogger(__name__)
 
 
 def get_redis_tls_url() -> str:
@@ -39,7 +37,7 @@ def get_redis_channel_layer_hosts(redis_url: str) -> Mapping[str, Any]:
     Both options are equally bad IMO.
     """
     if redis_url.startswith("rediss://"):
-        logger.warning(
+        warnings.warn(
             "Initializing channels redis layer with TLS url and instructing the redis client to ignore SSL certificate requirements!",
         )
         return {
@@ -51,7 +49,7 @@ def get_redis_channel_layer_hosts(redis_url: str) -> Mapping[str, Any]:
             ],
         }
     else:
-        logger.warning(
+        warnings.warn(
             "Initializing channels redis layer with non-TLS url and potentially"
             "transmitting queries in clear text!",
         )
@@ -149,3 +147,20 @@ class Production(Base):
             },
         },
     }
+
+    # Logging config
+    # Expect a comma-separated list of email addresses
+    ADMINS = os.getenv("ADMIN_EMAILS", "").split(",")
+    LOGGING = Base.LOGGING
+    LOGGING["handlers"]["mail_admins"] = {
+        "level": "ERROR",
+        "class": "django.utils.log.AdminEmailHandler",
+    }
+
+    @classmethod
+    def post_setup(cls) -> None:
+        """Warn if ADMINS is empty."""
+        if len(cls.ADMINS) == 0:
+            warnings.warn(
+                "No admin contacts set up. Set the ADMIN_EMAILS environment variable."
+            )

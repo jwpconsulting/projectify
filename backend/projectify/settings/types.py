@@ -28,3 +28,14 @@ class StorageConfig(TypedDict):
 
 
 StoragesConfig = Mapping[str, StorageConfig]
+
+LoggingConfig = TypedDict(
+    "LoggingConfig",
+    {
+        "version": int,
+        "disable_existing_loggers": bool,
+        "formatters": dict[str, Any],
+        "handlers": dict[str, Any],
+        "loggers": dict[str, Any],
+    },
+)
