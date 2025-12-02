@@ -3,8 +3,13 @@
 # SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
 """Section views."""
 
+from typing import Any, Optional
 from uuid import UUID
 
+from django import forms
+from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers, status
@@ -15,19 +20,117 @@ from rest_framework.views import APIView
 
 from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.schema import extend_schema
+from projectify.lib.types import AuthenticatedHttpRequest
+from projectify.lib.views import platform_view
 from projectify.workspace.models import Section
-from projectify.workspace.selectors.project import project_find_by_project_uuid
+from projectify.workspace.selectors.project import (
+    project_find_by_project_uuid,
+    project_find_by_workspace_uuid,
+)
 from projectify.workspace.selectors.section import (
     SectionDetailQuerySet,
     section_find_for_user_and_uuid,
+)
+from projectify.workspace.selectors.workspace import (
+    workspace_find_by_workspace_uuid,
 )
 from projectify.workspace.serializers.section import SectionDetailSerializer
 from projectify.workspace.services.section import (
     section_create,
     section_delete,
     section_move,
+    section_move_in_direction,
     section_update,
 )
+
+
+class SectionUpdateForm(forms.Form):
+    """Form for updating section."""
+
+    title = forms.CharField(
+        max_length=255,
+        widget=forms.TextInput(),
+    )
+    description = forms.CharField(
+        required=False,
+        widget=forms.Textarea(),
+    )
+
+
+@platform_view
+def section_update_view(
+    request: AuthenticatedHttpRequest, section_uuid: UUID
+) -> HttpResponse:
+    """Update section view."""
+    section = section_find_for_user_and_uuid(
+        user=request.user,
+        section_uuid=section_uuid,
+    )
+    if section is None:
+        raise Http404(_("Section not found for this UUID"))
+
+    # TODO not very efficient
+    projects = project_find_by_workspace_uuid(
+        workspace_uuid=section.project.workspace.uuid,
+        who=request.user,
+        archived=False,
+    )
+    workspace = workspace_find_by_workspace_uuid(
+        workspace_uuid=section.project.workspace.uuid,
+        who=request.user,
+    )
+
+    context: dict[str, Any] = {
+        "section": section,
+        "projects": projects,
+        "workspace": workspace,
+    }
+
+    if request.method == "GET":
+        form = SectionUpdateForm(
+            initial={
+                "title": section.title,
+                "description": section.description or "",
+            }
+        )
+
+        context = {"form": form, **context}
+        return render(request, "workspace/section_update.html", context)
+
+    action: Optional[str] = request.POST.get("action")
+    project_url = f"{reverse(
+        "dashboard:projects:detail",
+        args=(section.project.uuid, ),
+    )}#{section.uuid}"
+
+    match action:
+        case "save":
+            form = SectionUpdateForm(request.POST)
+            if not form.is_valid():
+                context = {"form": form, **context}
+                return render(
+                    request,
+                    "workspace/section_update.html",
+                    context,
+                    status=400,
+                )
+            section_update(
+                who=request.user,
+                section=section,
+                title=form.cleaned_data["title"],
+                description=form.cleaned_data.get("description") or None,
+            )
+        case "move_up":
+            section_move_in_direction(
+                section=section, direction="up", who=request.user
+            )
+        case "move_down":
+            section_move_in_direction(
+                section=section, direction="down", who=request.user
+            )
+        case _:
+            return HttpResponse("Invalid action", status=400)
+    return HttpResponseRedirect(project_url)
 
 
 class SectionCreate(APIView):

@@ -6,7 +6,15 @@
 from django.urls import include, path
 
 from projectify.workspace.views.dashboard import redirect_to_dashboard
-from projectify.workspace.views.project import project_detail_view
+from projectify.workspace.views.project import (
+    project_archive_view,
+    project_create_view,
+    project_delete_view,
+    project_detail_view,
+    project_recover_view,
+    project_update_view,
+)
+from projectify.workspace.views.section import section_update_view
 from projectify.workspace.views.task import (
     task_create,
     task_create_sub_task_form,
@@ -19,6 +27,7 @@ from projectify.workspace.views.workspace import (
     workspace_settings_billing,
     workspace_settings_billing_edit,
     workspace_settings_general,
+    workspace_settings_projects,
     workspace_settings_quota,
     workspace_settings_team_member_remove,
     workspace_settings_team_member_uninvite,
@@ -40,11 +49,22 @@ workspace_patterns = (
         workspace_view,
         name="detail",
     ),
+    # Project related views:
+    path(
+        "<uuid:workspace_uuid>/create-project",
+        project_create_view,
+        name="create-project",
+    ),
     # Settings
     path(
         "<uuid:workspace_uuid>/settings",
         workspace_settings_general,
         name="settings",
+    ),
+    path(
+        "<uuid:workspace_uuid>/projects",
+        workspace_settings_projects,
+        name="projects",
     ),
     path(
         "<uuid:workspace_uuid>/settings/team-members",
@@ -83,16 +103,37 @@ workspace_patterns = (
     ),
 )
 project_patterns = (
-    # HTML
     path(
         "<uuid:project_uuid>",
         project_detail_view,
         name="detail",
     ),
+    path(
+        "<uuid:project_uuid>/update",
+        project_update_view,
+        name="update",
+    ),
+    path(
+        "<uuid:project_uuid>/archive",
+        project_archive_view,
+        name="archive",
+    ),
+    path(
+        "<uuid:project_uuid>/delete",
+        project_delete_view,
+        name="delete",
+    ),
+    path(
+        "<uuid:project_uuid>/recover",
+        project_recover_view,
+        name="recover",
+    ),
 )
 section_patterns = (
     # Create task
     path("<uuid:section_uuid>/create-task", task_create, name="create-task"),
+    # Update section
+    path("<uuid:section_uuid>/update", section_update_view, name="update"),
 )
 task_patterns = (
     path("<uuid:task_uuid>", task_detail, name="detail"),

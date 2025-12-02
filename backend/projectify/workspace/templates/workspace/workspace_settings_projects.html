@@ -1,0 +1,84 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "workspace/workspace_settings_base.html" %}
+{% load i18n %}
+{% load projectify %}
+{% load rules %}
+{% block workspace_settings_content %}
+    <section class="flex flex-col gap-4">
+        <h2>{% translate "Projects" %}</h2>
+        <table class="grid w-full grid-cols-4">
+            <thead class="contents">
+                <tr class="contents">
+                    <th class="text-left col-span-2">{% translate "Project name" %}</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="contents">
+                {% for project in projects %}
+                    <tr class="contents">
+                        <td class="col-span-2">{{ project }}</td>
+                        <td>
+                            {% has_perm "workspace.update_project" user project as can_update_project %}
+                            {% if can_update_project %}
+                                {% url 'dashboard:projects:update' project_uuid=project.uuid as update_url %}
+                                {% anchor href=update_url label=_("Update") %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% has_perm "workspace.update_project" user project as can_update_project %}
+                            {# XXX limitation: This only works if javascript is enabled #}
+                            {% if can_update_project %}
+                                <button hx-post="{% url 'dashboard:projects:archive' project_uuid=project.uuid %}"
+                                        hx-confirm="{% translate 'Are you sure you want to archive this project?' %}"
+                                        hx-target="closest tr"
+                                        hx-swap="outerHTML"
+                                        class="text-red-600 hover:text-red-800">{% translate "Archive" %}</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    <section class="flex flex-col gap-4">
+        <h2>{% translate "Archived projects" %}</h2>
+        <table class="grid w-full grid-cols-4">
+            <thead class="contents">
+                <tr class="contents">
+                    <th class="text-left col-span-2">{% translate "Project name" %}</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="contents">
+                {% for archived_project in archived_projects %}
+                    <tr class="contents">
+                        <td class="col-span-2">{{ archived_project }}</td>
+                        <td>
+                            {% has_perm "workspace.update_project" user project as can_update_project %}
+                            {% if can_update_project %}
+                                <button hx-post="{% url 'dashboard:projects:recover' project_uuid=archived_project.uuid %}"
+                                        hx-confirm="{% translate 'Are you sure you want to recover this project?' %}"
+                                        hx-target="closest tr"
+                                        hx-swap="outerHTML"
+                                        class="text-green-600 hover:text-green-800">{% translate "Recover" %}</button>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% has_perm "workspace.update_project" user project as can_update_project %}
+                            {% if can_update_project %}
+                                <button hx-post="{% url 'dashboard:projects:delete' project_uuid=archived_project.uuid %}"
+                                        hx-confirm="{% translate 'Are you sure you want to permanently delete this project? This action cannot be undone.' %}"
+                                        hx-target="closest tr"
+                                        hx-swap="outerHTML"
+                                        class="text-red-600 hover:text-red-800">{% translate "Delete" %}</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock workspace_settings_content %}

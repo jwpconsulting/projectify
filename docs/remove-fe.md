@@ -118,15 +118,15 @@ Subject to change.
 - [x] Plan base template structure in `docs/remove-fe-templates.md`
 - [x] Write out which templates the backend needs and document them in
   `docs/remove-fe-templates.md`.
-- [ ] Write out which context menus and overlays need to be recreated using new
+- [x] Write out which context menus and overlays need to be recreated using new
   pages in `docs/remove-fe-overlays.md`.
-- [ ] Add template partials from prototyped backend templates to `docs/remove-fe-templates.md`.
+- [x] Add template partials from prototyped backend templates to `docs/remove-fe-templates.md`.
+- [x] Identify all JavaScript only/frontend only functions that need to be
+      recreated in Django. Mostly documented in `docs/remove-fe-overlays.md`
 - [ ] Analyze which views Django needs and list them in `docs/remove-fe-views.md`.
 - [ ] Analyze and list which forms the views need in `docs/remove-fe-forms.md`.
 - [ ] Understand if the Django views can use DRF serializers for forms. Add any viable
 DRF serializers to the form list in `docs/remove-fe-forms.md`.
-- [ ] Identify all JavaScript only/frontend only functions that need to be
-      recreated in Django
 - [ ] Identify form widget templates required
 
 ## Implementation
@@ -291,67 +291,8 @@ Once a task is opened, the following features are present:
 
 ## Modal views
 
-Features that are not accessible from a separate page but are somehow overlaid
-or otherwise only usable from the dashboard or task view are:
-
-- Create and update labels
-- Assigning labels and users in project dashboard or task view
-- Moving task to new section in project dashboard
-- Various creation/deletion/archival confirmation screens accessible from
-  dashboard or task:
-  - Add new section
-  - Add new project
-  - Archive project
-  - Delete task
-  - Rename project
-  - Rename section
-  - Restore project
-- Context menus:
-  - User profile context menu (logout/edit profile)
-  - Workspace context menu (select the workspace)
-  - Side navigation context menu (workspace settings, archive, minimize
-    sidebar)
-  - Section context menu (edit/delete/change order)
-  - Task context menu (described in detail above)
-  - Task label assignment (dashboard and task view)
-  - Task user assignment (dashboard and task view)
-- Mobile navigation overlay (dashboard, task, and other views)
-
-## Migrating modal views
-
-- Make separate pages for creating and updating labels
-- Turn all Add/Create/Update/Archive modals into separate pages
-  - Add new section: New form page
-  - Add new project: Create new form page
-  - Archive project: Create new confirmation page
-  - Delete task: Create new confirmation page
-  - Rename project: Create new form page
-  - Rename section: Create new form page
-  - Restore project: Create new confirmation page
-- Turn *Logout* and *edit profile* into regular links
-- Turn *Workspace settings* and *go to archive* into regular links
-- Remove *Minimize side nav* feature entirely
-- Task context menu:
-  - Open task: Remove this button
-  - Copy link: Remove this button
-  - Implement new page with a form containing the following buttons and accept
-    POST requests:
-    1. Move to section. Includes `<select>` menu for each section.
-    2. Move to top/bottom
-    3. Delete task
-- Section context menu:
-  - Ordering sections can be solved by adding up/down buttons.
-  - Collapse section: Remove this button
-  - Edit section title: Make a new page for this.
-  - Delete section: Make this a standalone deletion confirmation page.
-- Assign label context menu:
-  - Make this a `<select multiple>` HTML element on the task update page.
-  Remove this feature from the dashboard.
-- Assign user context menu:
-  - Make this a `<select>` on the task update page. Remove this feature
-  from the dashboard.
-- Mobile navigation overlay: Remove entirely for now. Tweak layout to work with
-mobile.
+See [remove-fe-overlays.md](docs/remove-fe-overlays.md) for more information
+on what modal views we need to replace.
 
 ## Other interactive features
 

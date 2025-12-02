@@ -68,7 +68,7 @@ logger = logging.getLogger(__name__)
 def workspace_list_view(request: AuthenticatedHttpRequest) -> HttpResponse:
     """Show all workspaces."""
     workspaces = workspace_find_for_user(who=request.user)
-    context = {"workspaces": workspaces}
+    context = {"workspaces": workspaces, "workspace": None}
     return render(request, "workspace/workspace_list.html", context)
 
 
@@ -112,9 +112,15 @@ def workspace_settings_general(
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
+    projects = project_find_by_workspace_uuid(
+        workspace_uuid=workspace_uuid,
+        who=request.user,
+        archived=False,
+    )
+    context: dict[str, Any] = {"workspace": workspace, "projects": projects}
     if request.method == "GET":
         form = WorkspaceSettingsForm(instance=workspace)
-        context = {"workspace": workspace, "form": form}
+        context = {"form": form, **context}
         return render(
             request,
             "workspace/workspace_settings_general.html",
@@ -124,7 +130,7 @@ def workspace_settings_general(
         instance=workspace, data=request.POST, files=request.FILES
     )
     if not form.is_valid():
-        context = {"workspace": workspace, "form": form}
+        context = {"form": form, **context}
         return render(
             request,
             "workspace/workspace_settings_general.html",
@@ -149,6 +155,39 @@ def workspace_settings_general(
     return redirect(
         "dashboard:workspaces:settings",
         workspace.uuid,
+    )
+
+
+@require_http_methods(["GET"])
+@platform_view
+def workspace_settings_projects(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Show projects for this workspace."""
+    workspace = workspace_find_by_workspace_uuid(
+        who=request.user, workspace_uuid=workspace_uuid
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+    projects = project_find_by_workspace_uuid(
+        workspace_uuid=workspace_uuid,
+        who=request.user,
+        archived=False,
+    )
+    archived_projects = project_find_by_workspace_uuid(
+        workspace_uuid=workspace_uuid,
+        who=request.user,
+        archived=True,
+    )
+    context = {
+        "workspace": workspace,
+        "projects": projects,
+        "archived_projects": archived_projects,
+    }
+    return render(
+        request,
+        "workspace/workspace_settings_projects.html",
+        context=context,
     )
 
 
@@ -185,7 +224,16 @@ def workspace_settings_team_members(
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    context = {"workspace": workspace, "form": InviteTeamMemberForm()}
+    projects = project_find_by_workspace_uuid(
+        workspace_uuid=workspace_uuid,
+        who=request.user,
+        archived=False,
+    )
+    context = {
+        "workspace": workspace,
+        "projects": projects,
+        "form": InviteTeamMemberForm(),
+    }
     return render(
         request,
         "workspace/workspace_settings_team_members.html",
@@ -206,10 +254,17 @@ def workspace_settings_team_members_invite(
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
+    projects = project_find_by_workspace_uuid(
+        workspace_uuid=workspace_uuid,
+        who=request.user,
+        archived=False,
+    )
+
+    context: dict[str, Any] = {"workspace": workspace, "projects": projects}
 
     form = InviteTeamMemberForm(request.POST)
 
-    context = {"workspace": workspace, "form": form}
+    context = {"form": form, **context}
     if not form.is_valid():
         return render(
             request,
@@ -238,10 +293,11 @@ def workspace_settings_team_members_invite(
                     _("User has already been added to this workspace."),
                 )
 
+        context = {"form": form, **context}
         return render(
             request,
             "workspace/workspace_settings_team_members.html",
-            context={"workspace": workspace, "form": form},
+            context=context,
             status=400,
         )
 

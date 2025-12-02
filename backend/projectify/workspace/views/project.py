@@ -3,19 +3,23 @@
 # SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
 """Project views."""
 
+from typing import Any
 from uuid import UUID
 
+from django import forms
 from django.http import Http404, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers, status
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from projectify.lib.error_schema import DeriveSchema
+from projectify.lib.forms import populate_form_with_drf_errors
+from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
@@ -51,13 +55,208 @@ def project_detail_view(
     if project is None:
         raise Http404(_("No project found for this uuid"))
     project.workspace.quota = workspace_get_all_quotas(project.workspace)
+    projects = project_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=project.workspace.uuid,
+        archived=False,
+    )
     context = {
         "object": project,
         "labels": list(project.workspace.label_set.values()),
-        "projects": project.workspace.project_set.all(),
+        "projects": projects,
         "workspace": project.workspace,
     }
     return render(request, "workspace/project_detail.html", context)
+
+
+class ProjectCreateForm(forms.Form):
+    """Form for project creation."""
+
+    title = forms.CharField(
+        label=_("Project title"),
+        widget=forms.TextInput(attrs={"placeholder": _("Project title")}),
+    )
+    description = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={"placeholder": _("Enter a description for your project")}
+        ),
+    )
+
+
+@platform_view
+def project_create_view(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Create a new project in a workspace."""
+    workspace = workspace_find_by_workspace_uuid(
+        workspace_uuid=workspace_uuid,
+        who=request.user,
+    )
+    if workspace is None:
+        raise Http404(_("No workspace found for this UUID"))
+
+    context: dict[str, Any] = {"workspace": workspace}
+
+    if request.method == "GET":
+        form = ProjectCreateForm()
+        context = {"form": form, **context}
+        return render(request, "workspace/project_create.html", context)
+
+    form = ProjectCreateForm(request.POST)
+    if not form.is_valid():
+        context = {"form": form, **context}
+        return render(
+            request, "workspace/project_create.html", context, status=400
+        )
+
+    try:
+        project: Project = project_create(
+            title=form.cleaned_data["title"],
+            description=form.cleaned_data.get("description"),
+            due_date=form.cleaned_data.get("due_date"),
+            who=request.user,
+            workspace=workspace,
+        )
+        return redirect("dashboard:projects:detail", project_uuid=project.uuid)
+    except ValidationError as error:
+        populate_form_with_drf_errors(form, error)
+        context = {"form": form, **context}
+        return render(
+            request, "workspace/project_create.html", context, status=400
+        )
+
+
+class ProjectUpdateForm(forms.Form):
+    """Form for project updates."""
+
+    title = forms.CharField(
+        label=_("Project title"),
+        widget=forms.TextInput(attrs={"placeholder": _("Project title")}),
+    )
+    description = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={"placeholder": _("Enter a description for your project")}
+        ),
+    )
+    due_date = forms.DateField(
+        required=False,
+        label=_("Due date"),
+        widget=forms.DateInput(attrs={"type": "date"}),
+    )
+
+
+@platform_view
+def project_update_view(
+    request: AuthenticatedHttpRequest, project_uuid: UUID
+) -> HttpResponse:
+    """Update an existing project."""
+    project = project_find_by_project_uuid(
+        who=request.user,
+        project_uuid=project_uuid,
+        qs=Project.objects.select_related("workspace"),
+    )
+    if project is None:
+        raise Http404(_("No project found for this uuid"))
+
+    context: dict[str, Any] = {
+        "project": project,
+        "workspace": project.workspace,
+    }
+
+    if request.method == "GET":
+        form = ProjectUpdateForm(
+            initial={
+                "title": project.title,
+                "description": project.description,
+            }
+        )
+        context = {"form": form, **context}
+        return render(request, "workspace/project_update.html", context)
+
+    form = ProjectUpdateForm(request.POST)
+    if not form.is_valid():
+        context = {"form": form, **context}
+        return render(
+            request, "workspace/project_update.html", context, status=400
+        )
+
+    try:
+        project_update(
+            who=request.user,
+            project=project,
+            title=form.cleaned_data["title"],
+            description=form.cleaned_data.get("description"),
+        )
+        return redirect(
+            "dashboard:workspaces:projects",
+            workspace_uuid=project.workspace.uuid,
+        )
+    except ValidationError as error:
+        populate_form_with_drf_errors(form, error)
+        context = {"form": form, **context}
+        return render(
+            request, "workspace/project_update.html", context, status=400
+        )
+
+
+@platform_view
+def project_archive_view(
+    request: AuthenticatedHttpRequest, project_uuid: UUID
+) -> HttpResponse:
+    """Archive a project via HTMX."""
+    if request.method != "POST":
+        return HttpResponse(status=405)
+    project = project_find_by_project_uuid(
+        who=request.user,
+        project_uuid=project_uuid,
+        archived=False,
+    )
+    if project is None:
+        raise Http404(_("No project found for this uuid"))
+    project_archive(project=project, archived=True, who=request.user)
+    return HttpResponseClientRefresh()
+
+
+@platform_view
+def project_recover_view(
+    request: AuthenticatedHttpRequest, project_uuid: UUID
+) -> HttpResponse:
+    """Recover an archived project via HTMX."""
+    if request.method != "POST":
+        return HttpResponse(status=405)
+
+    project = project_find_by_project_uuid(
+        who=request.user,
+        project_uuid=project_uuid,
+        archived=True,
+    )
+    if project is None:
+        raise Http404(_("No archived project found for this uuid"))
+
+    project_archive(project=project, archived=False, who=request.user)
+    return HttpResponseClientRefresh()
+
+
+@platform_view
+def project_delete_view(
+    request: AuthenticatedHttpRequest, project_uuid: UUID
+) -> HttpResponse:
+    """Delete an archived project via HTMX."""
+    if request.method != "POST":
+        return HttpResponse(status=405)
+
+    project = project_find_by_project_uuid(
+        who=request.user,
+        project_uuid=project_uuid,
+        archived=True,
+    )
+    if project is None:
+        raise Http404(_("No archived project found for this uuid"))
+
+    project_delete(project=project, who=request.user)
+    return HttpResponseClientRefresh()
 
 
 # Create

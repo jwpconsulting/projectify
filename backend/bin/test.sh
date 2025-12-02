@@ -36,7 +36,10 @@ then
     echo "djlint --check ran successfully"
 else
     echo "There was an error running djlint --check"
-    exit 1
+    if ! djlint --reformat .; then
+        echo "Couldn't fix with djlint --reformat"
+        exit 1
+    fi
 fi
 
 if ruff check --fix "$target"; then
