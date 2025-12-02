@@ -3,8 +3,8 @@
 # SPDX-FileCopyrightText: 2021-2024 JWP Consulting GK
 """Development settings."""
 
-import logging
 import os
+import warnings
 from collections.abc import Iterable, Sequence
 from typing import Optional
 
@@ -17,8 +17,6 @@ except ImportError as e:
 
 from .base import Base
 from .spectacular import SpectacularSettings
-
-logger = logging.getLogger(__name__)
 
 
 def add_dev_middleware(middleware: Sequence[str]) -> Iterable[str]:
@@ -42,7 +40,7 @@ def environ_get_or_warn(key: str) -> Optional[str]:
     if value is not None:
         return value
 
-    logger.warning(f"{key} needed for settings was not set in environment")
+    warnings.warn(f"{key} needed for settings was not set in environment")
     return None
 
 
