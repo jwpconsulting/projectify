@@ -13,38 +13,58 @@ achieve feature parity with the previous frontend.
 
 # Modal views
 
-These views are parts of the UI that don't have their own page.
+These views are parts of the UI that don't have their own page and interact
+with the page that they're placed on
+
+The side navigation has these components:
 
 - **Side nav labels**: Create and update labels, accessible from side nav when logged in
   and interacting with a workspace. You can also filter tasks by labels here
 - **Side nav team members**: Filter tasks by users, including tasks that aren't assigned to
   anyone
-- **Overlays**: Various creation/deletion/archival confirmation screens
-  accessible from dashboard or task.
-  - Add new section
-  - Add new project
-  - Archive project
-  - Delete task
-  - Rename project
-  - Rename section
-  - Restore project
-- **Context menus**:
-  - User profile context menu (logout/edit profile)
-  - Workspace context menu (select the workspace)
-  - Side navigation context menu (workspace settings, archive, minimize
-    sidebar)
-  - Section context menu (edit/delete/change order)
-  - Task context menu (described in detail above)
-  - Task label assignment (dashboard and task view)
-  - Task user assignment (dashboard and task view)
-- **Role assignment** in workspace settings
-- **Overlay menus** that are only visible on narrow (mobile) screens.
 
-# Migration plan
+Projectify has these overlays for creating, deleting, updating resources.
+Overlays are accessible from the dashboard, task pages, and workspace settings.
 
-## Labels
+- **Create new section**: Enter a section name to create a new section
+- **Create project**: Enter a project name to create a new project
+- **Archive project**: Puts a project into the workspace project archive
+- **Delete task**: Deletes a task with its subtasks and all other attached data
+- **Edit project**: Change a project's name
+- **Edit section**: Change a section's name
+- **Recover project**: Recover a project from the workspace project archive
+- **Delete project**: Delete an archived project
+- **Delete section**: Delete a section including its tasks
+
+The **team members** workspace settings screen has a modal team member **role
+assignment** dropdown.
+
+The navigation header turns into an **overlay menu** on narrow (mobile)
+screens.
+
+The **Modal migration** section describes how to port each overlay.
+
+# Context menus
+
+Further, the SvelteKit frontend has these context menus:
+
+- **User profile** context menu (**log out**, **My profile**)
+- **Workspace** context menu (select the workspace)
+- **Side navigation** context menu (workspace settings, archive, minimize
+  sidebar)
+- **Section** context menu (edit/delete/change order)
+- **Task** context menu (described in [./remove-fe.md](./remove-fe.md)
+- **Task label** context menu (dashboard and task view)
+- **Task assignee** context menu (dashboard and task view)
+
+The **Context menu migration** section describes how to port each context menu
+
+# Modal migration
+
+## Side navigation labels
 
 ### Create and update
+
 Move label creation and updating to the workspace settings for now. Where
 necessary, add a new link to "Create or update labels".
 
@@ -53,7 +73,7 @@ necessary, add a new link to "Create or update labels".
 Show somewhere what labels are assigned to what tasks? Make label filter
 clickable and update query params instead?
 
-## Users
+## Side navigation team members
 
 Either we make buttons that add GET query params to the url, or we incorporate
 user filtering into the Task search field.
@@ -72,7 +92,7 @@ For consistency, we rename this overlay to **Create section**.
 - **Success**: Redirect to project and scroll to section
 - **Failure**: Render form with errors
 
-## Add project
+## Create project
 
 Done on 2025-12-01.
 
@@ -158,14 +178,36 @@ Incorporate this into the project settings tab in the workspace settings.
 See the **Archive project** and **Recover project** section in this
 document.
 
-## Task context menu
+# Context menus
+
+## User profile
+
+Change **log out**, **My profile** into individual links
+
+## Workspace
+
+TODO
+
+## Side navigation
+
+Replace the following items with equivalent features:
+
+- **Minimise sidebar**: Remove this button and any side navigation minimise
+  feature.
+- **Go to archive**: Access the archive by going to the workspace settings
+- **Workspace settings**: Access the workspace settings by pressing the ellipsis
+icon. TODO: Consider using a different icon or using words
+
+## Task
 
 Here's how to replace items in the task context menu with equivalent UI features:
 
-- **Open task**: Remove this button
-- **Copy link**: Remove this button
-- **Move task**: Change the ellipsis (`...`) button in the task card or line to link to a new **Task actions** page. See the **Task actions** section
-for a description.
+- **Open task**: No replacement
+- **Move task**: Change the ellipsis (`...`) button in the task card or line to
+  link to a new **Task actions** page. See the **Task actions** section for a
+  description.
+- **Copy link**: No replacement
+- **Delete task**: Add a delete button to the task page.
 
 ### Task actions
 
@@ -198,7 +240,6 @@ for a description.
 
 ## Other
 
-- **Minimize side nav**: Remove entirely
 - Project page context menus:
   - **Label assignment**: Remove and add back in a future Projectify revision.
   - **Team member assignment**: Remove and add back in a future Projectify
