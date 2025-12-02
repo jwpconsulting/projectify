@@ -1,6 +1,7 @@
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "storefront_base.html" %}
+{% load static %}
 {% load markdownify %}
 {% load i18n %}
 {% block storefront_content %}
@@ -14,7 +15,7 @@
                     <div class="w-full max-w-xs justify-self-center">
                         <picture>
                             {# TODO: Add proper static assets #}
-                            <img src="{{ FRONTEND_URL }}/src/routes/(storefront)/accessibility/hero-accessibility.png"
+                            <img src="{% static "hero-accessibility.png" %}"
                                  alt="{% trans "Accessibility logo" %}"
                                  width="300"
                                  height="300">
