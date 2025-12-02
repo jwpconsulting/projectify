@@ -32,18 +32,49 @@ the backend performs the desired action, such as moving a task up or down.
 In `backend/projectify/storefront/views.py`, add the following views:
 
 ```python
-def accessibility(request: HttpRequest) -> HttpResponse: pass
-def contact_us(request: HttpRequest) -> HttpResponse: pass
-def credits(request: HttpRequest) -> HttpResponse: pass
-def ethicalads(request: HttpRequest) -> HttpResponse: pass
-def free_software(request: HttpRequest) -> HttpResponse: pass
-def pricing(request: HttpRequest) -> HttpResponse: pass
-def privacy(request: HttpRequest) -> HttpResponse: pass
-def security_disclose(request: HttpRequest) -> HttpResponse: pass
-def security_general(request: HttpRequest) -> HttpResponse: pass
-def solutions_index(request: HttpRequest) -> HttpResponse: pass
-def solutions_detail(request: HttpRequest, page: str) -> HttpResponse: pass
-def tos(request: HttpRequest) -> HttpResponse: pass
+# DONE
+# GET: Render accessibility statement
+accessibility(request)
+
+# DONE
+# GET: Show contact information
+contact_us(request)
+
+# TODO
+# GET: Show credits
+credits(request)
+
+# DONE
+# GET: Show free software license information
+free_software(request)
+
+# DONE
+# GET: Show pricing information
+pricing(request)
+
+# TODO
+# GET: Show the privacy policy
+privacy(request)
+
+# DONE
+# GET: Show the vulnerability disclosure policy
+security_disclose(request)
+
+# DONE
+# GET: Show general security information
+security_general(request)
+
+# DONE
+# GET: Show use cases for Projectify
+solutions_index(request)
+
+# DONE
+# GET: Show a specific use case
+solutions_detail(request, page: str)
+
+# TODO
+# GET: Show terms of service
+tos(request)
 ```
 
 ## Help
@@ -54,8 +85,13 @@ documents easier.
 In `backend/projectify/help/views.py`, add the following views:
 
 ```python
-def help_index(request: HttpRequest) -> HttpResponse: pass
-def help_detail(request: HttpRequest, page: str) -> HttpResponse: pass
+# DONE
+# GET: Render help overview
+help_index(request)
+
+# DONE
+# GET: Show help page for topic `page`
+help_detail(request, page: str)
 ```
 
 # Onboarding
@@ -65,81 +101,53 @@ All views during onboarding require the user to be logged in.
 In `backend/projectify/onboarding/views.py`, add the following views:
 
 ```python
-@require_http_methods(["GET", "POST"])
-def about_you(request: HttpRequest) -> HttpResponse:
-    """
-    Add a preferred name and profile picture for the current user,
+# DONE
+# Add a preferred name and profile picture for the current user
+# GET:           Show page with form
+# POST: SUCCESS: Update user profile. Redirect user to
+#                /onboarding/new-workspace
+#       FAILURE: Show this page again with errors
+about_you(request)
 
-    GET:
-    Show page with form
-    POST:
-    On success: Update user profile. Redirect user to /onboarding/new-workspace
-    On failure: Show this page again with errors
-    """
+# DONE
+# Create a new workspace.
+# GET:           Show page with workspace creation form
+# POST: SUCCESS: Create a new workspace. Redirect user to
+#                /onboarding/new-project/<workspace-uuid> with the workspace
+#                UUID coming from the newly created workspace.
+new_workspace(request)
 
-@require_http_methods(["GET", "POST"])
-def new_workspace(request: HttpRequest) -> HttpResponse:
-    """
-    Create a new workspace.
+# DONE
+# Create a new project inside the newly created workspace.
+# GET:           Show project creation form for `workspace_uuid`
+# POST: SUCCESS: Create new project inside the workspace. Redirect user to
+#                /onboarding/new-task/<project-uuid> with the project UUID
+#                coming from the newly created project.
+#       FAILURE: Show project creation form with errors
+new_project(request, workspace_uuid)
 
-    GET:
-    Show page with workspace creation form
-    POST:
-    On success: Create a new workspace. Redirect user to
-    /onboarding/new-project/<workspace-uuid> with the workspace UUID coming
-    from the newly created workspace.
-    """
+# DONE
+# Create a new task inside the newly created project.
+# Put the task in a "To Do" section. Create this section before creating the
+# task.
+# GET:           Show task creation form for project `project_uuid`
+# POST: SUCCESS: Creates a section and task and assigns it to the user.
+#                Redirect user to onboarding/new-label/<task-uuid> with the
+#                task uuid coming from the newly created task
+#       FAILURE: Show task creation form with errors
+new_task(request, project_uuid)
 
+# DONE
+# Ask the user to give the newly created task a label.
+# GET:           Show label creation form for task `task_uuid`
+# POST: SUCCESS: Creates a label and adds it to the task. Redirect to
+#                onboarding/assign-task/<task_uuid>.
+#       FAILURE: Show label creation form with errors
+new_label(request, task_uuid)
 
-@require_http_methods(["GET", "POST"])
-def new_project(request: HttpRequest, workspace_uuid: UUID) -> HttpResponse:
-    """
-    Create a new project inside the newly created workspace.
-
-    GET: Show project creation form for `workspace_uuid`
-    POST:
-    On success: Create new project inside the workspace. Redirect user to
-    /onboarding/new-task/<project-uuid> with the project UUID coming from the
-    newly created project.
-    On error: Show project creation form with errors
-    """
-
-
-@require_http_methods(["GET", "POST"])
-def new_task(request: HttpRequest, project_uuid: UUID) -> HttpResponse:
-    """
-    Create a new task inside the newly created project.
-
-    Put the task in a To Do section. Create this section before creating the
-    task.
-
-    GET:
-    Show task creation form for project `project_uuid`
-    POST:
-    On success: Creates a section and task and assigns it to the user. Redirect
-    user to onboarding/new-label/<task-uuid> with the task uuid coming
-    from the newly created task
-    On error: Show task creation form with errors
-    """
-
-@require_http_methods(["GET", "POST"])
-def new_label(request: HttpRequest, task_uuid: UUID) -> HttpResponse:
-    """
-    Ask the user to give the newly created task a label.
-
-    GET:
-    Show label creation form for task `task_uuid`
-
-    POST:
-    On success:
-    Creates a label and adds it to the task. Redirect to
-    onboarding/assign-task/<task_uuid>.
-    On failure:
-    Show label creation form with errors
-    """
-
-def assign_task(request: HttpRequest, task_uuid: UUID) -> HttpResponse:
-    """Show the user that Projectify assigned the task to them."""
+# DONE
+# GET: Show the user that Projectify assigned the task to them.
+assign_task(request, task_uuid)
 ```
 
 # Platform
@@ -152,11 +160,42 @@ In `backend/projectify/workspace/views/dashboard.py`, implement the following
 view functions:
 
 ```python
-# Redirect user to first available workspace and project
-def dashboard(request: HttpRequest) -> HttpResponse: pass
+# TODO, right now it shows available workspaces
+# GET: Redirect user to first available workspace and project
+dashboard(request)
 ```
 
 ## Project
+In `backend/projectify/workspace/views/project.py`, implement the following
+view functions:
+
+```python
+# DONE
+# GET: Show a project and its tasks
+project_detail_view(request, project_uuid)
+
+# DONE
+# GET:  Show a project creation form
+# POST: Create a new project for the given `workspace_uuid`
+project_create_view(request, workspace_uuid)
+
+# DONE
+# GET:  Show a project information update form
+# POST: Update the project
+project_update_view(request, project_uuid)
+
+# DONE
+# POST: Set the project with UUID `project_uuid` to archived
+project_archive_view(request, project_uuid)
+
+# DONE
+# POST: Set the project with UUID `project_uuid` to active
+project_recover_view(request, project_uuid)
+
+# DONE
+# POST: Delete the archived project with UUID `project_uuid`
+project_delete_view(request, project_uuid)
+```
 
 ## Section
 
@@ -164,15 +203,17 @@ In `backend/projectify/workspace/views/section.py`, implement the following
 view functions:
 
 ```python
-# Redirect to project with this section visible
-def section(request: HttpRequest, section_uuid: UUID) -> HttpResponse: pass
-@require_http_methods(["GET", "POST"])
-# GET: Shows section update form
-# POST: Updates section
-def section_update(request: HttpRequest, section_uuid: UUID) -> HttpResponse: pass
-@require_http_methods(["POST"])
-# POST: Moves section up or down
-def section_move(request: HttpRequest, section_uuid: UUID) -> HttpResponse: pass
+# TODO
+# GET: Redirect to project with this section visible
+section(request, section_uuid)
+
+# DONE
+# GET:  Shows section update form
+# POST: Depending on the action:
+# "save":      update the section
+# "move_up":   move it above the previous section
+# "move_down": move it below the next section
+section_update_view(request, section_uuid)
 ```
 
 ## Task
@@ -181,21 +222,25 @@ In `backend/projectify/workspace/views/task.py`, implement the following view
 functions:
 
 ```python
-
+# DONE
 # GET: Render a form for creating `sub_tasks` sub tasks
 task_create_sub_task_form(request, sub_tasks)
 
-# GET: Shows task creation form
+# DONE
+# GET:  Shows task creation form
 # POST: Creates task within section
 task_create(request, section_uuid)
 
-# Show a task
+# DONE
+# GET: Show task with UUID `task_uuid`
 task_detail(request, task_uuid)
 
-# GET: Shows task update form
+# DONE
+# GET:  Show task update form
 # POST: Updates task
 task_update_view(request, task_uuid)
 
+# DONE
 # POST: Move a task up or down
 task_move(request, task_uuid)
 ```
@@ -206,23 +251,88 @@ In `backend/projectify/workspace/views/workspace.py`, implement the following
 view functions:
 
 ```python
-# Redirects user to first available project within workspace
-def workspace(request: HttpRequest) -> HttpResponse: pass
+# TODO
+# GET: Redirects user to first available project within workspace
+workspace(request)
 
-@require_http_methods(["GET", "POST"])
-# GET: Shows archive projects
-# POST: Accepts a list of project UUIDs to restore
-def workspace_archive(request: HttpRequest, workspace_uuid: UUID) -> HttpResponse: pass
-@require_http_methods(["GET", "POST"])
-# GET: Shows workspace
+# DONE
+# GET:  Shows workspace
 # POST: Updates workspace
-def workspace_settings(request: HttpRequest, workspace_uuid: UUID) -> HttpResponse: pass
-def workspace_billing(request: HttpRequest, workspace_uuid: UUID) -> HttpResponse: pass
-def workspace_quota(request: HttpRequest, workspace_uuid: UUID) -> HttpResponse: pass
-# GET: Shows team members
-# POST: Changes or deletes team members
-# POST: Invites team member (checks for which form is submitted)
-def workspace_team_member(request: HttpRequest, workspace_uuid: UUID) -> HttpResponse: pass
+workspace_settings(request, workspace_uuid)
+
+# DONE
+# GET:  Shows projects in workspace for editing
+# Note: The old frontend doesn't implement this page and instead
+#       had a workspace project archive page. To simplify implementing
+#       the new version, editing projects and archiving/deleting projects
+#       become part of the following view.
+worskpace_settings_projects(request, workspace_uuid)
+
+# DONE
+# GET: List team members
+workspace_settings_team_members(request, workspace_uuid)
+
+# POST: Invite a team member
+workspace_settings_team_members_invite(request, workspace_uuid)
+
+# DELETE: Remove a team member
+workspace_settings_team_members_remove(request, workspace_uuid, team_member_uuid)
+
+# POST: Uninvite a team member
+workspace_settings_team_member_uninvite(request, workspace_uuid)
+
+# POST: Create and redirect to billing portal session
+workspace_settings_billing_edit(request, workspace_uuid)
+
+# GET:  Review current billing information
+# POST: Start stripe checkout or redeem coupon
+workspace_settings_billing(request, workspace_uuid)
+
+# GET: Review workspace resource quota
+workspace_settings_quota(request, workspace_uuid)
+```
+
+Current, intermediate implementation is:
+
+```python
+# TODO REMOVE
+# GET: Show a list of workspaces that the current user can access
+workspace_list_view(request)
+
+# TODO REMOVE
+# GET: Show the workspace's projects
+workspace_view(request, workspace_uuid)
 ```
 
 ## User
+
+In `backend/projectify/user/views/user.py`, implement the following views:
+
+```python
+# DONE
+# GET:  Show user profile information
+# POST: Change name, profile picture
+user_profile(request)
+
+# DONE
+# GET:  Show password change form
+# POST: Change password
+password_change(request)
+
+# DONE
+# GET:  Show email change form
+# POST: Initiate email update
+email_address_update(request)
+
+# DONE
+# GET:  Confirm email update with `token`
+email_address_update_confirm(request, token)
+
+# DONE
+# GET: Show confirmation that user initiated email change
+email_address_update_requested(request)
+
+# DONE
+# GET: Show confirmation that user has changed email
+email_address_update_confirmed(request)
+```
