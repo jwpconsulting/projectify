@@ -221,3 +221,49 @@ def workspace_team_member(request: HttpRequest, workspace_uuid: UUID) -> HttpRes
 ```
 
 ## User
+
+There are two kinds of views in the user app:
+
+1. Views in `views/auth.py` let users create accounts, authenticate, and restore access to their account.
+2. Views in `views/user.py` let users manage their account.
+
+In `backend/projectify/user/views/auth.py`, implement the following view
+functions:
+
+```python
+# Need to be authenticated for this view
+def logout(request: HttpRequest) -> HttpResponse: pass
+
+# No authentication required
+@require_http_methods(["GET", "POST"])
+def signup(request: HttpRequest) -> HttpResponse: pass
+
+def email_confirm(request: HttpRequest, email: str, token: str) -> HttpResponse: pass
+
+@require_http_methods(["GET", "POST"])
+def log_in(request: HttpRequest) -> HttpResponse: pass
+
+@require_http_methods(["GET", "POST"])
+def password_reset_request(request: HttpRequest) -> HttpResponse: pass
+
+@require_http_methods(["GET", "POST"])
+def password_reset_confirm(request: HttpRequest) -> HttpResponse: pass
+```
+
+In `backend/projectify/user/views/user.py`, implement the following view
+functions:
+
+```python
+def user_profile(request: HttpRequest) -> HttpResponse: pass
+
+@require_http_methods(["GET", "POST"])
+def user_update(request: HttpRequest) -> HttpResponse: pass
+
+@require_http_methods(["GET", "POST"])
+def password_change(request: HttpRequest) -> HttpResponse: pass
+
+@require_http_methods(["GET", "POST"])
+def email_address_update(request: HttpRequest) -> HttpResponse: pass
+
+def email_address_confirm(request: HttpRequest, token: str) -> HttpResponse: pass
+```
