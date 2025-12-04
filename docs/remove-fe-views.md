@@ -306,6 +306,57 @@ workspace_view(request, workspace_uuid)
 
 ## User
 
+There are two kinds of views in the user app:
+
+1. Views in `views/auth.py` let users create accounts, authenticate, and
+   restore access to their account.
+2. Views in `views/user.py` let users manage their account.
+
+In `backend/projectify/user/views/auth.py`, implement the following view
+functions:
+
+```python
+# DONE
+# GET: log out user
+log_out(request)
+
+# DONE
+# GET: Render sign up form
+# POST: SUCCESS: Sign up user, redirect to email_confirmation_link_sent
+#       FAILURE: Show validation errors
+sign_up(request)
+
+# DONE
+# GET: Show sign up confirmation and prompt user to check emails
+email_confirmation_link_sent(request)
+
+# DONE
+# GET: Confirm user's email address using token after sign up
+email_confirm(request, email, token)
+
+# DONE
+# GET: Render log in form
+# POST: SUCCESS: Log user in
+#       FAILURE: Show validation errors
+log_in(request)
+
+# DONE
+# GET: Show form to start reset if user forgot or wants to reset their password
+# POST: SUCCESS: Redirect to password_reset_confirm and send reset email
+#       FAILURE: Show validation errors
+password_reset_request(request)
+
+# DONE
+# GET: Show password reset confirmation form for email with token
+# POST: SUCCESS: Redirect to `password_reset`
+#       FAILURE: Show error
+password_reset_confirm(request, email, token)
+
+# DONE
+# GET: Tell user that they've reset their password
+password_reset(request)
+```
+
 In `backend/projectify/user/views/user.py`, implement the following views:
 
 ```python
@@ -335,4 +386,4 @@ email_address_update_requested(request)
 # DONE
 # GET: Show confirmation that user has changed email
 email_address_update_confirmed(request)
-```
+
