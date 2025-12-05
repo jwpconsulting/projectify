@@ -109,13 +109,9 @@ Done on 2025-12-01.
 
 ## Delete task
 
-- **View**: Create view with the address `/dashboard/task/<uuid:task_uuid>/confirm-delete`
 - **Link**: On the task page, create a **Delete Task** red button next to **Edit**
-- **Contents**:
-  - **Delete task** and **Cancel** button
-  - When the user presses **Delete task** and deleting the task succeeds,
-    redirect to the task's section. Show a confirmation flash message.
-  - When the user presses **Cancel**, redirect back to the task.
+- Show HTMX confirm dialog when user pressed **Delete Task**. Delete task on
+  confirmation.
 
 ## Archive project
 
@@ -206,7 +202,9 @@ icon. TODO: Consider using a different icon or using words
 - **Collapse section**: We implement no replacement for this.
 - **Edit section title**: The **update section** page has a form for updating
   the section's title.
-- **Delete section**: The **update section** page has a **delete section** link
+- **Delete section**: The **update section** page has a **delete section**
+  link. Show an HTMX confirmation dialog and delete the section when the user
+  presses **Ok***.
 
 ## Task
 
@@ -236,8 +234,8 @@ Here's how to replace items in the task context menu with equivalent UI features
     - When the user presses one of these buttons, move the task to the top
     or bottom of the task's current section accordingly. Redirect the user back
     to the task's project and scroll to the task.
-  - **Delete task**: When the user presses this, redirect to the task
-    `confirm-delete` screen
+  - **Delete task**: When the user presses this, show an HTMX confirm dialog
+    and delete the task
 
 ## Label assignment
 
