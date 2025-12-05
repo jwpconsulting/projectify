@@ -186,7 +186,8 @@ Change **log out**, **My profile** into individual links
 
 ## Workspace
 
-TODO
+Turn the workspace select context menu into a collapsible menu with
+links that point to one workspace each.
 
 ## Side navigation
 
@@ -197,6 +198,15 @@ Replace the following items with equivalent features:
 - **Go to archive**: Access the archive by going to the workspace settings
 - **Workspace settings**: Access the workspace settings by pressing the ellipsis
 icon. TODO: Consider using a different icon or using words
+
+## Section context menu
+
+- **Ordering**: The **update section** page has **move up** and **move
+  down** buttons as a replacement
+- **Collapse section**: We implement no replacement for this.
+- **Edit section title**: The **update section** page has a form for updating
+  the section's title.
+- **Delete section**: The **update section** page has a **delete section** link
 
 ## Task
 
@@ -229,19 +239,16 @@ Here's how to replace items in the task context menu with equivalent UI features
   - **Delete task**: When the user presses this, redirect to the task
     `confirm-delete` screen
 
-## Section context menu
+## Label assignment
 
-- **Ordering**: The **update section** page has **move up** and **move
-  down** buttons as a replacement
-- **Collapse section**: We implement no replacement for this.
-- **Edit section title**: The **update section** page has a form for updating
-  the section's title.
-- **Delete section**: The **update section** page has a **delete section** link
+Remove and add back in a future Projectify revision. Users can still edit
+labels from the task edit page.
 
-## Other
+## Team member assignment
 
-- Project page context menus:
-  - **Label assignment**: Remove and add back in a future Projectify revision.
-  - **Team member assignment**: Remove and add back in a future Projectify
-    revision.
-- **Mobile navigation overlay**: Remove entirely for now. Tweak layout to work with mobile.
+Remove and add back in a future Projectify revision. Users can still edit
+the assignee from the task edit page.
+
+## Mobile navigation overlay
+
+Remove entirely for now. Tweak layout to work with mobile.
