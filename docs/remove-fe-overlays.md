@@ -126,18 +126,22 @@ For consistency, we rename this overlay to **Create section**.
 
 ## Create project
 
-Done on 2025-12-01.
+**Go back** missing. - J 2025-12-05
 
-- [ ] **View**: Create view with the address `/dashboard/workspace/<uuid:workspace_uuid>/create-project`
-- [ ] **Link**: Copy **Create new project** button from old frontend and link to
-  the address
-- [ ] **Form contents**:
-  - [ ] Show a form with title and description fields
-  - [ ] **Create project**: Submit the form
-  - [ ] **Cancel**: Go to first available project in workspace, if no project
+- [x] **View**: Create view with the address `/dashboard/workspace/<uuid:workspace_uuid>/create-project`
+- [x] **Link**: Copy **Create new project** button from old frontend side nav
+  project list bottom. Make button anchor and link to the address
+- [x] **Form contents**:
+  - [x] Show a form with title and description fields
+  - [x] **Create project**: Submit the form
+  - [ ] **Go back**: Go to first available project in workspace, if no project
     exists, go to project settings inside workspace settings
-- [ ] **Success**: Redirect to new project on success
-- [ ] **Failure**: Render form with errors
+- [x] **Success**: Redirect to new project on success
+- [x] **Failure**: Render form with errors
+
+Things that are left to do:
+
+- [ ] Populate side nav with `workspace` and `projects` context objects
 
 ## Delete task
 
@@ -147,60 +151,73 @@ Done on 2025-12-01.
 
 ## Archive project
 
-Done on 2025-12-01.
+Styling missing on 2025-12-05
 
 Instead of archiving projects from the context menu, we want to create a new
 settings screen that lets you archive projects.
 
-- [ ] **View**: Create a project settings view with the address
+- [x] **View**: Create a project settings view with the address
   `/dashboard/workspace/<uuid:workspace_uuid>/settings/projects`
-- [ ] **Link**: Place **Projects** tab in workspace settings tab list
+- [x] **Link**: Place **Projects** tab in workspace settings tab list
 - [ ] **Page contents**:
-  - [ ] Show active projects in a list. Active projects are projects that the user hasn't archived.
-  - [ ] Show a **Update** and **Archive** button for every active project.
-  - [ ] When pressing the **Update** button, redirect to this address: `/dashboard/project/<uuid:project_uuid>/update`
+  - [x] Show active projects in a list. Active projects are projects that the user hasn't archived.
+  - [x] Show a **Update** and **Archive** button for every active project.
+  - [x] When pressing the **Update** button, redirect to this address: `/dashboard/project/<uuid:project_uuid>/update`
     For more details, see the following **Rename project** section.
-  - [ ] When pressing the **Archive** button, show a confirmation screen. When the
+  - [x] When pressing the **Archive** button, show a confirmation screen. When the
   user presses **Ok**, the project becomes inactive.
-  - [ ] Show archived projects in the bottom with a **Recover** and **Delete**
+  - [x] Show archived projects in the bottom with a **Recover** and **Delete**
     button for every archived project
-  - [ ] When pressing the **Recover** button, show a confirmation screen. When the
+  - [x] When pressing the **Recover** button, show a confirmation screen. When the
   user presses **Ok**, the project goes back to the active projects
-  - [ ] When pressing the **Delete** button, show a confirmation screen. When the
+  - [x] When pressing the **Delete** button, show a confirmation screen. When the
   user presses **Ok**, it deletes the project.
+
+Things that are left to do:
+
+- [ ] Style section headers **Projects** andd **Archived projects**
+- [ ] Style **Archive**, **Recover**, **Delete** buttons
 
 ## Update project
 
-Done on 2025-12-01.
+Almost done on 2025-12-05
 
-- [ ] **View**: Create an update project view with the address `/dashboard/project/<uuid:project_uuid>/update`
-- [ ] **Link**: Link to this page from the **Update** link on the project
+- [x] **View**: Create an update project view with the address `/dashboard/project/<uuid:project_uuid>/update`
+- [x] **Link**: Link to this page from the **Update** link on the project
   settings view
-- [ ] **Form contents**:
-  - [ ] Show project title and description fields
-  - [ ] **Update project**: Save the form contents to the project. Redirect back to project
+- [x] **Form contents**:
+  - [x] Show project **title** and **description** fields
+  - [x] **Update project**: Save the form contents to the project. Redirect back to project
     settings.
-  - [ ] **Cancel**: Go back to project settings
+  - [x] **Go back**: Go back to project settings
+
+Things that are left to do:
+
+- [ ] Populate `projects` context variable
 
 ## Update section
 
+Missing: Delete button, style link; Justus 2025-12-05
+
 This replaces the **Edit section title** modal.
 
-- [ ] **View**: Create an update section view with the address `/dashboard/section/<uuid:section_uuid>/update`
-- [ ] **Link**: Change the ellipsis button in the section header to link to this view
-- [ ] **Form contents**:
-  - [ ] Show section title and description fields
-  - [ ] **Save**: Save the form contents to the section. Redirect back to
+- [x] **View**: Create an update section view with the address `/dashboard/section/<uuid:section_uuid>/update`
+- [ ] **Link**: Change the ellipsis `...` button to say `Update section` in the section header and style it. Link to this view
+- [x] **Form contents**:
+  - [x] Show section **title** and **description** fields
+  - [x] **Update section**: Save the form contents to the section. Redirect back to
   the section's project and scroll to the section
-  - [ ] **Cancel**: Discard the form contents. Redirect back to the project's
+  - [x] **Go back**: Discard the form contents. Redirect back to the project's
   section and scroll to the section.
-- [ ] **Section move** form:
-  - [ ] **Move up**: Move the section above the previous section
-  - [ ] **Move down**: Move the section below the next section
+- [x] **Section move** form:
+  - [x] **Move up**: Move the section above the previous section
+  - [x] **Move down**: Move the section below the next section
 - [ ] **Delete** button: Show a confirmation dialog. If the user presses **Ok**,
   delete the section.
 
 ## Project archive
+
+DONE
 
 Incorporate this into the project settings tab in the workspace settings.
 See the **Archive project** and **Recover project** section in this
@@ -210,43 +227,48 @@ document.
 
 ## User profile
 
-Change **log out**, **My profile** into individual links
+Change the following into individual links:
+
+- [x] **Log out**
+- [x] **My profile**
 
 ## Workspace
 
-Turn the workspace select context menu into a collapsible menu with
+- [ ] Create collapsible menu
+- [ ] Turn the workspace select context menu into a collapsible menu with
 links that point to one workspace each.
 
 ## Side navigation
 
 Replace the following items with equivalent features:
 
-- **Minimise sidebar**: Remove this button and any side navigation minimise
+- [x] **Minimise sidebar**: Remove this button and any side navigation minimise
   feature.
-- **Go to archive**: Access the archive by going to the workspace settings
-- **Workspace settings**: Access the workspace settings by pressing the ellipsis
-icon. TODO: Consider using a different icon or using words
+- [x] **Go to archive**: Access the archive by going to the workspace settings
+  and then pressing the **Projects** tab
+- [x] **Workspace settings**: Access the workspace settings by pressing the ellipsis
+icon.
+- [ ] Consider using a different icon or using words for the **Workspace
+  settings** button
 
 ## Section context menu
 
-- [ ] **Ordering**: The **update section** page has **move up** and **move
+- [x] **Ordering**: The **update section** page has **move up** and **move
   down** buttons as a replacement
-- [ ] **Collapse section**: We implement no replacement for this.
-- [ ] **Edit section title**: The **update section** page has a form for updating
+- [x] **Collapse section**: We implement no replacement for this.
+- [x] **Edit section title**: The **update section** page has a form for updating
   the section's title.
-- [ ] **Delete section**: The **update section** page has a **delete section**
-  link. Show an HTMX confirmation dialog and delete the section when the user
-  presses **Ok***.
+- **Delete section**: See **Update section**
 
 ## Task
 
 Here's how to replace items in the task context menu with equivalent UI features:
 
-- [ ] **Open task**: No replacement
+- [x] **Open task**: No replacement
 - [ ] **Move task**: Change the ellipsis (`...`) button in the task card or line to
   link to a new **Task actions** page. See the **Task actions** section for a
   description.
-- [ ] **Copy link**: No replacement
+- [x] **Copy link**: No replacement
 - [ ] **Delete task**: Add a delete button to the task page.
 
 ### Task actions
