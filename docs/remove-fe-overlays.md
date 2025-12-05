@@ -63,15 +63,47 @@ The **Context menu migration** section describes how to port each context menu
 
 ## Side navigation labels
 
-### Create and update
+### Filter by labels
 
-Move label creation and updating to the workspace settings for now. Where
-necessary, add a new link to "Create or update labels".
+Add filter by label function to **Task search** panel. Use checkboxes inside
+a collapsible HTML element. Show number of tasks next to label names.
 
-### Filter
+### List workspace labels
 
-Show somewhere what labels are assigned to what tasks? Make label filter
-clickable and update query params instead?
+Create a new page to manage all workspace labels:
+
+- **Route**: `dashboard/workspace/[uuid]/settings/labels`
+- **Page title**: `{workspace.title} labels - Projectify`
+- **Contents**:
+    - Table listing all labels
+    - For each label, show:
+        - Label **name**
+        - Label **color**
+        - Update form link
+        - Delete button
+    - Show an **Add label** button in the bottom
+
+### Create label
+
+Make a new page for creating a new label for a workspace
+
+- **Route**: `dashboard/workspace/[uuid]/settings/labels/create`
+- **Page title**: `Create label for {workspace.title} - Projectify`
+- **Contents**:
+    - **Name** input
+    - **Color** selector (radio input)
+    - **Create** button; redirects to **List workspace labels** on success
+    - **Back** button; goes back to **List workspace labels** view
+
+### Update label
+
+- **Route**: `dashboard/labels/[uuid]`
+- **Page title**: `Update {label.name} - Projectify`
+- **Contents**:
+    - **Name** input
+    - **Color** selector (radio input)
+    - **Update** button; redirects to **List workspace labels** on success
+    - **Back** button; goes back to **List workspace labels** view
 
 ## Side navigation team members
 
