@@ -158,6 +158,7 @@ class Production(Base):
     @classmethod
     def setup(cls) -> None:
         """Set ADMINS from ADMIN_NAME and ADMIN_EMAIL."""
+        super().setup()
         admin_name = os.getenv("ADMIN_NAME")
         if admin_name is None:
             warnings.warn("ADMIN_NAME environment variable not set")
