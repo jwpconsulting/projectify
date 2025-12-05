@@ -160,14 +160,10 @@ class Production(Base):
         """Set ADMINS from ADMIN_NAME and ADMIN_EMAIL."""
         admin_name = os.getenv("ADMIN_NAME")
         if admin_name is None:
-            warnings.warn(
-                "ADMIN_NAME environment variable not set"
-            )
+            warnings.warn("ADMIN_NAME environment variable not set")
         admin_email = os.getenv("ADMIN_EMAIL")
         if admin_email is None:
-            warnings.warn(
-                "ADMIN_EMAIL environment variable not set"
-            )
+            warnings.warn("ADMIN_EMAIL environment variable not set")
         if admin_name and admin_email:
             cls.ADMINS = [[admin_name, admin_email]]
 
