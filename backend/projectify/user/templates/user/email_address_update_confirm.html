@@ -10,7 +10,17 @@
     <div class="flex flex-col gap-4">
         <p class="text-error">{% translate "An unknown error has occurred and your email address could not be updated." %}</p>
         <p>
-            {% blocktranslate with error=error %}The confirmation token provided in the URL you used to open this page is not valid. This means that you might have already changed your email address, or that you have requested for your email address to be changed multiple times. Please try updating your email address one more time by following the link below. The error was: '{{ error }}'.{% endblocktranslate %}
+            {% blocktranslate %}
+            The confirmation token provided in the URL you used to open this
+            page is not valid. This means that you might have already changed
+            your email address, or that you have requested for your email
+            address to be changed multiple times. Please try updating your
+            email address one more time by following the link below. This is
+            the error:
+            {% endblocktranslate %}
+            <pre class="overflow-x-scroll">
+{{ error|wordwrap:40 }}
+</pre>
         </p>
         <div class="mt-4">
             <h2 class="font-bold">{% translate "What to do" %}</h2>
