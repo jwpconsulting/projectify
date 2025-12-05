@@ -2,6 +2,12 @@
 title: Frontend page titles
 ---
 
+<!--
+SPDX-FileCopyrightText: 2025 JWP Consulting GK
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Method
 
 This document shows the current page titles for the SvelteKit frontend pages.
