@@ -72,38 +72,38 @@ a collapsible HTML element. Show number of tasks next to label names.
 
 Create a new page to manage all workspace labels:
 
-- **Route**: `dashboard/workspace/[uuid]/settings/labels`
-- **Page title**: `{workspace.title} labels - Projectify`
-- **Contents**:
-    - Table listing all labels
-    - For each label, show:
-        - Label **name**
-        - Label **color**
-        - Update form link
-        - Delete button
-    - Show an **Add label** button in the bottom
+- [ ] **Route**: `dashboard/workspace/[uuid]/settings/labels`
+- [ ] **Page title**: `{workspace.title} labels - Projectify`
+- [ ] **Contents**:
+    - [ ] Table listing all labels
+    - [ ] For each label, show:
+        - [ ] Label **name**
+        - [ ] Label **color**
+        - [ ] Update form link
+        - [ ] Delete button
+    - [ ] Show an **Add label** button in the bottom
 
 ### Create label
 
 Make a new page for creating a new label for a workspace
 
-- **Route**: `dashboard/workspace/[uuid]/settings/labels/create`
-- **Page title**: `Create label for {workspace.title} - Projectify`
-- **Contents**:
-    - **Name** input
-    - **Color** selector (radio input)
-    - **Create** button; redirects to **List workspace labels** on success
-    - **Back** button; goes back to **List workspace labels** view
+- [ ] **Route**: `dashboard/workspace/[uuid]/settings/labels/create`
+- [ ] **Page title**: `Create label for {workspace.title} - Projectify`
+- [ ] **Contents**:
+    - [ ] **Name** input
+    - [ ] **Color** selector (radio input)
+    - [ ] **Create** button; redirects to **List workspace labels** on success
+    - [ ] **Back** button; goes back to **List workspace labels** view
 
 ### Update label
 
-- **Route**: `dashboard/labels/[uuid]`
-- **Page title**: `Update {label.name} - Projectify`
-- **Contents**:
-    - **Name** input
-    - **Color** selector (radio input)
-    - **Update** button; redirects to **List workspace labels** on success
-    - **Back** button; goes back to **List workspace labels** view
+- [ ] **Route**: `dashboard/labels/[uuid]`
+- [ ] **Page title**: `Update {label.name} - Projectify`
+- [ ] **Contents**:
+    - [ ] **Name** input
+    - [ ] **Color** selector (radio input)
+    - [ ] **Update** button; redirects to **List workspace labels** on success
+    - [ ] **Back** button; goes back to **List workspace labels** view
 
 ## Side navigation team members
 
@@ -114,35 +114,35 @@ user filtering into the Task search field.
 
 For consistency, we rename this overlay to **Create section**.
 
-- **View**: Create view with the address `/dashboard/project/<uuid:project_uuid>/create-section`
-- **Link**: Turn existing **Add section** button on project page into link to
+- [ ] **View**: Create view with the address `/dashboard/project/<uuid:project_uuid>/create-section`
+- [ ] **Link**: Turn existing **Add section** button on project page into link to
   the address, change the button to say **Create section**
-- **Form contents**:
-  - Show a form with title and description fields
-  - **Add section**: Submit the form
-  - **Cancel**: Return to project
-- **Success**: Redirect to project and scroll to section
-- **Failure**: Render form with errors
+- [ ] **Form contents**:
+  - [ ] Show a form with title and description fields
+  - [ ] **Add section**: Submit the form
+  - [ ] **Cancel**: Return to project
+- [ ] **Success**: Redirect to project and scroll to section
+- [ ] **Failure**: Render form with errors
 
 ## Create project
 
 Done on 2025-12-01.
 
-- **View**: Create view with the address `/dashboard/workspace/<uuid:workspace_uuid>/create-project`
-- **Link**: Copy **Create new project** button from old frontend and link to
+- [ ] **View**: Create view with the address `/dashboard/workspace/<uuid:workspace_uuid>/create-project`
+- [ ] **Link**: Copy **Create new project** button from old frontend and link to
   the address
-- **Form contents**:
-  - Show a form with title and description fields
-  - **Create project**: Submit the form
-  - **Cancel**: Go to first available project in workspace, if no project
+- [ ] **Form contents**:
+  - [ ] Show a form with title and description fields
+  - [ ] **Create project**: Submit the form
+  - [ ] **Cancel**: Go to first available project in workspace, if no project
     exists, go to project settings inside workspace settings
-- **Success**: Redirect to new project on success
-- **Failure**: Render form with errors
+- [ ] **Success**: Redirect to new project on success
+- [ ] **Failure**: Render form with errors
 
 ## Delete task
 
-- **Link**: On the task page, create a **Delete Task** red button next to **Edit**
-- Show HTMX confirm dialog when user pressed **Delete Task**. Delete task on
+- [ ] **Link**: On the task page, create a **Delete Task** red button next to **Edit**
+- [ ] Show HTMX confirm dialog when user pressed **Delete Task**. Delete task on
   confirmation.
 
 ## Archive project
@@ -152,52 +152,52 @@ Done on 2025-12-01.
 Instead of archiving projects from the context menu, we want to create a new
 settings screen that lets you archive projects.
 
-- **View**: Create a project settings view with the address
+- [ ] **View**: Create a project settings view with the address
   `/dashboard/workspace/<uuid:workspace_uuid>/settings/projects`
-- **Link**: Place **Projects** tab in workspace settings tab list
-- **Page contents**:
-  - Show active projects in a list. Active projects are projects that the user hasn't archived.
-  - Show a **Update** and **Archive** button for every active project.
-  - When pressing the **Update** button, redirect to this address: `/dashboard/project/<uuid:project_uuid>/update`
+- [ ] **Link**: Place **Projects** tab in workspace settings tab list
+- [ ] **Page contents**:
+  - [ ] Show active projects in a list. Active projects are projects that the user hasn't archived.
+  - [ ] Show a **Update** and **Archive** button for every active project.
+  - [ ] When pressing the **Update** button, redirect to this address: `/dashboard/project/<uuid:project_uuid>/update`
     For more details, see the following **Rename project** section.
-  - When pressing the **Archive** button, show a confirmation screen. When the
+  - [ ] When pressing the **Archive** button, show a confirmation screen. When the
   user presses **Ok**, the project becomes inactive.
-  - Show archived projects in the bottom with a **Recover** and **Delete**
+  - [ ] Show archived projects in the bottom with a **Recover** and **Delete**
     button for every archived project
-  - When pressing the **Recover** button, show a confirmation screen. When the
+  - [ ] When pressing the **Recover** button, show a confirmation screen. When the
   user presses **Ok**, the project goes back to the active projects
-  - When pressing the **Delete** button, show a confirmation screen. When the
+  - [ ] When pressing the **Delete** button, show a confirmation screen. When the
   user presses **Ok**, it deletes the project.
 
 ## Update project
 
 Done on 2025-12-01.
 
-- **View**: Create an update project view with the address `/dashboard/project/<uuid:project_uuid>/update`
-- **Link**: Link to this page from the **Update** link on the project
+- [ ] **View**: Create an update project view with the address `/dashboard/project/<uuid:project_uuid>/update`
+- [ ] **Link**: Link to this page from the **Update** link on the project
   settings view
-- **Form contents**:
-  - Show project title and description fields
-  - **Update project**: Save the form contents to the project. Redirect back to project
+- [ ] **Form contents**:
+  - [ ] Show project title and description fields
+  - [ ] **Update project**: Save the form contents to the project. Redirect back to project
     settings.
-  - **Cancel**: Go back to project settings
+  - [ ] **Cancel**: Go back to project settings
 
 ## Update section
 
 This replaces the **Edit section title** modal.
 
-- **View**: Create an update section view with the address `/dashboard/section/<uuid:section_uuid>/update`
-- **Link**: Change the ellipsis button in the section header to link to this view
-- **Form contents**:
-  - Show section title and description fields
-  - **Save**: Save the form contents to the section. Redirect back to
+- [ ] **View**: Create an update section view with the address `/dashboard/section/<uuid:section_uuid>/update`
+- [ ] **Link**: Change the ellipsis button in the section header to link to this view
+- [ ] **Form contents**:
+  - [ ] Show section title and description fields
+  - [ ] **Save**: Save the form contents to the section. Redirect back to
   the section's project and scroll to the section
-  - **Cancel**: Discard the form contents. Redirect back to the project's
+  - [ ] **Cancel**: Discard the form contents. Redirect back to the project's
   section and scroll to the section.
-- **Section move** form:
-  - **Move up**: Move the section above the previous section
-  - **Move down**: Move the section below the next section
-- **Delete** button: Show a confirmation dialog. If the user presses **Ok**,
+- [ ] **Section move** form:
+  - [ ] **Move up**: Move the section above the previous section
+  - [ ] **Move down**: Move the section below the next section
+- [ ] **Delete** button: Show a confirmation dialog. If the user presses **Ok**,
   delete the section.
 
 ## Project archive
@@ -229,12 +229,12 @@ icon. TODO: Consider using a different icon or using words
 
 ## Section context menu
 
-- **Ordering**: The **update section** page has **move up** and **move
+- [ ] **Ordering**: The **update section** page has **move up** and **move
   down** buttons as a replacement
-- **Collapse section**: We implement no replacement for this.
-- **Edit section title**: The **update section** page has a form for updating
+- [ ] **Collapse section**: We implement no replacement for this.
+- [ ] **Edit section title**: The **update section** page has a form for updating
   the section's title.
-- **Delete section**: The **update section** page has a **delete section**
+- [ ] **Delete section**: The **update section** page has a **delete section**
   link. Show an HTMX confirmation dialog and delete the section when the user
   presses **Ok***.
 
@@ -242,31 +242,31 @@ icon. TODO: Consider using a different icon or using words
 
 Here's how to replace items in the task context menu with equivalent UI features:
 
-- **Open task**: No replacement
-- **Move task**: Change the ellipsis (`...`) button in the task card or line to
+- [ ] **Open task**: No replacement
+- [ ] **Move task**: Change the ellipsis (`...`) button in the task card or line to
   link to a new **Task actions** page. See the **Task actions** section for a
   description.
-- **Copy link**: No replacement
-- **Delete task**: Add a delete button to the task page.
+- [ ] **Copy link**: No replacement
+- [ ] **Delete task**: Add a delete button to the task page.
 
 ### Task actions
 
-- **View**: Create a new view with the address
+- [ ] **View**: Create a new view with the address
   `/dashboard/task/<uuid:task_uuid>/actions`
-- **Link** to this view from a task card in the project view
-- **Page contents**:
-  - **Section move form**:
-    - Dropdown with **section** names
-    - **Move to section** button
-    - When the user presses **Move to section**, move the task to that section
+- [ ] **Link** to this view from a task card in the project view
+- [ ] **Page contents**:
+  - [ ] **Section move form**:
+    - [ ] Dropdown with **section** names
+    - [ ] **Move to section** button
+    - [ ] When the user presses **Move to section**, move the task to that section
       and redirect the user to the task's project and scroll to the task.
-  - **Move to top / bottom**:
-    - **Move to top** button
-    - **Move to bottom** button
-    - When the user presses one of these buttons, move the task to the top
+  - [ ] **Move to top / bottom**:
+    - [ ] **Move to top** button
+    - [ ] **Move to bottom** button
+    - [ ] When the user presses one of these buttons, move the task to the top
     or bottom of the task's current section accordingly. Redirect the user back
     to the task's project and scroll to the task.
-  - **Delete task**: When the user presses this, show an HTMX confirm dialog
+  - [ ] **Delete task**: When the user presses this, show an HTMX confirm dialog
     and delete the task
 
 ## Label assignment

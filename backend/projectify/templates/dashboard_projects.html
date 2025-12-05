@@ -6,6 +6,7 @@
     <a class="group block flex w-full flex-row justify-between gap-1 px-4 py-1 hover:bg-base-200"
        href="{% url "dashboard:projects:detail" project.uuid %}">
         <div class="flex min-w-0 flex-row items-center gap-2">
+            {# TODO object -> current_project and make sure to include from every page #}
             <div class="rounded-md p-1{% if project == object %} bg-primary-focus{% endif %}">
                 <div class="h-4 w-4{% if project == object %} text-base-100{% endif %}">{% include "heroicons/folder.svg" %}</div>
             </div>
