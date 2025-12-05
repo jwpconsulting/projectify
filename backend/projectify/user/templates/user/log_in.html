@@ -2,6 +2,9 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "user_base.html" %}
 {% load i18n %}
+{% block title %}
+    {% translate "Log in - Projectify" %}
+{% endblock title %}
 {% block user_content %}
     <form class="flex flex-col gap-12 p-3" method="post">
         {% csrf_token %}

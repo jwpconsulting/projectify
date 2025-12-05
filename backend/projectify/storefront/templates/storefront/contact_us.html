@@ -4,6 +4,9 @@
 {% load markdownify %}
 {% load i18n %}
 {% load static %}
+{% block title %}
+    {% translate "Contact - Projectify" %}
+{% endblock title %}
 {% block storefront_content %}
     <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
         {% trans "Contact" as title %}

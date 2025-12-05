@@ -3,6 +3,9 @@
 {% extends "help_base.html" %}
 {% load markdownify %}
 {% load i18n %}
+{% block title %}
+    {% blocktrans with topic=helptopic.title %}{{ topic }} help - Projectify{% endblocktrans %}
+{% endblock title %}
 {% block help_content %}
     <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
         <div class="flex w-full flex-col items-center bg-background">

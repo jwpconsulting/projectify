@@ -1,6 +1,10 @@
 {# SPDX-FileCopyrightText: 2024 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "dashboard_base.html" %}
+{% load i18n %}
+{% block title %}
+    {% blocktrans with section_title=section.title %}Add task to {{ section_title }} - Projectify{% endblocktrans %}
+{% endblock title %}
 {% block dashboard_content %}
     <form action="{% url 'dashboard:sections:create-task' section.uuid %}"
           method="post"

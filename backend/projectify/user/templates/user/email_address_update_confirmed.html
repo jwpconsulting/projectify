@@ -2,6 +2,9 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "user_profile_base.html" %}
 {% load i18n %}
+{% block title %}
+    {% translate "Email address updated successfully - Projectify" %}
+{% endblock title %}
 {% block user_profile_content %}
     <div class="prose">
         <h1 class="text-center text-2xl font-bold">{% trans "Email address updated successfully" %}</h1>

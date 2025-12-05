@@ -2,6 +2,10 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "dashboard_base.html" %}
 {% load static %}
+{% load i18n %}
+{% block title %}
+    {% translate "Editing task - Projectify" %}
+{% endblock title %}
 {% block dashboard_content %}
     <form action="{% url 'dashboard:tasks:update' task.uuid %}"
           method="post"

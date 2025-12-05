@@ -1,8 +1,12 @@
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "storefront_base.html" %}
+{% load static %}
 {% load markdownify %}
 {% load i18n %}
+{% block title %}
+    {% translate "Accessibility statement - Projectify" %}
+{% endblock title %}
 {% block storefront_content %}
     <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
         <div class="flex w-full flex-col items-center bg-background">
@@ -14,7 +18,7 @@
                     <div class="w-full max-w-xs justify-self-center">
                         <picture>
                             {# TODO: Add proper static assets #}
-                            <img src="{{ FRONTEND_URL }}/src/routes/(storefront)/accessibility/hero-accessibility.png"
+                            <img src="{% static "hero-accessibility.png" %}"
                                  alt="{% trans "Accessibility logo" %}"
                                  width="300"
                                  height="300">
