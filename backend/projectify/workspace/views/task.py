@@ -30,6 +30,9 @@ from projectify.workspace.models.label import Label
 from projectify.workspace.models.section import Section
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.selectors.project import (
+    project_find_by_workspace_uuid,
+)
 from projectify.workspace.selectors.section import (
     SectionDetailQuerySet,
     section_find_for_user_and_uuid,
@@ -210,7 +213,17 @@ def task_detail(
     )
     if task is None:
         raise Http404(_(f"Could not find task with uuid {task_uuid}"))
-    context = {"task": task}
+    projects = project_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=task.section.project.workspace.uuid,
+        archived=False,
+    )
+    context = {
+        "task": task,
+        "projects": projects,
+        # Inefficient
+        "workspace": task.section.project.workspace,
+    }
     return render(request, "workspace/task_detail.html", context)
 
 
@@ -272,8 +285,15 @@ def task_update_view(
         raise Http404(_(f"Could not find task with uuid {task_uuid}"))
     project = task.section.project
     workspace = project.workspace
+    projects = project_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=workspace.uuid,
+        archived=False,
+    )
 
     action = determine_action(request)
+
+    context: dict[str, Any] = {"workspace": workspace, "projects": projects}
 
     if action == "add_sub_task":
         post: dict[str, Any] = request.POST.dict()
@@ -289,7 +309,7 @@ def task_update_view(
         logger.info("Adding sub task")
         form = TaskUpdateForm(data=post, workspace=workspace)
         formset = TaskUpdateSubTaskForms(data=post)
-        context = {"form": form, "task": task, "formset": formset}
+        context = {**context, "form": form, "task": task, "formset": formset}
         return render(request, "workspace/task_update.html", context)
 
     task_initial = {
@@ -307,7 +327,7 @@ def task_update_view(
     if action == "get":
         form = TaskUpdateForm(initial=task_initial, workspace=workspace)
         formset = TaskUpdateSubTaskForms(initial=sub_tasks_initial)  # type: ignore[arg-type]
-        context = {"form": form, "task": task, "formset": formset}
+        context = {**context, "form": form, "task": task, "formset": formset}
         return render(request, "workspace/task_update.html", context)
 
     form = TaskUpdateForm(
@@ -320,7 +340,7 @@ def task_update_view(
     )
     formset.full_clean()
     if not form.is_valid() or not formset.is_valid():
-        context = {"form": form, "task": task, "formset": formset}
+        context = {**context, "form": form, "task": task, "formset": formset}
         return render(request, "workspace/task_update.html", context)
 
     cleaned_data = form.cleaned_data
