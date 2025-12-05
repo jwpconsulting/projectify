@@ -150,6 +150,9 @@ class Development(SpectacularSettings, Base):
     CHANNEL_ERROR = 20
     ASGI_APPLICATION = "projectify.test.asgi.error_application"
 
+    # Admins for local logging
+    ADMINS = [["Local user", "user@localhost"]]
+
     # Show preview of all email types
     PREMAIL_PREVIEW = True
 

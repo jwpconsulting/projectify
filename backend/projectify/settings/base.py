@@ -288,7 +288,9 @@ class Base(Configuration):
             },
         },
     }
-    ADMINS: list[str] = []
+    # https://docs.djangoproject.com/en/5.2/ref/settings/#std-setting-ADMINS
+    # > Each item in the list should be a tuple of (Full name, email address). Example:
+    ADMINS: list[list[str]] = []
 
     # Cloudinary
     MEDIA_CLOUDINARY_STORAGE = (

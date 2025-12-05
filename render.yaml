@@ -85,8 +85,8 @@ envVarGroups:
       envVars:
           - key: DJANGO_SETTINGS_MODULE
             value: projectify.settings.production
-          - key: ADMIN_EMAILS
-            sync: false
+          - key: ADMIN_NAME
+          - key: ADMIN_EMAIL
           - key: DJANGO_CONFIGURATION
             value: Production
           - key: SECRET_KEY

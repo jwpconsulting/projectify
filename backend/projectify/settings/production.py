@@ -149,8 +149,6 @@ class Production(Base):
     }
 
     # Logging config
-    # Expect a comma-separated list of email addresses
-    ADMINS = os.getenv("ADMIN_EMAILS", "").split(",")
     LOGGING = Base.LOGGING
     LOGGING["handlers"]["mail_admins"] = {
         "level": "ERROR",
@@ -158,8 +156,21 @@ class Production(Base):
     }
 
     @classmethod
+    def setup(cls) -> None:
+        """Set ADMINS from ADMIN_NAME and ADMIN_EMAIL."""
+        admin_name = os.getenv("ADMIN_NAME")
+        if admin_name is None:
+            warnings.warn("ADMIN_NAME environment variable not set")
+        admin_email = os.getenv("ADMIN_EMAIL")
+        if admin_email is None:
+            warnings.warn("ADMIN_EMAIL environment variable not set")
+        if admin_name and admin_email:
+            cls.ADMINS = [[admin_name, admin_email]]
+
+    @classmethod
     def post_setup(cls) -> None:
         """Warn if ADMINS is empty."""
+        super().post_setup()
         if len(cls.ADMINS) == 0:
             warnings.warn(
                 "No admin contacts set up. Set the ADMIN_EMAILS environment variable."

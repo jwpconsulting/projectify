@@ -22,7 +22,16 @@ ensure that the Projectify backend will launch correctly.
 - `SECRET_KEY`: Used for session cookie generation, Redis symmetric encryption
 - `SITE_TITLE` (**optional**): Title of site, defaults to
   `Projectify Production`
-- `ADMIN_EMAILS`: Comma separated email addresses for admin contacts. Used for error reporting.
+
+## Error reporting
+
+These two values are used for error logging. When the Django backend logs
+an error, it also sends an email to the `ADMIN_EMAIL` email address with the
+contents of the logged error.
+
+- `ADMIN_NAME`: Administrator name. The backend prints a warning if this isn't set.
+- `ADMIN_EMAIL`: Administrator email address. The backend prints a warning if
+  this isn't set.
 
 ## Networking
 
