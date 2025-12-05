@@ -2,6 +2,9 @@
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
 {% extends "user_base.html" %}
 {% load i18n %}
+{% block title %}
+    {% translate "Email confirmation link sent - Projectify" %}
+{% endblock title %}
 {% load static %}
 {% block user_content %}
     <div class="flex flex-col gap-12 p-3">

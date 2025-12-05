@@ -2,6 +2,9 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "onboarding_base.html" %}
 {% load i18n %}
+{% block title %}
+    {% blocktrans %}Task "{{ task }}" has been assigned to you - Projectify{% endblocktrans %}
+{% endblock title %}
 {% block onboarding_content %}
     <div class="col-span-1 flex shrink grow flex-col gap-16 px-12 py-20 pb-8">
         {% csrf_token %}

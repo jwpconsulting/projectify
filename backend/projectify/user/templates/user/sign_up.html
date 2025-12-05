@@ -2,6 +2,9 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "user_base.html" %}
 {% load i18n %}
+{% block title %}
+    {% translate "Sign up - Projectify" %}
+{% endblock title %}
 {% block user_content %}
     <form class="flex flex-col gap-12 p-3" method="post">
         <h1 class="text-center text-4xl font-bold">{% trans "Sign up" %}</h1>

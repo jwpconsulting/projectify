@@ -4,6 +4,9 @@
 {% extends "solutions_base.html" %}
 {% load static %}
 {% load i18n %}
+{% block title %}
+    {% translate "Solutions - Projectify" %}
+{% endblock title %}
 {% block solutions_content %}
     <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
         {% trans "Solutions for every type of user" as title %}

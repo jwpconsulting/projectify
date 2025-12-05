@@ -3,6 +3,9 @@
 {% extends "storefront_base.html" %}
 {% load markdownify %}
 {% load i18n %}
+{% block title %}
+    {% translate "Credits and attribution - Projectify" %}
+{% endblock title %}
 {% block storefront_content %}
     <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
         {% trans "Credits and attribution" as title %}
