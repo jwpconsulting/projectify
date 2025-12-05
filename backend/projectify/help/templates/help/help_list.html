@@ -2,6 +2,9 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "help_base.html" %}
 {% load i18n %}
+{% block title %}
+    {% translate "Help - Projectify" %}
+{% endblock title %}
 {% block help_content %}
     <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
         <div class="flex w-full flex-col items-center bg-background">

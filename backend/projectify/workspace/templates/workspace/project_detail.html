@@ -1,6 +1,10 @@
 {# SPDX-FileCopyrightText: 2024 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "dashboard_base.html" %}
+{% load i18n %}
+{% block title %}
+    {% blocktrans with title=object.title %}{{ title }} - Projectify{% endblocktrans %}
+{% endblock title %}
 {% block dashboard_content %}
     <div class="min-w-0 grow" role="presentation">
         <main class="flex h-full flex-col items-center gap-4 bg-background py-4">
