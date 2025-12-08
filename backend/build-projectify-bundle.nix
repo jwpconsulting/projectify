@@ -37,6 +37,30 @@ let
       constantly = python312Packages.constantly;
       cffi = python312Packages.cffi;
       pyyaml = python312Packages.pyyaml;
+      # Fix this error:
+      # error: builder for '/nix/store/5bvgc1n6nim0khffcny1yy9d8fy96i87-python3.12-urllib3-2.6.0.drv' failed with exit code 1;
+      #        last 25 log lines:
+      #        >       self.metadata.validate_fields()
+      #        >     File "/nix/store/fbbghklswdr1r7czsnrcyh41ssri6cp4-python3.12-hatchling-1.27.0/lib/python3.12/site-packages/hatchling/metadata/core.py", line 266, in validate_fields
+      #        >       self.core.validate_fields()
+      #        >     File "/nix/store/fbbghklswdr1r7czsnrcyh41ssri6cp4-python3.12-hatchling-1.27.0/lib/python3.12/site-packages/hatchling/metadata/core.py", line 1366, in validate_fields
+      #        >       getattr(self, attribute)
+      #        >     File "/nix/store/fbbghklswdr1r7czsnrcyh41ssri6cp4-python3.12-hatchling-1.27.0/lib/python3.12/site-packages/hatchling/metadata/core.py", line 991, in classifiers
+      #        >       raise ValueError(message)
+      #        >   ValueError: Unknown classifier in field `project.classifiers`: Programming Language :: Python :: Free Threading :: 2 - Beta
+      urllib3 = super.urllib3.overridePythonAttrs (
+        old: {
+          # By passing in HATCH_METADATA_CLASSIFIERS_NO_VERIFY = "yes"
+          # https://github.com/pypa/hatch/pull/1620
+          # > Add a HATCH_METADATA_CLASSIFIERS_NO_VERIFY hook to disable
+          # verification of trove classifiers. This makes it possible to build
+          # newer packages against old versions of trove-classifiers (or even
+          # without the package installed). This is a convenience feature for
+          # Linux distributions that do not want to track minimum required
+          # trove-classifiers versions as required by various packages.
+          HATCH_METADATA_CLASSIFIERS_NO_VERIFY = "yes";
+        }
+      );
       psycopg-c = super.psycopg-c.overridePythonAttrs (
         old: {
           nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
