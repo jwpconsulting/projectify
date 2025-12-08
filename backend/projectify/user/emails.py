@@ -3,6 +3,11 @@
 # SPDX-FileCopyrightText: 2021, 2022, 2023 JWP Consulting GK
 """User emails."""
 
+from urllib.parse import quote
+
+from django.urls import reverse
+
+from projectify.lib.settings import get_settings
 from projectify.premail.email import Context, TemplateEmail
 from projectify.user.services.internal import user_make_token
 
@@ -17,12 +22,17 @@ class UserEmailConfirmationEmail(TemplateEmail[User]):
 
     def get_context(self) -> Context:
         """Add email confirm token."""
+        settings = get_settings()
+
+        email = self.obj.email
+        token = user_make_token(user=self.obj, kind="confirm_email_address")
+        if settings.ENABLE_DJANGO_FRONTEND:
+            url = reverse("users-django:confirm-email", args=(email, token))
+        else:
+            url = f"/user/confirm-email/{quote(email)}/{quote(token)}"
         return {
             **super().get_context(),
-            "confirm_email_address_token": user_make_token(
-                user=self.obj,
-                kind="confirm_email_address",
-            ),
+            "url": f"{settings.FRONTEND_URL}{url}",
         }
 
 
@@ -39,12 +49,18 @@ class UserPasswordResetEmail(TemplateEmail[User]):
 
     def get_context(self) -> Context:
         """Add reset password token."""
+        settings = get_settings()
+        email = self.obj.email
+        token = user_make_token(user=self.obj, kind="reset_password")
+        if settings.ENABLE_DJANGO_FRONTEND:
+            url = reverse(
+                "users-django:confirm-password-reset", args=(email, token)
+            )
+        else:
+            url = f"/user/profile/update-email-address/confirm/{quote(token)}"
         return {
             **super().get_context(),
-            "reset_password_token": user_make_token(
-                user=self.obj,
-                kind="reset_password",
-            ),
+            "url": f"{settings.FRONTEND_URL}{url}",
         }
 
 
@@ -78,12 +94,17 @@ class UserEmailAddressUpdateEmail(TemplateEmail[User]):
 
     def get_context(self) -> Context:
         """Add reset password token."""
+        settings = get_settings()
+        token = user_make_token(user=self.obj, kind="update_email_address")
+        if settings.ENABLE_DJANGO_FRONTEND:
+            url = reverse(
+                "users-django:confirm-email-address-update", args=(token,)
+            )
+        else:
+            url = f"/user/profile/update-email-address/confirm/{quote(token)}"
         return {
             **super().get_context(),
-            "update_email_address_token": user_make_token(
-                user=self.obj,
-                kind="update_email_address",
-            ),
+            "url": f"{settings.FRONTEND_URL}{url}",
             "new_email": self.obj.unconfirmed_email,
         }
 

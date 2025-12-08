@@ -59,7 +59,7 @@ class TestUserProfile:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating both preferred name and profile picture."""
-        with django_assert_num_queries(12):
+        with django_assert_num_queries(14):
             response = user_client.post(
                 resource_url,
                 {
@@ -480,7 +480,7 @@ class TestUserUpdate:
         user: User,
     ) -> None:
         """Test updating."""
-        with django_assert_num_queries(5):
+        with django_assert_num_queries(7):
             response = rest_user_client.put(
                 resource_url,
                 data={},

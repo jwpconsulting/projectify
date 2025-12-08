@@ -34,6 +34,7 @@ logger = logging.getLogger(__name__)
 
 
 # Update
+@transaction.atomic()
 def user_update(
     *,
     who: User,
