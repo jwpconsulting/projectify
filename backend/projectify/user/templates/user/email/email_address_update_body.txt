@@ -7,5 +7,5 @@ the your new email address '{{ new_email }}'.
 
 Please confirm your new email address by visiting the link below:
 {% endblocktranslate %}
-{{ FRONTEND_URL }}{% url "users-django:confirm-email-address-update" update_email_address_token %}
+{{ url }}
 {% include "email/_greeting.txt" %}

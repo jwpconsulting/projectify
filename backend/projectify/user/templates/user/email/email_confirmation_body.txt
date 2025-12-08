@@ -5,5 +5,5 @@
 You have recently signed up for Projectify. Please confirm your email address by
 visiting the following URL:
 {% endblocktranslate %}
-{{ FRONTEND_URL }}{% url 'users-django:confirm-email' object.email confirm_email_address_token %}
+{{ url }}
 {% include "email/_greeting.txt" %}

@@ -3,8 +3,10 @@
 # SPDX-FileCopyrightText: 2022, 2023 JWP Consulting GK
 """Workspace emails."""
 
+from django.urls import reverse
 from django.utils import timezone
 
+from projectify.lib.settings import get_settings
 from projectify.premail.email import Context, EmailAddress, TemplateEmail
 from projectify.user.models.user import User
 
@@ -27,9 +29,15 @@ class TeamMemberInviteEmail(TemplateEmail[TeamMemberInvite]):
 
     def get_context(self) -> Context:
         """Add name of inviter, current date."""
+        settings = get_settings()
+        if settings.ENABLE_DJANGO_FRONTEND:
+            url = reverse("users-django:sign-up")
+        else:
+            url = "/user/sign-up"
         return {
             **super().get_context(),
             "invited_by": self.who.preferred_name or self.who.email,
             "when": timezone.now(),
             "workspace_title": self.obj.workspace.title,
+            "url": f"{settings.FRONTEND_URL}{url}",
         }
