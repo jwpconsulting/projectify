@@ -52,7 +52,7 @@ class TestLogOutDjango:
         assert response.context["user"].is_authenticated, response.content
 
         # Now log out
-        with django_assert_num_queries(4):
+        with django_assert_num_queries(6):
             response = client.post(resource_url, follow=True)
         assert response.status_code == 200, response.content
         assert response.redirect_chain == [
@@ -80,7 +80,7 @@ class TestSignUpDjango:
     ) -> None:
         """Test signing up a new user."""
         assert User.objects.count() == 0
-        with django_assert_num_queries(9):
+        with django_assert_num_queries(11):
             response = client.post(
                 resource_url,
                 {
@@ -104,7 +104,7 @@ class TestSignUpDjango:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test signing up a new user with a weak password."""
-        with django_assert_num_queries(1):
+        with django_assert_num_queries(4):
             response = client.post(
                 resource_url,
                 {
@@ -230,7 +230,7 @@ class TestConfirmEmailDjango:
             privacy_policy_agreed=True,
         )
         token = user_make_token(user=user, kind="confirm_email_address")
-        with django_assert_num_queries(6):
+        with django_assert_num_queries(8):
             response = client.get(
                 reverse(
                     "users-django:confirm-email",
@@ -255,7 +255,7 @@ class TestConfirmEmailDjango:
             tos_agreed=True,
             privacy_policy_agreed=True,
         )
-        with django_assert_num_queries(1):
+        with django_assert_num_queries(4):
             response = client.get(
                 reverse(
                     "users-django:confirm-email",
@@ -288,7 +288,7 @@ class TestLogInDjango:
     ) -> None:
         """Test logging in a user."""
         # 13 + 3, 3 for the queries when redirecting
-        with django_assert_num_queries(16):
+        with django_assert_num_queries(18):
             response = client.post(
                 resource_url,
                 {"email": user.email, "password": password},
@@ -312,7 +312,7 @@ class TestLogInDjango:
         user: User,
     ) -> None:
         """Test logging in with wrong password."""
-        with django_assert_num_queries(2):
+        with django_assert_num_queries(5):
             response = client.post(
                 resource_url,
                 {"email": user.email, "password": "wrong_password"},
@@ -408,7 +408,7 @@ class TestPasswordResetRequestDjango:
         user: User,
     ) -> None:
         """Test POST request to password reset request page."""
-        with django_assert_num_queries(1):
+        with django_assert_num_queries(3):
             response = client.post(
                 resource_url,
                 {"email": user.email},
@@ -442,7 +442,7 @@ class TestPasswordResetRequestDjango:
     ) -> None:
         """Test POST request with email that doesn't exist in the system."""
         nonexistent_email = faker.email()
-        with django_assert_num_queries(1):
+        with django_assert_num_queries(4):
             response = client.post(
                 resource_url,
                 {"email": nonexistent_email},
@@ -684,7 +684,7 @@ class TestLogOut:
             data={"email": user.email, "password": password},
         )
         assert response.status_code == 200, response.data
-        with django_assert_num_queries(4):
+        with django_assert_num_queries(6):
             response = rest_client.post(resource_url)
             assert response.status_code == 200, response.data
         assert response.data == {"kind": "unauthenticated"}
@@ -765,7 +765,7 @@ class TestSignUp:
     ) -> None:
         """Test signing up a new user."""
         assert User.objects.count() == 0
-        with django_assert_num_queries(9):
+        with django_assert_num_queries(11):
             response = rest_client.post(
                 resource_url,
                 # TODO of course, we will validate password strength here in
@@ -818,7 +818,7 @@ class TestSignUp:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test signing up a new user."""
-        with django_assert_num_queries(1):
+        with django_assert_num_queries(4):
             response = rest_client.post(
                 resource_url,
                 data={
@@ -862,7 +862,7 @@ class TestConfirmEmail:
             privacy_policy_agreed=True,
         )
         token = user_make_token(user=user, kind="confirm_email_address")
-        with django_assert_num_queries(6):
+        with django_assert_num_queries(8):
             response = rest_client.post(
                 resource_url,
                 data={"email": "hello@world.com", "token": token},
@@ -891,7 +891,7 @@ class TestLogIn:
         password: str,
     ) -> None:
         """Test as an authenticated user."""
-        with django_assert_num_queries(13):
+        with django_assert_num_queries(15):
             response = rest_client.post(
                 resource_url,
                 data={"email": user.email, "password": password},
@@ -921,7 +921,7 @@ class TestPasswordResetRequest:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test requesting a password reset for a user."""
-        with django_assert_num_queries(1):
+        with django_assert_num_queries(3):
             response = rest_client.post(
                 resource_url,
                 data={"email": user.email},

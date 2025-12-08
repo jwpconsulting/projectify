@@ -47,6 +47,7 @@ def _validate_password(email: str, password: str) -> None:
         )
 
 
+@transaction.atomic()
 def user_sign_up(
     *,
     email: str,
@@ -89,6 +90,7 @@ def user_sign_up(
     return user
 
 
+@transaction.atomic()
 def user_confirm_email(
     *,
     email: str,
@@ -112,6 +114,7 @@ def user_confirm_email(
     return user
 
 
+@transaction.atomic()
 def user_log_in(
     *,
     email: str,
@@ -151,6 +154,7 @@ def user_log_in(
     return user
 
 
+@transaction.atomic()
 def user_log_out(
     *,
     request: HttpRequest,
@@ -162,6 +166,7 @@ def user_log_out(
     logout(request)
 
 
+@transaction.atomic()
 def user_request_password_reset(
     *,
     # Should this be taking in a user object instead?
