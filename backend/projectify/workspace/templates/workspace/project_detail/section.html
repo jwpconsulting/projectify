@@ -59,43 +59,22 @@
                                       action="{% url 'dashboard:tasks:move' task.uuid %}"
                                       class="flex flex-row items-center gap-1"
                                       method="post">
-                                    {# TODO use chevron up #}
-                                    {# TODO conditionally hide if top #}
                                     <button name="up"
                                             value="up"
                                             type="submit"
                                             aria-label="Move task up"
-                                            disabled=""
+                                            {% if forloop.first %}disabled{% endif %}
                                             class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                        <svg fill="none"
-                                             viewBox="0 0 24 24"
-                                             stroke="currentColor"
-                                             aria-hidden="true"
-                                             xmlns="http://www.w3.org/2000/svg"
-                                             width="100%"
-                                             height="100%">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                        </svg>
+                                        {% include "heroicons/chevron-up.svg" %}
                                     </button>
-                                    <!--<CircleIcon>-->
-                                    {# TODO use chevron down #}
-                                    {# TODO conditionally hide if bottom #}
-                                    <button aria-label="Move task down"
-                                            name="down"
+                                    <button name="down"
                                             value="down"
                                             type="submit"
+                                            aria-label="Move task down"
+                                            {% if forloop.last %}disabled{% endif %}
                                             class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                        <svg fill="none"
-                                             viewBox="0 0 24 24"
-                                             stroke="currentColor"
-                                             aria-hidden="true"
-                                             xmlns="http://www.w3.org/2000/svg"
-                                             width="100%"
-                                             height="100%">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                        </svg>
+                                        {% include "heroicons/chevron-down.svg" %}
                                     </button>
-                                    <!--<CircleIcon>-->
                                     {% csrf_token %}
                                     <p class="htmx-indicator">saving...</p>
                                 </form>
@@ -104,19 +83,8 @@
                                 <div>
                                     <button aria-label="Open context menu"
                                             class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                        {# TODO dots horizontal #}
-                                        <svg fill="none"
-                                             viewBox="0 0 24 24"
-                                             stroke="currentColor"
-                                             aria-hidden="true"
-                                             xmlns="http://www.w3.org/2000/svg"
-                                             width="100%"
-                                             height="100%">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z">
-                                            </path>
-                                        </svg>
+                                        {% include "heroicons/dots-horizontal.svg" %}
                                     </button>
-                                    <!--<CircleIcon>-->
                                 </div>
                                 <!--<MenuButton>-->
                             </div>
