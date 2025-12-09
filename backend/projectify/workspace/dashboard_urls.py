@@ -14,8 +14,12 @@ from projectify.workspace.views.project import (
     project_recover_view,
     project_update_view,
 )
-from projectify.workspace.views.section import section_update_view
+from projectify.workspace.views.section import (
+    section_create_view,
+    section_update_view,
+)
 from projectify.workspace.views.task import (
+    task_actions,
     task_create,
     task_create_sub_task_form,
     task_detail,
@@ -128,6 +132,12 @@ project_patterns = (
         project_recover_view,
         name="recover",
     ),
+    # Create section
+    path(
+        "<uuid:project_uuid>/create-section",
+        section_create_view,
+        name="create-section",
+    ),
 )
 section_patterns = (
     # Create task
@@ -138,6 +148,8 @@ section_patterns = (
 task_patterns = (
     path("<uuid:task_uuid>", task_detail, name="detail"),
     path("<uuid:task_uuid>/update", task_update_view, name="update"),
+    # Move/delete actions menu
+    path("<uuid:task_uuid>/actions", task_actions, name="actions"),
     # Form
     path("<uuid:task_uuid>/move", task_move, name="move"),
     path(

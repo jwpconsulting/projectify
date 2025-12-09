@@ -3,6 +3,9 @@
 {% extends "workspace/workspace_settings_base.html" %}
 {% load i18n %}
 {% load projectify %}
+{% block title %}
+    {% blocktrans with workspace_title=workspace.title %}{{ workspace_title }} settings - Projectify{% endblocktrans %}
+{% endblock title %}
 {% block workspace_settings_content %}
     <form class="flex flex-col gap-6"
           method="post"

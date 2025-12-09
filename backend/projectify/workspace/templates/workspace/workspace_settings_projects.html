@@ -4,6 +4,9 @@
 {% load i18n %}
 {% load projectify %}
 {% load rules %}
+{% block title %}
+    {% blocktrans with workspace_title=workspace.title %}{{ workspace_title }} projects - Projectify{% endblocktrans %}
+{% endblock title %}
 {% block workspace_settings_content %}
     <section class="flex flex-col gap-4">
         <h2>{% translate "Projects" %}</h2>

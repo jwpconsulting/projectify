@@ -1,0 +1,32 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "dashboard_base.html" %}
+{%comment%} Task context menu replacement
+
+Add:
+- Move to section
+- Move to top
+- Move to bottom
+- Delete task
+{% endcomment %}
+{% load projectify rules %}
+{% block dashboard_content %}
+    <div id="task-actions" class="min-w-0 grow" role="presentation">
+        <a href="">Move to section</a>
+        <form action="{% url 'dashboard:tasks:move' task.uuid %}"
+              hx-post="{% url 'dashboard:tasks:move' task.uuid %}"
+              hx-target="#task-actions"
+              hx-select="#project-detail"
+              hx-swap="outerHTML"
+              hx-push-url="true"
+              class="flex flex-row items-center gap-1"
+              method="post">
+            <button name="direction" value="top" type="submit">Move to top</button>
+            {# TODO conditionally hide if bottom #}
+            <button name="direction" value="bottom" type="submit">Move to bottom</button>
+            {% csrf_token %}
+            <p class="htmx-indicator">saving...</p>
+        </form>
+        <a href="">Delete task</a>
+    </div>
+{% endblock dashboard_content %}

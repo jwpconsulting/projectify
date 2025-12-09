@@ -7,6 +7,9 @@
 {# TODO: conditionally hide invite form #}
 {# TODO: add role change drop down #}
 {# TODO: add conditional remove button#}
+{% block title %}
+    {% blocktrans with workspace_title=workspace.title %}{{ workspace_title }} team members - Projectify{% endblocktrans %}
+{% endblock title %}
 {% block workspace_settings_content %}
     <section class="flex flex-col gap-4">
         {% has_perm "workspace.create_team_member" user workspace as can_create_team_member %}

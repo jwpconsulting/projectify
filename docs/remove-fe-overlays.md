@@ -13,47 +13,99 @@ achieve feature parity with the previous frontend.
 
 # Modal views
 
-These views are parts of the UI that don't have their own page.
+These views are parts of the UI that don't have their own page and interact
+with the page that they're placed on
+
+The side navigation has these components:
 
 - **Side nav labels**: Create and update labels, accessible from side nav when logged in
   and interacting with a workspace. You can also filter tasks by labels here
 - **Side nav team members**: Filter tasks by users, including tasks that aren't assigned to
   anyone
-- **Overlays**: Various creation/deletion/archival confirmation screens
-  accessible from dashboard or task.
-  - Add new section
-  - Add new project
-  - Archive project
-  - Delete task
-  - Rename project
-  - Rename section
-  - Restore project
-- **Context menus**:
-  - User profile context menu (logout/edit profile)
-  - Workspace context menu (select the workspace)
-  - Side navigation context menu (workspace settings, archive, minimize
-    sidebar)
-  - Section context menu (edit/delete/change order)
-  - Task context menu (described in detail above)
-  - Task label assignment (dashboard and task view)
-  - Task user assignment (dashboard and task view)
-- **Role assignment** in workspace settings
-- **Overlay menus** that are only visible on narrow (mobile) screens.
 
-# Migration plan
+Projectify has these overlays for creating, deleting, updating resources.
+Overlays are accessible from the dashboard, task pages, and workspace settings.
 
-## Labels
+- **Create new section**: Enter a section name to create a new section
+- **Create project**: Enter a project name to create a new project
+- **Archive project**: Puts a project into the workspace project archive
+- **Delete task**: Deletes a task with its subtasks and all other attached data
+- **Edit project**: Change a project's name
+- **Edit section**: Change a section's name
+- **Recover project**: Recover a project from the workspace project archive
+- **Delete project**: Delete an archived project
+- **Delete section**: Delete a section including its tasks
 
-### Create and update
-Move label creation and updating to the workspace settings for now. Where
-necessary, add a new link to "Create or update labels".
+The **team members** workspace settings screen has a modal team member **role
+assignment** dropdown.
 
-### Filter
+The navigation header turns into an **overlay menu** on narrow (mobile)
+screens.
 
-Show somewhere what labels are assigned to what tasks? Make label filter
-clickable and update query params instead?
+The **Modal migration** section describes how to port each overlay.
 
-## Users
+# Context menus
+
+Further, the SvelteKit frontend has these context menus:
+
+- **User profile** context menu (**log out**, **My profile**)
+- **Workspace** context menu (select the workspace)
+- **Side navigation** context menu (workspace settings, archive, minimize
+  sidebar)
+- **Section** context menu (edit/delete/change order)
+- **Task** context menu (described in [./remove-fe.md](./remove-fe.md)
+- **Task label** context menu (dashboard and task view)
+- **Task assignee** context menu (dashboard and task view)
+
+The **Context menu migration** section describes how to port each context menu
+
+# Modal migration
+
+## Side navigation labels
+
+### Filter by labels
+
+Add filter by label function to **Task search** panel. Use checkboxes inside
+a collapsible HTML element. Show number of tasks next to label names.
+
+### List workspace labels
+
+Create a new page to manage all workspace labels:
+
+- [ ] **Route**: `dashboard/workspace/[uuid]/settings/labels`
+- [ ] **Page title**: `{workspace.title} labels - Projectify`
+- [ ] **Contents**:
+    - [ ] Table listing all labels
+    - [ ] For each label, show:
+        - [ ] Label **name**
+        - [ ] Label **color**
+        - [ ] Update form link
+        - [ ] Delete button
+    - [ ] Show an **Add label** button in the bottom
+
+### Create label
+
+Make a new page for creating a new label for a workspace
+
+- [ ] **Route**: `dashboard/workspace/[uuid]/settings/labels/create`
+- [ ] **Page title**: `Create label for {workspace.title} - Projectify`
+- [ ] **Contents**:
+    - [ ] **Name** input
+    - [ ] **Color** selector (radio input)
+    - [ ] **Create** button; redirects to **List workspace labels** on success
+    - [ ] **Back** button; goes back to **List workspace labels** view
+
+### Update label
+
+- [ ] **Route**: `dashboard/labels/[uuid]`
+- [ ] **Page title**: `Update {label.name} - Projectify`
+- [ ] **Contents**:
+    - [ ] **Name** input
+    - [ ] **Color** selector (radio input)
+    - [ ] **Update** button; redirects to **List workspace labels** on success
+    - [ ] **Back** button; goes back to **List workspace labels** view
+
+## Side navigation team members
 
 Either we make buttons that add GET query params to the url, or we incorporate
 user filtering into the Task search field.
@@ -62,145 +114,193 @@ user filtering into the Task search field.
 
 For consistency, we rename this overlay to **Create section**.
 
-- **View**: Create view with the address `/dashboard/project/<uuid:project_uuid>/create-section`
-- **Link**: Turn existing **Add section** button on project page into link to
+- [ ] **View**: Create view with the address `/dashboard/project/<uuid:project_uuid>/create-section`
+- [ ] **Link**: Turn existing **Add section** button on project page into link to
   the address, change the button to say **Create section**
-- **Form contents**:
-  - Show a form with title and description fields
-  - **Add section**: Submit the form
-  - **Cancel**: Return to project
-- **Success**: Redirect to project and scroll to section
-- **Failure**: Render form with errors
+- [ ] **Form contents**:
+  - [ ] Show a form with title and description fields
+  - [ ] **Add section**: Submit the form
+  - [ ] **Cancel**: Return to project
+- [ ] **Success**: Redirect to project and scroll to section
+- [ ] **Failure**: Render form with errors
 
-## Add project
+## Create project
 
-Done on 2025-12-01.
+**Go back** missing. - J 2025-12-05
 
-- **View**: Create view with the address `/dashboard/workspace/<uuid:workspace_uuid>/create-project`
-- **Link**: Copy **Create new project** button from old frontend and link to
-  the address
-- **Form contents**:
-  - Show a form with title and description fields
-  - **Create project**: Submit the form
-  - **Cancel**: Go to first available project in workspace, if no project
+- [x] **View**: Create view with the address `/dashboard/workspace/<uuid:workspace_uuid>/create-project`
+- [x] **Link**: Copy **Create new project** button from old frontend side nav
+  project list bottom. Make button anchor and link to the address
+- [x] **Form contents**:
+  - [x] Show a form with title and description fields
+  - [x] **Create project**: Submit the form
+  - [ ] **Go back**: Go to first available project in workspace, if no project
     exists, go to project settings inside workspace settings
-- **Success**: Redirect to new project on success
-- **Failure**: Render form with errors
+- [x] **Success**: Redirect to new project on success
+- [x] **Failure**: Render form with errors
+
+Things that are left to do:
+
+- [ ] Populate side nav with `workspace` and `projects` context objects
 
 ## Delete task
 
-- **View**: Create view with the address `/dashboard/task/<uuid:task_uuid>/confirm-delete`
-- **Link**: On the task page, create a **Delete Task** red button next to **Edit**
-- **Contents**:
-  - **Delete task** and **Cancel** button
-  - When the user presses **Delete task** and deleting the task succeeds,
-    redirect to the task's section. Show a confirmation flash message.
-  - When the user presses **Cancel**, redirect back to the task.
+- [ ] **Link**: On the task page, create a **Delete Task** red button next to **Edit**
+- [ ] Show HTMX confirm dialog when user pressed **Delete Task**. Delete task on
+  confirmation.
 
 ## Archive project
 
-Done on 2025-12-01.
+Styling missing on 2025-12-05
 
 Instead of archiving projects from the context menu, we want to create a new
 settings screen that lets you archive projects.
 
-- **View**: Create a project settings view with the address
+- [x] **View**: Create a project settings view with the address
   `/dashboard/workspace/<uuid:workspace_uuid>/settings/projects`
-- **Link**: Place **Projects** tab in workspace settings tab list
-- **Page contents**:
-  - Show active projects in a list. Active projects are projects that the user hasn't archived.
-  - Show a **Update** and **Archive** button for every active project.
-  - When pressing the **Update** button, redirect to this address: `/dashboard/project/<uuid:project_uuid>/update`
+- [x] **Link**: Place **Projects** tab in workspace settings tab list
+- [ ] **Page contents**:
+  - [x] Show active projects in a list. Active projects are projects that the user hasn't archived.
+  - [x] Show a **Update** and **Archive** button for every active project.
+  - [x] When pressing the **Update** button, redirect to this address: `/dashboard/project/<uuid:project_uuid>/update`
     For more details, see the following **Rename project** section.
-  - When pressing the **Archive** button, show a confirmation screen. When the
+  - [x] When pressing the **Archive** button, show a confirmation screen. When the
   user presses **Ok**, the project becomes inactive.
-  - Show archived projects in the bottom with a **Recover** and **Delete**
+  - [x] Show archived projects in the bottom with a **Recover** and **Delete**
     button for every archived project
-  - When pressing the **Recover** button, show a confirmation screen. When the
+  - [x] When pressing the **Recover** button, show a confirmation screen. When the
   user presses **Ok**, the project goes back to the active projects
-  - When pressing the **Delete** button, show a confirmation screen. When the
+  - [x] When pressing the **Delete** button, show a confirmation screen. When the
   user presses **Ok**, it deletes the project.
+
+Things that are left to do:
+
+- [ ] Style section headers **Projects** andd **Archived projects**
+- [ ] Style **Archive**, **Recover**, **Delete** buttons
 
 ## Update project
 
-Done on 2025-12-01.
+Almost done on 2025-12-05
 
-- **View**: Create an update project view with the address `/dashboard/project/<uuid:project_uuid>/update`
-- **Link**: Link to this page from the **Update** link on the project
+- [x] **View**: Create an update project view with the address `/dashboard/project/<uuid:project_uuid>/update`
+- [x] **Link**: Link to this page from the **Update** link on the project
   settings view
-- **Form contents**:
-  - Show project title and description fields
-  - **Update project**: Save the form contents to the project. Redirect back to project
+- [x] **Form contents**:
+  - [x] Show project **title** and **description** fields
+  - [x] **Update project**: Save the form contents to the project. Redirect back to project
     settings.
-  - **Cancel**: Go back to project settings
+  - [x] **Go back**: Go back to project settings
+
+Things that are left to do:
+
+- [ ] Populate `projects` context variable
 
 ## Update section
 
+Missing: Delete button, style link; Justus 2025-12-05
+
 This replaces the **Edit section title** modal.
 
-- **View**: Create an update section view with the address `/dashboard/section/<uuid:section_uuid>/update`
-- **Link**: Change the ellipsis button in the section header to link to this view
-- **Form contents**:
-  - Show section title and description fields
-  - **Save**: Save the form contents to the section. Redirect back to
+- [x] **View**: Create an update section view with the address `/dashboard/section/<uuid:section_uuid>/update`
+- [ ] **Link**: Change the ellipsis `...` button to say `Update section` in the section header and style it. Link to this view
+- [x] **Form contents**:
+  - [x] Show section **title** and **description** fields
+  - [x] **Update section**: Save the form contents to the section. Redirect back to
   the section's project and scroll to the section
-  - **Cancel**: Discard the form contents. Redirect back to the project's
+  - [x] **Go back**: Discard the form contents. Redirect back to the project's
   section and scroll to the section.
-- **Section move** form:
-  - **Move up**: Move the section above the previous section
-  - **Move down**: Move the section below the next section
-- **Delete** button: Show a confirmation dialog. If the user presses **Ok**,
+- [x] **Section move** form:
+  - [x] **Move up**: Move the section above the previous section
+  - [x] **Move down**: Move the section below the next section
+- [ ] **Delete** button: Show a confirmation dialog. If the user presses **Ok**,
   delete the section.
 
 ## Project archive
+
+DONE
 
 Incorporate this into the project settings tab in the workspace settings.
 See the **Archive project** and **Recover project** section in this
 document.
 
-## Task context menu
+# Context menus
 
-Here's how to replace items in the task context menu with equivalent UI features:
+## User profile
 
-- **Open task**: Remove this button
-- **Copy link**: Remove this button
-- **Move task**: Change the ellipsis (`...`) button in the task card or line to link to a new **Task actions** page. See the **Task actions** section
-for a description.
+Change the following into individual links:
 
-### Task actions
+- [x] **Log out**
+- [x] **My profile**
 
-- **View**: Create a new view with the address
-  `/dashboard/task/<uuid:task_uuid>/actions`
-- **Link** to this view from a task card in the project view
-- **Page contents**:
-  - **Section move form**:
-    - Dropdown with **section** names
-    - **Move to section** button
-    - When the user presses **Move to section**, move the task to that section
-      and redirect the user to the task's project and scroll to the task.
-  - **Move to top / bottom**:
-    - **Move to top** button
-    - **Move to bottom** button
-    - When the user presses one of these buttons, move the task to the top
-    or bottom of the task's current section accordingly. Redirect the user back
-    to the task's project and scroll to the task.
-  - **Delete task**: When the user presses this, redirect to the task
-    `confirm-delete` screen
+## Workspace
+
+- [ ] Create collapsible menu
+- [ ] Turn the workspace select context menu into a collapsible menu with
+links that point to one workspace each.
+
+## Side navigation
+
+Replace the following items with equivalent features:
+
+- [x] **Minimise sidebar**: Remove this button and any side navigation minimise
+  feature.
+- [x] **Go to archive**: Access the archive by going to the workspace settings
+  and then pressing the **Projects** tab
+- [x] **Workspace settings**: Access the workspace settings by pressing the ellipsis
+icon.
+- [ ] Consider using a different icon or using words for the **Workspace
+  settings** button
 
 ## Section context menu
 
-- **Ordering**: The **update section** page has **move up** and **move
+- [x] **Ordering**: The **update section** page has **move up** and **move
   down** buttons as a replacement
-- **Collapse section**: We implement no replacement for this.
-- **Edit section title**: The **update section** page has a form for updating
+- [x] **Collapse section**: We implement no replacement for this.
+- [x] **Edit section title**: The **update section** page has a form for updating
   the section's title.
-- **Delete section**: The **update section** page has a **delete section** link
+- **Delete section**: See **Update section**
 
-## Other
+## Task
 
-- **Minimize side nav**: Remove entirely
-- Project page context menus:
-  - **Label assignment**: Remove and add back in a future Projectify revision.
-  - **Team member assignment**: Remove and add back in a future Projectify
-    revision.
-- **Mobile navigation overlay**: Remove entirely for now. Tweak layout to work with mobile.
+Here's how to replace items in the task context menu with equivalent UI features:
+
+- [x] **Open task**: No replacement
+- [ ] **Move task**: Change the ellipsis (`...`) button in the task card or line to
+  link to a new **Task actions** page. See the **Task actions** section for a
+  description.
+- [x] **Copy link**: No replacement
+- [ ] **Delete task**: Add a delete button to the task page.
+
+### Task actions
+
+- [ ] **View**: Create a new view with the address
+  `/dashboard/task/<uuid:task_uuid>/actions`
+- [ ] **Link** to this view from a task card in the project view
+- [ ] **Page contents**:
+  - [ ] **Section move form**:
+    - [ ] Dropdown with **section** names
+    - [ ] **Move to section** button
+    - [ ] When the user presses **Move to section**, move the task to that section
+      and redirect the user to the task's project and scroll to the task.
+  - [ ] **Move to top / bottom**:
+    - [ ] **Move to top** button
+    - [ ] **Move to bottom** button
+    - [ ] When the user presses one of these buttons, move the task to the top
+    or bottom of the task's current section accordingly. Redirect the user back
+    to the task's project and scroll to the task.
+  - [ ] **Delete task**: When the user presses this, show an HTMX confirm dialog
+    and delete the task
+
+## Label assignment
+
+Remove and add back in a future Projectify revision. Users can still edit
+labels from the task edit page.
+
+## Team member assignment
+
+Remove and add back in a future Projectify revision. Users can still edit
+the assignee from the task edit page.
+
+## Mobile navigation overlay
+
+Remove entirely for now. Tweak layout to work with mobile.

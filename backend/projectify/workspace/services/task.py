@@ -202,7 +202,10 @@ def task_move_in_direction(
             neighbor = maybe_neighbor.get()
 
         case "bottom":
-            neighbor = tasks[-1]
+            maybe_task = tasks.last()
+            if not maybe_task:
+                raise RuntimeError(f"There's no task after task {task.uuid}")
+            neighbor = maybe_task
         case "top":
             neighbor = section
     return task_move_after(who=who, task=task, after=neighbor)

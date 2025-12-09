@@ -2,6 +2,9 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "onboarding_base.html" %}
 {% load i18n %}
+{% block title %}
+    {% translate "Onboarding - Projectify" %}
+{% endblock title %}
 {% block onboarding_content %}
     <form class="col-span-1 flex shrink grow flex-col gap-16 px-12 py-20 pb-8">
         {% include "onboarding/common/form_description.html" with title="Welcome" text_1="In the following steps you will create a new workspace and create your first task." text_2="You can use the workspace in trial mode at the beginning, and upgrade to a paid version anytime by going to the workspace settings." target_blank="True" href="/help/quota#quotas-for-trial-workspaces" href_label="Learn more about features available during trial mode" %}

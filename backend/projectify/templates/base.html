@@ -10,7 +10,11 @@
               content="Free software project management software Projectify">
         <meta name="keywords"
               content="free software,open source,project management,projectify">
-        <title>Projectify</title>
+        <title>
+            {% block title %}
+                Projectify
+            {% endblock title %}
+        </title>
         <!-- TODO header goes here -->
         <script src="{% static "htmx.min.js" %}"></script>
         <script defer src="{% static "alpine.min.js" %}"></script>

@@ -30,6 +30,9 @@ from projectify.workspace.models.label import Label
 from projectify.workspace.models.section import Section
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.selectors.project import (
+    project_find_by_workspace_uuid,
+)
 from projectify.workspace.selectors.section import (
     SectionDetailQuerySet,
     section_find_for_user_and_uuid,
@@ -157,15 +160,15 @@ def task_create(
     if section is None:
         raise Http404(_("Section not found"))
     workspace = section.project.workspace
+    context: dict[str, Any] = {"section": section, "workspace": workspace}
     if request.method == "GET":
         return render(
             request,
             "workspace/task_create.html",
             {
+                **context,
                 "form": TaskCreateForm(workspace=section.project.workspace),
                 "formset": TaskCreateSubTaskForms(),
-                "section": section,
-                "workspace": workspace,
             },
         )
     form = TaskCreateForm(workspace, request.POST)
@@ -175,7 +178,7 @@ def task_create(
         return render(
             request,
             "workspace/task_create.html",
-            {"form": form, "formset": formset, "section": section},
+            {**context, "form": form, "formset": formset},
             status=400,
         )
 
@@ -210,7 +213,17 @@ def task_detail(
     )
     if task is None:
         raise Http404(_(f"Could not find task with uuid {task_uuid}"))
-    context = {"task": task}
+    projects = project_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=task.section.project.workspace.uuid,
+        archived=False,
+    )
+    context = {
+        "task": task,
+        "projects": projects,
+        # Inefficient
+        "workspace": task.section.project.workspace,
+    }
     return render(request, "workspace/task_detail.html", context)
 
 
@@ -272,8 +285,15 @@ def task_update_view(
         raise Http404(_(f"Could not find task with uuid {task_uuid}"))
     project = task.section.project
     workspace = project.workspace
+    projects = project_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=workspace.uuid,
+        archived=False,
+    )
 
     action = determine_action(request)
+
+    context: dict[str, Any] = {"workspace": workspace, "projects": projects}
 
     if action == "add_sub_task":
         post: dict[str, Any] = request.POST.dict()
@@ -289,7 +309,7 @@ def task_update_view(
         logger.info("Adding sub task")
         form = TaskUpdateForm(data=post, workspace=workspace)
         formset = TaskUpdateSubTaskForms(data=post)
-        context = {"form": form, "task": task, "formset": formset}
+        context = {**context, "form": form, "task": task, "formset": formset}
         return render(request, "workspace/task_update.html", context)
 
     task_initial = {
@@ -307,7 +327,7 @@ def task_update_view(
     if action == "get":
         form = TaskUpdateForm(initial=task_initial, workspace=workspace)
         formset = TaskUpdateSubTaskForms(initial=sub_tasks_initial)  # type: ignore[arg-type]
-        context = {"form": form, "task": task, "formset": formset}
+        context = {**context, "form": form, "task": task, "formset": formset}
         return render(request, "workspace/task_update.html", context)
 
     form = TaskUpdateForm(
@@ -320,7 +340,7 @@ def task_update_view(
     )
     formset.full_clean()
     if not form.is_valid() or not formset.is_valid():
-        context = {"form": form, "task": task, "formset": formset}
+        context = {**context, "form": form, "task": task, "formset": formset}
         return render(request, "workspace/task_update.html", context)
 
     cleaned_data = form.cleaned_data
@@ -368,10 +388,16 @@ def task_update_view(
 
 # Form
 class TaskMoveForm(forms.Form):
-    """Form that captures whether task shall be moved up or down."""
+    """Form that captures which direction to move a task."""
 
-    up = forms.CharField(required=False)
-    down = forms.CharField(required=False)
+    direction = forms.ChoiceField(
+        choices=[
+            ("top", _("Top")),
+            ("up", _("Up")),
+            ("down", _("Down")),
+            ("bottom", _("Bottom")),
+        ]
+    )
 
 
 @require_POST
@@ -383,28 +409,42 @@ def task_move(
     form = TaskMoveForm(request.POST)
     if not form.is_valid():
         # TODO
-        raise Exception()
-    direction: Literal["up", "down"]
-    if form.cleaned_data["up"]:
-        direction = "up"
-    elif form.cleaned_data["down"]:
-        direction = "down"
-    else:
-        # TODO
-        raise Exception()
+        return HttpResponse(status=400)
+    direction: Literal["up", "down", "top", "bottom"]
+    dir_in: str = form.cleaned_data["direction"]
+    match dir_in:
+        case "up" | "down" | "top" | "bottom":
+            direction = dir_in
+        case _:
+            # TODO
+            raise Exception(f"Did not recognize direction {dir_in}")
 
     task = task_move_in_direction(
         who=request.user, task=task, direction=direction
     )
 
-    if request.htmx:
-        return render(
-            request,
-            "workspace/project_detail/section.html",
-            {"section": task.section},
-        )
+    return redirect("dashboard:projects:detail", task.section.project.uuid)
 
-    return redirect("workspace:projects:view", task.section.project.uuid)
+
+def task_actions(
+    request: AuthenticatedHttpRequest, task_uuid: UUID
+) -> HttpResponse:
+    """Render task actions menu page."""
+    task = get_object(request, task_uuid)
+    project = task.section.project
+    workspace = project.workspace
+    projects = project_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=workspace.uuid,
+        archived=False,
+    )
+    context = {
+        "task": task,
+        "workspace": workspace,
+        "projects": projects,
+        "project": project,
+    }
+    return render(request, "workspace/task_actions.html", context)
 
 
 # Create

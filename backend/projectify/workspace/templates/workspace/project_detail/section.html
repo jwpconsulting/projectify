@@ -35,14 +35,17 @@
                         </a>
                     </td>
                     <td class="contents">
+                        {# TODO render labels #}
                         <button class="flex flex-row items-center self-start rounded-full px-4 py-1 font-bold text-primary outline-dashed outline-1 outline-primary focus:outline focus:outline-inherit">
                             Assign label
                         </button>
                         <!--<Labels>-->
                     </td>
                     <td class="flex flex-row items-center justify-end gap-2 self-end">
+                        {# TODO render sub task progress #}
                         <div class="flex shrink-0 flex-row items-center gap-2 px-2 py-1"></div>
                         <!--<SubTaskProgress>-->
+                        {# TODO render assignee #}
                         <div class="flex flex-row items-center gap-2">
                             <button>
                                 <div class="flex flex-row h-6 w-6 items-center rounded-full border border-primary bg-background"></div>
@@ -51,64 +54,40 @@
                             </button>
                             <!--<TeamMember>-->
                             <div class="flex flex-row items-center">
-                                <form hx-target="closest [data-section]"
+                                <form hx-target="#project-detail"
                                       hx-post="{% url 'dashboard:tasks:move' task.uuid %}"
+                                      hx-select="#project-detail"
                                       action="{% url 'dashboard:tasks:move' task.uuid %}"
                                       class="flex flex-row items-center gap-1"
                                       method="post">
-                                    <button name="up"
+                                    <button name="direction"
                                             value="up"
                                             type="submit"
                                             aria-label="Move task up"
-                                            disabled=""
+                                            {% if forloop.first %}disabled{% endif %}
                                             class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                        <svg fill="none"
-                                             viewBox="0 0 24 24"
-                                             stroke="currentColor"
-                                             aria-hidden="true"
-                                             xmlns="http://www.w3.org/2000/svg"
-                                             width="100%"
-                                             height="100%">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                        </svg>
+                                        {% include "heroicons/chevron-up.svg" %}
                                     </button>
-                                    <!--<CircleIcon>-->
-                                    <button aria-label="Move task down"
-                                            name="down"
+                                    <button name="direction"
                                             value="down"
                                             type="submit"
+                                            aria-label="Move task down"
+                                            {% if forloop.last %}disabled{% endif %}
                                             class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                        <svg fill="none"
-                                             viewBox="0 0 24 24"
-                                             stroke="currentColor"
-                                             aria-hidden="true"
-                                             xmlns="http://www.w3.org/2000/svg"
-                                             width="100%"
-                                             height="100%">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                        </svg>
+                                        {% include "heroicons/chevron-down.svg" %}
                                     </button>
-                                    <!--<CircleIcon>-->
                                     {% csrf_token %}
-                                    <p class="htmx-indicator">saving...</p>
+                                    <p class="htmx-indicator">...</p>
                                 </form>
                                 <!--<Chevrons>-->
-                                <div>
-                                    <button aria-label="Open context menu"
-                                            class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                        <svg fill="none"
-                                             viewBox="0 0 24 24"
-                                             stroke="currentColor"
-                                             aria-hidden="true"
-                                             xmlns="http://www.w3.org/2000/svg"
-                                             width="100%"
-                                             height="100%">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                    <!--<CircleIcon>-->
-                                </div>
+                                <a aria-label="Navigate to task menu"
+                                   hx-boost
+                                   hx-target="#project-detail"
+                                   hx-select="#task-actions"
+                                   href="{% url "dashboard:tasks:actions" task.uuid %}"
+                                   class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
+                                    {% include "heroicons/dots-horizontal.svg" %}
+                                </a>
                                 <!--<MenuButton>-->
                             </div>
                         </div>

@@ -3,10 +3,13 @@
 {% extends "solutions_base.html" %}
 {% load static %}
 {% load i18n %}
+{% block title %}
+    {% translate "Projectify for researchers" %}
+{% endblock title %}
 {% block solutions_content %}
     <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
         {% trans "Research solutions" as title %}
-        {% trans "How researchers teams can use Projectify to collaborate on data with colleagues and meticulously catalogue findings." as text %}
+        {% trans "How research teams can use Projectify to collaborate on data with colleagues and meticulously catalogue findings." as text %}
         {% trans "Two content looking Polys (our mascot) researching in a laboratory and taking down notes on a chalkboard" as alt %}
         {% include "storefront/common/solutions_header.html" with title=title text=text src="solutions/hero-research.png" alt=alt %}
         <div class="w-full p-6 max-w-4xl">

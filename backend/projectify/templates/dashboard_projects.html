@@ -2,14 +2,16 @@
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
 {% load i18n %}
 {# TODO this view should be in projectify/workspace/templates/ #}
-{% for project in projects %}
+{% for project_item in projects %}
     <a class="group block flex w-full flex-row justify-between gap-1 px-4 py-1 hover:bg-base-200"
-       href="{% url "dashboard:projects:detail" project.uuid %}">
+       href="{% url "dashboard:projects:detail" project_item.uuid %}">
         <div class="flex min-w-0 flex-row items-center gap-2">
-            <div class="rounded-md p-1{% if project == object %} bg-primary-focus{% endif %}">
-                <div class="h-4 w-4{% if project == object %} text-base-100{% endif %}">{% include "heroicons/folder.svg" %}</div>
+            <div class="rounded-md p-1{% if project_item == project %} bg-primary-focus{% endif %}">
+                <div class="h-4 w-4{% if project_item == project %} text-base-100{% endif %}">
+                    {% include "heroicons/folder.svg" %}
+                </div>
             </div>
-            <div class="line-clamp-1 min-w-0 font-bold">{{ project.title }}</div>
+            <div class="line-clamp-1 min-w-0 font-bold">{{ project_item.title }}</div>
         </div>
     </a>
 {% endfor %}

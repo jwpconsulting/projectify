@@ -3,6 +3,9 @@
 {% extends "storefront_base.html" %}
 {% load markdownify %}
 {% load i18n %}
+{% block title %}
+    {% translate "Free software - Projectify" %}
+{% endblock title %}
 {% block storefront_content %}
     <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
         {% trans "Free Software and License Information" as title %}

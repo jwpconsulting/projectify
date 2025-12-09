@@ -2,6 +2,9 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "user_profile_base.html" %}
 {% load i18n %}
+{% block title %}
+    {% translate "User account settings - Projectify" %}
+{% endblock title %}
 {% block user_profile_content %}
     <form class="flex flex-col gap-10"
           method="post"
