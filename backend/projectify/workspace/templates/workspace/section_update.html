@@ -12,7 +12,7 @@
           class="min-w-0 grow"
           role="presentation">
         {{ form.errors }}
-        <div class="flex h-full flex-col p-4 pt-0">
+        <div class="flex h-full flex-col gap-8 p-4 pt-0">
             <div class="flex flex-col gap-8">
                 <div class="flex flex-col gap-6">
                     {{ form.title.as_field_group }}
@@ -26,32 +26,38 @@
                     {% url 'dashboard:projects:detail' section.project.uuid as back_url %}
                     {% anchor href=back_url label=_("Go back") %}
                 </div>
-                {% csrf_token %}
+                <div class="flex flex-col gap-4">
+                    <h2 class="font-bold text-xl">{% translate "Section Actions" %}</h2>
+                    <div class="flex flex-col items-start gap-2">
+                        <h3 class="font-bold text-lg">{% translate "Move Section" %}</h3>
+                        <button class="flex flex-row gap-2 items-center"
+                                type="submit"
+                                name="action"
+                                value="move_up">
+                            <div class="h-4 w-4">{% include "heroicons/chevron-up.svg" %}</div>
+                            {% translate "Move up" %}
+                        </button>
+                        <button class="flex flex-row gap-2 items-center"
+                                type="submit"
+                                name="action"
+                                value="move_down">
+                            <div class="h-4 w-4">{% include "heroicons/chevron-down.svg" %}</div>
+                            {% translate "Move down" %}
+                        </button>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg">{% translate "Delete section" %}</h3>
+                        <button class="flex items-center gap-2 font-bold text-destructive"
+                                type="submit"
+                                hx-post="{% url 'dashboard:sections:delete' section_uuid=section.uuid %}"
+                                hx-confirm="{% translate "Are you sure you want to delete this section?" %}">
+                            <div class="h-4 w-4">{% include "heroicons/trash.svg" %}</div>
+                            {% translate "Delete this section" %}
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
+        {% csrf_token %}
     </form>
-    <h2>{% translate "Section Actions" %}</h2>
-    <div class="flex flex-col gap-4">
-        <div>
-            <h3>{% translate "Move Section" %}</h3>
-            <div class="flex gap-2">
-                <form method="post" class="inline">
-                    {% csrf_token %}
-                    <button type="submit" name="action" value="move_up">{% translate "Move Up" %}</button>
-                </form>
-                <form method="post" class="inline">
-                    {% csrf_token %}
-                    <button type="submit" name="action" value="move_down">{% translate "Move Down" %}</button>
-                </form>
-            </div>
-        </div>
-        <form hx-post="{% url 'dashboard:sections:delete' section_uuid=section.uuid %}"
-              method="post"
-              class="inline"
-              hx-confirm="{% translate "Are you sure you want to delete this section?" %}">
-            <h3>{% translate "Delete Section" %}</h3>
-            {% csrf_token %}
-            <input type="submit" value="{% translate "Delete section" %}">
-        </form>
-    </div>
 {% endblock form_content %}
