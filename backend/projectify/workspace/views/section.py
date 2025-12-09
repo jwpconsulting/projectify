@@ -11,6 +11,7 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django.views.decorators.http import require_POST
 
 from rest_framework import serializers, status
 from rest_framework.exceptions import NotFound
@@ -19,6 +20,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from projectify.lib.error_schema import DeriveSchema
+from projectify.lib.htmx import HttpResponseClientRedirect
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
@@ -205,6 +207,25 @@ def section_update_view(
         case _:
             return HttpResponse("Invalid action", status=400)
     return HttpResponseRedirect(project_url)
+
+
+@platform_view
+@require_POST
+def section_delete_view(
+    request: AuthenticatedHttpRequest, section_uuid: UUID
+) -> HttpResponse:
+    """Update section view."""
+    section = section_find_for_user_and_uuid(
+        user=request.user, section_uuid=section_uuid
+    )
+    if section is None:
+        raise Http404(_("Section not found for this UUID"))
+
+    project_url = reverse(
+        "dashboard:projects:detail", args=(section.project.uuid,)
+    )
+    section_delete(who=request.user, section=section)
+    return HttpResponseClientRedirect(project_url)
 
 
 class SectionCreate(APIView):

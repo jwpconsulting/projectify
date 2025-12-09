@@ -202,7 +202,8 @@ Missing: Delete button, style link; Justus 2025-12-05
 This replaces the **Edit section title** modal.
 
 - [x] **View**: Create an update section view with the address `/dashboard/section/<uuid:section_uuid>/update`
-- [ ] **Link**: Change the ellipsis `...` button to say `Update section` in the section header and style it. Link to this view
+- [x] **Link**: Change the ellipsis `...` button to a pencil button next to the
+  section title with `aria-label`.
 - [x] **Form contents**:
   - [x] Show section **title** and **description** fields
   - [x] **Update section**: Save the form contents to the section. Redirect back to
@@ -212,7 +213,7 @@ This replaces the **Edit section title** modal.
 - [x] **Section move** form:
   - [x] **Move up**: Move the section above the previous section
   - [x] **Move down**: Move the section below the next section
-- [ ] **Delete** button: Show a confirmation dialog. If the user presses **Ok**,
+- [x] **Delete** button: Show a confirmation dialog. If the user presses **Ok**,
   delete the section.
 
 ## Project archive

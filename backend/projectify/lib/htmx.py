@@ -16,7 +16,7 @@ from typing import Any, Callable
 from urllib.parse import unquote, urlsplit, urlunsplit
 
 from django.http import HttpRequest, HttpResponse
-from django.http.response import HttpResponseBase
+from django.http.response import HttpResponseBase, HttpResponseRedirectBase
 from django.utils.functional import cached_property
 
 from asgiref.sync import iscoroutinefunction, markcoroutinefunction
@@ -119,6 +119,24 @@ class HtmxDetails:
             except json.JSONDecodeError:
                 value = None
         return value
+
+
+class HttpResponseClientRedirect(HttpResponseRedirectBase):
+    status_code = 200
+
+    def __init__(self, redirect_to: str, *args: Any, **kwargs: Any) -> None:
+        if kwargs.get("preserve_request"):
+            raise ValueError(
+                "The 'preserve_request' argument is not supported for "
+                "HttpResponseClientRedirect.",
+            )
+        super().__init__(redirect_to, *args, **kwargs)
+        self["HX-Redirect"] = self["Location"]
+        del self["Location"]
+
+    @property
+    def url(self) -> str:
+        return self["HX-Redirect"]
 
 
 class HttpResponseClientRefresh(HttpResponse):
