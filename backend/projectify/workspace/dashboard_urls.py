@@ -16,6 +16,7 @@ from projectify.workspace.views.project import (
 )
 from projectify.workspace.views.section import (
     section_create_view,
+    section_delete_view,
     section_update_view,
 )
 from projectify.workspace.views.task import (
@@ -144,6 +145,8 @@ section_patterns = (
     path("<uuid:section_uuid>/create-task", task_create, name="create-task"),
     # Update section
     path("<uuid:section_uuid>/update", section_update_view, name="update"),
+    # Delete section
+    path("<uuid:section_uuid>/delete", section_delete_view, name="delete"),
 )
 task_patterns = (
     path("<uuid:task_uuid>", task_detail, name="detail"),
