@@ -160,15 +160,15 @@ def task_create(
     if section is None:
         raise Http404(_("Section not found"))
     workspace = section.project.workspace
+    context: dict[str, Any] = {"section": section, "workspace": workspace}
     if request.method == "GET":
         return render(
             request,
             "workspace/task_create.html",
             {
+                **context,
                 "form": TaskCreateForm(workspace=section.project.workspace),
                 "formset": TaskCreateSubTaskForms(),
-                "section": section,
-                "workspace": workspace,
             },
         )
     form = TaskCreateForm(workspace, request.POST)
@@ -178,7 +178,7 @@ def task_create(
         return render(
             request,
             "workspace/task_create.html",
-            {"form": form, "formset": formset, "section": section},
+            {**context, "form": form, "formset": formset},
             status=400,
         )
 
@@ -388,10 +388,16 @@ def task_update_view(
 
 # Form
 class TaskMoveForm(forms.Form):
-    """Form that captures whether task shall be moved up or down."""
+    """Form that captures which direction to move a task."""
 
-    up = forms.CharField(required=False)
-    down = forms.CharField(required=False)
+    direction = forms.ChoiceField(
+        choices=[
+            ("top", _("Top")),
+            ("up", _("Up")),
+            ("down", _("Down")),
+            ("bottom", _("Bottom")),
+        ]
+    )
 
 
 @require_POST
@@ -403,28 +409,42 @@ def task_move(
     form = TaskMoveForm(request.POST)
     if not form.is_valid():
         # TODO
-        raise Exception()
-    direction: Literal["up", "down"]
-    if form.cleaned_data["up"]:
-        direction = "up"
-    elif form.cleaned_data["down"]:
-        direction = "down"
-    else:
-        # TODO
-        raise Exception()
+        return HttpResponse(status=400)
+    direction: Literal["up", "down", "top", "bottom"]
+    dir_in: str = form.cleaned_data["direction"]
+    match dir_in:
+        case "up" | "down" | "top" | "bottom":
+            direction = dir_in
+        case _:
+            # TODO
+            raise Exception(f"Did not recognize direction {dir_in}")
 
     task = task_move_in_direction(
         who=request.user, task=task, direction=direction
     )
 
-    if request.htmx:
-        return render(
-            request,
-            "workspace/project_detail/section.html",
-            {"section": task.section},
-        )
+    return redirect("dashboard:projects:detail", task.section.project.uuid)
 
-    return redirect("workspace:projects:view", task.section.project.uuid)
+
+def task_actions(
+    request: AuthenticatedHttpRequest, task_uuid: UUID
+) -> HttpResponse:
+    """Render task actions menu page."""
+    task = get_object(request, task_uuid)
+    project = task.section.project
+    workspace = project.workspace
+    projects = project_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=workspace.uuid,
+        archived=False,
+    )
+    context = {
+        "task": task,
+        "workspace": workspace,
+        "projects": projects,
+        "project": project,
+    }
+    return render(request, "workspace/task_actions.html", context)
 
 
 # Create

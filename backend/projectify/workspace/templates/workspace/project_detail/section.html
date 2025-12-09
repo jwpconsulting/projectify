@@ -54,12 +54,13 @@
                             </button>
                             <!--<TeamMember>-->
                             <div class="flex flex-row items-center">
-                                <form hx-target="closest [data-section]"
+                                <form hx-target="#project-detail"
                                       hx-post="{% url 'dashboard:tasks:move' task.uuid %}"
+                                      hx-select="#project-detail"
                                       action="{% url 'dashboard:tasks:move' task.uuid %}"
                                       class="flex flex-row items-center gap-1"
                                       method="post">
-                                    <button name="up"
+                                    <button name="direction"
                                             value="up"
                                             type="submit"
                                             aria-label="Move task up"
@@ -67,7 +68,7 @@
                                             class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
                                         {% include "heroicons/chevron-up.svg" %}
                                     </button>
-                                    <button name="down"
+                                    <button name="direction"
                                             value="down"
                                             type="submit"
                                             aria-label="Move task down"
@@ -76,16 +77,17 @@
                                         {% include "heroicons/chevron-down.svg" %}
                                     </button>
                                     {% csrf_token %}
-                                    <p class="htmx-indicator">saving...</p>
+                                    <p class="htmx-indicator">...</p>
                                 </form>
                                 <!--<Chevrons>-->
-                                {# TODO context menu page #}
-                                <div>
-                                    <button aria-label="Open context menu"
-                                            class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                        {% include "heroicons/dots-horizontal.svg" %}
-                                    </button>
-                                </div>
+                                <a aria-label="Navigate to task menu"
+                                   hx-boost
+                                   hx-target="#project-detail"
+                                   hx-select="#task-actions"
+                                   href="{% url "dashboard:tasks:actions" task.uuid %}"
+                                   class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
+                                    {% include "heroicons/dots-horizontal.svg" %}
+                                </a>
                                 <!--<MenuButton>-->
                             </div>
                         </div>

@@ -61,7 +61,7 @@ def project_detail_view(
         archived=False,
     )
     context = {
-        "object": project,
+        "project": project,
         "labels": list(project.workspace.label_set.values()),
         "projects": projects,
         "workspace": project.workspace,

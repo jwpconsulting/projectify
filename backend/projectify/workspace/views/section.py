@@ -98,10 +98,12 @@ def section_update_view(
         return render(request, "workspace/section_update.html", context)
 
     action: Optional[str] = request.POST.get("action")
-    project_url = f"{reverse(
-        "dashboard:projects:detail",
-        args=(section.project.uuid, ),
-    )}#{section.uuid}"
+    project_url = f"{
+        reverse(
+            'dashboard:projects:detail',
+            args=(section.project.uuid,),
+        )
+    }#{section.uuid}"
 
     match action:
         case "save":
