@@ -8,33 +8,27 @@
     {% blocktrans with workspace_title=workspace.title %}{{ workspace_title }} projects - Projectify{% endblocktrans %}
 {% endblock title %}
 {% block workspace_settings_content %}
-    <section class="flex flex-col gap-4">
-        <h2>{% translate "Projects" %}</h2>
-        <table class="grid w-full grid-cols-4">
+    <section class="flex flex-col gap-2">
+        <h2 class="font-bold text-lg">{% translate "Projects" %}</h2>
+        <table class="grid w-full gap-x-2 gap-y-3 grid-cols-[3fr_max-content]">
             <thead class="contents">
                 <tr class="contents">
-                    <th class="text-left col-span-2">{% translate "Project name" %}</th>
-                    <th></th>
+                    <th class="text-left">{% translate "Project name" %}</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody class="contents">
                 {% for project in projects %}
                     <tr class="contents">
-                        <td class="col-span-2">{{ project }}</td>
-                        <td>
+                        <td>{{ project }}</td>
+                        <td class="flex gap-4 items-center">
                             {% has_perm "workspace.update_project" user project as can_update_project %}
                             {% if can_update_project %}
                                 {% url 'dashboard:projects:update' project_uuid=project.uuid as update_url %}
                                 {% anchor href=update_url label=_("Update") %}
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% has_perm "workspace.update_project" user project as can_update_project %}
-                            {# XXX limitation: This only works if javascript is enabled #}
-                            {% if can_update_project %}
+                                {# XXX limitation: This only works if javascript is enabled #}
                                 <button hx-post="{% url 'dashboard:projects:archive' project_uuid=project.uuid %}"
-                                        hx-confirm="{% translate 'Are you sure you want to archive this project?' %}"
+                                        hx-confirm="{% blocktranslate with project=project.title %}Are you sure you want to archive the '{{ project }}' project?{% endblocktranslate %}"
                                         hx-target="closest tr"
                                         hx-swap="outerHTML"
                                         class="text-red-600 hover:text-red-800">{% translate "Archive" %}</button>
@@ -45,35 +39,32 @@
             </tbody>
         </table>
     </section>
-    <section class="flex flex-col gap-4">
-        <h2>{% translate "Archived projects" %}</h2>
-        <table class="grid w-full grid-cols-4">
+    <section class="flex flex-col gap-2">
+        <h2 class="font-bold text-lg">{% translate "Archived projects" %}</h2>
+        <table class="grid w-full gap-x-2 gap-y-3 grid-cols-[3fr_max-content]">
             <thead class="contents">
                 <tr class="contents">
-                    <th class="text-left col-span-2">{% translate "Project name" %}</th>
-                    <th></th>
+                    <th class="text-left">{% translate "Project name" %}</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody class="contents">
                 {% for archived_project in archived_projects %}
                     <tr class="contents">
-                        <td class="col-span-2">{{ archived_project }}</td>
-                        <td>
+                        <td>{{ archived_project }}</td>
+                        <td class="flex gap-4 items-center">
                             {% has_perm "workspace.update_project" user project as can_update_project %}
                             {% if can_update_project %}
                                 <button hx-post="{% url 'dashboard:projects:recover' project_uuid=archived_project.uuid %}"
-                                        hx-confirm="{% translate 'Are you sure you want to recover this project?' %}"
+                                        hx-confirm="{% blocktranslate with project=archived_project.title %}Are you sure you want to recover the '{{ project }}' project?{% endblocktranslate %}"
                                         hx-target="closest tr"
                                         hx-swap="outerHTML"
                                         class="text-green-600 hover:text-green-800">{% translate "Recover" %}</button>
                             {% endif %}
-                        </td>
-                        <td>
-                            {% has_perm "workspace.update_project" user project as can_update_project %}
-                            {% if can_update_project %}
+                            {% has_perm "workspace.delete_project" user project as can_delete_project %}
+                            {% if can_delete_project %}
                                 <button hx-post="{% url 'dashboard:projects:delete' project_uuid=archived_project.uuid %}"
-                                        hx-confirm="{% translate 'Are you sure you want to permanently delete this project? This action cannot be undone.' %}"
+                                        hx-confirm="{% blocktranslate with project=archived_project.title %}Are you sure you want to permanently delete the '{{ project }}' project? This action cannot be undone. {% endblocktranslate %}"
                                         hx-target="closest tr"
                                         hx-swap="outerHTML"
                                         class="text-red-600 hover:text-red-800">{% translate "Delete" %}</button>
@@ -83,5 +74,14 @@
                 {% endfor %}
             </tbody>
         </table>
+    </section>
+    <hr>
+    <section class="flex flex-col gap-2">
+        <strong>{% trans "Help" %}</strong>
+        <ul class="flex list-inside list-disc flex-col gap-2">
+            <li>
+                {% url 'help:detail' page='projects' as help_url %}{% anchor href=help_url label=_("About projects") external=True %}
+            </li>
+        </ul>
     </section>
 {% endblock workspace_settings_content %}
