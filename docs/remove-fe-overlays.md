@@ -159,7 +159,7 @@ settings screen that lets you archive projects.
 - [x] **View**: Create a project settings view with the address
   `/dashboard/workspace/<uuid:workspace_uuid>/settings/projects`
 - [x] **Link**: Place **Projects** tab in workspace settings tab list
-- [ ] **Page contents**:
+- [x] **Page contents**:
   - [x] Show active projects in a list. Active projects are projects that the user hasn't archived.
   - [x] Show a **Update** and **Archive** button for every active project.
   - [x] When pressing the **Update** button, redirect to this address: `/dashboard/project/<uuid:project_uuid>/update`
@@ -175,8 +175,8 @@ settings screen that lets you archive projects.
 
 Things that are left to do:
 
-- [ ] Style section headers **Projects** andd **Archived projects**
-- [ ] Style **Archive**, **Recover**, **Delete** buttons
+- [x] Style section headers **Projects** and **Archived projects**
+- [x] Style **Archive**, **Recover**, **Delete** buttons
 
 ## Update project
 

@@ -36,6 +36,8 @@ def anchor(href: str, label: str, external: bool = False) -> SafeText:
     """
     extra: Union[SafeText, str]
     a_extra: Union[SafeText, str]
+    if href == "":
+        raise ValueError("Empty href supplied")
     try:
         url = reverse(href)
     except NoReverseMatch:
