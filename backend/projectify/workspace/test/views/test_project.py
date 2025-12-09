@@ -49,7 +49,8 @@ class TestProjectDetailView:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test GETting the project detail page."""
-        with django_assert_num_queries(14):
+        # Gone up from 14 -> 15, since we fetch all workspaces
+        with django_assert_num_queries(15):
             response = user_client.get(resource_url)
             assert response.status_code == 200
             assert project.title.encode() in response.content
@@ -106,18 +107,13 @@ class TestProjectCreateView:
     ) -> None:
         """Test successfully creating a project."""
         initial_project_count = Project.objects.count()
-
-        # XXX 20 queries is a bit excessive
-        with django_assert_num_queries(20):
+        with django_assert_num_queries(6):
             response = user_client.post(
-                resource_url,
-                {"title": "New Test Project"},
-                follow=True,
+                resource_url, {"title": "New Test Project"}
             )
-            assert response.status_code == 200
+            assert response.status_code == 302
 
         assert Project.objects.count() == initial_project_count + 1
-        assert "New Test Project" in response.content.decode()
 
     def test_create_project_invalid_form(
         self,

@@ -1,7 +1,6 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-FileCopyrightText: 2024-2025 JWP Consulting GK #}
 {% load i18n %}
-{# TODO this view should be in projectify/workspace/templates/ #}
 {% for project_item in projects %}
     <a class="group block flex w-full flex-row justify-between gap-1 px-4 py-1 hover:bg-base-200"
        href="{% url "dashboard:projects:detail" project_item.uuid %}">
@@ -21,4 +20,7 @@
         <span class="h-4">{% include "heroicons/plus.svg" %}</span>
         <span class="truncate">{% translate "Create new project" %}</span>
     </a>
+{% endif %}
+{% if team_members %}
+    {% include "workspace/common/sidebar/filter_team_members.html" %}
 {% endif %}
