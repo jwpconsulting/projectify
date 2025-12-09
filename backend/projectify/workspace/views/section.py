@@ -44,6 +44,78 @@ from projectify.workspace.services.section import (
 )
 
 
+class SectionCreateForm(forms.Form):
+    """Form for updating section."""
+
+    title = forms.CharField(
+        max_length=255,
+        widget=forms.TextInput(),
+    )
+    description = forms.CharField(
+        required=False,
+        widget=forms.Textarea(),
+    )
+
+
+@platform_view
+def section_create_view(
+    request: AuthenticatedHttpRequest, project_uuid: UUID
+) -> HttpResponse:
+    """Update section view."""
+    project = project_find_by_project_uuid(
+        who=request.user,
+        project_uuid=project_uuid,
+    )
+    if project is None:
+        raise Http404(_("Project not found for this UUID"))
+
+    # TODO not very efficient
+    projects = project_find_by_workspace_uuid(
+        workspace_uuid=project.workspace.uuid,
+        who=request.user,
+        archived=False,
+    )
+    workspace = workspace_find_by_workspace_uuid(
+        workspace_uuid=project.workspace.uuid,
+        who=request.user,
+    )
+
+    context: dict[str, Any] = {
+        "project": project,
+        "projects": projects,
+        "workspace": workspace,
+    }
+
+    if request.method == "GET":
+        form = SectionCreateForm()
+        context = {**context, "form": form}
+        return render(request, "workspace/section_create.html", context)
+
+    form = SectionCreateForm(request.POST)
+    if not form.is_valid():
+        context = {"form": form, **context}
+        return render(
+            request,
+            "workspace/section_create.html",
+            context,
+            status=400,
+        )
+    section = section_create(
+        who=request.user,
+        project=project,
+        title=form.cleaned_data["title"],
+        description=form.cleaned_data.get("description") or None,
+    )
+
+    project_url = f"{
+        reverse(
+            'dashboard:projects:detail',
+            args=(project.uuid,),
+        )
+    }#{section.uuid}"
+    return HttpResponseRedirect(project_url)
+
+
 class SectionUpdateForm(forms.Form):
     """Form for updating section."""
 

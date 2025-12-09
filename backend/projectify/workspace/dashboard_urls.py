@@ -14,7 +14,10 @@ from projectify.workspace.views.project import (
     project_recover_view,
     project_update_view,
 )
-from projectify.workspace.views.section import section_update_view
+from projectify.workspace.views.section import (
+    section_create_view,
+    section_update_view,
+)
 from projectify.workspace.views.task import (
     task_actions,
     task_create,
@@ -128,6 +131,12 @@ project_patterns = (
         "<uuid:project_uuid>/recover",
         project_recover_view,
         name="recover",
+    ),
+    # Create section
+    path(
+        "<uuid:project_uuid>/create-section",
+        section_create_view,
+        name="create-section",
     ),
 )
 section_patterns = (

@@ -48,10 +48,11 @@
                     {% include "workspace/project_detail/section.html" with section=section %}
                 {% endfor %}
                 <div class="sticky bottom-0 self-end p-2">
-                    <button type="button"
-                            class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
+                    <a type="button"
+                       href="{% url "dashboard:projects:create-section" project.uuid %}"
+                       class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
                         Add section
-                    </button>
+                    </a>
                     <!--<button>-->
                 </div>
                 <!--<+page>-->
