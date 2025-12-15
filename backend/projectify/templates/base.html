@@ -37,7 +37,9 @@
         {% if debug %}
             {% include "common/navigation/header/development_view_bar.html" %}
         {% endif %}
-        <div class="flex min-h-screen flex-col" id="svelte" role="presentation">
+        <div class="flex min-h-screen flex-col"
+             id="app-content"
+             role="presentation">
             {% block content %}{% endblock %}
         </div>
     </body>
