@@ -110,7 +110,7 @@ Make a new page for creating a new label for a workspace
 Either we make buttons that add GET query params to the url, or we incorporate
 user filtering into the Task search field.
 
-## Create section
+## Create section (DONE)
 
 For consistency, we rename this overlay to **Create section**.
 
@@ -124,9 +124,7 @@ For consistency, we rename this overlay to **Create section**.
 - [x] **Success**: Redirect to project and scroll to section
 - [x] **Failure**: Render form with errors
 
-## Create project
-
-**Go back** missing. - J 2025-12-05
+## Create project (DONE)
 
 - [x] **View**: Create view with the address `/dashboard/workspace/<uuid:workspace_uuid>/create-project`
 - [x] **Link**: Copy **Create new project** button from old frontend side nav
@@ -140,7 +138,7 @@ For consistency, we rename this overlay to **Create section**.
 
 Things that are left to do:
 
-- [ ] Populate side nav with `workspace` and `projects` context objects
+- [x] Populate side nav with `workspace` and `projects` context objects
 
 ## Delete task
 
