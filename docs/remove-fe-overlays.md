@@ -134,8 +134,7 @@ For consistency, we rename this overlay to **Create section**.
 - [x] **Form contents**:
   - [x] Show a form with title and description fields
   - [x] **Create project**: Submit the form
-  - [ ] **Go back**: Go to first available project in workspace, if no project
-    exists, go to project settings inside workspace settings
+  - [x] **Link**: Show *Go to workspace settings* link.
 - [x] **Success**: Redirect to new project on success
 - [x] **Failure**: Render form with errors
 

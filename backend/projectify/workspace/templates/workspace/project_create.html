@@ -2,6 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "workspace/form_base.html" %}
 {% load i18n %}
+{% load projectify %}
 {% block form_title %}
     {% translate "Create project" %}
 {% endblock form_title %}
@@ -17,6 +18,8 @@
                     {{ form.title.as_field_group }}
                     {{ form.description.as_field_group }}
                     {% include "projectify/forms/widgets/submit.html" with text=_("Create project") %}
+                    {% url 'dashboard:workspaces:settings' workspace_uuid=workspace.uuid as url %}
+                    {% anchor href=url label=_("Go to workspace settings") %}
                 </div>
                 {% csrf_token %}
             </div>
