@@ -17,7 +17,7 @@
                 <div class="flex flex-col gap-6">
                     {{ form.title.as_field_group }}
                     {{ form.description.as_field_group }}
-                    {% include "projectify/forms/widgets/submit.html" with text=_("Create project") %}
+                    {% include "projectify/forms/submit.html" with text=_("Create project") %}
                     {% url 'dashboard:workspaces:settings' workspace_uuid=workspace.uuid as url %}
                     {% anchor href=url label=_("Go to workspace settings") %}
                 </div>

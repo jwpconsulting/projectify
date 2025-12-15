@@ -114,15 +114,15 @@ user filtering into the Task search field.
 
 For consistency, we rename this overlay to **Create section**.
 
-- [ ] **View**: Create view with the address `/dashboard/project/<uuid:project_uuid>/create-section`
-- [ ] **Link**: Turn existing **Add section** button on project page into link to
+- [x] **View**: Create view with the address `/dashboard/project/<uuid:project_uuid>/create-section`
+- [x] **Link**: Turn existing **Add section** button on project page into link to
   the address, change the button to say **Create section**
-- [ ] **Form contents**:
-  - [ ] Show a form with title and description fields
-  - [ ] **Add section**: Submit the form
-  - [ ] **Cancel**: Return to project
-- [ ] **Success**: Redirect to project and scroll to section
-- [ ] **Failure**: Render form with errors
+- [x] **Form contents**:
+  - [x] Show a form with title and description fields
+  - [x] **Create section**: Submit the form
+  - [x] **Back**: *Go back to project* link
+- [x] **Success**: Redirect to project and scroll to section
+- [x] **Failure**: Render form with errors
 
 ## Create project
 
