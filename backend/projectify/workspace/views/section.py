@@ -156,6 +156,7 @@ def section_update_view(
 
     context: dict[str, Any] = {
         "section": section,
+        "project": section.project,
         "projects": projects,
         "workspace": workspace,
     }

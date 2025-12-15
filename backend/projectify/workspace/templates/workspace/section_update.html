@@ -17,19 +17,12 @@
                 <div class="flex flex-col gap-6">
                     {{ form.title.as_field_group }}
                     {{ form.description.as_field_group }}
-                    <button type="submit"
-                            name="action"
-                            value="save"
-                            class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                        {% trans "Update section" %}
-                    </button>
-                    {% url 'dashboard:projects:detail' section.project.uuid as back_url %}
-                    {% anchor href=back_url label=_("Go back") %}
+                    {% include "projectify/forms/submit.html" with text=_("Update section") %}
                 </div>
                 <div class="flex flex-col gap-4">
-                    <h2 class="font-bold text-xl">{% translate "Section Actions" %}</h2>
+                    <h2 class="font-bold text-xl">{% translate "Section actions" %}</h2>
                     <div class="flex flex-col items-start gap-2">
-                        <h3 class="font-bold text-lg">{% translate "Move Section" %}</h3>
+                        <h3 class="font-bold text-lg">{% translate "Move section" %}</h3>
                         <button class="flex flex-row gap-2 items-center"
                                 type="submit"
                                 name="action"
@@ -57,6 +50,8 @@
                     </div>
                 </div>
             </div>
+            {% url 'dashboard:projects:detail' section.project.uuid as back_url %}
+            {% anchor href=back_url label=_("Go back to project") %}
         </div>
         {% csrf_token %}
     </form>
