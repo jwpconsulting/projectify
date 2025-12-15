@@ -254,11 +254,11 @@ icon.
 Here's how to replace items in the task context menu with equivalent UI features:
 
 - [x] **Open task**: No replacement
-- [ ] **Move task**: Change the ellipsis (`...`) button in the task card or line to
+- [x] **Move task**: Change the ellipsis (`...`) button in the task card or line to
   link to a new **Task actions** page. See the **Task actions** section for a
   description.
 - [x] **Copy link**: No replacement
-- [ ] **Delete task**: Add a delete button to the task page.
+- [x] **Delete task**: Add a delete button to the task page.
 
 ### Task actions
 
@@ -266,19 +266,21 @@ Here's how to replace items in the task context menu with equivalent UI features
   `/dashboard/task/<uuid:task_uuid>/actions`
 - [x] **Link** to this view from each task card in the project view
 - [ ] **Page contents**:
-  - [ ] **Section move form**:
-    - [ ] Dropdown with **section** names
-    - [ ] **Move to section** button
-    - [ ] When the user presses **Move to section**, move the task to that section
-      and redirect the user to the task's project and scroll to the task.
   - [ ] **Move to top / bottom**:
-    - [ ] **Move to top** button
-    - [ ] **Move to bottom** button
-    - [ ] When the user presses one of these buttons, move the task to the top
-    or bottom of the task's current section accordingly. Redirect the user back
-    to the task's project and scroll to the task.
-  - [ ] **Delete task**: When the user presses this, show an HTMX confirm dialog
-    and delete the task
+    - [x] **Move to top** button
+    - [x] **Move to bottom** button
+    - [x] When the user presses one of these buttons, move the task to the top
+      or bottom of the task's current section accordingly.
+    - [ ] Redirect the user back to the task's project and scroll to the task.
+  - [ ] **Section move form**:
+    - [x] List of **buttons** with section names
+    - [x] When the user presses a section name **button**, move the task to that section
+    - [ ] Redirect the user to the task's project and scroll to the task.
+  - [ ] **Delete task**:
+    - [x] When the user presses the **Delete task** button, show an HTMX confirm dialog and delete the task
+    - [ ] Redirect to the task section when done
+- [ ] Styling:
+  - [ ] Style the buttons
 
 ## Label assignment
 
