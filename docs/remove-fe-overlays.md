@@ -188,9 +188,7 @@ Things that are left to do:
 
 - [x] Populate `projects` context variable
 
-## Update section
-
-Missing: Delete button, style link; Justus 2025-12-05
+## Update section (DONE)
 
 This replaces the **Edit section title** modal.
 
