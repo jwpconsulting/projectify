@@ -255,9 +255,7 @@ class TaskUpdateForm(forms.Form):
             attrs={"placeholder": _("Enter a description for your task")}
         ),
     )
-    submit = forms.CharField(required=False)
-    submit_stay = forms.CharField(required=False)
-    add_sub_task = forms.CharField(required=False)
+    action = forms.CharField(required=True)
 
     def __init__(self, *args: Any, workspace: Workspace, **kwargs: Any):
         """Populate available assignees."""
@@ -270,17 +268,20 @@ class TaskUpdateForm(forms.Form):
 
 def determine_action(
     request: AuthenticatedHttpRequest,
-) -> Optional[Literal["get", "submit", "submit_stay", "add_sub_task"]]:
+) -> Optional[Literal["get", "update", "update_stay", "add_sub_task"]]:
     """Determine what update view action should be taken."""
     if request.method == "GET":
         return "get"
-    if "submit" in request.POST:
-        return "submit"
-    elif "submit_stay" in request.POST:
-        return "submit_stay"
-    elif "add_sub_task" in request.POST:
-        return "add_sub_task"
-    return None
+    action: Optional[str] = request.POST.get("action")
+    match action:
+        case "update":
+            return "update"
+        case "update_stay":
+            return "update_stay"
+        case "add_sub_task":
+            return "add_sub_task"
+        case _:
+            return None
 
 
 @platform_view
@@ -302,26 +303,34 @@ def task_update_view(
         archived=False,
     )
 
-    action = determine_action(request)
-
     context: dict[str, Any] = {"workspace": workspace, "projects": projects}
 
-    if action == "add_sub_task":
-        post: dict[str, Any] = request.POST.dict()
-        sub_task_count_raw: str = post.get("form-" + TOTAL_FORM_COUNT, "0")
-        try:
-            sub_task_count = int(sub_task_count_raw)
-        except ValueError as e:
-            logger.error(
-                "Unexpected error when getting total form count", exc_info=e
-            )
-            sub_task_count = 0
-        post["form-TOTAL_FORMS"] = str(sub_task_count + 1)
-        logger.info("Adding sub task")
-        form = TaskUpdateForm(data=post, workspace=workspace)
-        formset = TaskUpdateSubTaskForms(data=post)
-        context = {**context, "form": form, "task": task, "formset": formset}
-        return render(request, "workspace/task_update.html", context)
+    action = determine_action(request)
+    match action:
+        case "add_sub_task":
+            post: dict[str, Any] = request.POST.dict()
+            sub_task_count_raw: str = post.get("form-" + TOTAL_FORM_COUNT, "0")
+            try:
+                sub_task_count = int(sub_task_count_raw)
+            except ValueError as e:
+                logger.error(
+                    "Unexpected error when getting total form count",
+                    exc_info=e,
+                )
+                sub_task_count = 0
+            post["form-TOTAL_FORMS"] = str(sub_task_count + 1)
+            logger.info("Adding sub task")
+            form = TaskUpdateForm(data=post, workspace=workspace)
+            formset = TaskUpdateSubTaskForms(data=post)
+            context = {
+                **context,
+                "form": form,
+                "task": task,
+                "formset": formset,
+            }
+            return render(request, "workspace/task_update.html", context)
+        case _:
+            pass
 
     task_initial = {
         "title": task.title,
@@ -388,12 +397,14 @@ def task_update_view(
             "create_sub_tasks": create_sub_tasks,
         },
     )
-    if action == "submit_stay":
-        n = reverse("dashboard:tasks:detail", args=(task.uuid,))
-    elif action == "submit":
-        n = reverse("dashboard:projects:detail", args=(project.uuid,))
-    else:
-        n = reverse("dashboard:projects:detail", args=(project.uuid,))
+    match action:
+        case "update_stay":
+            n = reverse("dashboard:tasks:detail", args=(task.uuid,))
+        case "update":
+            n = reverse("dashboard:projects:detail", args=(project.uuid,))
+        case _:
+            logger.warning("No action specified")
+            n = reverse("dashboard:projects:detail", args=(project.uuid,))
     return redirect(n)
 
 

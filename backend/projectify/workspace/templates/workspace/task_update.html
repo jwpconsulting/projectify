@@ -23,14 +23,8 @@
                     {% include "workspace/task/breadcrumbs.html" with task=task %}
                 </div>
                 <div class="flex items-center justify-between gap-4 sm:flex-row">
-                    <input type="submit"
-                           value="Update task"
-                           name="submit"
-                           class=" bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content" />
-                    <input type="submit"
-                           name="submit_stay"
-                           value="Update task and stay"
-                           class=" bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content" />
+                    {% include "projectify/forms/submit.html" with name="action" value="update" text=_("Update task") %}
+                    {% include "projectify/forms/submit.html" with name="action" value="update_stay" text=_("Update task and stay") %}
                 </div>
             </div>
             <div class="flex flex-col gap-8">
@@ -82,11 +76,11 @@
                         </div>
                         <div id="add-subtask" class="flex flex-row items-center gap-6">
                             <button type="submit"
-                                    name="add_sub_task"
+                                    name="action"
                                     value="add_sub_task"
                                     class="w-full text-tertiary-content hover:text-tertiary-content-hover active:bg-tertiary-pressed active:text-tertiary-content-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-transparent disabled:text-disabled-content">
                                 <div class="h-6 w-6">{% include "heroicons/plus.svg" %}</div>
-                                Add sub task
+                                {% translate "Add sub task" %}
                             </button>
                         </div>
                     </div>
