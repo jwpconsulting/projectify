@@ -213,16 +213,17 @@ def task_detail(
     )
     if task is None:
         raise Http404(_(f"Could not find task with uuid {task_uuid}"))
+    project = task.section.project
+    # Inefficient
+    workspace = project.workspace
     projects = project_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=task.section.project.workspace.uuid,
-        archived=False,
+        who=request.user, workspace_uuid=workspace.uuid, archived=False
     )
     context = {
         "task": task,
+        "project": project,
         "projects": projects,
-        # Inefficient
-        "workspace": task.section.project.workspace,
+        "workspace": workspace,
     }
     return render(request, "workspace/task_detail.html", context)
 
