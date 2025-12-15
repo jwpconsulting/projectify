@@ -61,6 +61,7 @@
                                       hx-select="#project-detail"
                                       action="{% url 'dashboard:tasks:move' task.uuid %}"
                                       class="flex flex-row items-center gap-1"
+                                      hx-swap="outerHTML"
                                       method="post">
                                     <button name="direction"
                                             value="up"
@@ -73,6 +74,7 @@
                                     <button name="direction"
                                             value="down"
                                             type="submit"
+                                            hx-swap="outerHTML"
                                             aria-label="Move task down"
                                             {% if forloop.last %}disabled{% endif %}
                                             class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
