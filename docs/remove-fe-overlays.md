@@ -207,9 +207,7 @@ This replaces the **Edit section title** modal.
 - [x] **Delete** button: Show a confirmation dialog. If the user presses **Ok**,
   delete the section.
 
-## Project archive
-
-DONE
+## Project archive (DONE)
 
 Incorporate this into the project settings tab in the workspace settings.
 See the **Archive project** and **Recover project** section in this
@@ -217,20 +215,20 @@ document.
 
 # Context menus
 
-## User profile
+## User profile (DONE)
 
 Change the following into individual links:
 
-- [x] **Log out**
-- [x] **My profile**
+- [x] **Log out**: Link to log out page
+- [x] **Profile**: Link to the user's profile page
 
-## Workspace
+## Workspace (DONE)
 
-- [ ] Create collapsible menu
-- [ ] Turn the workspace select context menu into a collapsible menu with
+- [x] Create collapsible menu
+- [x] Turn the workspace select context menu into a collapsible menu with
 links that point to one workspace each.
 
-## Side navigation
+## Side navigation (DONE)
 
 Replace the following items with equivalent features:
 
@@ -240,17 +238,16 @@ Replace the following items with equivalent features:
   and then pressing the **Projects** tab
 - [x] **Workspace settings**: Access the workspace settings by pressing the ellipsis
 icon.
-- [ ] Consider using a different icon or using words for the **Workspace
-  settings** button
 
-## Section context menu
+## Section context menu (DONE)
 
 - [x] **Ordering**: The **update section** page has **move up** and **move
   down** buttons as a replacement
 - [x] **Collapse section**: We implement no replacement for this.
 - [x] **Edit section title**: The **update section** page has a form for updating
   the section's title.
-- **Delete section**: See **Update section**
+- [x] **Delete section**: A delete button with an `hx-confirm` lets users
+  delete the section
 
 ## Task
 
@@ -265,9 +262,9 @@ Here's how to replace items in the task context menu with equivalent UI features
 
 ### Task actions
 
-- [ ] **View**: Create a new view with the address
+- [x] **View**: Create a new view with the address
   `/dashboard/task/<uuid:task_uuid>/actions`
-- [ ] **Link** to this view from a task card in the project view
+- [x] **Link** to this view from each task card in the project view
 - [ ] **Page contents**:
   - [ ] **Section move form**:
     - [ ] Dropdown with **section** names
