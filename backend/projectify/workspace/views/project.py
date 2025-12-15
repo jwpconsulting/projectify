@@ -100,7 +100,14 @@ def project_create_view(
     if workspace is None:
         raise Http404(_("No workspace found for this UUID"))
 
-    context: dict[str, Any] = {"workspace": workspace}
+    # XXX inefficient
+    projects = project_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=workspace.uuid,
+        archived=False,
+    )
+
+    context: dict[str, Any] = {"workspace": workspace, "projects": projects}
 
     if request.method == "GET":
         form = ProjectCreateForm()
