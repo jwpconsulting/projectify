@@ -91,7 +91,6 @@
                         </div>
                     </div>
                     <div id="subtasks">
-                        {{ formset.errors }}
                         {% for form in formset %}
                             <div data-formset
                                  class="flex w-full flex-row items-center justify-between gap-2 px-2 py-1">
@@ -109,7 +108,7 @@
                                                name="{{ form.uuid.html_name }}"
                                                value="{{ form.uuid.value }}">
                                     {% endif %}
-                                    <div>
+                                    <div class="flex flex-row gap-2 items-center">
                                         {{ form.delete }}
                                         <label for="{{ form.delete.id_for_label }}">{{ form.delete.label }}</label>
                                     </div>
