@@ -1,6 +1,7 @@
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "dashboard_base.html" %}
+{% extends "workspace/form_base.html" %}
+{% load i18n %}
 {%comment%} Task context menu replacement
 
 Add:
@@ -10,23 +11,40 @@ Add:
 - Delete task
 {% endcomment %}
 {% load projectify rules %}
-{% block dashboard_content %}
+{% block form_content %}
     <div id="task-actions" class="min-w-0 grow" role="presentation">
-        <a href="">Move to section</a>
-        <form action="{% url 'dashboard:tasks:move' task.uuid %}"
-              hx-post="{% url 'dashboard:tasks:move' task.uuid %}"
-              hx-target="#task-actions"
-              hx-select="#project-detail"
-              hx-swap="outerHTML"
-              hx-push-url="true"
-              class="flex flex-row items-center gap-1"
-              method="post">
-            <button name="direction" value="top" type="submit">Move to top</button>
-            {# TODO conditionally hide if bottom #}
-            <button name="direction" value="bottom" type="submit">Move to bottom</button>
-            {% csrf_token %}
-            <p class="htmx-indicator">saving...</p>
-        </form>
-        <a href="">Delete task</a>
-    </div>
-{% endblock dashboard_content %}
+        <form hx-post="{% url 'dashboard:tasks:move-to-section' task.uuid %}"
+              class="flex flex-col gap-1">
+            <h1 class="font-2xl font-bold">{% translate "Task actions" %}</h1>
+            <div>
+                <h2 class="font-bold">{% trans "Move to section" %}</h2>
+                <ul class="flex flex-col">
+                    {% for section in sections %}
+                        <li>
+                            <button type="submit" name="section_uuid" value="{{ section.uuid }}">{{ section.title }}</button>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <form action="{% url 'dashboard:tasks:move' task.uuid %}"
+                  hx-post="{% url 'dashboard:tasks:move' task.uuid %}"
+                  hx-target="#task-actions"
+                  hx-select="#project-detail"
+                  hx-swap="outerHTML"
+                  hx-push-url="true"
+                  class="flex flex-col gap-1"
+                  method="post">
+                <div class="flex flex-col items-start gap-2">
+                    <button name="direction" value="top" type="submit">{% translate "Move to top" %}</button>
+                    {# TODO conditionally hide if bottom #}
+                    <button name="direction" value="bottom" type="submit">{% translate "Move to bottom" %}</button>
+                </div>
+                {% csrf_token %}
+                <p class="htmx-indicator">saving...</p>
+            </form>
+            <form hx-post="{% url 'dashboard:tasks:delete' task.uuid %}"
+                  hx-confirm="{% blocktrans with title=task.title %}Are you sure you want to delete the following task: {{ title }}{% endblocktrans %}">
+                <button type="submit">{% translate "Delete task" %}</button>
+            </form>
+        </div>
+    {% endblock form_content %}
