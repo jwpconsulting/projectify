@@ -474,10 +474,8 @@ def task_move_to_section(
         # TODO give better validation message when section not found
         return HttpResponse(status=400)
     task = task_move_after(who=request.user, task=task, after=section)
-    project_url = f"{reverse(
-        "dashboard:projects:detail", args=(task.section.project.uuid,)
-    )}#{task.section.uuid}"
-    return HttpResponseClientRedirect(project_url)
+
+    return redirect("dashboard:projects:detail", task.section.project.uuid)
 
 
 def task_actions(

@@ -17,6 +17,10 @@ Add:
          role="presentation">
         <h1 class="text-2xl font-bold">{% translate "Task actions" %}</h1>
         <form hx-post="{% url 'dashboard:tasks:move' task.uuid %}"
+              hx-target="#app-content"
+              hx-select="#app-content"
+              hx-swap="outerHTML"
+              hx-push-url="true"
               class="flex flex-col gap-1">
             <div class="flex flex-col items-start gap-2">
                 <button name="direction" value="top" type="submit">{% translate "Move to top" %}</button>
@@ -27,6 +31,10 @@ Add:
             <p class="htmx-indicator">saving...</p>
         </form>
         <form hx-post="{% url 'dashboard:tasks:move-to-section' task.uuid %}"
+              hx-target="#app-content"
+              hx-select="#app-content"
+              hx-swap="outerHTML"
+              hx-push-url="true"
               class="flex flex-col gap-1">
             <div>
                 <h2 class="font-bold">{% trans "Move to section" %}</h2>
@@ -38,6 +46,7 @@ Add:
                     {% endfor %}
                 </ul>
             </div>
+            <p class="htmx-indicator">saving...</p>
         </form>
         <form hx-post="{% url 'dashboard:tasks:delete' task.uuid %}"
               hx-confirm="{% blocktrans with title=task.title %}Are you sure you want to delete the following task: {{ title }}{% endblocktrans %}">

@@ -63,12 +63,16 @@ The **Context menu migration** section describes how to port each context menu
 
 ## Side navigation labels
 
-### Filter by labels
+### Filter by labels and team members (TODO)
 
-Add filter by label function to **Task search** panel. Use checkboxes inside
-a collapsible HTML element. Show number of tasks next to label names.
+- [ ] Add filter by label checkboxes to side nav.
+- [ ] Add filter by member checkboxes to side nav
+- [ ] Show number of tasks next to label names.
+- [ ] Show number of tasks next to team member names.
+- [ ] **Filter**: Add **filter** button that reloads the project and filters by
+the selected labels and selected team members
 
-### List workspace labels
+### List workspace labels (TODO)
 
 Create a new page to manage all workspace labels:
 
@@ -83,7 +87,7 @@ Create a new page to manage all workspace labels:
         - [ ] Delete button
     - [ ] Show an **Add label** button in the bottom
 
-### Create label
+### Create label (TODO)
 
 Make a new page for creating a new label for a workspace
 
@@ -95,7 +99,7 @@ Make a new page for creating a new label for a workspace
     - [ ] **Create** button; redirects to **List workspace labels** on success
     - [ ] **Back** button; goes back to **List workspace labels** view
 
-### Update label
+### Update label (TODO)
 
 - [ ] **Route**: `dashboard/labels/[uuid]`
 - [ ] **Page title**: `Update {label.name} - Projectify`
@@ -104,11 +108,6 @@ Make a new page for creating a new label for a workspace
     - [ ] **Color** selector (radio input)
     - [ ] **Update** button; redirects to **List workspace labels** on success
     - [ ] **Back** button; goes back to **List workspace labels** view
-
-## Side navigation team members
-
-Either we make buttons that add GET query params to the url, or we incorporate
-user filtering into the Task search field.
 
 ## Create section (DONE)
 
@@ -135,9 +134,6 @@ For consistency, we rename this overlay to **Create section**.
   - [x] **Link**: Show *Go to workspace settings* link.
 - [x] **Success**: Redirect to new project on success
 - [x] **Failure**: Render form with errors
-
-Things that are left to do:
-
 - [x] Populate side nav with `workspace` and `projects` context objects
 
 ## Delete task
@@ -167,9 +163,6 @@ settings screen that lets you archive projects.
   user presses **Ok**, the project goes back to the active projects
   - [x] When pressing the **Delete** button, show a confirmation screen. When the
   user presses **Ok**, it deletes the project.
-
-Things that are left to do:
-
 - [x] Style section headers **Projects** and **Archived projects**
 - [x] Style **Archive**, **Recover**, **Delete** buttons
 
@@ -249,7 +242,7 @@ icon.
 - [x] **Delete section**: A delete button with an `hx-confirm` lets users
   delete the section
 
-## Task
+## Task (DONE)
 
 Here's how to replace items in the task context menu with equivalent UI features:
 
@@ -260,25 +253,27 @@ Here's how to replace items in the task context menu with equivalent UI features
 - [x] **Copy link**: No replacement
 - [x] **Delete task**: Add a delete button to the task page.
 
-### Task actions
+### Task actions (TODO)
+
+Only styling is missing ~ Justus 2025-12-15
 
 - [x] **View**: Create a new view with the address
   `/dashboard/task/<uuid:task_uuid>/actions`
 - [x] **Link** to this view from each task card in the project view
-- [ ] **Page contents**:
-  - [ ] **Move to top / bottom**:
+- [x] **Page contents**:
+  - [x] **Move to top / bottom**:
     - [x] **Move to top** button
     - [x] **Move to bottom** button
     - [x] When the user presses one of these buttons, move the task to the top
       or bottom of the task's current section accordingly.
-    - [ ] Redirect the user back to the task's project and scroll to the task.
-  - [ ] **Section move form**:
+    - [x] Redirect the user back to the task's project and scroll to the task.
+  - [x] **Section move form**:
     - [x] List of **buttons** with section names
     - [x] When the user presses a section name **button**, move the task to that section
-    - [ ] Redirect the user to the task's project and scroll to the task.
-  - [ ] **Delete task**:
+    - [x] Redirect the user to the task's project and scroll to the task.
+  - [x] **Delete task**:
     - [x] When the user presses the **Delete task** button, show an HTMX confirm dialog and delete the task
-    - [ ] Redirect to the task section when done
+    - [x] Redirect to the task section when done
 - [ ] Styling:
   - [ ] Style the buttons
 
