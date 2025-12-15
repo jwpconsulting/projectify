@@ -162,19 +162,28 @@ def task_create(
         raise Http404(_("Section not found"))
     workspace = section.project.workspace
     context: dict[str, Any] = {"section": section, "workspace": workspace}
-    if request.method == "GET":
-        return render(
-            request,
-            "workspace/task_create.html",
-            {
-                **context,
-                "form": TaskCreateForm(workspace=section.project.workspace),
-                "formset": TaskCreateSubTaskForms(),
-            },
-        )
+    match request.method:
+        case "GET":
+            return render(
+                request,
+                "workspace/task_create.html",
+                {
+                    **context,
+                    "form": TaskCreateForm(
+                        workspace=section.project.workspace
+                    ),
+                    "formset": TaskCreateSubTaskForms(),
+                },
+            )
+        case "POST":
+            pass
+        case method:
+            raise RuntimeError(f"Don't know how to handle method {method}")
     form = TaskCreateForm(workspace, request.POST)
-    formset = TaskCreateSubTaskForms(initial=request.POST.dict())
+    formset = TaskCreateSubTaskForms(request.POST.dict())
     all_valid = form.is_valid() and formset.is_valid()
+    if not formset.is_valid():
+        logger.warning("Formset validation errors: %s", formset.errors)
     if not all_valid:
         return render(
             request,
