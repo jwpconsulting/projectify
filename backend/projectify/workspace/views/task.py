@@ -23,6 +23,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from projectify.lib.error_schema import DeriveSchema
+from projectify.lib.htmx import HttpResponseClientRedirect
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
@@ -427,6 +428,38 @@ def task_move(
     return redirect("dashboard:projects:detail", task.section.project.uuid)
 
 
+class TaskMoveToSectionForm(forms.Form):
+    """Form that captures which section to move a task to."""
+
+    section_uuid = forms.UUIDField()
+
+
+@require_POST
+def task_move_to_section(
+    request: AuthenticatedHttpRequest, task_uuid: UUID
+) -> HttpResponse:
+    """Move a task to a given section."""
+    task = get_object(request, task_uuid)
+    form = TaskMoveToSectionForm(request.POST)
+    if not form.is_valid():
+        logger.warning("Form not valid for task_uuid %s", task_uuid)
+        # TODO
+        return HttpResponse(status=400)
+    section_uuid = form.cleaned_data["section_uuid"]
+    section = section_find_for_user_and_uuid(
+        user=request.user, section_uuid=section_uuid
+    )
+    if section is None:
+        logger.warning("Section with uuid %s not found", section_uuid)
+        # TODO give better validation message when section not found
+        return HttpResponse(status=400)
+    task = task_move_after(who=request.user, task=task, after=section)
+    project_url = reverse(
+        "dashboard:projects:detail", args=(task.section.project.uuid,)
+    )
+    return HttpResponseClientRedirect(project_url)
+
+
 def task_actions(
     request: AuthenticatedHttpRequest, task_uuid: UUID
 ) -> HttpResponse:
@@ -439,13 +472,27 @@ def task_actions(
         workspace_uuid=workspace.uuid,
         archived=False,
     )
+    sections = project.section_set.all()
     context = {
         "task": task,
         "workspace": workspace,
+        "sections": sections,
         "projects": projects,
         "project": project,
     }
     return render(request, "workspace/task_actions.html", context)
+
+
+def task_delete_view(
+    request: AuthenticatedHttpRequest, task_uuid: UUID
+) -> HttpResponse:
+    """Delete task."""
+    task = get_object(request, task_uuid)
+    section = task.section
+    project = section.project
+    task_delete(who=request.user, task=task)
+    next_url = f"{reverse("dashboard:projects:detail", args=(project.uuid,))}#{section.uuid}"
+    return HttpResponseClientRedirect(next_url)
 
 
 # Create
