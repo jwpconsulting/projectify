@@ -171,9 +171,17 @@ def project_update_view(
     if project is None:
         raise Http404(_("No project found for this uuid"))
 
+    workspace = project.workspace
+    projects = project_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=workspace.uuid,
+        archived=False,
+    )
+
     context: dict[str, Any] = {
         "project": project,
-        "workspace": project.workspace,
+        "workspace": workspace,
+        "projects": projects,
     }
 
     if request.method == "GET":

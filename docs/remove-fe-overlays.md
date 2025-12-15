@@ -146,9 +146,7 @@ Things that are left to do:
 - [ ] Show HTMX confirm dialog when user pressed **Delete Task**. Delete task on
   confirmation.
 
-## Archive project
-
-Styling missing on 2025-12-05
+## Archive project (DONE)
 
 Instead of archiving projects from the context menu, we want to create a new
 settings screen that lets you archive projects.
@@ -175,9 +173,7 @@ Things that are left to do:
 - [x] Style section headers **Projects** and **Archived projects**
 - [x] Style **Archive**, **Recover**, **Delete** buttons
 
-## Update project
-
-Almost done on 2025-12-05
+## Update project (DONE)
 
 - [x] **View**: Create an update project view with the address `/dashboard/project/<uuid:project_uuid>/update`
 - [x] **Link**: Link to this page from the **Update** link on the project
@@ -190,7 +186,7 @@ Almost done on 2025-12-05
 
 Things that are left to do:
 
-- [ ] Populate `projects` context variable
+- [x] Populate `projects` context variable
 
 ## Update section
 

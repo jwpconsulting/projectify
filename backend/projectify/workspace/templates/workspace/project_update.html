@@ -22,7 +22,7 @@
                         {% trans "Update project" %}
                     </button>
                     {% url 'dashboard:workspaces:projects' workspace_uuid=project.workspace.uuid as back_url %}
-                    {% anchor href=back_url label=_("Go back") %}
+                    {% anchor href=back_url label=_("Go back to workspace project settings") %}
                 </div>
                 {% csrf_token %}
             </div>
