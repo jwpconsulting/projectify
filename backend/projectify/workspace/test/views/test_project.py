@@ -535,7 +535,10 @@ class TestProjectReadUpdateDelete:
         task.save()
         # Gone up from 7 -> 12 since we prefetch workspace details too
         # Gone up from 11 -> 14, since we fetch workspace quota
-        with django_assert_num_queries(14):
+        # Gone up from 14 -> 15, since we match by assignee uuids
+        # XXX we might get rid of this extra step, we're already retrieving
+        # their uuids?
+        with django_assert_num_queries(15):
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.data
         assert response.data == {
