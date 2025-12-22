@@ -49,11 +49,14 @@
                         <!--<SubTaskProgress>-->
                         {# TODO render assignee #}
                         <div class="flex flex-row items-center gap-2">
-                            <button>
-                                <div class="flex flex-row h-6 w-6 items-center rounded-full border border-primary bg-background"></div>
-                                <!--<AvatarVariant>-->
-                                <div class="sr-only">Currently not assigned. Activate to assign to team member.</div>
-                            </button>
+                            {% if task.assignee %}
+                                {% user_avatar task.assignee.user %}
+                            {% else %}
+                                <button>
+                                    <!--<AvatarVariant>-->
+                                    <div class="sr-only">Currently not assigned. Activate to assign to team member.</div>
+                                </button>
+                            {% endif %}
                             <!--<TeamMember>-->
                             <div class="flex flex-row items-center">
                                 <form hx-target="#project-detail"

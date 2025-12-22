@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
 """Project views."""
 
+import logging
 from typing import Any
 from uuid import UUID
 
@@ -26,6 +27,7 @@ from projectify.lib.views import platform_view
 from projectify.workspace.models import Project
 from projectify.workspace.selectors.project import (
     ProjectDetailQuerySet,
+    project_detail_query_set,
     project_find_by_project_uuid,
     project_find_by_workspace_uuid,
 )
@@ -43,6 +45,8 @@ from projectify.workspace.services.project import (
     project_update,
 )
 
+logger = logging.getLogger(__name__)
+
 
 # HTML
 @platform_view
@@ -50,8 +54,19 @@ def project_detail_view(
     request: AuthenticatedHttpRequest, project_uuid: UUID
 ) -> HttpResponse:
     """Show project details."""
+    try:
+        team_member_uuids = [
+            UUID(uuid) for uuid in request.GET.getlist("member_filter")
+        ]
+    except ValueError as e:
+        logger.warning(
+            "Invalid filter for project_uuid=%s", project_uuid, exc_info=e
+        )
+        team_member_uuids = []
+
+    qs = project_detail_query_set(team_member_uuids=team_member_uuids)
     project = project_find_by_project_uuid(
-        who=request.user, project_uuid=project_uuid, qs=ProjectDetailQuerySet
+        who=request.user, project_uuid=project_uuid, qs=qs
     )
     if project is None:
         raise Http404(_("No project found for this uuid"))

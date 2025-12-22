@@ -14,33 +14,47 @@ from projectify.workspace.models.task import Task
 
 from ..models.project import Project
 
-ProjectDetailQuerySet = Project.objects.prefetch_related(
-    "section_set",
-    Prefetch(
-        "section_set__task_set",
-        queryset=Task.objects.annotate(
-            sub_task_progress=Count(
-                "subtask",
-                filter=Q(subtask__done=True),
-            )
-            * 1.0
-            / NullIf(Count("subtask"), 0),
-        ).order_by("_order"),
-    ),
-    "section_set__task_set__assignee",
-    "section_set__task_set__assignee__user",
-    "section_set__task_set__labels",
-    "workspace__label_set",
-    Prefetch(
-        "workspace__project_set",
-        queryset=Project.objects.filter(archived__isnull=True),
-    ),
-    "workspace__teammember_set",
-    "workspace__teammember_set__user",
-    "workspace__teammemberinvite_set",
-).select_related(
-    "workspace",
-)
+
+def project_detail_query_set(
+    *,
+    team_member_uuids: Optional[list[UUID]] = None,
+    label_uuids: Optional[list[UUID]] = None,
+) -> QuerySet[Project]:
+    """Create a project detail query set."""
+    task_qs = Task.objects.annotate(
+        sub_task_progress=Count(
+            "subtask",
+            filter=Q(subtask__done=True),
+        )
+        * 1.0
+        / NullIf(Count("subtask"), 0),
+    ).order_by("_order")
+    if team_member_uuids:
+        task_qs = task_qs.filter(
+            assignee__uuid__in=team_member_uuids,
+        )
+    if label_uuids:
+        # XXX this might not work
+        task_qs = task_qs.filter(
+            label__in=label_uuids,
+        )
+    return Project.objects.prefetch_related(
+        "section_set",
+        Prefetch("section_set__task_set", queryset=task_qs),
+        "section_set__task_set__assignee",
+        "section_set__task_set__assignee__user",
+        "section_set__task_set__labels",
+        "workspace__label_set",
+        Prefetch(
+            "workspace__project_set",
+            queryset=Project.objects.filter(archived__isnull=True),
+        ),
+        "workspace__teammember_set",
+        "workspace__teammember_set__user",
+    )
+
+
+ProjectDetailQuerySet = project_detail_query_set()
 
 
 def project_find_by_workspace_uuid(
