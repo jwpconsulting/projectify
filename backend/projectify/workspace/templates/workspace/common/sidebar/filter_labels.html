@@ -19,21 +19,30 @@
         </div>
         <!--<InputField>-->
     </div>
+    <div class="flex w-full flex-row gap-2 items-center px-5 hover:bg-background">
+        <input type="checkbox"
+               id="label_none"
+               name="label_none"
+               {% if unlabeled_tasks %}checked{% endif %}
+               value="on"
+               class="h-4 w-4 rounded border shrink-0 border-border focus:border-base-content focus:outline-none">
+        <label class="flex items-center min-w-0 gap-2" for="label_none">
+            <div class="h-4 w-4 shrink-0 rounded-full border border-utility"></div>
+            <div class="text-regular truncate min-w-0">{% translate "No label" %}</div>
+        </label>
+    </div>
     {% for label in labels %}
-        <div class="group flex w-full flex-row gap-2 items-center px-5 hover:bg-background">
+        <div class="flex w-full flex-row gap-2 items-center px-5 hover:bg-background">
             <input type="checkbox"
                    id="label_{{ label.uuid }}"
                    name="label_filter"
-                   {% if label.is_checked %}checked{% endif %}
-                   value="label_{{ label.uuid }}"
+                   {% if label.is_filtered %}checked{% endif %}
+                   value="{{ label.uuid }}"
                    class="h-4 w-4 rounded border shrink-0 border-border focus:border-base-content focus:outline-none">
-            <label class="flex items-center min-w-0 gap-2" for="checkbox-{{ label.id }}">
-                {% if label.bg_class != "bg-background" %}
-                    <div class="h-4 w-4 shrink-0 rounded-full {{ label.bg_class }} border {{ label.border_class }}"></div>
-                {% endif %}
+            <label class="flex items-center min-w-0 gap-2" for="label_{{ label.id }}">
+                <div class="h-4 w-4 shrink-0 rounded-full {{ label.bg_class }} border {{ label.border_class }}"></div>
                 <div class="text-regular truncate min-w-0">{{ label.name }}</div>
             </label>
         </div>
-        <!--<FilterLabel>-->
     {% endfor %}
 </div>
