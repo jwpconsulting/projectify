@@ -2,7 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load i18n %}
 {% load projectify %}
-<form class="flex flex-col px-4">
+<div class="flex flex-col px-4">
     <fieldset class="w-full max-w-full">
         <legend class="flex items-center gap-2">
             <div class="w-4 h-4">{% include "heroicons/user.svg" %}</div>
@@ -58,5 +58,4 @@
             </div>
         </div>
     </fieldset>
-    {% include "projectify/forms/submit.html" with text=_("Filter") %}
-</form>
+</div>

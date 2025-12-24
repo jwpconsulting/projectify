@@ -37,6 +37,15 @@ class Label(BaseModel):
 
     # TODO It should be fine to just use TitleDescription here
     name = models.CharField(max_length=255)
+    """
+    0 -> orange
+    2 -> pink
+    3 -> blue
+    4 -> purple
+    5 -> yellow
+    6 -> red
+    7 -> green
+    """
     color = models.PositiveBigIntegerField(
         help_text=_("Color index"),
     )

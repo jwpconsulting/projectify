@@ -21,6 +21,14 @@
         <span class="truncate">{% translate "Create new project" %}</span>
     </a>
 {% endif %}
-{% if team_members %}
-    {% include "workspace/common/sidebar/filter_team_members.html" %}
-{% endif %}
+<form class="contents">
+    {% if team_members %}
+        {% include "workspace/common/sidebar/filter_team_members.html" %}
+    {% endif %}
+    {% if labels %}
+        {% include "workspace/common/sidebar/filter_labels.html" %}
+    {% endif %}
+    {% if team_members or labels %}
+        {% include "projectify/forms/submit.html" with text=_("Filter") %}
+    {% endif %}
+</form>

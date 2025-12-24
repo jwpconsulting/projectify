@@ -47,6 +47,48 @@ from projectify.workspace.services.project import (
 
 logger = logging.getLogger(__name__)
 
+COLOR_MAP = {
+    0: {
+        "bg_class": "bg-label-orange",
+        "border_class": "border-label-text-orange",
+    },
+    1: {
+        "bg_class": "bg-label-pink",
+        "border_class": "border-label-text-pink",
+    },
+    2: {
+        "bg_class": "bg-label-blue",
+        "border_class": "border-label-text-blue",
+    },
+    3: {
+        "bg_class": "bg-label-purple",
+        "border_class": "border-label-text-purple",
+    },
+    4: {
+        "bg_class": "bg-label-yellow",
+        "border_class": "border-label-text-yellow",
+    },
+    5: {
+        "bg_class": "bg-label-red",
+        "border_class": "border-label-text-red",
+    },
+    6: {
+        "bg_class": "bg-label-green",
+        "border_class": "border-label-text-green",
+    },
+}
+
+
+def get_label_color_classes(index: int) -> dict[str, str]:
+    """Map label color index to CSS classes."""
+    if index not in COLOR_MAP:
+        logger.warning(
+            "Unknown label color index %s, defaulting to orange", index
+        )
+        # Default to orange
+        return COLOR_MAP[0]
+    return COLOR_MAP[index]
+
 
 # HTML
 @platform_view
@@ -80,9 +122,42 @@ def project_detail_view(
     project.workspace.quota = workspace_get_all_quotas(project.workspace)
     workspaces = workspace_find_for_user(who=request.user)
     projects = project.workspace.project_set.all()
+
+    # Special labels
+    special_labels = [
+        {
+            "id": "all-labels",
+            "name": _("All labels"),
+            "is_checked": True,
+            "bg_class": "bg-background",
+            "border_class": "border-primary",
+        },
+        {
+            "id": "no-label",
+            "name": _("No label"),
+            "is_checked": False,
+            "bg_class": "bg-background",
+            "border_class": "border-utility",
+        },
+    ]
+
+    # Workspace labels
+    workspace_labels = []
+    for label in project.workspace.label_set.all():
+        color_classes = get_label_color_classes(label.color)
+        workspace_labels.append(
+            {
+                "id": str(label.uuid),
+                "name": label.name,
+                "is_checked": False,
+                **color_classes,
+            }
+        )
+
+    labels = special_labels + workspace_labels
     context = {
         "project": project,
-        "labels": list(project.workspace.label_set.values()),
+        "labels": labels,
         "projects": projects,
         "workspaces": workspaces,
         "workspace": project.workspace,
