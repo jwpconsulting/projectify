@@ -56,7 +56,7 @@ def project_detail_query_set(
             queryset=Project.objects.filter(archived__isnull=True),
         ),
         Prefetch("workspace__teammember_set", queryset=team_member_qs),
-    ).select_related("workspace")
+    ).select_related("workspace", "workspace__customer")
 
 
 ProjectDetailQuerySet = project_detail_query_set()

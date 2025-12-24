@@ -72,11 +72,7 @@ def project_detail_view(
         raise Http404(_("No project found for this uuid"))
     project.workspace.quota = workspace_get_all_quotas(project.workspace)
     workspaces = workspace_find_for_user(who=request.user)
-    projects = project_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=project.workspace.uuid,
-        archived=False,
-    )
+    projects = project.workspace.project_set.all()
     context = {
         "project": project,
         "labels": list(project.workspace.label_set.values()),
