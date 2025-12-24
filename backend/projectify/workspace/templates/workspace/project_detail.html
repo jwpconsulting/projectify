@@ -8,9 +8,7 @@
 {% block dashboard_content %}
     <div id="project-detail" class="min-w-0 grow" role="presentation">
         <main class="flex h-full flex-col items-center gap-4 bg-background py-4">
-            <form role="search"
-                  action="{% url "dashboard:projects:detail" project_uuid=project.uuid %}"
-                  class="flex w-full max-w-md flex-col gap-2 rounded-xl bg-foreground px-4 py-4">
+            <div class="flex w-full max-w-md flex-col gap-2 rounded-xl bg-foreground px-4 py-4">
                 <div class="flex flex-col items-start gap-2">
                     <div class="flex w-full flex-row items-center justify-between">
                         <label for="search"
@@ -22,19 +20,15 @@
                         <input type="search"
                                class="placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2"
                                id="search"
-                               name="search"
+                               name="task-search-query"
                                placeholder="{% translate "Enter search terms" %}"
-                               required="" />
+                               form="task-filter"
+                               {% if task_search_query %}value="{{ task_search_query }}"{% endif %} />
                     </div>
                 </div>
                 <!--<InputField>-->
-                <button type="submit"
-                        class="text-tertiary-content hover:text-tertiary-content-hover active:bg-tertiary-pressed active:text-tertiary-content-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-transparent disabled:text-disabled-content">
-                    <span class="h-6 w-6">{% include "heroicons/search.svg" %}</span>
-                    Search tasks
-                </button>
-                <!--<button>-->
-            </form>
+                {% include "projectify/forms/submit.html" with text=_("Search tasks") form="task-filter" %}
+            </div>
             <div class="flex w-full grow flex-col gap-4 md:p-2">
                 {% for section in project.section_set.all %}
                     {% include "workspace/project_detail/section.html" with section=section %}
