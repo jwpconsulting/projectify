@@ -73,6 +73,7 @@ def project_detail_query_set(
     label_uuids: Optional[list[UUID]] = None,
     unassigned_tasks: Optional[bool] = None,
     unlabeled_tasks: Optional[bool] = None,
+    task_search_query: Optional[str] = None,
 ) -> QuerySet[Project]:
     """Create a project detail query set."""
     team_member_qs = TeamMember.objects.select_related("user")
@@ -109,6 +110,9 @@ def project_detail_query_set(
             label_qs = label_qs.annotate(is_filtered=Q(uuid__in=label_uuids))
         case _, _:
             pass
+
+    if task_search_query is not None:
+        task_q = task_q & Q(title__icontains=task_search_query)
 
     task_qs = (
         Task.objects.annotate(

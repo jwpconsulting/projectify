@@ -4,7 +4,7 @@
 """Project views."""
 
 import logging
-from typing import Any
+from typing import Any, Optional
 from uuid import UUID
 
 from django import forms
@@ -76,6 +76,10 @@ def project_detail_view(
     else:
         unlabeled_tasks = None
 
+    task_search_query: Optional[str] = request.GET.get(
+        "task-search-query", None
+    )
+
     try:
         label_uuids = [
             UUID(uuid) for uuid in request.GET.getlist("label_filter")
@@ -93,6 +97,7 @@ def project_detail_view(
         unassigned_tasks=unassigned_tasks,
         label_uuids=label_uuids,
         unlabeled_tasks=unlabeled_tasks,
+        task_search_query=task_search_query,
     )
     project = project_find_by_project_uuid(
         who=request.user, project_uuid=project_uuid, qs=qs
@@ -113,6 +118,7 @@ def project_detail_view(
         "team_members": project.workspace.teammember_set.all(),
         "unassigned_tasks": unassigned_tasks,
         "unlabeled_tasks": unlabeled_tasks,
+        "task_search_query": task_search_query,
     }
     return render(request, "workspace/project_detail.html", context)
 

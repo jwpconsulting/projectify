@@ -21,7 +21,7 @@
         <span class="truncate">{% translate "Create new project" %}</span>
     </a>
 {% endif %}
-<form class="contents">
+<form class="contents" id="task-filter" role="search">
     {% if team_members %}
         {% include "workspace/common/sidebar/filter_team_members.html" %}
     {% endif %}
