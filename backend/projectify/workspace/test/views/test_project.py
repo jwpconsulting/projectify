@@ -53,7 +53,8 @@ class TestProjectDetailView:
         # Gone down from 15 -> 14, since we optimized the prefetches
         # Gone down from 14 -> 13, since we select the related workspace
         # Gone down from 13 -> 11, since we prefetch projects
-        with django_assert_num_queries(11):
+        # Gone down from 11 -> 10, since we don't fetch label values()
+        with django_assert_num_queries(10):
             response = user_client.get(resource_url)
             assert response.status_code == 200
             assert project.title.encode() in response.content
