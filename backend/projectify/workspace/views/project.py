@@ -47,48 +47,6 @@ from projectify.workspace.services.project import (
 
 logger = logging.getLogger(__name__)
 
-COLOR_MAP = {
-    0: {
-        "bg_class": "bg-label-orange",
-        "border_class": "border-label-text-orange",
-    },
-    1: {
-        "bg_class": "bg-label-pink",
-        "border_class": "border-label-text-pink",
-    },
-    2: {
-        "bg_class": "bg-label-blue",
-        "border_class": "border-label-text-blue",
-    },
-    3: {
-        "bg_class": "bg-label-purple",
-        "border_class": "border-label-text-purple",
-    },
-    4: {
-        "bg_class": "bg-label-yellow",
-        "border_class": "border-label-text-yellow",
-    },
-    5: {
-        "bg_class": "bg-label-red",
-        "border_class": "border-label-text-red",
-    },
-    6: {
-        "bg_class": "bg-label-green",
-        "border_class": "border-label-text-green",
-    },
-}
-
-
-def get_label_color_classes(index: int) -> dict[str, str]:
-    """Map label color index to CSS classes."""
-    if index not in COLOR_MAP:
-        logger.warning(
-            "Unknown label color index %s, defaulting to orange", index
-        )
-        # Default to orange
-        return COLOR_MAP[0]
-    return COLOR_MAP[index]
-
 
 # HTML
 @platform_view
@@ -102,7 +60,9 @@ def project_detail_view(
         ] or None
     except ValueError as e:
         logger.warning(
-            "Invalid filter for project_uuid=%s", project_uuid, exc_info=e
+            "Invalid team member filter for project_uuid=%s",
+            project_uuid,
+            exc_info=e,
         )
         team_member_uuids = None
 
@@ -111,8 +71,22 @@ def project_detail_view(
     else:
         unassigned_tasks = None
 
+    try:
+        label_uuids = [
+            UUID(uuid) for uuid in request.GET.getlist("label_filter")
+        ] or None
+    except ValueError as e:
+        logger.warning(
+            "Invalid label filter for project_uuid=%s",
+            project_uuid,
+            exc_info=e,
+        )
+        label_uuids = None
+
     qs = project_detail_query_set(
-        team_member_uuids=team_member_uuids, unassigned_tasks=unassigned_tasks
+        team_member_uuids=team_member_uuids,
+        unassigned_tasks=unassigned_tasks,
+        label_uuids=label_uuids,
     )
     project = project_find_by_project_uuid(
         who=request.user, project_uuid=project_uuid, qs=qs
@@ -122,39 +96,8 @@ def project_detail_view(
     project.workspace.quota = workspace_get_all_quotas(project.workspace)
     workspaces = workspace_find_for_user(who=request.user)
     projects = project.workspace.project_set.all()
+    labels = project.workspace.label_set.all()
 
-    # Special labels
-    special_labels = [
-        {
-            "id": "all-labels",
-            "name": _("All labels"),
-            "is_checked": True,
-            "bg_class": "bg-background",
-            "border_class": "border-primary",
-        },
-        {
-            "id": "no-label",
-            "name": _("No label"),
-            "is_checked": False,
-            "bg_class": "bg-background",
-            "border_class": "border-utility",
-        },
-    ]
-
-    # Workspace labels
-    workspace_labels = []
-    for label in project.workspace.label_set.all():
-        color_classes = get_label_color_classes(label.color)
-        workspace_labels.append(
-            {
-                "id": str(label.uuid),
-                "name": label.name,
-                "is_checked": False,
-                **color_classes,
-            }
-        )
-
-    labels = special_labels + workspace_labels
     context = {
         "project": project,
         "labels": labels,

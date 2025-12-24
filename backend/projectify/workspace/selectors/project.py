@@ -6,14 +6,65 @@
 from typing import Optional
 from uuid import UUID
 
-from django.db.models import Count, Prefetch, Q, QuerySet
+from django.db.models import Case, Count, Prefetch, Q, QuerySet, Value, When
 from django.db.models.functions import NullIf
 
 from projectify.user.models import User
+from projectify.workspace.models.label import Label
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.team_member import TeamMember
 
 from ..models.project import Project
+
+COLOR_MAP = {
+    0: {
+        "bg_class": "bg-label-orange",
+        "border_class": "border-label-text-orange",
+    },
+    1: {
+        "bg_class": "bg-label-pink",
+        "border_class": "border-label-text-pink",
+    },
+    2: {
+        "bg_class": "bg-label-blue",
+        "border_class": "border-label-text-blue",
+    },
+    3: {
+        "bg_class": "bg-label-purple",
+        "border_class": "border-label-text-purple",
+    },
+    4: {
+        "bg_class": "bg-label-yellow",
+        "border_class": "border-label-text-yellow",
+    },
+    5: {
+        "bg_class": "bg-label-red",
+        "border_class": "border-label-text-red",
+    },
+    6: {
+        "bg_class": "bg-label-green",
+        "border_class": "border-label-text-green",
+    },
+}
+
+
+def _annotate_labels_with_colors(label_qs: QuerySet[Label]) -> QuerySet[Label]:
+    """Annotate labels with bg_class and border_class based on COLOR_MAP."""
+    bg_cases = [
+        When(color=i, then=Value(color_info["bg_class"]))
+        for i, color_info in COLOR_MAP.items()
+    ]
+    border_cases = [
+        When(color=i, then=Value(color_info["border_class"]))
+        for i, color_info in COLOR_MAP.items()
+    ]
+
+    return label_qs.annotate(
+        bg_class=Case(*bg_cases, default=Value(COLOR_MAP[0]["bg_class"])),
+        border_class=Case(
+            *border_cases, default=Value(COLOR_MAP[0]["border_class"])
+        ),
+    )
 
 
 def project_detail_query_set(
@@ -24,6 +75,7 @@ def project_detail_query_set(
 ) -> QuerySet[Project]:
     """Create a project detail query set."""
     team_member_qs = TeamMember.objects.select_related("user")
+    label_qs = _annotate_labels_with_colors(Label.objects.all())
     task_q = Q()
     if team_member_uuids is not None:
         task_q = task_q | Q(assignee__uuid__in=team_member_uuids)
@@ -35,7 +87,8 @@ def project_detail_query_set(
 
     if label_uuids is not None:
         # XXX untested
-        task_q = task_q | Q(label__in=label_uuids)
+        task_q = task_q | Q(labels__uuid__in=label_uuids)
+        label_qs = label_qs.annotate(is_filtered=Q(uuid__in=label_uuids))
 
     task_qs = (
         Task.objects.annotate(
@@ -55,7 +108,7 @@ def project_detail_query_set(
         Prefetch("section_set__task_set", queryset=task_qs),
         # Prefetch for workspace 1 : N relations, label, projects, and team
         # members
-        "workspace__label_set",
+        Prefetch("workspace__label_set", queryset=label_qs),
         Prefetch(
             "workspace__project_set",
             queryset=Project.objects.filter(archived__isnull=True),
