@@ -20,8 +20,23 @@ def project_detail_query_set(
     *,
     team_member_uuids: Optional[list[UUID]] = None,
     label_uuids: Optional[list[UUID]] = None,
+    unassigned_tasks: Optional[bool] = None,
 ) -> QuerySet[Project]:
     """Create a project detail query set."""
+    team_member_qs = TeamMember.objects.select_related("user")
+    task_q = Q()
+    if team_member_uuids is not None:
+        task_q = task_q | Q(assignee__uuid__in=team_member_uuids)
+        team_member_qs = team_member_qs.annotate(
+            is_filtered=Q(uuid__in=team_member_uuids)
+        )
+    if unassigned_tasks is not None:
+        task_q = task_q | Q(assignee__isnull=True)
+
+    if label_uuids is not None:
+        # XXX untested
+        task_q = task_q | Q(label__in=label_uuids)
+
     task_qs = (
         Task.objects.annotate(
             sub_task_progress=Count(
@@ -34,17 +49,7 @@ def project_detail_query_set(
         .order_by("_order")
         .select_related("assignee__user")
         .prefetch_related("labels")
-    )
-    team_member_qs = TeamMember.objects.select_related("user")
-    if team_member_uuids is not None:
-        task_qs = task_qs.filter(assignee__uuid__in=team_member_uuids)
-        is_filtered = Q(uuid__in=team_member_uuids)
-        team_member_qs = team_member_qs.annotate(is_filtered=is_filtered)
-    if label_uuids is not None:
-        # XXX this might not work
-        task_qs = task_qs.filter(
-            label__in=label_uuids,
-        )
+    ).filter(task_q)
     return Project.objects.prefetch_related(
         "section_set",
         Prefetch("section_set__task_set", queryset=task_qs),
