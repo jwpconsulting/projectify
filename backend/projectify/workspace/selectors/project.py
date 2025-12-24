@@ -11,6 +11,7 @@ from django.db.models.functions import NullIf
 
 from projectify.user.models import User
 from projectify.workspace.models.task import Task
+from projectify.workspace.models.team_member import TeamMember
 
 from ..models.project import Project
 
@@ -21,19 +22,25 @@ def project_detail_query_set(
     label_uuids: Optional[list[UUID]] = None,
 ) -> QuerySet[Project]:
     """Create a project detail query set."""
-    task_qs = Task.objects.annotate(
-        sub_task_progress=Count(
-            "subtask",
-            filter=Q(subtask__done=True),
+    task_qs = (
+        Task.objects.annotate(
+            sub_task_progress=Count(
+                "subtask",
+                filter=Q(subtask__done=True),
+            )
+            * 1.0
+            / NullIf(Count("subtask"), 0),
         )
-        * 1.0
-        / NullIf(Count("subtask"), 0),
-    ).order_by("_order")
-    if team_member_uuids:
-        task_qs = task_qs.filter(
-            assignee__uuid__in=team_member_uuids,
-        )
-    if label_uuids:
+        .order_by("_order")
+        .select_related("assignee__user")
+        .prefetch_related("labels")
+    )
+    team_member_qs = TeamMember.objects.select_related("user")
+    if team_member_uuids is not None:
+        task_qs = task_qs.filter(assignee__uuid__in=team_member_uuids)
+        is_filtered = Q(uuid__in=team_member_uuids)
+        team_member_qs = team_member_qs.annotate(is_filtered=is_filtered)
+    if label_uuids is not None:
         # XXX this might not work
         task_qs = task_qs.filter(
             label__in=label_uuids,
@@ -41,16 +48,14 @@ def project_detail_query_set(
     return Project.objects.prefetch_related(
         "section_set",
         Prefetch("section_set__task_set", queryset=task_qs),
-        "section_set__task_set__assignee",
-        "section_set__task_set__assignee__user",
-        "section_set__task_set__labels",
+        # Prefetch for workspace 1 : N relations, label, projects, and team
+        # members
         "workspace__label_set",
         Prefetch(
             "workspace__project_set",
             queryset=Project.objects.filter(archived__isnull=True),
         ),
-        "workspace__teammember_set",
-        "workspace__teammember_set__user",
+        Prefetch("workspace__teammember_set", queryset=team_member_qs),
     )
 
 

@@ -49,8 +49,9 @@ class TestProjectDetailView:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test GETting the project detail page."""
-        # Gone up from 14 -> 15, since we fetch all workspaces
-        with django_assert_num_queries(15):
+        # Gone up   from 14 -> 15, since we fetch all workspaces
+        # Gone down from 15 -> 14, since we optimized the prefetches
+        with django_assert_num_queries(14):
             response = user_client.get(resource_url)
             assert response.status_code == 200
             assert project.title.encode() in response.content
@@ -533,12 +534,11 @@ class TestProjectReadUpdateDelete:
         # Make sure section -> task -> team_member -> user is resolved
         task.assignee = team_member
         task.save()
-        # Gone up from 7 -> 12 since we prefetch workspace details too
-        # Gone up from 11 -> 14, since we fetch workspace quota
-        # Gone up from 14 -> 15, since we match by assignee uuids
-        # XXX we might get rid of this extra step, we're already retrieving
-        # their uuids?
-        with django_assert_num_queries(15):
+        # Gone up   from  7 -> 12, since we prefetch workspace details too
+        # Gone up   from 11 -> 14, since we fetch workspace quota
+        # Gone up   from 14 -> 15, since we match by assignee uuids
+        # Gone down from 15 -> 12, since we optimized the prefetch
+        with django_assert_num_queries(12):
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.data
         assert response.data == {
