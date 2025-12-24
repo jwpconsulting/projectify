@@ -57,14 +57,21 @@ def project_detail_view(
     try:
         team_member_uuids = [
             UUID(uuid) for uuid in request.GET.getlist("member_filter")
-        ]
+        ] or None
     except ValueError as e:
         logger.warning(
             "Invalid filter for project_uuid=%s", project_uuid, exc_info=e
         )
-        team_member_uuids = []
+        team_member_uuids = None
 
-    qs = project_detail_query_set(team_member_uuids=team_member_uuids)
+    if request.GET.get("member_nobody") == "on":
+        unassigned_tasks = True
+    else:
+        unassigned_tasks = None
+
+    qs = project_detail_query_set(
+        team_member_uuids=team_member_uuids, unassigned_tasks=unassigned_tasks
+    )
     project = project_find_by_project_uuid(
         who=request.user, project_uuid=project_uuid, qs=qs
     )
@@ -80,6 +87,7 @@ def project_detail_view(
         "workspaces": workspaces,
         "workspace": project.workspace,
         "team_members": project.workspace.teammember_set.all(),
+        "unassigned_tasks": unassigned_tasks,
     }
     return render(request, "workspace/project_detail.html", context)
 

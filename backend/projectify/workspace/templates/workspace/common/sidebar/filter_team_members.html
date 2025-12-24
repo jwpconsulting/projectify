@@ -23,6 +23,8 @@
                     <input type="checkbox"
                            id="member_nobody"
                            name="member_nobody"
+                           value="on"
+                           {% if unassigned_tasks is True %}checked{% endif %}
                            class="cursor-pointer" />
                     <label for="member_nobody"
                            class="flex flex-1 gap-2 text-regular min-w-0 cursor-pointer">
