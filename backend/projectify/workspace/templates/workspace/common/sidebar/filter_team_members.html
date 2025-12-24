@@ -39,6 +39,7 @@
                         <input type="checkbox"
                                id="member_{{ member.uuid }}"
                                name="member_filter"
+                               {% if member.is_filtered %}checked{% endif %}
                                value="{{ member.uuid }}"
                                class="cursor-pointer" />
                         <label for="member_{{ member.uuid }}"

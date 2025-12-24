@@ -83,7 +83,7 @@ def project_detail_view(
         "projects": projects,
         "workspaces": workspaces,
         "workspace": project.workspace,
-        "team_members": list(project.workspace.teammember_set.all()),
+        "team_members": project.workspace.teammember_set.all(),
     }
     return render(request, "workspace/project_detail.html", context)
 
