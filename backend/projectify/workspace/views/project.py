@@ -71,6 +71,11 @@ def project_detail_view(
     else:
         unassigned_tasks = None
 
+    if request.GET.get("label_none") == "on":
+        unlabeled_tasks = True
+    else:
+        unlabeled_tasks = None
+
     try:
         label_uuids = [
             UUID(uuid) for uuid in request.GET.getlist("label_filter")
@@ -87,6 +92,7 @@ def project_detail_view(
         team_member_uuids=team_member_uuids,
         unassigned_tasks=unassigned_tasks,
         label_uuids=label_uuids,
+        unlabeled_tasks=unlabeled_tasks,
     )
     project = project_find_by_project_uuid(
         who=request.user, project_uuid=project_uuid, qs=qs
@@ -106,6 +112,7 @@ def project_detail_view(
         "workspace": project.workspace,
         "team_members": project.workspace.teammember_set.all(),
         "unassigned_tasks": unassigned_tasks,
+        "unlabeled_tasks": unlabeled_tasks,
     }
     return render(request, "workspace/project_detail.html", context)
 
