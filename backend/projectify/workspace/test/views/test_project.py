@@ -52,7 +52,8 @@ class TestProjectDetailView:
         # Gone up   from 14 -> 15, since we fetch all workspaces
         # Gone down from 15 -> 14, since we optimized the prefetches
         # Gone down from 14 -> 13, since we select the related workspace
-        with django_assert_num_queries(13):
+        # Gone down from 13 -> 11, since we prefetch projects
+        with django_assert_num_queries(11):
             response = user_client.get(resource_url)
             assert response.status_code == 200
             assert project.title.encode() in response.content
@@ -540,7 +541,8 @@ class TestProjectReadUpdateDelete:
         # Gone up   from 14 -> 15, since we match by assignee uuids
         # Gone down from 15 -> 12, since we optimized the prefetch
         # Gone down from 12 -> 11, since we select the related workspace
-        with django_assert_num_queries(11):
+        # Gone down from 11 -> 10, since we select the related customer
+        with django_assert_num_queries(10):
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.data
         assert response.data == {
