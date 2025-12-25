@@ -3,49 +3,19 @@
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 """Project model selectors."""
 
-from typing import Optional
+from typing import Optional, Union
 from uuid import UUID
 
 from django.db.models import Case, Count, Prefetch, Q, QuerySet, Value, When
 from django.db.models.functions import NullIf
 
 from projectify.user.models import User
+from projectify.workspace.models.const import COLOR_MAP
 from projectify.workspace.models.label import Label
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.team_member import TeamMember
 
 from ..models.project import Project
-
-COLOR_MAP = {
-    0: {
-        "bg_class": "bg-label-orange",
-        "border_class": "border-label-text-orange",
-    },
-    1: {
-        "bg_class": "bg-label-pink",
-        "border_class": "border-label-text-pink",
-    },
-    2: {
-        "bg_class": "bg-label-blue",
-        "border_class": "border-label-text-blue",
-    },
-    3: {
-        "bg_class": "bg-label-purple",
-        "border_class": "border-label-text-purple",
-    },
-    4: {
-        "bg_class": "bg-label-yellow",
-        "border_class": "border-label-text-yellow",
-    },
-    5: {
-        "bg_class": "bg-label-red",
-        "border_class": "border-label-text-red",
-    },
-    6: {
-        "bg_class": "bg-label-green",
-        "border_class": "border-label-text-green",
-    },
-}
 
 
 def _annotate_labels_with_colors(label_qs: QuerySet[Label]) -> QuerySet[Label]:
@@ -99,17 +69,19 @@ def project_detail_query_set(
 
     labels_uuid = Q(labels__uuid__in=label_uuids)
     labels_empty = Q(labels__isnull=True)
+    label_is_filtered: Union[Value, Q] = Value(False)
     match label_uuids, unlabeled_tasks:
         case list(), None:
             task_q = task_q & labels_uuid
-            label_qs = label_qs.annotate(is_filtered=Q(uuid__in=label_uuids))
+            label_is_filtered = Q(uuid__in=label_uuids)
         case None, True:
             task_q = task_q & labels_empty
         case list(), True:
             task_q = task_q & (labels_uuid | labels_empty)
-            label_qs = label_qs.annotate(is_filtered=Q(uuid__in=label_uuids))
+            label_is_filtered = Q(uuid__in=label_uuids)
         case _, _:
             pass
+    label_qs = label_qs.annotate(is_filtered=label_is_filtered)
 
     if task_search_query is not None:
         task_q = task_q & Q(title__icontains=task_search_query)

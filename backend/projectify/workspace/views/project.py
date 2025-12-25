@@ -4,10 +4,11 @@
 """Project views."""
 
 import logging
-from typing import Any, Optional
+from typing import Any, Optional, Union
 from uuid import UUID
 
 from django import forms
+from django.db.models import QuerySet
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
@@ -25,6 +26,8 @@ from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 from projectify.workspace.models import Project
+from projectify.workspace.models.label import Label
+from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.selectors.project import (
     ProjectDetailQuerySet,
     project_detail_query_set,
@@ -48,6 +51,91 @@ from projectify.workspace.services.project import (
 logger = logging.getLogger(__name__)
 
 
+class SelectWOA(forms.CheckboxSelectMultiple):
+    """Overwrite CheckboxSelectMultiple and pass in extra data per choice."""
+
+    modify_choices: dict[str, dict[str, Any]]
+
+    def __init__(
+        self,
+        modify_choices: dict[str, dict[str, Any]],
+        *args: Any,
+        **kwargs: Any,
+    ) -> None:
+        """Overwrite and modify choice data."""
+        super().__init__(*args, **kwargs)
+        self.modify_choices = modify_choices
+
+    def create_option(
+        self,
+        name: str,
+        value: str,
+        label: Union[str, int],
+        selected: Union[set[str], bool],
+        index: int,
+        subindex: Optional[int] = None,
+        attrs: Optional[dict[str, Any]] = None,
+    ) -> dict[str, Any]:
+        """Enhance options with value from modify_choices."""
+        option = super().create_option(
+            name, value, label, selected, index, subindex, attrs
+        )
+        choice = self.modify_choices[value]
+        option = {**option, **choice}
+        return option
+
+
+class ProjectFilterForm(forms.Form):
+    """Form for deserializing project task filters."""
+
+    filter_by_unassigned = forms.BooleanField(label=_("Assigned to nobody"))
+    # filter_by_member = forms.MultipleChoiceField()
+    filter_by_unlabeled = forms.BooleanField(label=_("No label"))
+
+    def __init__(
+        self,
+        team_members: QuerySet[TeamMember],
+        labels: QuerySet[Label],
+        *args: Any,
+        **kwargs: Any,
+    ) -> None:
+        """Populate choices."""
+        super().__init__(*args, **kwargs)
+        member_choices = [
+            (str(member.uuid), str(member)) for member in team_members
+        ]
+        modify_member_choices = {
+            str(member.uuid): {
+                "is_filtered": getattr(member, "is_filtered", ""),
+                "user": member.user,
+            }
+            for member in team_members
+        }
+        self.fields["filter_by_member"] = forms.MultipleChoiceField(
+            required=False,
+            label=_("No label"),
+            choices=member_choices,
+            widget=SelectWOA(modify_choices=modify_member_choices),
+        )
+        label_choices = [(str(label.uuid), label.name) for label in labels]
+        modify_label_choices = {
+            str(label.uuid): {
+                "bg_class": getattr(label, "bg_class", ""),
+                "border_class": getattr(label, "border_class", ""),
+                "is_filtered": getattr(label, "is_filtered", ""),
+            }
+            for label in labels
+        }
+        self.fields["filter_by_label"] = forms.MultipleChoiceField(
+            required=False,
+            label=_("No label"),
+            choices=label_choices,
+            widget=SelectWOA(
+                choices=label_choices, modify_choices=modify_label_choices
+            ),
+        )
+
+
 # HTML
 @platform_view
 def project_detail_view(
@@ -56,7 +144,7 @@ def project_detail_view(
     """Show project details."""
     try:
         team_member_uuids = [
-            UUID(uuid) for uuid in request.GET.getlist("member_filter")
+            UUID(uuid) for uuid in request.GET.getlist("filter_by_member")
         ] or None
     except ValueError as e:
         logger.warning(
@@ -66,15 +154,15 @@ def project_detail_view(
         )
         team_member_uuids = None
 
-    if request.GET.get("member_nobody") == "on":
-        unassigned_tasks = True
+    if request.GET.get("filter_by_unassigned") == "on":
+        filter_by_unassigned = True
     else:
-        unassigned_tasks = None
+        filter_by_unassigned = None
 
-    if request.GET.get("label_none") == "on":
-        unlabeled_tasks = True
+    if request.GET.get("filter_by_unlabeled") == "on":
+        filter_by_unlabeled = True
     else:
-        unlabeled_tasks = None
+        filter_by_unlabeled = None
 
     task_search_query: Optional[str] = request.GET.get(
         "task-search-query", None
@@ -82,7 +170,7 @@ def project_detail_view(
 
     try:
         label_uuids = [
-            UUID(uuid) for uuid in request.GET.getlist("label_filter")
+            UUID(uuid) for uuid in request.GET.getlist("filter_by_label")
         ] or None
     except ValueError as e:
         logger.warning(
@@ -94,9 +182,9 @@ def project_detail_view(
 
     qs = project_detail_query_set(
         team_member_uuids=team_member_uuids,
-        unassigned_tasks=unassigned_tasks,
+        unassigned_tasks=filter_by_unassigned,
         label_uuids=label_uuids,
-        unlabeled_tasks=unlabeled_tasks,
+        unlabeled_tasks=filter_by_unlabeled,
         task_search_query=task_search_query,
     )
     project = project_find_by_project_uuid(
@@ -107,7 +195,14 @@ def project_detail_view(
     project.workspace.quota = workspace_get_all_quotas(project.workspace)
     workspaces = workspace_find_for_user(who=request.user)
     projects = project.workspace.project_set.all()
+    team_members = project.workspace.teammember_set.all()
     labels = project.workspace.label_set.all()
+
+    task_filter_form = ProjectFilterForm(
+        team_members=team_members,
+        labels=labels,
+        data=request.GET,
+    )
 
     context = {
         "project": project,
@@ -115,10 +210,11 @@ def project_detail_view(
         "projects": projects,
         "workspaces": workspaces,
         "workspace": project.workspace,
-        "team_members": project.workspace.teammember_set.all(),
-        "unassigned_tasks": unassigned_tasks,
-        "unlabeled_tasks": unlabeled_tasks,
+        "team_members": team_members,
+        "unassigned_tasks": filter_by_unassigned,
+        "unlabeled_tasks": filter_by_unlabeled,
         "task_search_query": task_search_query,
+        "task_filter_form": task_filter_form,
     }
     return render(request, "workspace/project_detail.html", context)
 

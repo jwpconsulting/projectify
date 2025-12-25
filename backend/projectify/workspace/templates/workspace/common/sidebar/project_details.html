@@ -22,116 +22,114 @@
         <span class="truncate">{% translate "Create new project" %}</span>
     </a>
 {% endif %}
-{% if team_members or labels %}
+{% if task_filter_form %}
     <form class="contents" id="task-filter" role="search">
-        {% if team_members %}
-            <div class="flex flex-col px-4">
-                <fieldset class="w-full max-w-full">
-                    <legend class="flex items-center gap-2">
-                        <div class="w-4 h-4">{% include "heroicons/user.svg" %}</div>
-                        <p class=" font-bold truncate py-2">{% trans "Filter team members" %}</p>
-                    </legend>
-                    <div class="flex flex-col gap-2">
-                        <div class="flex items-center gap-2">
-                            <div class="w-4 h-4">{% include "heroicons/search.svg" %}</div>
-                            <div class="flex-1">
-                                <input type="text"
-                                       name="team-member-name"
-                                       placeholder="{% translate "Filter by name" %}"
-                                       class="placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2" />
+        <div class="flex flex-col px-4">
+            <fieldset class="w-full max-w-full">
+                <legend class="flex items-center gap-2">
+                    <div class="w-4 h-4">{% include "heroicons/user.svg" %}</div>
+                    <p class=" font-bold truncate py-2">{% trans "Filter team members" %}</p>
+                </legend>
+                <div class="flex flex-col gap-2">
+                    <div class="flex items-center gap-2">
+                        <div class="w-4 h-4">{% include "heroicons/search.svg" %}</div>
+                        <div class="flex-1">
+                            <input type="text"
+                                   name="team-member-name"
+                                   placeholder="{% translate "Filter by name" %}"
+                                   class="placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2" />
+                        </div>
+                    </div>
+                    <div class="flex flex-col overflow-y-auto">
+                        <div class="grid grid-cols-[auto_1fr_auto] gap-2 items-center hover:bg-background p-2">
+                            <input type="checkbox"
+                                   id="{{ task_filter_form.filter_by_unassigned.id_for_label }}"
+                                   name="{{ task_filter_form.filter_by_unassigned.html_name }}"
+                                   value="on"
+                                   {% if task_filter_form.filter_by_unassigned.data %}checked{% endif %}
+                                   class="cursor-pointer" />
+                            <label for="{{ task_filter_form.filter_by_unassigned.id_for_label }}"
+                                   class="flex flex-1 gap-2 text-regular min-w-0 cursor-pointer">
+                                {% user_avatar None %}
+                                <span class="truncate">{{ task_filter_form.filter_by_unassigned.label }}</span>
+                            </label>
+                            {# TODO:Add count #}
+                            <div class="flex shrink-0 flex-row items-center gap-2 rounded-2.5xl bg-background px-2 py-0.5 text-primary group-hover:bg-foreground">
+                                111
                             </div>
                         </div>
-                        <div class="flex flex-col overflow-y-auto">
+                        {% for member in task_filter_form.filter_by_member %}
                             <div class="grid grid-cols-[auto_1fr_auto] gap-2 items-center hover:bg-background p-2">
                                 <input type="checkbox"
-                                       id="member_nobody"
-                                       name="member_nobody"
-                                       value="on"
-                                       {% if unassigned_tasks is True %}checked{% endif %}
+                                       id="{{ member.data.attrs.id }}"
+                                       name="{{ task_filter_form.filter_by_member.html_name }}"
+                                       {% if member.data.is_filtered %}checked{% endif %}
+                                       value="{{ member.data.value }}"
                                        class="cursor-pointer" />
-                                <label for="member_nobody"
+                                <label for="{{ member.id_for_label }}"
                                        class="flex flex-1 gap-2 text-regular min-w-0 cursor-pointer">
-                                    {% user_avatar None %}
-                                    <span class="truncate">{% translate "Assigned to nobody" %}</span>
+                                    {% user_avatar member.data.user %}
+                                    <span class="truncate">{{ member.choice_label }}</span>
                                 </label>
                                 {# TODO:Add count #}
                                 <div class="flex shrink-0 flex-row items-center gap-2 rounded-2.5xl bg-background px-2 py-0.5 text-primary group-hover:bg-foreground">
                                     111
                                 </div>
                             </div>
-                            {% for member in team_members %}
-                                <div class="grid grid-cols-[auto_1fr_auto] gap-2 items-center hover:bg-background p-2">
-                                    <input type="checkbox"
-                                           id="member_{{ member.uuid }}"
-                                           name="member_filter"
-                                           {% if member.is_filtered %}checked{% endif %}
-                                           value="{{ member.uuid }}"
-                                           class="cursor-pointer" />
-                                    <label for="member_{{ member.uuid }}"
-                                           class="flex flex-1 gap-2 text-regular min-w-0 cursor-pointer">
-                                        {% user_avatar member.user %}
-                                        <span class="truncate">{{ member }}</span>
-                                    </label>
-                                    {# TODO:Add count #}
-                                    <div class="flex shrink-0 flex-row items-center gap-2 rounded-2.5xl bg-background px-2 py-0.5 text-primary group-hover:bg-foreground">
-                                        111
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
+                        {% endfor %}
                     </div>
-                </fieldset>
-            </div>
-        {% endif %}
-        {% if labels %}
-            <div class="flex flex-col">
-                <div class="flex flex-col px-4 pb-4">
-                    <div class="flex flex-col items-start gap-2">
-                        <div class="flex w-full flex-row items-center justify-between">
-                            <label for="label-name"
-                                   class="font-bold text-base-content first-letter:uppercase">
-                                {% trans "Label name" %}
-                            </label>
-                        </div>
-                        <div class="flex w-full flex-row items-center gap-2">
-                            <div class="w-4 h-4">{% include "heroicons/search.svg" %}</div>
-                            <input type="text"
-                                   class="placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2"
-                                   id="label-name"
-                                   name="label-name"
-                                   placeholder="{% trans 'Filter by label name' %}">
-                        </div>
-                    </div>
-                    <!--<InputField>-->
                 </div>
-                <div class="flex w-full flex-row gap-2 items-center px-5 hover:bg-background">
-                    <input type="checkbox"
-                           id="label_none"
-                           name="label_none"
-                           {% if unlabeled_tasks %}checked{% endif %}
-                           value="on"
-                           class="h-4 w-4 rounded border shrink-0 border-border focus:border-base-content focus:outline-none">
-                    <label class="flex items-center min-w-0 gap-2" for="label_none">
-                        <div class="h-4 w-4 shrink-0 rounded-full border border-utility"></div>
-                        <div class="text-regular truncate min-w-0">{% translate "No label" %}</div>
-                    </label>
-                </div>
-                {% for label in labels %}
-                    <div class="flex w-full flex-row gap-2 items-center px-5 hover:bg-background">
-                        <input type="checkbox"
-                               id="label_{{ label.uuid }}"
-                               name="label_filter"
-                               {% if label.is_filtered %}checked{% endif %}
-                               value="{{ label.uuid }}"
-                               class="h-4 w-4 rounded border shrink-0 border-border focus:border-base-content focus:outline-none">
-                        <label class="flex items-center min-w-0 gap-2" for="label_{{ label.id }}">
-                            <div class="h-4 w-4 shrink-0 rounded-full {{ label.bg_class }} border {{ label.border_class }}"></div>
-                            <div class="text-regular truncate min-w-0">{{ label.name }}</div>
+            </fieldset>
+        </div>
+        <div class="flex flex-col">
+            <div class="flex flex-col px-4 pb-4">
+                <div class="flex flex-col items-start gap-2">
+                    <div class="flex w-full flex-row items-center justify-between">
+                        <label for="label-name"
+                               class="font-bold text-base-content first-letter:uppercase">
+                            {% trans "Label name" %}
                         </label>
                     </div>
-                {% endfor %}
+                    <div class="flex w-full flex-row items-center gap-2">
+                        <div class="w-4 h-4">{% include "heroicons/search.svg" %}</div>
+                        <input type="text"
+                               class="placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2"
+                               id="label-name"
+                               name="label-name"
+                               placeholder="{% trans 'Filter by label name' %}">
+                    </div>
+                </div>
+                <!--<InputField>-->
             </div>
-        {% endif %}
+            <div class="flex w-full flex-row gap-2 items-center px-5 hover:bg-background">
+                <input type="checkbox"
+                       id="{{ task_filter_form.filter_by_unlabeled.id_for_label }}"
+                       name="{{ task_filter_form.filter_by_unlabeled.html_name }}"
+                       {% if task_filter_form.filter_by_unlabeled.data %}checked{% endif %}
+                       value="on"
+                       class="h-4 w-4 rounded border shrink-0 border-border focus:border-base-content focus:outline-none">
+                <label class="flex items-center min-w-0 gap-2"
+                       for="{{ task_filter_form.filter_by_unlabeled.id_for_label }}">
+                    <div class="h-4 w-4 shrink-0 rounded-full border border-utility"></div>
+                    <div class="text-regular truncate min-w-0">{{ task_filter_form.filter_by_unlabeled.label }}</div>
+                </label>
+            </div>
+            {% for label in task_filter_form.filter_by_label %}
+                <div class="flex w-full flex-row gap-2 items-center px-5 hover:bg-background">
+                    <input type="checkbox"
+                           id="{{ label.data.attrs.id }}"
+                           name="{{ task_filter_form.filter_by_label.html_name }}"
+                           {% if label.data.is_filtered %}checked{% endif %}
+                           value="{{ label.data.value }}"
+                           class="h-4 w-4 rounded border shrink-0 border-border focus:border-base-content focus:outline-none">
+                    <label class="flex items-center min-w-0 gap-2"
+                           for="{{ label.id_for_label }}">
+                        <div class="h-4 w-4 shrink-0 rounded-full {{ label.data.bg_class }} border {{ label.data.border_class }}"></div>
+                        <div class="text-regular truncate min-w-0">{{ label.choice_label }}</div>
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
         {% include "projectify/forms/submit.html" with text=_("Filter") %}
     </form>
 {% endif %}
