@@ -1,6 +1,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {# SPDX-FileCopyrightText: 2024-2025 JWP Consulting GK #}
 {% load i18n %}
+{% load projectify %}
 {% for project_item in projects %}
     <a class="group block flex w-full flex-row justify-between gap-1 px-4 py-1 hover:bg-base-200"
        href="{% url "dashboard:projects:detail" project_item.uuid %}">
@@ -21,14 +22,70 @@
         <span class="truncate">{% translate "Create new project" %}</span>
     </a>
 {% endif %}
-<form class="contents" id="task-filter" role="search">
-    {% if team_members %}
-        {% include "workspace/common/sidebar/filter_team_members.html" %}
-    {% endif %}
-    {% if labels %}
-        {% include "workspace/common/sidebar/filter_labels.html" %}
-    {% endif %}
-    {% if team_members or labels %}
+{% if team_members or labels %}
+    <form class="contents" id="task-filter" role="search">
+        {% if team_members %}
+            <div class="flex flex-col px-4">
+                <fieldset class="w-full max-w-full">
+                    <legend class="flex items-center gap-2">
+                        <div class="w-4 h-4">{% include "heroicons/user.svg" %}</div>
+                        <p class=" font-bold truncate py-2">{% trans "Filter team members" %}</p>
+                    </legend>
+                    <div class="flex flex-col gap-2">
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4">{% include "heroicons/search.svg" %}</div>
+                            <div class="flex-1">
+                                <input type="text"
+                                       name="team-member-name"
+                                       placeholder="{% translate "Filter by name" %}"
+                                       class="placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2" />
+                            </div>
+                        </div>
+                        <div class="flex flex-col overflow-y-auto">
+                            <div class="grid grid-cols-[auto_1fr_auto] gap-2 items-center hover:bg-background p-2">
+                                <input type="checkbox"
+                                       id="member_nobody"
+                                       name="member_nobody"
+                                       value="on"
+                                       {% if unassigned_tasks is True %}checked{% endif %}
+                                       class="cursor-pointer" />
+                                <label for="member_nobody"
+                                       class="flex flex-1 gap-2 text-regular min-w-0 cursor-pointer">
+                                    {% user_avatar None %}
+                                    <span class="truncate">{% translate "Assigned to nobody" %}</span>
+                                </label>
+                                {# TODO:Add count #}
+                                <div class="flex shrink-0 flex-row items-center gap-2 rounded-2.5xl bg-background px-2 py-0.5 text-primary group-hover:bg-foreground">
+                                    111
+                                </div>
+                            </div>
+                            {% for member in team_members %}
+                                <div class="grid grid-cols-[auto_1fr_auto] gap-2 items-center hover:bg-background p-2">
+                                    <input type="checkbox"
+                                           id="member_{{ member.uuid }}"
+                                           name="member_filter"
+                                           {% if member.is_filtered %}checked{% endif %}
+                                           value="{{ member.uuid }}"
+                                           class="cursor-pointer" />
+                                    <label for="member_{{ member.uuid }}"
+                                           class="flex flex-1 gap-2 text-regular min-w-0 cursor-pointer">
+                                        {% user_avatar member.user %}
+                                        <span class="truncate">{{ member }}</span>
+                                    </label>
+                                    {# TODO:Add count #}
+                                    <div class="flex shrink-0 flex-row items-center gap-2 rounded-2.5xl bg-background px-2 py-0.5 text-primary group-hover:bg-foreground">
+                                        111
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        {% endif %}
+        {% if labels %}
+            {% include "workspace/common/sidebar/filter_labels.html" %}
+        {% endif %}
         {% include "projectify/forms/submit.html" with text=_("Filter") %}
-    {% endif %}
-</form>
+    </form>
+{% endif %}
