@@ -58,11 +58,11 @@
                                 111
                             </div>
                         </div>
-                        {% for member in task_filter_form.filter_by_member %}
+                        {% for member in task_filter_form.filter_by_team_member %}
                             <div class="grid grid-cols-[auto_1fr_auto] gap-2 items-center hover:bg-background p-2">
                                 <input type="checkbox"
                                        id="{{ member.data.attrs.id }}"
-                                       name="{{ task_filter_form.filter_by_member.html_name }}"
+                                       name="{{ task_filter_form.filter_by_team_member.html_name }}"
                                        {% if member.data.is_filtered %}checked{% endif %}
                                        value="{{ member.data.value }}"
                                        class="cursor-pointer" />

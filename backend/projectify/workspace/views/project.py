@@ -8,6 +8,7 @@ from typing import Any, Optional, Union
 from uuid import UUID
 
 from django import forms
+from django.core.exceptions import BadRequest
 from django.db.models import QuerySet
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
@@ -88,9 +89,9 @@ class SelectWOA(forms.CheckboxSelectMultiple):
 class ProjectFilterForm(forms.Form):
     """Form for deserializing project task filters."""
 
-    filter_by_unassigned = forms.BooleanField(label=_("Assigned to nobody"))
-    # filter_by_member = forms.MultipleChoiceField()
-    filter_by_unlabeled = forms.BooleanField(label=_("No label"))
+    filter_by_unassigned = forms.BooleanField(label=_("Assigned to nobody"), required=False)
+    filter_by_unlabeled = forms.BooleanField(label=_("No label"), required=False)
+    task_search_query = forms.CharField(label=_("Task search"), required=False, help_text=_("Enter search terms"))
 
     def __init__(
         self,
@@ -111,7 +112,7 @@ class ProjectFilterForm(forms.Form):
             }
             for member in team_members
         }
-        self.fields["filter_by_member"] = forms.MultipleChoiceField(
+        self.fields["filter_by_team_member"] = forms.MultipleChoiceField(
             required=False,
             label=_("No label"),
             choices=member_choices,
@@ -142,43 +143,38 @@ def project_detail_view(
     request: AuthenticatedHttpRequest, project_uuid: UUID
 ) -> HttpResponse:
     """Show project details."""
-    try:
-        team_member_uuids = [
-            UUID(uuid) for uuid in request.GET.getlist("filter_by_member")
-        ] or None
-    except ValueError as e:
-        logger.warning(
-            "Invalid team member filter for project_uuid=%s",
-            project_uuid,
-            exc_info=e,
-        )
-        team_member_uuids = None
+    team_member_uuids: Optional[list[UUID]] = None
+    label_uuids: Optional[list[UUID]] = None
+    filter_by_unlabeled: Optional[bool] = None
+    filter_by_unassigned: Optional[bool] = None
+    task_search_query: Optional[str] = None
+    match len(request.GET):
+        case 0:
+            label_uuids = None
+            team_member_uuids = None
+            label_uuids = None
+        case _:
+            project = project_find_by_project_uuid(
+                who=request.user, project_uuid=project_uuid
+            )
+            if project is None:
+                raise Http404(_("No project found for this uuid"))
+            labels = project.workspace.label_set.all()
+            team_members = project.workspace.teammember_set.all()
 
-    if request.GET.get("filter_by_unassigned") == "on":
-        filter_by_unassigned = True
-    else:
-        filter_by_unassigned = None
-
-    if request.GET.get("filter_by_unlabeled") == "on":
-        filter_by_unlabeled = True
-    else:
-        filter_by_unlabeled = None
-
-    task_search_query: Optional[str] = request.GET.get(
-        "task-search-query", None
-    )
-
-    try:
-        label_uuids = [
-            UUID(uuid) for uuid in request.GET.getlist("filter_by_label")
-        ] or None
-    except ValueError as e:
-        logger.warning(
-            "Invalid label filter for project_uuid=%s",
-            project_uuid,
-            exc_info=e,
-        )
-        label_uuids = None
+            task_filter_form = ProjectFilterForm(
+                team_members=team_members,
+                labels=labels,
+                data=request.GET,
+            )
+            if task_filter_form.is_valid():
+                team_member_uuids = task_filter_form.cleaned_data["filter_by_team_member"]
+                filter_by_unassigned = task_filter_form.cleaned_data["filter_by_unassigned"]
+                label_uuids = task_filter_form.cleaned_data["filter_by_label"]
+                filter_by_unlabeled = task_filter_form.cleaned_data["filter_by_unlabeled"]
+                task_search_query = task_filter_form.cleaned_data["task_search_query"]
+            else:
+                raise BadRequest(task_filter_form.errors)
 
     qs = project_detail_query_set(
         team_member_uuids=team_member_uuids,
