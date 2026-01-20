@@ -89,9 +89,17 @@ class SelectWOA(forms.CheckboxSelectMultiple):
 class ProjectFilterForm(forms.Form):
     """Form for deserializing project task filters."""
 
-    filter_by_unassigned = forms.BooleanField(label=_("Assigned to nobody"), required=False)
-    filter_by_unlabeled = forms.BooleanField(label=_("No label"), required=False)
-    task_search_query = forms.CharField(label=_("Task search"), required=False, help_text=_("Enter search terms"))
+    filter_by_unassigned = forms.BooleanField(
+        label=_("Assigned to nobody"), required=False
+    )
+    filter_by_unlabeled = forms.BooleanField(
+        label=_("No label"), required=False
+    )
+    task_search_query = forms.CharField(
+        label=_("Task search"),
+        required=False,
+        help_text=_("Enter search terms"),
+    )
 
     def __init__(
         self,
@@ -107,7 +115,8 @@ class ProjectFilterForm(forms.Form):
         ]
         modify_member_choices = {
             str(member.uuid): {
-                "is_filtered": getattr(member, "is_filtered", ""),
+                "is_filtered": getattr(member, "is_filtered", None),
+                "task_count": getattr(member, "task_count", None),
                 "user": member.user,
             }
             for member in team_members
@@ -124,6 +133,7 @@ class ProjectFilterForm(forms.Form):
                 "bg_class": getattr(label, "bg_class", ""),
                 "border_class": getattr(label, "border_class", ""),
                 "is_filtered": getattr(label, "is_filtered", ""),
+                "task_count": getattr(label, "task_count", None),
             }
             for label in labels
         }
@@ -168,11 +178,19 @@ def project_detail_view(
                 data=request.GET,
             )
             if task_filter_form.is_valid():
-                team_member_uuids = task_filter_form.cleaned_data["filter_by_team_member"]
-                filter_by_unassigned = task_filter_form.cleaned_data["filter_by_unassigned"]
+                team_member_uuids = task_filter_form.cleaned_data[
+                    "filter_by_team_member"
+                ]
+                filter_by_unassigned = task_filter_form.cleaned_data[
+                    "filter_by_unassigned"
+                ]
                 label_uuids = task_filter_form.cleaned_data["filter_by_label"]
-                filter_by_unlabeled = task_filter_form.cleaned_data["filter_by_unlabeled"]
-                task_search_query = task_filter_form.cleaned_data["task_search_query"]
+                filter_by_unlabeled = task_filter_form.cleaned_data[
+                    "filter_by_unlabeled"
+                ]
+                task_search_query = task_filter_form.cleaned_data[
+                    "task_search_query"
+                ]
             else:
                 raise BadRequest(task_filter_form.errors)
 

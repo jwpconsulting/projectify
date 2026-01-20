@@ -18,6 +18,7 @@ from projectify.workspace.models.team_member import TeamMember
 from ..models.project import Project
 
 
+# XXX Maybe this should be in selectors/label.py
 def _annotate_labels_with_colors(label_qs: QuerySet[Label]) -> QuerySet[Label]:
     """Annotate labels with bg_class and border_class based on COLOR_MAP."""
     bg_cases = [
@@ -46,8 +47,14 @@ def project_detail_query_set(
     task_search_query: Optional[str] = None,
 ) -> QuerySet[Project]:
     """Create a project detail query set."""
-    team_member_qs = TeamMember.objects.select_related("user")
-    label_qs = _annotate_labels_with_colors(Label.objects.all())
+    team_member_qs = TeamMember.objects.select_related("user").annotate(
+        task_count=Count("task")
+    )
+    label_qs = _annotate_labels_with_colors(
+        Label.objects.all().annotate(
+            task_count=Count("task"),
+        )
+    )
     task_q = Q()
     assignee_uuid = Q(assignee__uuid__in=team_member_uuids)
     assignee_empty = Q(assignee__isnull=True)
