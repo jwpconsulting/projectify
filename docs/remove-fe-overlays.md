@@ -70,9 +70,9 @@ The **Context menu migration** section describes how to port each context menu
 - [x] The filter button filters project tasks by the selected team members
 - [x] The filter button filters project tasks by the selected labels
 - [x] Add filter by label checkboxes to side nav.
-- [ ] Show number of tasks next to label names.
-- [ ] Show number of tasks next to team member names.
-- [ ] Fix styling of team member and label filters
+- [x] Show number of tasks next to label names.
+- [x] Show number of tasks next to team member names.
+- [x] Fix styling of team member and label filters
 
 ### List workspace labels (TODO)
 
