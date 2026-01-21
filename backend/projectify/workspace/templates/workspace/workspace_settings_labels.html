@@ -1,0 +1,52 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "workspace/workspace_settings_base.html" %}
+{% load i18n %}
+{% load projectify %}
+{% load rules %}
+{% block title %}
+    {% blocktrans with workspace_title=workspace.title %}{{ workspace_title }} projects - Projectify{% endblocktrans %}
+{% endblock title %}
+{% block workspace_settings_content %}
+    <section class="flex flex-col gap-2">
+        <h2 class="font-bold text-lg">{% translate "Labels" %}</h2>
+        <table class="grid w-full gap-x-2 gap-y-3 grid-cols-[3fr_max-content_max-content_max-content]">
+            <thead class="contents">
+                <tr class="contents">
+                    <th class="text-left">{% translate "Label name" %}</th>
+                    <th>{% translate "Label color" %}</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="contents">
+                {% for label in labels %}
+                    <tr class="contents">
+                        <td>{{ label.name }}</td>
+                        <td>{{ label.color }}</td>
+                        <td>
+                            {% has_perm "workspace.update_label" user label as can_update_label %}
+                            {% if can_update_label %}
+                                {% url "dashboard:workspaces:edit-label" workspace.uuid label.uuid as update_label_url %}
+                                {% anchor href=update_label_url label=_("Update") %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% has_perm "workspace.delete_label" user label as can_delete_label %}
+                            {% if can_delete_label %}delete label{% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    <hr>
+    <section class="flex flex-col gap-2">
+        <strong>{% trans "Help" %}</strong>
+        <ul class="flex list-inside list-disc flex-col gap-2">
+            <li>
+                {% url 'help:detail' page='labels' as help_url %}{% anchor href=help_url label=_("About labels") external=True %}
+            </li>
+        </ul>
+    </section>
+{% endblock workspace_settings_content %}

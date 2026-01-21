@@ -1,0 +1,26 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "workspace/workspace_settings_base.html" %}
+{% load i18n %}
+{% load projectify %}
+{% load rules %}
+{% block title %}
+    {% blocktrans with workspace_title=workspace.title %}{{ workspace_title }} projects - Projectify{% endblocktrans %}
+{% endblock title %}
+{% block workspace_settings_content %}
+    <form method="post" class="flex flex-col gap-2">
+        <h2 class="font-bold text-lg">{% translate "Edit label" %}</h2>
+        {{ form }}
+        {% csrf_token %}
+        {% include "projectify/forms/submit.html" with text=_("Save") %}
+    </form>
+    <hr>
+    <section class="flex flex-col gap-2">
+        <strong>{% trans "Help" %}</strong>
+        <ul class="flex list-inside list-disc flex-col gap-2">
+            <li>
+                {% url 'help:detail' page='labels' as help_url %}{% anchor href=help_url label=_("About labels") external=True %}
+            </li>
+        </ul>
+    </section>
+{% endblock workspace_settings_content %}
