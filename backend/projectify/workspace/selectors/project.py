@@ -47,47 +47,48 @@ def project_detail_query_set(
     task_search_query: Optional[str] = None,
 ) -> QuerySet[Project]:
     """Create a project detail query set."""
+    project_not_archived = Q(task__section__project__archived__isnull=True)
     team_member_qs = TeamMember.objects.select_related("user").annotate(
-        task_count=Count("task")
+        task_count=Count("task", filter=project_not_archived)
     )
     label_qs = _annotate_labels_with_colors(
         Label.objects.all().annotate(
-            task_count=Count("task"),
+            task_count=Count("tasklabel", filter=project_not_archived),
         )
     )
     task_q = Q()
     assignee_uuid = Q(assignee__uuid__in=team_member_uuids)
     assignee_empty = Q(assignee__isnull=True)
     match team_member_uuids, unassigned_tasks:
-        case list(), None:
-            task_q = task_q & assignee_uuid
-            team_member_qs = team_member_qs.annotate(
-                is_filtered=Q(uuid__in=team_member_uuids)
-            )
+        case None, None | False:
+            pass
         case None, True:
             task_q = task_q & assignee_empty
-        case list(), True:
+        case uuids, None | False:
+            task_q = task_q & assignee_uuid
+            team_member_qs = team_member_qs.annotate(
+                is_filtered=Q(uuid__in=uuids)
+            )
+        case uuids, True:
             task_q = task_q & (assignee_uuid & assignee_empty)
             team_member_qs = team_member_qs.annotate(
-                is_filtered=Q(uuid__in=team_member_uuids)
+                is_filtered=Q(uuid__in=uuids)
             )
-        case _, _:
-            pass
 
     labels_uuid = Q(labels__uuid__in=label_uuids)
     labels_empty = Q(labels__isnull=True)
     label_is_filtered: Union[Value, Q] = Value(False)
     match label_uuids, unlabeled_tasks:
-        case list(), None:
-            task_q = task_q & labels_uuid
-            label_is_filtered = Q(uuid__in=label_uuids)
+        case None, None | False:
+            pass
         case None, True:
             task_q = task_q & labels_empty
-        case list(), True:
+        case uuids, None | False:
+            task_q = task_q & labels_uuid
+            label_is_filtered = Q(uuid__in=uuids)
+        case uuids, True:
             task_q = task_q & (labels_uuid | labels_empty)
-            label_is_filtered = Q(uuid__in=label_uuids)
-        case _, _:
-            pass
+            label_is_filtered = Q(uuid__in=uuids)
     label_qs = label_qs.annotate(is_filtered=label_is_filtered)
 
     if task_search_query is not None:

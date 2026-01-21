@@ -146,6 +146,17 @@ class ProjectFilterForm(forms.Form):
             ),
         )
 
+    def clean(self) -> dict[str, Any]:
+        """Override clean and make empty fields None instead."""
+        data = super().clean()
+        if data["filter_by_team_member"] == []:
+            data["filter_by_team_member"] = None
+        if data["filter_by_label"] == []:
+            data["filter_by_label"] = None
+        if data["task_search_query"] == "":
+            data["task_search_query"] = None
+        return data
+
 
 # HTML
 @platform_view
@@ -177,22 +188,21 @@ def project_detail_view(
                 labels=labels,
                 data=request.GET,
             )
-            if task_filter_form.is_valid():
-                team_member_uuids = task_filter_form.cleaned_data[
-                    "filter_by_team_member"
-                ]
-                filter_by_unassigned = task_filter_form.cleaned_data[
-                    "filter_by_unassigned"
-                ]
-                label_uuids = task_filter_form.cleaned_data["filter_by_label"]
-                filter_by_unlabeled = task_filter_form.cleaned_data[
-                    "filter_by_unlabeled"
-                ]
-                task_search_query = task_filter_form.cleaned_data[
-                    "task_search_query"
-                ]
-            else:
+            if not task_filter_form.is_valid():
                 raise BadRequest(task_filter_form.errors)
+            team_member_uuids = task_filter_form.cleaned_data[
+                "filter_by_team_member"
+            ]
+            filter_by_unassigned = task_filter_form.cleaned_data[
+                "filter_by_unassigned"
+            ]
+            label_uuids = task_filter_form.cleaned_data["filter_by_label"]
+            filter_by_unlabeled = task_filter_form.cleaned_data[
+                "filter_by_unlabeled"
+            ]
+            task_search_query = task_filter_form.cleaned_data[
+                "task_search_query"
+            ]
 
     qs = project_detail_query_set(
         team_member_uuids=team_member_uuids,
