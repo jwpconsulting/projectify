@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2024 JWP Consulting GK
 """Shared template tags for Projectify."""
 
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from django import template
 from django.template.loader import render_to_string
@@ -26,7 +26,9 @@ def percent(value: Optional[float]) -> Optional[str]:
 
 
 @register.simple_tag
-def anchor(href: str, label: str, external: bool = False) -> SafeText:
+def anchor(
+    href: str, label: str, external: bool = False, *args: Any, **kwargs: Any
+) -> SafeText:
     """
     Render a fully styled HTML anchor.
 
@@ -39,9 +41,13 @@ def anchor(href: str, label: str, external: bool = False) -> SafeText:
     if href == "":
         raise ValueError("Empty href supplied")
     try:
-        url = reverse(href)
+        url = reverse(href, args=args, kwargs=kwargs)
     except NoReverseMatch:
         url = href
+    # TODO, if we have a reverse match, we don't have external URLs
+    # We could switch all callers of the anchor function to use the route name
+    # and implicitly switch on external for all other URLs. After all, if it's
+    # an internal resource, we'd have a named route for that resource.
     if external:
         a_extra = mark_safe(' target="_blank"')
         extra = format_html(

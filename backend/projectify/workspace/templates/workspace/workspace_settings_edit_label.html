@@ -13,6 +13,7 @@
         {{ form }}
         {% csrf_token %}
         {% include "projectify/forms/submit.html" with text=_("Save") %}
+        {% anchor href="dashboard:workspaces:settings" label=_("Go back") workspace_uuid=workspace.uuid %}
     </form>
     <hr>
     <section class="flex flex-col gap-2">
