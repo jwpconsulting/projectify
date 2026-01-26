@@ -229,6 +229,7 @@ reportUnusedImport = false
 [tool.vulture]
 ignore_decorators = ["@receiver", "@admin.register"]
 exclude = [
+    ".venv",
     "apps.py",
     "conftest.py",
     "settings",
