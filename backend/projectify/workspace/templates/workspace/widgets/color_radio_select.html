@@ -12,7 +12,7 @@
                        value="{{ color_value }}"
                        {% if form.color.value == color_value %}checked{% endif %}
                        class="peer">
-                <div class="w-6 h-6 rounded border {{ color_info.bg_class }} {{ color_info.border_class }}"></div>
+                <div class="w-6 h-6 rounded-full border {{ color_info.bg_class }} {{ color_info.border_class }}"></div>
                 <span>{{ color_info.name }}</span>
             </label>
         {% endfor %}

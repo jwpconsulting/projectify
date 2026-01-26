@@ -63,7 +63,7 @@ The **Context menu migration** section describes how to port each context menu
 
 ## Side navigation labels
 
-### Filter by labels and team members (TODO)
+### Filter by labels and team members (DONE)
 
 - [x] Add filter by member checkboxes to side nav
 - [x] **Filter**: Add **filter** button
@@ -74,22 +74,22 @@ The **Context menu migration** section describes how to port each context menu
 - [x] Show number of tasks next to team member names.
 - [x] Fix styling of team member and label filters
 
-### List workspace labels (TODO)
+### List workspace labels (DONE)
 
 Create a new page to manage all workspace labels:
 
 - [x] **Route**: `dashboard/workspace/[uuid]/settings/labels`
 - [x] **Page title**: `{workspace.title} labels - Projectify`
-- [ ] **Contents**:
+- [x] **Contents**:
     - [x] Table listing all labels
-    - [ ] For each label, show:
+    - [x] For each label, show:
         - [x] Label **name**
-        - [ ] Label **color**
+        - [x] Label **color**
         - [x] **Update** form link
-        - [ x Delete button
+        - [x] Delete button
     - [x] Show an **Add label** button in the bottom
 
-### Create label (TODO)
+### Create label (DONE)
 
 Make a new page for creating a new label for a workspace
 
@@ -97,17 +97,17 @@ Make a new page for creating a new label for a workspace
 - [x] **Page title**: `Create label for {workspace.title} - Projectify`
 - [ ] **Contents**:
     - [x] **Name** input
-    - [ ] **Color** selector (radio input)
+    - [x] **Color** selector (radio input)
     - [x] **Create label** button; redirects to **List workspace labels** on success
     - [x] **Go back** link; goes back to **List workspace labels** view
 
-### Update label (TODO)
+### Update label (DONE)
 
 - [x] **Route**: `dashboard/workspace/[uuid]/labels/[uuid]`
 - [x] **Page title**: `Update {label.name} - Projectify`
 - [ ] **Contents**:
     - [x] **Name** input
-    - [ ] **Color** selector (radio input)
+    - [x] **Color** selector (radio input)
     - [x] **Save** button; redirects to **List workspace labels** on success
     - [x] **Go back** link; goes back to **List workspace labels** view
 

@@ -21,25 +21,28 @@
             <tbody class="contents">
                 {% for label in labels %}
                     <tr class="contents">
-                        <td>
-                            <div class="flex items-center gap-2">
-                                <div class="w-6 h-6 rounded {{ label.bg_class }} border {{ label.border_class }}"></div>
-                                <span>{{ label.name }}</span>
-                            </div>
+                        <td class="flex items-center gap-2 overflow-hidden">
+                            <div class="shrink-0 w-6 h-6 rounded-full {{ label.bg_class }} border {{ label.border_class }}"></div>
+                            <span class="truncate">{{ label.name }}</span>
                         </td>
                         <td>
                             {% has_perm "workspace.update_label" user label as can_update_label %}
                             {% if can_update_label %}
-                                {% anchor href="dashboard:workspaces:edit-label" label=_("Update")  workspace_uuid=workspace.uuid label_uuid=label.uuid %}
+                                <a href="{% url 'dashboard:workspaces:edit-label' workspace_uuid=workspace.uuid label_uuid=label.uuid %}"
+                                   class="flex flex-row gap-1 items-center text-primary">
+                                    <div class="w-4 h-4">{% include "heroicons/pencil.svg" %}</div>
+                                    {% translate "Update" %}
+                                </a>
                             {% endif %}
                         </td>
                         <td>
                             {% has_perm "workspace.delete_label" user label as can_delete_label %}
                             {% if can_delete_label %}
-                                <button class="text-red-600"
+                                <button class="flex flex-row gap-1 items-center text-destructive"
                                         hx-confirm="{% blocktranslate with label=label.name %}Are you sure you want to delete the '{{ label }}' label?{% endblocktranslate %}"
                                         hx-delete="{% url "dashboard:workspaces:edit-label" workspace_uuid=workspace.uuid label_uuid=label.uuid %}">
-                                    Delete
+                                    <div class="w-4 h-4">{% include "heroicons/trash.svg" %}</div>
+                                    {% translate "Delete" %}
                                 </button>
                             {% endif %}
                         </td>
@@ -49,7 +52,7 @@
         </table>
         {% has_perm "workspace.create_label" user workspace as can_create_label %}
         {% if can_create_label %}
-            {% anchor href="dashboard:workspaces:create-label" label=_("Add label") workspace_uuid=workspace.uuid %}
+            {% anchor "dashboard:workspaces:create-label" _("Add label") workspace_uuid=workspace.uuid %}
         {% endif %}
     </section>
     <hr>
