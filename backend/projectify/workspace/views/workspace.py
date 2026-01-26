@@ -35,6 +35,7 @@ from projectify.corporate.services.customer import (
 )
 from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.forms import populate_form_with_drf_errors
+from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
@@ -43,7 +44,7 @@ from projectify.workspace.selectors.labels import (
     LabelDetailQuerySet,
     label_find_by_label_uuid,
 )
-from projectify.workspace.services.label import label_update
+from projectify.workspace.services.label import label_delete, label_update
 
 from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
 from ..models import Workspace
@@ -238,7 +239,7 @@ class LabelUpdateForm(forms.ModelForm):
         model = Label
 
 
-@require_http_methods(["GET", "POST"])
+@require_http_methods(["GET", "POST", "DELETE"])
 @platform_view
 def workspace_settings_edit_label(
     request: AuthenticatedHttpRequest, workspace_uuid: UUID, label_uuid: UUID
@@ -261,6 +262,9 @@ def workspace_settings_edit_label(
         "projects": projects.all(),
     }
     match request.method:
+        case "DELETE":
+            label_delete(who=request.user, label=label)
+            return HttpResponseClientRefresh()
         case "GET":
             form = LabelUpdateForm(instance=label)
             return render(

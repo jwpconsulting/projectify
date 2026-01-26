@@ -33,7 +33,12 @@
                         </td>
                         <td>
                             {% has_perm "workspace.delete_label" user label as can_delete_label %}
-                            {% if can_delete_label %}delete label{% endif %}
+                            {% if can_delete_label %}
+                                <button hx-confirm="{% blocktranslate with label=label.name %}Are you sure you want to delete the '{{ label }}' label?{% endblocktranslate %}"
+                                        hx-delete="{% url "dashboard:workspaces:edit-label" workspace_uuid=workspace.uuid label_uuid=label.uuid %}">
+                                    Delete label
+                                </button>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
