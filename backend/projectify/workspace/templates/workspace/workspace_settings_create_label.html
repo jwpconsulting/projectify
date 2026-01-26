@@ -3,17 +3,16 @@
 {% extends "workspace/workspace_settings_base.html" %}
 {% load i18n %}
 {% load projectify %}
-{% load rules %}
 {% block title %}
-    {% blocktrans with title=label.name %}Update label {{ title }} - Projectify{% endblocktrans %}
+    {% blocktrans with workspace_title=workspace.title %}Create label for {{ workspace_title }} - Projectify{% endblocktrans %}
 {% endblock title %}
 {% block workspace_settings_content %}
-    <form method="post" class="flex flex-col gap-2">
-        <h2 class="font-bold text-lg">{% translate "Edit label" %}</h2>
+    <form method="post" class="flex flex-col gap-4">
+        <h2 class="font-bold text-lg">{% translate "Create new label" %}</h2>
+        {% csrf_token %}
         {{ form.name.as_field_group }}
         {{ form.color.as_field_group }}
-        {% csrf_token %}
-        {% include "projectify/forms/submit.html" with text=_("Save") %}
+        {% include "projectify/forms/submit.html" with text=_("Create label") %}
         {% anchor href="dashboard:workspaces:labels" label=_("Go back") workspace_uuid=workspace.uuid %}
     </form>
     <hr>

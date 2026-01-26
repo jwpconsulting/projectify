@@ -78,38 +78,38 @@ The **Context menu migration** section describes how to port each context menu
 
 Create a new page to manage all workspace labels:
 
-- [ ] **Route**: `dashboard/workspace/[uuid]/settings/labels`
-- [ ] **Page title**: `{workspace.title} labels - Projectify`
+- [x] **Route**: `dashboard/workspace/[uuid]/settings/labels`
+- [x] **Page title**: `{workspace.title} labels - Projectify`
 - [ ] **Contents**:
-    - [ ] Table listing all labels
+    - [x] Table listing all labels
     - [ ] For each label, show:
-        - [ ] Label **name**
+        - [x] Label **name**
         - [ ] Label **color**
-        - [ ] Update form link
-        - [ ] Delete button
-    - [ ] Show an **Add label** button in the bottom
+        - [x] **Update** form link
+        - [ x Delete button
+    - [x] Show an **Add label** button in the bottom
 
 ### Create label (TODO)
 
 Make a new page for creating a new label for a workspace
 
-- [ ] **Route**: `dashboard/workspace/[uuid]/settings/labels/create`
-- [ ] **Page title**: `Create label for {workspace.title} - Projectify`
+- [x] **Route**: `dashboard/workspace/[uuid]/settings/labels/create`
+- [x] **Page title**: `Create label for {workspace.title} - Projectify`
 - [ ] **Contents**:
-    - [ ] **Name** input
+    - [x] **Name** input
     - [ ] **Color** selector (radio input)
-    - [ ] **Create** button; redirects to **List workspace labels** on success
-    - [ ] **Back** button; goes back to **List workspace labels** view
+    - [x] **Create label** button; redirects to **List workspace labels** on success
+    - [x] **Go back** link; goes back to **List workspace labels** view
 
 ### Update label (TODO)
 
-- [ ] **Route**: `dashboard/labels/[uuid]`
-- [ ] **Page title**: `Update {label.name} - Projectify`
+- [x] **Route**: `dashboard/workspace/[uuid]/labels/[uuid]`
+- [x] **Page title**: `Update {label.name} - Projectify`
 - [ ] **Contents**:
-    - [ ] **Name** input
+    - [x] **Name** input
     - [ ] **Color** selector (radio input)
-    - [ ] **Update** button; redirects to **List workspace labels** on success
-    - [ ] **Back** button; goes back to **List workspace labels** view
+    - [x] **Save** button; redirects to **List workspace labels** on success
+    - [x] **Go back** link; goes back to **List workspace labels** view
 
 ## Create section (DONE)
 

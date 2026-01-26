@@ -44,7 +44,11 @@ from projectify.workspace.selectors.labels import (
     LabelDetailQuerySet,
     label_find_by_label_uuid,
 )
-from projectify.workspace.services.label import label_delete, label_update
+from projectify.workspace.services.label import (
+    label_create,
+    label_delete,
+    label_update,
+)
 
 from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
 from ..models import Workspace
@@ -89,6 +93,7 @@ def workspace_view(
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
+    # TODO use workspace.project_set.all()
     projects = project_find_by_workspace_uuid(
         who=request.user,
         workspace_uuid=workspace_uuid,
@@ -205,24 +210,88 @@ def workspace_settings_label(
 ) -> HttpResponse:
     """Show labels for this workspace."""
     workspace = workspace_find_by_workspace_uuid(
-        who=request.user, workspace_uuid=workspace_uuid
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        qs=WorkspaceDetailQuerySet,
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    # TODO prefetch projects
-    projects = project_find_by_workspace_uuid(
-        workspace_uuid=workspace_uuid,
-        who=request.user,
-        archived=False,
-    )
     context = {
         "workspace": workspace,
-        "projects": projects,
+        "projects": workspace.project_set.all(),
         "labels": workspace.label_set.all(),
     }
     return render(
         request, "workspace/workspace_settings_labels.html", context=context
     )
+
+
+class LabelCreateForm(forms.ModelForm):
+    """Form for creating labels."""
+
+    name = forms.CharField(max_length=100)
+    color = forms.IntegerField()
+
+    class Meta:
+        """Meta settings for LabelCreateForm."""
+
+        fields = "name", "color"
+        model = Label
+
+
+@require_http_methods(["GET", "POST"])
+@platform_view
+def workspace_settings_new_label(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Create a new label for the workspace."""
+    workspace = workspace_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        qs=WorkspaceDetailQuerySet,
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+
+    context = {"workspace": workspace, "projects": workspace.project_set.all()}
+    match request.method:
+        case "GET":
+            form = LabelCreateForm()
+            return render(
+                request,
+                "workspace/workspace_settings_create_label.html",
+                context={**context, "form": form},
+            )
+        case "POST":
+            pass
+        case other:
+            raise ValueError(f"Wrong HTTP method {other}")
+    form = LabelCreateForm(data=request.POST)
+    if not form.is_valid():
+        return render(
+            request,
+            "workspace/workspace_settings_create_label.html",
+            context={**context, "form": form},
+            status=400,
+        )
+
+    try:
+        label_create(
+            workspace=workspace,
+            name=form.cleaned_data["name"],
+            color=form.cleaned_data["color"],
+            who=request.user,
+        )
+    except ValidationError as error:
+        populate_form_with_drf_errors(form, error)
+        return render(
+            request,
+            "workspace/workspace_settings_create_label.html",
+            context={**context, "form": form},
+            status=400,
+        )
+
+    return redirect("dashboard:workspaces:labels", workspace.uuid)
 
 
 class LabelUpdateForm(forms.ModelForm):
@@ -254,12 +323,10 @@ def workspace_settings_edit_label(
         raise Http404(f"Couldn't find label with UUID {label_uuid}")
     if label.workspace.uuid != workspace_uuid:
         return HttpResponseBadRequest("Workspace UUIDs don't match")
-    workspace = label.workspace
-    projects = workspace.project_set
     context = {
-        "workspace": workspace,
+        "workspace": label.workspace,
         "label": label,
-        "projects": projects.all(),
+        "projects": label.workspace.project_set.all(),
     }
     match request.method:
         case "DELETE":
@@ -287,7 +354,7 @@ def workspace_settings_edit_label(
     label_update(
         who=request.user, label=label, name=data["name"], color=data["color"]
     )
-    return redirect("dashboard:workspaces:labels", workspace.uuid)
+    return redirect("dashboard:workspaces:labels", label.workspace.uuid)
 
 
 class InviteTeamMemberForm(forms.Form):

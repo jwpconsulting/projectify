@@ -36,6 +36,7 @@ from projectify.workspace.views.workspace import (
     workspace_settings_edit_label,
     workspace_settings_general,
     workspace_settings_label,
+    workspace_settings_new_label,
     workspace_settings_projects,
     workspace_settings_quota,
     workspace_settings_team_member_remove,
@@ -79,6 +80,11 @@ workspace_patterns = (
         "<uuid:workspace_uuid>/labels",
         workspace_settings_label,
         name="labels",
+    ),
+    path(
+        "<uuid:workspace_uuid>/labels/create",
+        workspace_settings_new_label,
+        name="create-label",
     ),
     path(
         "<uuid:workspace_uuid>/labels/<uuid:label_uuid>",
