@@ -23,7 +23,9 @@
                 {% for label in labels %}
                     <tr class="contents">
                         <td>{{ label.name }}</td>
-                        <td>{{ label.color }}</td>
+                        <td>
+                            <div class="w-6 h-6 rounded {{ label.bg_class }} border {{ label.border_class }}"></div>
+                        </td>
                         <td>
                             {% has_perm "workspace.update_label" user label as can_update_label %}
                             {% if can_update_label %}

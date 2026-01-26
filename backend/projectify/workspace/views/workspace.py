@@ -212,7 +212,10 @@ def workspace_settings_label(
     workspace = workspace_find_by_workspace_uuid(
         who=request.user,
         workspace_uuid=workspace_uuid,
-        qs=WorkspaceDetailQuerySet,
+        qs=workspace_build_detail_query_set(
+            who=None,
+            annotate_labels=True,
+        ),
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))

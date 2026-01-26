@@ -6,36 +6,16 @@
 from typing import Optional, Union
 from uuid import UUID
 
-from django.db.models import Case, Count, Prefetch, Q, QuerySet, Value, When
+from django.db.models import Count, Prefetch, Q, QuerySet, Value
 from django.db.models.functions import NullIf
 
 from projectify.user.models import User
-from projectify.workspace.models.const import COLOR_MAP
-from projectify.workspace.models.label import Label
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.team_member import TeamMember
 
+from ..models.label import Label
 from ..models.project import Project
-
-
-# XXX Maybe this should be in selectors/label.py
-def _annotate_labels_with_colors(label_qs: QuerySet[Label]) -> QuerySet[Label]:
-    """Annotate labels with bg_class and border_class based on COLOR_MAP."""
-    bg_cases = [
-        When(color=i, then=Value(color_info["bg_class"]))
-        for i, color_info in COLOR_MAP.items()
-    ]
-    border_cases = [
-        When(color=i, then=Value(color_info["border_class"]))
-        for i, color_info in COLOR_MAP.items()
-    ]
-
-    return label_qs.annotate(
-        bg_class=Case(*bg_cases, default=Value(COLOR_MAP[0]["bg_class"])),
-        border_class=Case(
-            *border_cases, default=Value(COLOR_MAP[0]["border_class"])
-        ),
-    )
+from ..models.task import Task
+from ..models.team_member import TeamMember
+from .labels import labels_annotate_with_colors
 
 
 def project_detail_query_set(
@@ -51,7 +31,7 @@ def project_detail_query_set(
     team_member_qs = TeamMember.objects.select_related("user").annotate(
         task_count=Count("task", filter=project_not_archived)
     )
-    label_qs = _annotate_labels_with_colors(
+    label_qs = labels_annotate_with_colors(
         Label.objects.all().annotate(
             task_count=Count("tasklabel", filter=project_not_archived),
         )

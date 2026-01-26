@@ -16,6 +16,8 @@ from django.db.models import (
 )
 
 from projectify.user.models import User
+from projectify.workspace.models.label import Label
+from projectify.workspace.selectors.labels import labels_annotate_with_colors
 
 from ..models.project import Project
 from ..models.team_member import TeamMember
@@ -26,32 +28,33 @@ logger = logging.getLogger(__name__)
 
 
 def workspace_build_detail_query_set(
-    *, who: Optional[User]
+    *,
+    who: Optional[User],
+    annotate_labels: bool = False,
 ) -> QuerySet[Workspace]:
     """
     Build workspace detail query set.
 
     Optionally annotate if team member is the same user as `who`.
     """
-    teammember_prefetch: Prefetch[TeamMember]
-    if who is None:
-        teammember_prefetch = Prefetch(
-            "teammember_set",
-            queryset=TeamMember.objects.select_related("user"),
+    teammembers = TeamMember.objects.select_related("user")
+    if who is not None:
+        teammembers = teammembers.annotate(
+            is_current_user=ExpressionWrapper(
+                Q(user=who),
+                output_field=BooleanField(),
+            )
         )
-    else:
-        teammember_prefetch = Prefetch(
-            "teammember_set",
-            queryset=TeamMember.objects.select_related("user").annotate(
-                is_current_user=ExpressionWrapper(
-                    Q(user=who),
-                    output_field=BooleanField(),
-                )
-            ),
-        )
+    teammember_prefetch: Prefetch[TeamMember] = Prefetch(
+        "teammember_set", queryset=teammembers
+    )
+
+    labels: QuerySet[Label] = Label.objects.all()
+    if annotate_labels:
+        labels = labels_annotate_with_colors(Label.objects.all())
+
     qs = Workspace.objects.prefetch_related(
-        "label_set",
-    ).prefetch_related(
+        Prefetch("label_set", labels),
         Prefetch(
             "project_set",
             queryset=Project.objects.filter(archived__isnull=True),
@@ -90,6 +93,7 @@ def workspace_find_by_workspace_uuid(
     workspace_uuid: UUID,
     who: User,
     qs: Optional[QuerySet[Workspace]] = None,
+    annotate_labels: bool = False,
 ) -> Optional[Workspace]:
     """Find a workspace by uuid for a given user."""
     qs = workspace_find_for_user(who=who, qs=qs)
