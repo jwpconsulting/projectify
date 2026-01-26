@@ -39,6 +39,7 @@ from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
+from projectify.workspace.models.const import COLOR_MAP
 from projectify.workspace.models.label import Label
 from projectify.workspace.selectors.labels import (
     LabelDetailQuerySet,
@@ -256,7 +257,11 @@ def workspace_settings_new_label(
     if workspace is None:
         raise Http404(_("Workspace not found"))
 
-    context = {"workspace": workspace, "projects": workspace.project_set.all()}
+    context = {
+        "workspace": workspace,
+        "projects": workspace.project_set.all(),
+        "color_map": COLOR_MAP,
+    }
     match request.method:
         case "GET":
             form = LabelCreateForm()
@@ -330,6 +335,7 @@ def workspace_settings_edit_label(
         "workspace": label.workspace,
         "label": label,
         "projects": label.workspace.project_set.all(),
+        "color_map": COLOR_MAP,
     }
     match request.method:
         case "DELETE":

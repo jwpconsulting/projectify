@@ -5,11 +5,13 @@ from typing import Optional
 from uuid import UUID
 
 from django.db.models import Case, Prefetch, QuerySet, Value, When
+from django.utils.encoding import force_str
 
 from projectify.user.models.user import User
-from projectify.workspace.models.const import COLOR_MAP
-from projectify.workspace.models.label import Label
-from projectify.workspace.models.project import Project
+
+from ..models.const import COLOR_MAP
+from ..models.label import Label
+from ..models.project import Project
 
 logger = logging.getLogger(__name__)
 
@@ -24,12 +26,20 @@ def labels_annotate_with_colors(label_qs: QuerySet[Label]) -> QuerySet[Label]:
         When(color=i, then=Value(color_info["border_class"]))
         for i, color_info in COLOR_MAP.items()
     ]
+    text_cases = [
+        When(color=i, then=Value(color_info["text_class"]))
+        for i, color_info in COLOR_MAP.items()
+    ]
+    name_cases = [
+        When(color=i, then=Value(force_str(color_info["name"])))
+        for i, color_info in COLOR_MAP.items()
+    ]
 
     return label_qs.annotate(
-        bg_class=Case(*bg_cases, default=Value(COLOR_MAP[0]["bg_class"])),
-        border_class=Case(
-            *border_cases, default=Value(COLOR_MAP[0]["border_class"])
-        ),
+        bg_class=Case(*bg_cases),
+        border_class=Case(*border_cases),
+        text_class=Case(*text_cases),
+        color_name=Case(*name_cases),
     )
 
 

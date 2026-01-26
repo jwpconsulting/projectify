@@ -10,11 +10,10 @@
 {% block workspace_settings_content %}
     <section class="flex flex-col gap-2">
         <h2 class="font-bold text-lg">{% translate "Labels" %}</h2>
-        <table class="grid w-full gap-x-2 gap-y-3 grid-cols-[3fr_max-content_max-content_max-content]">
+        <table class="grid w-full gap-x-2 gap-y-3 grid-cols-[1fr_max-content_max-content]">
             <thead class="contents">
                 <tr class="contents">
                     <th class="text-left">{% translate "Label name" %}</th>
-                    <th>{% translate "Label color" %}</th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -22,15 +21,16 @@
             <tbody class="contents">
                 {% for label in labels %}
                     <tr class="contents">
-                        <td>{{ label.name }}</td>
                         <td>
-                            <div class="w-6 h-6 rounded {{ label.bg_class }} border {{ label.border_class }}"></div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded {{ label.bg_class }} border {{ label.border_class }}"></div>
+                                <span>{{ label.name }}</span>
+                            </div>
                         </td>
                         <td>
                             {% has_perm "workspace.update_label" user label as can_update_label %}
                             {% if can_update_label %}
-                                {% url "dashboard:workspaces:edit-label" workspace.uuid label.uuid as update_label_url %}
-                                {% anchor href=update_label_url label=_("Update") %}
+                                {% anchor href="dashboard:workspaces:edit-label" label=_("Update")  workspace_uuid=workspace.uuid label_uuid=label.uuid %}
                             {% endif %}
                         </td>
                         <td>
@@ -49,8 +49,7 @@
         </table>
         {% has_perm "workspace.create_label" user workspace as can_create_label %}
         {% if can_create_label %}
-            {% url "dashboard:workspaces:create-label" workspace.uuid as create_label_url %}
-            {% anchor href=create_label_url label=_("Add label") %}
+            {% anchor href="dashboard:workspaces:create-label" label=_("Add label") workspace_uuid=workspace.uuid %}
         {% endif %}
     </section>
     <hr>
