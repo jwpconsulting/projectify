@@ -181,6 +181,7 @@ stubPath = "mypy/stubs"
 typeCheckingMode = "strict"
 typeshedPath = ""
 exclude = [
+    ".venv",
     ".direnv",
     "**/__pycache__/",
     # TODO consider just removing whitelist.py
