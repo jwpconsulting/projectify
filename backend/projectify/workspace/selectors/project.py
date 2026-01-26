@@ -85,7 +85,12 @@ def project_detail_query_set(
         )
         .order_by("_order")
         .select_related("assignee__user")
-        .prefetch_related("labels")
+        .prefetch_related(
+            Prefetch(
+                "labels",
+                queryset=labels_annotate_with_colors(Label.objects.all()),
+            )
+        )
     ).filter(task_q)
     return Project.objects.prefetch_related(
         "section_set",

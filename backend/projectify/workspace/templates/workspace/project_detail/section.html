@@ -37,12 +37,14 @@
                         </a>
                     </td>
                     <td class="contents">
-                        {# TODO render labels #}
-                        {% for label in task.labels.all %}
-                            {{ label.name }}
-                        {% empty %}
-                            No labels
-                        {% endfor %}
+                        <div class="flex w-full flex-row items-center justify-start gap-1 self-start overflow-x-auto">
+                            {% for label in task.labels.all %}
+                                <div type="button"
+                                     class="max-w-xs shrink-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-full px-3 py-1 font-bold {{ label.bg_class }} {{ label.text_class }}">
+                                    {{ label.name }}
+                                </div>
+                            {% endfor %}
+                        </div>
                         <!--<Labels>-->
                     </td>
                     <td class="flex flex-row items-center justify-end gap-2 self-end">
