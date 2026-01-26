@@ -12,14 +12,13 @@
 # ruff: noqa: D101, D102, D105, D107
 import json
 from collections.abc import Awaitable
+from inspect import iscoroutinefunction, markcoroutinefunction
 from typing import Any, Callable
 from urllib.parse import unquote, urlsplit, urlunsplit
 
 from django.http import HttpRequest, HttpResponse
 from django.http.response import HttpResponseBase, HttpResponseRedirectBase
 from django.utils.functional import cached_property
-
-from asgiref.sync import iscoroutinefunction, markcoroutinefunction
 
 
 class HtmxMiddleware:
