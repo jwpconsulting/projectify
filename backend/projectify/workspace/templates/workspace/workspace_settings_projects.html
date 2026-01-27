@@ -35,17 +35,17 @@
                                 <span class="truncate">{{ project }}</span>
                             {% endif %}
                         </td>
-                        <td class="flex items-center">
-                        </td>
+                        <td class="flex items-center"></td>
                         <td class="flex gap-4 items-center">
                             {% has_perm "workspace.update_project" user project as can_update_project %}
                             {% if can_update_project %}
                                 {# XXX limitation: This only works if javascript is enabled #}
-                                <form class="w-full" hx-post="{% url 'dashboard:projects:archive' project_uuid=project.uuid %}"
+                                <form class="w-full"
+                                      hx-post="{% url 'dashboard:projects:archive' project_uuid=project.uuid %}"
                                       hx-confirm="{% blocktranslate with project=project.title %}Are you sure you want to archive the '{{ project }}' project?{% endblocktranslate %}"
                                       hx-target="closest tr"
                                       hx-swap="outerHTML">
-                                    {% action_button text=_("Archive") icon="archive" style="destructive"%}
+                                    {% action_button text=_("Archive") icon="archive" style="destructive" %}
                                 </form>
                             {% endif %}
                         </td>
@@ -72,7 +72,7 @@
                                       hx-target="closest tr"
                                       hx-swap="outerHTML"
                                       class="w-full">
-                                    {% action_button text=_("Recover") style="primary"%}
+                                    {% action_button text=_("Recover") %}
                                 </form>
                             {% endif %}
                         </td>
@@ -84,7 +84,7 @@
                                       hx-target="closest tr"
                                       hx-swap="outerHTML"
                                       class="w-full">
-                                    {% action_button text=_("Delete") icon="trash" style="destructive"%}
+                                    {% action_button text=_("Delete") icon="trash" style="destructive" %}
                                 </form>
                             {% endif %}
                         </td>

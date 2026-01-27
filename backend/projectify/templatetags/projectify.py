@@ -71,7 +71,7 @@ def anchor(
 def action_button(
     text: str,
     icon: Optional[str] = None,
-    style: Literal["primary", "destructive"] = "primary",
+    style: Literal["secondary", "destructive"] = "secondary",
     value: Optional[str] = None,
     name: Optional[str] = None,
     grow: bool = True,
@@ -79,7 +79,7 @@ def action_button(
     """Render a styled action button with icon."""
     # Source: frontend/src/lib/funabashi/buttons/Button.svelte
     color_classes = {
-        "primary": "text-secondary-content hover:bg-secondary-hover hover:text-secondary-content-hover active:bg-secondary-pressed active:text-secondary-content-hover",
+        "secondary": "text-secondary-content hover:bg-secondary-hover hover:text-secondary-content-hover active:bg-secondary-pressed active:text-secondary-content-hover",
         "destructive": "text-destructive hover:bg-destructive-secondary-hover hover:text-destructive-hover active:bg-destructive-secondary-pressed active:text-destructive-pressed",
     }
 
@@ -92,7 +92,12 @@ def action_button(
         "</button>",
         width_class="w-full" if grow else "min-w-max",
         color_classes=color_classes[style],
-        icon=format_html('<div class="w-6 h-6">{icon}</div>', icon=render_to_string(f"heroicons/{icon}.svg")) if icon else '',
+        icon=format_html(
+            '<div class="w-6 h-6">{icon}</div>',
+            icon=render_to_string(f"heroicons/{icon}.svg"),
+        )
+        if icon
+        else "",
         text=text,
         value=format_html(' value="{value}"', value=value) if value else "",
         name=format_html(' name="{name}"', name=name) if name else "",
