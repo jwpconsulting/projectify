@@ -70,7 +70,7 @@ def anchor(
 @register.simple_tag
 def action_button(
     text: str,
-    icon: str,
+    icon: Optional[str] = None,
     style: Literal["primary", "destructive"] = "primary",
     value: Optional[str] = None,
     name: Optional[str] = None,
@@ -87,12 +87,12 @@ def action_button(
         '<button type="submit" '
         'class="{width_class} {color_classes} flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold"'
         "{value}{name}>"
-        '<div class="w-6 h-6">{icon}</div>'
+        "{icon}"
         "{text}"
         "</button>",
         width_class="w-full" if grow else "min-w-max",
         color_classes=color_classes[style],
-        icon=render_to_string(f"heroicons/{icon}.svg"),
+        icon=format_html('<div class="w-6 h-6">{icon}</div>', icon=render_to_string(f"heroicons/{icon}.svg")) if icon else '',
         text=text,
         value=format_html(' value="{value}"', value=value) if value else "",
         name=format_html(' name="{name}"', name=name) if name else "",
