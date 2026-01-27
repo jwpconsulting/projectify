@@ -117,7 +117,7 @@ class ProjectFilterForm(forms.Form):
             str(member.uuid): {
                 "is_filtered": getattr(member, "is_filtered", None),
                 "task_count": getattr(member, "task_count", None),
-                "user": member.user,
+                "member": member,
             }
             for member in team_members
         }

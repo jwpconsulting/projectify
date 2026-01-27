@@ -13,6 +13,7 @@ from django.utils.safestring import SafeText, mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from projectify.user.models.user import User
+from projectify.workspace.models.team_member import TeamMember
 
 register = template.Library()
 
@@ -105,25 +106,31 @@ def action_button(
 
 
 @register.simple_tag
-def user_avatar(user: Optional[User]) -> SafeText:
+def user_avatar(
+    team_member_or_user: Union[None, TeamMember, User],
+) -> SafeText:
     """
     Render a user avatar image.
 
-    Takes a user object as parameter.
+    Takes a user or team member object as parameter.
     """
-    if user and user.profile_picture:
-        return format_html(
-            '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary"><img src="{src}" alt="{alt}" height="24" width="24" class="h-full w-full overflow-x-auto rounded-full object-cover object-center"></div>',
-            src=user.profile_picture.url,
-            alt=str(user),
-        )
-    # TODO improve appearance
-    elif user:
-        return format_html(
-            '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary" aria-label="{alt}"></div>',
-            alt=str(user),
-        )
-    else:
-        return mark_safe(
-            '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary bg-base-200"></div>'
-        )
+    match team_member_or_user:
+        case TeamMember(user=user) | (User() as user) if user.profile_picture:
+            return format_html(
+                '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary"><img src="{src}" alt="{alt}" height="24" width="24" class="h-full w-full overflow-x-auto rounded-full object-cover object-center"></div>',
+                src=user.profile_picture.url,
+                alt=str(user),
+            )
+        case TeamMember(user=user) as team_member:
+            avatar_url = reverse(
+                "dashboard:avatar-marble", args=[team_member.uuid]
+            )
+            return format_html(
+                '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary"><img src="{src}?size=24" alt="{alt}" height="24" width="24" class="h-full w-full overflow-x-auto rounded-full object-cover object-center"></div>',
+                src=avatar_url,
+                alt=str(user),
+            )
+        case _:
+            return mark_safe(
+                '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary bg-base-200"></div>'
+            )

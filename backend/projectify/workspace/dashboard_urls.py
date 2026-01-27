@@ -5,6 +5,7 @@
 
 from django.urls import include, path
 
+from projectify.workspace.views.avatar_marble import avatar_marble_view
 from projectify.workspace.views.dashboard import redirect_to_dashboard
 from projectify.workspace.views.project import (
     project_archive_view,
@@ -189,6 +190,12 @@ task_patterns = (
 )
 urlpatterns = (
     path("", redirect_to_dashboard, name="dashboard"),
+    # Avatar
+    path(
+        "avatar/<uuid:team_member_uuid>.svg",
+        avatar_marble_view,
+        name="avatar-marble",
+    ),
     # Workspace
     path(
         "workspace/",
