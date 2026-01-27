@@ -138,7 +138,7 @@ For consistency, we rename this overlay to **Create section**.
 - [x] **Failure**: Render form with errors
 - [x] Populate side nav with `workspace` and `projects` context objects
 
-## Delete task
+## Delete task (TODO)
 
 - [ ] **Link**: On the task page, create a **Delete Task** red button next to **Edit**
 - [ ] Show HTMX confirm dialog when user pressed **Delete Task**. Delete task on
@@ -255,9 +255,10 @@ Here's how to replace items in the task context menu with equivalent UI features
 - [x] **Copy link**: No replacement
 - [x] **Delete task**: Add a delete button to the task page.
 
-### Task actions (TODO)
+### Task actions (DONE)
 
 Only styling is missing ~ Justus 2025-12-15
+Added styling ~ Justus 2026-01-27
 
 - [x] **View**: Create a new view with the address
   `/dashboard/task/<uuid:task_uuid>/actions`
@@ -276,8 +277,8 @@ Only styling is missing ~ Justus 2025-12-15
   - [x] **Delete task**:
     - [x] When the user presses the **Delete task** button, show an HTMX confirm dialog and delete the task
     - [x] Redirect to the task section when done
-- [ ] Styling:
-  - [ ] Style the buttons
+- [x] Styling:
+  - [x] Style the buttons
 
 ## Label assignment
 
