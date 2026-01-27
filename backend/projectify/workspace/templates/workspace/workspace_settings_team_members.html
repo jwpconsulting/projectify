@@ -23,10 +23,7 @@
                   hx-swap="outerHTML">
                 {% csrf_token %}
                 {{ form.email.as_field_group }}
-                <button type="submit"
-                        class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                    {% trans "Invite team member" %}
-                </button>
+                {% include "projectify/forms/submit.html" with text=_("Invite team member") %}
             </form>
         {% endif %}
         <h2 class="text-xl font-bold">{% trans "Team members" %}</h2>
@@ -64,17 +61,15 @@
                         </td>
                         <td>
                             {% has_perm 'workspace.delete_team_member' user team_member as can_delete_team_member %}
-                            <button type="button"
-                                    class="w-full active:bg-destructive-secondary-presed text-destructive hover:text-destructive-hover active:text-destructive-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-transparent disabled:text-disabled-content"
-                                    {% if not can_delete_team_member %}disabled{% endif %}
-                                    hx-delete="{% url 'dashboard:workspaces:team-member-remove' workspace.uuid team_member.uuid %}"
-                                    hx-confirm="{% blocktrans with teamMember=team_member.user %}Would you like to remove '{{ teamMember }}' from this workspace? This action cannot be undone.{% endblocktrans %}"
-                                    hx-target="#settings-content"
-                                    hx-select="#settings-content"
-                                    hx-swap="outerHTML">
-                                <span class="w-6 h-6">{% include "heroicons/x.svg" %}</span>
-                                {% trans "Remove" %}
-                            </button>
+                            {% if can_delete_team_member %}
+                                <form hx-delete="{% url 'dashboard:workspaces:team-member-remove' workspace.uuid team_member.uuid %}"
+                                      hx-confirm="{% blocktrans with teamMember=team_member.user %}Would you like to remove '{{ teamMember }}' from this workspace? This action cannot be undone.{% endblocktrans %}"
+                                      hx-target="#settings-content"
+                                      hx-select="#settings-content"
+                                      hx-swap="outerHTML">
+                                    {% action_button text=_("Remove") icon="x" style="destructive" grow=True %}
+                                </form>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
@@ -106,11 +101,7 @@
                                   hx-swap="outerHTML">
                                 {% csrf_token %}
                                 <input type="hidden" name="email" value="{{ invite.user_invite.email }}">
-                                <button type="submit"
-                                        class="w-full active:bg-destructive-secondary-presed text-destructive hover:text-destructive-hover active:text-destructive-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-transparent disabled:text-disabled-content">
-                                    <span class="w-6 h-6">{% include "heroicons/x.svg" %}</span>
-                                    {% trans "Uninvite" %}
-                                </button>
+                                {% action_button text=_("Uninvite") icon="x" style="destructive" grow=True %}
                             </form>
                         </td>
                     </tr>

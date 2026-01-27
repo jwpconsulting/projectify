@@ -17,46 +17,26 @@
                 <div class="flex flex-col gap-6">
                     {{ form.title.as_field_group }}
                     {{ form.description.as_field_group }}
-                    <button type="submit"
-                            name="action"
-                            value="save"
-                            class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                        {% trans "Update section" %}
-                    </button>
-                    {% url 'dashboard:projects:detail' section.project.uuid as back_url %}
-                    {% anchor href=back_url label=_("Go back") %}
+                    {% include "projectify/forms/submit.html" with text=_("Update section") %}
                 </div>
                 <div class="flex flex-col gap-4">
-                    <h2 class="font-bold text-xl">{% translate "Section Actions" %}</h2>
+                    <h2 class="font-bold text-xl">{% translate "Section actions" %}</h2>
                     <div class="flex flex-col items-start gap-2">
-                        <h3 class="font-bold text-lg">{% translate "Move Section" %}</h3>
-                        <button class="flex flex-row gap-2 items-center"
-                                type="submit"
-                                name="action"
-                                value="move_up">
-                            <div class="h-4 w-4">{% include "heroicons/chevron-up.svg" %}</div>
-                            {% translate "Move up" %}
-                        </button>
-                        <button class="flex flex-row gap-2 items-center"
-                                type="submit"
-                                name="action"
-                                value="move_down">
-                            <div class="h-4 w-4">{% include "heroicons/chevron-down.svg" %}</div>
-                            {% translate "Move down" %}
-                        </button>
+                        <h3 class="font-bold text-lg">{% translate "Move section" %}</h3>
+                        {% action_button text=_("Move up") icon="chevron-up" style="secondary" name="action" value="move_up" %}
+                        {% action_button text=_("Move down") icon="chevron-down" style="secondary" name="action" value="move_down" %}
                     </div>
                     <div>
                         <h3 class="font-bold text-lg">{% translate "Delete section" %}</h3>
-                        <button class="flex items-center gap-2 font-bold text-destructive"
-                                type="submit"
-                                hx-post="{% url 'dashboard:sections:delete' section_uuid=section.uuid %}"
-                                hx-confirm="{% translate "Are you sure you want to delete this section?" %}">
-                            <div class="h-4 w-4">{% include "heroicons/trash.svg" %}</div>
-                            {% translate "Delete this section" %}
-                        </button>
+                        <form hx-post="{% url 'dashboard:sections:delete' section_uuid=section.uuid %}"
+                              hx-confirm="{% translate "Are you sure you want to delete this section?" %}">
+                            {% action_button text=_("Delete this section") icon="trash" style="destructive" %}
+                        </form>
                     </div>
                 </div>
             </div>
+            {% url 'dashboard:projects:detail' section.project.uuid as back_url %}
+            {% anchor href=back_url label=_("Go back to project") %}
         </div>
         {% csrf_token %}
     </form>

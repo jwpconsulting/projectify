@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2024 JWP Consulting GK
 """Shared template tags for Projectify."""
 
-from typing import Optional, Union
+from typing import Any, Literal, Optional, Union
 
 from django import template
 from django.template.loader import render_to_string
@@ -26,7 +26,9 @@ def percent(value: Optional[float]) -> Optional[str]:
 
 
 @register.simple_tag
-def anchor(href: str, label: str, external: bool = False) -> SafeText:
+def anchor(
+    href: str, label: str, external: bool = False, *args: Any, **kwargs: Any
+) -> SafeText:
     """
     Render a fully styled HTML anchor.
 
@@ -39,9 +41,13 @@ def anchor(href: str, label: str, external: bool = False) -> SafeText:
     if href == "":
         raise ValueError("Empty href supplied")
     try:
-        url = reverse(href)
+        url = reverse(href, args=args, kwargs=kwargs)
     except NoReverseMatch:
         url = href
+    # TODO, if we have a reverse match, we don't have external URLs
+    # We could switch all callers of the anchor function to use the route name
+    # and implicitly switch on external for all other URLs. After all, if it's
+    # an internal resource, we'd have a named route for that resource.
     if external:
         a_extra = mark_safe(' target="_blank"')
         extra = format_html(
@@ -62,16 +68,59 @@ def anchor(href: str, label: str, external: bool = False) -> SafeText:
 
 
 @register.simple_tag
-def user_avatar(user: User) -> SafeText:
+def action_button(
+    text: str,
+    icon: Optional[str] = None,
+    style: Literal["secondary", "destructive"] = "secondary",
+    value: Optional[str] = None,
+    name: Optional[str] = None,
+    grow: bool = True,
+) -> SafeText:
+    """Render a styled action button with icon."""
+    # Source: frontend/src/lib/funabashi/buttons/Button.svelte
+    color_classes = {
+        "secondary": "text-secondary-content hover:bg-secondary-hover hover:text-secondary-content-hover active:bg-secondary-pressed active:text-secondary-content-hover",
+        "destructive": "text-destructive hover:bg-destructive-secondary-hover hover:text-destructive-hover active:bg-destructive-secondary-pressed active:text-destructive-pressed",
+    }
+
+    return format_html(
+        '<button type="submit" '
+        'class="{width_class} {color_classes} flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold"'
+        "{value}{name}>"
+        "{icon}"
+        "{text}"
+        "</button>",
+        width_class="w-full" if grow else "min-w-max",
+        color_classes=color_classes[style],
+        icon=format_html(
+            '<div class="w-6 h-6">{icon}</div>',
+            icon=render_to_string(f"heroicons/{icon}.svg"),
+        )
+        if icon
+        else "",
+        text=text,
+        value=format_html(' value="{value}"', value=value) if value else "",
+        name=format_html(' name="{name}"', name=name) if name else "",
+    )
+
+
+@register.simple_tag
+def user_avatar(user: Optional[User]) -> SafeText:
     """
     Render a user avatar image.
 
     Takes a user object as parameter.
     """
-    if user.profile_picture:
+    if user and user.profile_picture:
         return format_html(
             '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary"><img src="{src}" alt="{alt}" height="24" width="24" class="h-full w-full overflow-x-auto rounded-full object-cover object-center"></div>',
             src=user.profile_picture.url,
+            alt=str(user),
+        )
+    # TODO improve appearance
+    elif user:
+        return format_html(
+            '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary" aria-label="{alt}"></div>',
             alt=str(user),
         )
     else:

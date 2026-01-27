@@ -1,0 +1,27 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "workspace/workspace_settings_base.html" %}
+{% load i18n %}
+{% load projectify %}
+{% block title %}
+    {% blocktrans with workspace_title=workspace.title %}Create label for {{ workspace_title }} - Projectify{% endblocktrans %}
+{% endblock title %}
+{% block workspace_settings_content %}
+    <form method="post" class="flex flex-col gap-4">
+        <h2 class="font-bold text-lg">{% translate "Create new label" %}</h2>
+        {% csrf_token %}
+        {{ form.name.as_field_group }}
+        {% include "workspace/widgets/color_radio_select.html" %}
+        {% include "projectify/forms/submit.html" with text=_("Create label") %}
+        {% anchor href="dashboard:workspaces:labels" label=_("Go back") workspace_uuid=workspace.uuid %}
+    </form>
+    <hr>
+    <section class="flex flex-col gap-2">
+        <strong>{% trans "Help" %}</strong>
+        <ul class="flex list-inside list-disc flex-col gap-2">
+            <li>
+                {% url 'help:detail' page='labels' as help_url %}{% anchor href=help_url label=_("About labels") external=True %}
+            </li>
+        </ul>
+    </section>
+{% endblock workspace_settings_content %}

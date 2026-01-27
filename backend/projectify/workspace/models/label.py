@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
+# SPDX-FileCopyrightText: 2023-2025 JWP Consulting GK
 """Label manager and model."""
 
 import uuid
@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any, ClassVar, Self, cast
 
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
+from django.db.models import CheckConstraint, Q
 from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import BaseModel
@@ -37,6 +38,15 @@ class Label(BaseModel):
 
     # TODO It should be fine to just use TitleDescription here
     name = models.CharField(max_length=255)
+    """
+    0 -> orange
+    2 -> pink
+    3 -> blue
+    4 -> purple
+    5 -> yellow
+    6 -> red
+    7 -> green
+    """
     color = models.PositiveBigIntegerField(
         help_text=_("Color index"),
     )
@@ -68,3 +78,10 @@ class Label(BaseModel):
         # TODO remove this restriction, just let users do what they want to
         unique_together = ("workspace", "name")
         ordering = ("-modified",)
+        constraints = [
+            CheckConstraint(
+                check=Q(color__gte=0) & Q(color__lte=7),
+                name="label_color_range",
+                violation_error_message=_("Color must be between 0 and 7"),
+            ),
+        ]

@@ -1,0 +1,63 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "workspace/workspace_settings_base.html" %}
+{% load i18n %}
+{% load projectify %}
+{% load rules %}
+{% block title %}
+    {% blocktrans with workspace_title=workspace.title %}{{ workspace_title }} labels - Projectify{% endblocktrans %}
+{% endblock title %}
+{% block workspace_settings_content %}
+    <section class="flex flex-col gap-2">
+        <h2 class="font-bold text-lg">{% translate "Labels" %}</h2>
+        <table class="grid w-full gap-x-2 gap-y-3 grid-cols-[1fr_max-content]">
+            <thead class="contents">
+                <tr class="contents">
+                    <th class="text-left">{% translate "Label name" %}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="contents">
+                {% for label in labels %}
+                    <tr class="contents items-center">
+                        <td class="flex items-center gap-2 overflow-hidden">
+                            <div class="shrink-0 w-6 h-6 rounded-full {{ label.bg_class }} border {{ label.border_class }}"></div>
+                            {% has_perm "workspace.update_label" user label as can_update_label %}
+                            {% if can_update_label %}
+                                <a href="{% url 'dashboard:workspaces:edit-label' workspace_uuid=workspace.uuid label_uuid=label.uuid %}"
+                                   class="flex items-center gap-1 text-primary truncate">
+                                    <span class="truncate">{{ label.name }}</span>
+                                    <div class="w-4 h-4 shrink-0">{% include "heroicons/pencil.svg" %}</div>
+                                </a>
+                            {% else %}
+                                <span class="truncate">{{ label.name }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="flex items-center">
+                            {% has_perm "workspace.delete_label" user label as can_delete_label %}
+                            {% if can_delete_label %}
+                                <form hx-delete="{% url "dashboard:workspaces:edit-label" workspace_uuid=workspace.uuid label_uuid=label.uuid %}"
+                                      hx-confirm="{% blocktranslate with label=label.name %}Are you sure you want to delete the '{{ label }}' label?{% endblocktranslate %}">
+                                    {% action_button text=_("Delete") icon="trash" style="destructive" grow=True %}
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% has_perm "workspace.create_label" user workspace as can_create_label %}
+        {% if can_create_label %}
+            {% anchor "dashboard:workspaces:create-label" _("Add label") workspace_uuid=workspace.uuid %}
+        {% endif %}
+    </section>
+    <hr>
+    <section class="flex flex-col gap-2">
+        <strong>{% trans "Help" %}</strong>
+        <ul class="flex list-inside list-disc flex-col gap-2">
+            <li>
+                {% url 'help:detail' page='labels' as help_url %}{% anchor href=help_url label=_("About labels") external=True %}
+            </li>
+        </ul>
+    </section>
+{% endblock workspace_settings_content %}

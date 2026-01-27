@@ -49,8 +49,12 @@ class TestProjectDetailView:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test GETting the project detail page."""
-        # Gone up from 14 -> 15, since we fetch all workspaces
-        with django_assert_num_queries(15):
+        # Gone up   from 14 -> 15, since we fetch all workspaces
+        # Gone down from 15 -> 14, since we optimized the prefetches
+        # Gone down from 14 -> 13, since we select the related workspace
+        # Gone down from 13 -> 11, since we prefetch projects
+        # Gone down from 11 -> 10, since we don't fetch label values()
+        with django_assert_num_queries(10):
             response = user_client.get(resource_url)
             assert response.status_code == 200
             assert project.title.encode() in response.content
@@ -169,7 +173,7 @@ class TestProjectUpdateView:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test GETting the project update page."""
-        with django_assert_num_queries(3):
+        with django_assert_num_queries(4):
             response = user_client.get(resource_url)
             assert response.status_code == 200
             assert project.title.encode() in response.content
@@ -533,9 +537,13 @@ class TestProjectReadUpdateDelete:
         # Make sure section -> task -> team_member -> user is resolved
         task.assignee = team_member
         task.save()
-        # Gone up from 7 -> 12 since we prefetch workspace details too
-        # Gone up from 11 -> 14, since we fetch workspace quota
-        with django_assert_num_queries(14):
+        # Gone up   from  7 -> 12, since we prefetch workspace details too
+        # Gone up   from 11 -> 14, since we fetch workspace quota
+        # Gone up   from 14 -> 15, since we match by assignee uuids
+        # Gone down from 15 -> 12, since we optimized the prefetch
+        # Gone down from 12 -> 11, since we select the related workspace
+        # Gone down from 11 -> 10, since we select the related customer
+        with django_assert_num_queries(10):
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.data
         assert response.data == {

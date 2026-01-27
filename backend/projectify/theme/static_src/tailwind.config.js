@@ -101,6 +101,7 @@ const config = {
     content: [
         // Apps
         "../../../projectify/*/templates/**/*.html",
+        "../../../projectify/**/const.py",
         // Shared templates
         "../../../projectify/templates/**/*.html",
         // Heroicons

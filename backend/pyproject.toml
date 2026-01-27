@@ -181,6 +181,7 @@ stubPath = "mypy/stubs"
 typeCheckingMode = "strict"
 typeshedPath = ""
 exclude = [
+    ".venv",
     ".direnv",
     "**/__pycache__/",
     # TODO consider just removing whitelist.py
@@ -228,6 +229,7 @@ reportUnusedImport = false
 [tool.vulture]
 ignore_decorators = ["@receiver", "@admin.register"]
 exclude = [
+    ".venv",
     "apps.py",
     "conftest.py",
     "settings",

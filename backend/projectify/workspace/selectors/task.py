@@ -12,7 +12,9 @@ from django.db.models.functions import NullIf
 from projectify.user.models import User
 
 from ..models.chat_message import ChatMessage
+from ..models.label import Label
 from ..models.task import Task
+from .labels import labels_annotate_with_colors
 
 TaskDetailQuerySet: QuerySet[Task] = (
     Task.objects.select_related(
@@ -21,8 +23,13 @@ TaskDetailQuerySet: QuerySet[Task] = (
         "assignee__user",
     )
     .prefetch_related(
-        "labels",
         "subtask_set",
+    )
+    .prefetch_related(
+        Prefetch(
+            "labels",
+            queryset=labels_annotate_with_colors(Label.objects.all()),
+        ),
     )
     .prefetch_related(
         Prefetch(

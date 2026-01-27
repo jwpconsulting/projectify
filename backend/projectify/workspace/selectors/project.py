@@ -3,44 +3,110 @@
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 """Project model selectors."""
 
-from typing import Optional
+from typing import Optional, Union
 from uuid import UUID
 
-from django.db.models import Count, Prefetch, Q, QuerySet
+from django.db.models import Count, Prefetch, Q, QuerySet, Value
 from django.db.models.functions import NullIf
 
 from projectify.user.models import User
-from projectify.workspace.models.task import Task
 
+from ..models.label import Label
 from ..models.project import Project
+from ..models.task import Task
+from ..models.team_member import TeamMember
+from .labels import labels_annotate_with_colors
 
-ProjectDetailQuerySet = Project.objects.prefetch_related(
-    "section_set",
-    Prefetch(
-        "section_set__task_set",
-        queryset=Task.objects.annotate(
+
+def project_detail_query_set(
+    *,
+    team_member_uuids: Optional[list[UUID]] = None,
+    label_uuids: Optional[list[UUID]] = None,
+    unassigned_tasks: Optional[bool] = None,
+    unlabeled_tasks: Optional[bool] = None,
+    task_search_query: Optional[str] = None,
+) -> QuerySet[Project]:
+    """Create a project detail query set."""
+    project_not_archived = Q(task__section__project__archived__isnull=True)
+    team_member_qs = TeamMember.objects.select_related("user").annotate(
+        task_count=Count("task", filter=project_not_archived)
+    )
+    label_qs = labels_annotate_with_colors(
+        Label.objects.all().annotate(
+            task_count=Count("tasklabel", filter=project_not_archived),
+        )
+    )
+    task_q = Q()
+    assignee_uuid = Q(assignee__uuid__in=team_member_uuids)
+    assignee_empty = Q(assignee__isnull=True)
+    match team_member_uuids, unassigned_tasks:
+        case None, None | False:
+            pass
+        case None, True:
+            task_q = task_q & assignee_empty
+        case uuids, None | False:
+            task_q = task_q & assignee_uuid
+            team_member_qs = team_member_qs.annotate(
+                is_filtered=Q(uuid__in=uuids)
+            )
+        case uuids, True:
+            task_q = task_q & (assignee_uuid & assignee_empty)
+            team_member_qs = team_member_qs.annotate(
+                is_filtered=Q(uuid__in=uuids)
+            )
+
+    labels_uuid = Q(labels__uuid__in=label_uuids)
+    labels_empty = Q(labels__isnull=True)
+    label_is_filtered: Union[Value, Q] = Value(False)
+    match label_uuids, unlabeled_tasks:
+        case None, None | False:
+            pass
+        case None, True:
+            task_q = task_q & labels_empty
+        case uuids, None | False:
+            task_q = task_q & labels_uuid
+            label_is_filtered = Q(uuid__in=uuids)
+        case uuids, True:
+            task_q = task_q & (labels_uuid | labels_empty)
+            label_is_filtered = Q(uuid__in=uuids)
+    label_qs = label_qs.annotate(is_filtered=label_is_filtered)
+
+    if task_search_query is not None:
+        task_q = task_q & Q(title__icontains=task_search_query)
+
+    task_qs = (
+        Task.objects.annotate(
             sub_task_progress=Count(
                 "subtask",
                 filter=Q(subtask__done=True),
             )
             * 1.0
             / NullIf(Count("subtask"), 0),
-        ).order_by("_order"),
-    ),
-    "section_set__task_set__assignee",
-    "section_set__task_set__assignee__user",
-    "section_set__task_set__labels",
-    "workspace__label_set",
-    Prefetch(
-        "workspace__project_set",
-        queryset=Project.objects.filter(archived__isnull=True),
-    ),
-    "workspace__teammember_set",
-    "workspace__teammember_set__user",
-    "workspace__teammemberinvite_set",
-).select_related(
-    "workspace",
-)
+        )
+        .order_by("_order")
+        .select_related("assignee__user")
+        .prefetch_related(
+            Prefetch(
+                "labels",
+                queryset=labels_annotate_with_colors(Label.objects.all()),
+            )
+        )
+    ).filter(task_q)
+    return Project.objects.prefetch_related(
+        "section_set",
+        Prefetch("section_set__task_set", queryset=task_qs),
+        # Prefetch for workspace 1 : N relations, label, projects, and team
+        # members
+        Prefetch("workspace__label_set", queryset=label_qs),
+        Prefetch(
+            "workspace__project_set",
+            queryset=Project.objects.filter(archived__isnull=True),
+        ),
+        Prefetch("workspace__teammember_set", queryset=team_member_qs),
+    ).select_related("workspace", "workspace__customer")
+
+
+ProjectDetailQuerySet = project_detail_query_set()
 
 
 def project_find_by_workspace_uuid(

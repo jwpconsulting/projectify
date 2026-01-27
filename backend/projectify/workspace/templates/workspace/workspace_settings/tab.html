@@ -1,0 +1,5 @@
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% load i18n %}
+<a href="{{ tab_url }}"
+   class="border-b-2 p-2.5 font-bold uppercase hover:text-base-content {% if name == active_tab %}border-base-content text-base-content{% else %}border-border text-utility{% endif %}">{{ label }}</a>

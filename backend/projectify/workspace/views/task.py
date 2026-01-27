@@ -23,6 +23,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from projectify.lib.error_schema import DeriveSchema
+from projectify.lib.htmx import HttpResponseClientRedirect
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
@@ -161,19 +162,28 @@ def task_create(
         raise Http404(_("Section not found"))
     workspace = section.project.workspace
     context: dict[str, Any] = {"section": section, "workspace": workspace}
-    if request.method == "GET":
-        return render(
-            request,
-            "workspace/task_create.html",
-            {
-                **context,
-                "form": TaskCreateForm(workspace=section.project.workspace),
-                "formset": TaskCreateSubTaskForms(),
-            },
-        )
+    match request.method:
+        case "GET":
+            return render(
+                request,
+                "workspace/task_create.html",
+                {
+                    **context,
+                    "form": TaskCreateForm(
+                        workspace=section.project.workspace
+                    ),
+                    "formset": TaskCreateSubTaskForms(),
+                },
+            )
+        case "POST":
+            pass
+        case method:
+            raise RuntimeError(f"Don't know how to handle method {method}")
     form = TaskCreateForm(workspace, request.POST)
-    formset = TaskCreateSubTaskForms(initial=request.POST.dict())
+    formset = TaskCreateSubTaskForms(request.POST.dict())
     all_valid = form.is_valid() and formset.is_valid()
+    if not formset.is_valid():
+        logger.warning("Formset validation errors: %s", formset.errors)
     if not all_valid:
         return render(
             request,
@@ -213,16 +223,17 @@ def task_detail(
     )
     if task is None:
         raise Http404(_(f"Could not find task with uuid {task_uuid}"))
+    project = task.section.project
+    # Inefficient
+    workspace = project.workspace
     projects = project_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=task.section.project.workspace.uuid,
-        archived=False,
+        who=request.user, workspace_uuid=workspace.uuid, archived=False
     )
     context = {
         "task": task,
+        "project": project,
         "projects": projects,
-        # Inefficient
-        "workspace": task.section.project.workspace,
+        "workspace": workspace,
     }
     return render(request, "workspace/task_detail.html", context)
 
@@ -244,32 +255,48 @@ class TaskUpdateForm(forms.Form):
             attrs={"placeholder": _("Enter a description for your task")}
         ),
     )
-    submit = forms.CharField(required=False)
-    submit_stay = forms.CharField(required=False)
-    add_sub_task = forms.CharField(required=False)
+    action = forms.CharField(required=True)
 
-    def __init__(self, *args: Any, workspace: Workspace, **kwargs: Any):
-        """Populate available assignees."""
+    def __init__(
+        self,
+        *args: Any,
+        workspace: Workspace,
+        focus_field: Optional[str],
+        **kwargs: Any,
+    ):
+        """Populate available assignees and set autofocus."""
         super().__init__(*args, **kwargs)
         assignee = cast(forms.ModelChoiceField, self.fields["assignee"])
         assignee.queryset = workspace.teammember_set.select_related("user")
         labels = cast(forms.ModelChoiceField, self.fields["labels"])
         labels.queryset = workspace.label_set.all()
 
+        if focus_field is None:
+            return
+        if focus_field in self.fields:
+            self.fields[focus_field].widget.attrs["autofocus"] = True
+        else:
+            logger.warning(
+                "Couldn't find focus_field=%s in self.fields", focus_field
+            )
+
 
 def determine_action(
     request: AuthenticatedHttpRequest,
-) -> Optional[Literal["get", "submit", "submit_stay", "add_sub_task"]]:
+) -> Optional[Literal["get", "update", "update_stay", "add_sub_task"]]:
     """Determine what update view action should be taken."""
     if request.method == "GET":
         return "get"
-    if "submit" in request.POST:
-        return "submit"
-    elif "submit_stay" in request.POST:
-        return "submit_stay"
-    elif "add_sub_task" in request.POST:
-        return "add_sub_task"
-    return None
+    action: Optional[str] = request.POST.get("action")
+    match action:
+        case "update":
+            return "update"
+        case "update_stay":
+            return "update_stay"
+        case "add_sub_task":
+            return "add_sub_task"
+        case _:
+            return None
 
 
 @platform_view
@@ -291,26 +318,37 @@ def task_update_view(
         archived=False,
     )
 
-    action = determine_action(request)
-
+    focus_field = request.GET.get("focus", None)
     context: dict[str, Any] = {"workspace": workspace, "projects": projects}
 
-    if action == "add_sub_task":
-        post: dict[str, Any] = request.POST.dict()
-        sub_task_count_raw: str = post.get("form-" + TOTAL_FORM_COUNT, "0")
-        try:
-            sub_task_count = int(sub_task_count_raw)
-        except ValueError as e:
-            logger.error(
-                "Unexpected error when getting total form count", exc_info=e
+    action = determine_action(request)
+    match action:
+        case "add_sub_task":
+            post: dict[str, Any] = request.POST.dict()
+            sub_task_count_raw: str = post.get("form-" + TOTAL_FORM_COUNT, "0")
+            try:
+                sub_task_count = int(sub_task_count_raw)
+            except ValueError as e:
+                logger.error(
+                    "Unexpected error when getting total form count",
+                    exc_info=e,
+                )
+                sub_task_count = 0
+            post["form-TOTAL_FORMS"] = str(sub_task_count + 1)
+            logger.info("Adding sub task")
+            form = TaskUpdateForm(
+                data=post, workspace=workspace, focus_field=focus_field
             )
-            sub_task_count = 0
-        post["form-TOTAL_FORMS"] = str(sub_task_count + 1)
-        logger.info("Adding sub task")
-        form = TaskUpdateForm(data=post, workspace=workspace)
-        formset = TaskUpdateSubTaskForms(data=post)
-        context = {**context, "form": form, "task": task, "formset": formset}
-        return render(request, "workspace/task_update.html", context)
+            formset = TaskUpdateSubTaskForms(data=post)
+            context = {
+                **context,
+                "form": form,
+                "task": task,
+                "formset": formset,
+            }
+            return render(request, "workspace/task_update.html", context)
+        case _:
+            pass
 
     task_initial = {
         "title": task.title,
@@ -325,13 +363,21 @@ def task_update_view(
         for sub_task in sub_tasks
     ]
     if action == "get":
-        form = TaskUpdateForm(initial=task_initial, workspace=workspace)
+        form = TaskUpdateForm(
+            initial=task_initial, workspace=workspace, focus_field=focus_field
+        )
         formset = TaskUpdateSubTaskForms(initial=sub_tasks_initial)  # type: ignore[arg-type]
+        # Add autofocus to first subtask if focus_field is subtasks
+        if focus_field == "subtasks" and formset.forms:
+            formset.forms[0].fields["title"].widget.attrs["autofocus"] = True
         context = {**context, "form": form, "task": task, "formset": formset}
         return render(request, "workspace/task_update.html", context)
 
     form = TaskUpdateForm(
-        data=request.POST, initial=task_initial, workspace=workspace
+        data=request.POST,
+        initial=task_initial,
+        workspace=workspace,
+        focus_field=focus_field,
     )
     form.full_clean()
     formset = TaskUpdateSubTaskForms(
@@ -377,12 +423,14 @@ def task_update_view(
             "create_sub_tasks": create_sub_tasks,
         },
     )
-    if action == "submit_stay":
-        n = reverse("dashboard:tasks:detail", args=(task.uuid,))
-    elif action == "submit":
-        n = reverse("dashboard:projects:detail", args=(project.uuid,))
-    else:
-        n = reverse("dashboard:projects:detail", args=(project.uuid,))
+    match action:
+        case "update_stay":
+            n = reverse("dashboard:tasks:detail", args=(task.uuid,))
+        case "update":
+            n = reverse("dashboard:projects:detail", args=(project.uuid,))
+        case _:
+            logger.warning("No action specified")
+            n = reverse("dashboard:projects:detail", args=(project.uuid,))
     return redirect(n)
 
 
@@ -426,6 +474,36 @@ def task_move(
     return redirect("dashboard:projects:detail", task.section.project.uuid)
 
 
+class TaskMoveToSectionForm(forms.Form):
+    """Form that captures which section to move a task to."""
+
+    section_uuid = forms.UUIDField()
+
+
+@require_POST
+def task_move_to_section(
+    request: AuthenticatedHttpRequest, task_uuid: UUID
+) -> HttpResponse:
+    """Move a task to a given section."""
+    task = get_object(request, task_uuid)
+    form = TaskMoveToSectionForm(request.POST)
+    if not form.is_valid():
+        logger.warning("Form not valid for task_uuid %s", task_uuid)
+        # TODO
+        return HttpResponse(status=400)
+    section_uuid = form.cleaned_data["section_uuid"]
+    section = section_find_for_user_and_uuid(
+        user=request.user, section_uuid=section_uuid
+    )
+    if section is None:
+        logger.warning("Section with uuid %s not found", section_uuid)
+        # TODO give better validation message when section not found
+        return HttpResponse(status=400)
+    task = task_move_after(who=request.user, task=task, after=section)
+
+    return redirect("dashboard:projects:detail", task.section.project.uuid)
+
+
 def task_actions(
     request: AuthenticatedHttpRequest, task_uuid: UUID
 ) -> HttpResponse:
@@ -438,13 +516,27 @@ def task_actions(
         workspace_uuid=workspace.uuid,
         archived=False,
     )
+    sections = project.section_set.all()
     context = {
         "task": task,
         "workspace": workspace,
+        "sections": sections,
         "projects": projects,
         "project": project,
     }
     return render(request, "workspace/task_actions.html", context)
+
+
+def task_delete_view(
+    request: AuthenticatedHttpRequest, task_uuid: UUID
+) -> HttpResponse:
+    """Delete task."""
+    task = get_object(request, task_uuid)
+    section = task.section
+    project = section.project
+    task_delete(who=request.user, task=task)
+    next_url = f"{reverse("dashboard:projects:detail", args=(project.uuid,))}#{section.uuid}"
+    return HttpResponseClientRedirect(next_url)
 
 
 # Create

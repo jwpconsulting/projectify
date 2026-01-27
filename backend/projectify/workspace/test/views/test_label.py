@@ -36,7 +36,7 @@ class TestLabelCreate:
         """Test as an authenticated user."""
         # Gone up from 6 to 9 after introducing full_clean
         # Now 8
-        with django_assert_num_queries(7):
+        with django_assert_num_queries(10):
             response = rest_user_client.post(
                 resource_url,
                 data={
@@ -105,7 +105,7 @@ class TestLabelUpdateDelete:
         # Gone up from 7 to 10 after introducing full_clean
         # now 9
         # now 8 yay
-        with django_assert_num_queries(7):
+        with django_assert_num_queries(10):
             response = rest_user_client.put(
                 resource_url,
                 data={

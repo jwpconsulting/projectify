@@ -35,9 +35,21 @@ from projectify.corporate.services.customer import (
 )
 from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.forms import populate_form_with_drf_errors
+from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
+from projectify.workspace.models.const import COLOR_MAP
+from projectify.workspace.models.label import Label
+from projectify.workspace.selectors.labels import (
+    LabelDetailQuerySet,
+    label_find_by_label_uuid,
+)
+from projectify.workspace.services.label import (
+    label_create,
+    label_delete,
+    label_update,
+)
 
 from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
 from ..models import Workspace
@@ -63,6 +75,20 @@ from ..types import Quota
 logger = logging.getLogger(__name__)
 
 
+def _get_workspace_settings_context(
+    request: AuthenticatedHttpRequest,
+    workspace: Workspace,
+    active_tab: str,
+) -> dict[str, object]:
+    """Get shared context for workspace settings views."""
+    return {
+        "workspace": workspace,
+        "projects": workspace.project_set.all(),
+        "workspaces": workspace_find_for_user(who=request.user),
+        "active_tab": active_tab,
+    }
+
+
 # HTML
 @platform_view
 def workspace_list_view(request: AuthenticatedHttpRequest) -> HttpResponse:
@@ -78,16 +104,13 @@ def workspace_view(
 ) -> HttpResponse:
     """Show workspace."""
     workspace = workspace_find_by_workspace_uuid(
-        who=request.user, workspace_uuid=workspace_uuid
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        qs=WorkspaceDetailQuerySet,
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    projects = project_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=workspace_uuid,
-        archived=False,
-    )
-    context = {"workspace": workspace, "projects": projects}
+    context = {"workspace": workspace, "projects": workspace.project_set.all()}
     return render(request, "workspace/workspace_detail.html", context)
 
 
@@ -108,19 +131,18 @@ def workspace_settings_general(
 ) -> HttpResponse:
     """Show general workspace settings."""
     workspace = workspace_find_by_workspace_uuid(
-        who=request.user, workspace_uuid=workspace_uuid
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        qs=WorkspaceDetailQuerySet,
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    projects = project_find_by_workspace_uuid(
-        workspace_uuid=workspace_uuid,
-        who=request.user,
-        archived=False,
+    context = _get_workspace_settings_context(
+        request=request, workspace=workspace, active_tab="general"
     )
-    context: dict[str, Any] = {"workspace": workspace, "projects": projects}
     if request.method == "GET":
         form = WorkspaceSettingsForm(instance=workspace)
-        context = {"form": form, **context}
+        context = {**context, "form": form}
         return render(
             request,
             "workspace/workspace_settings_general.html",
@@ -130,7 +152,7 @@ def workspace_settings_general(
         instance=workspace, data=request.POST, files=request.FILES
     )
     if not form.is_valid():
-        context = {"form": form, **context}
+        context = {**context, "form": form}
         return render(
             request,
             "workspace/workspace_settings_general.html",
@@ -148,9 +170,12 @@ def workspace_settings_general(
         )
     except ValidationError as error:
         populate_form_with_drf_errors(form, error)
-        context = {"form": form}
+        context = {**context, "form": form}
         return render(
-            request, "user/sign_up.html", context=context, status=400
+            request,
+            "workspace/workspace_settings_general.html",
+            context=context,
+            status=400,
         )
     return redirect(
         "dashboard:workspaces:settings",
@@ -165,30 +190,191 @@ def workspace_settings_projects(
 ) -> HttpResponse:
     """Show projects for this workspace."""
     workspace = workspace_find_by_workspace_uuid(
-        who=request.user, workspace_uuid=workspace_uuid
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        qs=WorkspaceDetailQuerySet,
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    projects = project_find_by_workspace_uuid(
-        workspace_uuid=workspace_uuid,
-        who=request.user,
-        archived=False,
+    context = _get_workspace_settings_context(
+        request=request, workspace=workspace, active_tab="projects"
     )
     archived_projects = project_find_by_workspace_uuid(
         workspace_uuid=workspace_uuid,
         who=request.user,
         archived=True,
     )
-    context = {
-        "workspace": workspace,
-        "projects": projects,
-        "archived_projects": archived_projects,
-    }
+    context["archived_projects"] = archived_projects
     return render(
         request,
         "workspace/workspace_settings_projects.html",
         context=context,
     )
+
+
+@require_http_methods(["GET"])
+@platform_view
+def workspace_settings_label(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Show labels for this workspace."""
+    workspace = workspace_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        qs=workspace_build_detail_query_set(
+            who=None,
+            annotate_labels=True,
+        ),
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+    context = {
+        **_get_workspace_settings_context(
+            request=request, workspace=workspace, active_tab="labels"
+        ),
+        "labels": workspace.label_set.all(),
+    }
+    return render(
+        request, "workspace/workspace_settings_labels.html", context=context
+    )
+
+
+class LabelCreateForm(forms.ModelForm):
+    """Form for creating labels."""
+
+    name = forms.CharField(max_length=100)
+    color = forms.IntegerField()
+
+    class Meta:
+        """Meta settings for LabelCreateForm."""
+
+        fields = "name", "color"
+        model = Label
+
+
+@require_http_methods(["GET", "POST"])
+@platform_view
+def workspace_settings_new_label(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Create a new label for the workspace."""
+    workspace = workspace_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        qs=WorkspaceDetailQuerySet,
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+
+    context = {
+        **_get_workspace_settings_context(
+            request=request, workspace=workspace, active_tab="labels"
+        ),
+        "color_map": COLOR_MAP,
+    }
+    match request.method:
+        case "GET":
+            form = LabelCreateForm()
+            return render(
+                request,
+                "workspace/workspace_settings_create_label.html",
+                context={**context, "form": form},
+            )
+        case "POST":
+            pass
+        case other:
+            raise ValueError(f"Wrong HTTP method {other}")
+    form = LabelCreateForm(data=request.POST)
+    if not form.is_valid():
+        return render(
+            request,
+            "workspace/workspace_settings_create_label.html",
+            context={**context, "form": form},
+            status=400,
+        )
+
+    try:
+        label_create(
+            workspace=workspace,
+            name=form.cleaned_data["name"],
+            color=form.cleaned_data["color"],
+            who=request.user,
+        )
+    except ValidationError as error:
+        populate_form_with_drf_errors(form, error)
+        return render(
+            request,
+            "workspace/workspace_settings_create_label.html",
+            context={**context, "form": form},
+            status=400,
+        )
+
+    return redirect("dashboard:workspaces:labels", workspace.uuid)
+
+
+class LabelUpdateForm(forms.ModelForm):
+    """Form for updating labels."""
+
+    name = forms.CharField()
+    # TODO
+    color = forms.IntegerField()
+
+    class Meta:
+        """Meta settings for LabelUpdateForm."""
+
+        fields = "name", "color"
+        model = Label
+
+
+@require_http_methods(["GET", "POST", "DELETE"])
+@platform_view
+def workspace_settings_edit_label(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID, label_uuid: UUID
+) -> HttpResponse:
+    """Show edit view for specific label."""
+    label = label_find_by_label_uuid(
+        who=request.user,
+        label_uuid=label_uuid,
+        qs=LabelDetailQuerySet,
+    )
+    if label is None:
+        raise Http404(f"Couldn't find label with UUID {label_uuid}")
+    if label.workspace.uuid != workspace_uuid:
+        return HttpResponseBadRequest("Workspace UUIDs don't match")
+    context = {
+        **_get_workspace_settings_context(
+            request=request, workspace=label.workspace, active_tab="labels"
+        ),
+        "label": label,
+        "color_map": COLOR_MAP,
+    }
+    match request.method:
+        case "DELETE":
+            label_delete(who=request.user, label=label)
+            return HttpResponseClientRefresh()
+        case "GET":
+            form = LabelUpdateForm(instance=label)
+            return render(
+                request,
+                "workspace/workspace_settings_edit_label.html",
+                context={**context, "form": form},
+            )
+        case "POST":
+            pass
+        case other:
+            raise ValueError(f"Wrong HTTP method {other}")
+    form = LabelUpdateForm(instance=label, data=request.POST)
+    if not form.is_valid():
+        return render(
+            request,
+            "workspace/workspace_settings_edit_label.html",
+            context={**context, "form": form},
+        )
+    data = form.cleaned_data
+    label_update(
+        who=request.user, label=label, name=data["name"], color=data["color"]
+    )
+    return redirect("dashboard:workspaces:labels", label.workspace.uuid)
 
 
 class InviteTeamMemberForm(forms.Form):
@@ -220,18 +406,14 @@ def workspace_settings_team_members(
     workspace = workspace_find_by_workspace_uuid(
         who=request.user,
         workspace_uuid=workspace_uuid,
-        qs=workspace_build_detail_query_set(who=request.user),
+        qs=workspace_build_detail_query_set(who=None),
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    projects = project_find_by_workspace_uuid(
-        workspace_uuid=workspace_uuid,
-        who=request.user,
-        archived=False,
-    )
     context = {
-        "workspace": workspace,
-        "projects": projects,
+        **_get_workspace_settings_context(
+            request=request, workspace=workspace, active_tab="team"
+        ),
         "form": InviteTeamMemberForm(),
     }
     return render(
@@ -250,21 +432,18 @@ def workspace_settings_team_members_invite(
     workspace = workspace_find_by_workspace_uuid(
         who=request.user,
         workspace_uuid=workspace_uuid,
-        qs=workspace_build_detail_query_set(who=request.user),
+        qs=workspace_build_detail_query_set(who=None),
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    projects = project_find_by_workspace_uuid(
-        workspace_uuid=workspace_uuid,
-        who=request.user,
-        archived=False,
-    )
 
-    context: dict[str, Any] = {"workspace": workspace, "projects": projects}
+    context = _get_workspace_settings_context(
+        request=request, workspace=workspace, active_tab="team"
+    )
 
     form = InviteTeamMemberForm(request.POST)
 
-    context = {"form": form, **context}
+    context = {**context, "form": form}
     if not form.is_valid():
         return render(
             request,
@@ -293,7 +472,7 @@ def workspace_settings_team_members_invite(
                     _("User has already been added to this workspace."),
                 )
 
-        context = {"form": form, **context}
+        context = {**context, "form": form}
         return render(
             request,
             "workspace/workspace_settings_team_members.html",
@@ -340,10 +519,16 @@ def workspace_settings_team_member_remove(
         )
 
     workspace.refresh_from_db()
+    context = {
+        **_get_workspace_settings_context(
+            request=request, workspace=workspace, active_tab="team"
+        ),
+        "form": InviteTeamMemberForm(),
+    }
     return render(
         request,
         "workspace/workspace_settings_team_members.html",
-        context={"workspace": workspace, "form": InviteTeamMemberForm()},
+        context=context,
     )
 
 
@@ -362,7 +547,7 @@ def workspace_settings_team_member_uninvite(
     workspace = workspace_find_by_workspace_uuid(
         who=request.user,
         workspace_uuid=workspace_uuid,
-        qs=workspace_build_detail_query_set(who=request.user),
+        qs=WorkspaceDetailQuerySet,
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
@@ -386,7 +571,12 @@ def workspace_settings_team_member_uninvite(
         )
 
     workspace.refresh_from_db()
-    context = {"workspace": workspace, "form": InviteTeamMemberForm()}
+    context = {
+        **_get_workspace_settings_context(
+            request=request, workspace=workspace, active_tab="team"
+        ),
+        "form": InviteTeamMemberForm(),
+    }
     return render(
         request,
         "workspace/workspace_settings_team_members.html",
@@ -467,18 +657,17 @@ def workspace_settings_billing(
 ) -> HttpResponse:
     """Show workspace billing settings."""
     workspace = workspace_find_by_workspace_uuid(
-        who=request.user, workspace_uuid=workspace_uuid
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        qs=WorkspaceDetailQuerySet,
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
     workspace.quota = workspace_get_all_quotas(workspace)
-    projects = project_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=workspace_uuid,
-        archived=False,
-    )
 
-    context: dict[str, object] = {"workspace": workspace, "projects": projects}
+    context = _get_workspace_settings_context(
+        request=request, workspace=workspace, active_tab="billing"
+    )
 
     if request.method == "GET":
         match workspace.customer.subscription_status:
@@ -566,15 +755,16 @@ def workspace_settings_quota(
 ) -> HttpResponse:
     """Show workspace quota."""
     workspace = workspace_find_by_workspace_uuid(
-        who=request.user, workspace_uuid=workspace_uuid
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        qs=WorkspaceDetailQuerySet,
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
     workspace.quota = workspace_get_all_quotas(workspace)
-    projects = project_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=workspace_uuid,
-        archived=False,
+
+    context = _get_workspace_settings_context(
+        request=request, workspace=workspace, active_tab="quota"
     )
 
     quota_rows: list[QuotaEntry] = [
@@ -609,11 +799,7 @@ def workspace_settings_quota(
     ]
     quota_rows = [q for q in quota_rows if q["quota"].limit is not None]
 
-    context = {
-        "workspace": workspace,
-        "quota_rows": quota_rows,
-        "projects": projects,
-    }
+    context = {**context, "quota_rows": quota_rows}
     return render(
         request, "workspace/workspace_settings_quota.html", context=context
     )
