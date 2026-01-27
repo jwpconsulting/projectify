@@ -11,7 +11,7 @@
     import { onScroll } from "$lib/utils/scroll";
     import { handleKey } from "$lib/utils/keyboard";
 
-    let contextMenu: HTMLElement | undefined = undefined;
+    let contextMenu: HTMLElement;
 
     interface Unsubscribers {
         removeResizeObserver: () => void;
@@ -30,9 +30,6 @@
     onMount(() => {
         return contextMenuState.subscribe(($contextMenuState) => {
             if ($contextMenuState.kind === "visible") {
-                if (!contextMenu) {
-                    throw new Error("Expected contextMenu");
-                }
                 if (unsubscribers) {
                     throw new Error("Unsubscribers were already set");
                 }
@@ -109,9 +106,6 @@
     }
 
     function repositionContextMenu(anchor: HTMLElement) {
-        if (!contextMenu) {
-            throw new Error("Expected contextMenu");
-        }
         if (anchor.offsetParent === null) {
             console.debug(
                 "Context menu anchor not rendered, closing context menu.",
