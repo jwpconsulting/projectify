@@ -43,9 +43,10 @@
                             <td class="col-span-3">
                                 <div class="flex flex-row gap-4">
                                     {{ task.title }}
-                                    <button class="flex flex-row" type="button">
+                                    <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=title"
+                                       class="flex flex-row">
                                         <div class="h-4 w-4">{% include "heroicons/pencil.svg" %}</div>
-                                    </button>
+                                    </a>
                                 </div>
                                 <!--<TaskTitle>-->
                             </td>
@@ -62,9 +63,9 @@
                                         {% user_avatar task.assignee.user %}
                                         <div class="truncate">{{ task.assignee }}</div>
                                     </button>
-                                    <button type="button">
+                                    <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=assignee">
                                         <div class="h-4 w-4">{% include "heroicons/pencil.svg" %}</div>
-                                    </button>
+                                    </a>
                                 </div>
                                 <!--<TaskUser>-->
                             </td>
@@ -85,9 +86,9 @@
                                             </div>
                                         {% endfor %}
                                     </div>
-                                    <button type="button">
+                                    <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=labels">
                                         <div class="h-4 w-4">{% include "heroicons/pencil.svg" %}</div>
-                                    </button>
+                                    </a>
                                 </div>
                                 <!--<TaskLabel>-->
                             </td>
@@ -99,9 +100,10 @@
                             <td class="col-span-3">
                                 <div class="flex flex-row gap-4">
                                     {{ task.due_date.date.isoformat }}
-                                    <button class="flex flex-row" type="button">
+                                    <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=due_date"
+                                       class="flex flex-row">
                                         <div class="h-4 w-4">{% include "heroicons/pencil.svg" %}</div>
-                                    </button>
+                                    </a>
                                 </div>
                                 <!--<TaskDueDate>-->
                             </td>
@@ -113,9 +115,9 @@
                             <td class="col-span-3">
                                 <div class="flex w-full flex-row items-start gap-4">
                                     <p>{{ task.description }}</p>
-                                    <button type="button">
+                                    <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=description">
                                         <div class="h-4 w-4">{% include "heroicons/pencil.svg" %}</div>
-                                    </button>
+                                    </a>
                                 </div>
                                 <!--<TaskDescription>-->
                             </td>
@@ -165,9 +167,10 @@
                                                    value="{{ sub_task.title }}"
                                                    placeholder="{% trans 'Enter a subtask' %}"
                                                    readonly="true">
-                                            <button class="flex flex-row" type="button">
+                                            <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=subtasks"
+                                               class="flex flex-row">
                                                 <div class="h-4 w-4">{% include "heroicons/pencil.svg" %}</div>
-                                            </button>
+                                            </a>
                                         </div>
                                     </div>
                                     <!--<InputField>-->

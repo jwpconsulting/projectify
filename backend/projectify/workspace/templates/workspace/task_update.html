@@ -51,14 +51,7 @@
                             <td class="col-span-3">
                                 <div class="flex flex-row items-center gap-4">
                                     <div class="flex flex-col items-start gap-2">
-                                        <div class="flex w-full flex-row items-center gap-2">
-                                            <input type="text"
-                                                   class="placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2"
-                                                   id="{{ form.due_date.id_for_label }}"
-                                                   name="{{ form.due_date.html_name }}"
-                                                   value="{{ form.due_date.value.date.isoformat }}"
-                                                   placeholder="Select due date">
-                                        </div>
+                                        <div class="flex w-full flex-row items-center gap-2">{{ form.due_date }}</div>
                                     </div>
                                 </div>
                             </td>

@@ -257,13 +257,28 @@ class TaskUpdateForm(forms.Form):
     )
     action = forms.CharField(required=True)
 
-    def __init__(self, *args: Any, workspace: Workspace, **kwargs: Any):
-        """Populate available assignees."""
+    def __init__(
+        self,
+        *args: Any,
+        workspace: Workspace,
+        focus_field: Optional[str],
+        **kwargs: Any,
+    ):
+        """Populate available assignees and set autofocus."""
         super().__init__(*args, **kwargs)
         assignee = cast(forms.ModelChoiceField, self.fields["assignee"])
         assignee.queryset = workspace.teammember_set.select_related("user")
         labels = cast(forms.ModelChoiceField, self.fields["labels"])
         labels.queryset = workspace.label_set.all()
+
+        if focus_field is None:
+            return
+        if focus_field in self.fields:
+            self.fields[focus_field].widget.attrs["autofocus"] = True
+        else:
+            logger.warning(
+                "Couldn't find focus_field=%s in self.fields", focus_field
+            )
 
 
 def determine_action(
@@ -303,6 +318,7 @@ def task_update_view(
         archived=False,
     )
 
+    focus_field = request.GET.get("focus", None)
     context: dict[str, Any] = {"workspace": workspace, "projects": projects}
 
     action = determine_action(request)
@@ -320,7 +336,9 @@ def task_update_view(
                 sub_task_count = 0
             post["form-TOTAL_FORMS"] = str(sub_task_count + 1)
             logger.info("Adding sub task")
-            form = TaskUpdateForm(data=post, workspace=workspace)
+            form = TaskUpdateForm(
+                data=post, workspace=workspace, focus_field=focus_field
+            )
             formset = TaskUpdateSubTaskForms(data=post)
             context = {
                 **context,
@@ -345,13 +363,21 @@ def task_update_view(
         for sub_task in sub_tasks
     ]
     if action == "get":
-        form = TaskUpdateForm(initial=task_initial, workspace=workspace)
+        form = TaskUpdateForm(
+            initial=task_initial, workspace=workspace, focus_field=focus_field
+        )
         formset = TaskUpdateSubTaskForms(initial=sub_tasks_initial)  # type: ignore[arg-type]
+        # Add autofocus to first subtask if focus_field is subtasks
+        if focus_field == "subtasks" and formset.forms:
+            formset.forms[0].fields["title"].widget.attrs["autofocus"] = True
         context = {**context, "form": form, "task": task, "formset": formset}
         return render(request, "workspace/task_update.html", context)
 
     form = TaskUpdateForm(
-        data=request.POST, initial=task_initial, workspace=workspace
+        data=request.POST,
+        initial=task_initial,
+        workspace=workspace,
+        focus_field=focus_field,
     )
     form.full_clean()
     formset = TaskUpdateSubTaskForms(
