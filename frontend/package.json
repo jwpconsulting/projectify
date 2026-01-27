@@ -75,7 +75,7 @@
         "exponential-backoff": "^3.1.1",
         "favicons": "~7.2.0",
         "fuse.js": "~7.0",
-        "generate-license-file": "^3.4",
+        "generate-license-file": "^4",
         "marked": "~12.0.2",
         "marked-gfm-heading-id": "~3.1.3",
         "openapi-fetch": "~0.9.7",
