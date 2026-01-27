@@ -93,7 +93,6 @@ def workspace_find_by_workspace_uuid(
     workspace_uuid: UUID,
     who: User,
     qs: Optional[QuerySet[Workspace]] = None,
-    annotate_labels: bool = False,
 ) -> Optional[Workspace]:
     """Find a workspace by uuid for a given user."""
     qs = workspace_find_for_user(who=who, qs=qs)
