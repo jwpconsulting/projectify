@@ -85,15 +85,15 @@ def action_button(
 
     return format_html(
         '<button type="submit" '
-        'class="{width_class} {color_classes} flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold"'
+        'class="{width_class} {color_classes} flex min-w-0 flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold"'
         "{value}{name}>"
         "{icon}"
-        "{text}"
+        '<span class="truncate">{text}</span>'
         "</button>",
-        width_class="w-full" if grow else "min-w-max",
+        width_class="w-full" if grow else "",
         color_classes=color_classes[style],
         icon=format_html(
-            '<div class="w-6 h-6">{icon}</div>',
+            '<div class="w-6 h-6 shrink-0">{icon}</div>',
             icon=render_to_string(f"heroicons/{icon}.svg"),
         )
         if icon
