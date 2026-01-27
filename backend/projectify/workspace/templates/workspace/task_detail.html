@@ -24,12 +24,11 @@
                             {% trans "Edit" %}
                         </a><!--<button>-->
                     {% endif %}
-                    <div>
-                        <button aria-label="{% trans 'Open task context menu' %}"
-                                class="focus:base-content relative h-8 w-8 rounded-lg border border-transparent p-1 focus:border-base-content focus:outline-none active:text-display enabled:hover:bg-secondary-hover enabled:active:bg-primary text-base-content">
-                            {% include "heroicons/dots-vertical.svg" %}
-                        </button>
-                    </div>
+                    <a aria-label="{% trans 'Open task context menu' %}"
+                       href="{% url 'dashboard:tasks:actions' task.uuid %}"
+                       class="focus:base-content relative h-8 w-8 rounded-lg border border-transparent p-1 focus:border-base-content focus:outline-none active:text-display hover:bg-secondary-hover active:bg-primary text-base-content">
+                        {% include "heroicons/dots-vertical.svg" %}
+                    </a>
                 </div>
             </div>
             <!--<TopBar>-->
