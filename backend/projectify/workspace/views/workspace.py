@@ -75,6 +75,20 @@ from ..types import Quota
 logger = logging.getLogger(__name__)
 
 
+def _get_workspace_settings_context(
+    request: AuthenticatedHttpRequest,
+    workspace: Workspace,
+    active_tab: str,
+) -> dict[str, object]:
+    """Get shared context for workspace settings views."""
+    return {
+        "workspace": workspace,
+        "projects": workspace.project_set.all(),
+        "workspaces": workspace_find_for_user(who=request.user),
+        "active_tab": active_tab,
+    }
+
+
 # HTML
 @platform_view
 def workspace_list_view(request: AuthenticatedHttpRequest) -> HttpResponse:
@@ -123,11 +137,9 @@ def workspace_settings_general(
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    context: dict[str, Any] = {
-        "workspace": workspace,
-        "projects": workspace.project_set.all(),
-        "active_tab": "general",
-    }
+    context = _get_workspace_settings_context(
+        request=request, workspace=workspace, active_tab="general"
+    )
     if request.method == "GET":
         form = WorkspaceSettingsForm(instance=workspace)
         context = {**context, "form": form}
@@ -184,17 +196,15 @@ def workspace_settings_projects(
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
+    context = _get_workspace_settings_context(
+        request=request, workspace=workspace, active_tab="projects"
+    )
     archived_projects = project_find_by_workspace_uuid(
         workspace_uuid=workspace_uuid,
         who=request.user,
         archived=True,
     )
-    context = {
-        "workspace": workspace,
-        "projects": workspace.project_set.all(),
-        "archived_projects": archived_projects,
-        "active_tab": "projects",
-    }
+    context["archived_projects"] = archived_projects
     return render(
         request,
         "workspace/workspace_settings_projects.html",
@@ -219,10 +229,10 @@ def workspace_settings_label(
     if workspace is None:
         raise Http404(_("Workspace not found"))
     context = {
-        "workspace": workspace,
-        "projects": workspace.project_set.all(),
+        **_get_workspace_settings_context(
+            request=request, workspace=workspace, active_tab="labels"
+        ),
         "labels": workspace.label_set.all(),
-        "active_tab": "labels",
     }
     return render(
         request, "workspace/workspace_settings_labels.html", context=context
@@ -257,10 +267,10 @@ def workspace_settings_new_label(
         raise Http404(_("Workspace not found"))
 
     context = {
-        "workspace": workspace,
-        "projects": workspace.project_set.all(),
+        **_get_workspace_settings_context(
+            request=request, workspace=workspace, active_tab="labels"
+        ),
         "color_map": COLOR_MAP,
-        "active_tab": "labels",
     }
     match request.method:
         case "GET":
@@ -332,11 +342,11 @@ def workspace_settings_edit_label(
     if label.workspace.uuid != workspace_uuid:
         return HttpResponseBadRequest("Workspace UUIDs don't match")
     context = {
-        "workspace": label.workspace,
+        **_get_workspace_settings_context(
+            request=request, workspace=label.workspace, active_tab="labels"
+        ),
         "label": label,
-        "projects": label.workspace.project_set.all(),
         "color_map": COLOR_MAP,
-        "active_tab": "labels",
     }
     match request.method:
         case "DELETE":
@@ -401,10 +411,10 @@ def workspace_settings_team_members(
     if workspace is None:
         raise Http404(_("Workspace not found"))
     context = {
-        "workspace": workspace,
-        "projects": workspace.project_set.all(),
+        **_get_workspace_settings_context(
+            request=request, workspace=workspace, active_tab="team"
+        ),
         "form": InviteTeamMemberForm(),
-        "active_tab": "team",
     }
     return render(
         request,
@@ -427,11 +437,9 @@ def workspace_settings_team_members_invite(
     if workspace is None:
         raise Http404(_("Workspace not found"))
 
-    context: dict[str, Any] = {
-        "workspace": workspace,
-        "projects": workspace.project_set.all(),
-        "active_tab": "team",
-    }
+    context = _get_workspace_settings_context(
+        request=request, workspace=workspace, active_tab="team"
+    )
 
     form = InviteTeamMemberForm(request.POST)
 
@@ -511,14 +519,16 @@ def workspace_settings_team_member_remove(
         )
 
     workspace.refresh_from_db()
+    context = {
+        **_get_workspace_settings_context(
+            request=request, workspace=workspace, active_tab="team"
+        ),
+        "form": InviteTeamMemberForm(),
+    }
     return render(
         request,
         "workspace/workspace_settings_team_members.html",
-        context={
-            "workspace": workspace,
-            "form": InviteTeamMemberForm(),
-            "active_tab": "team",
-        },
+        context=context,
     )
 
 
@@ -562,9 +572,10 @@ def workspace_settings_team_member_uninvite(
 
     workspace.refresh_from_db()
     context = {
-        "workspace": workspace,
+        **_get_workspace_settings_context(
+            request=request, workspace=workspace, active_tab="team"
+        ),
         "form": InviteTeamMemberForm(),
-        "active_tab": "team",
     }
     return render(
         request,
@@ -654,11 +665,9 @@ def workspace_settings_billing(
         raise Http404(_("Workspace not found"))
     workspace.quota = workspace_get_all_quotas(workspace)
 
-    context: dict[str, object] = {
-        "workspace": workspace,
-        "projects": workspace.project_set.all(),
-        "active_tab": "billing",
-    }
+    context = _get_workspace_settings_context(
+        request=request, workspace=workspace, active_tab="billing"
+    )
 
     if request.method == "GET":
         match workspace.customer.subscription_status:
@@ -754,6 +763,10 @@ def workspace_settings_quota(
         raise Http404(_("Workspace not found"))
     workspace.quota = workspace_get_all_quotas(workspace)
 
+    context = _get_workspace_settings_context(
+        request=request, workspace=workspace, active_tab="quota"
+    )
+
     quota_rows: list[QuotaEntry] = [
         {
             "label": _("Team members and invites"),
@@ -786,12 +799,7 @@ def workspace_settings_quota(
     ]
     quota_rows = [q for q in quota_rows if q["quota"].limit is not None]
 
-    context = {
-        "workspace": workspace,
-        "quota_rows": quota_rows,
-        "projects": workspace.project_set.all(),
-        "active_tab": "quota",
-    }
+    context = {**context, "quota_rows": quota_rows}
     return render(
         request, "workspace/workspace_settings_quota.html", context=context
     )

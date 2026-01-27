@@ -69,7 +69,8 @@ class TestWorkspaceSettings:
         workspace.save()
         assert not workspace.picture
         # Query count went up from 12 -> 19
-        with django_assert_num_queries(19):
+        # Query count went up from 19 -> 20
+        with django_assert_num_queries(20):
             response = user_client.post(
                 resource_url,
                 {
@@ -140,10 +141,11 @@ class TestWorkspaceSettingsTeamMembers:
         """Test inviting a new user."""
         initial_invite_count = workspace.teammemberinvite_set.count()
 
-        # Justus 2025-07-29 query count went up 10 -> 19 XXX
-        # Justus 2025-07-29 query count went up 19 -> 33 XXX
+        # Justus 2025-07-29 query count went up   10 -> 19 XXX
+        # Justus 2025-07-29 query count went up   19 -> 33 XXX
         # Justus 2025-07-29 query count went down 33 -> 32
-        with django_assert_num_queries(32):
+        # Justus 2025-07-29 query count went up   32 -> 33 XXX
+        with django_assert_num_queries(33):
             response = user_client.post(
                 invite_url, {"email": "newuser@example.com"}
             )
