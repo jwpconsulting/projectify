@@ -1,12 +1,10 @@
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% load projectify %}
 <div class="font-bold text-utility">
-    <a href="{% url "dashboard:projects:detail" task.section.project.uuid %}"
-       class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{{ task.section.project.title }}</a><!--<Anchor>-->
+    {% anchor "dashboard:projects:detail" label=task.section.project.title project_uuid=task.section.project.uuid %}
     &gt;
-    <a href="{% url "dashboard:projects:detail" task.section.project.uuid %}#{{ task.section.uuid }}"
-       class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{{ task.section.title }}</a><!--<Anchor>-->
+    {% anchor href=task.section.get_absolute_url label=task.section.title %}
     &gt;
-    <a href="{% url "dashboard:tasks:detail" task.uuid %}"
-       class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{{ task.number }}</a><!--<Anchor>-->
+    {% anchor "dashboard:tasks:detail" label=task.number task_uuid=task.uuid %}
 </div>

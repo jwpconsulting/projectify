@@ -2,19 +2,12 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "workspace/form_base.html" %}
 {% load i18n %}
-{%comment%} Task context menu replacement
-
-Add:
-- Move to section
-- Move to top
-- Move to bottom
-- Delete task
-{% endcomment %}
 {% load projectify rules %}
 {% block form_content %}
     <div id="task-actions"
          class="min-w-0 grow flex flex-col gap-4"
          role="presentation">
+        {% include "workspace/task/breadcrumbs.html" with task=task %}
         <h1 class="text-2xl font-bold">{% translate "Task actions" %}</h1>
         <form hx-post="{% url 'dashboard:tasks:move' task.uuid %}"
               hx-target="#app-content"
@@ -28,7 +21,7 @@ Add:
                 {% action_button text=_("Move to bottom") icon="arrow-down" value="bottom" name="direction" %}
             </div>
             {% csrf_token %}
-            <p class="htmx-indicator">saving...</p>
+            <p class="htmx-indicator">{% translate "Saving..." %}</p>
         </form>
         <form hx-post="{% url 'dashboard:tasks:move-to-section' task.uuid %}"
               hx-target="#app-content"
@@ -39,10 +32,12 @@ Add:
             <h2 class="font-bold">{% trans "Move to section" %}</h2>
             <ul class="flex flex-col">
                 {% for section in sections %}
-                    <li>{% action_button text=section.title icon="selector" value=section.uuid name="section_uuid" %}</li>
+                    <li class="overflow-x-hidden">
+                        {% action_button text=section.title icon="selector" value=section.uuid name="section_uuid" %}
+                    </li>
                 {% endfor %}
             </ul>
-            <p class="htmx-indicator">saving...</p>
+            <p class="htmx-indicator">{% trans "Saving..." %}</p>
         </form>
         <form hx-post="{% url 'dashboard:tasks:delete' task.uuid %}"
               hx-confirm="{% blocktrans with title=task.title %}Are you sure you want to delete the following task: {{ title }}{% endblocktrans %}">

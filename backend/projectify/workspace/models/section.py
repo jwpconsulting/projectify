@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Callable, ClassVar, Self, cast
 
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
+from django.urls import reverse
 
 from projectify.lib.models import BaseModel, TitleDescriptionModel
 
@@ -57,6 +58,10 @@ class Section(TitleDescriptionModel, BaseModel):
     def __str__(self) -> str:
         """Return title."""
         return self.title
+
+    def get_absolute_url(self) -> str:
+        """Get URL to section within project."""
+        return f"{reverse("dashboard:projects:detail", args=(str(self.project.uuid),))}#{self.uuid}"
 
     class Meta:
         """Meta."""
