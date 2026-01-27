@@ -78,7 +78,7 @@
                                     <div class="flex flex-row flex-wrap items-center gap-x-1 gap-y-2">
                                         {% for label in task.labels.all %}
                                             <div class="shrink-0">
-                                                <button class="group rounded-2.5xl border border-dashed border-primary px-3 py-1 font-bold bg-label-blue text-label-text-blue"
+                                                <button class="group rounded-2.5xl border border-dashed border-primary px-3 py-1 font-bold {{ label.bg_class }} {{ label.text_class }}"
                                                         type="button"
                                                         disabled="">{{ label.name }}</button>
                                                 <!--<label>-->
