@@ -130,10 +130,14 @@ def workspace_settings_general(
         who=request.user,
         archived=False,
     )
-    context: dict[str, Any] = {"workspace": workspace, "projects": projects}
+    context: dict[str, Any] = {
+        "workspace": workspace,
+        "projects": projects,
+        "active_tab": "general",
+    }
     if request.method == "GET":
         form = WorkspaceSettingsForm(instance=workspace)
-        context = {"form": form, **context}
+        context = {**context, "form": form}
         return render(
             request,
             "workspace/workspace_settings_general.html",
@@ -143,7 +147,7 @@ def workspace_settings_general(
         instance=workspace, data=request.POST, files=request.FILES
     )
     if not form.is_valid():
-        context = {"form": form, **context}
+        context = {**context, "form": form}
         return render(
             request,
             "workspace/workspace_settings_general.html",
@@ -161,9 +165,12 @@ def workspace_settings_general(
         )
     except ValidationError as error:
         populate_form_with_drf_errors(form, error)
-        context = {"form": form}
+        context = {**context, "form": form}
         return render(
-            request, "user/sign_up.html", context=context, status=400
+            request,
+            "workspace/workspace_settings_general.html",
+            context=context,
+            status=400,
         )
     return redirect(
         "dashboard:workspaces:settings",
@@ -196,6 +203,7 @@ def workspace_settings_projects(
         "workspace": workspace,
         "projects": projects,
         "archived_projects": archived_projects,
+        "active_tab": "projects",
     }
     return render(
         request,
@@ -224,6 +232,7 @@ def workspace_settings_label(
         "workspace": workspace,
         "projects": workspace.project_set.all(),
         "labels": workspace.label_set.all(),
+        "active_tab": "labels",
     }
     return render(
         request, "workspace/workspace_settings_labels.html", context=context
@@ -261,6 +270,7 @@ def workspace_settings_new_label(
         "workspace": workspace,
         "projects": workspace.project_set.all(),
         "color_map": COLOR_MAP,
+        "active_tab": "labels",
     }
     match request.method:
         case "GET":
@@ -336,6 +346,7 @@ def workspace_settings_edit_label(
         "label": label,
         "projects": label.workspace.project_set.all(),
         "color_map": COLOR_MAP,
+        "active_tab": "labels",
     }
     match request.method:
         case "DELETE":
@@ -408,6 +419,7 @@ def workspace_settings_team_members(
         "workspace": workspace,
         "projects": projects,
         "form": InviteTeamMemberForm(),
+        "active_tab": "team",
     }
     return render(
         request,
@@ -435,11 +447,15 @@ def workspace_settings_team_members_invite(
         archived=False,
     )
 
-    context: dict[str, Any] = {"workspace": workspace, "projects": projects}
+    context: dict[str, Any] = {
+        "workspace": workspace,
+        "projects": projects,
+        "active_tab": "team",
+    }
 
     form = InviteTeamMemberForm(request.POST)
 
-    context = {"form": form, **context}
+    context = {**context, "form": form}
     if not form.is_valid():
         return render(
             request,
@@ -468,7 +484,7 @@ def workspace_settings_team_members_invite(
                     _("User has already been added to this workspace."),
                 )
 
-        context = {"form": form, **context}
+        context = {**context, "form": form}
         return render(
             request,
             "workspace/workspace_settings_team_members.html",
@@ -518,7 +534,11 @@ def workspace_settings_team_member_remove(
     return render(
         request,
         "workspace/workspace_settings_team_members.html",
-        context={"workspace": workspace, "form": InviteTeamMemberForm()},
+        context={
+            "workspace": workspace,
+            "form": InviteTeamMemberForm(),
+            "active_tab": "team",
+        },
     )
 
 
@@ -561,7 +581,11 @@ def workspace_settings_team_member_uninvite(
         )
 
     workspace.refresh_from_db()
-    context = {"workspace": workspace, "form": InviteTeamMemberForm()}
+    context = {
+        "workspace": workspace,
+        "form": InviteTeamMemberForm(),
+        "active_tab": "team",
+    }
     return render(
         request,
         "workspace/workspace_settings_team_members.html",
@@ -653,7 +677,11 @@ def workspace_settings_billing(
         archived=False,
     )
 
-    context: dict[str, object] = {"workspace": workspace, "projects": projects}
+    context: dict[str, object] = {
+        "workspace": workspace,
+        "projects": projects,
+        "active_tab": "billing",
+    }
 
     if request.method == "GET":
         match workspace.customer.subscription_status:
@@ -788,6 +816,7 @@ def workspace_settings_quota(
         "workspace": workspace,
         "quota_rows": quota_rows,
         "projects": projects,
+        "active_tab": "quota",
     }
     return render(
         request, "workspace/workspace_settings_quota.html", context=context
