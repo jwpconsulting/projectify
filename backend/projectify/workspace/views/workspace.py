@@ -90,17 +90,13 @@ def workspace_view(
 ) -> HttpResponse:
     """Show workspace."""
     workspace = workspace_find_by_workspace_uuid(
-        who=request.user, workspace_uuid=workspace_uuid
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        qs=WorkspaceDetailQuerySet,
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    # TODO use workspace.project_set.all()
-    projects = project_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=workspace_uuid,
-        archived=False,
-    )
-    context = {"workspace": workspace, "projects": projects}
+    context = {"workspace": workspace, "projects": workspace.project_set.all()}
     return render(request, "workspace/workspace_detail.html", context)
 
 
@@ -121,18 +117,15 @@ def workspace_settings_general(
 ) -> HttpResponse:
     """Show general workspace settings."""
     workspace = workspace_find_by_workspace_uuid(
-        who=request.user, workspace_uuid=workspace_uuid
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        qs=WorkspaceDetailQuerySet,
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    projects = project_find_by_workspace_uuid(
-        workspace_uuid=workspace_uuid,
-        who=request.user,
-        archived=False,
-    )
     context: dict[str, Any] = {
         "workspace": workspace,
-        "projects": projects,
+        "projects": workspace.project_set.all(),
         "active_tab": "general",
     }
     if request.method == "GET":
@@ -185,15 +178,12 @@ def workspace_settings_projects(
 ) -> HttpResponse:
     """Show projects for this workspace."""
     workspace = workspace_find_by_workspace_uuid(
-        who=request.user, workspace_uuid=workspace_uuid
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        qs=WorkspaceDetailQuerySet,
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    projects = project_find_by_workspace_uuid(
-        workspace_uuid=workspace_uuid,
-        who=request.user,
-        archived=False,
-    )
     archived_projects = project_find_by_workspace_uuid(
         workspace_uuid=workspace_uuid,
         who=request.user,
@@ -201,7 +191,7 @@ def workspace_settings_projects(
     )
     context = {
         "workspace": workspace,
-        "projects": projects,
+        "projects": workspace.project_set.all(),
         "archived_projects": archived_projects,
         "active_tab": "projects",
     }
@@ -406,18 +396,13 @@ def workspace_settings_team_members(
     workspace = workspace_find_by_workspace_uuid(
         who=request.user,
         workspace_uuid=workspace_uuid,
-        qs=workspace_build_detail_query_set(who=request.user),
+        qs=workspace_build_detail_query_set(who=None),
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    projects = project_find_by_workspace_uuid(
-        workspace_uuid=workspace_uuid,
-        who=request.user,
-        archived=False,
-    )
     context = {
         "workspace": workspace,
-        "projects": projects,
+        "projects": workspace.project_set.all(),
         "form": InviteTeamMemberForm(),
         "active_tab": "team",
     }
@@ -437,19 +422,14 @@ def workspace_settings_team_members_invite(
     workspace = workspace_find_by_workspace_uuid(
         who=request.user,
         workspace_uuid=workspace_uuid,
-        qs=workspace_build_detail_query_set(who=request.user),
+        qs=workspace_build_detail_query_set(who=None),
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    projects = project_find_by_workspace_uuid(
-        workspace_uuid=workspace_uuid,
-        who=request.user,
-        archived=False,
-    )
 
     context: dict[str, Any] = {
         "workspace": workspace,
-        "projects": projects,
+        "projects": workspace.project_set.all(),
         "active_tab": "team",
     }
 
@@ -557,7 +537,7 @@ def workspace_settings_team_member_uninvite(
     workspace = workspace_find_by_workspace_uuid(
         who=request.user,
         workspace_uuid=workspace_uuid,
-        qs=workspace_build_detail_query_set(who=request.user),
+        qs=WorkspaceDetailQuerySet,
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
@@ -666,20 +646,17 @@ def workspace_settings_billing(
 ) -> HttpResponse:
     """Show workspace billing settings."""
     workspace = workspace_find_by_workspace_uuid(
-        who=request.user, workspace_uuid=workspace_uuid
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        qs=WorkspaceDetailQuerySet,
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
     workspace.quota = workspace_get_all_quotas(workspace)
-    projects = project_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=workspace_uuid,
-        archived=False,
-    )
 
     context: dict[str, object] = {
         "workspace": workspace,
-        "projects": projects,
+        "projects": workspace.project_set.all(),
         "active_tab": "billing",
     }
 
@@ -769,16 +746,13 @@ def workspace_settings_quota(
 ) -> HttpResponse:
     """Show workspace quota."""
     workspace = workspace_find_by_workspace_uuid(
-        who=request.user, workspace_uuid=workspace_uuid
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        qs=WorkspaceDetailQuerySet,
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
     workspace.quota = workspace_get_all_quotas(workspace)
-    projects = project_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=workspace_uuid,
-        archived=False,
-    )
 
     quota_rows: list[QuotaEntry] = [
         {
@@ -815,7 +789,7 @@ def workspace_settings_quota(
     context = {
         "workspace": workspace,
         "quota_rows": quota_rows,
-        "projects": projects,
+        "projects": workspace.project_set.all(),
         "active_tab": "quota",
     }
     return render(
