@@ -30,10 +30,7 @@
             <form method="post"
                   action="{% url 'dashboard:workspaces:billing-edit' workspace.uuid %}">
                 {% csrf_token %}
-                <button type="submit"
-                        class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                    {% trans "Edit billing details" %}
-                </button>
+                {% include "projectify/forms/submit.html" with text=_("Edit billing details") %}
             </form>
         {% elif workspace.customer.subscription_status == "UNPAID" or workspace.customer.subscription_status == "CANCELLED" %}
             <section>
@@ -61,12 +58,7 @@
                     </p>
                 </header>
                 {{ form.seats.as_field_group }}
-                <button type="submit"
-                        name="action"
-                        value="checkout"
-                        class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                    {% trans "Go to checkout" %}
-                </button>
+                {% include "projectify/forms/submit.html" with text=_("Go to checkout") name="action" value="checkout" %}
             </form>
             <form method="post" class="flex flex-col gap-4">
                 {% csrf_token %}
@@ -77,12 +69,7 @@
                     </p>
                 </header>
                 {{ form.code.as_field_group }}
-                <button type="submit"
-                        name="action"
-                        value="redeem_coupon"
-                        class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                    {% trans "Redeem coupon code" %}
-                </button>
+                {% include "projectify/forms/submit.html" with text=_("Redeem coupon code") name="action" value="redeem_coupon" %}
             </form>
         {% elif workspace.customer.subscription_status == "CUSTOM" %}
             <section class="flex flex-col gap-2">
