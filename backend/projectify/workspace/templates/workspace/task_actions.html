@@ -23,9 +23,9 @@ Add:
               hx-push-url="true"
               class="flex flex-col gap-1">
             <div class="flex flex-col items-start gap-2">
-                <button name="direction" value="top" type="submit">{% translate "Move to top" %}</button>
+                {% action_button text=_("Move to top") icon="arrow-up" value="top" name="direction" %}
                 {# TODO conditionally hide if bottom #}
-                <button name="direction" value="bottom" type="submit">{% translate "Move to bottom" %}</button>
+                {% action_button text=_("Move to bottom") icon="arrow-down" value="bottom" name="direction" %}
             </div>
             {% csrf_token %}
             <p class="htmx-indicator">saving...</p>
@@ -36,21 +36,17 @@ Add:
               hx-swap="outerHTML"
               hx-push-url="true"
               class="flex flex-col gap-1">
-            <div>
-                <h2 class="font-bold">{% trans "Move to section" %}</h2>
-                <ul class="flex flex-col">
-                    {% for section in sections %}
-                        <li>
-                            <button type="submit" name="section_uuid" value="{{ section.uuid }}">{{ section.title }}</button>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
+            <h2 class="font-bold">{% trans "Move to section" %}</h2>
+            <ul class="flex flex-col">
+                {% for section in sections %}
+                    <li>{% action_button text=section.title icon="selector" value=section.uuid name="section_uuid" %}</li>
+                {% endfor %}
+            </ul>
             <p class="htmx-indicator">saving...</p>
         </form>
         <form hx-post="{% url 'dashboard:tasks:delete' task.uuid %}"
               hx-confirm="{% blocktrans with title=task.title %}Are you sure you want to delete the following task: {{ title }}{% endblocktrans %}">
-            <button type="submit">{% translate "Delete task" %}</button>
+            {% action_button text=_("Delete task") icon="trash" style="destructive" %}
         </form>
     </div>
 {% endblock form_content %}

@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2024 JWP Consulting GK
 """Shared template tags for Projectify."""
 
-from typing import Any, Optional, Union
+from typing import Any, Literal, Optional, Union
 
 from django import template
 from django.template.loader import render_to_string
@@ -64,6 +64,38 @@ def anchor(
         url=url,
         label=label,
         extra=extra,
+    )
+
+
+@register.simple_tag
+def action_button(
+    text: str,
+    icon: str,
+    style: Literal["primary", "destructive"] = "primary",
+    value: Optional[str] = None,
+    name: Optional[str] = None,
+    grow: bool = True,
+) -> SafeText:
+    """Render a styled action button with icon."""
+    # Source: frontend/src/lib/funabashi/buttons/Button.svelte
+    color_classes = {
+        "primary": "text-secondary-content hover:bg-secondary-hover hover:text-secondary-content-hover active:bg-secondary-pressed active:text-secondary-content-hover",
+        "destructive": "text-destructive hover:bg-destructive-secondary-hover hover:text-destructive-hover active:bg-destructive-secondary-pressed active:text-destructive-pressed",
+    }
+
+    return format_html(
+        '<button type="submit" '
+        'class="{width_class} {color_classes} flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold"'
+        "{value}{name}>"
+        '<div class="w-6 h-6">{icon}</div>'
+        "{text}"
+        "</button>",
+        width_class="w-full" if grow else "min-w-max",
+        color_classes=color_classes[style],
+        icon=render_to_string(f"heroicons/{icon}.svg"),
+        text=text,
+        value=format_html(' value="{value}"', value=value) if value else "",
+        name=format_html(' name="{name}"', name=name) if name else "",
     )
 
 
