@@ -10,11 +10,10 @@
 {% block workspace_settings_content %}
     <section class="flex flex-col gap-2">
         <h2 class="font-bold text-lg">{% translate "Labels" %}</h2>
-        <table class="grid w-full gap-x-2 gap-y-3 grid-cols-[1fr_max-content_max-content]">
+        <table class="grid w-full gap-x-2 gap-y-3 grid-cols-[1fr_max-content]">
             <thead class="contents">
                 <tr class="contents">
                     <th class="text-left">{% translate "Label name" %}</th>
-                    <th></th>
                     <th></th>
                 </tr>
             </thead>
@@ -23,27 +22,24 @@
                     <tr class="contents">
                         <td class="flex items-center gap-2 overflow-hidden">
                             <div class="shrink-0 w-6 h-6 rounded-full {{ label.bg_class }} border {{ label.border_class }}"></div>
-                            <span class="truncate">{{ label.name }}</span>
-                        </td>
-                        <td>
                             {% has_perm "workspace.update_label" user label as can_update_label %}
                             {% if can_update_label %}
                                 <a href="{% url 'dashboard:workspaces:edit-label' workspace_uuid=workspace.uuid label_uuid=label.uuid %}"
-                                   class="flex flex-row gap-1 items-center text-primary">
-                                    <div class="w-4 h-4">{% include "heroicons/pencil.svg" %}</div>
-                                    {% translate "Update" %}
+                                   class="flex items-center gap-1 text-primary truncate">
+                                    <span class="truncate">{{ label.name }}</span>
+                                    <div class="w-4 h-4 shrink-0">{% include "heroicons/pencil.svg" %}</div>
                                 </a>
+                            {% else %}
+                                <span class="truncate">{{ label.name }}</span>
                             {% endif %}
                         </td>
                         <td>
                             {% has_perm "workspace.delete_label" user label as can_delete_label %}
                             {% if can_delete_label %}
-                                <button class="flex flex-row gap-1 items-center text-destructive"
-                                        hx-confirm="{% blocktranslate with label=label.name %}Are you sure you want to delete the '{{ label }}' label?{% endblocktranslate %}"
-                                        hx-delete="{% url "dashboard:workspaces:edit-label" workspace_uuid=workspace.uuid label_uuid=label.uuid %}">
-                                    <div class="w-4 h-4">{% include "heroicons/trash.svg" %}</div>
-                                    {% translate "Delete" %}
-                                </button>
+                                <form hx-delete="{% url "dashboard:workspaces:edit-label" workspace_uuid=workspace.uuid label_uuid=label.uuid %}"
+                                      hx-confirm="{% blocktranslate with label=label.name %}Are you sure you want to delete the '{{ label }}' label?{% endblocktranslate %}">
+                                    {% action_button text=_("Delete") icon="trash" style="destructive" grow=False %}
+                                </form>
                             {% endif %}
                         </td>
                     </tr>
