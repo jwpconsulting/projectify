@@ -20,7 +20,6 @@ if TYPE_CHECKING:
     from . import Project  # noqa: F401
 
 
-
 class Section(TitleDescriptionModel, BaseModel):
     """Section of a Project."""
 

@@ -15,8 +15,9 @@ from projectify.workspace.services.section import (
     section_move_in_direction,
 )
 
+pytestmark = pytest.mark.django_db
 
-@pytest.mark.django_db
+
 def test_delete_non_empty_section(
     team_member: TeamMember,
     section: Section,
@@ -34,7 +35,6 @@ def test_delete_non_empty_section(
     assert Task.objects.count() == task_count - 1
 
 
-@pytest.mark.django_db
 def test_moving_section(
     project: Project,
     section: Section,
@@ -80,7 +80,6 @@ def test_moving_section(
     ]
 
 
-@pytest.mark.django_db
 def test_moving_empty_section(
     project: Project,
     section: Section,
@@ -101,7 +100,6 @@ def test_moving_empty_section(
     assert section._order == 0
 
 
-@pytest.mark.django_db
 def test_section_move_in_direction_up(
     project: Project,
     section: Section,
@@ -128,7 +126,6 @@ def test_section_move_in_direction_up(
     ]
 
 
-@pytest.mark.django_db
 def test_section_move_in_direction_down(
     project: Project,
     section: Section,
@@ -155,7 +152,6 @@ def test_section_move_in_direction_down(
     ]
 
 
-@pytest.mark.django_db
 def test_section_move_in_direction_up_at_top(
     project: Project,
     section: Section,
@@ -179,7 +175,6 @@ def test_section_move_in_direction_up_at_top(
     ]
 
 
-@pytest.mark.django_db
 def test_section_move_in_direction_down_at_bottom(
     project: Project,
     section: Section,
@@ -203,7 +198,6 @@ def test_section_move_in_direction_down_at_bottom(
     ]
 
 
-@pytest.mark.django_db
 def test_section_move_in_direction_single_section(
     project: Project,
     section: Section,
