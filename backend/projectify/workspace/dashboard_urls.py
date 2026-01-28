@@ -31,7 +31,6 @@ from projectify.workspace.views.task import (
     task_update_view,
 )
 from projectify.workspace.views.workspace import (
-    workspace_list_view,
     workspace_settings_billing,
     workspace_settings_billing_edit,
     workspace_settings_edit_label,
@@ -50,11 +49,6 @@ from projectify.workspace.views.workspace import (
 app_name = "dashboard"
 workspace_patterns = (
     # HTML
-    path(
-        "",
-        workspace_list_view,
-        name="list",
-    ),
     path(
         "<uuid:workspace_uuid>",
         workspace_view,
