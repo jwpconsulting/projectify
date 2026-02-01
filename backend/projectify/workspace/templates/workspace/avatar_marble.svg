@@ -1,3 +1,6 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# SPDX-FileCopyrightText: 2023-2026 JWP Consulting GK #}
+{# SPDX-FileCopyrightText: 2023 paolotiu #}
 <?xml version="1.0" encoding="UTF-8"?>
 <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}">
     <title>{{ title }}</title>
