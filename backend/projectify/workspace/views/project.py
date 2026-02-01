@@ -210,6 +210,7 @@ def project_detail_view(
         label_uuids=label_uuids,
         unlabeled_tasks=filter_by_unlabeled,
         task_search_query=task_search_query,
+        who=request.user,
     )
     project = project_find_by_project_uuid(
         who=request.user, project_uuid=project_uuid, qs=qs

@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Callable
 
 from django.db import models
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import BaseModel, TitleDescriptionModel
 
@@ -17,6 +18,8 @@ from .types import GetOrder, SetOrder
 if TYPE_CHECKING:
     from django.db.models.manager import RelatedManager  # noqa: F401
 
+    from projectify.user.models.user import User  # noqa: F401
+
     from . import Project  # noqa: F401
 
 
@@ -25,6 +28,12 @@ class Section(TitleDescriptionModel, BaseModel):
 
     project = models.ForeignKey["Project"]("Project", on_delete=models.CASCADE)
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+    minimized_by = models.ManyToManyField(
+        "user.User",
+        blank=True,
+        related_name="minimized_sections",
+        help_text=_("Users who have minimized this section"),
+    )  # type: models.ManyToManyField[User, "Section"]
 
     if TYPE_CHECKING:
         # Related managers

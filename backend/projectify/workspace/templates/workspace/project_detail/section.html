@@ -2,11 +2,26 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load i18n %}
 {% load projectify %}
-<section data-section class="flex flex-col" id={{ section.uuid }}>
+<section data-section class="flex flex-col" id="section-{{ section.uuid }}">
     <header class="sticky top-0 flex w-full flex-row items-center justify-between bg-foreground px-4 py-2">
         <div data-figma-name="Section header"
              class="flex min-w-0 shrink flex-row gap-4 items-center text-base-content">
-            <span class="h-5">{% include "heroicons/chevron-down.svg" %}</span>
+            <form method="post"
+                  action="{% url 'dashboard:sections:minimize' section.uuid %}"
+                  hx-post="{% url 'dashboard:sections:minimize' section.uuid %}"
+                  hx-select="#section-{{ section.uuid }}"
+                  hx-target="#section-{{ section.uuid }}"
+                  hx-swap="outerHTML">
+                {% csrf_token %}
+                <input type="hidden"
+                       name="minimized"
+                       value="{% if section.minimized %}false{% else %}true{% endif %}">
+                <button type="submit"
+                        class="h-5 w-5 flex items-center justify-center hover:bg-secondary-hover rounded transition-transform duration-200 {% if section.minimized %}rotate-[-90deg]{% endif %}"
+                        aria-label="{% if section.minimized %}{% translate 'Expand section' %}{% else %}{% translate 'Minimize section' %}{% endif %}">
+                    {% include "heroicons/chevron-down.svg" %}
+                </button>
+            </form>
             <div class="flex flex-row items-center">
                 <h1 class="line-clamp-1 min-w-0 shrink font-bold">{{ section.title }}</h1>
                 <a href="{% url 'dashboard:sections:update' section.uuid %}"

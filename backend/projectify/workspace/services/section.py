@@ -122,3 +122,16 @@ def section_move(
     project.set_section_order(order_list)
     project.save()
     send_change_signal("changed", section.project)
+
+
+def section_minimize(*, who: User, section: Section, minimized: bool) -> None:
+    """Set section minimized state for user."""
+    validate_perm(
+        "workspace.read_section",
+        who,
+        section.project.workspace,
+    )
+    if minimized:
+        section.minimized_by.add(who)
+    else:
+        section.minimized_by.remove(who)

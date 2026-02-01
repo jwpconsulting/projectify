@@ -11,6 +11,7 @@ from projectify.workspace.models.task import Task
 from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.services.section import (
     section_delete,
+    section_minimize,
     section_move,
     section_move_in_direction,
 )
@@ -217,3 +218,18 @@ def test_section_move_in_direction_single_section(
         who=team_member.user,
     )
     assert list(project.section_set.all()) == [section]
+
+
+@pytest.mark.django_db
+def test_section_minimize(team_member: TeamMember, section: Section) -> None:
+    """Test minimizing and expanding a section."""
+    assert section.minimized_by.count() == 0
+
+    section_minimize(who=team_member.user, section=section, minimized=True)
+
+    assert section.minimized_by.count() == 1
+    assert team_member.user in section.minimized_by.all()
+
+    section_minimize(who=team_member.user, section=section, minimized=False)
+    assert section.minimized_by.count() == 0
+    assert team_member.user not in section.minimized_by.all()
