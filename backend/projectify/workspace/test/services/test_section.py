@@ -11,12 +11,14 @@ from projectify.workspace.models.task import Task
 from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.services.section import (
     section_delete,
+    section_minimize,
     section_move,
     section_move_in_direction,
 )
 
+pytestmark = pytest.mark.django_db
 
-@pytest.mark.django_db
+
 def test_delete_non_empty_section(
     team_member: TeamMember,
     section: Section,
@@ -34,7 +36,6 @@ def test_delete_non_empty_section(
     assert Task.objects.count() == task_count - 1
 
 
-@pytest.mark.django_db
 def test_moving_section(
     project: Project,
     section: Section,
@@ -80,7 +81,6 @@ def test_moving_section(
     ]
 
 
-@pytest.mark.django_db
 def test_moving_empty_section(
     project: Project,
     section: Section,
@@ -101,7 +101,6 @@ def test_moving_empty_section(
     assert section._order == 0
 
 
-@pytest.mark.django_db
 def test_section_move_in_direction_up(
     project: Project,
     section: Section,
@@ -128,7 +127,6 @@ def test_section_move_in_direction_up(
     ]
 
 
-@pytest.mark.django_db
 def test_section_move_in_direction_down(
     project: Project,
     section: Section,
@@ -155,7 +153,6 @@ def test_section_move_in_direction_down(
     ]
 
 
-@pytest.mark.django_db
 def test_section_move_in_direction_up_at_top(
     project: Project,
     section: Section,
@@ -179,7 +176,6 @@ def test_section_move_in_direction_up_at_top(
     ]
 
 
-@pytest.mark.django_db
 def test_section_move_in_direction_down_at_bottom(
     project: Project,
     section: Section,
@@ -203,7 +199,6 @@ def test_section_move_in_direction_down_at_bottom(
     ]
 
 
-@pytest.mark.django_db
 def test_section_move_in_direction_single_section(
     project: Project,
     section: Section,
@@ -223,3 +218,18 @@ def test_section_move_in_direction_single_section(
         who=team_member.user,
     )
     assert list(project.section_set.all()) == [section]
+
+
+@pytest.mark.django_db
+def test_section_minimize(team_member: TeamMember, section: Section) -> None:
+    """Test minimizing and expanding a section."""
+    assert section.minimized_by.count() == 0
+
+    section_minimize(who=team_member.user, section=section, minimized=True)
+
+    assert section.minimized_by.count() == 1
+    assert team_member.user in section.minimized_by.all()
+
+    section_minimize(who=team_member.user, section=section, minimized=False)
+    assert section.minimized_by.count() == 0
+    assert team_member.user not in section.minimized_by.all()

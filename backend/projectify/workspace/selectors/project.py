@@ -6,13 +6,22 @@
 from typing import Optional, Union
 from uuid import UUID
 
-from django.db.models import Count, Prefetch, Q, QuerySet, Value
+from django.db.models import (
+    Count,
+    Exists,
+    OuterRef,
+    Prefetch,
+    Q,
+    QuerySet,
+    Value,
+)
 from django.db.models.functions import NullIf
 
 from projectify.user.models import User
 
 from ..models.label import Label
 from ..models.project import Project
+from ..models.section import Section
 from ..models.task import Task
 from ..models.team_member import TeamMember
 from .labels import labels_annotate_with_colors
@@ -25,6 +34,7 @@ def project_detail_query_set(
     unassigned_tasks: Optional[bool] = None,
     unlabeled_tasks: Optional[bool] = None,
     task_search_query: Optional[str] = None,
+    who: Optional[User] = None,
 ) -> QuerySet[Project]:
     """Create a project detail query set."""
     project_not_archived = Q(task__section__project__archived__isnull=True)
@@ -92,8 +102,22 @@ def project_detail_query_set(
             )
         )
     ).filter(task_q)
+
+    # If caller provides a user, filter out tasks for hidden sections,
+    if who is not None:
+        task_qs = task_qs.exclude(section__minimized_by=who)
+
+    # and mark these sections as minimized
+    section_qs = Section.objects.all()
+    if who is not None:
+        section_qs = section_qs.annotate(
+            minimized=Exists(
+                Section.objects.filter(pk=OuterRef("pk"), minimized_by=who)
+            )
+        )
+
     return Project.objects.prefetch_related(
-        "section_set",
+        Prefetch("section_set", queryset=section_qs),
         Prefetch("section_set__task_set", queryset=task_qs),
         # Prefetch for workspace 1 : N relations, label, projects, and team
         # members

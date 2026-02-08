@@ -138,11 +138,10 @@ For consistency, we rename this overlay to **Create section**.
 - [x] **Failure**: Render form with errors
 - [x] Populate side nav with `workspace` and `projects` context objects
 
-## Delete task (TODO)
+## Delete task (DONE)
 
-- [ ] **Link**: On the task page, create a **Delete Task** red button next to **Edit**
-- [ ] Show HTMX confirm dialog when user pressed **Delete Task**. Delete task on
-  confirmation.
+- [x] **Link**: On the task page, turn the ellipsis button into a link to the
+  task menu
 
 ## Archive project (DONE)
 

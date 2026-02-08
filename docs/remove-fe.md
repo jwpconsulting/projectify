@@ -123,20 +123,17 @@ Subject to change.
 - [x] Add template partials from prototyped backend templates to `docs/remove-fe-templates.md`.
 - [x] Identify all JavaScript only/frontend only functions that need to be
       recreated in Django. Mostly documented in `docs/remove-fe-overlays.md`
-- [ ] Analyze which views Django needs and list them in `docs/remove-fe-views.md`.
-- [ ] Analyze and list which forms the views need in `docs/remove-fe-forms.md`.
-- [ ] Understand if the Django views can use DRF serializers for forms. Add any viable
-DRF serializers to the form list in `docs/remove-fe-forms.md`.
-- [ ] Identify form widget templates required
+- [x] Analyze which views Django needs and list them in `docs/remove-fe-views.md`.
+- [x] Identify form widget templates required
 
 ## Implementation
 
 Subject to change.
 
-- [ ] Create views, templates and forms in tandem. Write test cases as you go.
+- [x] Create views, templates and forms in tandem. Write test cases as you go.
       It's OK if it's bare-bones here. Structure over looks.
-- [ ] Port components to Django
-- [ ] Create form widgets
+- [x] Port components to Django
+- [x] Create form widgets
 - [ ] Features removed? Update help. Update landing page.
 - [ ] Update all architecture docs.
 

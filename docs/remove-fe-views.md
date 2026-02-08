@@ -208,12 +208,21 @@ view functions:
 section(request, section_uuid)
 
 # DONE
+# GET:  Shows section creation form
+# POST: Creates section within project
+section_create_view(request, project_uuid)
+
+# DONE
 # GET:  Shows section update form
 # POST: Depending on the action:
 # "save":      update the section
 # "move_up":   move it above the previous section
 # "move_down": move it below the next section
 section_update_view(request, section_uuid)
+
+# DONE
+# POST: Delete the section with UUID `section_uuid`
+section_delete_view(request, section_uuid)
 ```
 
 ## Task
@@ -243,6 +252,14 @@ task_update_view(request, task_uuid)
 # DONE
 # POST: Move a task up or down
 task_move(request, task_uuid)
+
+# DONE
+# POST: Move a task to a different section
+task_move_to_section(request, task_uuid)
+
+# DONE
+# POST: Delete the task with UUID `task_uuid`
+task_delete_view(request, task_uuid)
 ```
 
 ## Workspace
@@ -256,9 +273,9 @@ view functions:
 workspace(request)
 
 # DONE
-# GET:  Shows workspace
+# GET:  Shows workspace general settings
 # POST: Updates workspace
-workspace_settings(request, workspace_uuid)
+workspace_settings_general(request, workspace_uuid)
 
 # DONE
 # GET:  Shows projects in workspace for editing
@@ -290,6 +307,20 @@ workspace_settings_billing(request, workspace_uuid)
 
 # GET: Review workspace resource quota
 workspace_settings_quota(request, workspace_uuid)
+
+# DONE
+# GET: List workspace labels
+workspace_settings_label(request, workspace_uuid)
+
+# DONE
+# GET:  Shows label creation form
+# POST: Creates label within workspace
+workspace_settings_new_label(request, workspace_uuid)
+
+# DONE
+# GET:  Shows label update form
+# POST: Updates label
+workspace_settings_edit_label(request, workspace_uuid, label_uuid)
 ```
 
 Current, intermediate implementation is:

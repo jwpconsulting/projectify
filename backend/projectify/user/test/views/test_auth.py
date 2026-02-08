@@ -287,22 +287,13 @@ class TestLogInDjango:
         password: str,
     ) -> None:
         """Test logging in a user."""
-        # 13 + 3, 3 for the queries when redirecting
-        with django_assert_num_queries(18):
+        with django_assert_num_queries(15):
             response = client.post(
                 resource_url,
                 {"email": user.email, "password": password},
-                follow=True,
             )
-        assert response.status_code == 200, response.content
-        assert response.redirect_chain == [
-            (reverse("dashboard:dashboard"), 302),
-            (reverse("dashboard:workspaces:list"), 302),
-        ]
-        # Thx to
-        # https://stackoverflow.com/questions/22457557/how-to-test-login-process/22458380#22458380
-        assert "user" in response.context
-        assert response.context["user"].is_authenticated, response.context
+        assert response.status_code == 302, response.content
+        assert "sessionid" in response.cookies
 
     def test_log_in_wrong_password(
         self,

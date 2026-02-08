@@ -5,6 +5,7 @@
 
 from django.urls import include, path
 
+from projectify.workspace.views.avatar_marble import avatar_marble_view
 from projectify.workspace.views.dashboard import redirect_to_dashboard
 from projectify.workspace.views.project import (
     project_archive_view,
@@ -17,6 +18,7 @@ from projectify.workspace.views.project import (
 from projectify.workspace.views.section import (
     section_create_view,
     section_delete_view,
+    section_minimize_view,
     section_update_view,
 )
 from projectify.workspace.views.task import (
@@ -30,7 +32,6 @@ from projectify.workspace.views.task import (
     task_update_view,
 )
 from projectify.workspace.views.workspace import (
-    workspace_list_view,
     workspace_settings_billing,
     workspace_settings_billing_edit,
     workspace_settings_edit_label,
@@ -49,11 +50,6 @@ from projectify.workspace.views.workspace import (
 app_name = "dashboard"
 workspace_patterns = (
     # HTML
-    path(
-        "",
-        workspace_list_view,
-        name="list",
-    ),
     path(
         "<uuid:workspace_uuid>",
         workspace_view,
@@ -161,12 +157,13 @@ project_patterns = (
     ),
 )
 section_patterns = (
-    # Create task
-    path("<uuid:section_uuid>/create-task", task_create, name="create-task"),
-    # Update section
     path("<uuid:section_uuid>/update", section_update_view, name="update"),
-    # Delete section
     path("<uuid:section_uuid>/delete", section_delete_view, name="delete"),
+    path(
+        "<uuid:section_uuid>/minimize", section_minimize_view, name="minimize"
+    ),
+    # Create task within section
+    path("<uuid:section_uuid>/create-task", task_create, name="create-task"),
 )
 task_patterns = (
     path("<uuid:task_uuid>", task_detail, name="detail"),
@@ -189,6 +186,12 @@ task_patterns = (
 )
 urlpatterns = (
     path("", redirect_to_dashboard, name="dashboard"),
+    # Avatar
+    path(
+        "avatar/<uuid:team_member_uuid>.svg",
+        avatar_marble_view,
+        name="avatar-marble",
+    ),
     # Workspace
     path(
         "workspace/",

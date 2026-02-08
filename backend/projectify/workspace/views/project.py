@@ -117,7 +117,7 @@ class ProjectFilterForm(forms.Form):
             str(member.uuid): {
                 "is_filtered": getattr(member, "is_filtered", None),
                 "task_count": getattr(member, "task_count", None),
-                "user": member.user,
+                "member": member,
             }
             for member in team_members
         }
@@ -210,6 +210,7 @@ def project_detail_view(
         label_uuids=label_uuids,
         unlabeled_tasks=filter_by_unlabeled,
         task_search_query=task_search_query,
+        who=request.user,
     )
     project = project_find_by_project_uuid(
         who=request.user, project_uuid=project_uuid, qs=qs

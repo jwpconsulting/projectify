@@ -40,6 +40,7 @@ from projectify.workspace.serializers.section import SectionDetailSerializer
 from projectify.workspace.services.section import (
     section_create,
     section_delete,
+    section_minimize,
     section_move,
     section_move_in_direction,
     section_update,
@@ -227,6 +228,33 @@ def section_delete_view(
     )
     section_delete(who=request.user, section=section)
     return HttpResponseClientRedirect(project_url)
+
+
+class SectionMinimizeForm(forms.Form):
+    """Form for minimizing and expanding a section."""
+
+    minimized = forms.BooleanField(required=False)
+
+
+@platform_view
+@require_POST
+def section_minimize_view(
+    request: AuthenticatedHttpRequest, section_uuid: UUID
+) -> HttpResponse:
+    """Toggle section minimize state."""
+    section = section_find_for_user_and_uuid(
+        user=request.user, section_uuid=section_uuid
+    )
+    if section is None:
+        raise Http404(_("Section not found for this UUID"))
+
+    form = SectionMinimizeForm(request.POST)
+    if not form.is_valid():
+        return HttpResponse("Invalid form data", status=400)
+
+    minimized = form.cleaned_data["minimized"]
+    section_minimize(who=request.user, section=section, minimized=minimized)
+    return HttpResponseRedirect(section.get_absolute_url())
 
 
 class SectionCreate(APIView):

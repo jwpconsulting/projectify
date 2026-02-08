@@ -91,14 +91,6 @@ def _get_workspace_settings_context(
 
 # HTML
 @platform_view
-def workspace_list_view(request: AuthenticatedHttpRequest) -> HttpResponse:
-    """Show all workspaces."""
-    workspaces = workspace_find_for_user(who=request.user)
-    context = {"workspaces": workspaces, "workspace": None}
-    return render(request, "workspace/workspace_list.html", context)
-
-
-@platform_view
 def workspace_view(
     request: AuthenticatedHttpRequest, workspace_uuid: UUID
 ) -> HttpResponse:
@@ -110,8 +102,23 @@ def workspace_view(
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    context = {"workspace": workspace, "projects": workspace.project_set.all()}
-    return render(request, "workspace/workspace_detail.html", context)
+
+    projects = project_find_by_workspace_uuid(
+        workspace_uuid=workspace_uuid,
+        who=request.user,
+        archived=False,
+    )
+    project = projects.first()
+
+    if project:
+        return redirect(
+            "dashboard:projects:detail",
+            project_uuid=project.uuid,
+        )
+    return redirect(
+        "onboarding:new_project",
+        workspace_uuid=workspace_uuid,
+    )
 
 
 class WorkspaceSettingsForm(forms.ModelForm):
