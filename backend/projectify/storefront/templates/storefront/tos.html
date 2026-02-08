@@ -2,6 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "storefront_base.html" %}
 {% load markdownify %}
+{% load projectify %}
 {% load i18n %}
 {% block title %}
     {% translate "Terms of service - Projectify" %}
@@ -12,18 +13,19 @@
             <nav class="flex max-w-xs grow flex-col gap-2">
                 <p id="top" class="font-bold">{% trans "Terms of service" %}</p>
                 <ol class="list-inside list-disc">
-                    <li>
-                        <a href="#japanese"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Japanese (original)" %}</a>
-                    </li>
-                    <li>
-                        <a href="#english"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "English (translation)" %}</a>
-                    </li>
+                    <li>{% anchor href="#japanese" label=_("Japanese (original)") %}</li>
+                    <li>{% anchor href="#english" label=_("English (translation)") %}</li>
                 </ol>
             </nav>
-            <div class="w-full p-6 max-w-4xl">
-                <div class="prose">{# TODO: Load markdown #}</div>
+            <div class="flex flex-col gap-10">
+                <section class="prose" id="japanese">
+                    {% include "storefront/tos/tos-ja-formatted.svelte" %}
+                </section>
+                {% anchor label=_("Jump back to top") href="#top" %}
+                <section id="english" class="prose">
+                    {% include "storefront/tos/tos-en-formatted.svelte" %}
+                </section>
+                {% anchor label=_("Jump back to top") href="#top" %}
             </div>
         </main>
     </div>
