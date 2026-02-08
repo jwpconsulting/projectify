@@ -40,7 +40,7 @@ accessibility(request)
 # GET: Show contact information
 contact_us(request)
 
-# TODO
+# DONE
 # GET: Show credits
 credits(request)
 
@@ -52,7 +52,7 @@ free_software(request)
 # GET: Show pricing information
 pricing(request)
 
-# TODO
+# DONE
 # GET: Show the privacy policy
 privacy(request)
 
@@ -72,7 +72,7 @@ solutions_index(request)
 # GET: Show a specific use case
 solutions_detail(request, page: str)
 
-# TODO
+# DONE
 # GET: Show terms of service
 tos(request)
 ```
