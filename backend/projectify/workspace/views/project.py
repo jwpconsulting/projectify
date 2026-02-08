@@ -48,6 +48,7 @@ from projectify.workspace.services.project import (
     project_delete,
     project_update,
 )
+from projectify.workspace.services.team_member import team_member_visit_project
 
 logger = logging.getLogger(__name__)
 
@@ -217,6 +218,10 @@ def project_detail_view(
     )
     if project is None:
         raise Http404(_("No project found for this uuid"))
+
+    # Mark this project as most recently visited
+    team_member_visit_project(user=request.user, project=project)
+
     project.workspace.quota = workspace_get_all_quotas(project.workspace)
     workspaces = workspace_find_for_user(who=request.user)
     projects = project.workspace.project_set.all()

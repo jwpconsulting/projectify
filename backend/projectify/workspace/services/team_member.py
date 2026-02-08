@@ -6,11 +6,14 @@
 from typing import Optional
 
 from django.db import transaction
+from django.utils.timezone import now
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 from projectify.workspace.models.const import TeamMemberRoles
+from projectify.workspace.models.project import Project
 from projectify.workspace.models.team_member import TeamMember
+from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.services.signals import send_change_signal
 
 
@@ -65,3 +68,29 @@ def team_member_delete(
     validate_perm("workspace.delete_team_member", who, team_member)
     team_member.delete()
     send_change_signal("changed", team_member.workspace)
+
+
+def team_member_visit_workspace(*, user: User, workspace: Workspace) -> None:
+    """Mark a workspace as recently visited."""
+    validate_perm("workspace.read_workspace", user, workspace)
+    try:
+        team_member = TeamMember.objects.get(user=user, workspace=workspace)
+    except TeamMember.DoesNotExist:
+        # User is not a team member, nothing to do
+        return
+    team_member.last_visited_workspace = now()
+    team_member.save()
+
+
+def team_member_visit_project(*, user: User, project: Project) -> None:
+    """Mark a workspace and project as recently visited."""
+    validate_perm("workspace.read_workspace", user, project.workspace)
+    workspace = project.workspace
+    try:
+        team_member = TeamMember.objects.get(user=user, workspace=workspace)
+    except TeamMember.DoesNotExist:
+        # User is not a team member, nothing to do
+        return
+    team_member.last_visited_project = project
+    team_member.last_visited_workspace = now()
+    team_member.save()

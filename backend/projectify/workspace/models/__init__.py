@@ -18,13 +18,13 @@ from .workspace import Workspace
 __all__ = (
     "ChatMessage",
     "Label",
+    "Project",
+    "Section",
     "SubTask",
     "Task",
     "TaskLabel",
-    "Workspace",
-    "Project",
-    "Section",
     "TeamMember",
     "TeamMemberInvite",
     "TeamMemberRoles",
+    "Workspace",
 )

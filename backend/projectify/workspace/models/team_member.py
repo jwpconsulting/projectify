@@ -9,10 +9,12 @@ from typing import TYPE_CHECKING, ClassVar, Self, cast
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import BaseModel
 
 from .const import TeamMemberRoles
+from .project import Project
 from .types import Pks
 from .workspace import Workspace
 
@@ -60,6 +62,22 @@ class TeamMember(BaseModel):
         blank=True,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+    last_visited_project = models.ForeignKey(
+        Project,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        help_text=_(
+            "Last project visited by this team member in this workspace"
+        ),
+    )
+    last_visited_workspace = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text=_(
+            "Timestamp when this team member last visited this workspace"
+        ),
+    )
 
     # Sort of nonsensical
     objects: ClassVar[TeamMemberQuerySet] = cast(  # type: ignore[assignment]

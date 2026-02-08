@@ -7,6 +7,7 @@ import uuid
 from typing import TYPE_CHECKING
 
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import BaseModel, TitleDescriptionModel
@@ -53,6 +54,12 @@ class Project(TitleDescriptionModel, BaseModel):
     def __str__(self) -> str:
         """Return title."""
         return self.title
+
+    def get_absolute_url(self) -> str:
+        """Return the absolute URL for this project."""
+        return reverse(
+            "dashboard:projects:detail", kwargs={"project_uuid": self.uuid}
+        )
 
     class Meta:
         """Order by created, descending."""
