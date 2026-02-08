@@ -327,10 +327,6 @@ Current, intermediate implementation is:
 
 ```python
 # TODO REMOVE
-# GET: Show a list of workspaces that the current user can access
-workspace_list_view(request)
-
-# TODO REMOVE
 # GET: Show the workspace's projects
 workspace_view(request, workspace_uuid)
 ```
