@@ -19,7 +19,7 @@ channels = {version = "^4.1.0"}
 channels-redis = "^4.2"
 cryptography = "^44.0.1"
 dj-database-url = "~2.1.0"
-django = "^5.1.8"
+django = "^5.2.11"
 django-anymail = {extras = ["mailgun"], version = "~10.3"}
 django-celery-results = "~2.5.0"
 django-cloudinary-storage = "~0.3.0"
