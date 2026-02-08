@@ -20,9 +20,46 @@ from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.models.workspace import Workspace
 from pytest_types import DjangoAssertNumQueries
 
+pytestmark = pytest.mark.django_db
+
 
 # HTML Views
-@pytest.mark.django_db
+class TestSectionDetail:
+    """Test section detail view."""
+
+    @pytest.fixture
+    def resource_url(self, section: Section) -> str:
+        """Return URL to this view."""
+        return reverse("dashboard:sections:detail", args=(section.uuid,))
+
+    def test_get_section_detail_redirects_to_project(
+        self,
+        user_client: Client,
+        resource_url: str,
+        section: Section,
+        team_member: TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test that section detail redirects to project with section anchor."""
+        with django_assert_num_queries(4):
+            response = user_client.get(resource_url)
+            assert response.status_code == 302
+
+        assert isinstance(response, HttpResponseRedirect)
+        assert str(section.project.uuid) in response.url
+        assert str(section.uuid) in response.url
+
+    def test_section_not_found(
+        self,
+        user_client: Client,
+        team_member: TeamMember,
+    ) -> None:
+        """Test accessing non-existent section returns 404."""
+        url = reverse("dashboard:sections:detail", args=(uuid4(),))
+        response = user_client.get(url)
+        assert response.status_code == 404
+
+
 class TestSectionUpdateView:
     """Test section update view."""
 
@@ -141,7 +178,6 @@ class TestSectionUpdateView:
         assert response.status_code == 404
 
 
-@pytest.mark.django_db
 class TestSectionMinimizeView:
     """Test section minimize view."""
 
@@ -200,7 +236,6 @@ class TestSectionMinimizeView:
 
 
 # Create
-@pytest.mark.django_db
 class TestSectionCreate:
     """Test section creation."""
 
@@ -236,7 +271,6 @@ class TestSectionCreate:
 
 
 # Read + Update + Delete
-@pytest.mark.django_db
 class TestSectionReadUpdateDelete:
     """Test SectionReadUpdateDelete view."""
 
@@ -312,7 +346,6 @@ class TestSectionReadUpdateDelete:
 
 
 # RPC
-@pytest.mark.django_db
 class TestSectionMove:
     """Test moving a section."""
 

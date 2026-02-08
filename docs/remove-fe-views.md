@@ -160,7 +160,7 @@ In `backend/projectify/workspace/views/dashboard.py`, implement the following
 view functions:
 
 ```python
-# TODO, right now it shows available workspaces
+# DONE
 # GET: Redirect user to first available workspace and project
 dashboard(request)
 ```
@@ -203,7 +203,7 @@ In `backend/projectify/workspace/views/section.py`, implement the following
 view functions:
 
 ```python
-# TODO
+# DONE
 # GET: Redirect to project with this section visible
 section(request, section_uuid)
 
