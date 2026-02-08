@@ -179,6 +179,9 @@
             pkgs.gettext
             pkgs.stripe-cli
 
+            # License
+            pkgs.reuse
+
             # For frontend and backend
             self.outputs.packages.${system}.projectify-frontend-node.passthru.nodejs
           ];
