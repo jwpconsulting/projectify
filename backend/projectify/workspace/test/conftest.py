@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2021-2024 JWP Consulting GK
+# SPDX-FileCopyrightText: 2021-2026 JWP Consulting GK
 """
 Workspace test fixtures.
 
@@ -66,6 +66,27 @@ def workspace(faker: Faker, user: User) -> models.Workspace:
     workspace = workspace_create(
         title=faker.company(),
         description=faker.paragraph(),
+        owner=user,
+    )
+    customer = workspace.customer
+    # XXX use same fixture as in corporate/test/conftest.py
+    # Give ourselves some more seats so that tests can pass
+    customer_activate_subscription(
+        customer=customer, stripe_customer_id="stripe_", seats=10
+    )
+    # TODO right now our tests depend on the workspace being paid for
+    # We should also be able to test most actions here for a workspace that
+    # isn't paid.
+    return workspace
+    return timezone.now()
+
+
+@pytest.fixture
+def other_workspace(user: User) -> models.Workspace:
+    """Return workspace."""
+    workspace = workspace_create(
+        title="Other workspace",
+        description="This is another workspace that the current user can access",
         owner=user,
     )
     customer = workspace.customer
@@ -171,6 +192,38 @@ def project(
         due_date=faker.date_time(tzinfo=dt_timezone.utc)
         if faker.pybool()
         else None,
+    )
+
+
+@pytest.fixture
+def other_project_same_workspace(
+    user: User, workspace: models.Workspace
+) -> models.Project:
+    """Return project that belongs to the normal workspace."""
+    return project_create(
+        who=user,
+        title="Other project for the same workspace",
+        description="This is another project that this user can access",
+        workspace=workspace,
+        due_date=None,
+    )
+
+
+@pytest.fixture
+def other_project(
+    user: User, other_workspace: models.Workspace
+) -> models.Project:
+    """
+    Return project that belongs to the other workspace.
+
+    The normal fixture user can still access this.
+    """
+    return project_create(
+        who=user,
+        title="Other project from a different workspace",
+        description="This is in another workspace and the user can access it",
+        workspace=other_workspace,
+        due_date=None,
     )
 
 
