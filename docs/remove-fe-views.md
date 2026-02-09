@@ -40,7 +40,7 @@ accessibility(request)
 # GET: Show contact information
 contact_us(request)
 
-# TODO
+# DONE
 # GET: Show credits
 credits(request)
 
@@ -52,7 +52,7 @@ free_software(request)
 # GET: Show pricing information
 pricing(request)
 
-# TODO
+# DONE
 # GET: Show the privacy policy
 privacy(request)
 
@@ -72,7 +72,7 @@ solutions_index(request)
 # GET: Show a specific use case
 solutions_detail(request, page: str)
 
-# TODO
+# DONE
 # GET: Show terms of service
 tos(request)
 ```
@@ -160,7 +160,7 @@ In `backend/projectify/workspace/views/dashboard.py`, implement the following
 view functions:
 
 ```python
-# TODO, right now it shows available workspaces
+# DONE
 # GET: Redirect user to first available workspace and project
 dashboard(request)
 ```
@@ -203,7 +203,7 @@ In `backend/projectify/workspace/views/section.py`, implement the following
 view functions:
 
 ```python
-# TODO
+# DONE
 # GET: Redirect to project with this section visible
 section(request, section_uuid)
 
@@ -326,10 +326,6 @@ workspace_settings_edit_label(request, workspace_uuid, label_uuid)
 Current, intermediate implementation is:
 
 ```python
-# TODO REMOVE
-# GET: Show a list of workspaces that the current user can access
-workspace_list_view(request)
-
 # TODO REMOVE
 # GET: Show the workspace's projects
 workspace_view(request, workspace_uuid)

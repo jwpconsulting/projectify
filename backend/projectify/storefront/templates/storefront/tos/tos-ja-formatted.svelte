@@ -1,0 +1,1 @@
+../../../../../../frontend/src/routes/(storefront)/tos/tos-ja-formatted.svelte

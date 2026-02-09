@@ -54,7 +54,8 @@ class TestProjectDetailView:
         # Gone down from 14 -> 13, since we select the related workspace
         # Gone down from 13 -> 11, since we prefetch projects
         # Gone down from 11 -> 10, since we don't fetch label values()
-        with django_assert_num_queries(10):
+        # Gone up   from 10 -> 13, since we update the last visited project
+        with django_assert_num_queries(13):
             response = user_client.get(resource_url)
             assert response.status_code == 200
             assert project.title.encode() in response.content
@@ -410,7 +411,8 @@ class TestProjectDeleteView:
         """Test successfully deleting an archived project via HTMX."""
         project_uuid = archived_project.uuid
         assert archived_project.archived
-        with django_assert_num_queries(7):
+        # Gone from 7 -> 8 since we delete user preferences
+        with django_assert_num_queries(8):
             response = user_client.post(resource_url)
             assert response.status_code == 200
         assert not Project.objects.filter(uuid=project_uuid).exists()
@@ -638,13 +640,10 @@ class TestProjectReadUpdateDelete:
         response = rest_user_client.delete(resource_url)
         assert response.status_code == 404, response.content
 
-        project_archive(
-            project=project,
-            who=team_member.user,
-            archived=True,
-        )
+        project_archive(project=project, who=team_member.user, archived=True)
 
-        with django_assert_num_queries(5):
+        # Gone up 5 -> 6 since we track last visited project
+        with django_assert_num_queries(6):
             response = rest_user_client.delete(resource_url)
             assert (
                 response.status_code == status.HTTP_204_NO_CONTENT
@@ -660,8 +659,7 @@ class TestProjectsArchivedList:
     def resource_url(self, workspace: Workspace) -> str:
         """Return URL to this view."""
         return reverse(
-            "workspace:workspaces:archived-projects",
-            args=(workspace.uuid,),
+            "workspace:workspaces:archived-projects", args=(workspace.uuid,)
         )
 
     def test_authenticated(

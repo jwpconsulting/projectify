@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2023, 2024 JWP Consulting GK
+# SPDX-FileCopyrightText: 2023-2026 JWP Consulting GK
 """Workspace CRUD views."""
 
 import logging
@@ -55,7 +55,10 @@ from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
 from ..models import Workspace
 from ..selectors.project import project_find_by_workspace_uuid
 from ..selectors.quota import workspace_get_all_quotas
-from ..selectors.team_member import team_member_find_by_team_member_uuid
+from ..selectors.team_member import (
+    team_member_find_by_team_member_uuid,
+    team_member_last_project,
+)
 from ..selectors.workspace import (
     WorkspaceDetailQuerySet,
     workspace_build_detail_query_set,
@@ -64,7 +67,10 @@ from ..selectors.workspace import (
 )
 from ..serializers.base import WorkspaceBaseSerializer
 from ..serializers.workspace import WorkspaceDetailSerializer
-from ..services.team_member import team_member_delete
+from ..services.team_member import (
+    team_member_delete,
+    team_member_visit_workspace,
+)
 from ..services.team_member_invite import (
     team_member_invite_create,
     team_member_invite_delete,
@@ -103,22 +109,21 @@ def workspace_view(
     if workspace is None:
         raise Http404(_("Workspace not found"))
 
-    projects = project_find_by_workspace_uuid(
-        workspace_uuid=workspace_uuid,
-        who=request.user,
-        archived=False,
-    )
-    project = projects.first()
+    # Mark this workspace as most recently visited
+    team_member_visit_workspace(user=request.user, workspace=workspace)
 
-    if project:
-        return redirect(
-            "dashboard:projects:detail",
-            project_uuid=project.uuid,
-        )
-    return redirect(
-        "onboarding:new_project",
-        workspace_uuid=workspace_uuid,
+    # Check whether the user has already visited a project within this
+    # workspace
+    last_project = team_member_last_project(
+        user=request.user, workspace=workspace
     )
+    if last_project:
+        return redirect(last_project.get_absolute_url())
+
+    project = workspace.project_set.first()
+    if project:
+        return redirect(project.get_absolute_url())
+    return redirect("onboarding:new_project", workspace_uuid=workspace_uuid)
 
 
 class WorkspaceSettingsForm(forms.ModelForm):

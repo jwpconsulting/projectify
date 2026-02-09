@@ -2,6 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "storefront_base.html" %}
 {% load markdownify %}
+{% load projectify %}
 {% load i18n %}
 {% block title %}
     {% translate "Privacy policy - Projectify" %}
@@ -9,29 +10,32 @@
 {% block storefront_content %}
     <main class="flex flex-col items-center gap-10 bg-foreground pb-20 pt-10">
         <div class="flex w-full max-w-5xl grow flex-col gap-4 bg-foreground p-6 sm:flex-row sm:gap-8">
-            <nav slot="side" class="flex max-w-xs grow flex-col gap-2">
+            <nav class="flex max-w-xs grow flex-col gap-2">
                 <p id="top" class="font-bold">{% trans "Privacy Policy" %}</p>
                 <ol class="list-inside list-disc">
-                    <li>
-                        <a href="#japanese"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Japanese Privacy Policy (original)" %}</a>
-                    </li>
-                    <li>
-                        <a href="#english"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "English Privacy Policy (translation)" %}</a>
-                    </li>
-                    <li>
-                        <a href="#japanese-gdpr"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Japanese GDPR Privacy Policy (original)" %}</a>
-                    </li>
-                    <li>
-                        <a href="#english-gdpr"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "English GDPR Privacy Policy (translation)" %}</a>
-                    </li>
+                    <li>{% anchor href="#japanese" label=_("Japanese Privacy Policy (original)") %}</li>
+                    <li>{% anchor href="#english" label=_("English Privacy Policy (translation)") %}</li>
+                    <li>{% anchor href="#japanese-gdpr" label=_("Japanese GDPR Privacy Policy (original)") %}</li>
+                    <li>{% anchor href="#english-gdpr" label=_("English GDPR Privacy Policy (translation)") %}</li>
                 </ol>
             </nav>
             <div class="flex flex-col gap-10">
-                <div class="prose">{# TODO: Load markdown #}</div>
+                <section class="prose" id="japanese">
+                    {% include "storefront/privacy/pp-ja-formatted.svelte" %}
+                </section>
+                {% anchor href="#top" label=_("Jump back to top") %}
+                <section id="english" class="prose">
+                    {% include "storefront/privacy/pp-en-formatted.svelte" %}
+                </section>
+                {% anchor href="#top" label=_("Jump back to top") %}
+                <section class="prose" id="japanese-gdpr">
+                    {% include "storefront/privacy/pp-gdpr-ja-formatted.svelte" %}
+                </section>
+                {% anchor href="#top" label=_("Jump back to top") %}
+                <section id="english-gdpr" class="prose">
+                    {% include "storefront/privacy/pp-gdpr-en-formatted.svelte" %}
+                </section>
+                {% anchor href="#top" label=_("Jump back to top") %}
             </div>
         </main>
     </div>

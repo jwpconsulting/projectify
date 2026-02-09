@@ -36,7 +36,11 @@ def contact_us(request: HttpRequest) -> HttpResponse:
 
 def credits(request: HttpRequest) -> HttpResponse:
     """Serve Credits page."""
-    return render(request, "storefront/credits.html")
+    markdowntext = (
+        get_settings().BASE_DIR / "storefront" / "markdown_en" / "credits.md"
+    ).read_text()
+    context = {"markdowntext": markdowntext}
+    return render(request, "storefront/credits.html", context)
 
 
 def index(request: HttpRequest) -> HttpResponse:

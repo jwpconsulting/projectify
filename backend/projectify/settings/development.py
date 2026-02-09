@@ -116,6 +116,7 @@ class Development(SpectacularSettings, Base):
 
     # Email
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    SERVER_EMAIL = "hello@projectifyapp.com"
 
     # Media
     SERVE_MEDIA = True

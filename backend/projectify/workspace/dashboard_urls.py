@@ -18,6 +18,7 @@ from projectify.workspace.views.project import (
 from projectify.workspace.views.section import (
     section_create_view,
     section_delete_view,
+    section_detail,
     section_minimize_view,
     section_update_view,
 )
@@ -157,6 +158,7 @@ project_patterns = (
     ),
 )
 section_patterns = (
+    path("<uuid:section_uuid>", section_detail, name="detail"),
     path("<uuid:section_uuid>/update", section_update_view, name="update"),
     path("<uuid:section_uuid>/delete", section_delete_view, name="delete"),
     path(

@@ -2,6 +2,7 @@
 #
 # SPDX-FileCopyrightText: 2023-2026 JWP Consulting GK
 # SPDX-FileCopyrightText: 2023 paolotiu
+# SPDX-FileCopyrightText: 2021 boringdesigners
 # Original idea from https://boringavatars.com/
 """Avatar marble view."""
 

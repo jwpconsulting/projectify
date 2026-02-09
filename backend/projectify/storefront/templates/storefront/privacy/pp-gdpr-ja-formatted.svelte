@@ -1,0 +1,1 @@
+../../../../../../frontend/src/routes/(storefront)/privacy/pp-gdpr-ja-formatted.svelte

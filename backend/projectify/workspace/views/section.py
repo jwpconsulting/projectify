@@ -8,7 +8,7 @@ from uuid import UUID
 
 from django import forms
 from django.http import Http404, HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
@@ -110,13 +110,20 @@ def section_create_view(
         description=form.cleaned_data.get("description") or None,
     )
 
-    project_url = f"{
-        reverse(
-            'dashboard:projects:detail',
-            args=(project.uuid,),
-        )
-    }#{section.uuid}"
-    return HttpResponseRedirect(project_url)
+    return redirect(section.get_absolute_url())
+
+
+@platform_view
+def section_detail(
+    request: AuthenticatedHttpRequest, section_uuid: UUID
+) -> HttpResponse:
+    """Redirect to project with this section visible."""
+    section = section_find_for_user_and_uuid(
+        user=request.user, section_uuid=section_uuid
+    )
+    if section is None:
+        raise Http404(_("Section not found for this UUID"))
+    return redirect(section.get_absolute_url())
 
 
 class SectionUpdateForm(forms.Form):

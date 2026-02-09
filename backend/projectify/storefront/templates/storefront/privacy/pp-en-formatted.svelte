@@ -1,0 +1,1 @@
+../../../../../../frontend/src/routes/(storefront)/privacy/pp-en-formatted.svelte
