@@ -24,6 +24,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from projectify.lib.error_schema import DeriveSchema
+from projectify.lib.forms import SelectWOA
 from projectify.lib.htmx import HttpResponseClientRedirect
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
@@ -100,12 +101,27 @@ class TaskCreateForm(forms.Form):
     )
 
     def __init__(self, workspace: Workspace, *args: Any, **kwargs: Any):
-        """Populate available assignees."""
+        """Populate available assignees and labels."""
         super().__init__(*args, **kwargs)
         assignee = cast(forms.ModelChoiceField, self.fields["assignee"])
         assignee.queryset = workspace.teammember_set.select_related("user")
-        labels = cast(forms.ModelChoiceField, self.fields["labels"])
-        labels.queryset = workspace.label_set.all()
+        labels = workspace.label_set.all()
+        label_choices = [(str(label.uuid), label.name) for label in labels]
+        modify_label_choices = {
+            str(label.uuid): {
+                "bg_class": getattr(label, "bg_class", ""),
+                "border_class": getattr(label, "border_class", ""),
+            }
+            for label in labels
+        }
+        self.fields["labels"] = forms.MultipleChoiceField(
+            required=False,
+            label=_("Labels"),
+            choices=label_choices,
+            widget=SelectWOA(
+                choices=label_choices, modify_choices=modify_label_choices
+            ),
+        )
 
 
 class TaskCreateSubTaskForm(forms.Form):
@@ -210,7 +226,11 @@ def task_create(
         description=form.cleaned_data.get("description"),
         assignee=form.cleaned_data.get("assignee"),
         due_date=form.cleaned_data.get("due_date"),
-        labels=form.cleaned_data["labels"],
+        labels=list(
+            section.project.workspace.label_set.filter(
+                uuid__in=form.cleaned_data["labels"]
+            )
+        ),
         sub_tasks={"create_sub_tasks": sub_tasks, "update_sub_tasks": []},
     )
 

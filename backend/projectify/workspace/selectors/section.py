@@ -9,8 +9,10 @@ from uuid import UUID
 from django.db.models import Prefetch, QuerySet
 
 from projectify.user.models import User
+from projectify.workspace.models.label import Label
 from projectify.workspace.models.project import Project
 from projectify.workspace.models.section import Section
+from projectify.workspace.selectors.labels import labels_annotate_with_colors
 
 SectionDetailQuerySet = Section.objects.prefetch_related(
     "task_set",
@@ -21,6 +23,10 @@ SectionDetailQuerySet = Section.objects.prefetch_related(
     Prefetch(
         "project__workspace__project_set",
         queryset=Project.objects.filter(archived__isnull=True),
+    ),
+    Prefetch(
+        "project__workspace__label_set",
+        queryset=labels_annotate_with_colors(Label.objects.all()),
     ),
 ).select_related(
     "project",
