@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
+# SPDX-FileCopyrightText: 2023-2026 JWP Consulting GK
 """Section views."""
 
 from typing import Any, Optional
@@ -26,15 +26,12 @@ from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 from projectify.workspace.models import Section
 from projectify.workspace.selectors.project import (
+    ProjectDetailQuerySet,
     project_find_by_project_uuid,
-    project_find_by_workspace_uuid,
 )
 from projectify.workspace.selectors.section import (
     SectionDetailQuerySet,
     section_find_for_user_and_uuid,
-)
-from projectify.workspace.selectors.workspace import (
-    workspace_find_by_workspace_uuid,
 )
 from projectify.workspace.serializers.section import SectionDetailSerializer
 from projectify.workspace.services.section import (
@@ -66,27 +63,15 @@ def section_create_view(
 ) -> HttpResponse:
     """Update section view."""
     project = project_find_by_project_uuid(
-        who=request.user,
-        project_uuid=project_uuid,
+        who=request.user, project_uuid=project_uuid, qs=ProjectDetailQuerySet
     )
     if project is None:
         raise Http404(_("Project not found for this UUID"))
 
-    # TODO not very efficient
-    projects = project_find_by_workspace_uuid(
-        workspace_uuid=project.workspace.uuid,
-        who=request.user,
-        archived=False,
-    )
-    workspace = workspace_find_by_workspace_uuid(
-        workspace_uuid=project.workspace.uuid,
-        who=request.user,
-    )
-
     context: dict[str, Any] = {
         "project": project,
-        "projects": projects,
-        "workspace": workspace,
+        "workspace": project.workspace,
+        "projects": project.workspace.project_set.all(),
     }
 
     if request.method == "GET":
@@ -98,10 +83,7 @@ def section_create_view(
     if not form.is_valid():
         context = {"form": form, **context}
         return render(
-            request,
-            "workspace/section_create.html",
-            context,
-            status=400,
+            request, "workspace/section_create.html", context, status=400
         )
     section = section_create(
         who=request.user,
@@ -145,28 +127,16 @@ def section_update_view(
 ) -> HttpResponse:
     """Update section view."""
     section = section_find_for_user_and_uuid(
-        user=request.user,
-        section_uuid=section_uuid,
+        user=request.user, section_uuid=section_uuid, qs=SectionDetailQuerySet
     )
     if section is None:
         raise Http404(_("Section not found for this UUID"))
 
-    # TODO not very efficient
-    projects = project_find_by_workspace_uuid(
-        workspace_uuid=section.project.workspace.uuid,
-        who=request.user,
-        archived=False,
-    )
-    workspace = workspace_find_by_workspace_uuid(
-        workspace_uuid=section.project.workspace.uuid,
-        who=request.user,
-    )
-
     context: dict[str, Any] = {
         "section": section,
         "project": section.project,
-        "projects": projects,
-        "workspace": workspace,
+        "projects": section.project.workspace.project_set.all(),
+        "workspace": section.project.workspace,
     }
 
     if request.method == "GET":
@@ -181,12 +151,6 @@ def section_update_view(
         return render(request, "workspace/section_update.html", context)
 
     action: Optional[str] = request.POST.get("action")
-    project_url = f"{
-        reverse(
-            'dashboard:projects:detail',
-            args=(section.project.uuid,),
-        )
-    }#{section.uuid}"
 
     match action:
         case "save":
@@ -215,7 +179,7 @@ def section_update_view(
             )
         case _:
             return HttpResponse("Invalid action", status=400)
-    return HttpResponseRedirect(project_url)
+    return HttpResponseRedirect(section.get_absolute_url())
 
 
 @platform_view

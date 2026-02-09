@@ -77,7 +77,7 @@ class TestSectionUpdateView:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test getting the section update form."""
-        with django_assert_num_queries(7):
+        with django_assert_num_queries(5):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert "Update Section" in response.content.decode()
@@ -94,7 +94,7 @@ class TestSectionUpdateView:
         """Test saving section updates."""
         new_title = "Updated Section Title"
 
-        with django_assert_num_queries(8):
+        with django_assert_num_queries(7):
             response = user_client.post(
                 resource_url,
                 {"action": "save", "title": new_title},
@@ -130,7 +130,7 @@ class TestSectionUpdateView:
 
         original_order = section._order
 
-        with django_assert_num_queries(9):
+        with django_assert_num_queries(8):
             response = user_client.post(
                 resource_url,
                 {"action": "move_up"},
@@ -157,7 +157,7 @@ class TestSectionUpdateView:
         original_order = section._order
 
         # TODO optimize
-        with django_assert_num_queries(16):
+        with django_assert_num_queries(15):
             response = user_client.post(
                 resource_url,
                 {"action": "move_down"},
@@ -298,7 +298,7 @@ class TestSectionReadUpdateDelete:
         # Make sure task -> team_member -> user is resolved
         task.assignee = team_member
         task.save()
-        with django_assert_num_queries(6):
+        with django_assert_num_queries(7):
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.content
 
@@ -312,7 +312,7 @@ class TestSectionReadUpdateDelete:
         section: Section,
     ) -> None:
         """Test updating a section."""
-        with django_assert_num_queries(4):
+        with django_assert_num_queries(5):
             response = rest_user_client.put(
                 resource_url,
                 data={
@@ -337,7 +337,7 @@ class TestSectionReadUpdateDelete:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test deleting."""
-        with django_assert_num_queries(8):
+        with django_assert_num_queries(9):
             response = rest_user_client.delete(resource_url)
             assert (
                 response.status_code == status.HTTP_204_NO_CONTENT
@@ -375,7 +375,7 @@ class TestSectionMove:
         assert other_section._order == 1
         # XXX that's still a whole lot of queries
         # 50% XXX Better now
-        with django_assert_num_queries(10):
+        with django_assert_num_queries(11):
             response = rest_user_client.post(
                 resource_url,
                 data={

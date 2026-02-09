@@ -6,9 +6,10 @@
 from typing import Optional
 from uuid import UUID
 
-from django.db.models import QuerySet
+from django.db.models import Prefetch, QuerySet
 
 from projectify.user.models import User
+from projectify.workspace.models.project import Project
 from projectify.workspace.models.section import Section
 
 SectionDetailQuerySet = Section.objects.prefetch_related(
@@ -17,6 +18,10 @@ SectionDetailQuerySet = Section.objects.prefetch_related(
     "task_set__assignee__user",
     "task_set__labels",
     "task_set__subtask_set",
+    Prefetch(
+        "project__workspace__project_set",
+        queryset=Project.objects.filter(archived__isnull=True),
+    ),
 ).select_related(
     "project",
     "project__workspace",
