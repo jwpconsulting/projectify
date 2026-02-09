@@ -85,6 +85,10 @@ class SelectWOA(forms.CheckboxSelectMultiple):
         option = super().create_option(
             name, value, label, selected, index, subindex, attrs
         )
+        if value not in self.modify_choices:
+            raise ValueError(
+                f"Couldn't find value={value} in self.modify_choices. Possible keys are: {self.modify_choices.keys()}"
+            )
         choice = self.modify_choices[value]
         option = {**option, **choice}
         return option
