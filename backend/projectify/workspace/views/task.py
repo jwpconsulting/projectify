@@ -28,30 +28,28 @@ from projectify.lib.htmx import HttpResponseClientRedirect
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
-from projectify.workspace.models.label import Label
-from projectify.workspace.models.section import Section
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.selectors.section import (
+
+from ..models.label import Label
+from ..models.section import Section
+from ..models.task import Task
+from ..models.workspace import Workspace
+from ..selectors.section import (
     SectionDetailQuerySet,
     section_find_for_user_and_uuid,
 )
-from projectify.workspace.selectors.task import (
-    TaskDetailQuerySet,
-    task_find_by_task_uuid,
-)
-from projectify.workspace.selectors.workspace import workspace_find_for_user
-from projectify.workspace.serializers.task_detail import (
+from ..selectors.task import TaskDetailQuerySet, task_find_by_task_uuid
+from ..selectors.workspace import workspace_find_for_user
+from ..serializers.task_detail import (
     TaskCreateSerializer,
     TaskDetailSerializer,
     TaskUpdateSerializer,
 )
-from projectify.workspace.services.sub_task import (
+from ..services.sub_task import (
     ValidatedData,
     ValidatedDatum,
     ValidatedDatumWithUuid,
 )
-from projectify.workspace.services.task import (
+from ..services.task import (
     task_create_nested,
     task_delete,
     task_move_after,
