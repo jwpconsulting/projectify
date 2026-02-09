@@ -143,7 +143,7 @@ def section_update_view(
         form = SectionUpdateForm(
             initial={
                 "title": section.title,
-                "description": section.description or "",
+                "description": section.description,
             }
         )
 
