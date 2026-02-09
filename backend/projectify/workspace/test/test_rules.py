@@ -22,6 +22,7 @@ from projectify.workspace.services.project import project_create
 from projectify.workspace.services.section import section_create
 from projectify.workspace.services.sub_task import sub_task_create
 from projectify.workspace.services.task import task_create
+from projectify.workspace.services.team_member import team_member_change_role
 from projectify.workspace.services.team_member_invite import (
     team_member_invite_create,
 )
@@ -68,10 +69,15 @@ class TestPredicates:
         self,
         workspace: Workspace,
         observer: TeamMember,
+        superuser: User,
     ) -> None:
         """Test is_at_least_contributor."""
         assert not rules.is_at_least_contributor(observer.user, workspace)
-        observer.assign_role(TeamMemberRoles.CONTRIBUTOR)
+        team_member_change_role(
+            team_member=observer,
+            who=superuser,
+            role=TeamMemberRoles.CONTRIBUTOR,
+        )
         assert rules.is_at_least_contributor(observer.user, workspace)
 
     def test_is_at_least_contributor_unrelated_workspace(
@@ -88,10 +94,15 @@ class TestPredicates:
         self,
         workspace: Workspace,
         observer: TeamMember,
+        superuser: User,
     ) -> None:
         """Test is_at_least_maintainer."""
         assert not rules.is_at_least_maintainer(observer.user, workspace)
-        observer.assign_role(TeamMemberRoles.MAINTAINER)
+        team_member_change_role(
+            team_member=observer,
+            who=superuser,
+            role=TeamMemberRoles.MAINTAINER,
+        )
         assert rules.is_at_least_maintainer(observer.user, workspace)
 
     def test_is_at_least_maintainer_unrelated_workspace(
@@ -108,10 +119,15 @@ class TestPredicates:
         self,
         workspace: Workspace,
         observer: TeamMember,
+        superuser: User,
     ) -> None:
         """Test is_at_least_owner."""
         assert not rules.is_at_least_owner(observer.user, workspace)
-        observer.assign_role(TeamMemberRoles.OWNER)
+        team_member_change_role(
+            team_member=observer,
+            who=superuser,
+            role=TeamMemberRoles.OWNER,
+        )
         assert rules.is_at_least_owner(observer.user, workspace)
 
     def test_is_at_least_owner_unrelated_workspace(

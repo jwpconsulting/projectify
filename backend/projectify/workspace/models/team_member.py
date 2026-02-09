@@ -4,10 +4,9 @@
 """Team member models."""
 
 import uuid
-from typing import TYPE_CHECKING, ClassVar, Self, cast
+from typing import TYPE_CHECKING
 
 from django.conf import settings
-from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -15,7 +14,6 @@ from projectify.lib.models import BaseModel
 
 from .const import TeamMemberRoles
 from .project import Project
-from .types import Pks
 from .workspace import Workspace
 
 # TODO Here we could be using __all__
@@ -25,18 +23,6 @@ if TYPE_CHECKING:
     from django.db.models.fields.related import RelatedField  # noqa: F401
 
     from projectify.user.models import User, UserInvite  # noqa: F401
-
-
-class TeamMemberQuerySet(models.QuerySet["TeamMember"]):
-    """Team member queryset."""
-
-    def filter_by_workspace_pks(self, workspace_pks: Pks) -> Self:
-        """Filter by workspace pks."""
-        return self.filter(workspace__pk__in=workspace_pks)
-
-    def filter_by_user(self, user: AbstractBaseUser) -> Self:
-        """Filter team members based on this user's workspaces."""
-        return self.filter(workspace__users=user)
 
 
 class TeamMember(BaseModel):
@@ -79,23 +65,9 @@ class TeamMember(BaseModel):
         ),
     )
 
-    # Sort of nonsensical
-    objects: ClassVar[TeamMemberQuerySet] = cast(  # type: ignore[assignment]
-        TeamMemberQuerySet, TeamMemberQuerySet.as_manager()
-    )
-
     if TYPE_CHECKING:
         # Related
         user_invite: RelatedField[None, "UserInvite"]
-
-    def assign_role(self, role: str) -> None:
-        """
-        Assign a new role.
-
-        Saves.
-        """
-        self.role = role
-        self.save()
 
     def __str__(self) -> str:
         """Return title."""
