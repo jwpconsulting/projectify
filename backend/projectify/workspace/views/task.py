@@ -8,6 +8,7 @@ from typing import Any, Literal, Optional, Union, cast
 from uuid import UUID
 
 from django import forms
+from django.core.exceptions import BadRequest
 from django.forms.formsets import TOTAL_FORM_COUNT
 from django.http import HttpResponse
 from django.http.response import Http404
@@ -31,9 +32,6 @@ from projectify.workspace.models.label import Label
 from projectify.workspace.models.section import Section
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.selectors.project import (
-    project_find_by_workspace_uuid,
-)
 from projectify.workspace.selectors.section import (
     SectionDetailQuerySet,
     section_find_for_user_and_uuid,
@@ -42,6 +40,7 @@ from projectify.workspace.selectors.task import (
     TaskDetailQuerySet,
     task_find_by_task_uuid,
 )
+from projectify.workspace.selectors.workspace import workspace_find_for_user
 from projectify.workspace.serializers.task_detail import (
     TaskCreateSerializer,
     TaskDetailSerializer,
@@ -69,7 +68,11 @@ def get_object(
     """Get object for user and uuid."""
     user = request.user
     obj = task_find_by_task_uuid(
-        who=user, task_uuid=task_uuid, qs=TaskDetailQuerySet
+        # TODO TaskDetailQuerySet probably not needed
+        # Remove when DRF views are gone
+        who=user,
+        task_uuid=task_uuid,
+        qs=TaskDetailQuerySet,
     )
     if obj is None:
         raise NotFound(
@@ -160,8 +163,12 @@ def task_create(
     )
     if section is None:
         raise Http404(_("Section not found"))
-    workspace = section.project.workspace
-    context: dict[str, Any] = {"section": section, "workspace": workspace}
+    context: dict[str, Any] = {
+        "section": section,
+        "projects": section.project.workspace.project_set.all(),
+        "workspace": section.project.workspace,
+        "workspaces": workspace_find_for_user(who=request.user),
+    }
     match request.method:
         case "GET":
             return render(
@@ -179,7 +186,7 @@ def task_create(
             pass
         case method:
             raise RuntimeError(f"Don't know how to handle method {method}")
-    form = TaskCreateForm(workspace, request.POST)
+    form = TaskCreateForm(section.project.workspace, request.POST)
     formset = TaskCreateSubTaskForms(request.POST.dict())
     all_valid = form.is_valid() and formset.is_valid()
     if not formset.is_valid():
@@ -198,7 +205,7 @@ def task_create(
         if d.get("title")
     ]
 
-    task_create_nested(
+    task = task_create_nested(
         who=request.user,
         section=section,
         title=form.cleaned_data["title"],
@@ -208,9 +215,14 @@ def task_create(
         labels=form.cleaned_data["labels"],
         sub_tasks={"create_sub_tasks": sub_tasks, "update_sub_tasks": []},
     )
-    return redirect(
-        reverse("dashboard:projects:detail", args=(section.project.uuid,))
-    )
+
+    match request.POST.get("action"):
+        case "create_stay":
+            return redirect("dashboard:tasks:detail", task.uuid)
+        case "create":
+            return redirect(section.get_absolute_url())
+        case action:
+            raise BadRequest(_("Invalid action: {}").format(action))
 
 
 @platform_view
@@ -223,17 +235,12 @@ def task_detail(
     )
     if task is None:
         raise Http404(_(f"Could not find task with uuid {task_uuid}"))
-    project = task.section.project
-    # Inefficient
-    workspace = project.workspace
-    projects = project_find_by_workspace_uuid(
-        who=request.user, workspace_uuid=workspace.uuid, archived=False
-    )
     context = {
         "task": task,
-        "project": project,
-        "projects": projects,
-        "workspace": workspace,
+        "project": task.section.project,
+        "workspace": task.workspace,
+        "projects": task.workspace.project_set.all(),
+        "workspaces": workspace_find_for_user(who=request.user),
     }
     return render(request, "workspace/task_detail.html", context)
 
@@ -310,16 +317,13 @@ def task_update_view(
     )
     if task is None:
         raise Http404(_(f"Could not find task with uuid {task_uuid}"))
-    project = task.section.project
-    workspace = project.workspace
-    projects = project_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=workspace.uuid,
-        archived=False,
-    )
 
     focus_field = request.GET.get("focus", None)
-    context: dict[str, Any] = {"workspace": workspace, "projects": projects}
+    context: dict[str, Any] = {
+        "workspace": task.workspace,
+        "projects": task.workspace.project_set.all(),
+        "workspaces": workspace_find_for_user(who=request.user),
+    }
 
     action = determine_action(request)
     match action:
@@ -337,7 +341,7 @@ def task_update_view(
             post["form-TOTAL_FORMS"] = str(sub_task_count + 1)
             logger.info("Adding sub task")
             form = TaskUpdateForm(
-                data=post, workspace=workspace, focus_field=focus_field
+                data=post, workspace=task.workspace, focus_field=focus_field
             )
             formset = TaskUpdateSubTaskForms(data=post)
             context = {
@@ -364,7 +368,9 @@ def task_update_view(
     ]
     if action == "get":
         form = TaskUpdateForm(
-            initial=task_initial, workspace=workspace, focus_field=focus_field
+            initial=task_initial,
+            workspace=task.workspace,
+            focus_field=focus_field,
         )
         formset = TaskUpdateSubTaskForms(initial=sub_tasks_initial)  # type: ignore[arg-type]
         # Add autofocus to first subtask if focus_field is subtasks
@@ -376,7 +382,7 @@ def task_update_view(
     form = TaskUpdateForm(
         data=request.POST,
         initial=task_initial,
-        workspace=workspace,
+        workspace=task.workspace,
         focus_field=focus_field,
     )
     form.full_clean()
@@ -427,10 +433,14 @@ def task_update_view(
         case "update_stay":
             n = reverse("dashboard:tasks:detail", args=(task.uuid,))
         case "update":
-            n = reverse("dashboard:projects:detail", args=(project.uuid,))
+            n = reverse(
+                "dashboard:projects:detail", args=(task.section.project.uuid,)
+            )
         case _:
             logger.warning("No action specified")
-            n = reverse("dashboard:projects:detail", args=(project.uuid,))
+            n = reverse(
+                "dashboard:projects:detail", args=(task.section.project.uuid,)
+            )
     return redirect(n)
 
 
@@ -509,20 +519,13 @@ def task_actions(
 ) -> HttpResponse:
     """Render task actions menu page."""
     task = get_object(request, task_uuid)
-    project = task.section.project
-    workspace = project.workspace
-    projects = project_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=workspace.uuid,
-        archived=False,
-    )
-    sections = project.section_set.all()
     context = {
         "task": task,
-        "workspace": workspace,
-        "sections": sections,
-        "projects": projects,
-        "project": project,
+        "workspace": task.workspace,
+        "sections": task.section.project.section_set.all(),
+        "projects": task.workspace.project_set.all(),
+        "project": task.section.project,
+        "workspaces": workspace_find_for_user(who=request.user),
     }
     return render(request, "workspace/task_actions.html", context)
 
@@ -532,11 +535,8 @@ def task_delete_view(
 ) -> HttpResponse:
     """Delete task."""
     task = get_object(request, task_uuid)
-    section = task.section
-    project = section.project
     task_delete(who=request.user, task=task)
-    next_url = f"{reverse("dashboard:projects:detail", args=(project.uuid,))}#{section.uuid}"
-    return HttpResponseClientRedirect(next_url)
+    return HttpResponseClientRedirect(task.section.get_absolute_url())
 
 
 # Create

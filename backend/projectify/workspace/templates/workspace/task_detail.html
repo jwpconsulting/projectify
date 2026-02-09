@@ -14,7 +14,7 @@
                            class="block w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background"
                            aria-label="{% trans 'Go back to section' %}">{% include "heroicons/x.svg" %}</a>
                     </div>
-                    {% include "workspace/task/breadcrumbs.html" with task=task %}
+                    {% include "workspace/task/breadcrumbs.html" with section=task.section task=task %}
                 </div>
                 <div class="flex items-center justify-between gap-4 sm:flex-row">
                     {% has_perm "workspace.update_task" user task.workspace as can_update_task %}

@@ -223,7 +223,6 @@ def project_detail_view(
     team_member_visit_project(user=request.user, project=project)
 
     project.workspace.quota = workspace_get_all_quotas(project.workspace)
-    workspaces = workspace_find_for_user(who=request.user)
     projects = project.workspace.project_set.all()
     team_members = project.workspace.teammember_set.all()
     labels = project.workspace.label_set.all()
@@ -238,7 +237,7 @@ def project_detail_view(
         "project": project,
         "labels": labels,
         "projects": projects,
-        "workspaces": workspaces,
+        "workspaces": workspace_find_for_user(who=request.user),
         "workspace": project.workspace,
         "team_members": team_members,
         "unassigned_tasks": filter_by_unassigned,
@@ -283,7 +282,11 @@ def project_create_view(
         archived=False,
     )
 
-    context: dict[str, Any] = {"workspace": workspace, "projects": projects}
+    context: dict[str, Any] = {
+        "workspace": workspace,
+        "projects": projects,
+        "workspaces": workspace_find_for_user(who=request.user),
+    }
 
     if request.method == "GET":
         form = ProjectCreateForm()
@@ -308,7 +311,7 @@ def project_create_view(
         return redirect("dashboard:projects:detail", project_uuid=project.uuid)
     except ValidationError as error:
         populate_form_with_drf_errors(form, error)
-        context = {"form": form, **context}
+        context = {**context, "form": form}
         return render(
             request, "workspace/project_create.html", context, status=400
         )
@@ -340,24 +343,18 @@ def project_update_view(
 ) -> HttpResponse:
     """Update an existing project."""
     project = project_find_by_project_uuid(
-        who=request.user,
-        project_uuid=project_uuid,
-        qs=Project.objects.select_related("workspace"),
+        who=request.user, project_uuid=project_uuid, qs=ProjectDetailQuerySet
     )
     if project is None:
         raise Http404(_("No project found for this uuid"))
 
     workspace = project.workspace
-    projects = project_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=workspace.uuid,
-        archived=False,
-    )
 
     context: dict[str, Any] = {
         "project": project,
         "workspace": workspace,
-        "projects": projects,
+        "projects": project.workspace.project_set.all(),
+        "workspaces": workspace_find_for_user(who=request.user),
     }
 
     if request.method == "GET":

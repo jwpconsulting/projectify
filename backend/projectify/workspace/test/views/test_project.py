@@ -174,7 +174,7 @@ class TestProjectUpdateView:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test GETting the project update page."""
-        with django_assert_num_queries(4):
+        with django_assert_num_queries(8):
             response = user_client.get(resource_url)
             assert response.status_code == 200
             assert project.title.encode() in response.content
@@ -190,7 +190,7 @@ class TestProjectUpdateView:
         """Test successfully updating a project."""
         updated_title = "Updated Project Title"
 
-        with django_assert_num_queries(5):
+        with django_assert_num_queries(9):
             response = user_client.post(
                 resource_url,
                 {"title": updated_title},

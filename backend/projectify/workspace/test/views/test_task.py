@@ -196,7 +196,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test retrieving when authenticated."""
-        with django_assert_num_queries(4):
+        with django_assert_num_queries(5):
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.data
 
@@ -217,7 +217,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         # 31 now
         # 28 now
         # 22 now
-        with django_assert_num_queries(22):
+        with django_assert_num_queries(24):
             response = rest_user_client.put(
                 resource_url,
                 {**payload, "assignee": {"uuid": str(team_member.uuid)}},
@@ -237,7 +237,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         payload: dict[str, object],
     ) -> None:
         """Test updating a task when logged in correctly."""
-        with django_assert_num_queries(4):
+        with django_assert_num_queries(5):
             response = rest_user_client.put(
                 resource_url,
                 {
@@ -266,7 +266,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test deleting a task."""
-        with django_assert_num_queries(10):
+        with django_assert_num_queries(11):
             response = rest_user_client.delete(resource_url)
             assert response.status_code == 204, response.content
         # Ensure that the task is gone for good
@@ -299,7 +299,7 @@ class TestMoveTaskToSection:
     ) -> None:
         """Test moving a task."""
         assert task.section == section
-        with django_assert_num_queries(18):
+        with django_assert_num_queries(19):
             response = rest_user_client.post(
                 resource_url,
                 data={"section_uuid": str(other_section.uuid)},
@@ -331,7 +331,7 @@ class TestTaskMoveAfterTask:
         other_task: Task,
     ) -> None:
         """Test as an authenticated user."""
-        with django_assert_num_queries(17):
+        with django_assert_num_queries(18):
             response = rest_user_client.post(
                 resource_url,
                 data={"task_uuid": str(other_task.uuid)},

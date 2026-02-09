@@ -7,7 +7,7 @@
     <div id="task-actions"
          class="min-w-0 grow flex flex-col gap-4"
          role="presentation">
-        {% include "workspace/task/breadcrumbs.html" with task=task %}
+        {% include "workspace/task/breadcrumbs.html" with task=task section=task.section %}
         <h1 class="text-2xl font-bold">{% translate "Task actions" %}</h1>
         <form hx-post="{% url 'dashboard:tasks:move' task.uuid %}"
               hx-target="#app-content"
