@@ -4,7 +4,7 @@
 """Project views."""
 
 import logging
-from typing import Any, Optional, Union
+from typing import Any, Optional
 from uuid import UUID
 
 from django import forms
@@ -21,70 +21,37 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from projectify.lib.error_schema import DeriveSchema
-from projectify.lib.forms import populate_form_with_drf_errors
+from projectify.lib.forms import SelectWOA, populate_form_with_drf_errors
 from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
-from projectify.workspace.models import Project
-from projectify.workspace.models.label import Label
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.selectors.project import (
+
+from ..models import Project
+from ..models.label import Label
+from ..models.team_member import TeamMember
+from ..selectors.project import (
     ProjectDetailQuerySet,
     project_detail_query_set,
     project_find_by_project_uuid,
     project_find_by_workspace_uuid,
 )
-from projectify.workspace.selectors.quota import workspace_get_all_quotas
-from projectify.workspace.selectors.workspace import (
+from ..selectors.quota import workspace_get_all_quotas
+from ..selectors.workspace import (
     workspace_find_by_workspace_uuid,
     workspace_find_for_user,
 )
-from projectify.workspace.serializers.base import ProjectBaseSerializer
-from projectify.workspace.serializers.project import ProjectDetailSerializer
-from projectify.workspace.services.project import (
+from ..serializers.base import ProjectBaseSerializer
+from ..serializers.project import ProjectDetailSerializer
+from ..services.project import (
     project_archive,
     project_create,
     project_delete,
     project_update,
 )
-from projectify.workspace.services.team_member import team_member_visit_project
+from ..services.team_member import team_member_visit_project
 
 logger = logging.getLogger(__name__)
-
-
-class SelectWOA(forms.CheckboxSelectMultiple):
-    """Overwrite CheckboxSelectMultiple and pass in extra data per choice."""
-
-    modify_choices: dict[str, dict[str, Any]]
-
-    def __init__(
-        self,
-        modify_choices: dict[str, dict[str, Any]],
-        *args: Any,
-        **kwargs: Any,
-    ) -> None:
-        """Overwrite and modify choice data."""
-        super().__init__(*args, **kwargs)
-        self.modify_choices = modify_choices
-
-    def create_option(
-        self,
-        name: str,
-        value: str,
-        label: Union[str, int],
-        selected: Union[set[str], bool],
-        index: int,
-        subindex: Optional[int] = None,
-        attrs: Optional[dict[str, Any]] = None,
-    ) -> dict[str, Any]:
-        """Enhance options with value from modify_choices."""
-        option = super().create_option(
-            name, value, label, selected, index, subindex, attrs
-        )
-        choice = self.modify_choices[value]
-        option = {**option, **choice}
-        return option
 
 
 class ProjectFilterForm(forms.Form):
