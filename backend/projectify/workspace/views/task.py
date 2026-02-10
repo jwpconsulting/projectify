@@ -114,13 +114,16 @@ class TaskCreateForm(forms.Form):
             }
             for label in labels
         }
+        labels_widget = SelectWOA(
+            choices=label_choices,
+            modify_choices=modify_label_choices,
+        )
+        labels_widget.option_template_name = "workspace/forms/widgets/select_label_option.html"
         self.fields["labels"] = forms.MultipleChoiceField(
             required=False,
             label=_("Labels"),
             choices=label_choices,
-            widget=SelectWOA(
-                choices=label_choices, modify_choices=modify_label_choices
-            ),
+            widget=labels_widget,
         )
 
 

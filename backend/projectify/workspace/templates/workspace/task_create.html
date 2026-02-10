@@ -45,23 +45,7 @@
                         <tr class="contents">
                             <th scope="row" class="col-span-1 text-left font-bold">{{ form.labels.label_tag }}</th>
                             <td class="col-span-3">
-                                <div class="flex flex-col gap-2">
-                                    <div class="flex flex-col overflow-y-auto">
-                                        {% for label in form.labels %}
-                                            <div class="grid grid-cols-[auto_1fr] gap-2 items-center hover:bg-background p-2">
-                                                <input type="checkbox"
-                                                       id="{{ label.data.attrs.id }}"
-                                                       name="{{ form.labels.html_name }}"
-                                                       value="{{ label.data.value }}">
-                                                <label class="flex items-center min-w-0 gap-2"
-                                                       for="{{ label.id_for_label }}">
-                                                    <div class="h-6 w-6 shrink-0 rounded-full {{ label.data.bg_class }} border {{ label.data.border_class }}"></div>
-                                                    <div class="text-regular truncate min-w-0">{{ label.choice_label }}</div>
-                                                </label>
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                </div>
+                                <div class="flex flex-col gap-2">{{ form.labels }}</div>
                             </td>
                         </tr>
                         <tr class="contents">

@@ -1,0 +1,12 @@
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+<div class="flex flex-row gap-2 items-center hover:bg-background p-2">
+    <input type="checkbox"
+           name="{{ widget.name }}"
+           value="{{ widget.value }}"
+           {% include "django/forms/widgets/attrs.html" %}>
+    <label class="flex items-center min-w-0 gap-2" for="{{ widget.attrs.id }}">
+        <div class="h-6 w-6 shrink-0 rounded-full {{ widget.bg_class }} border {{ widget.border_class }}"></div>
+        <div class="text-regular truncate min-w-0">{{ widget.label }}</div>
+    </label>
+</div>
