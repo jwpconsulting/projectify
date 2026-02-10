@@ -89,11 +89,18 @@ class ProjectFilterForm(forms.Form):
             }
             for member in team_members
         }
+        member_widget = SelectWOA(
+            choices=member_choices,
+            modify_choices=modify_member_choices,
+        )
+        member_widget.option_template_name = (
+            "workspace/forms/widgets/select_team_member_option.html"
+        )
         self.fields["filter_by_team_member"] = forms.MultipleChoiceField(
             required=False,
-            label=_("No label"),
+            label=_("Filter team members"),
             choices=member_choices,
-            widget=SelectWOA(modify_choices=modify_member_choices),
+            widget=member_widget,
         )
         label_choices = [(str(label.uuid), label.name) for label in labels]
         modify_label_choices = {
@@ -105,13 +112,18 @@ class ProjectFilterForm(forms.Form):
             }
             for label in labels
         }
+        label_widget = SelectWOA(
+            choices=label_choices,
+            modify_choices=modify_label_choices,
+        )
+        label_widget.option_template_name = (
+            "workspace/forms/widgets/select_label_option.html"
+        )
         self.fields["filter_by_label"] = forms.MultipleChoiceField(
             required=False,
-            label=_("No label"),
+            label=_("Filter labels"),
             choices=label_choices,
-            widget=SelectWOA(
-                choices=label_choices, modify_choices=modify_label_choices
-            ),
+            widget=label_widget,
         )
 
     def clean(self) -> dict[str, Any]:

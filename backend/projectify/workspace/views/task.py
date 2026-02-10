@@ -118,7 +118,9 @@ class TaskCreateForm(forms.Form):
             choices=label_choices,
             modify_choices=modify_label_choices,
         )
-        labels_widget.option_template_name = "workspace/forms/widgets/select_label_option.html"
+        labels_widget.option_template_name = (
+            "workspace/forms/widgets/select_label_option.html"
+        )
         self.fields["labels"] = forms.MultipleChoiceField(
             required=False,
             label=_("Labels"),
