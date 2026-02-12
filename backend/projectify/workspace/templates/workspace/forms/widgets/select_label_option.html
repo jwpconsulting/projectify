@@ -8,7 +8,8 @@
            {% include "django/forms/widgets/attrs.html" %}>
     <label class="flex items-center min-w-0 gap-2 cursor-pointer"
            for="{{ widget.attrs.id }}">
-        <div class="h-6 w-6 shrink-0 rounded-full {{ widget.bg_class }} border {{ widget.border_class }}"></div>
+        <div class="h-6 w-6 shrink-0 rounded-full {{ widget.value.instance.bg_class }} border {{ widget.value.instance.border_class }}">
+        </div>
         <div class="text-regular truncate min-w-0">{{ widget.label }}</div>
     </label>
     {% if widget.task_count is not None %}

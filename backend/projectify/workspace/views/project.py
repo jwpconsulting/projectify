@@ -21,7 +21,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from projectify.lib.error_schema import DeriveSchema
-from projectify.lib.forms import SelectWOA, populate_form_with_drf_errors
+from projectify.lib.forms import populate_form_with_drf_errors
 from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
@@ -78,60 +78,36 @@ class ProjectFilterForm(forms.Form):
     ) -> None:
         """Populate choices."""
         super().__init__(*args, **kwargs)
-        member_choices = [
-            (str(member.uuid), str(member)) for member in team_members
-        ]
-        modify_member_choices = {
-            str(member.uuid): {
-                "is_filtered": getattr(member, "is_filtered", None),
-                "task_count": getattr(member, "task_count", None),
-                "member": member,
-            }
-            for member in team_members
-        }
-        member_widget = SelectWOA(
-            choices=member_choices,
-            modify_choices=modify_member_choices,
-        )
+        member_widget = forms.CheckboxSelectMultiple()
         member_widget.option_template_name = (
             "workspace/forms/widgets/select_team_member_option.html"
         )
-        self.fields["filter_by_team_member"] = forms.MultipleChoiceField(
+        self.fields["filter_by_team_member"] = forms.ModelMultipleChoiceField(
             required=False,
+            blank=True,
             label=_("Filter team members"),
-            choices=member_choices,
+            queryset=team_members,
             widget=member_widget,
+            to_field_name="uuid",
         )
-        label_choices = [(str(label.uuid), label.name) for label in labels]
-        modify_label_choices = {
-            str(label.uuid): {
-                "bg_class": getattr(label, "bg_class", ""),
-                "border_class": getattr(label, "border_class", ""),
-                "is_filtered": getattr(label, "is_filtered", ""),
-                "task_count": getattr(label, "task_count", None),
-            }
-            for label in labels
-        }
-        label_widget = SelectWOA(
-            choices=label_choices,
-            modify_choices=modify_label_choices,
-        )
+        label_widget = forms.CheckboxSelectMultiple()
         label_widget.option_template_name = (
             "workspace/forms/widgets/select_label_option.html"
         )
-        self.fields["filter_by_label"] = forms.MultipleChoiceField(
+        self.fields["filter_by_label"] = forms.ModelMultipleChoiceField(
             required=False,
             label=_("Filter labels"),
-            choices=label_choices,
+            queryset=labels,
             widget=label_widget,
+            to_field_name="uuid",
         )
 
     def clean(self) -> dict[str, Any]:
         """Override clean and make empty fields None instead."""
         data = super().clean()
-        if data["filter_by_team_member"] == []:
+        if not data["filter_by_team_member"].exists():
             data["filter_by_team_member"] = None
-        if data["filter_by_label"] == []:
+        if not data["filter_by_label"].exists():
             data["filter_by_label"] = None
         if data["task_search_query"] == "":
             data["task_search_query"] = None
@@ -144,17 +120,18 @@ def project_detail_view(
     request: AuthenticatedHttpRequest, project_uuid: UUID
 ) -> HttpResponse:
     """Show project details."""
-    team_member_uuids: Optional[list[UUID]] = None
-    label_uuids: Optional[list[UUID]] = None
-    filter_by_unlabeled: Optional[bool] = None
-    filter_by_unassigned: Optional[bool] = None
+    filter_by_team_member: Optional[QuerySet[TeamMember]] = None
+    filter_by_label: Optional[QuerySet[Label]] = None
+    filter_by_unlabeled: bool = False
+    filter_by_unassigned: bool = False
     task_search_query: Optional[str] = None
     match len(request.GET):
         case 0:
-            label_uuids = None
-            team_member_uuids = None
-            label_uuids = None
+            pass
         case _:
+            # We need to query the project an additional round here to
+            # establish whether the labels and team members given to us
+            # by the user are valid, or not
             project = project_find_by_project_uuid(
                 who=request.user, project_uuid=project_uuid
             )
@@ -164,19 +141,18 @@ def project_detail_view(
             team_members = project.workspace.teammember_set.all()
 
             task_filter_form = ProjectFilterForm(
-                team_members=team_members,
-                labels=labels,
-                data=request.GET,
+                team_members=team_members, labels=labels, data=request.GET
             )
             if not task_filter_form.is_valid():
                 raise BadRequest(task_filter_form.errors)
-            team_member_uuids = task_filter_form.cleaned_data[
+
+            filter_by_team_member = task_filter_form.cleaned_data[
                 "filter_by_team_member"
             ]
             filter_by_unassigned = task_filter_form.cleaned_data[
                 "filter_by_unassigned"
             ]
-            label_uuids = task_filter_form.cleaned_data["filter_by_label"]
+            filter_by_label = task_filter_form.cleaned_data["filter_by_label"]
             filter_by_unlabeled = task_filter_form.cleaned_data[
                 "filter_by_unlabeled"
             ]
@@ -185,9 +161,9 @@ def project_detail_view(
             ]
 
     qs = project_detail_query_set(
-        team_member_uuids=team_member_uuids,
+        filter_by_team_members=filter_by_team_member,
         unassigned_tasks=filter_by_unassigned,
-        label_uuids=label_uuids,
+        filter_by_labels=filter_by_label,
         unlabeled_tasks=filter_by_unlabeled,
         task_search_query=task_search_query,
         who=request.user,

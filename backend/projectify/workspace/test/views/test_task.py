@@ -196,7 +196,8 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test retrieving when authenticated."""
-        with django_assert_num_queries(5):
+        # Gone up from 5 -> 9, since we added filtering annotations
+        with django_assert_num_queries(9):
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.data
 
@@ -217,7 +218,8 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         # 31 now
         # 28 now
         # 22 now
-        with django_assert_num_queries(24):
+        # Gone up from 24 -> 31, since we added filtering annotations
+        with django_assert_num_queries(31):
             response = rest_user_client.put(
                 resource_url,
                 {**payload, "assignee": {"uuid": str(team_member.uuid)}},
@@ -237,7 +239,8 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         payload: dict[str, object],
     ) -> None:
         """Test updating a task when logged in correctly."""
-        with django_assert_num_queries(5):
+        # Gone up from 5 -> 6, since we added filtering annotations
+        with django_assert_num_queries(6):
             response = rest_user_client.put(
                 resource_url,
                 {
@@ -266,7 +269,8 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test deleting a task."""
-        with django_assert_num_queries(11):
+        # Gone up from 11 -> 13, since we added filtering annotations
+        with django_assert_num_queries(13):
             response = rest_user_client.delete(resource_url)
             assert response.status_code == 204, response.content
         # Ensure that the task is gone for good
@@ -299,7 +303,8 @@ class TestMoveTaskToSection:
     ) -> None:
         """Test moving a task."""
         assert task.section == section
-        with django_assert_num_queries(19):
+        # Gone up from 19 -> 23, since we added filtering annotations
+        with django_assert_num_queries(23):
             response = rest_user_client.post(
                 resource_url,
                 data={"section_uuid": str(other_section.uuid)},
@@ -331,7 +336,8 @@ class TestTaskMoveAfterTask:
         other_task: Task,
     ) -> None:
         """Test as an authenticated user."""
-        with django_assert_num_queries(18):
+        # Gone up from 18 -> 22, since we added filtering annotations
+        with django_assert_num_queries(22):
             response = rest_user_client.post(
                 resource_url,
                 data={"task_uuid": str(other_task.uuid)},

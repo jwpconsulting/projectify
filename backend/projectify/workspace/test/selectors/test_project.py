@@ -36,7 +36,11 @@ def test_project_detail_query_set(
     task.save()
 
     # Filter by first team member (one task assigned)
-    qs = project_detail_query_set(team_member_uuids=[first_team_member.uuid])
+    qs = project_detail_query_set(
+        filter_by_team_members=TeamMember.objects.filter(
+            id__in=[first_team_member.pk]
+        )
+    )
     project_first = qs.first()
     assert project_first
     section = project_first.section_set.first()
@@ -51,7 +55,11 @@ def test_project_detail_query_set(
     assert getattr(second_team_member, "is_filtered") is False
 
     # Filter by second team member (no task assigned)
-    qs = project_detail_query_set(team_member_uuids=[second_team_member.uuid])
+    qs = project_detail_query_set(
+        filter_by_team_members=TeamMember.objects.filter(
+            id__in=[second_team_member.pk]
+        )
+    )
     project_first = qs.first()
     assert project_first
     section = project_first.section_set.first()

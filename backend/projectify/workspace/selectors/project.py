@@ -29,10 +29,10 @@ from .labels import labels_annotate_with_colors
 
 def project_detail_query_set(
     *,
-    team_member_uuids: Optional[list[UUID]] = None,
-    label_uuids: Optional[list[UUID]] = None,
-    unassigned_tasks: Optional[bool] = None,
-    unlabeled_tasks: Optional[bool] = None,
+    filter_by_team_members: Optional[QuerySet[TeamMember]] = None,
+    filter_by_labels: Optional[QuerySet[Label]] = None,
+    unassigned_tasks: bool = False,
+    unlabeled_tasks: bool = False,
     task_search_query: Optional[str] = None,
     who: Optional[User] = None,
 ) -> QuerySet[Project]:
@@ -46,39 +46,51 @@ def project_detail_query_set(
             task_count=Count("tasklabel", filter=project_not_archived),
         )
     )
+
     task_q = Q()
-    assignee_uuid = Q(assignee__uuid__in=team_member_uuids)
+
+    # Annotate team members in side nav with whether they're filtered or not
+    assignee_contained = Q(assignee__in=filter_by_team_members)
     assignee_empty = Q(assignee__isnull=True)
-    match team_member_uuids, unassigned_tasks:
-        case None, None | False:
+    team_member_is_filtered: Union[Value, Exists] = Value(False)
+    match filter_by_team_members, unassigned_tasks:
+        case None, False:
             pass
         case None, True:
             task_q = task_q & assignee_empty
-        case uuids, None | False:
-            task_q = task_q & assignee_uuid
-            team_member_qs = team_member_qs.annotate(
-                is_filtered=Q(uuid__in=uuids)
+        case QuerySet(), False:
+            task_q = task_q & assignee_contained
+            team_member_is_filtered = Exists(
+                filter_by_team_members.filter(pk=OuterRef("pk"))
             )
-        case uuids, True:
-            task_q = task_q & (assignee_uuid & assignee_empty)
-            team_member_qs = team_member_qs.annotate(
-                is_filtered=Q(uuid__in=uuids)
+        case QuerySet(), True:
+            task_q = task_q & (assignee_contained & assignee_empty)
+            team_member_is_filtered = Exists(
+                filter_by_team_members.filter(pk=OuterRef("pk"))
             )
+    team_member_qs = team_member_qs.annotate(
+        is_filtered=team_member_is_filtered
+    )
 
-    labels_uuid = Q(labels__uuid__in=label_uuids)
+    # Annotate labels shown in side nav with whether they're filtered or not
+    label_contained = Q(labels__in=filter_by_labels)
     labels_empty = Q(labels__isnull=True)
-    label_is_filtered: Union[Value, Q] = Value(False)
-    match label_uuids, unlabeled_tasks:
-        case None, None | False:
+    label_is_filtered: Union[Value, Exists] = Value(False)
+    match filter_by_labels, unlabeled_tasks:
+        case None, False:
             pass
         case None, True:
             task_q = task_q & labels_empty
-        case uuids, None | False:
-            task_q = task_q & labels_uuid
-            label_is_filtered = Q(uuid__in=uuids)
-        case uuids, True:
-            task_q = task_q & (labels_uuid | labels_empty)
-            label_is_filtered = Q(uuid__in=uuids)
+        case QuerySet(), False:
+            task_q = task_q & label_contained
+            label_is_filtered = Exists(
+                filter_by_labels.filter(pk=OuterRef("pk"))
+            )
+        case QuerySet(), True:
+            task_q = task_q & (label_contained | labels_empty)
+            label_is_filtered = Exists(
+                filter_by_labels.filter(pk=OuterRef("pk"))
+            )
     label_qs = label_qs.annotate(is_filtered=label_is_filtered)
 
     if task_search_query is not None:
