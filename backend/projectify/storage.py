@@ -15,7 +15,7 @@ class LocalhostStorage(FileSystemStorage):
     """Override file system storage."""
 
     @cached_property
-    def base_url(self) -> str:  # type: ignore
+    def base_url(self) -> str:
         """Override base url to point to localhost."""
         settings = get_settings()
         if not settings.FRONTEND_URL:
