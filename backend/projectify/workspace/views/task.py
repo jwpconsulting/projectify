@@ -88,7 +88,10 @@ class TaskCreateForm(forms.Form):
         label=_("Task title"),
         widget=forms.TextInput(attrs={"placeholder": _("Task title")}),
     )
-    due_date = forms.DateTimeField(required=False)
+    due_date = forms.DateTimeField(
+        required=False,
+        widget=forms.DateTimeInput(attrs={"type": "date"}),
+    )
     description = forms.CharField(
         required=False,
         widget=forms.Textarea(
@@ -267,7 +270,10 @@ class TaskUpdateForm(forms.Form):
         label=_("Task title"),
         widget=forms.TextInput(attrs={"placeholder": _("Task title")}),
     )
-    due_date = forms.DateTimeField(required=False)
+    due_date = forms.DateTimeField(
+        required=False,
+        widget=forms.DateTimeInput(attrs={"type": "date"}),
+    )
     description = forms.CharField(
         required=False,
         widget=forms.Textarea(
