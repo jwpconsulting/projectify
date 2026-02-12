@@ -30,36 +30,7 @@
             <div class="flex flex-col gap-8">
                 <table class="flex w-full max-w-xl flex-col gap-y-4 sm:grid sm:grid-cols-4">
                     <tbody class="contents">
-                        <tr class="contents">
-                            <th scope="row" class="col-span-1 text-left font-bold">{{ form.title.label_tag }}</th>
-                            <td class="col-span-3">
-                                <div class="flex flex-col items-start gap-2">
-                                    <div class="flex w-full flex-row items-center gap-2">{{ form.title }}</div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="contents">
-                            <th scope="row" class="col-span-1 text-left font-bold">{{ form.assignee.label_tag }}</th>
-                            <td class="col-span-3">{{ form.assignee }}</td>
-                        </tr>
-                        <tr class="contents">
-                            <th scope="row" class="col-span-1 text-left font-bold">{{ form.labels.label_tag }}</th>
-                            <td class="col-span-3">{{ form.labels }}</td>
-                        </tr>
-                        <tr class="contents">
-                            <th scope="row" class="col-span-1 text-left font-bold">{{ form.due_date.label_tag }}</th>
-                            <td class="col-span-3">
-                                <div class="flex flex-row items-center gap-4">
-                                    <div class="flex flex-col items-start gap-2">
-                                        <div class="flex w-full flex-row items-center gap-2">{{ form.due_date }}</div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="contents">
-                            <th scope="row" class="col-span-1 text-left font-bold">{{ form.description.label_tag }}</th>
-                            <td class="col-span-3">{{ form.description }}</td>
-                        </tr>
+                        {{ form.as_table }}
                     </tbody>
                 </table>
                 <div class="flex flex-col gap-4">

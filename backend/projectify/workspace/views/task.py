@@ -84,6 +84,8 @@ def get_object(
 class TaskCreateForm(forms.Form):
     """Form for task creation."""
 
+    template_name_table = "workspace/forms/table.html"
+
     title = forms.CharField(
         label=_("Task title"),
         widget=forms.TextInput(attrs={"placeholder": _("Task title")}),
@@ -125,6 +127,10 @@ class TaskCreateForm(forms.Form):
             queryset=workspace.label_set.all(),
             widget=labels_widget,
             to_field_name="uuid",
+        )
+
+        self.order_fields(
+            ["title", "assignee", "labels", "due_date", "description"]
         )
 
 
@@ -266,9 +272,13 @@ def task_detail(
 class TaskUpdateForm(forms.Form):
     """Form for task creation."""
 
+    template_name_table = "workspace/forms/table.html"
+
     title = forms.CharField(
         label=_("Task title"),
-        widget=forms.TextInput(attrs={"placeholder": _("Task title")}),
+        widget=forms.TextInput(
+            attrs={"placeholder": _("Task title")},
+        ),
     )
     due_date = forms.DateTimeField(
         required=False,
@@ -280,7 +290,7 @@ class TaskUpdateForm(forms.Form):
             attrs={"placeholder": _("Enter a description for your task")}
         ),
     )
-    action = forms.CharField(required=True)
+    action = forms.CharField(required=True, widget=forms.HiddenInput())
 
     def __init__(
         self,
@@ -314,6 +324,10 @@ class TaskUpdateForm(forms.Form):
             queryset=workspace.label_set.all(),
             widget=labels_widget,
             to_field_name="uuid",
+        )
+
+        self.order_fields(
+            ["title", "assignee", "labels", "due_date", "description"]
         )
 
         if focus_field is None:
