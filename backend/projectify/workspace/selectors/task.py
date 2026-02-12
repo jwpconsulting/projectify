@@ -19,7 +19,7 @@ from .labels import labels_annotate_with_colors
 
 TaskDetailQuerySet: QuerySet[Task] = (
     Task.objects.select_related(
-        "section__project__workspace",
+        "workspace",
         "assignee",
         "assignee__user",
     )
@@ -34,6 +34,12 @@ TaskDetailQuerySet: QuerySet[Task] = (
     )
     .prefetch_related(
         Prefetch(
+            "workspace__label_set",
+            queryset=labels_annotate_with_colors(Label.objects.all()),
+        ),
+    )
+    .prefetch_related(
+        Prefetch(
             "chatmessage_set",
             queryset=ChatMessage.objects.select_related(
                 "author",
@@ -43,7 +49,7 @@ TaskDetailQuerySet: QuerySet[Task] = (
     )
     .prefetch_related(
         Prefetch(
-            "section__project__workspace__project_set",
+            "workspace__project_set",
             queryset=Project.objects.filter(archived__isnull=True),
         ),
     )

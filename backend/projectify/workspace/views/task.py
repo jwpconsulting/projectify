@@ -4,7 +4,7 @@
 """Task CRUD views."""
 
 import logging
-from typing import Any, Literal, Optional, Union, cast
+from typing import Any, Literal, Optional, Union
 from uuid import UUID
 
 from django import forms
@@ -24,7 +24,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from projectify.lib.error_schema import DeriveSchema
-from projectify.lib.forms import SelectWOA
 from projectify.lib.htmx import HttpResponseClientRedirect
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
@@ -89,9 +88,6 @@ class TaskCreateForm(forms.Form):
         label=_("Task title"),
         widget=forms.TextInput(attrs={"placeholder": _("Task title")}),
     )
-    assignee = forms.ModelChoiceField(required=False, queryset=None)
-    # Django stub for ModelMultipleChoiceField does not accept None
-    labels = forms.ModelMultipleChoiceField(required=False, queryset=None)  # type: ignore[arg-type]
     due_date = forms.DateTimeField(required=False)
     description = forms.CharField(
         required=False,
@@ -103,29 +99,29 @@ class TaskCreateForm(forms.Form):
     def __init__(self, workspace: Workspace, *args: Any, **kwargs: Any):
         """Populate available assignees and labels."""
         super().__init__(*args, **kwargs)
-        assignee = cast(forms.ModelChoiceField, self.fields["assignee"])
-        assignee.queryset = workspace.teammember_set.select_related("user")
-        labels = workspace.label_set.all()
-        label_choices = [(str(label.uuid), label.name) for label in labels]
-        modify_label_choices = {
-            str(label.uuid): {
-                "bg_class": getattr(label, "bg_class", ""),
-                "border_class": getattr(label, "border_class", ""),
-            }
-            for label in labels
-        }
-        labels_widget = SelectWOA(
-            choices=label_choices,
-            modify_choices=modify_label_choices,
+        assignee_widget = forms.RadioSelect()
+        assignee_widget.option_template_name = (
+            "workspace/forms/widgets/select_assignee_option.html"
         )
+        self.fields["assignee"] = forms.ModelChoiceField(
+            required=False,
+            blank=True,
+            queryset=workspace.teammember_set.all(),
+            widget=assignee_widget,
+            to_field_name="uuid",
+            empty_label=_("Assigned to nobody"),
+        )
+
+        labels_widget = forms.CheckboxSelectMultiple()
         labels_widget.option_template_name = (
             "workspace/forms/widgets/select_label_option.html"
         )
-        self.fields["labels"] = forms.MultipleChoiceField(
+        self.fields["labels"] = forms.ModelMultipleChoiceField(
             required=False,
-            label=_("Labels"),
-            choices=label_choices,
+            blank=True,
+            queryset=workspace.label_set.all(),
             widget=labels_widget,
+            to_field_name="uuid",
         )
 
 
@@ -231,11 +227,7 @@ def task_create(
         description=form.cleaned_data.get("description"),
         assignee=form.cleaned_data.get("assignee"),
         due_date=form.cleaned_data.get("due_date"),
-        labels=list(
-            section.project.workspace.label_set.filter(
-                uuid__in=form.cleaned_data["labels"]
-            )
-        ),
+        labels=form.cleaned_data["labels"],
         sub_tasks={"create_sub_tasks": sub_tasks, "update_sub_tasks": []},
     )
 
@@ -275,9 +267,6 @@ class TaskUpdateForm(forms.Form):
         label=_("Task title"),
         widget=forms.TextInput(attrs={"placeholder": _("Task title")}),
     )
-    assignee = forms.ModelChoiceField(required=False, queryset=None)
-    # Django stub for ModelMultipleChoiceField does not accept None
-    labels = forms.ModelMultipleChoiceField(required=False, queryset=None)  # type: ignore[arg-type]
     due_date = forms.DateTimeField(required=False)
     description = forms.CharField(
         required=False,
@@ -296,10 +285,30 @@ class TaskUpdateForm(forms.Form):
     ):
         """Populate available assignees and set autofocus."""
         super().__init__(*args, **kwargs)
-        assignee = cast(forms.ModelChoiceField, self.fields["assignee"])
-        assignee.queryset = workspace.teammember_set.select_related("user")
-        labels = cast(forms.ModelChoiceField, self.fields["labels"])
-        labels.queryset = workspace.label_set.all()
+        assignee_widget = forms.RadioSelect()
+        assignee_widget.option_template_name = (
+            "workspace/forms/widgets/select_assignee_option.html"
+        )
+        self.fields["assignee"] = forms.ModelChoiceField(
+            required=False,
+            blank=True,
+            queryset=workspace.teammember_set.all(),
+            widget=assignee_widget,
+            to_field_name="uuid",
+            empty_label=_("Assigned to nobody"),
+        )
+
+        labels_widget = forms.CheckboxSelectMultiple()
+        labels_widget.option_template_name = (
+            "workspace/forms/widgets/select_label_option.html"
+        )
+        self.fields["labels"] = forms.ModelMultipleChoiceField(
+            required=False,
+            blank=True,
+            queryset=workspace.label_set.all(),
+            widget=labels_widget,
+            to_field_name="uuid",
+        )
 
         if focus_field is None:
             return
@@ -446,7 +455,7 @@ def task_update_view(
         description=cleaned_data["description"],
         due_date=cleaned_data["due_date"],
         assignee=cleaned_data["assignee"],
-        labels=[],
+        labels=cleaned_data["labels"],
         sub_tasks={
             "update_sub_tasks": update_sub_tasks,
             "create_sub_tasks": create_sub_tasks,
