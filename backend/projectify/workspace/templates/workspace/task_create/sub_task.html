@@ -15,14 +15,14 @@
             </div>
         </div>
     </div>
+    <input type="hidden"
+           name="form-TOTAL_FORMS"
+           value="{{ formset_total }}"
+           id="id_form-TOTAL_FORMS">
 {% endif %}
-<input type="hidden"
-       name="form-TOTAL_FORMS"
-       value="{{ formset_total }}"
-       id="total-subtasks">
 <div id="add-subtask" class="flex flex-row items-center gap-6">
     <button type="button"
-            hx-select-oob="#total-subtasks,#add-subtask"
+            hx-select-oob="#id_form-TOTAL_FORMS,#add-subtask"
             hx-trigger="click"
             hx-target="#subtasks"
             hx-select="[data-formset]"

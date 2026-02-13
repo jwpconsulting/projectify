@@ -1,0 +1,18 @@
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+<div class="flex items-center gap-2 hover:bg-background p-2">
+    <input type="checkbox"
+           name="{{ widget.name }}"
+           value="{{ widget.value }}"
+           class="cursor-pointer"
+           {% include "django/forms/widgets/attrs.html" %}>
+    <label class="grow overflow-x-hidden flex items-center cursor-pointer group rounded-2.5xl border border-dashed border-primary px-3 py-1 font-bold {% if widget.value.instance %}{{ widget.value.instance.bg_class }} {{ widget.value.instance.text_class }}{% endif %}"
+           for="{{ widget.attrs.id }}">
+        <span class="truncate">{{ widget.label }}</span>
+    </label>
+    {% if widget.value.instance %}
+        <div class="flex shrink-0 flex-row items-center gap-2 rounded-2.5xl bg-background px-2 py-0.5 text-primary group-hover:bg-foreground">
+            {{ widget.value.instance.task_count }}
+        </div>
+    {% endif %}
+</div>

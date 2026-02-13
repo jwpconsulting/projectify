@@ -23,7 +23,7 @@ pytestmark = pytest.mark.django_db
 
 
 def test_project_detail_query_set(
-    workspace: Workspace, task: Task, team_member: TeamMember
+    workspace: Workspace, task: Task, other_task: Task, team_member: TeamMember
 ) -> None:
     """Test project_detail_query_set."""
     # Ensure the task is assigned to the team_member
@@ -34,13 +34,20 @@ def test_project_detail_query_set(
 
     task.assignee = first_team_member
     task.save()
+    other_task.assignee = None
+    other_task.save()
 
     # Filter by first team member (one task assigned)
-    qs = project_detail_query_set(team_member_uuids=[first_team_member.uuid])
+    qs = project_detail_query_set(
+        filter_by_team_members=TeamMember.objects.filter(
+            id__in=[first_team_member.pk]
+        )
+    )
     project_first = qs.first()
     assert project_first
     section = project_first.section_set.first()
     assert section
+    assert section.task_set.count() == 1
     task_found = section.task_set.first()
     assert task_found
     # Check whether first team member is marked as filtered
@@ -50,8 +57,22 @@ def test_project_detail_query_set(
     assert getattr(first_team_member, "is_filtered") is True
     assert getattr(second_team_member, "is_filtered") is False
 
+    # When filtering by the first team member, and unassigned tasks, we should
+    # get both tasks
+    qs = project_detail_query_set(
+        filter_by_team_members=TeamMember.objects.filter(
+            id__in=[first_team_member.pk]
+        ),
+        unassigned_tasks=True,
+    )
+    assert qs.get().section_set.all().get().task_set.count() == 2
+
     # Filter by second team member (no task assigned)
-    qs = project_detail_query_set(team_member_uuids=[second_team_member.uuid])
+    qs = project_detail_query_set(
+        filter_by_team_members=TeamMember.objects.filter(
+            id__in=[second_team_member.pk]
+        )
+    )
     project_first = qs.first()
     assert project_first
     section = project_first.section_set.first()

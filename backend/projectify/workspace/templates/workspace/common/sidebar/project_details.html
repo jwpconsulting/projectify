@@ -31,84 +31,22 @@
                     <p class=" font-bold truncate py-2">{% trans "Filter team members" %}</p>
                 </legend>
                 <div class="flex flex-col gap-2">
-                    <div class="flex flex-col overflow-y-auto">
-                        <div class="grid grid-cols-[auto_1fr_auto] gap-2 items-center hover:bg-background p-2">
-                            <input type="checkbox"
-                                   id="{{ task_filter_form.filter_by_unassigned.id_for_label }}"
-                                   name="{{ task_filter_form.filter_by_unassigned.html_name }}"
-                                   value="on"
-                                   {% if task_filter_form.filter_by_unassigned.data %}checked{% endif %}
-                                   class="cursor-pointer" />
-                            <label for="{{ task_filter_form.filter_by_unassigned.id_for_label }}"
-                                   class="flex flex-1 gap-2 text-regular min-w-0 cursor-pointer">
-                                {% user_avatar None %}
-                                <span class="truncate">{{ task_filter_form.filter_by_unassigned.label }}</span>
-                            </label>
-                            {# no count #}
-                        </div>
-                        {% for member in task_filter_form.filter_by_team_member %}
-                            <div class="grid grid-cols-[auto_1fr_auto] gap-2 items-center hover:bg-background p-2">
-                                <input type="checkbox"
-                                       id="{{ member.data.attrs.id }}"
-                                       name="{{ task_filter_form.filter_by_team_member.html_name }}"
-                                       {% if member.data.is_filtered %}checked{% endif %}
-                                       value="{{ member.data.value }}"
-                                       class="cursor-pointer" />
-                                <label for="{{ member.id_for_label }}"
-                                       class="flex flex-1 gap-2 text-regular min-w-0 cursor-pointer">
-                                    {% user_avatar member.data.member %}
-                                    <span class="truncate">{{ member.choice_label }}</span>
-                                </label>
-                                <div class="flex shrink-0 flex-row items-center gap-2 rounded-2.5xl bg-background px-2 py-0.5 text-primary group-hover:bg-foreground">
-                                    {{ member.data.task_count }}
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
+                    <div class="flex flex-col overflow-y-auto">{{ task_filter_form.filter_by_team_member }}</div>
                 </div>
             </fieldset>
         </div>
-        <div class="flex flex-col px-4">
-            <fieldset class="w-full max-w-full">
+        <div class="flex flex-col gap-4 px-4">
+            <fieldset class="w-full max-w-full min-w-0">
                 <legend class="flex items-center gap-2">
                     <div class="w-4 h-4">{% include "heroicons/tag.svg" %}</div>
                     <p class=" font-bold truncate py-2">{% trans "Filter labels" %}</p>
                 </legend>
-                <div class="flex flex-col gap-2">
-                    <div class="flex flex-col overflow-y-auto">
-                        <div class="grid grid-cols-[auto_1fr_auto] gap-2 items-center hover:bg-background p-2">
-                            <input type="checkbox"
-                                   id="{{ task_filter_form.filter_by_unlabeled.id_for_label }}"
-                                   name="{{ task_filter_form.filter_by_unlabeled.html_name }}"
-                                   {% if task_filter_form.filter_by_unlabeled.data %}checked{% endif %}
-                                   value="on">
-                            <label class="flex items-center min-w-0 gap-2"
-                                   for="{{ task_filter_form.filter_by_unlabeled.id_for_label }}">
-                                <div class="h-6 w-6 shrink-0 rounded-full border border-utility"></div>
-                                <div class="text-regular truncate min-w-0">{{ task_filter_form.filter_by_unlabeled.label }}</div>
-                            </label>
-                        </div>
-                        {% for label in task_filter_form.filter_by_label %}
-                            <div class="grid grid-cols-[auto_1fr_auto] gap-2 items-center hover:bg-background p-2">
-                                <input type="checkbox"
-                                       id="{{ label.data.attrs.id }}"
-                                       name="{{ task_filter_form.filter_by_label.html_name }}"
-                                       {% if label.data.is_filtered %}checked{% endif %}
-                                       value="{{ label.data.value }}">
-                                <label class="flex items-center min-w-0 gap-2"
-                                       for="{{ label.id_for_label }}">
-                                    <div class="h-6 w-6 shrink-0 rounded-full {{ label.data.bg_class }} border {{ label.data.border_class }}"></div>
-                                    <div class="text-regular truncate min-w-0">{{ label.choice_label }}</div>
-                                </label>
-                                <div class="flex shrink-0 flex-row items-center gap-2 rounded-2.5xl bg-background px-2 py-0.5 text-primary group-hover:bg-foreground">
-                                    {{ label.data.task_count }}
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
+                <div class="flex flex-col overflow-y-auto">{{ task_filter_form.filter_by_label }}</div>
             </fieldset>
+            {% if workspace %}
+                {% anchor "dashboard:workspaces:labels" _("Edit labels") workspace_uuid=workspace.uuid %}
+            {% endif %}
+            {% include "projectify/forms/submit.html" with text=_("Filter") %}
         </div>
-        {% include "projectify/forms/submit.html" with text=_("Filter") %}
     </form>
 {% endif %}

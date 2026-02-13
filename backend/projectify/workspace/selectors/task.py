@@ -13,12 +13,13 @@ from projectify.user.models import User
 
 from ..models.chat_message import ChatMessage
 from ..models.label import Label
+from ..models.project import Project
 from ..models.task import Task
 from .labels import labels_annotate_with_colors
 
 TaskDetailQuerySet: QuerySet[Task] = (
     Task.objects.select_related(
-        "section__project__workspace",
+        "workspace",
         "assignee",
         "assignee__user",
     )
@@ -33,11 +34,23 @@ TaskDetailQuerySet: QuerySet[Task] = (
     )
     .prefetch_related(
         Prefetch(
+            "workspace__label_set",
+            queryset=labels_annotate_with_colors(Label.objects.all()),
+        ),
+    )
+    .prefetch_related(
+        Prefetch(
             "chatmessage_set",
             queryset=ChatMessage.objects.select_related(
                 "author",
                 "author__user",
             ),
+        ),
+    )
+    .prefetch_related(
+        Prefetch(
+            "workspace__project_set",
+            queryset=Project.objects.filter(archived__isnull=True),
         ),
     )
     .annotate(

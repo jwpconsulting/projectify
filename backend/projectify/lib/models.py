@@ -43,7 +43,7 @@ class CreationDateTimeField(DateTimeField[datetime.datetime]):
         kwargs.setdefault("blank", True)
         kwargs.setdefault("auto_now_add", True)
         # projectify/lib/models.py:58: error: Argument 1 to "__init__" of "Field" has incompatible type "CreationDateTimeField"; expected "Field[_ST, _GT]"  [arg-type]
-        DateTimeField[datetime.datetime].__init__(self, *args, **kwargs)  # type: ignore[arg-type]
+        DateTimeField[datetime.datetime].__init__(self, *args, **kwargs)
 
     def get_internal_type(self) -> str:
         """Return internal type."""
@@ -74,7 +74,7 @@ class ModificationDateTimeField(CreationDateTimeField):
         """Enable auto_now=True."""
         kwargs.setdefault("auto_now", True)
         # projectify/lib/models.py:88: error: Argument 1 to "__init__" of "Field" has incompatible type "ModificationDateTimeField"; expected "Field[_ST, _GT]"  [arg-type]
-        DateTimeField[datetime.datetime].__init__(self, *args, **kwargs)  # type: ignore[arg-type]
+        DateTimeField[datetime.datetime].__init__(self, *args, **kwargs)
 
     def get_internal_type(self) -> str:
         """Return internal type."""

@@ -15,23 +15,26 @@ import pytest
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from projectify.workspace.models import TaskLabel
-from projectify.workspace.models.project import Project
-from projectify.workspace.models.section import Section
-from projectify.workspace.models.sub_task import SubTask
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.selectors.project import (
-    project_find_by_workspace_uuid,
-)
-from projectify.workspace.services.project import project_archive
-from projectify.workspace.services.sub_task import sub_task_create
 from pytest_types import DjangoAssertNumQueries
+
+from ...models import (
+    Label,
+    Project,
+    Section,
+    SubTask,
+    Task,
+    TaskLabel,
+    TeamMember,
+    Workspace,
+)
+from ...selectors.project import project_find_by_workspace_uuid
+from ...services.project import project_archive
+from ...services.sub_task import sub_task_create
+
+pytestmark = pytest.mark.django_db
 
 
 # HTML views
-@pytest.mark.django_db
 class TestProjectDetailView:
     """Test html project detail view."""
 
@@ -55,37 +58,154 @@ class TestProjectDetailView:
         # Gone down from 13 -> 11, since we prefetch projects
         # Gone down from 11 -> 10, since we don't fetch label values()
         # Gone up   from 10 -> 13, since we update the last visited project
-        with django_assert_num_queries(13):
+        # Gone up   from 13 -> 15
+        with django_assert_num_queries(15):
             response = user_client.get(resource_url)
             assert response.status_code == 200
-            assert project.title.encode() in response.content
-            assert project.workspace.title.encode() in response.content
+        assert project.title in response.content.decode()
+        assert project.workspace.title in response.content.decode()
 
     def test_project_not_found(
         self,
         user_client: Client,
         team_member: TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Ensure that accessing a non-existent project returns 404."""
         url = reverse("dashboard:projects:detail", args=(uuid4(),))
-        response = user_client.get(url)
-        assert response.status_code == 404
+        with django_assert_num_queries(3):
+            response = user_client.get(url)
+            assert response.status_code == 404
 
     def test_archived_project_not_found(
         self,
         user_client: Client,
         archived_project: Project,
         team_member: TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Ensure that the client can't access archived projects."""
         url = reverse(
             "dashboard:projects:detail", args=(archived_project.uuid,)
         )
-        response = user_client.get(url)
-        assert response.status_code == 404
+        with django_assert_num_queries(3):
+            response = user_client.get(url)
+            assert response.status_code == 404
+
+    def test_filter_by_team_member(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        other_team_member: TeamMember,
+        task: Task,
+        other_task: Task,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test filtering tasks by team member."""
+        task.assignee = team_member
+        task.save()
+
+        other_task.assignee = other_team_member
+        other_task.save()
+
+        with django_assert_num_queries(21):
+            response = user_client.get(
+                resource_url,
+                {"filter_by_team_member": [str(team_member.uuid)]},
+            )
+            assert response.status_code == 200
+
+        assert task.title in response.content.decode()
+        assert other_task.title not in response.content.decode()
+
+    def test_filter_by_unassigned_tasks(
+        self,
+        user_client: Client,
+        resource_url: str,
+        task: Task,
+        team_member: TeamMember,
+        other_task: Task,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test filtering for unassigned tasks."""
+        task.assignee = team_member
+        task.save()
+
+        with django_assert_num_queries(19):
+            response = user_client.get(
+                resource_url, {"filter_by_team_member": [""]}
+            )
+            assert response.status_code == 200
+
+        assert task.title not in response.content.decode()
+        assert other_task.title in response.content.decode()
+
+    def test_filter_by_label(
+        self,
+        user_client: Client,
+        resource_url: str,
+        task: Task,
+        other_task: Task,
+        label: Label,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test filtering tasks by label."""
+        task.labels.add(label)
+
+        with django_assert_num_queries(21):
+            response = user_client.get(
+                resource_url, {"filter_by_label": [str(label.uuid)]}
+            )
+            assert response.status_code == 200
+
+        assert task.title in response.content.decode()
+        assert other_task.title not in response.content.decode()
+
+    def test_filter_by_unlabeled_tasks(
+        self,
+        user_client: Client,
+        resource_url: str,
+        task: Task,
+        other_task: Task,
+        label: Label,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test filtering for unlabeled tasks."""
+        task.labels.add(label)
+
+        with django_assert_num_queries(19):
+            response = user_client.get(resource_url, {"filter_by_label": [""]})
+            assert response.status_code == 200
+
+        assert task.title not in response.content.decode()
+        assert other_task.title in response.content.decode()
+
+    def test_filter_by_task_search_query(
+        self,
+        user_client: Client,
+        resource_url: str,
+        task: Task,
+        other_task: Task,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test filtering tasks by search query."""
+        task.title = "Important bug fix"
+        task.save()
+
+        other_task.title = "Feature request"
+        other_task.save()
+
+        with django_assert_num_queries(19):
+            response = user_client.get(
+                resource_url, {"task_search_query": "bug"}
+            )
+            assert response.status_code == 200
+
+        assert task.title in response.content.decode()
+        assert other_task.title not in response.content.decode()
 
 
-@pytest.mark.django_db
 class TestProjectCreateView:
     """Test html project create view."""
 
@@ -156,7 +276,6 @@ class TestProjectCreateView:
         assert response.status_code == 404
 
 
-@pytest.mark.django_db
 class TestProjectUpdateView:
     """Test html project update view."""
 
@@ -174,7 +293,7 @@ class TestProjectUpdateView:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test GETting the project update page."""
-        with django_assert_num_queries(4):
+        with django_assert_num_queries(8):
             response = user_client.get(resource_url)
             assert response.status_code == 200
             assert project.title.encode() in response.content
@@ -190,7 +309,7 @@ class TestProjectUpdateView:
         """Test successfully updating a project."""
         updated_title = "Updated Project Title"
 
-        with django_assert_num_queries(5):
+        with django_assert_num_queries(9):
             response = user_client.post(
                 resource_url,
                 {"title": updated_title},
@@ -251,7 +370,6 @@ class TestProjectUpdateView:
         assert response.status_code == 404
 
 
-@pytest.mark.django_db
 class TestProjectArchiveView:
     """Test html project archive view."""
 
@@ -312,7 +430,6 @@ class TestProjectArchiveView:
         assert response.status_code == 404
 
 
-@pytest.mark.django_db
 class TestProjectRecoverView:
     """Test html project recover view."""
 
@@ -389,7 +506,6 @@ class TestProjectRecoverView:
         assert response.status_code == 404
 
 
-@pytest.mark.django_db
 class TestProjectDeleteView:
     """Test html project delete view."""
 
@@ -466,7 +582,6 @@ class TestProjectDeleteView:
 
 
 # Create
-@pytest.mark.django_db
 class TestProjectCreate:
     """Test project creation."""
 
@@ -501,7 +616,6 @@ class TestProjectCreate:
 
 
 # Read + Update + Delete
-@pytest.mark.django_db
 class TestProjectReadUpdateDelete:
     """Test ProjectReadUpdateDelete view."""
 
@@ -651,7 +765,6 @@ class TestProjectReadUpdateDelete:
 
 
 # Read (list)
-@pytest.mark.django_db
 class TestProjectsArchivedList:
     """Test ProjectsArchived list."""
 
@@ -683,7 +796,6 @@ class TestProjectsArchivedList:
 
 
 # RPC
-@pytest.mark.django_db
 class TestProjectArchive:
     """Test project archival."""
 

@@ -4,12 +4,13 @@
 """Task CRUD views."""
 
 import logging
-from typing import Any, Literal, Optional, Union, cast
+from typing import Any, Literal, Optional, Union
 from uuid import UUID
 
 from django import forms
+from django.core.exceptions import BadRequest
 from django.forms.formsets import TOTAL_FORM_COUNT
-from django.http import HttpResponse
+from django.http import HttpResponse, QueryDict
 from django.http.response import Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -27,32 +28,28 @@ from projectify.lib.htmx import HttpResponseClientRedirect
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
-from projectify.workspace.models.label import Label
-from projectify.workspace.models.section import Section
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.selectors.project import (
-    project_find_by_workspace_uuid,
-)
-from projectify.workspace.selectors.section import (
+
+from ..models.label import Label
+from ..models.section import Section
+from ..models.task import Task
+from ..models.workspace import Workspace
+from ..selectors.section import (
     SectionDetailQuerySet,
     section_find_for_user_and_uuid,
 )
-from projectify.workspace.selectors.task import (
-    TaskDetailQuerySet,
-    task_find_by_task_uuid,
-)
-from projectify.workspace.serializers.task_detail import (
+from ..selectors.task import TaskDetailQuerySet, task_find_by_task_uuid
+from ..selectors.workspace import workspace_find_for_user
+from ..serializers.task_detail import (
     TaskCreateSerializer,
     TaskDetailSerializer,
     TaskUpdateSerializer,
 )
-from projectify.workspace.services.sub_task import (
+from ..services.sub_task import (
     ValidatedData,
     ValidatedDatum,
     ValidatedDatumWithUuid,
 )
-from projectify.workspace.services.task import (
+from ..services.task import (
     task_create_nested,
     task_delete,
     task_move_after,
@@ -69,7 +66,11 @@ def get_object(
     """Get object for user and uuid."""
     user = request.user
     obj = task_find_by_task_uuid(
-        who=user, task_uuid=task_uuid, qs=TaskDetailQuerySet
+        # TODO TaskDetailQuerySet probably not needed
+        # Remove when DRF views are gone
+        who=user,
+        task_uuid=task_uuid,
+        qs=TaskDetailQuerySet,
     )
     if obj is None:
         raise NotFound(
@@ -83,14 +84,16 @@ def get_object(
 class TaskCreateForm(forms.Form):
     """Form for task creation."""
 
+    template_name_table = "workspace/forms/table.html"
+
     title = forms.CharField(
         label=_("Task title"),
         widget=forms.TextInput(attrs={"placeholder": _("Task title")}),
     )
-    assignee = forms.ModelChoiceField(required=False, queryset=None)
-    # Django stub for ModelMultipleChoiceField does not accept None
-    labels = forms.ModelMultipleChoiceField(required=False, queryset=None)  # type: ignore[arg-type]
-    due_date = forms.DateTimeField(required=False)
+    due_date = forms.DateTimeField(
+        required=False,
+        widget=forms.DateTimeInput(attrs={"type": "date"}),
+    )
     description = forms.CharField(
         required=False,
         widget=forms.Textarea(
@@ -99,12 +102,36 @@ class TaskCreateForm(forms.Form):
     )
 
     def __init__(self, workspace: Workspace, *args: Any, **kwargs: Any):
-        """Populate available assignees."""
+        """Populate available assignees and labels."""
         super().__init__(*args, **kwargs)
-        assignee = cast(forms.ModelChoiceField, self.fields["assignee"])
-        assignee.queryset = workspace.teammember_set.select_related("user")
-        labels = cast(forms.ModelChoiceField, self.fields["labels"])
-        labels.queryset = workspace.label_set.all()
+        assignee_widget = forms.RadioSelect()
+        assignee_widget.option_template_name = (
+            "workspace/forms/widgets/select_assignee_option.html"
+        )
+        self.fields["assignee"] = forms.ModelChoiceField(
+            required=False,
+            blank=True,
+            queryset=workspace.teammember_set.all(),
+            widget=assignee_widget,
+            to_field_name="uuid",
+            empty_label=_("Assigned to nobody"),
+        )
+
+        labels_widget = forms.CheckboxSelectMultiple()
+        labels_widget.option_template_name = (
+            "workspace/forms/widgets/select_label_option.html"
+        )
+        self.fields["labels"] = forms.ModelMultipleChoiceField(
+            required=False,
+            blank=True,
+            queryset=workspace.label_set.all(),
+            widget=labels_widget,
+            to_field_name="uuid",
+        )
+
+        self.order_fields(
+            ["title", "assignee", "labels", "due_date", "description"]
+        )
 
 
 class TaskCreateSubTaskForm(forms.Form):
@@ -120,7 +147,7 @@ TaskCreateSubTaskForms = forms.formset_factory(TaskCreateSubTaskForm, extra=0)  
 class TaskUpdateSubTaskForm(forms.Form):
     """Form for creating sub tasks as part of task creation."""
 
-    title = forms.CharField()
+    title = forms.CharField(required=False)
     done = forms.BooleanField(required=False)
     uuid = forms.UUIDField(required=False, widget=forms.HiddenInput)
     delete = forms.BooleanField(
@@ -160,8 +187,12 @@ def task_create(
     )
     if section is None:
         raise Http404(_("Section not found"))
-    workspace = section.project.workspace
-    context: dict[str, Any] = {"section": section, "workspace": workspace}
+    context: dict[str, Any] = {
+        "section": section,
+        "projects": section.project.workspace.project_set.all(),
+        "workspace": section.project.workspace,
+        "workspaces": workspace_find_for_user(who=request.user),
+    }
     match request.method:
         case "GET":
             return render(
@@ -179,7 +210,7 @@ def task_create(
             pass
         case method:
             raise RuntimeError(f"Don't know how to handle method {method}")
-    form = TaskCreateForm(workspace, request.POST)
+    form = TaskCreateForm(section.project.workspace, request.POST)
     formset = TaskCreateSubTaskForms(request.POST.dict())
     all_valid = form.is_valid() and formset.is_valid()
     if not formset.is_valid():
@@ -198,7 +229,7 @@ def task_create(
         if d.get("title")
     ]
 
-    task_create_nested(
+    task = task_create_nested(
         who=request.user,
         section=section,
         title=form.cleaned_data["title"],
@@ -208,9 +239,14 @@ def task_create(
         labels=form.cleaned_data["labels"],
         sub_tasks={"create_sub_tasks": sub_tasks, "update_sub_tasks": []},
     )
-    return redirect(
-        reverse("dashboard:projects:detail", args=(section.project.uuid,))
-    )
+
+    match request.POST.get("action"):
+        case "create_stay":
+            return redirect("dashboard:tasks:detail", task.uuid)
+        case "create":
+            return redirect(section.get_absolute_url())
+        case action:
+            raise BadRequest(_("Invalid action: {}").format(action))
 
 
 @platform_view
@@ -223,17 +259,12 @@ def task_detail(
     )
     if task is None:
         raise Http404(_(f"Could not find task with uuid {task_uuid}"))
-    project = task.section.project
-    # Inefficient
-    workspace = project.workspace
-    projects = project_find_by_workspace_uuid(
-        who=request.user, workspace_uuid=workspace.uuid, archived=False
-    )
     context = {
         "task": task,
-        "project": project,
-        "projects": projects,
-        "workspace": workspace,
+        "project": task.section.project,
+        "workspace": task.workspace,
+        "projects": task.workspace.project_set.all(),
+        "workspaces": workspace_find_for_user(who=request.user),
     }
     return render(request, "workspace/task_detail.html", context)
 
@@ -241,21 +272,24 @@ def task_detail(
 class TaskUpdateForm(forms.Form):
     """Form for task creation."""
 
+    template_name_table = "workspace/forms/table.html"
+
     title = forms.CharField(
         label=_("Task title"),
-        widget=forms.TextInput(attrs={"placeholder": _("Task title")}),
+        widget=forms.TextInput(
+            attrs={"placeholder": _("Task title")},
+        ),
     )
-    assignee = forms.ModelChoiceField(required=False, queryset=None)
-    # Django stub for ModelMultipleChoiceField does not accept None
-    labels = forms.ModelMultipleChoiceField(required=False, queryset=None)  # type: ignore[arg-type]
-    due_date = forms.DateTimeField(required=False)
+    due_date = forms.DateTimeField(
+        required=False,
+        widget=forms.DateTimeInput(attrs={"type": "date"}),
+    )
     description = forms.CharField(
         required=False,
         widget=forms.Textarea(
             attrs={"placeholder": _("Enter a description for your task")}
         ),
     )
-    action = forms.CharField(required=True)
 
     def __init__(
         self,
@@ -266,10 +300,34 @@ class TaskUpdateForm(forms.Form):
     ):
         """Populate available assignees and set autofocus."""
         super().__init__(*args, **kwargs)
-        assignee = cast(forms.ModelChoiceField, self.fields["assignee"])
-        assignee.queryset = workspace.teammember_set.select_related("user")
-        labels = cast(forms.ModelChoiceField, self.fields["labels"])
-        labels.queryset = workspace.label_set.all()
+        assignee_widget = forms.RadioSelect()
+        assignee_widget.option_template_name = (
+            "workspace/forms/widgets/select_assignee_option.html"
+        )
+        self.fields["assignee"] = forms.ModelChoiceField(
+            required=False,
+            blank=True,
+            queryset=workspace.teammember_set.all(),
+            widget=assignee_widget,
+            to_field_name="uuid",
+            empty_label=_("Assigned to nobody"),
+        )
+
+        labels_widget = forms.CheckboxSelectMultiple()
+        labels_widget.option_template_name = (
+            "workspace/forms/widgets/select_label_option.html"
+        )
+        self.fields["labels"] = forms.ModelMultipleChoiceField(
+            required=False,
+            blank=True,
+            queryset=workspace.label_set.all(),
+            widget=labels_widget,
+            to_field_name="uuid",
+        )
+
+        self.order_fields(
+            ["title", "assignee", "labels", "due_date", "description"]
+        )
 
         if focus_field is None:
             return
@@ -310,21 +368,18 @@ def task_update_view(
     )
     if task is None:
         raise Http404(_(f"Could not find task with uuid {task_uuid}"))
-    project = task.section.project
-    workspace = project.workspace
-    projects = project_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=workspace.uuid,
-        archived=False,
-    )
 
     focus_field = request.GET.get("focus", None)
-    context: dict[str, Any] = {"workspace": workspace, "projects": projects}
+    context: dict[str, Any] = {
+        "workspace": task.workspace,
+        "projects": task.workspace.project_set.all(),
+        "workspaces": workspace_find_for_user(who=request.user),
+    }
 
     action = determine_action(request)
     match action:
         case "add_sub_task":
-            post: dict[str, Any] = request.POST.dict()
+            post: QueryDict = request.POST.copy()
             sub_task_count_raw: str = post.get("form-" + TOTAL_FORM_COUNT, "0")
             try:
                 sub_task_count = int(sub_task_count_raw)
@@ -337,9 +392,9 @@ def task_update_view(
             post["form-TOTAL_FORMS"] = str(sub_task_count + 1)
             logger.info("Adding sub task")
             form = TaskUpdateForm(
-                data=post, workspace=workspace, focus_field=focus_field
+                data=post, workspace=task.workspace, focus_field=focus_field
             )
-            formset = TaskUpdateSubTaskForms(data=post)
+            formset = TaskUpdateSubTaskForms(data=post)  # type: ignore[arg-type]
             context = {
                 **context,
                 "form": form,
@@ -364,7 +419,9 @@ def task_update_view(
     ]
     if action == "get":
         form = TaskUpdateForm(
-            initial=task_initial, workspace=workspace, focus_field=focus_field
+            initial=task_initial,
+            workspace=task.workspace,
+            focus_field=focus_field,
         )
         formset = TaskUpdateSubTaskForms(initial=sub_tasks_initial)  # type: ignore[arg-type]
         # Add autofocus to first subtask if focus_field is subtasks
@@ -374,20 +431,27 @@ def task_update_view(
         return render(request, "workspace/task_update.html", context)
 
     form = TaskUpdateForm(
-        data=request.POST,
+        data=request.POST.copy(),
         initial=task_initial,
-        workspace=workspace,
+        workspace=task.workspace,
         focus_field=focus_field,
     )
     form.full_clean()
     formset = TaskUpdateSubTaskForms(
-        data=request.POST.dict(),
+        data=request.POST,  # type: ignore[arg-type]
         initial=sub_tasks_initial,  # type: ignore[arg-type]
     )
     formset.full_clean()
     if not form.is_valid() or not formset.is_valid():
+        logger.warning(
+            "form.is_valid=%s, formset.is_valid()=%s",
+            form.is_valid(),
+            formset.is_valid(),
+        )
         context = {**context, "form": form, "task": task, "formset": formset}
-        return render(request, "workspace/task_update.html", context)
+        return render(
+            request, "workspace/task_update.html", context, status=400
+        )
 
     cleaned_data = form.cleaned_data
     formset_cleaned_data = formset.cleaned_data
@@ -408,7 +472,8 @@ def task_update_view(
             "_order": i,
         }
         for i, f in enumerate(formset_cleaned_data)
-        if f and not f["uuid"] and not f["delete"]
+        # Only include sub tasks that have a title
+        if f and not f["uuid"] and not f["delete"] and f["title"].strip()
     ]
     task_update_nested(
         who=request.user,
@@ -417,7 +482,7 @@ def task_update_view(
         description=cleaned_data["description"],
         due_date=cleaned_data["due_date"],
         assignee=cleaned_data["assignee"],
-        labels=[],
+        labels=cleaned_data["labels"],
         sub_tasks={
             "update_sub_tasks": update_sub_tasks,
             "create_sub_tasks": create_sub_tasks,
@@ -427,10 +492,14 @@ def task_update_view(
         case "update_stay":
             n = reverse("dashboard:tasks:detail", args=(task.uuid,))
         case "update":
-            n = reverse("dashboard:projects:detail", args=(project.uuid,))
+            n = reverse(
+                "dashboard:projects:detail", args=(task.section.project.uuid,)
+            )
         case _:
             logger.warning("No action specified")
-            n = reverse("dashboard:projects:detail", args=(project.uuid,))
+            n = reverse(
+                "dashboard:projects:detail", args=(task.section.project.uuid,)
+            )
     return redirect(n)
 
 
@@ -509,20 +578,13 @@ def task_actions(
 ) -> HttpResponse:
     """Render task actions menu page."""
     task = get_object(request, task_uuid)
-    project = task.section.project
-    workspace = project.workspace
-    projects = project_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=workspace.uuid,
-        archived=False,
-    )
-    sections = project.section_set.all()
     context = {
         "task": task,
-        "workspace": workspace,
-        "sections": sections,
-        "projects": projects,
-        "project": project,
+        "workspace": task.workspace,
+        "sections": task.section.project.section_set.all(),
+        "projects": task.workspace.project_set.all(),
+        "project": task.section.project,
+        "workspaces": workspace_find_for_user(who=request.user),
     }
     return render(request, "workspace/task_actions.html", context)
 
@@ -532,11 +594,8 @@ def task_delete_view(
 ) -> HttpResponse:
     """Delete task."""
     task = get_object(request, task_uuid)
-    section = task.section
-    project = section.project
     task_delete(who=request.user, task=task)
-    next_url = f"{reverse("dashboard:projects:detail", args=(project.uuid,))}#{section.uuid}"
-    return HttpResponseClientRedirect(next_url)
+    return HttpResponseClientRedirect(task.section.get_absolute_url())
 
 
 # Create

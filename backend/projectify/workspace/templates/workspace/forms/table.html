@@ -1,0 +1,36 @@
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# SPDX-License-Identifier: BSD-3-Clause #}
+{# SPDX-FileCopyrightText: Django Software Foundation and individual contributors. #}
+{% if errors %}
+    <tr>
+        <td colspan="2">
+            {{ errors }}
+            {% if not fields %}
+                {% for field in hidden_fields %}{{ field }}{% endfor %}
+            {% endif %}
+        </td>
+    </tr>
+{% endif %}
+{% for field, errors in fields %}
+    <tr class="contents">
+        <th scope="row" class="col-span-1 text-left font-bold">
+            {% if field.label %}{{ field.label_tag }}{% endif %}
+        </th>
+        <td class="col-span-3">
+            {% if errors %}<div class="text-destructive">{{ errors }}</div>{% endif %}
+            {{ field }}
+            {% if field.help_text %}
+                <br>
+                <span class="helptext"
+                      {% if field.auto_id %}id="{{ field.auto_id }}_helptext"{% endif %}>{{ field.help_text|safe }}</span>
+            {% endif %}
+            {% if forloop.last %}
+                {% for field in hidden_fields %}{{ field }}{% endfor %}
+            {% endif %}
+        </td>
+    </tr>
+{% endfor %}
+{% if not fields and not errors %}
+    {% for field in hidden_fields %}{{ field }}{% endfor %}
+{% endif %}

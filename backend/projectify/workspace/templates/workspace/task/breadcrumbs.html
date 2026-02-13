@@ -1,10 +1,14 @@
-{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load projectify %}
 <div class="font-bold text-utility">
-    {% anchor "dashboard:projects:detail" label=task.section.project.title project_uuid=task.section.project.uuid %}
+    {% anchor "dashboard:projects:detail" label=section.project.title project_uuid=section.project.uuid %}
     &gt;
-    {% anchor href=task.section.get_absolute_url label=task.section.title %}
+    {% anchor href=section.get_absolute_url label=section.title %}
     &gt;
-    {% anchor "dashboard:tasks:detail" label=task.number task_uuid=task.uuid %}
+    {% if current_page_label and current_page_url %}
+        {% anchor href=current_page_url label=current_page_label %}
+    {% else %}
+        {% anchor "dashboard:tasks:detail" label=task.number task_uuid=task.uuid %}
+    {% endif %}
 </div>
