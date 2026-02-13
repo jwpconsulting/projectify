@@ -35,16 +35,17 @@
                 </div>
             </fieldset>
         </div>
-        <div class="flex flex-col px-4">
+        <div class="flex flex-col gap-4 px-4">
             <fieldset class="w-full max-w-full min-w-0">
                 <legend class="flex items-center gap-2">
                     <div class="w-4 h-4">{% include "heroicons/tag.svg" %}</div>
                     <p class=" font-bold truncate py-2">{% trans "Filter labels" %}</p>
                 </legend>
-                <div class="flex flex-col gap-2">
-                    <div class="flex flex-col overflow-y-auto">{{ task_filter_form.filter_by_label }}</div>
-                </div>
+                <div class="flex flex-col overflow-y-auto">{{ task_filter_form.filter_by_label }}</div>
             </fieldset>
+            {% if workspace %}
+                {% anchor "dashboard:workspaces:labels" _("Edit labels") workspace_uuid=workspace.uuid %}
+            {% endif %}
             {% include "projectify/forms/submit.html" with text=_("Filter") %}
         </div>
     </form>
