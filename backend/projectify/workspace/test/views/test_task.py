@@ -18,6 +18,7 @@ from projectify.workspace.models.task import Task
 from pytest_types import DjangoAssertNumQueries
 
 from ... import models
+from ...services.sub_task import sub_task_create
 
 
 class UnauthenticatedTestMixin:
@@ -114,6 +115,180 @@ class TestTaskCreateView:
         )
         response = user_client.get(url)
         assert response.status_code == 404
+
+
+class TestTaskUpdateView:
+    """Test HTML task update view."""
+
+    @pytest.fixture
+    def resource_url(self, task: Task) -> str:
+        """Return URL to this view."""
+        return reverse("dashboard:tasks:update", args=(task.uuid,))
+
+    def test_get_task_update(
+        self,
+        user_client: Client,
+        resource_url: str,
+        task: Task,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test GETting the task update page."""
+        with django_assert_num_queries(15):
+            response = user_client.get(resource_url)
+            assert response.status_code == 200
+        assert task.title in response.content.decode()
+
+    def test_task_not_found(self, user_client: Client) -> None:
+        """Test accessing task update for non-existent task."""
+        url = reverse("dashboard:tasks:update", args=(uuid4(),))
+        response = user_client.get(url)
+        assert response.status_code == 404
+
+    def test_unauthorized_task_access(
+        self, user_client: Client, unrelated_task: Task
+    ) -> None:
+        """Test that users can't update tasks they don't have access to."""
+        url = reverse("dashboard:tasks:update", args=(unrelated_task.uuid,))
+        response = user_client.get(url)
+        assert response.status_code == 404
+
+    def test_update_task(
+        self,
+        user_client: Client,
+        resource_url: str,
+        task: Task,
+        team_member: models.TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test updating a task."""
+        original_title = task.title
+        with django_assert_num_queries(24):
+            response = user_client.post(
+                resource_url,
+                {
+                    "title": "Updated Task Title",
+                    "assignee": str(team_member.uuid),
+                    "action": "update",
+                    "form-TOTAL_FORMS": "1",
+                    "form-INITIAL_FORMS": "0",
+                    "form-MIN_NUM_FORMS": "0",
+                    "form-MAX_NUM_FORMS": "1000",
+                    "form-0-title": "Updated subtask",
+                    "form-0-done": "True",
+                },
+            )
+            assert response.status_code == 302
+
+        task.refresh_from_db()
+        assert task.title == "Updated Task Title"
+        assert task.title != original_title
+        assert task.assignee == team_member
+        assert task.subtask_set.count() == 1
+        subtask = task.subtask_set.get()
+        assert subtask.title == "Updated subtask"
+        assert subtask.done is True
+
+    def test_add_subtask_to_existing_task(
+        self,
+        user_client: Client,
+        resource_url: str,
+        task: Task,
+        team_member: models.TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test adding a subtask to a task that already has one."""
+        # Create an initial subtask
+        sub_task_create(
+            who=team_member.user,
+            task=task,
+            title="Existing subtask",
+            done=False,
+        )
+
+        original_subtask_count = task.subtask_set.count()
+        assert original_subtask_count == 1
+
+        existing_subtask = task.subtask_set.get()
+
+        with django_assert_num_queries(25):
+            response = user_client.post(
+                resource_url,
+                {
+                    "title": task.title,
+                    "assignee": str(team_member.uuid),
+                    "action": "update",
+                    "form-TOTAL_FORMS": "3",
+                    "form-INITIAL_FORMS": "1",
+                    "form-MIN_NUM_FORMS": "0",
+                    "form-MAX_NUM_FORMS": "1000",
+                    # Existing subtask
+                    "form-0-title": "Existing subtask",
+                    "form-0-done": "False",
+                    "form-0-uuid": str(existing_subtask.uuid),
+                    "form-0-delete": "False",
+                    # Empty title so should be ignored
+                    "form-1-title": "",
+                    "form-1-done": "True",
+                    # New subtask
+                    "form-2-title": "New additional subtask",
+                    "form-2-done": "True",
+                },
+            )
+            assert response.status_code == 302, response.content
+
+        task.refresh_from_db()
+        assert task.subtask_set.count() == 2
+
+        subtask_a, subtask_b = list(task.subtask_set.all())
+
+        assert subtask_a.title == "Existing subtask"
+        assert subtask_a.done is False
+        assert subtask_b.title == "New additional subtask"
+        assert subtask_b.done is True
+
+    def test_delete_existing_subtask(
+        self,
+        user_client: Client,
+        resource_url: str,
+        task: Task,
+        team_member: models.TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test marking an existing subtask for deletion."""
+        # Create an initial subtask
+        from ...services.sub_task import sub_task_create
+
+        subtask = sub_task_create(
+            who=team_member.user,
+            task=task,
+            title="Subtask to delete",
+            done=False,
+        )
+
+        assert task.subtask_set.count() == 1
+
+        with django_assert_num_queries(24):
+            response = user_client.post(
+                resource_url,
+                {
+                    "title": task.title,
+                    "assignee": str(team_member.uuid),
+                    "action": "update",
+                    "form-TOTAL_FORMS": "1",
+                    "form-INITIAL_FORMS": "1",
+                    "form-MIN_NUM_FORMS": "0",
+                    "form-MAX_NUM_FORMS": "1000",
+                    # Mark existing subtask for deletion
+                    "form-0-title": "Subtask to delete",
+                    "form-0-done": "False",
+                    "form-0-uuid": str(subtask.uuid),
+                    "form-0-delete": "True",
+                },
+            )
+            assert response.status_code == 302
+
+        task.refresh_from_db()
+        assert task.subtask_set.count() == 0
 
 
 # Create
@@ -215,6 +390,106 @@ class TestTaskCreate(UnauthenticatedTestMixin):
             ],
         }
         response = rest_user_client.post(
+            resource_url,
+            {**payload, "assignee": {"uuid": str(team_member.uuid)}},
+            format="json",
+        )
+        assert response.status_code == 400, response.data
+        assert response.data == {
+            "status": "invalid",
+            "code": 400,
+            "details": {
+                "sub_tasks": [
+                    {"done": "Must be a valid boolean."},
+                    {"title": "This field may not be null."},
+                ]
+            },
+            "general": None,
+        }
+
+
+# Update
+class TestTaskUpdate(UnauthenticatedTestMixin):
+    """Test task update."""
+
+    @pytest.fixture
+    def resource_url(self, task: Task) -> str:
+        """Return URL to resource."""
+        return reverse("workspace:tasks:read-update-delete", args=(task.uuid,))
+
+    @pytest.fixture
+    def payload(
+        self,
+        task: Task,
+    ) -> dict[str, object]:
+        """Return a payload for API."""
+        return {
+            "title": "Updated task title",
+            "description": "Updated description",
+            "labels": [],
+            "assignee": None,
+            "sub_tasks": [
+                {"title": "Updated sub task", "done": True},
+            ],
+            "due_date": None,
+        }
+
+    def test_unauthorized(
+        self,
+        rest_meddling_client: APIClient,
+        resource_url: str,
+        payload: dict[str, object],
+    ) -> None:
+        """Test updating when unauthorized."""
+        response = rest_meddling_client.put(
+            resource_url, payload, format="json"
+        )
+        assert response.status_code == 404, response.data
+
+    def test_authenticated(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        team_member: models.TeamMember,
+        task: Task,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        payload: dict[str, object],
+    ) -> None:
+        """Test updating when authenticated."""
+        original_title = task.title
+        with django_assert_num_queries(32):
+            response = rest_user_client.put(
+                resource_url,
+                {**payload, "assignee": {"uuid": str(team_member.uuid)}},
+                format="json",
+            )
+            assert response.status_code == 200, response.data
+
+        task.refresh_from_db()
+        assert task.title == "Updated task title"
+        assert task.title != original_title
+        assert task.assignee == team_member
+        assert task.subtask_set.count() == 1
+        subtask = task.subtask_set.get()
+        assert subtask.title == "Updated sub task"
+        assert subtask.done is True
+
+    def test_error_format(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        team_member: models.TeamMember,
+        payload: dict[str, object],
+    ) -> None:
+        """Test nested error serialization."""
+        payload = {
+            **payload,
+            "sub_tasks": [
+                {"done": "hello", "title": "I am sub task"},
+                {"done": True, "title": None},
+            ],
+        }
+        response = rest_user_client.put(
             resource_url,
             {**payload, "assignee": {"uuid": str(team_member.uuid)}},
             format="json",

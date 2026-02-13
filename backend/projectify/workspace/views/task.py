@@ -10,7 +10,7 @@ from uuid import UUID
 from django import forms
 from django.core.exceptions import BadRequest
 from django.forms.formsets import TOTAL_FORM_COUNT
-from django.http import HttpResponse
+from django.http import HttpResponse, QueryDict
 from django.http.response import Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -147,7 +147,7 @@ TaskCreateSubTaskForms = forms.formset_factory(TaskCreateSubTaskForm, extra=0)  
 class TaskUpdateSubTaskForm(forms.Form):
     """Form for creating sub tasks as part of task creation."""
 
-    title = forms.CharField()
+    title = forms.CharField(required=False)
     done = forms.BooleanField(required=False)
     uuid = forms.UUIDField(required=False, widget=forms.HiddenInput)
     delete = forms.BooleanField(
@@ -290,7 +290,6 @@ class TaskUpdateForm(forms.Form):
             attrs={"placeholder": _("Enter a description for your task")}
         ),
     )
-    action = forms.CharField(required=True, widget=forms.HiddenInput())
 
     def __init__(
         self,
@@ -380,7 +379,7 @@ def task_update_view(
     action = determine_action(request)
     match action:
         case "add_sub_task":
-            post: dict[str, Any] = request.POST.dict()
+            post: QueryDict = request.POST.copy()
             sub_task_count_raw: str = post.get("form-" + TOTAL_FORM_COUNT, "0")
             try:
                 sub_task_count = int(sub_task_count_raw)
@@ -395,7 +394,7 @@ def task_update_view(
             form = TaskUpdateForm(
                 data=post, workspace=task.workspace, focus_field=focus_field
             )
-            formset = TaskUpdateSubTaskForms(data=post)
+            formset = TaskUpdateSubTaskForms(data=post)  # type: ignore[arg-type]
             context = {
                 **context,
                 "form": form,
@@ -432,20 +431,27 @@ def task_update_view(
         return render(request, "workspace/task_update.html", context)
 
     form = TaskUpdateForm(
-        data=request.POST,
+        data=request.POST.copy(),
         initial=task_initial,
         workspace=task.workspace,
         focus_field=focus_field,
     )
     form.full_clean()
     formset = TaskUpdateSubTaskForms(
-        data=request.POST.dict(),
+        data=request.POST,  # type: ignore[arg-type]
         initial=sub_tasks_initial,  # type: ignore[arg-type]
     )
     formset.full_clean()
     if not form.is_valid() or not formset.is_valid():
+        logger.warning(
+            "form.is_valid=%s, formset.is_valid()=%s",
+            form.is_valid(),
+            formset.is_valid(),
+        )
         context = {**context, "form": form, "task": task, "formset": formset}
-        return render(request, "workspace/task_update.html", context)
+        return render(
+            request, "workspace/task_update.html", context, status=400
+        )
 
     cleaned_data = form.cleaned_data
     formset_cleaned_data = formset.cleaned_data
@@ -466,7 +472,8 @@ def task_update_view(
             "_order": i,
         }
         for i, f in enumerate(formset_cleaned_data)
-        if f and not f["uuid"] and not f["delete"]
+        # Only include sub tasks that have a title
+        if f and not f["uuid"] and not f["delete"] and f["title"].strip()
     ]
     task_update_nested(
         who=request.user,
