@@ -9,12 +9,16 @@
            {% include "django/forms/widgets/attrs.html" %}>
     <label for="{{ widget.attrs.id }}"
            class="flex flex-1 gap-2 text-regular min-w-0 cursor-pointer">
-        {% user_avatar widget.value.instance %}
+        {% if widget.value.instance %}
+            {% user_avatar widget.value.instance %}
+        {% else %}
+            {% user_avatar None %}
+        {% endif %}
         <span class="truncate">{{ widget.label }}</span>
     </label>
-    {% with widget.value.instance.task_count as task_count %}
+    {% if widget.value.instance %}
         <div class="flex shrink-0 flex-row items-center gap-2 rounded-2.5xl bg-background px-2 py-0.5 text-primary group-hover:bg-foreground">
-            {{ task_count }}
+            {{ widget.value.instance.task_count }}
         </div>
-    {% endwith %}
+    {% endif %}
 </div>

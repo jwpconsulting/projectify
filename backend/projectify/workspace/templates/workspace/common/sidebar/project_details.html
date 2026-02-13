@@ -31,51 +31,21 @@
                     <p class=" font-bold truncate py-2">{% trans "Filter team members" %}</p>
                 </legend>
                 <div class="flex flex-col gap-2">
-                    <div class="flex flex-col overflow-y-auto">
-                        <div class="grid grid-cols-[auto_1fr_auto] gap-2 items-center hover:bg-background p-2">
-                            <input type="checkbox"
-                                   id="{{ task_filter_form.filter_by_unassigned.id_for_label }}"
-                                   name="{{ task_filter_form.filter_by_unassigned.html_name }}"
-                                   value="on"
-                                   {% if task_filter_form.filter_by_unassigned.data %}checked{% endif %}
-                                   class="cursor-pointer" />
-                            <label for="{{ task_filter_form.filter_by_unassigned.id_for_label }}"
-                                   class="flex flex-1 gap-2 text-regular min-w-0 cursor-pointer">
-                                {% user_avatar None %}
-                                <span class="truncate">{{ task_filter_form.filter_by_unassigned.label }}</span>
-                            </label>
-                            {# no count #}
-                        </div>
-                        {{ task_filter_form.filter_by_team_member }}
-                    </div>
+                    <div class="flex flex-col overflow-y-auto">{{ task_filter_form.filter_by_team_member }}</div>
                 </div>
             </fieldset>
         </div>
         <div class="flex flex-col px-4">
-            <fieldset class="w-full max-w-full">
+            <fieldset class="w-full max-w-full min-w-0">
                 <legend class="flex items-center gap-2">
                     <div class="w-4 h-4">{% include "heroicons/tag.svg" %}</div>
                     <p class=" font-bold truncate py-2">{% trans "Filter labels" %}</p>
                 </legend>
                 <div class="flex flex-col gap-2">
-                    <div class="flex flex-col overflow-y-auto">
-                        <div class="grid grid-cols-[auto_1fr_auto] gap-2 items-center hover:bg-background p-2">
-                            <input type="checkbox"
-                                   id="{{ task_filter_form.filter_by_unlabeled.id_for_label }}"
-                                   name="{{ task_filter_form.filter_by_unlabeled.html_name }}"
-                                   {% if task_filter_form.filter_by_unlabeled.data %}checked{% endif %}
-                                   value="on">
-                            <label class="flex items-center min-w-0 gap-2"
-                                   for="{{ task_filter_form.filter_by_unlabeled.id_for_label }}">
-                                <div class="h-6 w-6 shrink-0 rounded-full border border-utility"></div>
-                                <div class="text-regular truncate min-w-0">{{ task_filter_form.filter_by_unlabeled.label }}</div>
-                            </label>
-                        </div>
-                        {{ task_filter_form.filter_by_label }}
-                    </div>
+                    <div class="flex flex-col overflow-y-auto">{{ task_filter_form.filter_by_label }}</div>
                 </div>
             </fieldset>
+            {% include "projectify/forms/submit.html" with text=_("Filter") %}
         </div>
-        {% include "projectify/forms/submit.html" with text=_("Filter") %}
     </form>
 {% endif %}

@@ -31,7 +31,9 @@ def project_detail_query_set(
     *,
     filter_by_team_members: Optional[QuerySet[TeamMember]] = None,
     filter_by_labels: Optional[QuerySet[Label]] = None,
+    # TODO rename to filter_by_unassigned
     unassigned_tasks: bool = False,
+    # TODO rename to filter_by_unlabeled
     unlabeled_tasks: bool = False,
     task_search_query: Optional[str] = None,
     who: Optional[User] = None,
@@ -64,7 +66,7 @@ def project_detail_query_set(
                 filter_by_team_members.filter(pk=OuterRef("pk"))
             )
         case QuerySet(), True:
-            task_q = task_q & (assignee_contained & assignee_empty)
+            task_q = task_q & (assignee_contained | assignee_empty)
             team_member_is_filtered = Exists(
                 filter_by_team_members.filter(pk=OuterRef("pk"))
             )

@@ -134,7 +134,7 @@ class TestProjectDetailView:
 
         with django_assert_num_queries(19):
             response = user_client.get(
-                resource_url, {"filter_by_unassigned": True}
+                resource_url, {"filter_by_team_member": [""]}
             )
             assert response.status_code == 200
 
@@ -175,9 +175,7 @@ class TestProjectDetailView:
         task.labels.add(label)
 
         with django_assert_num_queries(19):
-            response = user_client.get(
-                resource_url, {"filter_by_unlabeled": True}
-            )
+            response = user_client.get(resource_url, {"filter_by_label": [""]})
             assert response.status_code == 200
 
         assert task.title not in response.content.decode()

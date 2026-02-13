@@ -4,12 +4,12 @@
 """Project views."""
 
 import logging
-from typing import Any, Optional
+from typing import Any, Optional, TypeVar
 from uuid import UUID
 
 from django import forms
 from django.core.exceptions import BadRequest
-from django.db.models import QuerySet
+from django.db.models import Model, QuerySet
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
@@ -53,16 +53,54 @@ from ..services.team_member import team_member_visit_project
 
 logger = logging.getLogger(__name__)
 
+Q = TypeVar("Q", bound=Model)
+
+
+class ModelMultipleChoiceFieldWithEmpty(forms.ModelMultipleChoiceField):
+    """Override ModelMultipleChoiceField and allow empty label."""
+
+    def __init__(self, queryset: QuerySet[Any], **kwargs: Any) -> None:
+        """Override init."""
+        super(forms.ModelMultipleChoiceField, self).__init__(
+            queryset, **kwargs
+        )
+
+    def clean(self, value: list[str]) -> tuple[bool, Optional[QuerySet[Any]]]:
+        """
+        Return a tuple of values.
+
+        The first value is a bool that tells you whether the user selected the blank
+        option
+
+        The second value is an optional queryset.
+        If no values have been selected, it's empty. If values have been
+        selected, it's a queryset.
+        """
+        has_empty = False
+        value_without_empty: list[str] = []
+        if len(value) == 0:
+            return False, None
+        for v in value:
+            if len(v) == 0:
+                has_empty = True
+            else:
+                value_without_empty.append(v)
+        match value_without_empty:
+            case []:
+                cleaned = None
+            case values:
+                cleaned_qs: QuerySet[Any] = super().clean(values)
+                if not cleaned_qs.exists():
+                    cleaned = None
+                else:
+                    cleaned = cleaned_qs
+
+        return has_empty, cleaned
+
 
 class ProjectFilterForm(forms.Form):
     """Form for deserializing project task filters."""
 
-    filter_by_unassigned = forms.BooleanField(
-        label=_("Assigned to nobody"), required=False
-    )
-    filter_by_unlabeled = forms.BooleanField(
-        label=_("No label"), required=False
-    )
     task_search_query = forms.CharField(
         label=_("Task search"),
         required=False,
@@ -82,33 +120,34 @@ class ProjectFilterForm(forms.Form):
         member_widget.option_template_name = (
             "workspace/forms/widgets/select_team_member_option.html"
         )
-        self.fields["filter_by_team_member"] = forms.ModelMultipleChoiceField(
-            required=False,
-            blank=True,
-            label=_("Filter team members"),
-            queryset=team_members,
-            widget=member_widget,
-            to_field_name="uuid",
+        self.fields["filter_by_team_member"] = (
+            ModelMultipleChoiceFieldWithEmpty(
+                required=False,
+                blank=True,
+                label=_("Filter team members"),
+                queryset=team_members,
+                widget=member_widget,
+                to_field_name="uuid",
+                empty_label=_("Assigned to nobody"),
+            )
         )
         label_widget = forms.CheckboxSelectMultiple()
         label_widget.option_template_name = (
             "workspace/forms/widgets/select_label_option.html"
         )
-        self.fields["filter_by_label"] = forms.ModelMultipleChoiceField(
+        self.fields["filter_by_label"] = ModelMultipleChoiceFieldWithEmpty(
             required=False,
+            blank=True,
             label=_("Filter labels"),
             queryset=labels,
             widget=label_widget,
             to_field_name="uuid",
+            empty_label=_("No label"),
         )
 
     def clean(self) -> dict[str, Any]:
         """Override clean and make empty fields None instead."""
         data = super().clean()
-        if not data["filter_by_team_member"].exists():
-            data["filter_by_team_member"] = None
-        if not data["filter_by_label"].exists():
-            data["filter_by_label"] = None
         if data["task_search_query"] == "":
             data["task_search_query"] = None
         return data
@@ -146,16 +185,12 @@ def project_detail_view(
             if not task_filter_form.is_valid():
                 raise BadRequest(task_filter_form.errors)
 
-            filter_by_team_member = task_filter_form.cleaned_data[
-                "filter_by_team_member"
-            ]
-            filter_by_unassigned = task_filter_form.cleaned_data[
-                "filter_by_unassigned"
-            ]
-            filter_by_label = task_filter_form.cleaned_data["filter_by_label"]
-            filter_by_unlabeled = task_filter_form.cleaned_data[
-                "filter_by_unlabeled"
-            ]
+            filter_by_unassigned, filter_by_team_member = (
+                task_filter_form.cleaned_data["filter_by_team_member"]
+            )
+            filter_by_unlabeled, filter_by_label = (
+                task_filter_form.cleaned_data["filter_by_label"]
+            )
             task_search_query = task_filter_form.cleaned_data[
                 "task_search_query"
             ]
