@@ -5,6 +5,7 @@
 
 from uuid import uuid4
 
+from django.test.client import Client
 from django.urls import reverse
 
 import pytest
@@ -37,8 +38,85 @@ class UnauthenticatedTestMixin:
         assert response.status_code == 403, response.data
 
 
+pytestmark = pytest.mark.django_db
+
+
+class TestTaskCreateView:
+    """Test HTML task creation view."""
+
+    @pytest.fixture
+    def resource_url(self, section: Section) -> str:
+        """Return URL to this view."""
+        return reverse("dashboard:sections:create-task", args=(section.uuid,))
+
+    def test_get_task_create(
+        self,
+        user_client: Client,
+        resource_url: str,
+        section: Section,
+        team_member: models.TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test GETting the task creation page."""
+        with django_assert_num_queries(11):
+            response = user_client.get(resource_url)
+            assert response.status_code == 200
+        assert section.title in response.content.decode()
+
+    def test_create_task(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: models.TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test creating a task."""
+        initial_task_count = Task.objects.count()
+        with django_assert_num_queries(24):
+            response = user_client.post(
+                resource_url,
+                {
+                    "title": "Assigned Task",
+                    "assignee": str(team_member.uuid),
+                    "action": "create",
+                    "form-TOTAL_FORMS": "1",
+                    "form-INITIAL_FORMS": "0",
+                    "form-MIN_NUM_FORMS": "0",
+                    "form-MAX_NUM_FORMS": "1000",
+                    "form-0-title": "Test subtask",
+                    "form-0-done": "False",
+                },
+            )
+            assert response.status_code == 302
+
+        assert Task.objects.count() == initial_task_count + 1
+        task = Task.objects.get()
+        assert task.assignee == team_member
+        assert task.subtask_set.count() == 1
+        subtask = task.subtask_set.get()
+        assert subtask.title == "Test subtask"
+        assert subtask.done is False
+
+    def test_section_not_found(
+        self, user_client: Client, team_member: models.TeamMember
+    ) -> None:
+        """Test accessing task creation for non-existent section."""
+        url = reverse("dashboard:sections:create-task", args=(uuid4(),))
+        response = user_client.get(url)
+        assert response.status_code == 404
+
+    def test_unauthorized_section_access(
+        self, user_client: Client, unrelated_section: Section
+    ) -> None:
+        """Test that users can't create tasks in sections they don't have access to."""
+        url = reverse(
+            "dashboard:sections:create-task", args=(unrelated_section.uuid,)
+        )
+        response = user_client.get(url)
+        assert response.status_code == 404
+
+
 # Create
-@pytest.mark.django_db
 class TestTaskCreate(UnauthenticatedTestMixin):
     """Test task creation."""
 
@@ -117,8 +195,9 @@ class TestTaskCreate(UnauthenticatedTestMixin):
                 format="json",
             )
             assert response.status_code == 201, response.data
-        assert Task.objects.count() == 1
-        assert Task.objects.get().assignee == team_member
+        task = Task.objects.get()
+        assert task.assignee == team_member
+        assert task.subtask_set.count() == 1
 
     def test_error_format(
         self,
@@ -155,7 +234,6 @@ class TestTaskCreate(UnauthenticatedTestMixin):
 
 
 # Read
-@pytest.mark.django_db
 class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
     """Test Task read, update and delete."""
 
@@ -280,7 +358,6 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
 
 
 # RPC
-@pytest.mark.django_db
 class TestMoveTaskToSection:
     """Test moving a task to a section."""
 
@@ -316,7 +393,6 @@ class TestMoveTaskToSection:
         assert task._order == 0
 
 
-@pytest.mark.django_db
 class TestTaskMoveAfterTask:
     """Test moving a task."""
 
