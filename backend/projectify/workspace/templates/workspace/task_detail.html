@@ -22,7 +22,7 @@
                         <a href="{% url "dashboard:tasks:update" task.uuid %}"
                            class=" bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
                             {% trans "Edit" %}
-                        </a><!--<button>-->
+                        </a>
                     {% endif %}
                     <a aria-label="{% trans 'Open task context menu' %}"
                        href="{% url 'dashboard:tasks:actions' task.uuid %}"
@@ -31,7 +31,6 @@
                     </a>
                 </div>
             </div>
-            <!--<TopBar>-->
             <div class="flex flex-col gap-8">
                 <table class="flex w-full max-w-xl flex-col gap-y-4 sm:grid sm:grid-cols-4">
                     <tbody class="contents">
@@ -45,7 +44,6 @@
                                         <div class="h-4 w-4">{% icon "pencil" %}</div>
                                     </a>
                                 </div>
-                                <!--<TaskTitle>-->
                             </td>
                         </tr>
                         <tr class="contents">
@@ -62,7 +60,6 @@
                                         <div class="h-4 w-4">{% icon "pencil" %}</div>
                                     </a>
                                 </div>
-                                <!--<TaskUser>-->
                             </td>
                         </tr>
                         <tr class="contents">
@@ -75,7 +72,6 @@
                                                 <button class="group rounded-2.5xl border border-dashed border-primary px-3 py-1 font-bold {{ label.bg_class }} {{ label.text_class }}"
                                                         type="button"
                                                         disabled="">{{ label.name }}</button>
-                                                <!--<label>-->
                                             </div>
                                         {% endfor %}
                                     </div>
@@ -83,7 +79,6 @@
                                         <div class="h-4 w-4">{% icon "pencil" %}</div>
                                     </a>
                                 </div>
-                                <!--<TaskLabel>-->
                             </td>
                         </tr>
                         <tr class="contents">
@@ -96,7 +91,6 @@
                                         <div class="h-4 w-4">{% icon "pencil" %}</div>
                                     </a>
                                 </div>
-                                <!--<TaskDueDate>-->
                             </td>
                         </tr>
                         <tr class="contents">
@@ -108,7 +102,6 @@
                                         <div class="h-4 w-4">{% icon "pencil" %}</div>
                                     </a>
                                 </div>
-                                <!--<TaskDescription>-->
                             </td>
                         </tr>
                     </tbody>
@@ -135,7 +128,6 @@
                         </div>
                     {% endif %}
                 </div>
-                <!--<SubTaskBar>-->
                 <div class="flex grow flex-col">
                     {% for sub_task in task.subtask_set.all %}
                         <div class="flex w-full flex-row items-center justify-between gap-2 px-2 py-1">
@@ -148,7 +140,6 @@
                                            checked="{{ sub_task.done|yesno:"true,false" }}"
                                            disabled="">
                                 </div>
-                                <!--<Checkbox>-->
                                 <div class="grow">
                                     <label for="{{ sub_task.uuid }}" class="sr-only">{% trans "Enter a subtask" %}</label>
                                     <div class="flex flex-col items-start gap-2">
@@ -166,11 +157,9 @@
                                             </a>
                                         </div>
                                     </div>
-                                    <!--<InputField>-->
                                 </div>
                             </div>
                         </div>
-                        <!--<SubTaskLine>-->
                     {% endfor %}
                 </div>
             </div>
