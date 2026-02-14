@@ -6,46 +6,34 @@
     {% blocktrans with title=project.title %}{{ title }} - Projectify{% endblocktrans %}
 {% endblock title %}
 {% block dashboard_content %}
-    <div id="project-detail" class="min-w-0 grow" role="presentation">
-        <main class="flex h-full flex-col items-center gap-4 bg-background py-4">
-            {% if task_filter_form %}
-                <form id="task-filter"
-                      class="flex w-full max-w-md flex-col gap-2 rounded-xl bg-foreground px-4 py-4">
-                    <div class="flex flex-col items-start gap-2">
-                        <div class="flex w-full flex-row items-center justify-between">
-                            <label for="{{ task_filter_form.task_search_query.id_for_label }}"
-                                   class="font-bold text-base-content first-letter:uppercase">
-                                {% translate "Task search" %}
-                            </label>
-                        </div>
-                        <div class="flex w-full flex-row items-center gap-2">
-                            <input type="search"
-                                   class="placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2"
-                                   id="{{ task_filter_form.task_search_query.id_for_label }}"
-                                   name="{{ task_filter_form.task_search_query.html_name }}"
-                                   placeholder="{{ task_filter_form.task_search_query.help_text }}"
-                                   form="task-filter"
-                                   {% if task_filter_form.task_search_query.data %}value="{{ task_filter_form.task_search_query.data }}"{% endif %} />
-                        </div>
-                    </div>
-                    <!--<InputField>-->
-                    {% include "projectify/forms/submit.html" with text=_("Search tasks") %}
-                </form>
-            {% endif %}
-            <div class="flex w-full grow flex-col gap-4 md:p-2">
-                {% for section in project.section_set.all %}
-                    {% include "workspace/project_detail/section.html" with section=section %}
-                {% endfor %}
-                <div class="sticky bottom-0 self-end p-2">
-                    <a type="button"
-                       href="{% url "dashboard:projects:create-section" project.uuid %}"
-                       class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                        {% translate "Create section" %}
-                    </a>
-                </div>
-                <!--<+page>-->
+    <main id="project-detail"
+          class="min-w-0 grow flex h-full flex-col items-center gap-4 bg-background py-4">
+        {% if task_filter_form %}
+            <form id="task-filter"
+                  class="flex w-full max-w-md flex-col gap-2 rounded-xl bg-foreground px-4 py-4">
+                <label for="{{ task_filter_form.task_search_query.id_for_label }}"
+                       class="font-bold text-base-content first-letter:uppercase">{% translate "Task search" %}</label>
+                <input type="search"
+                       class="placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2"
+                       id="{{ task_filter_form.task_search_query.id_for_label }}"
+                       name="{{ task_filter_form.task_search_query.html_name }}"
+                       placeholder="{{ task_filter_form.task_search_query.help_text }}"
+                       form="task-filter"
+                       {% if task_filter_form.task_search_query.data %}value="{{ task_filter_form.task_search_query.data }}"{% endif %} />
+                {% include "projectify/forms/submit.html" with text=_("Search tasks") %}
+            </form>
+        {% endif %}
+        <div class="flex w-full grow flex-col gap-4 md:p-2">
+            {% for section in project.section_set.all %}
+                {% include "workspace/project_detail/section.html" with section=section %}
+            {% endfor %}
+            <div class="sticky bottom-0 self-end p-2">
+                <a type="button"
+                   href="{% url "dashboard:projects:create-section" project.uuid %}"
+                   class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
+                    {% translate "Create section" %}
+                </a>
             </div>
-        </main>
-        <!--<+layout>-->
-    </div>
+        </div>
+    </main>
 {% endblock dashboard_content %}

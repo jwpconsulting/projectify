@@ -315,6 +315,9 @@ def project_detail_view(
         "unlabeled_tasks": filter_by_unlabeled,
         "task_search_query": task_search_query,
         "task_filter_form": task_filter_form,
+        "has_team_member_filter": filter_by_team_member is not None
+        or filter_by_unassigned,
+        "has_label_filter": filter_by_label is not None or filter_by_unlabeled,
     }
     return render(request, "workspace/project_detail.html", context)
 

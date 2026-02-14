@@ -75,7 +75,12 @@
                 class="flex w-full flex-row items-center justify-between gap-2 py-2 text-utility hover:text-base-content">
             <div class="flex flex-row items-center gap-2">
                 <div class="w-4 h-4">{% icon "user" %}</div>
-                <span class="font-bold truncate">{% trans "Filter team members" %}</span>
+                <span class="font-bold truncate">
+                    {% trans "Filter team members" %}
+                    {% if has_team_member_filter %}
+                        {% trans "(active)" %}
+                    {% endif %}
+                </span>
             </div>
             <div class="w-4 h-4">
                 {% if current_team_member_qs.minimized_team_member_filter %}
@@ -110,7 +115,12 @@
                 class="flex w-full flex-row items-center justify-between gap-2 py-2 text-utility hover:text-base-content">
             <div class="flex flex-row items-center gap-2">
                 <div class="w-4 h-4">{% icon "tag" %}</div>
-                <span class="font-bold truncate">{% trans "Filter labels" %}</span>
+                <span class="font-bold truncate">
+                    {% trans "Filter labels" %}
+                    {% if has_label_filter %}
+                        {% trans "(active)" %}
+                    {% endif %}
+                </span>
             </div>
             <div class="size-4">
                 {% if current_team_member_qs.minimized_label_filter %}
@@ -120,7 +130,7 @@
                 {% endif %}
             </div>
         </button>
-        <fieldset class="flex flex-col overflow-y-auto w-full max-w-full min-w-0{% if current_team_member_qs.minimized_label_filter %} hidden{% endif %}">
+        <fieldset class="flex flex-col overflow-y-auto w-full max-w-full min-w-0 pb-4{% if current_team_member_qs.minimized_label_filter %} hidden{% endif %}">
             {{ task_filter_form.filter_by_label }}
             {% if workspace %}
                 {% anchor "dashboard:workspaces:labels" _("Edit labels") workspace_uuid=workspace.uuid %}
