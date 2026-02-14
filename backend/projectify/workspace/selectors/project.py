@@ -117,13 +117,11 @@ def project_detail_query_set(
         )
     ).filter(task_q)
 
+    section_qs = Section.objects.all()
     # If caller provides a user, filter out tasks for hidden sections,
+    # and mark these sections as minimized
     if who is not None:
         task_qs = task_qs.exclude(section__minimized_by=who)
-
-    # and mark these sections as minimized
-    section_qs = Section.objects.all()
-    if who is not None:
         section_qs = section_qs.annotate(
             minimized=Exists(
                 Section.objects.filter(pk=OuterRef("pk"), minimized_by=who)
