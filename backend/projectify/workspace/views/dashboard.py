@@ -12,8 +12,8 @@ from projectify.workspace.selectors.project import (
     project_find_by_workspace_uuid,
 )
 from projectify.workspace.selectors.team_member import (
-    team_member_last_project,
-    team_member_last_workspace,
+    team_member_last_project_for_user,
+    team_member_last_workspace_for_user,
 )
 from projectify.workspace.selectors.workspace import workspace_find_for_user
 
@@ -24,11 +24,11 @@ def redirect_to_dashboard(request: AuthenticatedHttpRequest) -> HttpResponse:
     # that returns either a workspace or project
     # but still, if we're going to a workspace, we should remember what
     # project we looked at last
-    maybe_last_visited_workspace = team_member_last_workspace(
+    maybe_last_visited_workspace = team_member_last_workspace_for_user(
         user=request.user
     )
     if maybe_last_visited_workspace:
-        maybe_project = team_member_last_project(
+        maybe_project = team_member_last_project_for_user(
             user=request.user, workspace=maybe_last_visited_workspace
         )
         if maybe_project:

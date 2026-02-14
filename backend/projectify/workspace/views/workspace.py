@@ -50,7 +50,7 @@ from ..selectors.quota import workspace_get_all_quotas
 from ..selectors.team_member import (
     team_member_find_by_team_member_uuid,
     team_member_find_for_workspace,
-    team_member_last_project,
+    team_member_last_project_for_user,
 )
 from ..selectors.workspace import (
     WorkspaceDetailQuerySet,
@@ -117,7 +117,7 @@ def workspace_view(
 
     # Check whether the user has already visited a project within this
     # workspace
-    last_project = team_member_last_project(
+    last_project = team_member_last_project_for_user(
         user=request.user, workspace=workspace
     )
     if last_project:

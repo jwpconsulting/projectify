@@ -11,8 +11,8 @@ from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.selectors.team_member import (
     team_member_find_for_workspace,
-    team_member_last_project,
-    team_member_last_workspace,
+    team_member_last_project_for_user,
+    team_member_last_workspace_for_user,
 )
 from projectify.workspace.services.team_member import (
     team_member_visit_project,
@@ -40,20 +40,20 @@ def test_team_member_multiple_workspaces(
     """Test that we receive the most recently visited workspace."""
     user = team_member.user
     # No last visited in the beginning
-    assert team_member_last_workspace(user=user) is None
+    assert team_member_last_workspace_for_user(user=user) is None
     team_member_visit_workspace(team_member=team_member)
-    assert team_member_last_workspace(user=user) == workspace
+    assert team_member_last_workspace_for_user(user=user) == workspace
 
     other_team_member = other_workspace.teammember_set.get()
     team_member_visit_workspace(team_member=other_team_member)
-    assert team_member_last_workspace(user=user) == other_workspace
+    assert team_member_last_workspace_for_user(user=user) == other_workspace
 
     team_member_visit_workspace(team_member=team_member)
-    assert team_member_last_workspace(user=user) == workspace
+    assert team_member_last_workspace_for_user(user=user) == workspace
 
     # This will not set a last visited project
     assert (
-        team_member_last_project(
+        team_member_last_project_for_user(
             user=team_member.user, workspace=team_member.workspace
         )
         is None
@@ -73,22 +73,31 @@ def test_team_member_multiple_projects(
     result for workspace A.
     """
     user = team_member.user
-    assert team_member_last_project(user=user, workspace=workspace) is None
+    assert (
+        team_member_last_project_for_user(user=user, workspace=workspace)
+        is None
+    )
 
     team_member_visit_project(team_member=team_member, project=project)
-    assert team_member_last_project(user=user, workspace=workspace) == project
+    assert (
+        team_member_last_project_for_user(user=user, workspace=workspace)
+        == project
+    )
 
     team_member_visit_project(
         team_member=team_member, project=other_project_same_workspace
     )
     assert (
-        team_member_last_project(user=user, workspace=workspace)
+        team_member_last_project_for_user(user=user, workspace=workspace)
         == other_project_same_workspace
     )
 
     team_member_visit_project(team_member=team_member, project=project)
-    assert team_member_last_project(user=user, workspace=workspace) == project
-    assert team_member_last_workspace(user=user) == workspace
+    assert (
+        team_member_last_project_for_user(user=user, workspace=workspace)
+        == project
+    )
+    assert team_member_last_workspace_for_user(user=user) == workspace
 
 
 def test_team_member_preferences_other_project(
@@ -104,5 +113,6 @@ def test_team_member_preferences_other_project(
     team_member_visit_project(team_member=team_member, project=project)
 
     assert (
-        team_member_last_project(user=user, workspace=other_workspace) is None
+        team_member_last_project_for_user(user=user, workspace=other_workspace)
+        is None
     )
