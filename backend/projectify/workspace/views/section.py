@@ -214,7 +214,7 @@ def section_minimize_view(
 ) -> HttpResponse:
     """Toggle section minimize state."""
     section = section_find_for_user_and_uuid(
-        user=request.user, section_uuid=section_uuid
+        user=request.user, section_uuid=section_uuid, qs=SectionDetailQuerySet
     )
     if section is None:
         raise Http404(_("Section not found for this UUID"))
@@ -225,7 +225,13 @@ def section_minimize_view(
 
     minimized = form.cleaned_data["minimized"]
     section_minimize(who=request.user, section=section, minimized=minimized)
-    return HttpResponseRedirect(section.get_absolute_url())
+    setattr(section, "minimized", minimized)
+    context = {
+        "section": section,
+    }
+    return render(
+        request, "workspace/project_detail/section.html", context=context
+    )
 
 
 class SectionCreate(APIView):

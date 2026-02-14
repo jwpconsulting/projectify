@@ -18,7 +18,10 @@ SectionDetailQuerySet = Section.objects.prefetch_related(
     "task_set",
     "task_set__assignee",
     "task_set__assignee__user",
-    "task_set__labels",
+    Prefetch(
+        "task_set__labels",
+        queryset=labels_annotate_with_colors(Label.objects.all()),
+    ),
     "task_set__subtask_set",
     Prefetch(
         "project__workspace__project_set",

@@ -207,14 +207,12 @@ class TestSectionMinimizeView:
             == initial_state
         )
 
-        with django_assert_num_queries(7):
+        with django_assert_num_queries(8):
             response = user_client.post(
                 reverse("dashboard:sections:minimize", args=[section.uuid]),
                 {"minimized": form_value},
             )
-
-        assert response.status_code == 302
-        assert isinstance(response, HttpResponseRedirect)
+            assert response.status_code == 200
 
         section.refresh_from_db()
         assert (
