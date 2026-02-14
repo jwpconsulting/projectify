@@ -128,7 +128,9 @@ def project_detail_query_set(
             Prefetch("labels", queryset=task_label_prefetch_qs)
         )
 
-    section_qs = Section.objects.all()
+    section_qs = Section.objects.all().annotate(
+        has_tasks=Exists(Task.objects.filter(section_id=OuterRef("pk"))),
+    )
     # If caller provides a user, filter out tasks for hidden sections,
     # and mark these sections as minimized
     if who is not None:

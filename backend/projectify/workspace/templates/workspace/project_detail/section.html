@@ -114,16 +114,16 @@
                     </tr>
                 {% empty %}
                     <tr class="contents">
-                        <td class="contents">
-                            <p class="lg:col-span-3">
+                        <td class="lg:col-span-3">
+                            {% if section.has_tasks %}
+                                {% translate "No tasks found for your search." %}
+                            {% else %}
                                 {% translate "No tasks in this section." %}
-                                {% url 'dashboard:sections:create-task' section.uuid as create_task_url %}
-                                {% anchor create_task_url _("Add a task here") %}
-                            </p>
+                                {% anchor 'dashboard:sections:create-task' label=_("Add a task here") section_uuid=section.uuid %}
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
-                <!--<TaskCard>-->
             </tbody>
         </table>
     {% endif %}
