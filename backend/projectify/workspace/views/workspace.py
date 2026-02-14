@@ -164,14 +164,15 @@ def workspace_minimize_project_list(
     if not form.is_valid():
         return HttpResponse(status=400)
 
-    team_member_minimize_project_list(
-        user=request.user,
-        workspace=workspace,
-        minimized=form.cleaned_data["minimized"],
-    )
-
     current_team_member_qs = team_member_find_for_workspace(
         user=request.user, workspace=workspace
+    )
+    if current_team_member_qs is None:
+        raise Http404(_("Team member not found"))
+
+    team_member_minimize_project_list(
+        team_member=current_team_member_qs,
+        minimized=form.cleaned_data["minimized"],
     )
 
     context = {

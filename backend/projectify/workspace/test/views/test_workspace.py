@@ -34,8 +34,8 @@ pytestmark = pytest.mark.django_db
 # Django view tests
 
 
-class TestProjectMinimizeProjectList:
-    """Test html project minimize project list view."""
+class TestMinimizeLists:
+    """Test minimizing various lists."""
 
     @pytest.fixture
     def resource_url(self, workspace: Workspace) -> str:
@@ -66,7 +66,7 @@ class TestProjectMinimizeProjectList:
         team_member.minimized_project_list = initial_state
         team_member.save()
 
-        with django_assert_num_queries(13):
+        with django_assert_num_queries(11):
             response = user_client.post(
                 resource_url, {"minimized": post_value}
             )

@@ -70,6 +70,18 @@ class TeamMember(BaseModel):
             "Whether this team member has minimized the project list in this workspace"
         ),
     )
+    minimized_team_member_filter = models.BooleanField(
+        default=False,
+        help_text=_(
+            "Whether this team member has minimized the team member filter in this workspace"
+        ),
+    )
+    minimized_label_filter = models.BooleanField(
+        default=False,
+        help_text=_(
+            "Whether this team member has minimized the label filter in this workspace"
+        ),
+    )
 
     if TYPE_CHECKING:
         # Related

@@ -13,7 +13,6 @@ from projectify.user.models import User
 from projectify.workspace.models.const import TeamMemberRoles
 from projectify.workspace.models.project import Project
 from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.services.signals import send_change_signal
 
 
@@ -88,11 +87,29 @@ def team_member_visit_project(
 
 @transaction.atomic
 def team_member_minimize_project_list(
-    *, user: User, workspace: Workspace, minimized: bool
+    *, team_member: TeamMember, minimized: bool
 ) -> TeamMember:
     """Set the minimized state of the project list for a team member."""
-    validate_perm("workspace.read_workspace", user, workspace)
-    team_member = TeamMember.objects.get(user=user, workspace=workspace)
     team_member.minimized_project_list = minimized
+    team_member.save()
+    return team_member
+
+
+@transaction.atomic
+def team_member_minimize_team_member_filter(
+    *, team_member: TeamMember, minimized: bool
+) -> TeamMember:
+    """Set the minimized state of the team member filter for a team member."""
+    team_member.minimized_team_member_filter = minimized
+    team_member.save()
+    return team_member
+
+
+@transaction.atomic
+def team_member_minimize_label_filter(
+    *, team_member: TeamMember, minimized: bool
+) -> TeamMember:
+    """Set the minimized state of the label filter for a team member."""
+    team_member.minimized_label_filter = minimized
     team_member.save()
     return team_member

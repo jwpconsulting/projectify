@@ -110,7 +110,7 @@ class TestProjectDetailView:
         other_task.assignee = other_team_member
         other_task.save()
 
-        with django_assert_num_queries(20):
+        with django_assert_num_queries(21):
             response = user_client.get(
                 resource_url,
                 {"filter_by_team_member": [str(team_member.uuid)]},
@@ -580,6 +580,97 @@ class TestProjectDeleteView:
         )
         response = user_client.post(url)
         assert response.status_code == 404
+
+
+class TestProjectDetailMinimize:
+    """Test minimize functionality in project detail view."""
+
+    @pytest.fixture
+    def resource_url(self, project: Project) -> str:
+        """Return URL to project detail view."""
+        return reverse(
+            "dashboard:projects:detail",
+            args=(project.uuid,),
+        )
+
+    @pytest.mark.parametrize(
+        "initial_state,post_value,expected_state",
+        [
+            (False, "true", True),
+            (True, "false", False),
+        ],
+    )
+    def test_toggle_team_member_filter(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        initial_state: bool,
+        post_value: str,
+        expected_state: bool,
+    ) -> None:
+        """Test toggling the team member filter minimized state."""
+        team_member.minimized_team_member_filter = initial_state
+        team_member.save()
+
+        response = user_client.post(
+            resource_url,
+            {
+                "action": "minimize_team_member_filter",
+                "minimized": post_value,
+            },
+        )
+        assert response.status_code == 200
+
+        team_member.refresh_from_db()
+        assert team_member.minimized_team_member_filter is expected_state
+
+    @pytest.mark.parametrize(
+        "initial_state,post_value,expected_state",
+        [
+            (False, "true", True),
+            (True, "false", False),
+        ],
+    )
+    def test_toggle_label_filter(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        initial_state: bool,
+        post_value: str,
+        expected_state: bool,
+    ) -> None:
+        """Test toggling the label filter minimized state."""
+        team_member.minimized_label_filter = initial_state
+        team_member.save()
+
+        response = user_client.post(
+            resource_url,
+            {"action": "minimize_label_filter", "minimized": post_value},
+        )
+        assert response.status_code == 200
+
+        team_member.refresh_from_db()
+        assert team_member.minimized_label_filter is expected_state
+
+    def test_minimize_preserves_get_parameters(
+        self,
+        user_client: Client,
+        project: Project,
+        team_member: TeamMember,
+    ) -> None:
+        """Test that GET parameters are preserved after minimize action."""
+        url = reverse("dashboard:projects:detail", args=(project.uuid,))
+        url_with_params = f"{url}?task_search_query=test"
+
+        response = user_client.post(
+            url_with_params,
+            {"action": "minimize_project_list", "minimized": "true"},
+        )
+        assert response.status_code == 200
+        # The view re-renders with the same GET parameters
+        assert b"task_search_query" in response.content
 
 
 # Create

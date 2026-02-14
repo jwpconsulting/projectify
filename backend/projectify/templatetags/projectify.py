@@ -129,7 +129,7 @@ def icon(
         src = static.static(static_path)
 
     return format_html(
-        '<img src="{src}" alt="{icon} icon">',
+        '<img src="{src}" aria-hidden="true">',
         src=src,
         icon=icon,
     )
