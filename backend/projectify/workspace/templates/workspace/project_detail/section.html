@@ -112,6 +112,16 @@
                             </div>
                         </td>
                     </tr>
+                {% empty %}
+                    <tr class="contents">
+                        <td class="contents">
+                            <p class="lg:col-span-3">
+                                {% translate "No tasks in this section." %}
+                                {% url 'dashboard:sections:create-task' section.uuid as create_task_url %}
+                                {% anchor create_task_url _("Add a task here") %}
+                            </p>
+                        </td>
+                    </tr>
                 {% endfor %}
                 <!--<TaskCard>-->
             </tbody>
