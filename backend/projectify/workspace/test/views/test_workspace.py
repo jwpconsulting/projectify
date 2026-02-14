@@ -7,7 +7,6 @@ import unittest.mock
 from typing import cast
 from uuid import uuid4
 
-from django.contrib.auth.models.models import AbstractBaseUser, AbstractUser
 from django.core.files import File
 from django.db.models.fields.files import FileDescriptor
 from django.test.client import Client
@@ -337,7 +336,7 @@ class TestUserWorkspaces:
         self,
         rest_user_client: APIClient,
         resource_url: str,
-        user: AbstractBaseUser,
+        user: User,
         workspace: Workspace,
         team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
@@ -368,7 +367,7 @@ class TestWorkspaceReadUpdate:
         self,
         rest_user_client: APIClient,
         resource_url: str,
-        user: AbstractBaseUser,
+        user: User,
         workspace: Workspace,
         team_member: TeamMember,
         project: Project,
@@ -500,7 +499,7 @@ class TestWorkspaceReadUpdate:
         self,
         rest_user_client: APIClient,
         resource_url: str,
-        user: AbstractBaseUser,
+        user: User,
         workspace: Workspace,
         team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
@@ -562,7 +561,7 @@ class TestWorkspacePictureUploadView:
         resource_url: str,
         headers: Headers,
         uploaded_file: File,
-        user: AbstractBaseUser,
+        user: User,
         workspace: Workspace,
         team_member: TeamMember,
     ) -> None:
@@ -644,7 +643,7 @@ class TestInviteUserToWorkspace:
         resource_url: str,
         rest_user_client: APIClient,
         workspace: Workspace,
-        other_user: AbstractUser,
+        other_user: User,
     ) -> None:
         """Test by inviting an existing user."""
         assert workspace.teammemberinvite_set.count() == 0
