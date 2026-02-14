@@ -19,7 +19,7 @@
                     <div class="shrink-0">
                         <a href="{% url "dashboard:projects:detail" task.section.project.uuid %}"
                            class="block w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background"
-                           aria-label="Go back to section">{% icon "x" %}</a>
+                           aria-label="{% translate "Go back to section" %}">{% icon "x" %}</a>
                     </div>
                     {% include "workspace/task/breadcrumbs.html" with section=task.section task=task %}
                 </div>
@@ -37,14 +37,14 @@
                 <div class="flex flex-col gap-4">
                     <div class="flex flex-row items-center justify-between">
                         <div class="flex flex-row items-center gap-4">
-                            <h4 class="text-xl font-bold">Sub tasks</h4>
+                            <h4 class="text-xl font-bold">{% translate "Sub tasks" %}</h4>
                         </div>
                         <div id="add-subtask" class="flex flex-row items-center gap-6">
                             <button type="submit"
                                     name="action"
                                     value="add_sub_task"
                                     class="w-full text-tertiary-content hover:text-tertiary-content-hover active:bg-tertiary-pressed active:text-tertiary-content-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-transparent disabled:text-disabled-content">
-                                <div class="h-6 w-6">{% icon "plus" %}</div>
+                                <div class="h-6 w-6">{% icon "plus" "primary" %}</div>
                                 {% translate "Add sub task" %}
                             </button>
                         </div>
@@ -73,6 +73,10 @@
                                     </div>
                                 </div>
                             </div>
+                        {% empty %}
+                            <p id="subtasks-empty-state" class="text-base-content">
+                                {% blocktrans %}You have not added any sub tasks yet. You can add a sub task by clicking the <strong>Add sub task</strong> button.{% endblocktrans %}
+                            </p>
                         {% endfor %}
                     </div>
                 </div>

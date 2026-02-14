@@ -54,7 +54,7 @@
                                             type="button"
                                             disabled="">
                                         {% user_avatar task.assignee %}
-                                        <div class="truncate">{{ task.assignee|default:"Assigned to nobody" }}</div>
+                                        <div class="truncate">{{ task.assignee|default:"No team member assigned" }}</div>
                                     </button>
                                     <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=assignee">
                                         <div class="h-4 w-4">{% icon "pencil" %}</div>
@@ -106,7 +106,6 @@
                         </tr>
                     </tbody>
                 </table>
-                <!--<Fields>-->
                 <div class="flex flex-col gap-4">
                     <div class="flex flex-row items-center justify-between">
                         <div class="flex flex-row items-center gap-4">
@@ -160,6 +159,10 @@
                                 </div>
                             </div>
                         </div>
+                    {% empty %}
+                        <p class="text-base-content">
+                            {% blocktrans %}This task has no sub tasks. You can add sub tasks by going to the task edit screen and clicking the <strong>Add sub task</strong> button from there.{% endblocktrans %}
+                        </p>
                     {% endfor %}
                 </div>
             </div>
