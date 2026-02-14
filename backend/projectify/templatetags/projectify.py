@@ -27,7 +27,7 @@ def percent(value: Optional[float]) -> Optional[str]:
     """Format value as percentage."""
     if not value:
         return None
-    return f"{value:3.0%}"
+    return _("{sub_task_done} %").format(sub_task_done=round(value * 100))
 
 
 @register.simple_tag

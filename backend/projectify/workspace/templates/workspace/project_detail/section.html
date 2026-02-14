@@ -39,7 +39,7 @@
         </div>
     </header>
     {% if not section.minimized %}
-        <table class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4 lg:grid lg:grid-cols-[8fr_3fr_max-content] lg:gap-4">
+        <table class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4 lg:grid lg:grid-cols-[8fr_3fr_max-content] lg:gap-2 lg:items-center">
             <tbody class="contents">
                 {% for task in section.task_set.all %}
                     <tr class="flex w-full flex-col items-center gap-1 rounded-lg border border-border p-3 lg:contents">
@@ -50,71 +50,65 @@
                                 <span class="line-clamp-3 justify-self-start hover:text-primary lg:line-clamp-1 lg:h-6">{{ task.title }}</span>
                             </a>
                         </td>
-                        <td class="contents">
-                            <div class="flex w-full flex-row items-center justify-start gap-1 self-start overflow-x-auto">
-                                {% for label in task.labels.all %}
-                                    <div type="button"
-                                         class="max-w-xs shrink-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-full px-3 py-1 font-bold {{ label.bg_class }} {{ label.text_class }}">
-                                        {{ label.name }}
-                                    </div>
-                                {% endfor %}
-                            </div>
-                            <!--<Labels>-->
+                        <td class="flex w-full flex-row items-center justify-start gap-1 self-start overflow-x-auto">
+                            {% for label in task.labels.all %}
+                                <div class="max-w-xs shrink-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-full px-3 py-1 font-bold {{ label.bg_class }} {{ label.text_class }}">
+                                    {{ label.name }}
+                                </div>
+                            {% endfor %}
                         </td>
-                        <td class="flex flex-row items-center justify-end gap-2 self-end">
-                            {# TODO render sub task progress #}
-                            <div class="flex shrink-0 flex-row items-center gap-2 px-2 py-1"></div>
-                            <!--<SubTaskProgress>-->
-                            {# TODO render assignee #}
-                            <div class="flex flex-row items-center gap-2">
+                        <td class="flex flex-row justify-end items-center gap-2">
+                            {% if task.sub_task_progress %}
+                                <div class="flex shrink-0 flex-row items-center gap-0.5 justify-between px-2 py-1">
+                                    <div class="size-5 shrink-0">{% icon "view-list" "primary" %}</div>
+                                    <div class="font-bold text-primary">{{ task.sub_task_progress|percent }}</div>
+                                </div>
+                            {% endif %}
+                            <div class="ml-auto">
                                 {% if task.assignee %}
                                     {% user_avatar task.assignee %}
                                 {% else %}
                                     <button>
-                                        <!--<AvatarVariant>-->
                                         <div class="sr-only">Currently not assigned. Activate to assign to team member.</div>
                                     </button>
                                 {% endif %}
-                                <!--<TeamMember>-->
-                                <div class="flex flex-row items-center">
-                                    <form hx-target="#project-detail"
-                                          hx-post="{% url 'dashboard:tasks:move' task.uuid %}"
-                                          hx-select="#project-detail"
-                                          action="{% url 'dashboard:tasks:move' task.uuid %}"
-                                          class="flex flex-row items-center gap-1"
-                                          hx-swap="outerHTML"
-                                          method="post">
-                                        <button name="direction"
-                                                value="up"
-                                                type="submit"
-                                                aria-label="Move task up"
-                                                {% if forloop.first %}disabled{% endif %}
-                                                class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                            {% icon "chevron-up" %}
-                                        </button>
-                                        <button name="direction"
-                                                value="down"
-                                                type="submit"
-                                                hx-swap="outerHTML"
-                                                aria-label="Move task down"
-                                                {% if forloop.last %}disabled{% endif %}
-                                                class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                            {% icon "chevron-down" %}
-                                        </button>
-                                        {% csrf_token %}
-                                        <p class="htmx-indicator">...</p>
-                                    </form>
-                                    <!--<Chevrons>-->
-                                    <a aria-label="Navigate to task menu"
-                                       hx-boost
-                                       hx-target="#project-detail"
-                                       hx-select="#task-actions"
-                                       href="{% url "dashboard:tasks:actions" task.uuid %}"
-                                       class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                        {% icon "dots-horizontal" %}
-                                    </a>
-                                    <!--<MenuButton>-->
-                                </div>
+                            </div>
+                            <div class="flex flex-row items-center">
+                                <form hx-target="#project-detail"
+                                      hx-post="{% url 'dashboard:tasks:move' task.uuid %}"
+                                      hx-select="#project-detail"
+                                      action="{% url 'dashboard:tasks:move' task.uuid %}"
+                                      class="flex flex-row items-center gap-1"
+                                      hx-swap="outerHTML"
+                                      method="post">
+                                    <button name="direction"
+                                            value="up"
+                                            type="submit"
+                                            aria-label="Move task up"
+                                            {% if forloop.first %}disabled{% endif %}
+                                            class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
+                                        {% icon "chevron-up" %}
+                                    </button>
+                                    <button name="direction"
+                                            value="down"
+                                            type="submit"
+                                            hx-swap="outerHTML"
+                                            aria-label="Move task down"
+                                            {% if forloop.last %}disabled{% endif %}
+                                            class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
+                                        {% icon "chevron-down" %}
+                                    </button>
+                                    {% csrf_token %}
+                                    <p class="htmx-indicator">...</p>
+                                </form>
+                                <a aria-label="Navigate to task menu"
+                                   hx-boost
+                                   hx-target="#project-detail"
+                                   hx-select="#task-actions"
+                                   href="{% url "dashboard:tasks:actions" task.uuid %}"
+                                   class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
+                                    {% icon "dots-horizontal" %}
+                                </a>
                             </div>
                         </td>
                     </tr>
