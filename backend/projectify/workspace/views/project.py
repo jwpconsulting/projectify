@@ -52,6 +52,7 @@ from ..services.project import (
     project_delete,
     project_update,
 )
+from ..services.section import section_minimize
 from ..services.team_member import (
     team_member_minimize_label_filter,
     team_member_minimize_team_member_filter,
@@ -199,6 +200,22 @@ class MinimizeForm(forms.Form):
     minimized = forms.BooleanField(required=False)
 
 
+class SectionMinimizeForm(forms.Form):
+    """Form for handling section minimize actions."""
+
+    action = forms.CharField(required=True)
+    minimized = forms.BooleanField(required=False)
+
+    def __init__(self, project: Project, *args: Any, **kwargs: Any) -> None:
+        """Initialize form with section choices from project."""
+        super().__init__(*args, **kwargs)
+        self.fields["section"] = forms.ModelChoiceField(
+            queryset=project.section_set.all(),
+            to_field_name="uuid",
+            required=True,
+        )
+
+
 # HTML
 @require_http_methods(["GET", "POST"])
 @platform_view
@@ -206,43 +223,58 @@ def project_detail_view(
     request: AuthenticatedHttpRequest, project_uuid: UUID
 ) -> HttpResponse:
     """Show project details."""
-    if request.method == "POST":
-        minimize_form = MinimizeForm(request.POST)
-        if not minimize_form.is_valid():
-            raise BadRequest()
+    project = project_find_by_project_uuid(
+        who=request.user, project_uuid=project_uuid
+    )
+    if project is None:
+        raise Http404(_("No project found for this uuid"))
+    match request.method, request.POST.get("action"):
+        case "POST", "minimize_section":
+            section_minimize_form = SectionMinimizeForm(
+                project=project, data=request.POST
+            )
+            if not section_minimize_form.is_valid():
+                raise BadRequest()
 
-        action = minimize_form.cleaned_data["action"]
-        minimized = minimize_form.cleaned_data["minimized"]
+            section = section_minimize_form.cleaned_data["section"]
+            minimized = section_minimize_form.cleaned_data["minimized"]
 
-        project = project_find_by_project_uuid(
-            who=request.user, project_uuid=project_uuid
-        )
-        if project is None:
-            raise Http404(_("No project found for this uuid"))
+            section_minimize(
+                who=request.user, section=section, minimized=minimized
+            )
 
-        team_member = team_member_find_for_workspace(
-            user=request.user, workspace=project.workspace
-        )
-        if team_member is None:
-            raise RuntimeError("No team member")
+            querydict = request.POST
+        case "POST", _:
+            minimize_form = MinimizeForm(request.POST)
+            if not minimize_form.is_valid():
+                raise BadRequest()
 
-        match action:
-            case "minimize_team_member_filter":
-                team_member_minimize_team_member_filter(
-                    team_member=team_member,
-                    minimized=minimized,
-                )
-            case "minimize_label_filter":
-                team_member_minimize_label_filter(
-                    team_member=team_member,
-                    minimized=minimized,
-                )
-            case invalid:
-                logger.warning("Invalid action %s", invalid)
+            action = minimize_form.cleaned_data["action"]
+            minimized = minimize_form.cleaned_data["minimized"]
 
-        querydict = request.POST
-    else:
-        querydict = request.GET
+            team_member = team_member_find_for_workspace(
+                user=request.user, workspace=project.workspace
+            )
+            if team_member is None:
+                raise RuntimeError("No team member")
+
+            match action:
+                case "minimize_team_member_filter":
+                    team_member_minimize_team_member_filter(
+                        team_member=team_member,
+                        minimized=minimized,
+                    )
+                case "minimize_label_filter":
+                    team_member_minimize_label_filter(
+                        team_member=team_member,
+                        minimized=minimized,
+                    )
+                case invalid:
+                    logger.warning("Invalid action %s", invalid)
+
+            querydict = request.POST
+        case _:
+            querydict = request.GET
 
     filter_by_team_member: Optional[QuerySet[TeamMember]] = None
     filter_by_label: Optional[QuerySet[Label]] = None
@@ -250,15 +282,6 @@ def project_detail_view(
     filter_by_unassigned: bool = False
     task_search_query: Optional[str] = None
     if len(querydict):
-        logger.info("querydict %s", querydict)
-        # We need to query the project an additional round here to
-        # establish whether the labels and team members given to us
-        # by the user are valid, or not
-        project = project_find_by_project_uuid(
-            who=request.user, project_uuid=project_uuid
-        )
-        if project is None:
-            raise Http404(_("No project found for this uuid"))
         labels = project.workspace.label_set.all()
         team_members = project.workspace.teammember_set.all()
 
@@ -267,7 +290,6 @@ def project_detail_view(
         )
         if not task_filter_form.is_valid():
             raise BadRequest(task_filter_form.errors)
-        logger.info("filter form %s", task_filter_form.cleaned_data)
 
         filter_by_unassigned, filter_by_team_member = (
             task_filter_form.cleaned_data["filter_by_team_member"]

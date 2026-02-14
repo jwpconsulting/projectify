@@ -60,7 +60,8 @@ class TestProjectDetailView:
         # Gone up   from 10 -> 13, since we update the last visited project
         # Gone up   from 13 -> 15
         # Gone down from 15 -> 14
-        with django_assert_num_queries(14):
+        # Gone up   from 14 -> 15
+        with django_assert_num_queries(15):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert project.title in response.content.decode()
@@ -110,7 +111,7 @@ class TestProjectDetailView:
         other_task.assignee = other_team_member
         other_task.save()
 
-        with django_assert_num_queries(21):
+        with django_assert_num_queries(20):
             response = user_client.get(
                 resource_url,
                 {"filter_by_team_member": [str(team_member.uuid)]},
@@ -671,6 +672,71 @@ class TestProjectDetailMinimize:
         assert response.status_code == 200
         # The view re-renders with the same GET parameters
         assert b"task_search_query" in response.content
+
+    @pytest.mark.parametrize(
+        "initial_state,form_value,expected_final_state",
+        [
+            (False, "true", True),  # minimize section
+            (True, "false", False),  # expand section
+        ],
+    )
+    def test_section_minimize_toggle(
+        self,
+        user_client: Client,
+        team_member: TeamMember,
+        section: Section,
+        initial_state: bool,
+        form_value: str,
+        expected_final_state: bool,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test minimizing and expanding a section."""
+        if initial_state:
+            section.minimized_by.add(team_member.user)
+
+        assert (
+            section.minimized_by.filter(pk=team_member.user.pk).exists()
+            == initial_state
+        )
+
+        url = reverse(
+            "dashboard:projects:detail", args=(section.project.uuid,)
+        )
+
+        with django_assert_num_queries(20):
+            response = user_client.post(
+                url,
+                {
+                    "action": "minimize_section",
+                    "section": str(section.uuid),
+                    "minimized": form_value,
+                },
+            )
+            assert response.status_code == 200
+
+        section.refresh_from_db()
+        assert (
+            section.minimized_by.filter(pk=team_member.user.pk).exists()
+            == expected_final_state
+        )
+
+    def test_minimize_section_not_found(
+        self,
+        user_client: Client,
+        team_member: TeamMember,
+        project: Project,
+    ) -> None:
+        """Test minimize view with non-existent section."""
+        url = reverse("dashboard:projects:detail", args=(project.uuid,))
+        response = user_client.post(
+            url,
+            {
+                "action": "minimize_section",
+                "section": str(uuid4()),
+                "minimized": "true",
+            },
+        )
+        assert response.status_code == 400
 
 
 # Create

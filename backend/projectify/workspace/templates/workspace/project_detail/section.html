@@ -2,15 +2,18 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load i18n %}
 {% load projectify %}
-<section data-section class="flex flex-col" id="section-{{ section.uuid }}">
-    <header class="sticky top-0 flex w-full flex-row items-center justify-between bg-foreground px-4 py-2 {% if section.minimized %}rounded-b-2xl{% endif %}">
+<section class="flex flex-col" id="section-{{ section.uuid }}">
+    <header class="sticky top-0 flex w-full flex-row items-center justify-between bg-foreground px-4 py-2">
         <div data-figma-name="Section header"
              class="flex min-w-0 shrink flex-row gap-4 items-center text-base-content">
             <form method="post"
-                  hx-post="{% url 'dashboard:sections:minimize' section.uuid %}"
+                  hx-post="{% url 'dashboard:projects:detail' section.project.uuid %}"
                   hx-target="#section-{{ section.uuid }}"
-                  hx-swap="outerHTML">
+                  hx-select="#section-{{ section.uuid }}"
+                  hx-include="#task-filter,#team-member-filters,#label-filters">
                 {% csrf_token %}
+                <input type="hidden" name="action" value="minimize_section">
+                <input type="hidden" name="section" value="{{ section.uuid }}">
                 <input type="hidden"
                        name="minimized"
                        value="{% if section.minimized %}false{% else %}true{% endif %}">
