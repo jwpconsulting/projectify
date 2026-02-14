@@ -76,20 +76,20 @@ def test_team_member_delete(
     assert team_member.workspace.users.count() == count
 
 
-def test_team_member_visit_workspace_permission_denied(
-    unrelated_workspace: Workspace, user: User
-) -> None:
-    """Test that user without workspace access cannot visit workspace."""
-    with pytest.raises(PermissionDenied):
-        team_member_visit_workspace(user=user, workspace=unrelated_workspace)
+def test_team_member_visit_functions(team_member: TeamMember) -> None:
+    """Test visiting a workspace."""
+    team_member_visit_workspace(team_member=team_member)
 
 
-def test_team_member_visit_project_permission_denied(
-    unrelated_project: Project, user: User
+def test_team_member_visit_project(
+    team_member: TeamMember, project: Project, other_project: Project
 ) -> None:
-    """Test that user without workspace access cannot visit project."""
-    with pytest.raises(PermissionDenied):
-        team_member_visit_project(user=user, project=unrelated_project)
+    """Test visiting a project."""
+    team_member_visit_project(team_member=team_member, project=project)
+    with pytest.raises(AssertionError):
+        team_member_visit_project(
+            team_member=team_member, project=other_project
+        )
 
 
 def test_team_member_minimize_project_list(team_member: TeamMember) -> None:

@@ -4,7 +4,7 @@
 """Project views."""
 
 import logging
-from typing import Any, Optional, TypeVar
+from typing import Any, Optional, TypeVar, Union
 from uuid import UUID
 
 from django import forms
@@ -28,7 +28,7 @@ from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 
-from ..models import Project
+from ..models import Project, Workspace
 from ..models.label import Label
 from ..models.team_member import TeamMember
 from ..selectors.project import (
@@ -40,6 +40,7 @@ from ..selectors.project import (
 from ..selectors.quota import workspace_get_all_quotas
 from ..selectors.team_member import team_member_find_for_workspace
 from ..selectors.workspace import (
+    workspace_build_detail_query_set,
     workspace_find_by_workspace_uuid,
     workspace_find_for_user,
 )
@@ -56,6 +57,34 @@ from ..services.team_member import team_member_visit_project
 logger = logging.getLogger(__name__)
 
 Q = TypeVar("Q", bound=Model)
+
+
+def get_project_view_context(
+    request: AuthenticatedHttpRequest, workspace: Workspace
+) -> dict[str, object]:
+    """Get shared context for project views."""
+    if not hasattr(workspace, "current_team_member_qs"):
+        current_team_member = team_member_find_for_workspace(
+            user=request.user, workspace=workspace
+        )
+        logger.warning("No current_team_member_qs in workspace")
+    else:
+        current_team_member_qs: Union[list[TeamMember], TeamMember, Any] = (
+            getattr(workspace, "current_team_member_qs")
+        )
+        match current_team_member_qs:
+            case TeamMember() as current_team_member:
+                pass
+            case [current_team_member]:
+                pass
+            case any:
+                raise RuntimeError(f"Don't know what to do with {type(any)}")
+    return {
+        "workspace": workspace,
+        "workspaces": workspace_find_for_user(who=request.user),
+        "projects": workspace.project_set.all(),
+        "current_team_member_qs": current_team_member,
+    }
 
 
 class ModelMultipleChoiceFieldWithEmpty(forms.ModelMultipleChoiceField):
@@ -212,10 +241,11 @@ def project_detail_view(
         raise Http404(_("No project found for this uuid"))
 
     # Mark this project as most recently visited
-    team_member_visit_project(user=request.user, project=project)
+    team_member_qs = getattr(project.workspace, "current_team_member_qs", None)
+    assert team_member_qs
+    team_member_visit_project(team_member=team_member_qs[0], project=project)
 
     project.workspace.quota = workspace_get_all_quotas(project.workspace)
-    projects = project.workspace.project_set.all()
     team_members = project.workspace.teammember_set.all()
     labels = project.workspace.label_set.all()
 
@@ -226,11 +256,9 @@ def project_detail_view(
     )
 
     context = {
+        **get_project_view_context(request, project.workspace),
         "project": project,
         "labels": labels,
-        "projects": projects,
-        "workspaces": workspace_find_for_user(who=request.user),
-        "workspace": project.workspace,
         "team_members": team_members,
         "unassigned_tasks": filter_by_unassigned,
         "unlabeled_tasks": filter_by_unlabeled,
@@ -255,39 +283,44 @@ class ProjectCreateForm(forms.Form):
     )
 
 
+@require_http_methods(["GET", "POST"])
 @platform_view
 def project_create_view(
     request: AuthenticatedHttpRequest, workspace_uuid: UUID
 ) -> HttpResponse:
     """Create a new project in a workspace."""
+    qs: Optional[QuerySet[Workspace]]
+    match request.method:
+        case "GET":
+            qs = workspace_build_detail_query_set(
+                who=request.user, annotate_labels=True
+            )
+        case "POST":
+            qs = None
+        case other:
+            # Should never be hit
+            assert False, other
     workspace = workspace_find_by_workspace_uuid(
         workspace_uuid=workspace_uuid,
         who=request.user,
+        qs=qs,
     )
     if workspace is None:
         raise Http404(_("No workspace found for this UUID"))
 
-    # XXX inefficient
-    projects = project_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=workspace.uuid,
-        archived=False,
-    )
-
-    context: dict[str, Any] = {
-        "workspace": workspace,
-        "projects": projects,
-        "workspaces": workspace_find_for_user(who=request.user),
-    }
-
     if request.method == "GET":
-        form = ProjectCreateForm()
-        context = {"form": form, **context}
+        context = {
+            **get_project_view_context(request, workspace),
+            "form": ProjectCreateForm(),
+        }
         return render(request, "workspace/project_create.html", context)
 
     form = ProjectCreateForm(request.POST)
     if not form.is_valid():
-        context = {"form": form, **context}
+        context = {
+            **get_project_view_context(request, workspace),
+            "form": form,
+        }
         return render(
             request, "workspace/project_create.html", context, status=400
         )
@@ -303,7 +336,10 @@ def project_create_view(
         return redirect("dashboard:projects:detail", project_uuid=project.uuid)
     except ValidationError as error:
         populate_form_with_drf_errors(form, error)
-        context = {**context, "form": form}
+        context = {
+            **get_project_view_context(request, workspace),
+            "form": form,
+        }
         return render(
             request, "workspace/project_create.html", context, status=400
         )
@@ -329,24 +365,24 @@ class ProjectUpdateForm(forms.Form):
     )
 
 
+@require_http_methods(["GET", "POST"])
 @platform_view
 def project_update_view(
     request: AuthenticatedHttpRequest, project_uuid: UUID
 ) -> HttpResponse:
     """Update an existing project."""
+    qs = project_detail_query_set(who=request.user, prefetch_labels=False)
     project = project_find_by_project_uuid(
-        who=request.user, project_uuid=project_uuid, qs=ProjectDetailQuerySet
+        who=request.user, project_uuid=project_uuid, qs=qs
     )
     if project is None:
         raise Http404(_("No project found for this uuid"))
 
     workspace = project.workspace
 
-    context: dict[str, Any] = {
+    context = {
+        **get_project_view_context(request, workspace),
         "project": project,
-        "workspace": workspace,
-        "projects": project.workspace.project_set.all(),
-        "workspaces": workspace_find_for_user(who=request.user),
     }
 
     if request.method == "GET":
@@ -403,18 +439,16 @@ def project_archive_view(
     return HttpResponseClientRefresh()
 
 
+@require_http_methods(["POST"])
 @platform_view
 def project_recover_view(
     request: AuthenticatedHttpRequest, project_uuid: UUID
 ) -> HttpResponse:
     """Recover an archived project via HTMX."""
-    if request.method != "POST":
-        return HttpResponse(status=405)
+    assert request.method == "POST"
 
     project = project_find_by_project_uuid(
-        who=request.user,
-        project_uuid=project_uuid,
-        archived=True,
+        who=request.user, project_uuid=project_uuid, archived=True
     )
     if project is None:
         raise Http404(_("No archived project found for this uuid"))
@@ -441,45 +475,6 @@ def project_delete_view(
 
     project_delete(project=project, who=request.user)
     return HttpResponseClientRefresh()
-
-
-class MinimizeProjectListForm(forms.Form):
-    """Form for minimizing/expanding the project list."""
-
-    minimized = forms.BooleanField(required=True)
-
-
-@require_http_methods(["POST"])
-@platform_view
-def project_minimize_project_list(
-    request: AuthenticatedHttpRequest, workspace_uuid: UUID
-) -> HttpResponse:
-    """Toggle the minimized state of the project list for a workspace."""
-    assert request.method == "POST"
-
-    workspace = workspace_find_by_workspace_uuid(
-        workspace_uuid=workspace_uuid,
-        who=request.user,
-    )
-    if workspace is None:
-        raise Http404(_("No workspace found for this UUID"))
-
-    team_member = team_member_find_for_workspace(
-        user=request.user,
-        workspace=workspace,
-    )
-    if team_member is None:
-        raise Http404(_("You are not a member of this workspace"))
-
-    form = MinimizeProjectListForm(request.POST)
-    if not form.is_valid():
-        return HttpResponse(status=400)
-
-    minimized = form.cleaned_data["minimized"]
-    team_member.minimized_project_list = minimized
-    team_member.save()
-
-    return HttpResponse(status=200)
 
 
 # Create

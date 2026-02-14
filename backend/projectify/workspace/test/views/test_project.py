@@ -59,7 +59,8 @@ class TestProjectDetailView:
         # Gone down from 11 -> 10, since we don't fetch label values()
         # Gone up   from 10 -> 13, since we update the last visited project
         # Gone up   from 13 -> 15
-        with django_assert_num_queries(15):
+        # Gone down from 15 -> 14
+        with django_assert_num_queries(14):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert project.title in response.content.decode()
@@ -109,7 +110,7 @@ class TestProjectDetailView:
         other_task.assignee = other_team_member
         other_task.save()
 
-        with django_assert_num_queries(21):
+        with django_assert_num_queries(20):
             response = user_client.get(
                 resource_url,
                 {"filter_by_team_member": [str(team_member.uuid)]},
@@ -132,7 +133,7 @@ class TestProjectDetailView:
         task.assignee = team_member
         task.save()
 
-        with django_assert_num_queries(19):
+        with django_assert_num_queries(18):
             response = user_client.get(
                 resource_url, {"filter_by_team_member": [""]}
             )
@@ -153,7 +154,7 @@ class TestProjectDetailView:
         """Test filtering tasks by label."""
         task.labels.add(label)
 
-        with django_assert_num_queries(21):
+        with django_assert_num_queries(20):
             response = user_client.get(
                 resource_url, {"filter_by_label": [str(label.uuid)]}
             )
@@ -174,7 +175,7 @@ class TestProjectDetailView:
         """Test filtering for unlabeled tasks."""
         task.labels.add(label)
 
-        with django_assert_num_queries(19):
+        with django_assert_num_queries(18):
             response = user_client.get(resource_url, {"filter_by_label": [""]})
             assert response.status_code == 200
 
@@ -196,7 +197,7 @@ class TestProjectDetailView:
         other_task.title = "Feature request"
         other_task.save()
 
-        with django_assert_num_queries(19):
+        with django_assert_num_queries(18):
             response = user_client.get(
                 resource_url, {"task_search_query": "bug"}
             )

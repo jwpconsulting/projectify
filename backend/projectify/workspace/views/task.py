@@ -87,12 +87,12 @@ def get_object(
 def get_task_view_context(
     request: AuthenticatedHttpRequest, workspace: Workspace
 ) -> dict[str, Any]:
-    """Return context with workspace, workspaces and current_team_member."""
+    """Return context with workspace, workspaces and current_team_member_qs."""
     return {
         "workspace": workspace,
         "workspaces": workspace_find_for_user(who=request.user),
         "projects": workspace.project_set.all(),
-        "current_team_member": team_member_find_for_workspace(
+        "current_team_member_qs": team_member_find_for_workspace(
             user=request.user, workspace=workspace
         ),
     }

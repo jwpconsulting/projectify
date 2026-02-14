@@ -10,7 +10,7 @@
         {% if project %}<input type="hidden" name="current_project" value="{{ project.uuid }}">{% endif %}
         <input type="hidden"
                name="minimized"
-               value="{% if current_team_member.minimized_project_list %}false{% else %}true{% endif %}">
+               value="{% if current_team_member_qs.minimized_project_list %}false{% else %}true{% endif %}">
         <button type="submit"
                 class="flex w-full flex-row items-center justify-between gap-2 px-4 py-2 text-utility hover:text-base-content">
             <div class="flex flex-row items-center gap-4">
@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="w-4 h-4">
-                {% if current_team_member.minimized_project_list %}
+                {% if current_team_member_qs.minimized_project_list %}
                     {% icon "chevron-up" %}
                 {% else %}
                     {% icon "chevron-down" %}
@@ -28,7 +28,7 @@
             </div>
         </button>
     </form>
-    {% if not current_team_member.minimized_project_list %}
+    {% if not current_team_member_qs.minimized_project_list %}
         {% for project_item in projects %}
             <a class="group block flex w-full flex-row justify-between gap-1 px-4 py-1 hover:bg-base-200"
                href="{% url "dashboard:projects:detail" project_item.uuid %}">

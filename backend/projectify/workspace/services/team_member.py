@@ -70,29 +70,17 @@ def team_member_delete(
     send_change_signal("changed", team_member.workspace)
 
 
-def team_member_visit_workspace(*, user: User, workspace: Workspace) -> None:
+def team_member_visit_workspace(*, team_member: TeamMember) -> None:
     """Mark a workspace as recently visited."""
-    validate_perm("workspace.read_workspace", user, workspace)
-    try:
-        team_member = TeamMember.objects.get(user=user, workspace=workspace)
-    except TeamMember.DoesNotExist as e:
-        raise RuntimeError(
-            f"User can read workspace {workspace.uuid} but doesn't have a team member"
-        ) from e
     team_member.last_visited_workspace = now()
     team_member.save()
 
 
-def team_member_visit_project(*, user: User, project: Project) -> None:
+def team_member_visit_project(
+    *, team_member: TeamMember, project: Project
+) -> None:
     """Mark a workspace and project as recently visited."""
-    validate_perm("workspace.read_workspace", user, project.workspace)
-    workspace = project.workspace
-    try:
-        team_member = TeamMember.objects.get(user=user, workspace=workspace)
-    except TeamMember.DoesNotExist as e:
-        raise RuntimeError(
-            f"User can read workspace {workspace.uuid} but doesn't have a team member"
-        ) from e
+    assert team_member.workspace == project.workspace
     team_member.last_visited_project = project
     team_member.last_visited_workspace = now()
     team_member.save()

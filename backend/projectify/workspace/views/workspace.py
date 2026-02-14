@@ -86,6 +86,9 @@ def _get_workspace_settings_context(
         "workspace": workspace,
         "projects": workspace.project_set.all(),
         "workspaces": workspace_find_for_user(who=request.user),
+        "current_team_member_qs": team_member_find_for_workspace(
+            user=request.user, workspace=workspace
+        ),
         "active_tab": active_tab,
     }
 
@@ -105,7 +108,12 @@ def workspace_view(
         raise Http404(_("Workspace not found"))
 
     # Mark this workspace as most recently visited
-    team_member_visit_workspace(user=request.user, workspace=workspace)
+    team_member = team_member_find_for_workspace(
+        user=request.user, workspace=workspace
+    )
+    if team_member is None:
+        raise Http404(_("Team member not found"))
+    team_member_visit_workspace(team_member=team_member)
 
     # Check whether the user has already visited a project within this
     # workspace
@@ -145,7 +153,9 @@ def workspace_minimize_project_list(
     """Toggle the minimized state of the project list."""
     assert request.method == "POST"
     workspace = workspace_find_by_workspace_uuid(
-        workspace_uuid=workspace_uuid, who=request.user
+        workspace_uuid=workspace_uuid,
+        who=request.user,
+        qs=WorkspaceDetailQuerySet,
     )
     if workspace is None:
         raise Http404(_("No workspace found for this UUID"))
@@ -160,7 +170,7 @@ def workspace_minimize_project_list(
         minimized=form.cleaned_data["minimized"],
     )
 
-    current_team_member = team_member_find_for_workspace(
+    current_team_member_qs = team_member_find_for_workspace(
         user=request.user, workspace=workspace
     )
 
@@ -168,7 +178,7 @@ def workspace_minimize_project_list(
         "workspace": workspace,
         "project": form.cleaned_data.get("current_project"),
         "projects": workspace.project_set.all(),
-        "current_team_member": current_team_member,
+        "current_team_member_qs": current_team_member_qs,
     }
 
     return render(
