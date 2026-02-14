@@ -92,10 +92,12 @@ class TaskCreateForm(forms.Form):
     )
     due_date = forms.DateTimeField(
         required=False,
+        label=_("Due date"),
         widget=forms.DateTimeInput(attrs={"type": "date"}),
     )
     description = forms.CharField(
         required=False,
+        label=_("Description"),
         widget=forms.Textarea(
             attrs={"placeholder": _("Enter a description for your task")}
         ),
@@ -111,6 +113,7 @@ class TaskCreateForm(forms.Form):
         self.fields["assignee"] = forms.ModelChoiceField(
             required=False,
             blank=True,
+            label=_("Assignee"),
             queryset=workspace.teammember_set.all(),
             widget=assignee_widget,
             to_field_name="uuid",
@@ -124,6 +127,7 @@ class TaskCreateForm(forms.Form):
         self.fields["labels"] = forms.ModelMultipleChoiceField(
             required=False,
             blank=True,
+            label=_("Labels"),
             queryset=workspace.label_set.all(),
             widget=labels_widget,
             to_field_name="uuid",
@@ -137,8 +141,8 @@ class TaskCreateForm(forms.Form):
 class TaskCreateSubTaskForm(forms.Form):
     """Form for creating sub tasks as part of task creation."""
 
-    title = forms.CharField()
-    done = forms.BooleanField(required=False)
+    title = forms.CharField(label=_("Sub task title"))
+    done = forms.BooleanField(required=False, label=_("Done"))
 
 
 TaskCreateSubTaskForms = forms.formset_factory(TaskCreateSubTaskForm, extra=0)  # type: ignore[type-var]
@@ -147,8 +151,8 @@ TaskCreateSubTaskForms = forms.formset_factory(TaskCreateSubTaskForm, extra=0)  
 class TaskUpdateSubTaskForm(forms.Form):
     """Form for creating sub tasks as part of task creation."""
 
-    title = forms.CharField(required=False)
-    done = forms.BooleanField(required=False)
+    title = forms.CharField(required=False, label=_("Sub task title"))
+    done = forms.BooleanField(required=False, label=_("Done"))
     uuid = forms.UUIDField(required=False, widget=forms.HiddenInput)
     delete = forms.BooleanField(
         required=False,
@@ -246,7 +250,9 @@ def task_create(
         case "create":
             return redirect(section.get_absolute_url())
         case action:
-            raise BadRequest(_("Invalid action: {}").format(action))
+            raise BadRequest(
+                _("Invalid action: {action}").format(action=action)
+            )
 
 
 @platform_view
@@ -258,7 +264,11 @@ def task_detail(
         who=request.user, task_uuid=task_uuid, qs=TaskDetailQuerySet
     )
     if task is None:
-        raise Http404(_(f"Could not find task with uuid {task_uuid}"))
+        raise Http404(
+            _("Could not find task with uuid {task_uuid}").format(
+                task_uuid=task_uuid
+            )
+        )
     context = {
         "task": task,
         "project": task.section.project,
@@ -282,10 +292,12 @@ class TaskUpdateForm(forms.Form):
     )
     due_date = forms.DateTimeField(
         required=False,
+        label=_("Due date"),
         widget=forms.DateTimeInput(attrs={"type": "date"}),
     )
     description = forms.CharField(
         required=False,
+        label=_("Description"),
         widget=forms.Textarea(
             attrs={"placeholder": _("Enter a description for your task")}
         ),
@@ -307,6 +319,7 @@ class TaskUpdateForm(forms.Form):
         self.fields["assignee"] = forms.ModelChoiceField(
             required=False,
             blank=True,
+            label=_("Assignee"),
             queryset=workspace.teammember_set.all(),
             widget=assignee_widget,
             to_field_name="uuid",
@@ -320,6 +333,7 @@ class TaskUpdateForm(forms.Form):
         self.fields["labels"] = forms.ModelMultipleChoiceField(
             required=False,
             blank=True,
+            label=_("Labels"),
             queryset=workspace.label_set.all(),
             widget=labels_widget,
             to_field_name="uuid",
@@ -367,7 +381,11 @@ def task_update_view(
         who=request.user, task_uuid=task_uuid, qs=TaskDetailQuerySet
     )
     if task is None:
-        raise Http404(_(f"Could not find task with uuid {task_uuid}"))
+        raise Http404(
+            _("Could not find task with uuid {task_uuid}").format(
+                task_uuid=task_uuid
+            )
+        )
 
     focus_field = request.GET.get("focus", None)
     context: dict[str, Any] = {
