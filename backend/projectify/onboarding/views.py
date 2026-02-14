@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2025 JWP Consulting GK
 """Onboarding Views."""
 
+from typing import Any
 from uuid import UUID
 
 from django import forms
@@ -24,6 +25,9 @@ from projectify.workspace.selectors.project import (
     project_find_by_workspace_uuid,
 )
 from projectify.workspace.selectors.task import task_find_by_task_uuid
+from projectify.workspace.selectors.team_member import (
+    team_member_find_for_workspace,
+)
 from projectify.workspace.selectors.workspace import (
     workspace_find_by_workspace_uuid,
     workspace_find_for_user,
@@ -31,7 +35,10 @@ from projectify.workspace.selectors.workspace import (
 from projectify.workspace.services.label import label_create
 from projectify.workspace.services.project import project_create
 from projectify.workspace.services.section import section_create
-from projectify.workspace.services.task import task_create, task_update_nested
+from projectify.workspace.services.task import (
+    task_create_nested,
+    task_update_nested,
+)
 from projectify.workspace.services.workspace import workspace_create
 
 
@@ -216,35 +223,50 @@ def new_task(
     section_title = _("To do")
     if section:
         section_title = section.title
-
-    if request.method == "POST":
-        if section is None:
-            # Create a section
-            section = section_create(
-                who=request.user,
-                title=section_title,
-                description=None,
-                project=project,
-            )
-        # Create a task
-        form = TaskForm(request.POST)
-        if form.is_valid():
-            task = task_create(
-                who=request.user,
-                section=section,
-                title=form.cleaned_data["title"],
-            )
-            return redirect(
-                reverse("onboarding:new_label", args=[str(task.uuid)])
-            )
-    else:
-        form = TaskForm()
-
-    context = {
-        "form": form,
+    context: dict[str, Any] = {
         "section": section,
         "section_title": section_title,
     }
+
+    match request.method:
+        case "GET":
+            return render(
+                request,
+                "onboarding/new_task.html",
+                {**context, "form": TaskForm()},
+            )
+        case "POST":
+            pass
+        case method:
+            raise ValueError(f"Should not have hit method {method}")
+
+    if section is None:
+        section = section_create(
+            who=request.user,
+            title=section_title,
+            description=None,
+            project=project,
+        )
+    team_member = team_member_find_for_workspace(
+        user=request.user, workspace=project.workspace
+    )
+    if not team_member:
+        raise RuntimeError(
+            f"No team_member found for current user in workspace {project.workspace.uuid}"
+        )
+
+    form = TaskForm(request.POST)
+    if form.is_valid():
+        task = task_create_nested(
+            who=request.user,
+            section=section,
+            title=form.cleaned_data["title"],
+            assignee=team_member,
+            labels=[],
+            sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
+        )
+        return redirect(reverse("onboarding:new_label", args=[str(task.uuid)]))
+    context = {**context, "form": form}
     return render(request, "onboarding/new_task.html", context)
 
 
@@ -296,6 +318,7 @@ def new_label(
                 task=task,
                 title=task.title,
                 labels=[label],
+                assignee=task.assignee,
             )
 
             return redirect(
