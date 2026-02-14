@@ -27,7 +27,7 @@
                                 <a href="{% url 'dashboard:workspaces:edit-label' workspace_uuid=workspace.uuid label_uuid=label.uuid %}"
                                    class="flex items-center gap-1 text-primary truncate">
                                     <span class="truncate">{{ label.name }}</span>
-                                    <div class="w-4 h-4 shrink-0">{% include "heroicons/pencil.svg" %}</div>
+                                    <div class="w-4 h-4 shrink-0">{% icon "pencil" %}</div>
                                 </a>
                             {% else %}
                                 <span class="truncate">{{ label.name }}</span>

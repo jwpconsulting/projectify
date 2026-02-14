@@ -2,6 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "onboarding_base.html" %}
 {% load i18n %}
+{% load projectify %}
 {% block title %}
     {% blocktrans %}Task "{{ task }}" has been assigned to you - Projectify{% endblocktrans %}
 {% endblock title %}
@@ -20,13 +21,13 @@
             <a href="{% url "help:detail" page="billing" %}"
                class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg"
                target="_blank">{% trans "Learn more about workspace billing settings" %}<span class="sr-only">(Opens in new tab)</span>
-            {% include "heroicons/external_links.svg" %}
+            {% icon "external_links" %}
         </a>
         {# TODO:: Use django template url tag #}
     <a href="/dashboard/workspace/{{ workspace.uuid }}/settings/billing"
        class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg"
        target="_blank">{% trans "Go to workspace billing setting" %}<span class="sr-only">(Opens in new tab)</span>
-    {% include "heroicons/external_links.svg" %}
+    {% icon "external_links" %}
 </a>
 </div>
 </div>

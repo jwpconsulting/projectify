@@ -18,7 +18,7 @@
                     <div class="shrink-0">
                         <a href="{% url "dashboard:projects:detail" section.project.uuid %}"
                            class="block w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background"
-                           aria-label="Go back to section">{% include "heroicons/x.svg" %}</a>
+                           aria-label="Go back to section">{% icon "x" %}</a>
                     </div>
                     {% include "workspace/task/breadcrumbs.html" with section=section current_page_label=_("New task (currently creating)") current_page_url=request.get_full_path %}
                 </div>

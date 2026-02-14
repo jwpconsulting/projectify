@@ -17,7 +17,7 @@
                 <button type="submit"
                         class="h-5 w-5 flex items-center justify-center hover:bg-secondary-hover rounded transition-transform duration-200 {% if section.minimized %}rotate-[-90deg]{% endif %}"
                         aria-label="{% if section.minimized %}{% translate 'Expand section' %}{% else %}{% translate 'Minimize section' %}{% endif %}">
-                    {% include "heroicons/chevron-down.svg" %}
+                    {% icon "chevron-down" %}
                 </button>
             </form>
             <div class="flex flex-row items-center">
@@ -25,7 +25,7 @@
                 <a href="{% url 'dashboard:sections:update' section.uuid %}"
                    aria-label="{% translate "Update section" %}"
                    class="text-tertiary-content hover:text-tertiary-content-hover active:bg-tertiary-pressed active:text-tertiary-content-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-transparent disabled:text-disabled-content">
-                    <span class="h-4">{% include "heroicons/pencil.svg" %}</span>
+                    <span class="h-4">{% icon "pencil" %}</span>
                 </a>
             </div>
         </div>
@@ -33,7 +33,7 @@
              data-figma-name="Right side">
             <a href="{% url "dashboard:sections:create-task" section.uuid %}"
                class="w-full text-tertiary-content hover:text-tertiary-content-hover active:bg-tertiary-pressed active:text-tertiary-content-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-transparent disabled:text-disabled-content">
-                <span class="h-6">{% include "heroicons/plus.svg" %}</span>
+                <span class="size-6">{% icon "plus" color="primary" %}</span>
                 {% translate "Add Task" %}
             </a>
         </div>
@@ -90,7 +90,7 @@
                                                 aria-label="Move task up"
                                                 {% if forloop.first %}disabled{% endif %}
                                                 class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                            {% include "heroicons/chevron-up.svg" %}
+                                            {% icon "chevron-up" %}
                                         </button>
                                         <button name="direction"
                                                 value="down"
@@ -99,7 +99,7 @@
                                                 aria-label="Move task down"
                                                 {% if forloop.last %}disabled{% endif %}
                                                 class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                            {% include "heroicons/chevron-down.svg" %}
+                                            {% icon "chevron-down" %}
                                         </button>
                                         {% csrf_token %}
                                         <p class="htmx-indicator">...</p>
@@ -111,7 +111,7 @@
                                        hx-select="#task-actions"
                                        href="{% url "dashboard:tasks:actions" task.uuid %}"
                                        class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                        {% include "heroicons/dots-horizontal.svg" %}
+                                        {% icon "dots-horizontal" %}
                                     </a>
                                     <!--<MenuButton>-->
                                 </div>

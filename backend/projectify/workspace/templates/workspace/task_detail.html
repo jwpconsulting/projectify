@@ -12,7 +12,7 @@
                     <div class="shrink-0">
                         <a href="{% url "dashboard:projects:detail" task.section.project.uuid %}"
                            class="block w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background"
-                           aria-label="{% trans 'Go back to section' %}">{% include "heroicons/x.svg" %}</a>
+                           aria-label="{% trans 'Go back to section' %}">{% icon "x" %}</a>
                     </div>
                     {% include "workspace/task/breadcrumbs.html" with section=task.section task=task %}
                 </div>
@@ -27,7 +27,7 @@
                     <a aria-label="{% trans 'Open task context menu' %}"
                        href="{% url 'dashboard:tasks:actions' task.uuid %}"
                        class="focus:base-content relative h-8 w-8 rounded-lg border border-transparent p-1 focus:border-base-content focus:outline-none active:text-display hover:bg-secondary-hover active:bg-primary text-base-content">
-                        {% include "heroicons/dots-vertical.svg" %}
+                        {% icon "dots-vertical" %}
                     </a>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                                     {{ task.title }}
                                     <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=title"
                                        class="flex flex-row">
-                                        <div class="h-4 w-4">{% include "heroicons/pencil.svg" %}</div>
+                                        <div class="h-4 w-4">{% icon "pencil" %}</div>
                                     </a>
                                 </div>
                                 <!--<TaskTitle>-->
@@ -59,7 +59,7 @@
                                         <div class="truncate">{{ task.assignee|default:"Assigned to nobody" }}</div>
                                     </button>
                                     <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=assignee">
-                                        <div class="h-4 w-4">{% include "heroicons/pencil.svg" %}</div>
+                                        <div class="h-4 w-4">{% icon "pencil" %}</div>
                                     </a>
                                 </div>
                                 <!--<TaskUser>-->
@@ -80,7 +80,7 @@
                                         {% endfor %}
                                     </div>
                                     <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=labels">
-                                        <div class="h-4 w-4">{% include "heroicons/pencil.svg" %}</div>
+                                        <div class="h-4 w-4">{% icon "pencil" %}</div>
                                     </a>
                                 </div>
                                 <!--<TaskLabel>-->
@@ -93,7 +93,7 @@
                                     {{ task.due_date.date.isoformat }}
                                     <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=due_date"
                                        class="flex flex-row">
-                                        <div class="h-4 w-4">{% include "heroicons/pencil.svg" %}</div>
+                                        <div class="h-4 w-4">{% icon "pencil" %}</div>
                                     </a>
                                 </div>
                                 <!--<TaskDueDate>-->
@@ -105,7 +105,7 @@
                                 <div class="flex w-full flex-row items-start gap-4">
                                     <p>{{ task.description }}</p>
                                     <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=description">
-                                        <div class="h-4 w-4">{% include "heroicons/pencil.svg" %}</div>
+                                        <div class="h-4 w-4">{% icon "pencil" %}</div>
                                     </a>
                                 </div>
                                 <!--<TaskDescription>-->
@@ -120,7 +120,7 @@
                             <h4 class="text-xl font-bold">{% trans "Sub tasks" %}</h4>
                             <a href="{% url 'dashboard:tasks:update' task.uuid %}#subtasks"
                                class="flex flex-row">
-                                <div class="h-4 w-4">{% include "heroicons/pencil.svg" %}</div>
+                                <div class="h-4 w-4">{% icon "pencil" %}</div>
                             </a>
                         </div>
                     </div>
@@ -162,7 +162,7 @@
                                                    readonly="true">
                                             <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=subtasks"
                                                class="flex flex-row">
-                                                <div class="h-4 w-4">{% include "heroicons/pencil.svg" %}</div>
+                                                <div class="h-4 w-4">{% icon "pencil" %}</div>
                                             </a>
                                         </div>
                                     </div>

@@ -3,6 +3,7 @@
 {% extends "dashboard_base.html" %}
 {% load static %}
 {% load i18n %}
+{% load projectify %}
 {% block title %}
     {% translate "Editing task - Projectify" %}
 {% endblock title %}
@@ -18,7 +19,7 @@
                     <div class="shrink-0">
                         <a href="{% url "dashboard:projects:detail" task.section.project.uuid %}"
                            class="block w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background"
-                           aria-label="Go back to section">{% include "heroicons/x.svg" %}</a>
+                           aria-label="Go back to section">{% icon "x" %}</a>
                     </div>
                     {% include "workspace/task/breadcrumbs.html" with section=task.section task=task %}
                 </div>
@@ -43,7 +44,7 @@
                                     name="action"
                                     value="add_sub_task"
                                     class="w-full text-tertiary-content hover:text-tertiary-content-hover active:bg-tertiary-pressed active:text-tertiary-content-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-transparent disabled:text-disabled-content">
-                                <div class="h-6 w-6">{% include "heroicons/plus.svg" %}</div>
+                                <div class="h-6 w-6">{% icon "plus" %}</div>
                                 {% translate "Add sub task" %}
                             </button>
                         </div>

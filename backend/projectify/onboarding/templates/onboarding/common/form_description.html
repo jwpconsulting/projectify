@@ -1,6 +1,7 @@
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load i18n %}
+{% load projectify %}
 <div class="flex flex-col gap-4">
     <h1 class="min-w-fit max-w-lg text-4xl font-bold">{% trans title %}</h1>
     <div class="flex flex-col gap-2 text-lg">
@@ -14,7 +15,7 @@
                 <a href="{{ href }}"
                    class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg"
                    target="_blank">{% trans href_label %}<span class="sr-only">{% trans "(Opens in new tab)" %}</span>
-                {% include "heroicons/external_links.svg" %}
+                {% icon "external_links" %}
             </a>
         {% else %}
             <a href="{{ href }}"

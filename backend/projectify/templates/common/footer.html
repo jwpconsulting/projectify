@@ -2,133 +2,68 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load static %}
 {% load i18n %}
+{% load projectify %}
 <footer class="flex w-full gap-6 gap-8 border-t border-border p-8 flex-wrap sm:flex-row">
     <nav class="flex flex-col flex-wrap gap-12 sm:flex-row">
-        <div class="flex flex-col gap-6">
-            <a class="flex flex-col gap-2" href="/">
-                <div class="flex flex-row items-center gap-2">
-                    <img src="{% static "polylogo.svg" %}"
-                         width="171"
-                         height="36"
-                         alt="Projectify">
-                </div>
-                <p>{% trans "Project management at pace." %}</p>
-            </a>
-        </div>
+        <a href="/">
+            <div class="flex flex-row items-center gap-2">
+                <img src="{% static "polylogo.svg" %}"
+                     width="171"
+                     height="36"
+                     alt="Projectify">
+            </div>
+            <div>{% trans "Project management at pace." %}</div>
+        </a>
         <section class="flex flex-col gap-1">
             <h6 class="font-bold">{% trans "Product" %}</h6>
             <ul class="flex flex-col gap-2">
-                <li>
-                    <a href="{% url "storefront:pricing" %}"
-                       class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Pricing" %}</a>
-                </li>
-                <li>
-                    <a href="{% url "storefront:solutions:list" %}"
-                       class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Solutions" %}</a>
-                </li>
+                <li>{% anchor "storefront:pricing" "Pricing" %}</li>
+                <li>{% anchor "storefront:solutions:list" "Solutions" %}</li>
             </ul>
         </section>
         <section class="flex flex-col gap-1">
             <h6 class="font-bold">{% trans "Resources" %}</h6>
             <ul class="flex flex-col gap-2">
-                <li>
-                <a href="{% url "help:list" %}"
-                   class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
-                   target="_blank">{% trans "Help and tips" %}<span class="sr-only">{% trans "(Opens in new tab)" %}</span>
-                {% include "heroicons/external_links.svg" %}
-            </a>
-        </li>
-        <li>
-        <a href="{% url "help:detail" page="keyboard-shortcuts" %}"
-           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
-           target="_blank">{% trans "Keyboard shortcuts" %}<span class="sr-only">{% trans "(Opens in new tab)" %}</span>
-        {% include "heroicons/external_links.svg" %}
-    </a>
-</li>
-<li>
-<a href="https://www.jwpconsulting.net/tags/projectify/"
-   class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
-   target="_blank">{% trans "Blog" %}<span class="sr-only">{% trans "(Opens in new tab)" %}</span>
-{% include "heroicons/external_links.svg" %}
-</a>
-</li>
-<li>
-<a href="https://github.com/jwpconsulting/projectify"
-   class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
-   target="_blank">{% trans "GitHub Repository" %}<span class="sr-only">{% trans "(Opens in new tab)" %}</span>
-{% include "heroicons/external_links.svg" %}
-</a>
-</li>
-<li>
-    <a href="/download"
-       class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Download and install" %}</a>
-</li>
-</ul>
-</section>
-<section class="flex flex-col gap-1">
-    <h6 class="font-bold">{% trans "Company" %}</h6>
-    <ul class="flex flex-col gap-2">
-        <li>
-            <a href="{% url "storefront:accessibility" %}"
-               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Accessibility statement" %}</a>
-        </li>
-        <li>
-            <a href="{% url "storefront:contact_us" %}"
-               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Contact us" %}</a>
-        </li>
-        <li>
-        <a href="https://www.jwpconsulting.net"
-           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
-           target="_blank">{% trans "Corporate information" %}<span class="sr-only">{% trans "(Opens in new tab)" %}</span>
-        {% include "heroicons/external_links.svg" %}
-    </a>
-</li>
-</ul>
-</section>
-<section class="flex flex-col gap-1">
-    <h6 class="font-bold">{% trans "Security" %}</h6>
-    <ul class="flex flex-col gap-2">
-        <li>
-            <a href="{% url "storefront:security:general" %}"
-               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "General information" %}</a>
-        </li>
-        <li>
-            <a href="{% url "storefront:security:disclose" %}"
-               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Disclosure Policy" %}</a>
-        </li>
-    </ul>
-</section>
-<section class="flex flex-col gap-1">
-    <h6 class="font-bold">{% trans "Legal" %}</h6>
-    <ul class="flex flex-col gap-2">
-        <li>
-            <a href="{% url "storefront:privacy" %}"
-               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Privacy Policy" %}</a>
-        </li>
-        <li>
-            <a href="{% url "storefront:tos" %}"
-               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Terms of Service" %}</a>
-        </li>
-        <li>
-            <a href="{% url "storefront:credits" %}"
-               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Credits" %}</a>
-        </li>
-        <li>
-            <a href="{% url "storefront:free_software" %}"
-               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Free Software" %}</a>
-        </li>
-    </ul>
-</section>
-</nav>
-<section class="flex flex-col gap-4">
-    <p>
-        {% trans "Copyright 2021-2024 JWP Consulting GK" %}
-        <br>
-        {% trans "The Projectify application is free software, and you are welcome to redistribute it under certain conditions; " %}<a href="/free-software"
-   class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "see here for details" %}</a>
-    </p>
-    <p class="text-utility">
-        {% trans "This version was built on 2025-05-05 from commit 3898a21a on branch feat/remove-fe-storefront-pages committed on 2025-05-05." %}
-    </p>
-</section>
+                <li>{% anchor "help:list" "Help and tips" external=True %}</li>
+                <li>{% anchor "help:detail" "Keyboard shortcuts" external=True page="keyboard-shortcuts" %}</li>
+                <li>{% anchor "https://www.jwpconsulting.net/tags/projectify/" "Blog" external=True %}</li>
+                <li>{% anchor "https://github.com/jwpconsulting/projectify" "GitHub Repository" external=True %}</li>
+                <li>{% anchor "/download" "Download and install" %}</li>
+            </ul>
+        </section>
+        <section class="flex flex-col gap-1">
+            <h6 class="font-bold">{% trans "Company" %}</h6>
+            <ul class="flex flex-col gap-2">
+                <li>{% anchor "storefront:accessibility" "Accessibility statement" %}</li>
+                <li>{% anchor "storefront:contact_us" "Contact us" %}</li>
+                <li>{% anchor "https://www.jwpconsulting.net" "Corporate information" external=True %}</li>
+            </ul>
+        </section>
+        <section class="flex flex-col gap-1">
+            <h6 class="font-bold">{% trans "Security" %}</h6>
+            <ul class="flex flex-col gap-2">
+                <li>{% anchor "storefront:security:general" "General information" %}</li>
+                <li>{% anchor "storefront:security:disclose" "Disclosure Policy" %}</li>
+            </ul>
+        </section>
+        <section class="flex flex-col gap-1">
+            <h6 class="font-bold">{% trans "Legal" %}</h6>
+            <ul class="flex flex-col gap-2">
+                <li>{% anchor "storefront:privacy" "Privacy Policy" %}</li>
+                <li>{% anchor "storefront:tos" "Terms of Service" %}</li>
+                <li>{% anchor "storefront:credits" "Credits" %}</li>
+                <li>{% anchor "storefront:free_software" "Free Software" %}</li>
+            </ul>
+        </section>
+    </nav>
+    <section class="flex flex-col gap-4">
+        <p>
+            {% trans "Copyright 2021-2024 JWP Consulting GK" %}
+            <br>
+            {% trans "The Projectify application is free software, and you are welcome to redistribute it under certain conditions; " %}{% anchor "/free-software" "see here for details" %}
+        </p>
+        <p class="text-utility">
+            {% trans "This version was built on 2025-05-05 from commit 3898a21a on branch feat/remove-fe-storefront-pages committed on 2025-05-05." %}
+        </p>
+    </section>
 </footer>
