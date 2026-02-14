@@ -28,6 +28,9 @@ from projectify.lib.htmx import HttpResponseClientRedirect
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
+from projectify.workspace.selectors.team_member import (
+    team_member_find_for_workspace,
+)
 
 from ..models.label import Label
 from ..models.section import Section
@@ -79,6 +82,20 @@ def get_object(
             )
         )
     return obj
+
+
+def get_task_view_context(
+    request: AuthenticatedHttpRequest, workspace: Workspace
+) -> dict[str, Any]:
+    """Return context with workspace, workspaces and current_team_member."""
+    return {
+        "workspace": workspace,
+        "workspaces": workspace_find_for_user(who=request.user),
+        "projects": workspace.project_set.all(),
+        "current_team_member": team_member_find_for_workspace(
+            user=request.user, workspace=workspace
+        ),
+    }
 
 
 class TaskCreateForm(forms.Form):
@@ -191,12 +208,13 @@ def task_create(
     )
     if section is None:
         raise Http404(_("Section not found"))
+
+    workspace = section.project.workspace
     context: dict[str, Any] = {
+        **get_task_view_context(request, workspace),
         "section": section,
-        "projects": section.project.workspace.project_set.all(),
-        "workspace": section.project.workspace,
-        "workspaces": workspace_find_for_user(who=request.user),
     }
+
     match request.method:
         case "GET":
             return render(
@@ -204,9 +222,7 @@ def task_create(
                 "workspace/task_create.html",
                 {
                     **context,
-                    "form": TaskCreateForm(
-                        workspace=section.project.workspace
-                    ),
+                    "form": TaskCreateForm(workspace=workspace),
                     "formset": TaskCreateSubTaskForms(),
                 },
             )
@@ -214,7 +230,7 @@ def task_create(
             pass
         case method:
             raise RuntimeError(f"Don't know how to handle method {method}")
-    form = TaskCreateForm(section.project.workspace, request.POST)
+    form = TaskCreateForm(workspace, request.POST)
     formset = TaskCreateSubTaskForms(request.POST.dict())
     all_valid = form.is_valid() and formset.is_valid()
     if not formset.is_valid():
@@ -269,12 +285,12 @@ def task_detail(
                 task_uuid=task_uuid
             )
         )
+
+    workspace = task.workspace
     context = {
+        **get_task_view_context(request, workspace),
         "task": task,
         "project": task.section.project,
-        "workspace": task.workspace,
-        "projects": task.workspace.project_set.all(),
-        "workspaces": workspace_find_for_user(who=request.user),
     }
     return render(request, "workspace/task_detail.html", context)
 
@@ -388,11 +404,8 @@ def task_update_view(
         )
 
     focus_field = request.GET.get("focus", None)
-    context: dict[str, Any] = {
-        "workspace": task.workspace,
-        "projects": task.workspace.project_set.all(),
-        "workspaces": workspace_find_for_user(who=request.user),
-    }
+    workspace = task.workspace
+    context: dict[str, Any] = get_task_view_context(request, workspace)
 
     action = determine_action(request)
     match action:
@@ -410,7 +423,7 @@ def task_update_view(
             post["form-TOTAL_FORMS"] = str(sub_task_count + 1)
             logger.info("Adding sub task")
             form = TaskUpdateForm(
-                data=post, workspace=task.workspace, focus_field=focus_field
+                data=post, workspace=workspace, focus_field=focus_field
             )
             formset = TaskUpdateSubTaskForms(data=post)  # type: ignore[arg-type]
             context = {
@@ -438,7 +451,7 @@ def task_update_view(
     if action == "get":
         form = TaskUpdateForm(
             initial=task_initial,
-            workspace=task.workspace,
+            workspace=workspace,
             focus_field=focus_field,
         )
         formset = TaskUpdateSubTaskForms(initial=sub_tasks_initial)  # type: ignore[arg-type]
@@ -451,7 +464,7 @@ def task_update_view(
     form = TaskUpdateForm(
         data=request.POST.copy(),
         initial=task_initial,
-        workspace=task.workspace,
+        workspace=workspace,
         focus_field=focus_field,
     )
     form.full_clean()
@@ -596,13 +609,12 @@ def task_actions(
 ) -> HttpResponse:
     """Render task actions menu page."""
     task = get_object(request, task_uuid)
+    workspace = task.workspace
     context = {
+        **get_task_view_context(request, workspace),
         "task": task,
-        "workspace": task.workspace,
         "sections": task.section.project.section_set.all(),
-        "projects": task.workspace.project_set.all(),
         "project": task.section.project,
-        "workspaces": workspace_find_for_user(who=request.user),
     }
     return render(request, "workspace/task_actions.html", context)
 

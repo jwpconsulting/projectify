@@ -2,30 +2,59 @@
 {# SPDX-FileCopyrightText: 2024-2025 JWP Consulting GK #}
 {% load i18n %}
 {% load projectify %}
-{% for project_item in projects %}
-    <a class="group block flex w-full flex-row justify-between gap-1 px-4 py-1 hover:bg-base-200"
-       href="{% url "dashboard:projects:detail" project_item.uuid %}">
-        <div class="flex min-w-0 flex-row items-center gap-2">
-            <div class="rounded-md p-1{% if project_item == project %} bg-primary-focus{% endif %}">
-                <div class="size-4">
-                    {% if project_item == project %}
-                        {% icon "folder" "white" %}
-                    {% else %}
-                        {% icon "folder" %}
-                    {% endif %}
+<div id="sidebar-project-section">
+    <form hx-post="{% url 'dashboard:workspaces:minimize-project-list' workspace.uuid %}"
+          hx-swap="outerHTML"
+          hx-target="#sidebar-project-section">
+        {% csrf_token %}
+        {% if project %}<input type="hidden" name="current_project" value="{{ project.uuid }}">{% endif %}
+        <input type="hidden"
+               name="minimized"
+               value="{% if current_team_member.minimized_project_list %}false{% else %}true{% endif %}">
+        <button type="submit"
+                class="flex w-full flex-row items-center justify-between gap-2 px-4 py-2 text-utility hover:text-base-content">
+            <div class="flex flex-row items-center gap-4">
+                <div class="flex flex-row items-center gap-2">
+                    <div class="w-4 h-4">{% icon "folder" %}</div>
+                    <div class="font-bold">{% trans "Projects" %}</div>
                 </div>
             </div>
-            <div class="line-clamp-1 min-w-0 font-bold">{{ project_item.title }}</div>
-        </div>
-    </a>
-{% endfor %}
-{% if workspace %}
-    <a class="flex w-full flex-row items-center gap-2 px-4 py-2 font-bold hover:bg-secondary-hover active:bg-disabled disabled:active:bg-secondary-hover text-primary"
-       href="{% url "dashboard:workspaces:create-project" workspace_uuid=workspace.uuid %}">
-        <span class="h-4">{% icon "plus" %}</span>
-        <span class="truncate">{% translate "Create new project" %}</span>
-    </a>
-{% endif %}
+            <div class="w-4 h-4">
+                {% if current_team_member.minimized_project_list %}
+                    {% icon "chevron-up" %}
+                {% else %}
+                    {% icon "chevron-down" %}
+                {% endif %}
+            </div>
+        </button>
+    </form>
+    {% if not current_team_member.minimized_project_list %}
+        {% for project_item in projects %}
+            <a class="group block flex w-full flex-row justify-between gap-1 px-4 py-1 hover:bg-base-200"
+               href="{% url "dashboard:projects:detail" project_item.uuid %}">
+                <div class="flex min-w-0 flex-row items-center gap-2">
+                    <div class="rounded-md p-1{% if project_item == project %} bg-primary-focus{% endif %}">
+                        <div class="size-4">
+                            {% if project_item == project %}
+                                {% icon "folder" "white" %}
+                            {% else %}
+                                {% icon "folder" %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="line-clamp-1 min-w-0 font-bold">{{ project_item.title }}</div>
+                </div>
+            </a>
+        {% endfor %}
+    {% endif %}
+    {% if workspace %}
+        <a class="flex w-full flex-row items-center gap-2 px-4 py-2 font-bold hover:bg-secondary-hover active:bg-disabled disabled:active:bg-secondary-hover text-primary"
+           href="{% url "dashboard:workspaces:create-project" workspace_uuid=workspace.uuid %}">
+            <span class="h-4">{% icon "plus" %}</span>
+            <span class="truncate">{% translate "Create new project" %}</span>
+        </a>
+    {% endif %}
+</div>
 {% if task_filter_form %}
     <form class="contents" id="task-filter" role="search">
         <div class="flex flex-col px-4">

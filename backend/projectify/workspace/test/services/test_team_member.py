@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2023 JWP Consulting GK
+# SPDX-FileCopyrightText: 2023,2026 JWP Consulting GK
 """Test team member services."""
 
 import pytest
@@ -14,6 +14,7 @@ from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.services.team_member import (
     team_member_change_role,
     team_member_delete,
+    team_member_minimize_project_list,
     team_member_update,
     team_member_visit_project,
     team_member_visit_workspace,
@@ -89,3 +90,29 @@ def test_team_member_visit_project_permission_denied(
     """Test that user without workspace access cannot visit project."""
     with pytest.raises(PermissionDenied):
         team_member_visit_project(user=user, project=unrelated_project)
+
+
+def test_team_member_minimize_project_list(team_member: TeamMember) -> None:
+    """Test setting the minimized state of the project list."""
+    # False in the beginning
+    assert team_member.minimized_project_list is False
+
+    updated_team_member = team_member_minimize_project_list(
+        user=team_member.user, workspace=team_member.workspace, minimized=True
+    )
+    assert updated_team_member.minimized_project_list is True
+
+    updated_team_member = team_member_minimize_project_list(
+        user=team_member.user, workspace=team_member.workspace, minimized=False
+    )
+    assert updated_team_member.minimized_project_list is False
+
+
+def test_team_member_minimize_project_list_permission_denied(
+    unrelated_workspace: Workspace, user: User
+) -> None:
+    """Test that user without workspace access cannot minimize project list."""
+    with pytest.raises(PermissionDenied):
+        team_member_minimize_project_list(
+            user=user, workspace=unrelated_workspace, minimized=True
+        )

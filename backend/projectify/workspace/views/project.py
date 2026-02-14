@@ -37,6 +37,7 @@ from ..selectors.project import (
     project_find_by_workspace_uuid,
 )
 from ..selectors.quota import workspace_get_all_quotas
+from ..selectors.team_member import team_member_find_for_workspace
 from ..selectors.workspace import (
     workspace_find_by_workspace_uuid,
     workspace_find_for_user,
@@ -439,6 +440,45 @@ def project_delete_view(
 
     project_delete(project=project, who=request.user)
     return HttpResponseClientRefresh()
+
+
+class MinimizeProjectListForm(forms.Form):
+    """Form for minimizing/expanding the project list."""
+
+    minimized = forms.BooleanField(required=True)
+
+
+@platform_view
+def project_minimize_project_list(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Toggle the minimized state of the project list for a workspace."""
+    if request.method != "POST":
+        return HttpResponse(status=405)
+
+    workspace = workspace_find_by_workspace_uuid(
+        workspace_uuid=workspace_uuid,
+        who=request.user,
+    )
+    if workspace is None:
+        raise Http404(_("No workspace found for this UUID"))
+
+    team_member = team_member_find_for_workspace(
+        user=request.user,
+        workspace=workspace,
+    )
+    if team_member is None:
+        raise Http404(_("You are not a member of this workspace"))
+
+    form = MinimizeProjectListForm(request.POST)
+    if not form.is_valid():
+        return HttpResponse(status=400)
+
+    minimized = form.cleaned_data["minimized"]
+    team_member.minimized_project_list = minimized
+    team_member.save()
+
+    return HttpResponse(status=200)
 
 
 # Create

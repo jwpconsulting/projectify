@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2023 JWP Consulting GK
+# SPDX-FileCopyrightText: 2023,2026 JWP Consulting GK
 """Team member services."""
 
 from typing import Optional
@@ -75,9 +75,10 @@ def team_member_visit_workspace(*, user: User, workspace: Workspace) -> None:
     validate_perm("workspace.read_workspace", user, workspace)
     try:
         team_member = TeamMember.objects.get(user=user, workspace=workspace)
-    except TeamMember.DoesNotExist:
-        # User is not a team member, nothing to do
-        return
+    except TeamMember.DoesNotExist as e:
+        raise RuntimeError(
+            f"User can read workspace {workspace.uuid} but doesn't have a team member"
+        ) from e
     team_member.last_visited_workspace = now()
     team_member.save()
 
@@ -88,9 +89,22 @@ def team_member_visit_project(*, user: User, project: Project) -> None:
     workspace = project.workspace
     try:
         team_member = TeamMember.objects.get(user=user, workspace=workspace)
-    except TeamMember.DoesNotExist:
-        # User is not a team member, nothing to do
-        return
+    except TeamMember.DoesNotExist as e:
+        raise RuntimeError(
+            f"User can read workspace {workspace.uuid} but doesn't have a team member"
+        ) from e
     team_member.last_visited_project = project
     team_member.last_visited_workspace = now()
     team_member.save()
+
+
+@transaction.atomic
+def team_member_minimize_project_list(
+    *, user: User, workspace: Workspace, minimized: bool
+) -> TeamMember:
+    """Set the minimized state of the project list for a team member."""
+    validate_perm("workspace.read_workspace", user, workspace)
+    team_member = TeamMember.objects.get(user=user, workspace=workspace)
+    team_member.minimized_project_list = minimized
+    team_member.save()
+    return team_member

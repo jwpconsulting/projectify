@@ -33,6 +33,7 @@ from projectify.workspace.views.task import (
     task_update_view,
 )
 from projectify.workspace.views.workspace import (
+    workspace_minimize_project_list,
     workspace_settings_billing,
     workspace_settings_billing_edit,
     workspace_settings_edit_label,
@@ -61,6 +62,11 @@ workspace_patterns = (
         "<uuid:workspace_uuid>/create-project",
         project_create_view,
         name="create-project",
+    ),
+    path(
+        "<uuid:workspace_uuid>/minimize-project-list",
+        workspace_minimize_project_list,
+        name="minimize-project-list",
     ),
     # Settings
     path(

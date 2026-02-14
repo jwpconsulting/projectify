@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2023 JWP Consulting GK
+# SPDX-FileCopyrightText: 2023,2026 JWP Consulting GK
 """Team member models."""
 
 import uuid
@@ -62,6 +62,12 @@ class TeamMember(BaseModel):
         blank=True,
         help_text=_(
             "Timestamp when this team member last visited this workspace"
+        ),
+    )
+    minimized_project_list = models.BooleanField(
+        default=False,
+        help_text=_(
+            "Whether this team member has minimized the project list in this workspace"
         ),
     )
 
