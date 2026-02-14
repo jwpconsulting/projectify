@@ -13,6 +13,7 @@ from django.db.models import Model, QuerySet
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
+from django.views.decorators.http import require_http_methods
 
 from rest_framework import serializers, status
 from rest_framework.exceptions import NotFound, ValidationError
@@ -384,13 +385,13 @@ def project_update_view(
         )
 
 
+@require_http_methods(["POST"])
 @platform_view
 def project_archive_view(
     request: AuthenticatedHttpRequest, project_uuid: UUID
 ) -> HttpResponse:
     """Archive a project via HTMX."""
-    if request.method != "POST":
-        return HttpResponse(status=405)
+    assert request.method == "POST"
     project = project_find_by_project_uuid(
         who=request.user,
         project_uuid=project_uuid,
@@ -422,13 +423,13 @@ def project_recover_view(
     return HttpResponseClientRefresh()
 
 
+@require_http_methods(["POST"])
 @platform_view
 def project_delete_view(
     request: AuthenticatedHttpRequest, project_uuid: UUID
 ) -> HttpResponse:
     """Delete an archived project via HTMX."""
-    if request.method != "POST":
-        return HttpResponse(status=405)
+    assert request.method == "POST"
 
     project = project_find_by_project_uuid(
         who=request.user,
@@ -448,13 +449,13 @@ class MinimizeProjectListForm(forms.Form):
     minimized = forms.BooleanField(required=True)
 
 
+@require_http_methods(["POST"])
 @platform_view
 def project_minimize_project_list(
     request: AuthenticatedHttpRequest, workspace_uuid: UUID
 ) -> HttpResponse:
     """Toggle the minimized state of the project list for a workspace."""
-    if request.method != "POST":
-        return HttpResponse(status=405)
+    assert request.method == "POST"
 
     workspace = workspace_find_by_workspace_uuid(
         workspace_uuid=workspace_uuid,
