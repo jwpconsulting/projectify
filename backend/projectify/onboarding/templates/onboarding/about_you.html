@@ -9,7 +9,7 @@
     <form method="post"
           class="col-span-1 flex shrink grow flex-col gap-16 px-12 py-20 pb-8">
         {% csrf_token %}
-        {% include "onboarding/common/form_description.html" with title="About you" text_1="Tell us your preferred name. You can also keep it empty and continue by clicking the button below." %}
+        {% include "onboarding/common/form_description.html" with title=_("About you") text_1=_("Tell us your preferred name. You can also keep it empty and continue by clicking the button below.") %}
         <div class="flex flex-col">
             <div class="flex flex-col items-start gap-2">{{ form }}</div>
         </div>

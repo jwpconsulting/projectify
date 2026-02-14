@@ -18,11 +18,11 @@
                     </p>
                     <p>
                         <a href="{% url "onboarding:new_task" project.uuid %}"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg">{% blocktrans %}Continue adding task to "{{ project }}"{% endblocktrans %}</a>
+                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg">{% blocktrans %}Continue adding a task to "{{ project }}"{% endblocktrans %}</a>
                     </p>
                 {% else %}
-                    <p>{% trans "You can create unlimited project per workspace." %}</p>
-                    <p>{% trans "They help you to focus on different projects you may be working on." %}</p>
+                    <p>{% trans "You can create unlimited projects per workspace." %}</p>
+                    <p>{% trans "Projects help you to focus on different projects you may be working on." %}</p>
                 {% endif %}
             </div>
         </div>
