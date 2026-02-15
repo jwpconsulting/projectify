@@ -4,7 +4,7 @@
 """Project views."""
 
 import logging
-from typing import Any, Optional, TypeVar
+from typing import Any, Optional, TypeVar, Union
 from uuid import UUID
 
 from django import forms
@@ -13,6 +13,7 @@ from django.db.models import Model, QuerySet
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
+from django.views.decorators.http import require_http_methods
 
 from rest_framework import serializers, status
 from rest_framework.exceptions import NotFound, ValidationError
@@ -26,8 +27,13 @@ from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
+from projectify.workspace.models.section import Section
+from projectify.workspace.selectors.section import (
+    SectionDetailQuerySet,
+    section_find_for_user_and_uuid,
+)
 
-from ..models import Project
+from ..models import Project, Workspace
 from ..models.label import Label
 from ..models.team_member import TeamMember
 from ..selectors.project import (
@@ -37,7 +43,9 @@ from ..selectors.project import (
     project_find_by_workspace_uuid,
 )
 from ..selectors.quota import workspace_get_all_quotas
+from ..selectors.team_member import team_member_find_for_workspace
 from ..selectors.workspace import (
+    workspace_build_detail_query_set,
     workspace_find_by_workspace_uuid,
     workspace_find_for_user,
 )
@@ -49,11 +57,44 @@ from ..services.project import (
     project_delete,
     project_update,
 )
-from ..services.team_member import team_member_visit_project
+from ..services.section import section_minimize
+from ..services.team_member import (
+    team_member_minimize_label_filter,
+    team_member_minimize_team_member_filter,
+    team_member_visit_project,
+)
 
 logger = logging.getLogger(__name__)
 
 Q = TypeVar("Q", bound=Model)
+
+
+def get_project_view_context(
+    request: AuthenticatedHttpRequest, workspace: Workspace
+) -> dict[str, object]:
+    """Get shared context for project views."""
+    if not hasattr(workspace, "current_team_member_qs"):
+        current_team_member = team_member_find_for_workspace(
+            user=request.user, workspace=workspace
+        )
+        logger.warning("No current_team_member_qs in workspace")
+    else:
+        current_team_member_qs: Union[list[TeamMember], TeamMember, Any] = (
+            getattr(workspace, "current_team_member_qs")
+        )
+        match current_team_member_qs:
+            case TeamMember() as current_team_member:
+                pass
+            case [current_team_member]:
+                pass
+            case any:
+                raise RuntimeError(f"Don't know what to do with {type(any)}")
+    return {
+        "workspace": workspace,
+        "workspaces": workspace_find_for_user(who=request.user),
+        "projects": workspace.project_set.all(),
+        "current_team_member_qs": current_team_member,
+    }
 
 
 class ModelMultipleChoiceFieldWithEmpty(forms.ModelMultipleChoiceField):
@@ -116,7 +157,9 @@ class ProjectFilterForm(forms.Form):
     ) -> None:
         """Populate choices."""
         super().__init__(*args, **kwargs)
-        member_widget = forms.CheckboxSelectMultiple()
+        member_widget = forms.CheckboxSelectMultiple(
+            attrs={"form": "task-filter"},
+        )
         member_widget.option_template_name = (
             "workspace/forms/widgets/select_team_member_option.html"
         )
@@ -124,21 +167,23 @@ class ProjectFilterForm(forms.Form):
             ModelMultipleChoiceFieldWithEmpty(
                 required=False,
                 blank=True,
-                label=_("Filter team members"),
+                label=_("Filter tasks by team member:"),
                 queryset=team_members,
                 widget=member_widget,
                 to_field_name="uuid",
                 empty_label=_("Assigned to nobody"),
             )
         )
-        label_widget = forms.CheckboxSelectMultiple()
+        label_widget = forms.CheckboxSelectMultiple(
+            attrs={"form": "task-filter"},
+        )
         label_widget.option_template_name = (
             "workspace/forms/widgets/select_label_option.html"
         )
         self.fields["filter_by_label"] = ModelMultipleChoiceFieldWithEmpty(
             required=False,
             blank=True,
-            label=_("Filter labels"),
+            label=_("Filter tasks by label:"),
             queryset=labels,
             widget=label_widget,
             to_field_name="uuid",
@@ -153,47 +198,128 @@ class ProjectFilterForm(forms.Form):
         return data
 
 
+class MinimizeForm(forms.Form):
+    """Form for handling minimize actions."""
+
+    action = forms.CharField(required=True)
+    minimized = forms.BooleanField(required=False)
+
+
+class SectionMinimizeForm(forms.Form):
+    """Form for handling section minimize actions."""
+
+    action = forms.CharField(required=True)
+    minimized = forms.BooleanField(required=False)
+
+    def __init__(self, project: Project, *args: Any, **kwargs: Any) -> None:
+        """Initialize form with section choices from project."""
+        super().__init__(*args, **kwargs)
+        self.fields["section"] = forms.ModelChoiceField(
+            queryset=project.section_set.all(),
+            to_field_name="uuid",
+            required=True,
+        )
+
+
 # HTML
+@require_http_methods(["GET", "POST"])
 @platform_view
 def project_detail_view(
     request: AuthenticatedHttpRequest, project_uuid: UUID
 ) -> HttpResponse:
     """Show project details."""
+    project = project_find_by_project_uuid(
+        who=request.user, project_uuid=project_uuid
+    )
+    if project is None:
+        raise Http404(_("No project found for this uuid"))
+
+    context: dict[str, Any] = {}
+
+    match request.method, request.POST.get("action"):
+        case "POST", "minimize_section":
+            section_minimize_form = SectionMinimizeForm(
+                project=project, data=request.POST
+            )
+            if not section_minimize_form.is_valid():
+                raise BadRequest()
+
+            section: Section = section_minimize_form.cleaned_data["section"]
+            minimized: bool = section_minimize_form.cleaned_data["minimized"]
+
+            section_minimize(
+                who=request.user, section=section, minimized=minimized
+            )
+
+            querydict = request.POST
+            template = "workspace/project_detail/section.html"
+            setattr(section, "minimized", minimized)
+            # Populate context with section. this section has all the
+            # necessary task and label annotations
+            # TODO not optimal
+            enriched_section = section_find_for_user_and_uuid(
+                section_uuid=section.uuid,
+                user=request.user,
+                qs=SectionDetailQuerySet,
+            )
+            assert enriched_section, "Section disappeared"
+            setattr(enriched_section, "minimized", minimized)
+            context = {**context, "section": enriched_section}
+        case "POST", _:
+            minimize_form = MinimizeForm(request.POST)
+            if not minimize_form.is_valid():
+                raise BadRequest()
+
+            action = minimize_form.cleaned_data["action"]
+            minimized = minimize_form.cleaned_data["minimized"]
+
+            team_member = team_member_find_for_workspace(
+                user=request.user, workspace=project.workspace
+            )
+            if team_member is None:
+                raise RuntimeError("No team member")
+
+            match action:
+                case "minimize_team_member_filter":
+                    team_member_minimize_team_member_filter(
+                        team_member=team_member,
+                        minimized=minimized,
+                    )
+                case "minimize_label_filter":
+                    team_member_minimize_label_filter(
+                        team_member=team_member,
+                        minimized=minimized,
+                    )
+                case invalid:
+                    raise BadRequest(f"Invalid action {invalid}")
+            querydict = request.POST
+            template = "workspace/common/sidebar/project_details.html"
+        case _:
+            querydict = request.GET
+            template = "workspace/project_detail.html"
+
     filter_by_team_member: Optional[QuerySet[TeamMember]] = None
     filter_by_label: Optional[QuerySet[Label]] = None
     filter_by_unlabeled: bool = False
     filter_by_unassigned: bool = False
     task_search_query: Optional[str] = None
-    match len(request.GET):
-        case 0:
-            pass
-        case _:
-            # We need to query the project an additional round here to
-            # establish whether the labels and team members given to us
-            # by the user are valid, or not
-            project = project_find_by_project_uuid(
-                who=request.user, project_uuid=project_uuid
-            )
-            if project is None:
-                raise Http404(_("No project found for this uuid"))
-            labels = project.workspace.label_set.all()
-            team_members = project.workspace.teammember_set.all()
+    if len(querydict):
+        labels = project.workspace.label_set.all()
+        team_members = project.workspace.teammember_set.all()
 
-            task_filter_form = ProjectFilterForm(
-                team_members=team_members, labels=labels, data=request.GET
-            )
-            if not task_filter_form.is_valid():
-                raise BadRequest(task_filter_form.errors)
+        task_filter_form = ProjectFilterForm(
+            team_members=team_members, labels=labels, data=querydict
+        )
+        if not task_filter_form.is_valid():
+            raise BadRequest(task_filter_form.errors)
 
-            filter_by_unassigned, filter_by_team_member = (
-                task_filter_form.cleaned_data["filter_by_team_member"]
-            )
-            filter_by_unlabeled, filter_by_label = (
-                task_filter_form.cleaned_data["filter_by_label"]
-            )
-            task_search_query = task_filter_form.cleaned_data[
-                "task_search_query"
-            ]
+        filter_by_unassigned, filter_by_team_member = (
+            task_filter_form.cleaned_data["filter_by_team_member"]
+        )
+        filter_by_unlabeled, filter_by_label = task_filter_form.cleaned_data[
+            "filter_by_label"
+        ]
+        task_search_query = task_filter_form.cleaned_data["task_search_query"]
 
     qs = project_detail_query_set(
         filter_by_team_members=filter_by_team_member,
@@ -202,40 +328,43 @@ def project_detail_view(
         unlabeled_tasks=filter_by_unlabeled,
         task_search_query=task_search_query,
         who=request.user,
+        prefetch_labels=True,
     )
     project = project_find_by_project_uuid(
         who=request.user, project_uuid=project_uuid, qs=qs
     )
-    if project is None:
-        raise Http404(_("No project found for this uuid"))
+    assert project, "Project disappeared"
 
     # Mark this project as most recently visited
-    team_member_visit_project(user=request.user, project=project)
+    team_member_qs = getattr(project.workspace, "current_team_member_qs", None)
+    assert team_member_qs
+    team_member_visit_project(team_member=team_member_qs[0], project=project)
 
     project.workspace.quota = workspace_get_all_quotas(project.workspace)
-    projects = project.workspace.project_set.all()
     team_members = project.workspace.teammember_set.all()
     labels = project.workspace.label_set.all()
 
     task_filter_form = ProjectFilterForm(
         team_members=team_members,
         labels=labels,
-        data=request.GET,
+        data=querydict,
     )
 
     context = {
+        **context,
+        **get_project_view_context(request, project.workspace),
         "project": project,
         "labels": labels,
-        "projects": projects,
-        "workspaces": workspace_find_for_user(who=request.user),
-        "workspace": project.workspace,
         "team_members": team_members,
         "unassigned_tasks": filter_by_unassigned,
         "unlabeled_tasks": filter_by_unlabeled,
         "task_search_query": task_search_query,
         "task_filter_form": task_filter_form,
+        "has_team_member_filter": filter_by_team_member is not None
+        or filter_by_unassigned,
+        "has_label_filter": filter_by_label is not None or filter_by_unlabeled,
     }
-    return render(request, "workspace/project_detail.html", context)
+    return render(request, template, context)
 
 
 class ProjectCreateForm(forms.Form):
@@ -253,39 +382,44 @@ class ProjectCreateForm(forms.Form):
     )
 
 
+@require_http_methods(["GET", "POST"])
 @platform_view
 def project_create_view(
     request: AuthenticatedHttpRequest, workspace_uuid: UUID
 ) -> HttpResponse:
     """Create a new project in a workspace."""
+    qs: Optional[QuerySet[Workspace]]
+    match request.method:
+        case "GET":
+            qs = workspace_build_detail_query_set(
+                who=request.user, annotate_labels=True
+            )
+        case "POST":
+            qs = None
+        case other:
+            # Should never be hit
+            assert False, other
     workspace = workspace_find_by_workspace_uuid(
         workspace_uuid=workspace_uuid,
         who=request.user,
+        qs=qs,
     )
     if workspace is None:
         raise Http404(_("No workspace found for this UUID"))
 
-    # XXX inefficient
-    projects = project_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=workspace.uuid,
-        archived=False,
-    )
-
-    context: dict[str, Any] = {
-        "workspace": workspace,
-        "projects": projects,
-        "workspaces": workspace_find_for_user(who=request.user),
-    }
-
     if request.method == "GET":
-        form = ProjectCreateForm()
-        context = {"form": form, **context}
+        context = {
+            **get_project_view_context(request, workspace),
+            "form": ProjectCreateForm(),
+        }
         return render(request, "workspace/project_create.html", context)
 
     form = ProjectCreateForm(request.POST)
     if not form.is_valid():
-        context = {"form": form, **context}
+        context = {
+            **get_project_view_context(request, workspace),
+            "form": form,
+        }
         return render(
             request, "workspace/project_create.html", context, status=400
         )
@@ -301,7 +435,10 @@ def project_create_view(
         return redirect("dashboard:projects:detail", project_uuid=project.uuid)
     except ValidationError as error:
         populate_form_with_drf_errors(form, error)
-        context = {**context, "form": form}
+        context = {
+            **get_project_view_context(request, workspace),
+            "form": form,
+        }
         return render(
             request, "workspace/project_create.html", context, status=400
         )
@@ -327,24 +464,24 @@ class ProjectUpdateForm(forms.Form):
     )
 
 
+@require_http_methods(["GET", "POST"])
 @platform_view
 def project_update_view(
     request: AuthenticatedHttpRequest, project_uuid: UUID
 ) -> HttpResponse:
     """Update an existing project."""
+    qs = project_detail_query_set(who=request.user, prefetch_labels=False)
     project = project_find_by_project_uuid(
-        who=request.user, project_uuid=project_uuid, qs=ProjectDetailQuerySet
+        who=request.user, project_uuid=project_uuid, qs=qs
     )
     if project is None:
         raise Http404(_("No project found for this uuid"))
 
     workspace = project.workspace
 
-    context: dict[str, Any] = {
+    context = {
+        **get_project_view_context(request, workspace),
         "project": project,
-        "workspace": workspace,
-        "projects": project.workspace.project_set.all(),
-        "workspaces": workspace_find_for_user(who=request.user),
     }
 
     if request.method == "GET":
@@ -383,13 +520,13 @@ def project_update_view(
         )
 
 
+@require_http_methods(["POST"])
 @platform_view
 def project_archive_view(
     request: AuthenticatedHttpRequest, project_uuid: UUID
 ) -> HttpResponse:
     """Archive a project via HTMX."""
-    if request.method != "POST":
-        return HttpResponse(status=405)
+    assert request.method == "POST"
     project = project_find_by_project_uuid(
         who=request.user,
         project_uuid=project_uuid,
@@ -401,18 +538,16 @@ def project_archive_view(
     return HttpResponseClientRefresh()
 
 
+@require_http_methods(["POST"])
 @platform_view
 def project_recover_view(
     request: AuthenticatedHttpRequest, project_uuid: UUID
 ) -> HttpResponse:
     """Recover an archived project via HTMX."""
-    if request.method != "POST":
-        return HttpResponse(status=405)
+    assert request.method == "POST"
 
     project = project_find_by_project_uuid(
-        who=request.user,
-        project_uuid=project_uuid,
-        archived=True,
+        who=request.user, project_uuid=project_uuid, archived=True
     )
     if project is None:
         raise Http404(_("No archived project found for this uuid"))
@@ -421,13 +556,13 @@ def project_recover_view(
     return HttpResponseClientRefresh()
 
 
+@require_http_methods(["POST"])
 @platform_view
 def project_delete_view(
     request: AuthenticatedHttpRequest, project_uuid: UUID
 ) -> HttpResponse:
     """Delete an archived project via HTMX."""
-    if request.method != "POST":
-        return HttpResponse(status=405)
+    assert request.method == "POST"
 
     project = project_find_by_project_uuid(
         who=request.user,

@@ -5,8 +5,8 @@
 
 import unittest.mock
 from typing import cast
+from uuid import uuid4
 
-from django.contrib.auth.models import AbstractBaseUser, AbstractUser
 from django.core.files import File
 from django.db.models.fields.files import FileDescriptor
 from django.test.client import Client
@@ -32,6 +32,93 @@ pytestmark = pytest.mark.django_db
 
 
 # Django view tests
+
+
+class TestMinimizeLists:
+    """Test minimizing various lists."""
+
+    @pytest.fixture
+    def resource_url(self, workspace: Workspace) -> str:
+        """Return URL to this view."""
+        return reverse(
+            "dashboard:workspaces:minimize-project-list",
+            args=(workspace.uuid,),
+        )
+
+    @pytest.mark.parametrize(
+        "initial_state,post_value,expected_state",
+        [
+            (False, "true", True),
+            (True, "false", False),
+        ],
+    )
+    def test_toggle_project_list(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        initial_state: bool,
+        post_value: str,
+        expected_state: bool,
+    ) -> None:
+        """Test toggling the project list minimized state via HTMX."""
+        team_member.minimized_project_list = initial_state
+        team_member.save()
+
+        with django_assert_num_queries(11):
+            response = user_client.post(
+                resource_url, {"minimized": post_value}
+            )
+            assert response.status_code == 200
+
+        team_member.refresh_from_db()
+        assert team_member.minimized_project_list is expected_state
+
+    def test_get_method_not_allowed(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+    ) -> None:
+        """Test that GET requests are not allowed."""
+        response = user_client.get(resource_url)
+        assert response.status_code == 405
+
+    def test_workspace_not_found(
+        self,
+        user_client: Client,
+        team_member: TeamMember,
+    ) -> None:
+        """Test minimizing project list for non-existent workspace."""
+        url = reverse(
+            "dashboard:workspaces:minimize-project-list", args=(uuid4(),)
+        )
+        response = user_client.post(url, {"minimized": "true"})
+        assert response.status_code == 404
+
+    def test_invalid_form(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+    ) -> None:
+        """Test form validation with invalid data."""
+        response = user_client.post(resource_url, {})
+        assert response.status_code == 200
+
+    def test_unauthorized_workspace_access(
+        self,
+        user_client: Client,
+        unrelated_workspace: Workspace,
+    ) -> None:
+        """Test that users can't minimize project list for other workspaces."""
+        url = reverse(
+            "dashboard:workspaces:minimize-project-list",
+            args=(unrelated_workspace.uuid,),
+        )
+        response = user_client.post(url, {"minimized": "true"})
+        assert response.status_code == 404
 
 
 class TestWorkspaceSettings:
@@ -70,7 +157,8 @@ class TestWorkspaceSettings:
         assert not workspace.picture
         # Query count went up from 12 -> 19
         # Query count went up from 19 -> 20
-        with django_assert_num_queries(20):
+        # Query count went up from 20 -> 22
+        with django_assert_num_queries(22):
             response = user_client.post(
                 resource_url,
                 {
@@ -145,7 +233,8 @@ class TestWorkspaceSettingsTeamMembers:
         # Justus 2025-07-29 query count went up   19 -> 33 XXX
         # Justus 2025-07-29 query count went down 33 -> 32
         # Justus 2025-07-29 query count went up   32 -> 33 XXX
-        with django_assert_num_queries(33):
+        # Query count went up 33 -> 34
+        with django_assert_num_queries(34):
             response = user_client.post(
                 invite_url, {"email": "newuser@example.com"}
             )
@@ -249,7 +338,7 @@ class TestUserWorkspaces:
         self,
         rest_user_client: APIClient,
         resource_url: str,
-        user: AbstractBaseUser,
+        user: User,
         workspace: Workspace,
         team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
@@ -280,7 +369,7 @@ class TestWorkspaceReadUpdate:
         self,
         rest_user_client: APIClient,
         resource_url: str,
-        user: AbstractBaseUser,
+        user: User,
         workspace: Workspace,
         team_member: TeamMember,
         project: Project,
@@ -412,7 +501,7 @@ class TestWorkspaceReadUpdate:
         self,
         rest_user_client: APIClient,
         resource_url: str,
-        user: AbstractBaseUser,
+        user: User,
         workspace: Workspace,
         team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
@@ -474,7 +563,7 @@ class TestWorkspacePictureUploadView:
         resource_url: str,
         headers: Headers,
         uploaded_file: File,
-        user: AbstractBaseUser,
+        user: User,
         workspace: Workspace,
         team_member: TeamMember,
     ) -> None:
@@ -556,7 +645,7 @@ class TestInviteUserToWorkspace:
         resource_url: str,
         rest_user_client: APIClient,
         workspace: Workspace,
-        other_user: AbstractUser,
+        other_user: User,
     ) -> None:
         """Test by inviting an existing user."""
         assert workspace.teammemberinvite_set.count() == 0

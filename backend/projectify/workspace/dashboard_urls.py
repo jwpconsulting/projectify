@@ -19,7 +19,6 @@ from projectify.workspace.views.section import (
     section_create_view,
     section_delete_view,
     section_detail,
-    section_minimize_view,
     section_update_view,
 )
 from projectify.workspace.views.task import (
@@ -33,6 +32,7 @@ from projectify.workspace.views.task import (
     task_update_view,
 )
 from projectify.workspace.views.workspace import (
+    workspace_minimize_project_list,
     workspace_settings_billing,
     workspace_settings_billing_edit,
     workspace_settings_edit_label,
@@ -61,6 +61,11 @@ workspace_patterns = (
         "<uuid:workspace_uuid>/create-project",
         project_create_view,
         name="create-project",
+    ),
+    path(
+        "<uuid:workspace_uuid>/minimize-project-list",
+        workspace_minimize_project_list,
+        name="minimize-project-list",
     ),
     # Settings
     path(
@@ -161,9 +166,6 @@ section_patterns = (
     path("<uuid:section_uuid>", section_detail, name="detail"),
     path("<uuid:section_uuid>/update", section_update_view, name="update"),
     path("<uuid:section_uuid>/delete", section_delete_view, name="delete"),
-    path(
-        "<uuid:section_uuid>/minimize", section_minimize_view, name="minimize"
-    ),
     # Create task within section
     path("<uuid:section_uuid>/create-task", task_create, name="create-task"),
 )

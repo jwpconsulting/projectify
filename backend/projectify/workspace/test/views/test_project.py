@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 """Test project CRUD views."""
 
+import re
 from datetime import datetime
 from unittest.mock import ANY
 from uuid import uuid4
@@ -59,6 +60,8 @@ class TestProjectDetailView:
         # Gone down from 11 -> 10, since we don't fetch label values()
         # Gone up   from 10 -> 13, since we update the last visited project
         # Gone up   from 13 -> 15
+        # Gone down from 15 -> 14
+        # Gone up   from 14 -> 15
         with django_assert_num_queries(15):
             response = user_client.get(resource_url)
             assert response.status_code == 200
@@ -109,7 +112,7 @@ class TestProjectDetailView:
         other_task.assignee = other_team_member
         other_task.save()
 
-        with django_assert_num_queries(21):
+        with django_assert_num_queries(20):
             response = user_client.get(
                 resource_url,
                 {"filter_by_team_member": [str(team_member.uuid)]},
@@ -132,7 +135,7 @@ class TestProjectDetailView:
         task.assignee = team_member
         task.save()
 
-        with django_assert_num_queries(19):
+        with django_assert_num_queries(18):
             response = user_client.get(
                 resource_url, {"filter_by_team_member": [""]}
             )
@@ -153,7 +156,7 @@ class TestProjectDetailView:
         """Test filtering tasks by label."""
         task.labels.add(label)
 
-        with django_assert_num_queries(21):
+        with django_assert_num_queries(20):
             response = user_client.get(
                 resource_url, {"filter_by_label": [str(label.uuid)]}
             )
@@ -174,7 +177,7 @@ class TestProjectDetailView:
         """Test filtering for unlabeled tasks."""
         task.labels.add(label)
 
-        with django_assert_num_queries(19):
+        with django_assert_num_queries(18):
             response = user_client.get(resource_url, {"filter_by_label": [""]})
             assert response.status_code == 200
 
@@ -196,7 +199,7 @@ class TestProjectDetailView:
         other_task.title = "Feature request"
         other_task.save()
 
-        with django_assert_num_queries(19):
+        with django_assert_num_queries(18):
             response = user_client.get(
                 resource_url, {"task_search_query": "bug"}
             )
@@ -579,6 +582,165 @@ class TestProjectDeleteView:
         )
         response = user_client.post(url)
         assert response.status_code == 404
+
+
+class TestProjectDetailMinimize:
+    """Test minimize functionality in project detail view."""
+
+    @pytest.fixture
+    def resource_url(self, project: Project) -> str:
+        """Return URL to project detail view."""
+        return reverse(
+            "dashboard:projects:detail",
+            args=(project.uuid,),
+        )
+
+    @pytest.mark.parametrize(
+        "initial_state,post_value,expected_state",
+        [
+            (False, "true", True),
+            (True, "false", False),
+        ],
+    )
+    def test_toggle_team_member_filter(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        initial_state: bool,
+        post_value: str,
+        expected_state: bool,
+    ) -> None:
+        """Test toggling the team member filter minimized state."""
+        team_member.minimized_team_member_filter = initial_state
+        team_member.save()
+
+        response = user_client.post(
+            resource_url,
+            {
+                "action": "minimize_team_member_filter",
+                "minimized": post_value,
+            },
+        )
+        assert response.status_code == 200
+
+        team_member.refresh_from_db()
+        assert team_member.minimized_team_member_filter is expected_state
+
+    @pytest.mark.parametrize(
+        "initial_state,post_value,expected_state",
+        [
+            (False, "true", True),
+            (True, "false", False),
+        ],
+    )
+    def test_toggle_label_filter(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        initial_state: bool,
+        post_value: str,
+        expected_state: bool,
+    ) -> None:
+        """Test toggling the label filter minimized state."""
+        team_member.minimized_label_filter = initial_state
+        team_member.save()
+
+        response = user_client.post(
+            resource_url,
+            {"action": "minimize_label_filter", "minimized": post_value},
+        )
+        assert response.status_code == 200
+
+        team_member.refresh_from_db()
+        assert team_member.minimized_label_filter is expected_state
+
+    def test_minimize_preserves_get_parameters(
+        self,
+        user_client: Client,
+        team_member: TeamMember,
+        resource_url: str,
+    ) -> None:
+        """Test that GET parameters are preserved after minimize action."""
+        response = user_client.post(
+            resource_url,
+            {
+                "action": "minimize_team_member_filter",
+                "filter_by_team_member": team_member.uuid,
+                "minimized": "true",
+            },
+        )
+        assert response.status_code == 200
+        pattern = rf'<input[^>]*name="filter_by_team_member"[^>]*value="{team_member.uuid}"[^>]*checked[^>]*>'
+        assert re.search(
+            pattern, response.content.decode()
+        ), "Team member filter checkbox should be checked"
+
+    @pytest.mark.parametrize(
+        "initial_state,form_value,expected_final_state",
+        [
+            (False, "true", True),  # minimize section
+            (True, "false", False),  # expand section
+        ],
+    )
+    def test_section_minimize_toggle(
+        self,
+        user_client: Client,
+        team_member: TeamMember,
+        section: Section,
+        initial_state: bool,
+        form_value: str,
+        expected_final_state: bool,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test minimizing and expanding a section."""
+        if initial_state:
+            section.minimized_by.add(team_member.user)
+
+        assert (
+            section.minimized_by.filter(pk=team_member.user.pk).exists()
+            == initial_state
+        )
+
+        url = reverse(
+            "dashboard:projects:detail", args=(section.project.uuid,)
+        )
+
+        with django_assert_num_queries(21):
+            response = user_client.post(
+                url,
+                {
+                    "action": "minimize_section",
+                    "section": str(section.uuid),
+                    "minimized": form_value,
+                },
+            )
+            assert response.status_code == 200
+
+        section.refresh_from_db()
+        assert (
+            section.minimized_by.filter(pk=team_member.user.pk).exists()
+            == expected_final_state
+        )
+
+    def test_minimize_section_not_found(
+        self,
+        user_client: Client,
+        team_member: TeamMember,
+        project: Project,
+    ) -> None:
+        """Test minimize view with non-existent section."""
+        url = reverse("dashboard:projects:detail", args=(project.uuid,))
+        response = user_client.post(
+            url,
+            {
+                "action": "minimize_section",
+                "section": str(uuid4()),
+                "minimized": "true",
+            },
+        )
+        assert response.status_code == 400
 
 
 # Create

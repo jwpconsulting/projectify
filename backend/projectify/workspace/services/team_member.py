@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2023 JWP Consulting GK
+# SPDX-FileCopyrightText: 2023,2026 JWP Consulting GK
 """Team member services."""
 
 from typing import Optional
@@ -13,7 +13,6 @@ from projectify.user.models import User
 from projectify.workspace.models.const import TeamMemberRoles
 from projectify.workspace.models.project import Project
 from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.services.signals import send_change_signal
 
 
@@ -70,27 +69,47 @@ def team_member_delete(
     send_change_signal("changed", team_member.workspace)
 
 
-def team_member_visit_workspace(*, user: User, workspace: Workspace) -> None:
+def team_member_visit_workspace(*, team_member: TeamMember) -> None:
     """Mark a workspace as recently visited."""
-    validate_perm("workspace.read_workspace", user, workspace)
-    try:
-        team_member = TeamMember.objects.get(user=user, workspace=workspace)
-    except TeamMember.DoesNotExist:
-        # User is not a team member, nothing to do
-        return
     team_member.last_visited_workspace = now()
     team_member.save()
 
 
-def team_member_visit_project(*, user: User, project: Project) -> None:
+def team_member_visit_project(
+    *, team_member: TeamMember, project: Project
+) -> None:
     """Mark a workspace and project as recently visited."""
-    validate_perm("workspace.read_workspace", user, project.workspace)
-    workspace = project.workspace
-    try:
-        team_member = TeamMember.objects.get(user=user, workspace=workspace)
-    except TeamMember.DoesNotExist:
-        # User is not a team member, nothing to do
-        return
+    assert team_member.workspace == project.workspace
     team_member.last_visited_project = project
     team_member.last_visited_workspace = now()
     team_member.save()
+
+
+@transaction.atomic
+def team_member_minimize_project_list(
+    *, team_member: TeamMember, minimized: bool
+) -> TeamMember:
+    """Set the minimized state of the project list for a team member."""
+    team_member.minimized_project_list = minimized
+    team_member.save()
+    return team_member
+
+
+@transaction.atomic
+def team_member_minimize_team_member_filter(
+    *, team_member: TeamMember, minimized: bool
+) -> TeamMember:
+    """Set the minimized state of the team member filter for a team member."""
+    team_member.minimized_team_member_filter = minimized
+    team_member.save()
+    return team_member
+
+
+@transaction.atomic
+def team_member_minimize_label_filter(
+    *, team_member: TeamMember, minimized: bool
+) -> TeamMember:
+    """Set the minimized state of the label filter for a team member."""
+    team_member.minimized_label_filter = minimized
+    team_member.save()
+    return team_member

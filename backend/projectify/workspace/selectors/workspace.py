@@ -73,6 +73,17 @@ def workspace_build_detail_query_set(
             ).filter(redeemed=False),
         ),
     )
+
+    if who is not None:
+        current_team_member_qs_qs = TeamMember.objects.filter(user=who)
+        qs = qs.prefetch_related(
+            Prefetch(
+                "teammember_set",
+                queryset=current_team_member_qs_qs,
+                to_attr="current_team_member_qs",
+            )
+        )
+
     return qs
 
 

@@ -56,7 +56,7 @@
                             <span>{{ team_member.get_role_display }}</span>
                             <button {% if not can_update_team_member_role %}disabled{% endif %}
                                     class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                {% include "heroicons/pencil.svg" %}
+                                {% icon "pencil" %}
                             </button>
                         </td>
                         <td>

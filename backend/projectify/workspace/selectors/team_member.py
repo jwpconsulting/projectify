@@ -34,7 +34,7 @@ def team_member_find_by_team_member_uuid(
         return None
 
 
-def team_member_last_workspace(*, user: User) -> Optional[Workspace]:
+def team_member_last_workspace_for_user(*, user: User) -> Optional[Workspace]:
     """Return the last workspace that the user visited (or None)."""
     match (
         TeamMember.objects.filter(
@@ -50,7 +50,7 @@ def team_member_last_workspace(*, user: User) -> Optional[Workspace]:
             return None
 
 
-def team_member_last_project(
+def team_member_last_project_for_user(
     *, user: User, workspace: Workspace
 ) -> Optional[Project]:
     """Get the last project that the user visited in a given workspace."""

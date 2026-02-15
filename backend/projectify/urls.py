@@ -24,6 +24,7 @@ from django.utils.translation import gettext_lazy as _
 from django_ratelimit.exceptions import Ratelimited
 
 from projectify.lib.settings import get_settings
+from projectify.lib.views import colored_icon
 from projectify.workspace.consumers import ChangeConsumer
 
 settings = get_settings()
@@ -34,6 +35,9 @@ urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     path("user/", include("projectify.user.urls")),
     path("workspace/", include("projectify.workspace.urls")),
     path("corporate/", include("projectify.corporate.urls")),
+    path(
+        "icons/<str:icon>/<str:color>.svg", colored_icon, name="colored-icon"
+    ),
 )
 if settings.ENABLE_DJANGO_FRONTEND:
     urlpatterns = (

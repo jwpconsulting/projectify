@@ -6,7 +6,7 @@
            value="{{ widget.value }}"
            class="cursor-pointer"
            {% include "django/forms/widgets/attrs.html" %}>
-    <label class="grow overflow-x-hidden flex items-center cursor-pointer group rounded-2.5xl border border-dashed border-primary px-3 py-1 font-bold {% if widget.value.instance %}{{ widget.value.instance.bg_class }} {{ widget.value.instance.text_class }}{% endif %}"
+    <label class="grow overflow-x-hidden flex items-center cursor-pointer group rounded-2.5xl px-3 py-1 font-bold{% if widget.value.instance %} {{ widget.value.instance.bg_class }} {{ widget.value.instance.text_class }}{% else %} bg-background{% endif %}"
            for="{{ widget.attrs.id }}">
         <span class="truncate">{{ widget.label }}</span>
     </label>

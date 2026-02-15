@@ -1,19 +1,20 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2023 JWP Consulting GK
+# SPDX-FileCopyrightText: 2023,2026 JWP Consulting GK
 """Test team member services."""
 
 import pytest
-from rest_framework.exceptions import PermissionDenied
 
 from projectify.user.models import User
 from projectify.workspace.models.const import TeamMemberRoles
 from projectify.workspace.models.project import Project
 from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.services.team_member import (
     team_member_change_role,
     team_member_delete,
+    team_member_minimize_label_filter,
+    team_member_minimize_project_list,
+    team_member_minimize_team_member_filter,
     team_member_update,
     team_member_visit_project,
     team_member_visit_workspace,
@@ -37,6 +38,8 @@ def test_team_member_change_role(
     team_member: TeamMember, unrelated_user: User
 ) -> None:
     """Test changing team member roles."""
+    from rest_framework.exceptions import PermissionDenied
+
     with pytest.raises(PermissionDenied):
         team_member_change_role(
             who=team_member.user,
@@ -75,17 +78,61 @@ def test_team_member_delete(
     assert team_member.workspace.users.count() == count
 
 
-def test_team_member_visit_workspace_permission_denied(
-    unrelated_workspace: Workspace, user: User
+def test_team_member_visit_functions(
+    team_member: TeamMember, project: Project, other_project: Project
 ) -> None:
-    """Test that user without workspace access cannot visit workspace."""
-    with pytest.raises(PermissionDenied):
-        team_member_visit_workspace(user=user, workspace=unrelated_workspace)
+    """Test visiting a workspace and project."""
+    team_member_visit_workspace(team_member=team_member)
+    team_member_visit_project(team_member=team_member, project=project)
+    with pytest.raises(AssertionError):
+        team_member_visit_project(
+            team_member=team_member, project=other_project
+        )
 
 
-def test_team_member_visit_project_permission_denied(
-    unrelated_project: Project, user: User
+def test_team_member_minimize_project_list(team_member: TeamMember) -> None:
+    """Test setting the minimized state of the project list."""
+    # False in the beginning
+    assert team_member.minimized_project_list is False
+
+    updated_team_member = team_member_minimize_project_list(
+        team_member=team_member, minimized=True
+    )
+    assert updated_team_member.minimized_project_list is True
+
+    updated_team_member = team_member_minimize_project_list(
+        team_member=team_member, minimized=False
+    )
+    assert updated_team_member.minimized_project_list is False
+
+
+def test_team_member_minimize_team_member_filter(
+    team_member: TeamMember,
 ) -> None:
-    """Test that user without workspace access cannot visit project."""
-    with pytest.raises(PermissionDenied):
-        team_member_visit_project(user=user, project=unrelated_project)
+    """Test setting the minimized state of the team member filter."""
+    assert team_member.minimized_team_member_filter is False
+
+    updated_team_member = team_member_minimize_team_member_filter(
+        team_member=team_member, minimized=True
+    )
+    assert updated_team_member.minimized_team_member_filter is True
+
+    updated_team_member = team_member_minimize_team_member_filter(
+        team_member=team_member, minimized=False
+    )
+    assert updated_team_member.minimized_team_member_filter is False
+
+
+def test_team_member_minimize_label_filter(team_member: TeamMember) -> None:
+    """Test setting the minimized state of the label filter."""
+    assert team_member.minimized_label_filter is False
+
+    updated_team_member = team_member_minimize_label_filter(
+        team_member=team_member, minimized=True
+    )
+    assert updated_team_member.minimized_label_filter is True
+
+    updated_team_member = team_member_minimize_label_filter(
+        team_member=team_member, minimized=False
+    )
+    assert updated_team_member.minimized_label_filter is False

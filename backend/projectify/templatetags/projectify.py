@@ -1,12 +1,14 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2024 JWP Consulting GK
+# SPDX-FileCopyrightText: 2024-2026 JWP Consulting GK
 """Shared template tags for Projectify."""
 
+import logging
 from typing import Any, Literal, Optional, Union
 
 from django import template
-from django.template.loader import render_to_string
+from django.contrib.staticfiles import finders
+from django.templatetags import static
 from django.urls import NoReverseMatch, reverse
 from django.utils.html import format_html
 from django.utils.safestring import SafeText, mark_safe
@@ -14,6 +16,8 @@ from django.utils.translation import gettext_lazy as _
 
 from projectify.user.models.user import User
 from projectify.workspace.models.team_member import TeamMember
+
+logger = logging.getLogger(__name__)
 
 register = template.Library()
 
@@ -23,7 +27,7 @@ def percent(value: Optional[float]) -> Optional[str]:
     """Format value as percentage."""
     if not value:
         return None
-    return f"{value:3.0%}"
+    return _("{sub_task_done} %").format(sub_task_done=round(value * 100))
 
 
 @register.simple_tag
@@ -52,8 +56,11 @@ def anchor(
     if external:
         a_extra = mark_safe(' target="_blank"')
         extra = format_html(
-            '<span class="sr-only">{text}</span>{svg}',
-            svg=render_to_string("heroicons/external_links.svg"),
+            '<span class="sr-only">{text}</span><img class="inline-block w-4 h-4" src="{src}" aria-hidden=true>',
+            src=reverse(
+                "colored-icon",
+                kwargs={"icon": "external_links", "color": "primary"},
+            ),
             text=_("(Opens in new tab)"),
         )
     else:
@@ -94,14 +101,49 @@ def action_button(
         width_class="w-full" if grow else "",
         color_classes=color_classes[style],
         icon=format_html(
-            '<div class="w-6 h-6 shrink-0">{icon}</div>',
-            icon=render_to_string(f"heroicons/{icon}.svg"),
+            '<img class="w-6 h-6 shrink-0" src="{src}" aria-hidden="true">',
+            src=reverse(
+                "colored-icon",
+                kwargs={
+                    "icon": icon,
+                    "color": "destructive"
+                    if style == "destructive"
+                    else "primary",
+                },
+            ),
         )
         if icon
         else "",
         text=text,
         value=format_html(' value="{value}"', value=value) if value else "",
         name=format_html(' name="{name}"', name=name) if name else "",
+    )
+
+
+@register.simple_tag
+def icon(
+    icon: str,
+    color: Optional[Literal["primary", "destructive"]] = None,
+    size: Literal[None, 4, 6] = None,
+) -> SafeText:
+    """Return a rendered heroicon SVG file with optional color."""
+    static_path = f"heroicons/{icon}.svg"
+    if not finders.find(static_path):
+        logger.error("Missing icon '%s'", icon)
+        return format_html("<div>MISSING ICON {}</div>", icon)
+
+    if color:
+        src = reverse("colored-icon", kwargs={"icon": icon, "color": color})
+    else:
+        src = static.static(static_path)
+
+    return format_html(
+        '<img src="{src}" aria-hidden="true"{size}>',
+        src=src,
+        icon=icon,
+        size=format_html(" class={}", {4: "size-4", 6: "size-6"}[size])
+        if size
+        else "",
     )
 
 

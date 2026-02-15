@@ -35,7 +35,9 @@ TaskDetailQuerySet: QuerySet[Task] = (
     .prefetch_related(
         Prefetch(
             "workspace__label_set",
-            queryset=labels_annotate_with_colors(Label.objects.all()),
+            queryset=labels_annotate_with_colors(
+                Label.objects.annotate(task_count=Count("task"))
+            ),
         ),
     )
     .prefetch_related(

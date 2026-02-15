@@ -178,63 +178,6 @@ class TestSectionUpdateView:
         assert response.status_code == 404
 
 
-class TestSectionMinimizeView:
-    """Test section minimize view."""
-
-    @pytest.mark.parametrize(
-        "initial_state,form_value,expected_final_state",
-        [
-            (False, "true", True),  # minimize section
-            (True, "false", False),  # expand section
-        ],
-    )
-    def test_section_minimize_toggle(
-        self,
-        user_client: Client,
-        team_member: TeamMember,
-        section: Section,
-        initial_state: bool,
-        form_value: str,
-        expected_final_state: bool,
-        django_assert_num_queries: DjangoAssertNumQueries,
-    ) -> None:
-        """Test minimizing and expanding a section."""
-        if initial_state:
-            section.minimized_by.add(team_member.user)
-
-        assert (
-            section.minimized_by.filter(pk=team_member.user.pk).exists()
-            == initial_state
-        )
-
-        with django_assert_num_queries(7):
-            response = user_client.post(
-                reverse("dashboard:sections:minimize", args=[section.uuid]),
-                {"minimized": form_value},
-            )
-
-        assert response.status_code == 302
-        assert isinstance(response, HttpResponseRedirect)
-
-        section.refresh_from_db()
-        assert (
-            section.minimized_by.filter(pk=team_member.user.pk).exists()
-            == expected_final_state
-        )
-
-    def test_minimize_section_different_workspace(
-        self, user_client: Client, unrelated_section: Section
-    ) -> None:
-        """Test minimize view with section from different workspace."""
-        response = user_client.post(
-            reverse(
-                "dashboard:sections:minimize", args=[unrelated_section.uuid]
-            ),
-            {"minimized": "true"},
-        )
-        assert response.status_code == 404
-
-
 # Create
 class TestSectionCreate:
     """Test section creation."""

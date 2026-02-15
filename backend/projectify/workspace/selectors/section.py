@@ -1,24 +1,39 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2023 JWP Consulting GK
+# SPDX-FileCopyrightText: 2023-2026 JWP Consulting GK
 """Section selectors."""
 
 from typing import Optional
 from uuid import UUID
 
-from django.db.models import Prefetch, QuerySet
+from django.db.models import Count, Prefetch, Q, QuerySet
+from django.db.models.functions import NullIf
 
 from projectify.user.models import User
 from projectify.workspace.models.label import Label
 from projectify.workspace.models.project import Project
 from projectify.workspace.models.section import Section
+from projectify.workspace.models.task import Task
 from projectify.workspace.selectors.labels import labels_annotate_with_colors
 
 SectionDetailQuerySet = Section.objects.prefetch_related(
-    "task_set",
+    Prefetch(
+        "task_set",
+        queryset=Task.objects.annotate(
+            sub_task_progress=Count(
+                "subtask",
+                filter=Q(subtask__done=True),
+            )
+            * 1.0
+            / NullIf(Count("subtask"), 0),
+        ).order_by("_order"),
+    ),
     "task_set__assignee",
     "task_set__assignee__user",
-    "task_set__labels",
+    Prefetch(
+        "task_set__labels",
+        queryset=labels_annotate_with_colors(Label.objects.all()),
+    ),
     "task_set__subtask_set",
     Prefetch(
         "project__workspace__project_set",
@@ -26,7 +41,9 @@ SectionDetailQuerySet = Section.objects.prefetch_related(
     ),
     Prefetch(
         "project__workspace__label_set",
-        queryset=labels_annotate_with_colors(Label.objects.all()),
+        queryset=labels_annotate_with_colors(
+            Label.objects.annotate(task_count=Count("task"))
+        ),
     ),
 ).select_related(
     "project",

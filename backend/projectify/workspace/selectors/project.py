@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 """Project model selectors."""
 
-from typing import Optional, Union
+from typing import Any, Optional, Union
 from uuid import UUID
 
 from django.db.models import (
@@ -37,6 +37,7 @@ def project_detail_query_set(
     unlabeled_tasks: bool = False,
     task_search_query: Optional[str] = None,
     who: Optional[User] = None,
+    prefetch_labels: bool = True,
 ) -> QuerySet[Project]:
     """Create a project detail query set."""
     project_not_archived = Q(task__section__project__archived__isnull=True)
@@ -48,6 +49,7 @@ def project_detail_query_set(
             task_count=Count("tasklabel", filter=project_not_archived),
         )
     )
+    task_label_prefetch_qs = labels_annotate_with_colors(Label.objects.all())
 
     task_q = Q()
 
@@ -100,48 +102,63 @@ def project_detail_query_set(
 
     task_qs = (
         Task.objects.annotate(
-            sub_task_progress=Count(
-                "subtask",
-                filter=Q(subtask__done=True),
-            )
+            sub_task_progress=Count("subtask", filter=Q(subtask__done=True))
             * 1.0
             / NullIf(Count("subtask"), 0),
         )
         .order_by("_order")
         .select_related("assignee__user")
-        .prefetch_related(
-            Prefetch(
-                "labels",
-                queryset=labels_annotate_with_colors(Label.objects.all()),
-            )
-        )
-    ).filter(task_q)
+        .filter(task_q)
+    )
 
-    # If caller provides a user, filter out tasks for hidden sections,
-    if who is not None:
-        task_qs = task_qs.exclude(section__minimized_by=who)
-
-    # and mark these sections as minimized
-    section_qs = Section.objects.all()
-    if who is not None:
-        section_qs = section_qs.annotate(
-            minimized=Exists(
-                Section.objects.filter(pk=OuterRef("pk"), minimized_by=who)
-            )
-        )
-
-    return Project.objects.prefetch_related(
-        Prefetch("section_set", queryset=section_qs),
-        Prefetch("section_set__task_set", queryset=task_qs),
+    project_prefetches: list[Prefetch[Any]] = [
         # Prefetch for workspace 1 : N relations, label, projects, and team
         # members
-        Prefetch("workspace__label_set", queryset=label_qs),
         Prefetch(
             "workspace__project_set",
             queryset=Project.objects.filter(archived__isnull=True),
         ),
         Prefetch("workspace__teammember_set", queryset=team_member_qs),
+    ]
+    if prefetch_labels:
+        project_prefetches.append(
+            Prefetch("workspace__label_set", queryset=label_qs)
+        )
+        task_qs = task_qs.prefetch_related(
+            Prefetch("labels", queryset=task_label_prefetch_qs)
+        )
+
+    section_qs = Section.objects.all().annotate(
+        has_tasks=Exists(Task.objects.filter(section_id=OuterRef("pk"))),
+    )
+    # If caller provides a user, filter out tasks for hidden sections,
+    # and mark these sections as minimized
+    if who is not None:
+        task_qs = task_qs.exclude(section__minimized_by=who)
+        section_qs = section_qs.annotate(
+            minimized=Exists(
+                Section.objects.filter(pk=OuterRef("pk"), minimized_by=who)
+            )
+        )
+        current_team_member_qs = TeamMember.objects.filter(user=who)
+        project_prefetches.append(
+            Prefetch(
+                "workspace__teammember_set",
+                queryset=current_team_member_qs,
+                to_attr="current_team_member_qs",
+            )
+        )
+        project_prefetches.append(Prefetch("section_set", queryset=section_qs))
+
+    project_prefetches.append(
+        Prefetch("section_set__task_set", queryset=task_qs)
+    )
+
+    project = Project.objects.prefetch_related(
+        *project_prefetches
     ).select_related("workspace", "workspace__customer")
+
+    return project
 
 
 ProjectDetailQuerySet = project_detail_query_set()

@@ -1,0 +1,26 @@
+{# SPDX-FileCopyrightText: 2024-2026 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+<div class="h-5 w-5 text-primary shrink-0 htmx-indicator">
+    <svg viewBox="-50 -50 100 100" fill="none" class="relative w-full h-full">
+        <circle cx="0" cy="0" stroke="currentColor" stroke-width="5" opacity="1" class="rounded-full animate-ripple" />
+        <circle cx="0" cy="0" stroke="currentColor" stroke-width="5" opacity="1" class="rounded-full animate-ripple animation-delay-1000" />
+    </svg>
+</div>
+<style>
+    @keyframes ripple {
+        0% {
+            opacity: 1;
+            r: 0px;
+        }
+        100% {
+            opacity: 0;
+            r: 45px;
+        }
+    }
+    .animate-ripple {
+        animation: ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+    }
+    .animation-delay-1000 {
+        animation-delay: 1s;
+    }
+</style>

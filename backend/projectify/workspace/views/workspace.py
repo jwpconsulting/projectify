@@ -39,25 +39,18 @@ from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
-from projectify.workspace.models.const import COLOR_MAP
-from projectify.workspace.models.label import Label
-from projectify.workspace.selectors.labels import (
-    LabelDetailQuerySet,
-    label_find_by_label_uuid,
-)
-from projectify.workspace.services.label import (
-    label_create,
-    label_delete,
-    label_update,
-)
 
 from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
 from ..models import Workspace
+from ..models.const import COLOR_MAP
+from ..models.label import Label
+from ..selectors.labels import LabelDetailQuerySet, label_find_by_label_uuid
 from ..selectors.project import project_find_by_workspace_uuid
 from ..selectors.quota import workspace_get_all_quotas
 from ..selectors.team_member import (
     team_member_find_by_team_member_uuid,
-    team_member_last_project,
+    team_member_find_for_workspace,
+    team_member_last_project_for_user,
 )
 from ..selectors.workspace import (
     WorkspaceDetailQuerySet,
@@ -67,8 +60,10 @@ from ..selectors.workspace import (
 )
 from ..serializers.base import WorkspaceBaseSerializer
 from ..serializers.workspace import WorkspaceDetailSerializer
+from ..services.label import label_create, label_delete, label_update
 from ..services.team_member import (
     team_member_delete,
+    team_member_minimize_project_list,
     team_member_visit_workspace,
 )
 from ..services.team_member_invite import (
@@ -91,6 +86,9 @@ def _get_workspace_settings_context(
         "workspace": workspace,
         "projects": workspace.project_set.all(),
         "workspaces": workspace_find_for_user(who=request.user),
+        "current_team_member_qs": team_member_find_for_workspace(
+            user=request.user, workspace=workspace
+        ),
         "active_tab": active_tab,
     }
 
@@ -110,11 +108,16 @@ def workspace_view(
         raise Http404(_("Workspace not found"))
 
     # Mark this workspace as most recently visited
-    team_member_visit_workspace(user=request.user, workspace=workspace)
+    team_member = team_member_find_for_workspace(
+        user=request.user, workspace=workspace
+    )
+    if team_member is None:
+        raise Http404(_("Team member not found"))
+    team_member_visit_workspace(team_member=team_member)
 
     # Check whether the user has already visited a project within this
     # workspace
-    last_project = team_member_last_project(
+    last_project = team_member_last_project_for_user(
         user=request.user, workspace=workspace
     )
     if last_project:
@@ -124,6 +127,66 @@ def workspace_view(
     if project:
         return redirect(project.get_absolute_url())
     return redirect("onboarding:new_project", workspace_uuid=workspace_uuid)
+
+
+class MinimizeProjectListForm(forms.Form):
+    """Form for minimizingand expanding the project list."""
+
+    minimized = forms.BooleanField(required=False)
+
+    def __init__(self, workspace: Workspace, *args: Any, **kwargs: Any):
+        """Create current project field."""
+        super().__init__(*args, **kwargs)
+        self.fields["current_project"] = forms.ModelChoiceField(
+            required=False,
+            to_field_name="uuid",
+            # Hopefully this project_set only contains non-archived projects
+            queryset=workspace.project_set.all(),
+        )
+
+
+@require_http_methods(["POST"])
+@platform_view
+def workspace_minimize_project_list(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Toggle the minimized state of the project list."""
+    assert request.method == "POST"
+    workspace = workspace_find_by_workspace_uuid(
+        workspace_uuid=workspace_uuid,
+        who=request.user,
+        qs=WorkspaceDetailQuerySet,
+    )
+    if workspace is None:
+        raise Http404(_("No workspace found for this UUID"))
+
+    form = MinimizeProjectListForm(workspace, request.POST)
+    if not form.is_valid():
+        return HttpResponse(status=400)
+
+    current_team_member_qs = team_member_find_for_workspace(
+        user=request.user, workspace=workspace
+    )
+    if current_team_member_qs is None:
+        raise Http404(_("Team member not found"))
+
+    team_member_minimize_project_list(
+        team_member=current_team_member_qs,
+        minimized=form.cleaned_data["minimized"],
+    )
+
+    context = {
+        "workspace": workspace,
+        "project": form.cleaned_data.get("current_project"),
+        "projects": workspace.project_set.all(),
+        "current_team_member_qs": current_team_member_qs,
+    }
+
+    return render(
+        request,
+        "workspace/common/sidebar/project_details.html",
+        context=context,
+    )
 
 
 class WorkspaceSettingsForm(forms.ModelForm):

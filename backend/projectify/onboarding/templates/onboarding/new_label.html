@@ -1,7 +1,8 @@
-{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "onboarding_base.html" %}
 {% load i18n %}
+{% load projectify %}
 {% block title %}
     {% blocktrans %}Create a label for "{{ task }}" - Projectify{% endblocktrans %}
 {% endblock title %}
@@ -10,24 +11,67 @@
           class="col-span-1 flex shrink grow flex-col gap-16 px-12 py-20 pb-8">
         {% csrf_token %}
         <div class="flex flex-col gap-4">
-            <h1 class="min-w-fit max-w-lg text-4xl font-bold">{% blocktrans %}Create a label for "{{task}}"{% endblocktrans %}</h1>
-            <div class="flex flex-col gap-2 text-lg">
-                <p>{% trans "Labels help you to filter between the types of tasks." %}</p>
-            </div>
+            <h1 class="min-w-0 text-4xl font-bold overflow-hidden">
+                {% blocktrans %}Create a label for "{{task}}"{% endblocktrans %}
+            </h1>
+            <p class="flex flex-col gap-2 text-lg">{% trans "Labels help you to filter between the types of tasks." %}</p>
         </div>
-        <div class="flex flex-col">
-            <div class="flex flex-col items-start gap-2">{{ form }}</div>
-        </div>
-        <div class="flex flex-col gap-2">
-            <div class="flex gap-2">
-                <button type="submit"
-                        class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                    {% trans "Continue" %}
-                </button>
-            </div>
-        </div>
+        {{ form }}
+        {% include "projectify/forms/submit.html" with text=_("Continue") %}
         {% include "onboarding/common/step_counter.html" with step=4 step_count="5" %}
     </form>
-    <div class="hidden h-full min-w-0 shrink grow flex-col items-center justify-center overflow-hidden bg-background md:flex xl:col-span-2">
+    <div class="hidden h-full min-w-0 shrink grow flex-col items-center justify-center overflow-hidden bg-background md:flex xl:col-span-2 p-4">
+        <div class="ring-4 max-w-full flex flex-row ring-border bg-foreground py-2"
+             inert>
+            <div class="flex flex-col gap-2">
+                <div class="mx-4 px-4 flex items-center gap-2 font-bold border rounded p-2">
+                    {% icon "briefcase" size=4 %}
+                    <span class="max-w-16 truncate">{{ task.workspace.title }}</span>
+                </div>
+                <div class="mx-4 flex flex-row items-center justify-start text-utility gap-2">
+                    {% icon "folder" size=4 %}
+                    <div class="font-bold mr-auto">{% trans "Projects" %}</div>
+                    {% icon "chevron-up" size=4 %}
+                </div>
+                <div class="flex w-full flex-row items-center gap-1 px-4 py-1">
+                    {% icon "folder" size=4 %}
+                    <div class="max-w-16 line-clamp-1 min-w-0 font-bold">{{ task.section.project.title }}</div>
+                </div>
+            </div>
+            <div class="min-w-0 shrink flex flex-col px-4">
+                <div class="flex flex-row items-center text-base-content min-w-0 gap-4 py-2">
+                    {% icon "chevron-down" size=4 %}
+                    <h1 class="line-clamp-1 min-w-0 shrink font-bold">{{ task.section.title }}</h1>
+                </div>
+                <div class="p-4 rounded-lg border border-border flex flex-col gap-2">
+                    <div class="flex flex-row items-center gap-1 sm:gap-6">
+                        <span class="shrink-0 font-bold">#1</span>
+                        <span id="task-title" class="text-ellipsis line-clamp-3">{{ task.title }}</span>
+                    </div>
+                    {% translate "Your label" as label_title_default %}
+                    <div id="label-preview"
+                         class="truncate rounded-full px-3 py-1 font-bold bg-label-orange text-label-text-orange">
+                        {{ label_title_default }}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <script>
+        (() => {
+            const nameInput = document.querySelector('input[name="name"]');
+            if (!nameInput) { return; }
+            const labelPreview = document.getElementById('label-preview');
+            if (!labelPreview) { return; }
+            const defaultTitle = '{% trans "Your label" %}';
+            nameInput.addEventListener('input', (event) => {
+                const name = event.target.value.trim();
+                if (!name) {
+                    labelPreview.textContent = defaultTitle;
+                    return;
+                }
+                labelPreview.textContent = name;
+            });
+        })();
+    </script>
 {% endblock onboarding_content %}
