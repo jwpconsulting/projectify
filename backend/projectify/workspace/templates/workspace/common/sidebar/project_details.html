@@ -46,13 +46,13 @@
                 </div>
             </a>
         {% endfor %}
-    {% endif %}
-    {% if workspace %}
-        <a class="flex w-full flex-row items-center gap-2 px-4 py-2 font-bold hover:bg-secondary-hover active:bg-disabled disabled:active:bg-secondary-hover text-primary"
-           href="{% url "dashboard:workspaces:create-project" workspace_uuid=workspace.uuid %}">
-            <span class="size-4">{% icon "plus" "primary" %}</span>
-            <span class="truncate">{% translate "Create new project" %}</span>
-        </a>
+        {% if workspace %}
+            <a class="flex w-full flex-row items-center gap-2 px-4 py-2 font-bold hover:bg-secondary-hover active:bg-disabled disabled:active:bg-secondary-hover text-primary"
+               href="{% url "dashboard:workspaces:create-project" workspace_uuid=workspace.uuid %}">
+                <span class="size-4">{% icon "plus" "primary" %}</span>
+                <span class="truncate">{% translate "Create new project" %}</span>
+            </a>
+        {% endif %}
     {% endif %}
 </div>
 {% if task_filter_form %}
@@ -91,17 +91,15 @@
             </div>
         </button>
         <fieldset class="w-full max-w-full{% if current_team_member_qs.minimized_team_member_filter %} hidden{% endif %}">
-            <div class="flex flex-col gap-2">
-                <div class="flex flex-col overflow-y-auto">{{ task_filter_form.filter_by_team_member }}</div>
-            </div>
+            {{ task_filter_form.filter_by_team_member }}
+            {% if workspace %}
+                <a href="{% url 'dashboard:workspaces:team-members' workspace_uuid=workspace.uuid %}"
+                   class="flex w-full flex-row items-center gap-2 px-4 py-2 font-bold hover:bg-secondary-hover active:bg-disabled disabled:active:bg-secondary-hover text-primary">
+                    <span class="size-4">{% icon "plus" "primary" %}</span>
+                    <span class="truncate">{% translate "Add more team members" %}</span>
+                </a>
+            {% endif %}
         </fieldset>
-        {% if workspace %}
-            <a href="{% url 'dashboard:workspaces:team-members' workspace_uuid=workspace.uuid %}"
-               class="flex w-full flex-row items-center gap-2 px-4 py-2 font-bold hover:bg-secondary-hover active:bg-disabled disabled:active:bg-secondary-hover text-primary">
-                <span class="size-4">{% icon "plus" "primary" %}</span>
-                <span class="truncate">{% translate "Add more team members" %}</span>
-            </a>
-        {% endif %}
     </div>
     <div id="label-filters" class="flex flex-col px-4">
         <form class="hidden"
