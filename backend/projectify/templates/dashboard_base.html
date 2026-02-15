@@ -7,28 +7,22 @@
 {% block content %}
     <div class="flex min-h-screen grow flex-col">
         {% include "common/navigation/header/dashboard.html" %}
-        <div class="flex min-h-0 shrink grow flex-row">
-            <div class="hidden h-full shrink-0 md:block">
-                <div class="max-w-xs 2xl:max-w-md">
-                    <nav class="flex flex-col py-4">
-                        <div class="flex flex-col gap-2 px-4 pb-4">
-                            {% if workspace %}
-                                <div class="min-w-0 grow">{% include "workspace/common/sidebar/workspace_details.html" %}</div>
-                            {% endif %}
-                        </div>
-                        <p class="px-4">
-                            {% url "help:detail" page="billing" as trial_workspace_help %}
-                            <strong>{% trans "Trial workspace" %}</strong>
-                            {% anchor href=trial_workspace_help label=_("Learn more") external=True %}
-                        </p>
-                        <div class="flex flex-col">
-                            {% block dashboard_projects %}
-                                {% include "workspace/common/sidebar/project_details.html" %}
-                            {% endblock dashboard_projects %}
-                        </div>
-                    </nav>
+        <div class="flex min-h-0 shrink grow flex-col md:flex-row">
+            <nav class="max-w-full md:max-w-xs 2xl:max-w-md h-full shrink-0 flex flex-col py-4">
+                <div class="flex flex-col gap-2 px-4 pb-4">
+                    {% if workspace %}
+                        <div class="min-w-0 grow">{% include "workspace/common/sidebar/workspace_details.html" %}</div>
+                    {% endif %}
                 </div>
-            </div>
+                <p class="px-4">
+                    {% url "help:detail" page="billing" as trial_workspace_help %}
+                    <strong>{% trans "Trial workspace" %}</strong>
+                    {% anchor href=trial_workspace_help label=_("Learn more") external=True %}
+                </p>
+                {% block dashboard_projects %}
+                    {% include "workspace/common/sidebar/project_details.html" %}
+                {% endblock dashboard_projects %}
+            </nav>
             {% block dashboard_content %}
             {% endblock dashboard_content %}
         </div>
