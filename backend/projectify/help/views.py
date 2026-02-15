@@ -84,12 +84,6 @@ help_topics = {
         "markdown_file": Path("roles.md"),
         "href": reverse_lazy("help:detail", args=("roles",)),
     },
-    "keyboard-shortcuts": {
-        "title": _("Keyboard shortcuts"),
-        "description": _("Use keyboard shortcuts to improve productivity"),
-        "markdown_file": Path("keyboard-shortcuts.md"),
-        "href": reverse_lazy("help:detail", args=("keyboard-shortcuts",)),
-    },
 }
 
 help_topics_with_index = {
