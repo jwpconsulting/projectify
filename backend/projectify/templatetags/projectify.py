@@ -115,7 +115,9 @@ def action_button(
 
 @register.simple_tag
 def icon(
-    icon: str, color: Optional[Literal["primary", "destructive"]] = None
+    icon: str,
+    color: Optional[Literal["primary", "destructive"]] = None,
+    size: Literal[None, 4, 6] = None,
 ) -> SafeText:
     """Return a rendered heroicon SVG file with optional color."""
     static_path = f"heroicons/{icon}.svg"
@@ -129,9 +131,12 @@ def icon(
         src = static.static(static_path)
 
     return format_html(
-        '<img src="{src}" aria-hidden="true">',
+        '<img src="{src}" aria-hidden="true"{size}>',
         src=src,
         icon=icon,
+        size=format_html(" class={}", {4: "size-4", 6: "size-6"}[size])
+        if size
+        else "",
     )
 
 
