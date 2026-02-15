@@ -244,6 +244,8 @@ def project_detail_view(
             )
 
             querydict = request.POST
+            # TODO only render sections here
+            template = "workspace/project_detail.html"
         case "POST", _:
             minimize_form = MinimizeForm(request.POST)
             if not minimize_form.is_valid():
@@ -270,11 +272,12 @@ def project_detail_view(
                         minimized=minimized,
                     )
                 case invalid:
-                    logger.warning("Invalid action %s", invalid)
-
+                    raise BadRequest(f"Invalid action {invalid}")
             querydict = request.POST
+            template = "workspace/common/sidebar/project_details.html"
         case _:
             querydict = request.GET
+            template = "workspace/project_detail.html"
 
     filter_by_team_member: Optional[QuerySet[TeamMember]] = None
     filter_by_label: Optional[QuerySet[Label]] = None
@@ -341,7 +344,7 @@ def project_detail_view(
         or filter_by_unassigned,
         "has_label_filter": filter_by_label is not None or filter_by_unlabeled,
     }
-    return render(request, "workspace/project_detail.html", context)
+    return render(request, template, context)
 
 
 class ProjectCreateForm(forms.Form):
