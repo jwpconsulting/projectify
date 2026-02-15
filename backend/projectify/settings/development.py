@@ -19,13 +19,16 @@ from .base import Base
 from .spectacular import SpectacularSettings
 
 
-def add_dev_middleware(middleware: Sequence[str]) -> Iterable[str]:
+def add_dev_middleware(
+    middleware: Sequence[str], debug_toolbar: bool
+) -> Iterable[str]:
     """Add the debug toolbar to debug middleware."""
     gzip_middleware = "django.middleware.gzip.GZipMiddleware"
     for m in middleware:
         if m == gzip_middleware:
             yield m
-            yield "debug_toolbar.middleware.DebugToolbarMiddleware"
+            if debug_toolbar:
+                yield "debug_toolbar.middleware.DebugToolbarMiddleware"
             yield "projectify.middleware.microsloth"
             yield "projectify.middleware.errorsloth"
             yield "django_browser_reload.middleware.BrowserReloadMiddleware"
@@ -56,14 +59,11 @@ class Development(SpectacularSettings, Base):
         # Needs to be there before django.contrib.staticfiles
         "daphne",
         *Base.INSTALLED_APPS,
-        "debug_toolbar",
         "drf_spectacular",
         "drf_spectacular_sidecar",
         "django_browser_reload",
         "django_extensions",
     )
-
-    MIDDLEWARE = list(add_dev_middleware(Base.MIDDLEWARE))
 
     # Debug
     DEBUG = True
@@ -175,3 +175,13 @@ class Development(SpectacularSettings, Base):
         """Load environment variables from .env."""
         super().pre_setup()
         load_dotenv()
+
+    @classmethod
+    def setup(cls) -> None:
+        """Enable debug toolbar."""
+        super().setup()
+        if cls.DEBUG_TOOLBAR:
+            cls.INSTALLED_APPS = (*cls.INSTALLED_APPS, "debug_toolbar")
+        cls.MIDDLEWARE = list(
+            add_dev_middleware(Base.MIDDLEWARE, cls.DEBUG_TOOLBAR)
+        )
