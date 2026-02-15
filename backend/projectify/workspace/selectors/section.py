@@ -41,7 +41,9 @@ SectionDetailQuerySet = Section.objects.prefetch_related(
     ),
     Prefetch(
         "project__workspace__label_set",
-        queryset=labels_annotate_with_colors(Label.objects.all()),
+        queryset=labels_annotate_with_colors(
+            Label.objects.annotate(task_count=Count("task"))
+        ),
     ),
 ).select_related(
     "project",
