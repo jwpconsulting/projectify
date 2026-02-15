@@ -167,7 +167,7 @@ class ProjectFilterForm(forms.Form):
             ModelMultipleChoiceFieldWithEmpty(
                 required=False,
                 blank=True,
-                label=_("Filter team members"),
+                label=_("Filter tasks by team member:"),
                 queryset=team_members,
                 widget=member_widget,
                 to_field_name="uuid",
@@ -183,7 +183,7 @@ class ProjectFilterForm(forms.Form):
         self.fields["filter_by_label"] = ModelMultipleChoiceFieldWithEmpty(
             required=False,
             blank=True,
-            label=_("Filter labels"),
+            label=_("Filter tasks by label:"),
             queryset=labels,
             widget=label_widget,
             to_field_name="uuid",

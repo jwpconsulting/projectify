@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="flex shrink-0 flex-row items-center gap-1">
-            <div class="htmx-indicator shrink-0">{% include "workspace/common/loading_spinner.html" %}</div>
+            {% include "workspace/common/loading_spinner.html" %}
             {% action_button text=_("Add Task") icon="plus" %}
         </div>
     </form>
@@ -60,34 +60,32 @@
                                 </div>
                             {% endif %}
                             {% user_avatar task.assignee %}
-                            <div class="flex flex-row items-center">
-                                <form hx-target="#project-detail"
-                                      hx-post="{% url 'dashboard:tasks:move' task.uuid %}"
-                                      hx-select="#project-detail"
-                                      action="{% url 'dashboard:tasks:move' task.uuid %}"
-                                      class="flex flex-row items-center gap-1"
-                                      hx-swap="outerHTML"
-                                      method="post">
-                                    <button name="direction"
-                                            value="up"
-                                            type="submit"
-                                            aria-label="Move task up"
-                                            {% if forloop.first %}disabled{% endif %}
-                                            class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                        {% icon "chevron-up" %}
-                                    </button>
-                                    <button name="direction"
-                                            value="down"
-                                            type="submit"
-                                            hx-swap="outerHTML"
-                                            aria-label="Move task down"
-                                            {% if forloop.last %}disabled{% endif %}
-                                            class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                        {% icon "chevron-down" %}
-                                    </button>
-                                    {% csrf_token %}
-                                    <p class="htmx-indicator">...</p>
-                                </form>
+                            <form hx-target="#project-detail"
+                                  hx-post="{% url 'dashboard:tasks:move' task.uuid %}"
+                                  hx-select="#project-detail"
+                                  action="{% url 'dashboard:tasks:move' task.uuid %}"
+                                  class="flex flex-row items-center gap-1"
+                                  hx-swap="outerHTML"
+                                  method="post">
+                                <button name="direction"
+                                        value="up"
+                                        type="submit"
+                                        aria-label="Move task up"
+                                        {% if forloop.first %}disabled{% endif %}
+                                        class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
+                                    {% icon "chevron-up" %}
+                                </button>
+                                <button name="direction"
+                                        value="down"
+                                        type="submit"
+                                        hx-swap="outerHTML"
+                                        aria-label="Move task down"
+                                        {% if forloop.last %}disabled{% endif %}
+                                        class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
+                                    {% icon "chevron-down" %}
+                                </button>
+                                {% csrf_token %}
+                                <p class="htmx-indicator">...</p>
                                 <a aria-label="Navigate to task menu"
                                    hx-boost
                                    hx-target="#project-detail"
@@ -96,7 +94,7 @@
                                    class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
                                     {% icon "dots-horizontal" %}
                                 </a>
-                            </div>
+                            </form>
                         </td>
                     </tr>
                 {% empty %}
