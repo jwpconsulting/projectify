@@ -1,7 +1,8 @@
-{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "onboarding_base.html" %}
 {% load i18n %}
+{% load projectify %}
 {% block title %}
     {% translate "Create a new workspace - Projectify" %}
 {% endblock title %}
@@ -10,7 +11,7 @@
           class="col-span-1 flex shrink grow flex-col gap-16 px-12 py-20 pb-8">
         {% csrf_token %}
         <div class="flex flex-col gap-4">
-            <h1 class="min-w-fit max-w-lg text-4xl font-bold">
+            <h1 class="overflow-hidden text-ellipsis max-w-lg text-4xl font-bold">
                 {% if user %}
                     {% blocktrans %}Let’s set up your first workspace, {{user}}.{% endblocktrans %}
                 {% else %}
@@ -19,29 +20,53 @@
             </h1>
             <div class="flex flex-col gap-2 text-lg">
                 {% if workspace %}
-                    <p>{% trans "It looks like you already have a workspace, would you like to create a project?" %}</p>
                     <p>
-                        <a href="{% url "onboarding:new_project" workspace.uuid %}"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg">{% trans "Create project" %}</a>
+                        {% blocktrans with title=workspace.title%}It looks like you already have a workspace called "{{ title }}", would you like to continue with this workspace and create a project?{% endblocktrans %}
                     </p>
+                    {% anchor href="onboarding:new_project" label="Continue with this workspace and create a project" workspace_uuid=workspace.uuid %}
                 {% else %}
                     <p>{% trans "You can create and manage numerous workspaces." %}</p>
                 {% endif %}
             </div>
         </div>
-        <div class="flex flex-col">
-            <div class="flex flex-col items-start gap-2">{{ form }}</div>
-        </div>
-        <div class="flex flex-col gap-2">
-            <div class="flex gap-2">
-                <button type="submit"
-                        class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                    {% trans "Continue" %}
-                </button>
-            </div>
-        </div>
-        {% include "onboarding/common/step_counter.html" with step=1 step_count="5" %}
+        {{ form }}
+        {% include "projectify/forms/submit.html" with text=_("Continue") %}
+        {% include "onboarding/common/step_counter.html" with step=1 step_count=5 %}
     </form>
     <div class="hidden h-full min-w-0 shrink grow flex-col items-center justify-center overflow-hidden bg-background md:flex xl:col-span-2">
+        <div class="py-2 ring-4 gap-2 flex flex-col ring-border bg-foreground"
+             inert>
+            <div class="mx-4 px-4 flex items-center gap-2 font-bold border rounded p-2">
+                {% icon "briefcase" size=4 %}
+                {% translate "Your workspace" as workspace_title_default %}
+                <span id="workspace-title" class="max-w-xs truncate">{{ workspace_title_default }}</span>
+            </div>
+            <div class="mx-4 flex flex-row items-center justify-start text-utility gap-2">
+                {% icon "folder" size=4 %}
+                <div class="font-bold mr-auto">{% trans "Projects" %}</div>
+                {% icon "chevron-up" size=4 %}
+            </div>
+            <div class="flex w-full flex-row items-center gap-1 px-4 py-1">
+                {% icon "folder" size=4 %}
+                <div class="line-clamp-1 min-w-0 font-bold">{% trans "Your project" %}</div>
+            </div>
+        </div>
     </div>
+    <script>
+        (() => {
+            const titleInput = document.querySelector('input[name="title"]');
+            if (!titleInput) { return; }
+            const workspaceTitle = document.getElementById('workspace-title');
+            if (!workspaceTitle) { return; }
+            const defaultTitle = '{{ workspace_title_default }}';
+            titleInput.addEventListener('input', (event) => {
+                const title = event.target.value.trim();
+                if (!title) {
+                    workspaceTitle.textContent = defaultTitle;
+                    return;
+                }
+                workspaceTitle.textContent = title;
+            });
+        })();
+    </script>
 {% endblock onboarding_content %}
