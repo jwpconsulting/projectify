@@ -216,7 +216,9 @@ def new_task(
     On error: Show task creation form with errors.
     """
     project = project_find_by_project_uuid(
-        project_uuid=project_uuid, who=request.user
+        project_uuid=project_uuid,
+        who=request.user,
+        qs=ProjectDetailQuerySet,
     )
     if project is None:
         raise Http404(_("Project not found"))
@@ -226,6 +228,8 @@ def new_task(
     if section:
         section_title = section.title
     context: dict[str, Any] = {
+        "workspace": project.workspace,
+        "project": project,
         "section": section,
         "section_title": section_title,
     }
