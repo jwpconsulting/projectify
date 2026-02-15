@@ -52,6 +52,10 @@ def welcome(request: AuthenticatedHttpRequest) -> HttpResponse:
 class PreferredNameForm(forms.ModelForm):
     """Update User's preferred name."""
 
+    preferred_name = forms.CharField(
+        widget=forms.TextInput(attrs={"placeholder": _("Your preferred name")})
+    )
+
     class Meta:
         """Meta."""
 
@@ -87,7 +91,16 @@ def about_you(request: AuthenticatedHttpRequest) -> HttpResponse:
 class WorkspaceForm(forms.ModelForm):
     """Create a workspace."""
 
-    title = forms.CharField(label=_("Workspace title"))
+    title = forms.CharField(
+        label=_("Workspace title"),
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": _(
+                    "e.g. My Company, Personal Projects, Team Alpha"
+                )
+            }
+        ),
+    )
 
     class Meta:
         """Meta."""
@@ -132,7 +145,12 @@ def new_workspace(request: AuthenticatedHttpRequest) -> HttpResponse:
 class ProjectForm(forms.ModelForm):
     """Create a project."""
 
-    title = forms.CharField(label=_("Project title"))
+    title = forms.CharField(
+        label=_("Project title"),
+        widget=forms.TextInput(
+            attrs={"placeholder": _("e.g. Website Redesign, Mobile App")}
+        ),
+    )
 
     class Meta:
         """Meta."""
@@ -157,7 +175,9 @@ def new_project(
     On error: Show project creation form with errors.
     """
     workspace = workspace_find_by_workspace_uuid(
-        workspace_uuid=workspace_uuid, who=request.user, qs=WorkspaceDetailQuerySet
+        workspace_uuid=workspace_uuid,
+        who=request.user,
+        qs=WorkspaceDetailQuerySet,
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
@@ -187,7 +207,12 @@ def new_project(
 class TaskForm(forms.ModelForm):
     """Create a task."""
 
-    title = forms.CharField(label=_("Task name"))
+    title = forms.CharField(
+        label=_("Task name"),
+        widget=forms.TextInput(
+            attrs={"placeholder": _("e.g. Review proposal, Schedule meeting")}
+        ),
+    )
 
     class Meta:
         """Meta."""
@@ -279,7 +304,12 @@ def new_task(
 class LabelForm(forms.ModelForm):
     """Create a label."""
 
-    name = forms.CharField(label=_("Label name"))
+    name = forms.CharField(
+        label=_("Label name"),
+        widget=forms.TextInput(
+            attrs={"placeholder": _("e.g. Bug, Feature, Urgent, Design")}
+        ),
+    )
 
     class Meta:
         """Meta."""
