@@ -29,12 +29,10 @@
                         {% endif %}
                     </div>
                     <div class="max-w-md">
-                        <picture>
-                            <img src="{% static "hero.png" %}"
-                                 alt="{% trans "An illustration showing the look and feel of tasks in Projectify's user interface" %}"
-                                 width="1559"
-                                 height="992">
-                        </picture>
+                        <img src="{% static "hero.png" %}"
+                             alt="{% trans "An illustration showing the look and feel of tasks in Projectify's user interface" %}"
+                             width="1559"
+                             height="992">
                     </div>
                 </section>
             </div>
@@ -63,31 +61,25 @@
                     <div class="flex flex-col gap-5 text-center">
                         <div class="grid grid-cols-1 gap-8 sm:grid-cols-3">
                             <div class="flex flex-col gap-3">
-                                <picture>
-                                    <img src="{% static "solutions/hero-development-teams.png" %}"
-                                         alt="{% trans "An illustration showing our mascot Poly working at a computer" %}"
-                                         width="728"
-                                         height="492">
-                                </picture>
+                                <img src="{% static "solutions/hero-development-teams.png" %}"
+                                     alt="{% trans "An illustration showing our mascot Poly working at a computer" %}"
+                                     width="728"
+                                     height="492">
                                 <a href="{% url 'storefront:solutions:detail' page='development-teams' %}"
                                    class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg">{% trans "Development teams" %}</a>
                             </div>
                             <div class="flex flex-col gap-3">
-                                <picture>
-                                    <img src="{% static "solutions/hero-research.png" %}"
-                                         alt="{% trans "An illustration showing our mascot researching in a laboratory" %}"
-                                         width="728"
-                                         height="492">
-                                </picture>
+                                <img src="{% static "solutions/hero-research.png" %}"
+                                     alt="{% trans "An illustration showing our mascot researching in a laboratory" %}"
+                                     width="728"
+                                     height="492">
                                 {% anchor "storefront:solutions:detail" "Research" page="research" %}
                             </div>
                             <div class="flex flex-col gap-3">
-                                <picture>
-                                    <img src="{% static "solutions/hero-project-management.png" %}"
-                                         alt="{% trans "An illustration showing our mascot overseeing our factory" %}"
-                                         width="728"
-                                         height="494">
-                                </picture>
+                                <img src="{% static "solutions/hero-project-management.png" %}"
+                                     alt="{% trans "An illustration showing our mascot overseeing our factory" %}"
+                                     width="728"
+                                     height="494">
                                 {% anchor "storefront:solutions:detail" "Project management" page="project-management" %}
                             </div>
                         </div>
