@@ -67,15 +67,7 @@
                                     <div class="font-bold text-primary">{{ task.sub_task_progress|percent }}</div>
                                 </div>
                             {% endif %}
-                            <div class="ml-auto">
-                                {% if task.assignee %}
-                                    {% user_avatar task.assignee %}
-                                {% else %}
-                                    <button>
-                                        <div class="sr-only">Currently not assigned. Activate to assign to team member.</div>
-                                    </button>
-                                {% endif %}
-                            </div>
+                            {% user_avatar task.assignee %}
                             <div class="flex flex-row items-center">
                                 <form hx-target="#project-detail"
                                       hx-post="{% url 'dashboard:tasks:move' task.uuid %}"
