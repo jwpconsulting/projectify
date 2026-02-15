@@ -21,8 +21,8 @@ from projectify.workspace.models.project import Project
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.selectors.project import (
+    ProjectDetailQuerySet,
     project_find_by_project_uuid,
-    project_find_by_workspace_uuid,
 )
 from projectify.workspace.selectors.task import task_find_by_task_uuid
 from projectify.workspace.selectors.team_member import (
