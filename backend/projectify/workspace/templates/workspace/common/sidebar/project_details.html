@@ -28,18 +28,16 @@
     </form>
     {% if not current_team_member_qs.minimized_project_list %}
         {% for project_item in projects %}
-            <a class="group block flex w-full flex-row justify-between gap-1 px-4 py-1 hover:bg-base-200"
+            <a class="flex flex-row items-center gap-2 px-4 py-1 hover:bg-base-200"
                href="{% url "dashboard:projects:detail" project_item.uuid %}">
-                <div class="flex min-w-0 flex-row items-center gap-2">
-                    <div class="rounded-md p-1{% if project_item == project %} bg-primary-focus{% endif %}">
-                        {% if project_item == project %}
-                            {% icon "folder" "white" size=4 %}
-                        {% else %}
-                            {% icon "folder" size=4 %}
-                        {% endif %}
-                    </div>
-                    <div class="line-clamp-1 min-w-0 font-bold">{{ project_item.title }}</div>
+                <div class="shrink-0 rounded-md p-1{% if project_item == project %} bg-primary-focus{% endif %}">
+                    {% if project_item == project %}
+                        {% icon "folder" "white" size=4 %}
+                    {% else %}
+                        {% icon "folder" size=4 %}
+                    {% endif %}
                 </div>
+                <div class="truncate min-w-0 font-bold">{{ project_item.title }}</div>
             </a>
         {% endfor %}
         {% if workspace %}

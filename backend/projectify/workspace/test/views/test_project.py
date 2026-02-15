@@ -707,7 +707,7 @@ class TestProjectDetailMinimize:
             "dashboard:projects:detail", args=(section.project.uuid,)
         )
 
-        with django_assert_num_queries(20):
+        with django_assert_num_queries(21):
             response = user_client.post(
                 url,
                 {

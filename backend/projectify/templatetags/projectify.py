@@ -102,8 +102,15 @@ def action_button(
         color_classes=color_classes[style],
         icon=format_html(
             '<img class="w-6 h-6 shrink-0" src="{src}" aria-hidden="true">',
-            src=static.static(f"heroicons/{icon}.svg"),
-            text=icon,
+            src=reverse(
+                "colored-icon",
+                kwargs={
+                    "icon": icon,
+                    "color": "destructive"
+                    if style == "destructive"
+                    else "primary",
+                },
+            ),
         )
         if icon
         else "",

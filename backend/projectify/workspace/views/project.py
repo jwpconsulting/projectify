@@ -27,6 +27,11 @@ from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
+from projectify.workspace.models.section import Section
+from projectify.workspace.selectors.section import (
+    SectionDetailQuerySet,
+    section_find_for_user_and_uuid,
+)
 
 from ..models import Project, Workspace
 from ..models.label import Label
@@ -228,6 +233,9 @@ def project_detail_view(
     )
     if project is None:
         raise Http404(_("No project found for this uuid"))
+
+    context: dict[str, Any] = {}
+
     match request.method, request.POST.get("action"):
         case "POST", "minimize_section":
             section_minimize_form = SectionMinimizeForm(
@@ -236,16 +244,27 @@ def project_detail_view(
             if not section_minimize_form.is_valid():
                 raise BadRequest()
 
-            section = section_minimize_form.cleaned_data["section"]
-            minimized = section_minimize_form.cleaned_data["minimized"]
+            section: Section = section_minimize_form.cleaned_data["section"]
+            minimized: bool = section_minimize_form.cleaned_data["minimized"]
 
             section_minimize(
                 who=request.user, section=section, minimized=minimized
             )
 
             querydict = request.POST
-            # TODO only render sections here
-            template = "workspace/project_detail.html"
+            template = "workspace/project_detail/section.html"
+            setattr(section, "minimized", minimized)
+            # Populate context with section. this section has all the
+            # necessary task and label annotations
+            # TODO not optimal
+            enriched_section = section_find_for_user_and_uuid(
+                section_uuid=section.uuid,
+                user=request.user,
+                qs=SectionDetailQuerySet,
+            )
+            assert enriched_section, "Section disappeared"
+            setattr(enriched_section, "minimized", minimized)
+            context = {**context, "section": enriched_section}
         case "POST", _:
             minimize_form = MinimizeForm(request.POST)
             if not minimize_form.is_valid():
@@ -309,12 +328,12 @@ def project_detail_view(
         unlabeled_tasks=filter_by_unlabeled,
         task_search_query=task_search_query,
         who=request.user,
+        prefetch_labels=True,
     )
     project = project_find_by_project_uuid(
         who=request.user, project_uuid=project_uuid, qs=qs
     )
-    if project is None:
-        raise Http404(_("No project found for this uuid"))
+    assert project, "Project disappeared"
 
     # Mark this project as most recently visited
     team_member_qs = getattr(project.workspace, "current_team_member_qs", None)
@@ -332,6 +351,7 @@ def project_detail_view(
     )
 
     context = {
+        **context,
         **get_project_view_context(request, project.workspace),
         "project": project,
         "labels": labels,
