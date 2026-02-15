@@ -2,6 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "onboarding_base.html" %}
 {% load i18n %}
+{% load projectify %}
 {% block title %}
     {% translate "Add your first project - Projectify" %}
 {% endblock title %}
@@ -16,29 +17,51 @@
                     <p>
                         {% blocktrans %}It looks like you already have a project called "{{ project }}". Would you like to continue adding a task for it?{% endblocktrans %}
                     </p>
-                    <p>
-                        <a href="{% url "onboarding:new_task" project.uuid %}"
-                           class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg">{% blocktrans %}Continue adding a task to "{{ project }}"{% endblocktrans %}</a>
-                    </p>
+                    {% anchor href="onboarding:new_task" project_uuid=project.uuid label=_("Continue adding a task to this project") %}
                 {% else %}
                     <p>{% trans "You can create unlimited projects per workspace." %}</p>
                     <p>{% trans "Projects help you to focus on different projects you may be working on." %}</p>
                 {% endif %}
             </div>
         </div>
-        <div class="flex flex-col">
-            <div class="flex flex-col items-start gap-2">{{ form }}</div>
-        </div>
-        <div class="flex flex-col gap-2">
-            <div class="flex gap-2">
-                <button type="submit"
-                        class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                    {% trans "Continue" %}
-                </button>
-            </div>
-        </div>
-        {% include "onboarding/common/step_counter.html" with step=2 step_count="5" %}
+        {{ form }}
+        {% include "projectify/forms/submit.html" with text=_("Continue") %}
+        {% include "onboarding/common/step_counter.html" with step=2 step_count=5 %}
     </form>
     <div class="hidden h-full min-w-0 shrink grow flex-col items-center justify-center overflow-hidden bg-background md:flex xl:col-span-2">
+        <div class="py-2 ring-4 gap-2 flex flex-col ring-border bg-foreground"
+             inert>
+            <div class="mx-4 px-4 flex items-center gap-2 font-bold border rounded p-2">
+                {% icon "briefcase" size=4 %}
+                <span class="max-w-xs truncate">{{ workspace.title }}</span>
+            </div>
+            <div class="mx-4 flex flex-row items-center justify-start text-utility gap-2">
+                {% icon "folder" size=4 %}
+                <div class="font-bold mr-auto">{% trans "Projects" %}</div>
+                {% icon "chevron-up" size=4 %}
+            </div>
+            <div class="flex w-full flex-row items-center gap-1 px-4 py-1">
+                {% icon "folder" size=4 %}
+                {% translate "Your project" as project_title_default %}
+                <div id="project-title" class="max-w-xs line-clamp-1 min-w-0 font-bold">{{ project_title_default }}</div>
+            </div>
+        </div>
     </div>
+    <script>
+        (() => {
+            const titleInput = document.querySelector('input[name="title"]');
+            if (!titleInput) { return; }
+            const projectTitle = document.getElementById('project-title');
+            if (!projectTitle) { return; }
+            const defaultTitle = '{{ project_title_default }}';
+            titleInput.addEventListener('input', (event) => {
+                const title = event.target.value.trim();
+                if (!title) {
+                    projectTitle.textContent = defaultTitle;
+                    return;
+                }
+                projectTitle.textContent = title;
+            });
+        })();
+    </script>
 {% endblock onboarding_content %}

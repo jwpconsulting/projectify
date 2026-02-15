@@ -29,6 +29,7 @@ from projectify.workspace.selectors.team_member import (
     team_member_find_for_workspace,
 )
 from projectify.workspace.selectors.workspace import (
+    WorkspaceDetailQuerySet,
     workspace_find_by_workspace_uuid,
     workspace_find_for_user,
 )
@@ -156,13 +157,10 @@ def new_project(
     On error: Show project creation form with errors.
     """
     workspace = workspace_find_by_workspace_uuid(
-        workspace_uuid=workspace_uuid, who=request.user
+        workspace_uuid=workspace_uuid, who=request.user, qs=WorkspaceDetailQuerySet
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
-    projects = project_find_by_workspace_uuid(
-        workspace_uuid=workspace_uuid, who=request.user, archived=False
-    )
 
     if request.method == "POST":
         form = ProjectForm(request.POST)
@@ -178,7 +176,11 @@ def new_project(
     else:
         form = ProjectForm()
 
-    context = {"form": form, "project": projects.first()}
+    context = {
+        "form": form,
+        "workspace": workspace,
+        "project": workspace.project_set.first(),
+    }
     return render(request, "onboarding/new_project.html", context)
 
 
