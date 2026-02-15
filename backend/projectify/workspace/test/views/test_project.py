@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 """Test project CRUD views."""
 
+import re
 from datetime import datetime
 from unittest.mock import ANY
 from uuid import uuid4
@@ -658,20 +659,23 @@ class TestProjectDetailMinimize:
     def test_minimize_preserves_get_parameters(
         self,
         user_client: Client,
-        project: Project,
         team_member: TeamMember,
+        resource_url: str,
     ) -> None:
         """Test that GET parameters are preserved after minimize action."""
-        url = reverse("dashboard:projects:detail", args=(project.uuid,))
-        url_with_params = f"{url}?task_search_query=test"
-
         response = user_client.post(
-            url_with_params,
-            {"action": "minimize_project_list", "minimized": "true"},
+            resource_url,
+            {
+                "action": "minimize_team_member_filter",
+                "filter_by_team_member": team_member.uuid,
+                "minimized": "true",
+            },
         )
         assert response.status_code == 200
-        # The view re-renders with the same GET parameters
-        assert b"task_search_query" in response.content
+        pattern = rf'<input[^>]*name="filter_by_team_member"[^>]*value="{team_member.uuid}"[^>]*checked[^>]*>'
+        assert re.search(
+            pattern, response.content.decode()
+        ), "Team member filter checkbox should be checked"
 
     @pytest.mark.parametrize(
         "initial_state,form_value,expected_final_state",
