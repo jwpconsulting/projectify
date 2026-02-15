@@ -163,6 +163,7 @@
             # Run things locally
             pkgs.redis
             pkgs.python312Packages.supervisor
+            pkgs.librsvg
 
             # Test docker stuff
             pkgs.skopeo

@@ -9,7 +9,8 @@ from typing import Any, Protocol
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.staticfiles import finders
-from django.http import Http404, HttpRequest, HttpResponse
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.views.decorators.cache import cache_control
 
 from projectify.lib.types import AuthenticatedHttpRequest
@@ -68,3 +69,49 @@ def colored_icon(request: HttpRequest, icon: str, color: str) -> HttpResponse:
         .replace("<svg", f'<svg style="color: {color_map[color]}"')
     )
     return HttpResponse(svg_content, content_type="image/svg+xml")
+
+
+def manifest_view(request: HttpRequest) -> JsonResponse:
+    """Return the web app manifest.json."""
+    manifest_data = {
+        "name": "Projectify",
+        "short_name": "Projectify",
+        "description": "Free open source project management software",
+        "dir": "auto",
+        "lang": "en-US",
+        "display": "standalone",
+        "orientation": "any",
+        "start_url": "/?homescreen=1",
+        "background_color": "#fff",
+        "theme_color": "#fff",
+        "icons": [
+            {
+                "src": staticfiles_storage.url("favicon.ico"),
+                "sizes": "32x32",
+                "type": "image/x-icon",
+                "purpose": "any",
+            },
+            {
+                "src": staticfiles_storage.url("apple-touch-icon.png"),
+                "sizes": "180x180",
+                "type": "image/png",
+                "purpose": "any",
+            },
+        ],
+        "shortcuts": [
+            {
+                "name": "View Projectify Dashboard",
+                "short_name": "Dashboard",
+                "description": "View your Projectify dashboard",
+                "url": "/dashboard",
+                "icons": [
+                    {
+                        "src": staticfiles_storage.url("apple-touch-icon.png"),
+                        "sizes": "180x180",
+                        "type": "image/png",
+                    }
+                ],
+            }
+        ],
+    }
+    return JsonResponse(manifest_data)
