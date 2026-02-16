@@ -293,7 +293,7 @@ def project_detail_view(
                 case invalid:
                     raise BadRequest(f"Invalid action {invalid}")
             querydict = request.POST
-            template = "workspace/common/sidebar/project_details.html"
+            template = "workspace/common/sidemenu/project_details.html"
         case _:
             querydict = request.GET
             template = "workspace/project_detail.html"

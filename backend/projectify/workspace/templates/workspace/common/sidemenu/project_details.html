@@ -2,10 +2,10 @@
 {# SPDX-FileCopyrightText: 2024-2025 JWP Consulting GK #}
 {% load i18n %}
 {% load projectify %}
-<div id="sidebar-project-section">
+<div id="sidemenu-project-section">
     <form hx-post="{% url 'dashboard:workspaces:minimize-project-list' workspace.uuid %}"
           hx-swap="outerHTML"
-          hx-target="#sidebar-project-section">
+          hx-target="#sidemenu-project-section">
         {% csrf_token %}
         <input type="hidden"
                name="minimized"

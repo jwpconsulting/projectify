@@ -184,7 +184,7 @@ def workspace_minimize_project_list(
 
     return render(
         request,
-        "workspace/common/sidebar/project_details.html",
+        "workspace/common/sidemenu/project_details.html",
         context=context,
     )
 

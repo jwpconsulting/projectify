@@ -11,7 +11,7 @@
             <nav class="max-w-full md:max-w-xs 2xl:max-w-md h-full shrink-0 flex flex-col py-4">
                 <div class="flex flex-col gap-2 px-4 pb-4">
                     {% if workspace %}
-                        <div class="min-w-0 grow">{% include "workspace/common/sidebar/workspace_details.html" %}</div>
+                        <div class="min-w-0 grow">{% include "workspace/common/sidemenu/workspace_details.html" %}</div>
                     {% endif %}
                 </div>
                 <p class="px-4">
@@ -20,7 +20,7 @@
                     {% anchor href=trial_workspace_help label=_("Learn more") external=True %}
                 </p>
                 {% block dashboard_projects %}
-                    {% include "workspace/common/sidebar/project_details.html" %}
+                    {% include "workspace/common/sidemenu/project_details.html" %}
                 {% endblock dashboard_projects %}
             </nav>
             {% block dashboard_content %}
