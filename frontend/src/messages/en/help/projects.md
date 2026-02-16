@@ -13,37 +13,32 @@ project list in the side menu.
 
 # Edit a project
 
-To edit a project, click the **ellipsis button** (...) on the right side of the
-project's title in the side menu.
+To edit a project, go to your [workspace settings](/help/workspaces#workspace-settings) and navigate to the
+**Projects** tab. Click on the project name or the pencil icon next to the
+project you want to edit.
 
-This will bring up a context menu with an option to edit the board. Click
-**Edit project** to bring up an overlay that allows you to edit the project
-name.
+This will bring up a form that allows you to edit the project
+name and description.
 
 # Archive a project
 
-To archive a project, click the **ellipsis button** (...) on the right side of
-the project's title in the side menu.
+To archive a project, go to your [workspace settings](/help/workspaces#workspace-settings) and navigate to the
+**Projects** tab. Click the **Archive** button next to the project you want to
+archive.
 
-This will bring up a context menu with an option to archive the project. Click
-**Archive project** to bring up an overlay that allows you to archive the
-project.
+This will archive the project and move it to the archived projects section.
 
 # Delete a project
 
 You can only delete projects that have been archived first. See the above
-description under _Archive a project_ to learn how to archive a project.
+description under [Archive a project](#archive-a-project) to learn how to archive a project.
 
-To delete a project, first navigate to the project archive. You can reach the
-project archive by clicking on the **ellipsis button** (...) next to the
-**workspace dropdown button** in the side menu. From there a context menu
-opens, where you can click on **Go to archive** to go to the project archive.
+To delete a project, go to your [workspace settings](/help/workspaces#workspace-settings) and navigate to the
+**Projects** tab. In the archived projects section, you can either recover a project
+or permanently delete it. For each archived project, there are two buttons:
 
-Once you reach the project archive from there, you can either recover a project
-or permanently delete it. The project archive contains a list of archived
-projects. Under each archived project, the date is written on which the project
-was archived. To the right of the archival date, there are two buttons:
-**Recover** and **Delete**
+- **Recover**, and
+- **Delete**.
 
 To recover a project, click the **Recover** button. When you recover a project,
 it will be put back next to the other projects in your side menu.
