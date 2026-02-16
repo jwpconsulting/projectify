@@ -9,7 +9,10 @@ from django.conf import settings
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
+
+import markdown
 
 help_topics = {
     "basics": {
@@ -120,8 +123,20 @@ def help_detail(request: HttpRequest, page: str) -> HttpResponse:
     ]
     markdowntext = help_page.read_text()
 
+    # Skip markdownify and generate Markdown directly
+    md = markdown.Markdown(
+        extensions=settings.MARKDOWNIFY["default"]["MARKDOWN_EXTENSIONS"]
+    )
+    # NOTE: This is safe as long as we don't let the user control the page
+    # (e.g., local file inclusion)
+    help_html = mark_safe(md.convert(markdowntext))
+    toc_html = mark_safe(getattr(md, "toc", None))
+    assert toc_html
+
     context = {
         "help_text": markdowntext,
+        "help_html": help_html,
+        "toc_html": toc_html,
         "helptopics": help_topics_with_index.values(),
         "helptopic": topic,
     }

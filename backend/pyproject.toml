@@ -75,6 +75,7 @@ types-redis = "~4.6.0.5"
 vulture = "^2.9.1"
 types-requests = "^2.32.0.20240712"
 djlint = "^1.36.1"
+types-markdown = "^3.10.2.20260211"
 
 [build-system]
 requires = ["poetry-core"]

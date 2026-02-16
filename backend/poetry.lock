@@ -2997,6 +2997,18 @@ files = [
 ]
 
 [[package]]
+name = "types-markdown"
+version = "3.10.2.20260211"
+description = "Typing stubs for Markdown"
+optional = false
+python-versions = ">=3.10"
+groups = ["test"]
+files = [
+    {file = "types_markdown-3.10.2.20260211-py3-none-any.whl", hash = "sha256:2d94d08587e3738203b3c4479c449845112b171abe8b5cadc9b0c12fcf3e99da"},
+    {file = "types_markdown-3.10.2.20260211.tar.gz", hash = "sha256:66164310f88c11a58c6c706094c6f8c537c418e3525d33b76276a5fbd66b01ce"},
+]
+
+[[package]]
 name = "types-psycopg2"
 version = "2.9.21.20240417"
 description = "Typing stubs for psycopg2"
@@ -3371,4 +3383,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "~3.12.7"
-content-hash = "ad33f0b4bc43d0ebae17c04fbe60a65d417722928fdc9c821a56a1cb2fd8a16b"
+content-hash = "ab5b9d5e6abe8524f1cb5a69547f738e5dbbe6cc22e31ba504da85904d6cd459"
