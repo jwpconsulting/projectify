@@ -355,9 +355,16 @@ class Base(Configuration):
                 "h2",
                 "pre",
                 "code",
+                "table",
+                "thead",
+                "tbody",
+                "tr",
+                "th",
+                "td",
             ],
             "MARKDOWN_EXTENSIONS": [
-                "fenced_code",
+                "markdown.extensions.fenced_code",
+                "markdown.extensions.tables",
             ],
         }
     }
