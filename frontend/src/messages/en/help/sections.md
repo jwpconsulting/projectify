@@ -6,52 +6,34 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Create a section
 
-To create a section click the **Add a section** bottom in the bottom left
-corner. This will bring up an overlay for you to give the section a name.
+To create a section click the **Create section** button at the bottom of the
+project page. This will bring up a form for you to give the section a name
+and description.
 
-To create a new task within the section, click the **Add task** button next to
-the section title.
+To create a new task within the section, click the **Add task** button in
+the section header.
 
-# Section context menu
+# Section actions
 
-To open the **section context menu**, click the **ellipsis menu button** (...)
-in the right corner of the section.
-
-The section context menu gives you the option to:
-
-- Expanding or collapsing the section,
-- swapping positions with the previous or next section,
-- edit the section title, and
-- deleting the section.
-
-To collapse a section, click the **Collapse section** button in the section
-context menu. All tasks contained within the section will be hidden.
-
-To expand the section again, click the **Expand section** button in the section
-context menu. All tasks contained within the section will be visible again.
-
-Furthermore, you can expand or collapse a section by using the **arrow button**
-to the left of the section title.
+You can expand or collapse a section by using the **arrow button**
+to the left of the section title. When collapsed, all tasks contained within the section will be hidden.
+When expanded, all tasks contained within the section will be visible again.
 
 # Move a section
 
-To move a section up or down, open the **section context menu** by clicking the
-**ellipsis menu button** (...) in the right corner of the section. This will
-bring up a context menu with the options mentioned above in _Section context
-menu_. You can either switch the section with the previous or the next section.
+To move a section up or down, click on the pencil icon next to the section title to go to the section
+update page. From there you can use the **Move up** or **Move down** buttons
+to change the section's position.
 
-# Edit a section title
+# Edit a section
 
-To edit a section title, click the **ellipsis menu button** (...) in the right
-corner of the section. This will bring up a context menu with the options
-mentioned in _Section context menu_. Click **Edit section title** to edit the
-name of the section.
+To edit a section, click on the pencil icon next to the section title. This will take you to the
+section update page where you can edit the section title and description.
 
 # Delete a section
 
-To delete a section, click the **ellipsis menu button** (...) in the right
-corner of the section. This will bring up a context menu with the options
-mentioned in _Section context menu_. Click **Delete section** to bring up an
-overlay where you can confirm your decision to delete the section.
+To delete a section, click on the pencil icon next to the section title to go to the section update
+page. At the bottom of the page, click the **Delete this section** button
+to confirm your decision to delete the section.
 
 Deleting a section will also delete all tasks contained within.
