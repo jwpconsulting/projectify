@@ -14,17 +14,15 @@ through the onboarding process there one more time to create a new workspace.
 
 # Switch workspaces
 
-To switch between workspaces, click the **workspace dropdown** in the side
-menu. This will open up a context menu where you can switch between different
-workspaces associated with your account. The workspace dropdown is the topmost
-in the side menu.
+To switch between workspaces, click the **workspace selector** in the side
+menu. This will expand a list where you can switch between different
+workspaces associated with your account. The workspace selector is the topmost
+element in the side menu and shows your current workspace name.
 
 # Workspace settings
 
-To go to **workspace settings**, click the **workspace ellipsis button** (...)
-next to the **workspace dropdown button** button in the side menu. This will
-open up a context menu where you can access the current workspaces settings
-page.
+To go to the workspace settings, click the **workspace selector** in the side
+menu to expand it, then click **Workspace Settings** at the top of the list.
 
 The workspace settings consist of six tabs:
 
