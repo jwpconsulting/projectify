@@ -18,16 +18,11 @@
             {% trans "An illustration showing how Projectify displays each team members assigned task count" as alt %}
             {# TODO update screenshot of team member filter #}
             {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="solutions/project-management-team-member.png" alt=alt imgPosition="left" %}
-            {% trans "Full control of your workspaces" as title %}
-            {% trans "Split your workspace into projects to enable multi-project management. Filter by labels or team members to focus on specific tasks." as text %}
-            {% trans "An illustration showing a collapsed dashboard side bar and various team members and labels" as alt %}
-            {# TODO update screenshot of side nav #}
-            {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="solutions/filters.png" alt=alt imgPosition="right" %}
             {% trans "Permissions to control access" as title %}
             {% trans "Make sure nothing important gets deleted. With permission roles - Owner, Maintainer, Contributor and Observer, you can be safe in knowing there won't be any accidental data loss." as text %}
             {% trans "An illustration of a settings screen showing team members belonging to a team member and their role within the workspace. The illustration also shows a button allowing filtering by role and another button letting a user invite new team members" as alt %}
             {# TODO update screenshot of team members settings #}
-            {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="solutions/project-management-permissions.png" alt=alt imgPosition="left" %}
+            {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="solutions/project-management-permissions.png" alt=alt imgPosition="right" %}
         </div>
     </main>
 {% endblock solutions_content %}

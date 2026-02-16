@@ -17,6 +17,7 @@ from django.urls import reverse
 
 from faker import Faker
 from selenium import webdriver
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -65,7 +66,9 @@ class Command(BaseCommand):
     owner: Optional[User] = None
     test_users: list[User] = []
     essay_task = None
+    branding_task = None
     in_progress_section = None
+    coursework_section = None
     software_project = None
 
     @transaction.atomic
@@ -119,6 +122,7 @@ class Command(BaseCommand):
                 email_or_user=user,
                 who=self.owner,
             )
+        team_members = self.workspace.teammember_set.all()
 
         labels_data = [
             ("Bug", 0),
@@ -156,14 +160,16 @@ class Command(BaseCommand):
             title="In progress",
             _order=0,
         )
+        self.coursework_section = Section.objects.create(
+            project=self.software_project,
+            title="Coursework",
+            _order=1,
+        )
+        # Put this last to conveniently hide the "Create section" button from
+        # Selenium
         todo_section = Section.objects.create(
             project=self.software_project,
             title="To Do",
-            _order=1,
-        )
-        done_section = Section.objects.create(
-            project=self.software_project,
-            title="Done",
             _order=2,
         )
 
@@ -193,12 +199,13 @@ class Command(BaseCommand):
                 description=description,
                 sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
                 labels=[labels[label_name]],
+                assignee=fake.random_element(elements=team_members),
             )
 
         # Used in academic solutions page
         self.essay_task = task_create_nested(
             who=self.owner,
-            section=done_section,
+            section=self.coursework_section,
             title="Write essay for assignment",
             description="Complete the essay assignment for the course",
             sub_tasks={
@@ -213,7 +220,44 @@ class Command(BaseCommand):
                 ],
                 "update_sub_tasks": [],
             },
-            labels=[labels["Enhancement"]],
+            labels=[labels["Investigate"]],
+            assignee=fake.random_element(elements=team_members),
+        )
+        task_create_nested(
+            who=self.owner,
+            section=self.coursework_section,
+            title="Research methodology review",
+            sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
+            labels=[],
+            assignee=fake.random_element(elements=team_members),
+        )
+
+        task_create_nested(
+            who=self.owner,
+            section=self.coursework_section,
+            title="Prepare presentation slides",
+            sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
+            labels=[labels["Design"]],
+            assignee=fake.random_element(elements=team_members),
+        )
+
+        # Task for sub-tasks screenshot
+        self.branding_task = task_create_nested(
+            who=self.owner,
+            section=self.in_progress_section,
+            title="Brand identity development",
+            description="Develop comprehensive brand identity for the project",
+            sub_tasks={
+                "create_sub_tasks": [
+                    {"title": "Create moodboard", "done": True, "_order": 0},
+                    {"title": "Brainstorm logo", "done": True, "_order": 1},
+                    {"title": "Finalise branding", "done": False, "_order": 2},
+                    {"title": "Draft presentation", "done": False, "_order": 3},
+                ],
+                "update_sub_tasks": [],
+            },
+            labels=[labels["Design"]],
+            assignee=fake.random_element(elements=team_members),
         )
 
         for label_name in labels.keys():
@@ -225,6 +269,7 @@ class Command(BaseCommand):
                     description=fake.text(max_nb_chars=100),
                     sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
                     labels=[labels[label_name]],
+                    assignee=fake.random_element(elements=team_members),
                 )
 
     def cleanup_test_data(self) -> None:
@@ -262,10 +307,12 @@ class Command(BaseCommand):
         assert self.workspace
         assert self.software_project
         assert self.in_progress_section
+        assert self.coursework_section
         assert self.essay_task
+        assert self.branding_task
 
         driver.get(f"{base_url}{reverse("users-django:log-in")}")
-        wait = WebDriverWait(driver, 10)
+        wait = WebDriverWait(driver, 2)
         email_field = wait.until(
             EC.presence_of_element_located((By.NAME, "email"))
         )
@@ -343,8 +390,43 @@ class Command(BaseCommand):
                 (By.CSS_SELECTOR, subtasks_selector)
             )
         )
+        ActionChains(driver).scroll_to_element(subtasks_element).perform()
         subtasks_element.screenshot(
             str(output_directory / "academic-sub-task.png")
+        )
+
+        # academic solutions coursework section
+        driver.get(
+            f"{base_url}{reverse('dashboard:projects:detail', kwargs={'project_uuid': self.software_project.uuid})}"
+        )
+        self.remove_debug_toolbar(driver)
+        coursework_section_selector = (
+            f"#section-{self.coursework_section.uuid}"
+        )
+        coursework_section_element = wait.until(
+            EC.presence_of_element_located(
+                (By.CSS_SELECTOR, coursework_section_selector)
+            )
+        )
+        ActionChains(driver).scroll_to_element(coursework_section_element).perform()
+        coursework_section_element.screenshot(
+            str(output_directory / "academic-tasks.png")
+        )
+
+        # sub-tasks screenshot for landing
+        driver.get(
+            f"{base_url}{reverse('dashboard:tasks:detail', kwargs={'task_uuid': self.branding_task.uuid})}"
+        )
+        self.remove_debug_toolbar(driver)
+        subtasks_selector = "#subtasks"
+        subtasks_element = wait.until(
+            EC.presence_of_element_located(
+                (By.CSS_SELECTOR, subtasks_selector)
+            )
+        )
+        ActionChains(driver).scroll_to_element(subtasks_element).perform()
+        subtasks_element.screenshot(
+            str(output_directory / "sub-tasks.png")
         )
 
     def add_arguments(self, parser: Any) -> None:
@@ -365,7 +447,7 @@ class Command(BaseCommand):
         del args, options
 
         url = "http://localhost:8000"
-        output_directory = Path("screenshots")
+        output_directory = Path("projectify/storefront/static/solutions")
         output_directory.mkdir(parents=True, exist_ok=True)
 
         firefox_options = Options()
@@ -375,7 +457,7 @@ class Command(BaseCommand):
         try:
             self.create_test_data()
             driver = webdriver.Firefox(options=firefox_options)
-            driver.set_window_size(1024, 720)
+            driver.set_window_size(1024, 1920)
             self.take_screenshot(
                 driver, base_url=url, output_directory=output_directory
             )

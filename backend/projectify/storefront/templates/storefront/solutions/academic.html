@@ -16,9 +16,11 @@
             {% trans "Checklists that aid your progress" as title %}
             {% trans "We know that projects and dissertations can be daunting, but we're here to help. Breaking tasks into smaller sub tasks allow you to micro-achieve your way to completion." as text %}
             {% trans "An illustration showing how users can track subtask progress for each task" as alt %}
-            {# TODO update sub task screenshot #}
             {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="solutions/academic-sub-task.png" alt=alt imgPosition="left" %}
-            {# TODO add section about collaboration #}
+            {% trans "Organize your coursework efficiently" as title %}
+            {% trans "Keep all your tasks organized in one place. From essay assignments to research projects, Projectify helps you  collaborate with classmates. Labels make it easy to categorize and prioritze your coursework." as text %}
+            {% trans "A screenshot showing academic tasks organized with labels and assignees" as alt %}
+            {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="solutions/academic-tasks.png" alt=alt imgPosition="right" %}
         </div>
     </main>
 {% endblock solutions_content %}
