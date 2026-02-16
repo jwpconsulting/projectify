@@ -14,7 +14,7 @@ from django.utils.translation import gettext_lazy as _
 
 import markdown
 
-help_topics = {
+HELP_TOPICS = {
     "basics": {
         "title": _("Basics"),
         "description": _("Your first steps towards productivity"),
@@ -96,13 +96,13 @@ help_topics_with_index = {
         "markdown_file": Path("overview.md"),
         "href": reverse_lazy("help:list"),
     },
-    **help_topics,
+    **HELP_TOPICS,
 }
 
 
 def help_list(request: HttpRequest) -> HttpResponse:
     """Serve Help list page."""
-    context = {"helptopics": help_topics.values()}
+    context = {"helptopics": HELP_TOPICS.values()}
     return render(request, "help/help_list.html", context)
 
 
@@ -113,7 +113,7 @@ def help_detail(request: HttpRequest, page: str) -> HttpResponse:
     Because `page` is used to load a markdown file, extra care needs to be
     taken to not let the user load arbitrary files.
     """
-    topic = help_topics.get(page)
+    topic = HELP_TOPICS.get(page)
     if topic is None:
         raise Http404(
             _("{page} is not a valid help page title").format(page=page)
