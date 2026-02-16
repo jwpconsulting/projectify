@@ -28,9 +28,9 @@ For more information on boards please see the [projects help](/help/projects).
 A section is a category inside a project that you can divide tasks into.
 Popular categories in a Kanban-style project are the following:
 
-- ‘To do’,
-- ‘In progress’, and
-- ‘Done’.
+- **To do**,
+- **In progress**, and
+- **Done**.
 
 Sections can be moved and edited freely inside a project.
 

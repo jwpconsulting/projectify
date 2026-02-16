@@ -13,7 +13,7 @@ clicking **Filter labels** and then click the **Create new label** button at
 the bottom of the _label menu_.
 
 This will open up a new menu where you can write the name of your new label as
-well as choose a color for it. Click the \*\*Save button\_\_ to create your new
+well as choose a color for it. Click the **Save button** to create your new
 label.
 
 # Assign a label to a task
