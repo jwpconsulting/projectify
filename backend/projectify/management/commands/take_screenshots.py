@@ -174,12 +174,47 @@ class Command(BaseCommand):
         )
 
         # Used in development team solutions page
+        task_create_nested(
+            who=self.owner,
+            section=self.in_progress_section,
+            title="Beta testing for level 6",
+            description="Conduct beta testing for level 6 functionality",
+            sub_tasks={
+                "create_sub_tasks": [
+                    {
+                        "title": "Set up test environment",
+                        "done": True,
+                        "_order": 0,
+                    },
+                    {
+                        "title": "Create test scenarios",
+                        "done": True,
+                        "_order": 1,
+                    },
+                    {
+                        "title": "Execute gameplay tests",
+                        "done": False,
+                        "_order": 2,
+                    },
+                    {
+                        "title": "Test user interface",
+                        "done": False,
+                        "_order": 3,
+                    },
+                    {
+                        "title": "Performance testing",
+                        "done": False,
+                        "_order": 4,
+                    },
+                    {"title": "Document findings", "done": False, "_order": 5},
+                ],
+                "update_sub_tasks": [],
+            },
+            labels=[labels["Testing"]],
+            assignee=fake.random_element(elements=team_members),
+        )
+
         tasks_data = [
-            (
-                "Beta testing for level 6",
-                "Conduct beta testing for level 6 functionality",
-                "Testing",
-            ),
             (
                 "Fix collision engine bug",
                 "Investigate and fix the collision engine bug",
@@ -244,7 +279,7 @@ class Command(BaseCommand):
         # Task for sub-tasks screenshot
         self.branding_task = task_create_nested(
             who=self.owner,
-            section=self.in_progress_section,
+            section=todo_section,
             title="Brand identity development",
             description="Develop comprehensive brand identity for the project",
             sub_tasks={
@@ -252,7 +287,11 @@ class Command(BaseCommand):
                     {"title": "Create moodboard", "done": True, "_order": 0},
                     {"title": "Brainstorm logo", "done": True, "_order": 1},
                     {"title": "Finalise branding", "done": False, "_order": 2},
-                    {"title": "Draft presentation", "done": False, "_order": 3},
+                    {
+                        "title": "Draft presentation",
+                        "done": False,
+                        "_order": 3,
+                    },
                 ],
                 "update_sub_tasks": [],
             },
@@ -408,7 +447,9 @@ class Command(BaseCommand):
                 (By.CSS_SELECTOR, coursework_section_selector)
             )
         )
-        ActionChains(driver).scroll_to_element(coursework_section_element).perform()
+        ActionChains(driver).scroll_to_element(
+            coursework_section_element
+        ).perform()
         coursework_section_element.screenshot(
             str(output_directory / "academic-tasks.png")
         )
@@ -425,9 +466,7 @@ class Command(BaseCommand):
             )
         )
         ActionChains(driver).scroll_to_element(subtasks_element).perform()
-        subtasks_element.screenshot(
-            str(output_directory / "sub-tasks.png")
-        )
+        subtasks_element.screenshot(str(output_directory / "sub-tasks.png"))
 
     def add_arguments(self, parser: Any) -> None:
         """Add command arguments."""
