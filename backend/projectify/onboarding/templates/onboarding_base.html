@@ -3,11 +3,9 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-    <div class="flex grow flex-col">
-        {% include "common/navigation/header/dashboard.html" %}
-        <main class="flex grow flex-col md:grid md:grid-cols-2 xl:grid-cols-3">
-            {% block onboarding_content %}
-            {% endblock onboarding_content %}
-        </main>
-    </div>
+    {% include "common/navigation/header/dashboard.html" %}
+    <main class="flex grow flex-col md:grid md:grid-cols-2 xl:grid-cols-3">
+        {% block onboarding_content %}
+        {% endblock onboarding_content %}
+    </main>
 {% endblock content %}
