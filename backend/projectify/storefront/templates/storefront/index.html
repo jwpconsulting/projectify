@@ -9,87 +9,77 @@
 {% endblock title %}
 {% block storefront_content %}
     <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
-        <div class="flex w-full flex-col items-center">
-            <div class="w-full max-w-4xl px-6 py-6 sm:py-12">
-                <section slot="hero"
-                         class="grid grid-cols-1 items-center gap-4 sm:grid-cols-2">
-                    <div class="flex flex-col gap-12">
-                        <header class="flex flex-col gap-10">
-                            <h1 class="text-4xl font-bold md:text-6xl">{% trans "Manage projects the right way." %}</h1>
-                            <p>
-                                {% trans "Warp drive your way to success with software that helps you collaborate on and manage projects efficiently at speed." %}
-                            </p>
-                        </header>
-                        {% if user.is_authenticated %}
-                            <a href="{% url 'dashboard:dashboard' %}"
-                               class=" bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Continue to dashboard" %}</a>
-                        {% else %}
-                            <a href="{% url 'users-django:sign-up' %}"
-                               class=" bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Start a free trial" %}</a>
-                        {% endif %}
-                    </div>
-                    <div class="max-w-md">
-                        <img src="{% static "hero.png" %}"
-                             alt="{% trans "An illustration showing the look and feel of tasks in Projectify's user interface" %}"
-                             width="1559"
-                             height="992">
-                    </div>
-                </section>
+        <section class="w-full max-w-4xl px-6 py-6 sm:py-12 grid grid-cols-1 items-center gap-4 sm:grid-cols-2">
+            <div class="flex flex-col gap-12">
+                <header class="flex flex-col gap-10">
+                    <h1 class="text-4xl font-bold md:text-6xl">{% trans "Manage projects the right way." %}</h1>
+                    <p>
+                        {% trans "Warp drive your way to success with software that helps you collaborate on and manage projects efficiently at speed." %}
+                    </p>
+                </header>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard:dashboard' %}"
+                       class=" bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Continue to dashboard" %}</a>
+                {% else %}
+                    <a href="{% url 'users-django:sign-up' %}"
+                       class=" bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Start a free trial" %}</a>
+                {% endif %}
             </div>
-        </div>
-        <div class="w-full p-6 max-w-4xl">
-            <div slot="content" class="flex flex-col gap-16">
-                <section class="flex flex-col gap-4">
-                    <h2 class="text-center text-3xl font-bold md:text-5xl">
-                        {% blocktrans %}Everything you need to <span class="text-primary">stay organized</span> and <span class="text-primary">deliver faster</span>{% endblocktrans %}
-                    </h2>
-                    <h4 class="text-center text-2xl font-bold md:text-3xl">
-                        {% trans "The go-to project management tool for developers." %}
-                    </h4>
-                </section>
-                {% include "storefront/common/solutions_detail_item.html" with title=_("Transform mammoth tasks into smaller, feasible ones") text=_("Sub tasks break up the workload to make large tasks more realistic and achievable.") src="sub-task.png" alt=_("A screenshot from a task in the Projectify UI showing how sub tasks can be assigned to tasks") imgPosition="left" %}
-                {% include "storefront/common/solutions_detail_item.html" with title=_("Full control of your workspaces") text=_("Split your workspace into projects to enable multi-project management. Filter by labels, team members, or keywords to focus on specific tasks.") src="filters.png" alt=_("An illustration showing how tasks can be filtered by team members or labels") %}
-                {% include "storefront/common/solutions_detail_item.html" with title=_("Responsive for on-the-go") text=_("Need to access your projects while away from the office? No app. No problem. A fully responsive experience to stay connected and keep projects on track.") src="responsive.png" alt=_("An illustration of a smartphone showing the Projectify UI in landscape orientation.") imgPosition="left" %}
-                <section class="flex flex-col gap-7">
-                    <header class="flex flex-col gap-3">
-                        <h2 class="text-2xl font-bold sm:text-4xl">{% trans "Meeting diverse needs with practical solutions." %}</h2>
-                        <p>
-                            {% trans "From companies big and small to individuals working alone, you can use Projectify to manage all kinds of tasks." %}
-                        </p>
-                    </header>
-                    <div class="flex flex-col gap-5 text-center">
-                        <div class="grid grid-cols-1 gap-8 sm:grid-cols-3">
-                            <div class="flex flex-col gap-3">
-                                <img src="{% static "solutions/hero-development-teams.png" %}"
-                                     alt="{% trans "An illustration showing our mascot Poly working at a computer" %}"
-                                     width="728"
-                                     height="492">
-                                <a href="{% url 'storefront:solutions:detail' page='development-teams' %}"
-                                   class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-lg">{% trans "Development teams" %}</a>
-                            </div>
-                            <div class="flex flex-col gap-3">
-                                <img src="{% static "solutions/hero-research.png" %}"
-                                     alt="{% trans "An illustration showing our mascot researching in a laboratory" %}"
-                                     width="728"
-                                     height="492">
-                                {% anchor "storefront:solutions:detail" "Research" page="research" %}
-                            </div>
-                            <div class="flex flex-col gap-3">
-                                <img src="{% static "solutions/hero-project-management.png" %}"
-                                     alt="{% trans "An illustration showing our mascot overseeing our factory" %}"
-                                     width="728"
-                                     height="494">
-                                {% anchor "storefront:solutions:detail" "Project management" page="project-management" %}
-                            </div>
-                        </div>
-                        {% anchor "storefront:solutions:list" "See more use cases" %}
-                    </div>
-                </section>
-                {% include "storefront/common/solutions_detail_item.html" with title=_("We never sell your data. Ever.") text=_("Our platform fully complies with GDPR regulations, amongst others, so you can rest assured that your private information stays private.") src="privacy.png" alt=_("An illustration showing our mascot Poly safekeeping your data") %}
-                {% trans "Projectify is 100% Free Software" as title %}
-                {% url "storefront:free_software" as learnmore_url %}
-                {% include "storefront/common/solutions_detail_item.html" with title=title text=_("We respect your freedom and privacy and provide you with the source code under a Free Software license. The Projectify application is licensed under the GNU Affero General Public License (AGPL) version 3.0 or later.") src="open-source.png" alt=_("Birds freed from their gilded cages") imgPosition="left" learnmore_url=learnmore_url %}
+            <div class="max-w-md">
+                <img src="{% static "hero.png" %}"
+                     alt="{% trans "An illustration showing the look and feel of tasks in Projectify's user interface" %}"
+                     width="1559"
+                     height="992">
             </div>
+        </section>
+        <div class="w-full p-6 max-w-4xl flex flex-col gap-16">
+            <section class="flex flex-col gap-4">
+                <h2 class="text-center text-3xl font-bold md:text-5xl">
+                    {% blocktrans %}Everything you need to <span class="text-primary">stay organized</span> and <span class="text-primary">deliver faster</span>{% endblocktrans %}
+                </h2>
+                <h4 class="text-center text-2xl font-bold md:text-3xl">
+                    {% trans "The go-to project management tool for developers." %}
+                </h4>
+            </section>
+            {% include "storefront/common/solutions_detail_item.html" with title=_("Transform mammoth tasks into smaller, feasible ones") text=_("Sub tasks break up the workload to make large tasks more realistic and achievable.") src="sub-task.png" alt=_("A screenshot from a task in the Projectify UI showing how sub tasks can be assigned to tasks") imgPosition="left" %}
+            {% include "storefront/common/solutions_detail_item.html" with title=_("Full control of your workspaces") text=_("Split your workspace into projects to enable multi-project management. Filter by labels, team members, or keywords to focus on specific tasks.") src="filters.png" alt=_("An illustration showing how tasks can be filtered by team members or labels") imgPosition="right" %}
+            {% include "storefront/common/solutions_detail_item.html" with title=_("Responsive for on-the-go") text=_("Need to access your projects while away from the office? No app. No problem. A fully responsive experience to stay connected and keep projects on track.") src="responsive.png" alt=_("An illustration of a smartphone showing the Projectify UI in landscape orientation.") imgPosition="left" %}
+            <section class="flex flex-col gap-7">
+                <header class="flex flex-col gap-3">
+                    <h2 class="text-2xl font-bold sm:text-4xl">{% trans "Meeting diverse needs with practical solutions." %}</h2>
+                    <p>
+                        {% trans "From companies big and small to individuals working alone, you can use Projectify to manage all kinds of tasks." %}
+                    </p>
+                </header>
+                <div class="grid grid-cols-1 gap-8 sm:grid-cols-3 text-center">
+                    <div class="flex flex-col gap-3">
+                        <img src="{% static "solutions/hero-development-teams.png" %}"
+                             alt="{% trans "An illustration showing our mascot Poly working at a computer" %}"
+                             width="728"
+                             height="492">
+                        {% anchor "storefront:solutions:detail" label=_("Development teams") page="development-teams" %}
+                    </div>
+                    <div class="flex flex-col gap-3">
+                        <img src="{% static "solutions/hero-project-management.png" %}"
+                             alt="{% trans "Two Polys in a factory pointing at machines symbolized by huge gears. The mascot on the left holds a wrench." %}"
+                             width="728"
+                             height="492">
+                        {% anchor "storefront:solutions:detail" label=_("Project management") page="project-management" %}
+                    </div>
+                    <div class="flex flex-col gap-3">
+                        <img src="{% static "solutions/hero-academic.png" %}"
+                             alt="{% trans "Our mascot Poly celebrating their graduation from an educiational institution, wearing an academic dress, throwing a square academic cap into the air" %}"
+                             width="728"
+                             height="494">
+                        {% anchor "storefront:solutions:detail" label=_("Academic endeavours") page="academic" %}
+                    </div>
+                </div>
+            </section>
+            {% url "storefront:privacy" as pp_url %}
+            {% include "storefront/common/solutions_detail_item.html" with title=_("We never sell your data. Ever.") text=_("Our platform fully complies with GDPR regulations, amongst others, so you can rest assured that your private information stays private.") src="privacy.png" alt=_("An illustration showing our mascot Poly safekeeping your data") learnmore_url=pp_url imgPosition="right" %}
+            {% trans "Projectify is 100% Free Software" as title %}
+            {% url "storefront:free_software" as learnmore_url %}
+            {% include "storefront/common/solutions_detail_item.html" with title=title text=_("We respect your freedom and privacy and provide you with the source code under a Free Software license. The Projectify application is licensed under the GNU Affero General Public License (AGPL) version 3.0 or later.") src="open-source.png" alt=_("Birds freed from their gilded cages") imgPosition="left" learnmore_url=learnmore_url %}
         </div>
     </main>
 {% endblock storefront_content %}
