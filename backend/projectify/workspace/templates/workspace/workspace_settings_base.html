@@ -1,10 +1,7 @@
-{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "dashboard_base.html" %}
 {% load i18n %}
-{% block dashboard_projects %}
-    {% include "workspace/common/sidemenu/project_details.html" with projects=projects %}
-{% endblock dashboard_projects %}
 {% block dashboard_content %}
     <div class="min-w-0 grow" role="presentation">
         <div class="flex h-full flex-col items-center bg-background px-0 py-8 sm:px-2">

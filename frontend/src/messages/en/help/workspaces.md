@@ -26,26 +26,37 @@ next to the **workspace dropdown button** button in the side menu. This will
 open up a context menu where you can access the current workspaces settings
 page.
 
-The workspace settings consist of four pages:
+The workspace settings consist of six tabs:
 
 - **General**,
+- **Projects**,
+- **Labels**,
 - **Team members**,
 - **Billing**, and
 - **Quota**,
 
-**General** provides information on your current workspace such as the name of
-the workspace. **Team members** allows you to add, edit permissions and delete
-team members. **Billing** provides a way for you to amend your account billing
-details. **Quota** shows you how many more items you can create in your
+The **General** tab provides information on your current workspace such as the name of
+the workspace.
+
+The **Projects** tab shows all projects in your workspace, including
+archived ones. You can edit, archive, and delete your projects.
+To learn more about the projects tab, visit the [projects help](/help/projects).
+
+The **Labels** tab allows you to create, edit and delete labels for
+organizing your tasks.
+To learn more about the labels tab, visit the [labels help](/help/labels).
+
+The **Team members** tab allows you to add, edit permissions and delete
+team members.
+To learn more about the team members tab, visit the [team members help](/help/team-members).
+
+The **Billing** tab provides a way for you to amend your account billing
+details.
+To learn more about the billing tab, visit the [billing help](/help/billing).
+
+The **Quota** tab shows you how many more items you can create in your
 Projectify workspace.
-
-To learn more about the team members page, visit the [team members
-help](/help/team-members).
-
-To learn more about the billing page, visit the [billing help](/help/billing).
-
-To learn more about the quota page, visit the [workspace quota
-help](/help/quota).
+To learn more about the quota tab, visit the [workspace quota help](/help/quota).
 
 # Delete a workspace
 
