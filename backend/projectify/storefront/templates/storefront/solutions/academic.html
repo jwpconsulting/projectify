@@ -3,6 +3,7 @@
 {% extends "solutions_base.html" %}
 {% load static %}
 {% load i18n %}
+{% load projectify %}
 {% block title %}
     {% translate "Projectify for academia" %}
 {% endblock title %}
@@ -22,5 +23,6 @@
             {% trans "A screenshot showing academic tasks organized with labels and assignees" as alt %}
             {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="solutions/academic-tasks.png" alt=alt imgPosition="right" %}
         </div>
+        {% anchor href="storefront:solutions:list" label=_("Find other solutions for your project management needs") %}
     </main>
 {% endblock solutions_content %}

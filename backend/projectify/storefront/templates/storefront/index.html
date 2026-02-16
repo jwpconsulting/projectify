@@ -25,11 +25,27 @@
                        class=" bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Start a free trial" %}</a>
                 {% endif %}
             </div>
-            <div class="max-w-md">
-                <img src="{% static "hero.png" %}"
-                     alt="{% trans "An illustration showing the look and feel of tasks in Projectify's user interface" %}"
-                     width="1559"
-                     height="992">
+            <div class="h-[300px] flex flex-row items-center overflow-hidden">
+                <div class="relative rounded-lg transform -rotate-12 h-48 flex flex-row items-center p-4">
+                    <div class="absolute h-0.5 w-[96px] bg-primary opacity-10 transform -skew-x-12 left-[0%] top-[5%]"></div>
+                    <div class="absolute h-0.25 w-[80px] bg-primary opacity-10 transform -skew-x-12 left-[9%] top-[85%]"></div>
+                    <div class="absolute h-0.5 w-[112px] bg-primary opacity-10 transform -skew-x-12 left-[18%] top-[15%]"></div>
+                    <div class="absolute h-0.5 w-[64px] bg-primary opacity-10 transform -skew-x-12 left-[27%] top-[90%]"></div>
+                    <div class="absolute h-0.5 w-[128px] bg-primary opacity-10 transform -skew-x-12 left-[36%] top-[10%]"></div>
+                    <div class="absolute h-0.25 w-[88px] bg-primary opacity-10 transform -skew-x-12 left-[45%] top-[75%]"></div>
+                    <div class="absolute h-0.5 w-[104px] bg-primary opacity-10 transform -skew-x-12 left-[54%] top-[95%]"></div>
+                    <div class="absolute h-0.5 w-[72px] bg-primary opacity-10 transform -skew-x-12 left-[63%] top-[20%]"></div>
+                    <div class="absolute h-0.5 w-[120px] bg-primary opacity-10 transform -skew-x-12 left-[72%] top-[80%]"></div>
+                    <div class="absolute h-0.5 w-[96px] bg-primary opacity-10 transform -skew-x-12 left-[81%] top-[25%]"></div>
+                    <div class="absolute h-0.5 w-[80px] bg-primary opacity-10 transform -skew-x-12 left-[90%] top-[70%]"></div>
+                    <div class="absolute h-0.5 w-[96px] bg-primary opacity-10 transform -skew-x-12 left-[10%] top-[55%]"></div>
+                    <div class="absolute h-0.5 w-[80px] bg-primary opacity-10 transform -skew-x-12 left-[90%] top-[70%]"></div>
+                    <img src="{% static "solutions/development-teams-tasks.png" %}"
+                         alt="{% trans "An illustration showing the look and feel of tasks in Projectify's user interface" %}"
+                         width="692"
+                         height="206"
+                         class="relative z-10 shadow-lg">
+                </div>
             </div>
         </section>
         <div class="w-full p-6 max-w-4xl flex flex-col gap-16">
