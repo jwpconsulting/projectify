@@ -17,11 +17,11 @@ help](/help/workspaces).
 # What is a project?
 
 A project in your workspace is something that you would like to work on. In a
-paid workspace, you can create unlimited projects and have the freedom to
-rename and organize them. Completed boards can be archived to remove clutter
+[paid workspace](/help/quota#what-are-quotas), you can create unlimited projects and have the freedom to
+rename and organize them. Completed projects can be archived to remove clutter
 from your workspace.
 
-For more information on boards please see the [projects help](/help/projects).
+For more information on projects please see the [projects help](/help/projects).
 
 # What is a section?
 
@@ -54,7 +54,7 @@ For more information on tasks please see the [tasks help](/help/tasks).
 
 The side menu allows for full control of your workspace and projects.
 
-You are able to switch between workspaces or boards through this menu.
+You are able to switch between workspaces or projects through this menu.
 Filtering between team members and labels can also be performed here. Workspace
 settings such as permissions and billing can be accessed from this menu.
 
