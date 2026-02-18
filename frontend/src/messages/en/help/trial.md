@@ -11,7 +11,7 @@ having to enter your credit card data. This help page will explain how to
 create a trial workspace, get started using it and then upgrade it to a paid
 workspace.
 
-# Signing up for a trial workspaces
+# Signing up for a trial workspace
 
 You can sign up for a trial workspace by creating a new account on the [sign up
 page](/user/sign-up). There, you can enter the email address and password used
@@ -30,23 +30,23 @@ create your first project, task and so on.
 # Using the trial workspace
 
 After the onboarding finishes, you can start using your trial workspace. You
-can add other team members by going to the [team member
+can add other team members to your trial workspace by going to the [team
 settings](/help/team-members). You can add new projects, sections,
-and tasks, and use all the other features available in Projectify.
+and tasks, and use all the other workspace features available in Projectify.
 
 Within a trial, certain limits will apply to your workspace, such as how many
-team members you will be able to add, or how many projects and tasks
-and so on you can create. Please review the [workspace quota
+team members you can add, or how many projects, tasks, and more
+you can create. Please review the [workspace quota
 help](/help/quota#quotas-for-trial-workspaces) for more information on this.
 
 # Upgrading to a paid workspace
 
 If you want to turn your trial workspace into a paid workspace, you can
-subscribe from the [billing settings page](/help/billing) in your workspace
+subscribe from the [billing settings](/help/billing) in your workspace
 settings. With a paid workspace, you can add as many items (projects,
-tasks, and so on) as you want to, and as many team members as you have added
+tasks, and more) as you want to, and as many team members as you have added
 seats to your workspace.
 
 The exact usage quotas that apply to paid workspaces are described in the
 workspace quota help [paid workspace
-section](/help/quota#quotas-for-trial-workspaces).
+section](/help/quota).
