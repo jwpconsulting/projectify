@@ -98,7 +98,12 @@ def project_detail_query_set(
     label_qs = label_qs.annotate(is_filtered=label_is_filtered)
 
     if task_search_query is not None:
-        task_q = task_q & Q(title__icontains=task_search_query)
+        task_q = task_q & (
+            Q(number__icontains=task_search_query)
+            | Q(title__icontains=task_search_query)
+            | Q(section__title__icontains=task_search_query)
+            | Q(section__project__title__icontains=task_search_query)
+        )
 
     task_qs = (
         Task.objects.annotate(
