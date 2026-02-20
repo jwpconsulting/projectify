@@ -4,10 +4,13 @@
 """Workspace CRUD views."""
 
 import logging
+from dataclasses import dataclass
 from typing import Any, TypedDict
 from uuid import UUID
 
 from django import forms
+from django.core import exceptions
+from django.db.models import QuerySet
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
@@ -44,7 +47,11 @@ from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
 from ..models import Workspace
 from ..models.const import COLOR_MAP
 from ..models.label import Label
-from ..selectors.labels import LabelDetailQuerySet, label_find_by_label_uuid
+from ..selectors.labels import (
+    LabelDetailQuerySet,
+    label_find_by_label_uuid,
+    labels_annotate_with_colors,
+)
 from ..selectors.project import project_find_by_workspace_uuid
 from ..selectors.quota import workspace_get_all_quotas
 from ..selectors.team_member import (
@@ -74,6 +81,29 @@ from ..services.workspace import workspace_create, workspace_update
 from ..types import Quota
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass(kw_only=True, frozen=True)
+class ColorInfo:
+    """Color information for form widgets."""
+
+    name: str
+    bg_class: str
+    border_class: str
+    text_class: str
+
+
+def create_color_choices() -> dict[Any, ColorInfo]:
+    """Create color choices for label colors."""
+    return {
+        i: ColorInfo(
+            name=info["name"],
+            bg_class=info["bg_class"],
+            border_class=info["border_class"],
+            text_class=info["text_class"],
+        )
+        for i, info in COLOR_MAP.items()
+    }
 
 
 def _get_workspace_settings_context(
@@ -307,7 +337,7 @@ def workspace_settings_label(
         **_get_workspace_settings_context(
             request=request, workspace=workspace, active_tab="labels"
         ),
-        "labels": workspace.label_set.all(),
+        "labels": labels_annotate_with_colors(workspace.label_set.all()),
     }
     return render(
         request, "workspace/workspace_settings_labels.html", context=context
@@ -319,6 +349,20 @@ class LabelCreateForm(forms.ModelForm):
 
     name = forms.CharField(max_length=100)
     color = forms.IntegerField()
+
+    def __init__(self, *args: Any, **kwargs: Any):
+        """Initialize form with color widget."""
+        super().__init__(*args, **kwargs)
+        color_widget = forms.RadioSelect()
+        color_widget.option_template_name = (
+            "workspace/forms/widgets/select_label_option.html"
+        )
+
+        self.fields["color"] = forms.ChoiceField(
+            label=_("Color"),
+            choices=create_color_choices(),
+            widget=color_widget,
+        )
 
     class Meta:
         """Meta settings for LabelCreateForm."""
@@ -375,7 +419,7 @@ def workspace_settings_new_label(
             color=form.cleaned_data["color"],
             who=request.user,
         )
-    except ValidationError as error:
+    except (exceptions.ValidationError, ValidationError) as error:
         populate_form_with_drf_errors(form, error)
         return render(
             request,
@@ -391,8 +435,21 @@ class LabelUpdateForm(forms.ModelForm):
     """Form for updating labels."""
 
     name = forms.CharField()
-    # TODO
     color = forms.IntegerField()
+
+    def __init__(self, labels: QuerySet[Label], *args: Any, **kwargs: Any):
+        """Initialize form with color widget."""
+        super().__init__(*args, **kwargs)
+        color_widget = forms.RadioSelect()
+        color_widget.option_template_name = (
+            "workspace/forms/widgets/select_label_option.html"
+        )
+
+        self.fields["color"] = forms.ChoiceField(
+            label=_("Color"),
+            choices=create_color_choices(),
+            widget=color_widget,
+        )
 
     class Meta:
         """Meta settings for LabelUpdateForm."""
@@ -428,7 +485,9 @@ def workspace_settings_edit_label(
             label_delete(who=request.user, label=label)
             return HttpResponseClientRefresh()
         case "GET":
-            form = LabelUpdateForm(instance=label)
+            form = LabelUpdateForm(
+                labels=label.workspace.label_set.all(), instance=label
+            )
             return render(
                 request,
                 "workspace/workspace_settings_edit_label.html",
@@ -438,17 +497,33 @@ def workspace_settings_edit_label(
             pass
         case other:
             raise ValueError(f"Wrong HTTP method {other}")
-    form = LabelUpdateForm(instance=label, data=request.POST)
+    form = LabelUpdateForm(
+        labels=label.workspace.label_set.all(),
+        instance=label,
+        data=request.POST,
+    )
     if not form.is_valid():
         return render(
             request,
             "workspace/workspace_settings_edit_label.html",
             context={**context, "form": form},
+            status=400,
         )
-    data = form.cleaned_data
-    label_update(
-        who=request.user, label=label, name=data["name"], color=data["color"]
-    )
+    try:
+        label_update(
+            who=request.user,
+            label=label,
+            name=form.cleaned_data["name"],
+            color=form.cleaned_data["color"],
+        )
+    except (exceptions.ValidationError, ValidationError) as error:
+        populate_form_with_drf_errors(form, error)
+        return render(
+            request,
+            "workspace/workspace_settings_edit_label.html",
+            context={**context, "form": form},
+            status=400,
+        )
     return redirect("dashboard:workspaces:labels", label.workspace.uuid)
 
 

@@ -5,7 +5,8 @@
 <div class="flex flex-col items-start gap-2">
     {# TODO add back the anchorTop to the right of the label #}
     {% if field.use_fieldset %}
-        <fieldset {% if field.help_text and field.auto_id and "aria-describedby" not in field.field.widget.attrs %} aria-describedby="{{ field.auto_id }}_helptext"{% endif %}>
+        <fieldset class="min-w-0 max-w-full"
+                  {% if field.help_text and field.auto_id and "aria-describedby" not in field.field.widget.attrs %} aria-describedby="{{ field.auto_id }}_helptext"{% endif %}>
             {% if field.label %}{{ field.legend_tag }}{% endif %}
         {% else %}
             {% if field.label %}{{ field.label_tag }}{% endif %}

@@ -18,6 +18,7 @@ from rest_framework.test import APIClient
 
 from projectify.corporate.services.stripe import customer_cancel_subscription
 from projectify.user.models.user import User
+from projectify.workspace.models.label import Label
 from projectify.workspace.services.team_member_invite import (
     team_member_invite_create,
 )
@@ -283,6 +284,203 @@ class TestWorkspaceSettingsTeamMembers:
         )
         assert response.status_code == 400
         assert b"already been added" in response.content
+
+
+class TestWorkspaceSettingsLabels:
+    """Test workspace labels settings view."""
+
+    @pytest.fixture
+    def resource_url(self, workspace: Workspace) -> str:
+        """Return URL to this view."""
+        return reverse("dashboard:workspaces:labels", args=(workspace.uuid,))
+
+    def test_get_labels_list(
+        self, user_client: Client, resource_url: str, team_member: TeamMember
+    ) -> None:
+        """Test getting the page."""
+        assert user_client.get(resource_url).status_code == 200
+
+
+class TestWorkspaceSettingsCreateLabel:
+    """Test workspace create label view."""
+
+    @pytest.fixture
+    def resource_url(self, workspace: Workspace) -> str:
+        """Return URL to this view."""
+        return reverse(
+            "dashboard:workspaces:create-label", args=(workspace.uuid,)
+        )
+
+    def test_get_create_form(
+        self, user_client: Client, resource_url: str, team_member: TeamMember
+    ) -> None:
+        """Test getting the form."""
+        assert user_client.get(resource_url).status_code == 200
+
+    def test_create_label_success(
+        self,
+        user_client: Client,
+        resource_url: str,
+        workspace: Workspace,
+        team_member: TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test creating a new label."""
+        initial_label_count = workspace.label_set.count()
+        with django_assert_num_queries(20):
+            assert (
+                user_client.post(
+                    resource_url, {"name": "Bug", "color": 1}
+                ).status_code
+                == 302
+            )
+        assert workspace.label_set.count() == initial_label_count + 1
+        assert workspace.label_set.get(name="Bug").color == 1
+
+    def test_create_label_invalid_form(
+        self, user_client: Client, resource_url: str
+    ) -> None:
+        """Test form validation."""
+        assert (
+            user_client.post(
+                resource_url, {"name": "", "color": 1}
+            ).status_code
+            == 400
+        )
+
+    def test_create_label_duplicate_name(
+        self,
+        user_client: Client,
+        resource_url: str,
+        workspace: Workspace,
+        team_member: TeamMember,
+        label: Label,
+    ) -> None:
+        """Test creating a label with the same name as an existing one."""
+        initial_label_count = workspace.label_set.count()
+        assert (
+            user_client.post(
+                resource_url, {"name": label.name, "color": 1}
+            ).status_code
+            == 400
+        )
+        assert workspace.label_set.count() == initial_label_count
+
+
+class TestWorkspaceSettingsEditLabel:
+    """Test workspace edit label view."""
+
+    @pytest.fixture
+    def resource_url(self, workspace: Workspace, label: Label) -> str:
+        """Return URL to this view."""
+        return reverse(
+            "dashboard:workspaces:edit-label",
+            args=(workspace.uuid, label.uuid),
+        )
+
+    def test_get_edit_form(
+        self, user_client: Client, resource_url: str, team_member: TeamMember
+    ) -> None:
+        """Test GETting the edit label form."""
+        assert user_client.get(resource_url).status_code == 200
+
+    def test_update_label_success(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        label: Label,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test successfully updating a label."""
+        with django_assert_num_queries(16):
+            response = user_client.post(
+                resource_url, {"name": "Updated", "color": 3}
+            )
+            assert response.status_code == 302
+        label.refresh_from_db()
+        assert label.name == "Updated"
+        assert label.color == 3
+
+    def test_update_label_invalid_form(
+        self, user_client: Client, resource_url: str, team_member: TeamMember
+    ) -> None:
+        """Test form validation."""
+        assert (
+            user_client.post(
+                resource_url, {"name": "", "color": 3}
+            ).status_code
+            == 400
+        )
+
+    def test_update_label_duplicate_name(
+        self,
+        user_client: Client,
+        workspace: Workspace,
+        team_member: TeamMember,
+        label: Label,
+        labels: list[Label],
+    ) -> None:
+        """Test updating a label to have the same name as another existing label."""
+        other_label = labels[0]
+        original_name = label.name
+        url = reverse(
+            "dashboard:workspaces:edit-label",
+            args=(workspace.uuid, label.uuid),
+        )
+        response = user_client.post(
+            url, {"name": other_label.name, "color": 3}
+        )
+        assert response.status_code == 400
+
+        label.refresh_from_db()
+        assert label.name == original_name  # Should not have changed
+
+    def test_deleting(
+        self,
+        user_client: Client,
+        resource_url: str,
+        workspace: Workspace,
+        team_member: TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Delete the label."""
+        initial_label_count = workspace.label_set.count()
+        with django_assert_num_queries(8):
+            assert user_client.delete(resource_url).status_code == 200
+        assert workspace.label_set.count() == initial_label_count - 1
+
+    def test_label_not_found(
+        self,
+        user_client: Client,
+        workspace: Workspace,
+        team_member: TeamMember,
+    ) -> None:
+        """Test editing a missing label."""
+        url = reverse(
+            "dashboard:workspaces:edit-label",
+            args=(workspace.uuid, uuid4()),
+        )
+        assert user_client.get(url).status_code == 404
+
+    def test_workspace_uuid_mismatch(
+        self, user_client: Client, team_member: TeamMember, label: Label
+    ) -> None:
+        """Test editing label with mismatched workspace UUID."""
+        url = reverse(
+            "dashboard:workspaces:edit-label", args=(uuid4(), label.uuid)
+        )
+        assert user_client.get(url).status_code == 400
+
+    def test_unauthorized_workspace_access(
+        self, user_client: Client, unrelated_label: Label
+    ) -> None:
+        """Test that users can't edit labels for other workspaces."""
+        url = reverse(
+            "dashboard:workspaces:edit-label",
+            args=(unrelated_label.workspace.uuid, unrelated_label.uuid),
+        )
+        assert user_client.get(url).status_code == 404
 
 
 # Create

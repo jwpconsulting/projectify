@@ -10,8 +10,7 @@
 {% block workspace_settings_content %}
     <form method="post" class="flex flex-col gap-2">
         <h2 class="font-bold text-lg">{% translate "Edit label" %}</h2>
-        {{ form.name.as_field_group }}
-        {% include "workspace/widgets/color_radio_select.html" %}
+        {{ form }}
         {% csrf_token %}
         {% include "projectify/forms/submit.html" with text=_("Save") %}
         {% anchor href="dashboard:workspaces:labels" label=_("Go back") workspace_uuid=workspace.uuid %}
