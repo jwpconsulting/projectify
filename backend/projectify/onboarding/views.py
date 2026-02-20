@@ -8,12 +8,16 @@ from uuid import UUID
 
 from django import forms
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
+from rest_framework.exceptions import ValidationError
+
+from projectify.lib.forms import populate_form_with_drf_errors
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.user.models import User
 from projectify.workspace.models.label import Label
@@ -353,23 +357,26 @@ def new_label(
     if request.method == "POST":
         form = LabelForm(request.POST)
         if form.is_valid():
-            label = label_create(
-                workspace=task.section.project.workspace,
-                name=form.cleaned_data["name"],
-                color=0,
-                who=request.user,
-            )
-            task_update_nested(
-                who=request.user,
-                task=task,
-                title=task.title,
-                labels=[label],
-                assignee=task.assignee,
-            )
+            try:
+                label = label_create(
+                    workspace=task.section.project.workspace,
+                    name=form.cleaned_data["name"],
+                    color=0,
+                    who=request.user,
+                )
+                task_update_nested(
+                    who=request.user,
+                    task=task,
+                    title=task.title,
+                    labels=[label],
+                    assignee=task.assignee,
+                )
 
-            return redirect(
-                reverse("onboarding:assign_task", args=[str(task.uuid)])
-            )
+                return redirect(
+                    reverse("onboarding:assign_task", args=[str(task.uuid)])
+                )
+            except (ValidationError, DjangoValidationError) as e:
+                populate_form_with_drf_errors(form, e)
         status = 400
     else:
         form = LabelForm()

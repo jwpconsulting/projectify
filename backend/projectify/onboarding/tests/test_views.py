@@ -249,6 +249,13 @@ class TestNewLabel(MixinForTests):
         """Test what happens if we pass in an empty label."""
         assert user_client.post(resource_url, {"name": ""}).status_code == 400
 
+    def test_label_conflict(
+        self, user_client: Client, resource_url: str
+    ) -> None:
+        """Test what happens if we pass in an empty label."""
+        assert user_client.post(resource_url, {"name": "T"}).status_code == 302
+        assert user_client.post(resource_url, {"name": "T"}).status_code == 400
+
     def test_task_not_found(self, user_client: Client) -> None:
         """Test not found handling."""
         assert (
