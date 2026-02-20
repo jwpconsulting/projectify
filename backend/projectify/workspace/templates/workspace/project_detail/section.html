@@ -30,7 +30,11 @@
         </div>
         <div class="flex shrink-0 flex-row items-center gap-1">
             {% include "workspace/common/loading_spinner.html" %}
-            {% action_button text=_("Add task") icon="plus" %}
+            <a href="{% url 'dashboard:sections:create-task' section.uuid %}"
+               class="text-secondary-content hover:bg-secondary-hover hover:text-secondary-content-hover active:bg-secondary-pressed active:text-secondary-content-hover flex flex-row gap-2 rounded-lg px-4 py-2 font-bold">
+                {% icon "plus" size=6 color="primary" %}
+                <span class="truncate">{% translate "Add task" %}</span>
+            </a>
         </div>
     </form>
     {% if not section.minimized %}
