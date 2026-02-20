@@ -338,6 +338,12 @@ class Base(Configuration):
     # Markdownify
     MARKDOWNIFY = {
         "default": {
+            "WHITELIST_ATTRS": [
+                "href",
+                "src",
+                "alt",
+                "id",
+            ],
             "WHITELIST_TAGS": [
                 "a",
                 "abbr",
@@ -353,11 +359,23 @@ class Base(Configuration):
                 "ul",
                 "h1",
                 "h2",
+                "h3",
                 "pre",
                 "code",
+                "sup",
+                # Table things
+                "table",
+                "thead",
+                "th",
+                "td",
+                "tr",
             ],
+            "LINKIFY_TEXT": {
+                "PARSE_URLS": False,
+            },
             "MARKDOWN_EXTENSIONS": [
                 "markdown.extensions.fenced_code",
+                "markdown.extensions.footnotes",
                 "markdown.extensions.tables",
                 "markdown.extensions.toc",
             ],
