@@ -14,6 +14,7 @@ from projectify.lib.models import BaseModel
 
 from .const import TeamMemberRoles
 from .project import Project
+from .task import Task
 from .workspace import Workspace
 
 # TODO Here we could be using __all__
@@ -21,6 +22,7 @@ from .workspace import Workspace
 
 if TYPE_CHECKING:
     from django.db.models.fields.related import RelatedField  # noqa: F401
+    from django.db.models.manager import RelatedManager  # noqa: F401
 
     from projectify.user.models import User, UserInvite  # noqa: F401
 
@@ -86,6 +88,7 @@ class TeamMember(BaseModel):
     if TYPE_CHECKING:
         # Related
         user_invite: RelatedField[None, "UserInvite"]
+        task_set: RelatedManager["Task"]
 
     def __str__(self) -> str:
         """Return title."""

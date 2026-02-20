@@ -81,11 +81,13 @@ def about_you(request: AuthenticatedHttpRequest) -> HttpResponse:
             user = form.save(commit=False)
             user.save()
             return redirect(reverse("onboarding:new_workspace"))
+        status = 400
     else:
         form = PreferredNameForm(instance=request.user)
+        status = 200
 
     context = {"form": form}
-    return render(request, "onboarding/about_you.html", context)
+    return render(request, "onboarding/about_you.html", context, status=status)
 
 
 class WorkspaceForm(forms.ModelForm):
@@ -133,13 +135,17 @@ def new_workspace(request: AuthenticatedHttpRequest) -> HttpResponse:
             return redirect(
                 reverse("onboarding:new_project", args=[str(workspace.uuid)])
             )
+        status = 400
     else:
         form = WorkspaceForm()
+        status = 200
 
     workspaces = workspace_find_for_user(who=request.user)
 
     context = {"form": form, "workspace": workspaces.first()}
-    return render(request, "onboarding/new_workspace.html", context)
+    return render(
+        request, "onboarding/new_workspace.html", context, status=status
+    )
 
 
 class ProjectForm(forms.ModelForm):
@@ -193,15 +199,19 @@ def new_project(
             return redirect(
                 reverse("onboarding:new_task", args=[str(project.uuid)])
             )
+        status = 400
     else:
         form = ProjectForm()
+        status = 200
 
     context = {
         "form": form,
         "workspace": workspace,
         "project": workspace.project_set.first(),
     }
-    return render(request, "onboarding/new_project.html", context)
+    return render(
+        request, "onboarding/new_project.html", context, status=status
+    )
 
 
 class TaskForm(forms.ModelForm):
@@ -298,7 +308,7 @@ def new_task(
         )
         return redirect(reverse("onboarding:new_label", args=[str(task.uuid)]))
     context = {**context, "form": form}
-    return render(request, "onboarding/new_task.html", context)
+    return render(request, "onboarding/new_task.html", context, status=400)
 
 
 class LabelForm(forms.ModelForm):
@@ -360,10 +370,12 @@ def new_label(
             return redirect(
                 reverse("onboarding:assign_task", args=[str(task.uuid)])
             )
+        status = 400
     else:
         form = LabelForm()
+        status = 200
     context = {"form": form, "task": task}
-    return render(request, "onboarding/new_label.html", context)
+    return render(request, "onboarding/new_label.html", context, status=status)
 
 
 @login_required
