@@ -51,12 +51,12 @@
                                 </span>
                             </div>
                         </td>
-                        <td class="flex flex-row items-center gap-2">
+                        <td class="flex flex-row items-center justify-end gap-2">
                             {% has_perm 'workspace.update_team_member_role' user team_member as can_update_team_member_role %}
                             <span>{{ team_member.get_role_display }}</span>
                             <button {% if not can_update_team_member_role %}disabled{% endif %}
-                                    class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                {% icon "pencil" %}
+                                    class="shrink-0 w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
+                                {% icon "pencil" size=4 %}
                             </button>
                         </td>
                         <td>
