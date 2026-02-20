@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any, ClassVar, Self, cast
 
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
-from django.db.models import CheckConstraint, Q
+from django.db.models import CheckConstraint, Q, UniqueConstraint
 from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import BaseModel
@@ -75,13 +75,18 @@ class Label(BaseModel):
     class Meta:
         """Meta."""
 
-        # TODO remove this restriction, just let users do what they want to
-        unique_together = ("workspace", "name")
         ordering = ("-modified",)
         constraints = [
             CheckConstraint(
                 check=Q(color__gte=0) & Q(color__lte=7),
                 name="label_color_range",
                 violation_error_message=_("Color must be between 0 and 7"),
+            ),
+            UniqueConstraint(
+                fields=["name", "workspace"],
+                name="unique_label_name_per_workspace",
+                violation_error_message=_(
+                    "You can only create one label with this name."
+                ),
             ),
         ]
