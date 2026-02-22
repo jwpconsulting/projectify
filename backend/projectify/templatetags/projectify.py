@@ -76,6 +76,27 @@ def anchor(
 
 
 @register.simple_tag
+def circle_button(
+    label: str,
+    icon_style: str,
+    name: str,
+    value: Optional[str] = None,
+    disabled: bool = False,
+) -> SafeText:
+    """Render a circular button."""
+    return format_html(
+        '<button name="{name}"{value}{disabled} type="submit" hx-swap="outerHTML" '
+        'aria-label="{label}"'
+        ' class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:opacity-20">{icon}</button>',
+        name=name,
+        disabled=" disabled" if disabled else "",
+        value=format_html(' value="{}"', value) if value else "",
+        icon=icon(icon_style),
+        label=label,
+    )
+
+
+@register.simple_tag
 def action_button(
     text: str,
     icon: Optional[str] = None,
@@ -136,14 +157,20 @@ def icon(
         src = reverse("colored-icon", kwargs={"icon": icon, "color": color})
     else:
         src = static.static(static_path)
-
+    try:
+        size_class = (
+            format_html(" class={}", {4: "size-4", 6: "size-6"}[size])
+            if size
+            else ""
+        )
+    except KeyError:
+        logger.error(f"Missing size class for size {size}")
+        size_class = ""
     return format_html(
-        '<img src="{src}" aria-hidden="true"{size}>',
+        '<img src="{src}" aria-hidden="true"{size_class}>',
         src=src,
         icon=icon,
-        size=format_html(" class={}", {4: "size-4", 6: "size-6"}[size])
-        if size
-        else "",
+        size_class=size_class,
     )
 
 
