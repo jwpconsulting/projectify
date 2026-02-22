@@ -6,7 +6,15 @@
 from typing import Optional
 from uuid import UUID
 
-from django.db.models import Count, Prefetch, Q, QuerySet
+from django.db.models import (
+    Count,
+    OuterRef,
+    Prefetch,
+    Q,
+    QuerySet,
+    Subquery,
+    Value,
+)
 from django.db.models.functions import NullIf
 
 from projectify.user.models import User
@@ -62,6 +70,15 @@ TaskDetailQuerySet: QuerySet[Task] = (
         )
         * 1.0
         / NullIf(Count("subtask"), 0),
+        first=Q(_order=Value(0)),
+        last=Q(
+            _order=Subquery(
+                # The order of the last task in this section
+                Task.objects.filter(section_id=OuterRef("section_id"))
+                .order_by("-_order")
+                .values("_order")[:1]
+            )
+        ),
     )
 )
 

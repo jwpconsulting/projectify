@@ -641,7 +641,15 @@ def task_actions(
     request: AuthenticatedHttpRequest, task_uuid: UUID
 ) -> HttpResponse:
     """Render task actions menu page."""
-    task = get_object(request, task_uuid)
+    task = task_find_by_task_uuid(
+        who=request.user, task_uuid=task_uuid, qs=TaskDetailQuerySet
+    )
+    if task is None:
+        raise Http404(
+            _("Could not find task with uuid {task_uuid}").format(
+                task_uuid=task_uuid
+            )
+        )
     workspace = task.workspace
     context = {
         **get_task_view_context(request, workspace),
