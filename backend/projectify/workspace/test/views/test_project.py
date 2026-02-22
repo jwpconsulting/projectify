@@ -31,6 +31,7 @@ from ...models import (
 from ...selectors.project import project_find_by_workspace_uuid
 from ...services.project import project_archive
 from ...services.sub_task import sub_task_create
+from ...services.task import task_create
 
 pytestmark = pytest.mark.django_db
 
@@ -62,7 +63,8 @@ class TestProjectDetailView:
         # Gone up   from 13 -> 15
         # Gone down from 15 -> 14
         # Gone up   from 14 -> 15
-        with django_assert_num_queries(15):
+        # Gone up   from 15 -> 18
+        with django_assert_num_queries(18):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert project.title in response.content.decode()
@@ -112,7 +114,7 @@ class TestProjectDetailView:
         other_task.assignee = other_team_member
         other_task.save()
 
-        with django_assert_num_queries(20):
+        with django_assert_num_queries(22):
             response = user_client.get(
                 resource_url,
                 {"filter_by_team_member": [str(team_member.uuid)]},
@@ -135,7 +137,7 @@ class TestProjectDetailView:
         task.assignee = team_member
         task.save()
 
-        with django_assert_num_queries(18):
+        with django_assert_num_queries(20):
             response = user_client.get(
                 resource_url, {"filter_by_team_member": [""]}
             )
@@ -156,7 +158,7 @@ class TestProjectDetailView:
         """Test filtering tasks by label."""
         task.labels.add(label)
 
-        with django_assert_num_queries(20):
+        with django_assert_num_queries(22):
             response = user_client.get(
                 resource_url, {"filter_by_label": [str(label.uuid)]}
             )
@@ -177,7 +179,7 @@ class TestProjectDetailView:
         """Test filtering for unlabeled tasks."""
         task.labels.add(label)
 
-        with django_assert_num_queries(18):
+        with django_assert_num_queries(20):
             response = user_client.get(resource_url, {"filter_by_label": [""]})
             assert response.status_code == 200
 
@@ -199,7 +201,7 @@ class TestProjectDetailView:
         other_task.title = "Feature request"
         other_task.save()
 
-        with django_assert_num_queries(18):
+        with django_assert_num_queries(20):
             response = user_client.get(
                 resource_url, {"task_search_query": "bug"}
             )
@@ -207,6 +209,79 @@ class TestProjectDetailView:
 
         assert task.title in response.content.decode()
         assert other_task.title not in response.content.decode()
+
+    def test_move_task_up_down(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        task: Task,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test moving tasks up and down within a section."""
+        section = task.section
+        task2 = task_create(
+            who=team_member.user, section=task.section, title="Second task"
+        )
+        assert list(section.task_set.values_list("pk", flat=True)) == [
+            task.pk,
+            task2.pk,
+        ]
+
+        # Move task2 up (should swap positions)
+        with django_assert_num_queries(33):
+            response = user_client.post(
+                resource_url,
+                {
+                    "action": "move_task",
+                    "task_uuid": str(task2.uuid),
+                    "direction": "up",
+                },
+            )
+            assert response.status_code == 200
+        assert list(section.task_set.values_list("pk", flat=True)) == [
+            task2.pk,
+            task.pk,
+        ]
+
+        # Move task1 up (should swap back)
+        with django_assert_num_queries(33):
+            response = user_client.post(
+                resource_url,
+                {
+                    "action": "move_task",
+                    "task_uuid": str(task.uuid),
+                    "direction": "up",
+                },
+            )
+            assert response.status_code == 200
+        assert list(section.task_set.values_list("pk", flat=True)) == [
+            task.pk,
+            task2.pk,
+        ]
+
+    def test_move_task_form_validation(
+        self, user_client: Client, resource_url: str, task: Task
+    ) -> None:
+        """Test form validation."""
+        response = user_client.post(
+            resource_url,
+            {
+                "action": "move_task",
+                "task_uuid": str(task.uuid),
+                "direction": "inv",
+            },
+        )
+        assert response.status_code == 400
+        response = user_client.post(
+            resource_url,
+            {
+                "action": "move_task",
+                "task_uuid": str(uuid4()),
+                "direction": "up",
+            },
+        )
+        assert response.status_code == 400
 
 
 class TestProjectCreateView:
@@ -707,7 +782,7 @@ class TestProjectDetailMinimize:
             "dashboard:projects:detail", args=(section.project.uuid,)
         )
 
-        with django_assert_num_queries(21):
+        with django_assert_num_queries(19):
             response = user_client.post(
                 url,
                 {

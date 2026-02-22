@@ -64,13 +64,14 @@
                                 </div>
                             {% endif %}
                             {% user_avatar task.assignee %}
-                            <form hx-target="#project-detail"
-                                  hx-post="{% url 'dashboard:tasks:move' task.uuid %}"
-                                  hx-select="#project-detail"
-                                  action="{% url 'dashboard:tasks:move' task.uuid %}"
+                            <form hx-target="#section-{{ section.uuid }}"
+                                  hx-post="{% url 'dashboard:projects:detail' project.uuid %}"
+                                  hx-include="#task-filter,#team-member-filters,#label-filters"
                                   class="flex flex-row items-center gap-1"
                                   hx-swap="outerHTML"
                                   method="post">
+                                <input type="hidden" name="action" value="move_task">
+                                <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
                                 <div hx-swap="outerHTML">
                                     {% circle_button label=_("Move task up") value="up" name="direction" disabled=task.first icon_style="chevron-up" %}
                                     {% circle_button label=_("Move task down") value="down" name="direction" disabled=task.last icon_style="chevron-down" %}

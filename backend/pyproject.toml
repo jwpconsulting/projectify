@@ -192,6 +192,8 @@ exclude = [
     "projectify/*/migrations/*.py",
     # Missing type stub
     "projectify/workspace/test/test_migrations.py",
+    # Type confusion over next(filter())
+    "projectify/workspace/views/project.py",
     # This one is sort of covered by mypy
     "projectify/settings/monkeypatch.py",
     # TODO cloudinary stub
