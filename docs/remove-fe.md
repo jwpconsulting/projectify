@@ -134,8 +134,8 @@ Subject to change.
       It's OK if it's bare-bones here. Structure over looks.
 - [x] Port components to Django
 - [x] Create form widgets
-- [ ] Features removed? Update help. Update landing page.
-- [ ] Update all architecture docs.
+- [x] Features removed? Update help. Update landing page.
+- [x] Update all architecture docs.
 
 ### Removal steps
 
@@ -153,7 +153,7 @@ These are sub-steps of the implementation stage.
 
 - [ ] Test and compare the two implementations.
 - [ ] Perform thorough test of billing logic.
-- [ ] Security audit. Check CSPs and other gotchas. Update security docs.
+- [x] Security audit. Check CSPs and other gotchas. Update security docs.
 - [ ] Good enough? Continue. Broken? Go back to Analysis
 - [ ] User tests.
 

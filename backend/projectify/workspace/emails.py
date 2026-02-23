@@ -30,10 +30,7 @@ class TeamMemberInviteEmail(TemplateEmail[TeamMemberInvite]):
     def get_context(self) -> Context:
         """Add name of inviter, current date."""
         settings = get_settings()
-        if settings.ENABLE_DJANGO_FRONTEND:
-            url = reverse("users-django:sign-up")
-        else:
-            url = "/user/sign-up"
+        url = reverse("users-django:sign-up")
         return {
             **super().get_context(),
             "invited_by": self.who.preferred_name or self.who.email,

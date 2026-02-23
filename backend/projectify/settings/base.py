@@ -332,9 +332,6 @@ class Base(Configuration):
     TAILWIND_APP_NAME = "projectify.theme"
     BROWSER_RELOAD = False
 
-    # Feature flags
-    ENABLE_DJANGO_FRONTEND = False
-
     # Markdownify
     MARKDOWNIFY = {
         "default": {

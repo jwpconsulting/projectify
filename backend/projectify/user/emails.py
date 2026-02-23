@@ -3,8 +3,6 @@
 # SPDX-FileCopyrightText: 2021, 2022, 2023 JWP Consulting GK
 """User emails."""
 
-from urllib.parse import quote
-
 from django.urls import reverse
 
 from projectify.lib.settings import get_settings
@@ -26,10 +24,7 @@ class UserEmailConfirmationEmail(TemplateEmail[User]):
 
         email = self.obj.email
         token = user_make_token(user=self.obj, kind="confirm_email_address")
-        if settings.ENABLE_DJANGO_FRONTEND:
-            url = reverse("users-django:confirm-email", args=(email, token))
-        else:
-            url = f"/user/confirm-email/{quote(email)}/{quote(token)}"
+        url = reverse("users-django:confirm-email", args=(email, token))
         return {
             **super().get_context(),
             "url": f"{settings.FRONTEND_URL}{url}",
@@ -52,12 +47,9 @@ class UserPasswordResetEmail(TemplateEmail[User]):
         settings = get_settings()
         email = self.obj.email
         token = user_make_token(user=self.obj, kind="reset_password")
-        if settings.ENABLE_DJANGO_FRONTEND:
-            url = reverse(
-                "users-django:confirm-password-reset", args=(email, token)
-            )
-        else:
-            url = f"/user/profile/update-email-address/confirm/{quote(token)}"
+        url = reverse(
+            "users-django:confirm-password-reset", args=(email, token)
+        )
         return {
             **super().get_context(),
             "url": f"{settings.FRONTEND_URL}{url}",
@@ -96,12 +88,9 @@ class UserEmailAddressUpdateEmail(TemplateEmail[User]):
         """Add reset password token."""
         settings = get_settings()
         token = user_make_token(user=self.obj, kind="update_email_address")
-        if settings.ENABLE_DJANGO_FRONTEND:
-            url = reverse(
-                "users-django:confirm-email-address-update", args=(token,)
-            )
-        else:
-            url = f"/user/profile/update-email-address/confirm/{quote(token)}"
+        url = reverse(
+            "users-django:confirm-email-address-update", args=(token,)
+        )
         return {
             **super().get_context(),
             "url": f"{settings.FRONTEND_URL}{url}",
