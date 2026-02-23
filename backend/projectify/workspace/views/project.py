@@ -21,10 +21,8 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.forms import populate_form_with_drf_errors
 from projectify.lib.htmx import HttpResponseClientRefresh
-from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 
@@ -610,10 +608,6 @@ class ProjectCreate(APIView):
             model = Project
             fields = "title", "description", "workspace_uuid", "due_date"
 
-    @extend_schema(
-        request=ProjectCreateSerializer,
-        responses={201: ProjectDetailSerializer, 400: DeriveSchema},
-    )
     def post(self, request: Request) -> Response:
         """Create a project."""
         user = request.user
@@ -644,9 +638,6 @@ class ProjectCreate(APIView):
 class ProjectReadUpdateDelete(APIView):
     """Project retrieve view."""
 
-    @extend_schema(
-        responses={200: ProjectDetailSerializer},
-    )
     def get(self, request: Request, project_uuid: UUID) -> Response:
         """Handle GET."""
         project = project_find_by_project_uuid(
@@ -673,10 +664,6 @@ class ProjectReadUpdateDelete(APIView):
                 "due_date",
             )
 
-    @extend_schema(
-        request=ProjectUpdateSerializer,
-        responses={200: ProjectUpdateSerializer, 400: DeriveSchema},
-    )
     def put(self, request: Request, project_uuid: UUID) -> Response:
         """Handle PUT."""
         project = project_find_by_project_uuid(
@@ -700,9 +687,6 @@ class ProjectReadUpdateDelete(APIView):
         )
         return Response(data, status.HTTP_200_OK)
 
-    @extend_schema(
-        responses={204: None},
-    )
     def delete(self, request: Request, project_uuid: UUID) -> Response:
         """Handle DELETE."""
         project = project_find_by_project_uuid(
@@ -736,10 +720,6 @@ class ProjectArchivedList(APIView):
                 "archived",
             )
 
-    @extend_schema(
-        request=None,
-        responses={200: ArchivedProjectSerializer(many=True)},
-    )
     def get(self, request: Request, workspace_uuid: UUID) -> Response:
         """Get queryset."""
         workspace = workspace_find_by_workspace_uuid(
@@ -769,10 +749,6 @@ class ProjectArchive(APIView):
 
         archived = serializers.BooleanField()
 
-    @extend_schema(
-        request=ProjectArchiveSerializer,
-        responses={204: None, 400: DeriveSchema},
-    )
     def post(self, request: Request, project_uuid: UUID) -> Response:
         """Process request."""
         serializer = self.ProjectArchiveSerializer(data=request.data)

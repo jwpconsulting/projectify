@@ -19,9 +19,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.htmx import HttpResponseClientRedirect
-from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 from projectify.workspace.models import Section
@@ -214,10 +212,6 @@ class SectionCreate(APIView):
             model = Section
             fields = "title", "description", "project_uuid"
 
-    @extend_schema(
-        request=SectionCreateSerializer,
-        responses={201: SectionDetailSerializer, 400: DeriveSchema},
-    )
     def post(self, request: Request) -> Response:
         """Create a section."""
         user = request.user
@@ -250,9 +244,6 @@ class SectionCreate(APIView):
 class SectionReadUpdateDelete(APIView):
     """Project retrieve view."""
 
-    @extend_schema(
-        responses={200: SectionDetailSerializer},
-    )
     def get(self, request: Request, section_uuid: UUID) -> Response:
         """Handle GET."""
         section = section_find_for_user_and_uuid(
@@ -274,10 +265,6 @@ class SectionReadUpdateDelete(APIView):
             fields = "title", "description"
             model = Section
 
-    @extend_schema(
-        request=SectionUpdateSerializer,
-        responses={200: SectionUpdateSerializer, 400: DeriveSchema},
-    )
     def put(self, request: Request, section_uuid: UUID) -> Response:
         """Update section."""
         section = section_find_for_user_and_uuid(
@@ -299,9 +286,6 @@ class SectionReadUpdateDelete(APIView):
         )
         return Response(data=serializer.validated_data)
 
-    @extend_schema(
-        responses={204: None},
-    )
     def delete(self, request: Request, section_uuid: UUID) -> Response:
         """Handle DELETE."""
         section = section_find_for_user_and_uuid(
@@ -327,10 +311,6 @@ class SectionMove(APIView):
 
         order = serializers.IntegerField()
 
-    @extend_schema(
-        request=SectionMoveSerializer,
-        responses={200: None, 400: DeriveSchema},
-    )
     def post(self, request: Request, section_uuid: UUID) -> Response:
         """Process request."""
         serializer = self.SectionMoveSerializer(data=request.data)

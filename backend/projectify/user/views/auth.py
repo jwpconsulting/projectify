@@ -25,9 +25,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
-from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.forms import populate_form_with_drf_errors
-from projectify.lib.schema import extend_schema
 from projectify.user.serializers import (
     AnonymousUserSerializer,
     LoggedInUserSerializer,
@@ -364,7 +362,6 @@ def password_reset(request: HttpRequest) -> HttpResponse:
 class LogOut(views.APIView):
     """Log a user out."""
 
-    @extend_schema(request=None, responses={200: AnonymousUserSerializer})
     def post(self, request: Request) -> Response:
         """Handle POST."""
         user_log_out(request=request)
@@ -388,10 +385,6 @@ class SignUp(views.APIView):
         tos_agreed = serializers.BooleanField()
         privacy_policy_agreed = serializers.BooleanField()
 
-    @extend_schema(
-        request=SignUpSerializer,
-        responses={204: None, 400: DeriveSchema, 429: DeriveSchema},
-    )
     @method_decorator(ratelimit(key="ip", rate="60/h"))
     def post(self, request: Request) -> Response:
         """Handle POST."""
@@ -440,10 +433,6 @@ class ConfirmEmail(views.APIView):
         email = serializers.EmailField()
         token = serializers.CharField()
 
-    @extend_schema(
-        request=ConfirmEmailSerializer,
-        responses={204: None, 400: DeriveSchema},
-    )
     def post(self, request: Request) -> Response:
         """Handle POST."""
         serializer = self.ConfirmEmailSerializer(data=request.data)
@@ -467,14 +456,6 @@ class LogIn(views.APIView):
         email = serializers.EmailField()
         password = serializers.CharField()
 
-    @extend_schema(
-        request=LogInSerializer,
-        responses={
-            200: LoggedInUserSerializer,
-            400: DeriveSchema,
-            429: DeriveSchema,
-        },
-    )
     @method_decorator(
         ratelimit(
             group="projectify.user.views.auth.login.post",
@@ -529,10 +510,6 @@ class PasswordResetRequest(views.APIView):
 
         email = serializers.EmailField()
 
-    @extend_schema(
-        request=PasswordResetRequestSerializer,
-        responses={204: None, 400: DeriveSchema, 429: DeriveSchema},
-    )
     @method_decorator(ratelimit(key="post:email", rate="5/h"))
     @method_decorator(ratelimit(key="ip", rate="5/h"))
     @method_decorator(ratelimit(key="ip", rate="1/m"))
@@ -557,10 +534,6 @@ class PasswordResetConfirm(views.APIView):
         token = serializers.CharField()
         new_password = serializers.CharField()
 
-    @extend_schema(
-        request=PasswordResetConfirmSerializer,
-        responses={204: None, 400: DeriveSchema},
-    )
     def post(self, request: Request) -> Response:
         """Handle POST."""
         serializer = self.PasswordResetConfirmSerializer(data=request.data)
@@ -584,11 +557,6 @@ class PasswordPolicyRead(views.APIView):
 
         policies = serializers.ListField(child=serializers.CharField())
 
-    @extend_schema(
-        responses={
-            200: PasswordPoliciesSerializer,
-        },
-    )
     def get(self, request: Request) -> Response:
         """Return all information about current password policy."""
         del request

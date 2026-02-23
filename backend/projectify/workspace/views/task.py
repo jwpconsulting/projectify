@@ -23,9 +23,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.htmx import HttpResponseClientRedirect
-from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 from projectify.workspace.selectors.team_member import (
@@ -673,10 +671,6 @@ def task_delete_view(
 class TaskCreate(APIView):
     """Create a task."""
 
-    @extend_schema(
-        request=TaskCreateSerializer,
-        responses={201: TaskDetailSerializer, 400: DeriveSchema},
-    )
     def post(self, request: Request) -> Response:
         """Handle POST."""
         serializer = TaskCreateSerializer(
@@ -714,19 +708,12 @@ class TaskCreate(APIView):
 class TaskRetrieveUpdateDelete(APIView):
     """Retrieve a task."""
 
-    @extend_schema(
-        responses={200: TaskDetailSerializer},
-    )
     def get(self, request: Request, task_uuid: UUID) -> Response:
         """Handle GET."""
         instance = get_object(request, task_uuid)
         serializer = TaskDetailSerializer(instance=instance)
         return Response(data=serializer.data)
 
-    @extend_schema(
-        request=TaskUpdateSerializer,
-        responses={200: TaskDetailSerializer, 400: DeriveSchema},
-    )
     def put(self, request: Request, task_uuid: UUID) -> Response:
         """
         Override update behavior. Return using different serializer.
@@ -773,9 +760,6 @@ class TaskRetrieveUpdateDelete(APIView):
             status=status.HTTP_200_OK, data=response_serializer.data
         )
 
-    @extend_schema(
-        responses={204: None},
-    )
     def delete(self, request: Request, task_uuid: UUID) -> Response:
         """Delete task."""
         instance = get_object(request, task_uuid)
@@ -792,10 +776,6 @@ class TaskMoveToSection(APIView):
 
         section_uuid = serializers.UUIDField()
 
-    @extend_schema(
-        request=TaskMoveToSectionSerializer,
-        responses={200: TaskDetailSerializer, 400: DeriveSchema},
-    )
     def post(self, request: Request, task_uuid: UUID) -> Response:
         """Process the request."""
         user = request.user
@@ -831,10 +811,6 @@ class TaskMoveAfterTask(APIView):
 
         task_uuid = serializers.UUIDField()
 
-    @extend_schema(
-        request=TaskMoveAfterTaskSerializer,
-        responses={200: TaskDetailSerializer, 400: DeriveSchema},
-    )
     def post(self, request: Request, task_uuid: UUID) -> Response:
         """Process the request."""
         user = request.user

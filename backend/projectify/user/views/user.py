@@ -27,9 +27,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
-from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.forms import populate_form_with_drf_errors
-from projectify.lib.schema import PolymorphicProxySerializer, extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 from projectify.user.models import User
@@ -262,18 +260,6 @@ class UserRead(views.APIView):
 
     permission_classes = (AllowAny,)
 
-    @extend_schema(
-        responses={
-            200: PolymorphicProxySerializer(
-                "auth_info",
-                [
-                    LoggedInUserSerializer,
-                    AnonymousUserSerializer,
-                ],
-                None,
-            ),
-        }
-    )
     def get(self, request: Request) -> Response:
         """Handle GET."""
         user = cast(Union[User, AnonymousUser], request.user)
@@ -299,10 +285,6 @@ class UserUpdate(views.APIView):
             fields = ("preferred_name",)
             model = User
 
-    @extend_schema(
-        request=UserUpdateSerializer,
-        responses={200: LoggedInUserSerializer, 400: DeriveSchema},
-    )
     def put(self, request: Request) -> Response:
         """Update a user."""
         user = cast(Union[User, AnonymousUser], request.user)
@@ -338,10 +320,6 @@ class ProfilePictureUpload(views.APIView):
 
         file = serializers.ImageField(required=False)
 
-    @extend_schema(
-        request=ProfilePictureUploadSerializer,
-        responses={204: None, 400: DeriveSchema},
-    )
     def post(self, request: Request) -> Response:
         """Handle POST."""
         serializer = self.ProfilePictureUploadSerializer(data=request.data)
@@ -365,10 +343,6 @@ class ChangePassword(views.APIView):
         current_password = serializers.CharField()
         new_password = serializers.CharField()
 
-    @extend_schema(
-        request=ChangePasswordSerializer,
-        responses={204: None, 400: DeriveSchema, 429: DeriveSchema},
-    )
     @method_decorator(ratelimit(key="user", rate="5/h"))
     def post(self, request: Request) -> Response:
         """Handle POST."""
@@ -394,10 +368,6 @@ class RequestEmailAddressUpdate(views.APIView):
         password = serializers.CharField()
         new_email = serializers.EmailField()
 
-    @extend_schema(
-        request=RequestEmailAddressUpdateSerializer,
-        responses={204: None, 400: DeriveSchema, 429: DeriveSchema},
-    )
     @method_decorator(ratelimit(key="user", rate="5/h"))
     def post(self, request: Request) -> Response:
         """Handle POST."""
@@ -423,13 +393,6 @@ class ConfirmEmailAddressUpdate(views.APIView):
 
         confirmation_token = serializers.CharField()
 
-    @extend_schema(
-        request=ConfirmEmailAddressUpdateSerializer,
-        responses={
-            204: None,
-            400: DeriveSchema,
-        },
-    )
     def post(self, request: Request) -> Response:
         """Handle POST."""
         user = request.user

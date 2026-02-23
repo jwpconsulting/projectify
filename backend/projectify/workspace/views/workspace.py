@@ -36,10 +36,8 @@ from projectify.corporate.services.customer import (
     create_billing_portal_session_for_customer,
     customer_create_stripe_checkout_session,
 )
-from projectify.lib.error_schema import DeriveSchema
 from projectify.lib.forms import populate_form_with_drf_errors
 from projectify.lib.htmx import HttpResponseClientRefresh
-from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 
@@ -971,10 +969,6 @@ class WorkspaceCreate(views.APIView):
             fields = "title", "description"
             model = Workspace
 
-    @extend_schema(
-        request=WorkspaceCreateSerializer,
-        responses={201: WorkspaceBaseSerializer, 400: DeriveSchema},
-    )
     def post(self, request: Request) -> Response:
         """Create the workspace and add this user."""
         serializer = self.WorkspaceCreateSerializer(data=request.data)
@@ -1002,7 +996,6 @@ class UserWorkspaces(views.APIView):
             fields = ("title", "uuid")
             model = Workspace
 
-    @extend_schema(responses={200: UserWorkspaceSerializer(many=True)})
     def get(self, request: Request) -> Response:
         """Handle GET."""
         workspaces = workspace_find_for_user(who=request.user)
@@ -1016,9 +1009,6 @@ class UserWorkspaces(views.APIView):
 class WorkspaceReadUpdate(views.APIView):
     """Workspace read and update view."""
 
-    @extend_schema(
-        responses={200: WorkspaceDetailSerializer},
-    )
     def get(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle GET."""
         workspace = workspace_find_by_workspace_uuid(
@@ -1041,10 +1031,6 @@ class WorkspaceReadUpdate(views.APIView):
             fields = "title", "description"
             model = Workspace
 
-    @extend_schema(
-        request=WorkspaceUpdateSerializer,
-        responses={200: WorkspaceUpdateSerializer, 400: DeriveSchema},
-    )
     def put(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle PUT."""
         workspace = workspace_find_by_workspace_uuid(
@@ -1081,10 +1067,6 @@ class WorkspacePictureUploadView(views.APIView):
 
         file = serializers.ImageField(required=False)
 
-    @extend_schema(
-        request=WorkspacePictureUploadSerializer,
-        responses={204: None, 400: DeriveSchema},
-    )
     def post(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle POST."""
         workspace = workspace_find_by_workspace_uuid(
@@ -1114,10 +1096,6 @@ class InviteUserToWorkspace(views.APIView):
 
         email = serializers.EmailField()
 
-    @extend_schema(
-        request=InviteUserToWorkspaceSerializer,
-        responses={201: InviteUserToWorkspaceSerializer, 400: DeriveSchema},
-    )
     @method_decorator(ratelimit(key="user", rate="5/h"))
     def post(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle POST."""
@@ -1163,10 +1141,6 @@ class UninviteUserFromWorkspace(views.APIView):
 
         email = serializers.EmailField()
 
-    @extend_schema(
-        request=UninviteUserFromWorkspaceSerializer,
-        responses={204: None, 400: DeriveSchema},
-    )
     def post(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle POST."""
         workspace = workspace_find_by_workspace_uuid(
