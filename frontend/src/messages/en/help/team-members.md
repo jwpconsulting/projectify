@@ -55,7 +55,7 @@ member is working on.
 
 You can apply more than one filter at a time. Go to the **Team members**
 section in the side menu and make sure it is open by clicking the **Arrow
-button** on the right side. From there you can  filter team members.
+button** on the right side. From there you can filter team members.
 
 Filtering a team member also allows you to see how many tasks that team member
 has assigned to them. This feature is great in determining which team team

@@ -79,8 +79,7 @@ strict-transport-security max-age=31536000
 
 Projectify does not use HSTS preloading. [^hsts]
 
-[^hsts]: [HSTS Preload List Submission](https://hstspreload.org/) *hstspreload.org*
-
+[^hsts]: [HSTS Preload List Submission](https://hstspreload.org/) _hstspreload.org_
 
 Projectify uses the following Content Security Policy[^csp]:
 
@@ -88,7 +87,7 @@ Projectify uses the following Content Security Policy[^csp]:
 script-src 'self'
 ```
 
-[^csp]: [Content Security Policy (CSP)](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP) *developer.mozilla.org*
+[^csp]: [Content Security Policy (CSP)](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP) _developer.mozilla.org_
 
 To prevent `iframe` embedding, Projectify sets the `X-Frame-Options` HTTP
 response header to `DENY`.
@@ -118,7 +117,7 @@ Projectify enforces password policies that prevent users from using weak and
 easy to guess
 passwords.
 
-[^django-passwords]: ["By default, Django uses the PBKDF2 algorithm with a SHA256 hash, a password stretching mechanism recommended by NIST."](https://docs.djangoproject.com/en/6.0/topics/auth/passwords/#how-django-stores-passwords) *docs.djangoproject.com*
+[^django-passwords]: ["By default, Django uses the PBKDF2 algorithm with a SHA256 hash, a password stretching mechanism recommended by NIST."](https://docs.djangoproject.com/en/6.0/topics/auth/passwords/#how-django-stores-passwords) _docs.djangoproject.com_
 
 ## Dependency patching
 
@@ -128,7 +127,7 @@ JWP uses Dependabot [^dependabot] to monitor new vulnerabilities in Projectify's
 source code repository [^repository].
 
 [^dependabot]: [About Dependabot](https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/dependabot-quickstart-guide#about-dependabot) _docs.github.com_
-[^repository]: [Projectify source code repository](github.com/jwpconsulting/projectify) *github.com/jwpconsulting/projectify*
+[^repository]: [Projectify source code repository](github.com/jwpconsulting/projectify) _github.com/jwpconsulting/projectify_
 
 ## Logging
 
@@ -157,10 +156,9 @@ Projectify uses TLS for the following connections:
 - Django backend to Render Postgres[^render-postgres]
 - Sending mails with Mailgun
 
-[^render-key-value]: [Render Key Value](https://render.com/docs/key-value) *render.com/docs*
-[^render-postgres]: [Render Postgres](https://render.com/docs/postgresql) *render.com/docs*
-
-[^cloudinary-encryption-at-rest]: [Digital Asset Library: The Ultimate Guide - Role of a Digital Asset Library in Data Security](https://cloudinary.com/guides/digital-asset-management/digital-asset-library#:~:text=Additionally%2C%20Cloudinary%20supports%20encryption%20at%20rest%20and%20in%20transit%2C%20ensuring%20your%20files%20are%20protected%20from%20external%20threats%2E) *cloudinary.com*
+[^render-key-value]: [Render Key Value](https://render.com/docs/key-value) _render.com/docs_
+[^render-postgres]: [Render Postgres](https://render.com/docs/postgresql) _render.com/docs_
+[^cloudinary-encryption-at-rest]: [Digital Asset Library: The Ultimate Guide - Role of a Digital Asset Library in Data Security](https://cloudinary.com/guides/digital-asset-management/digital-asset-library#:~:text=Additionally%2C%20Cloudinary%20supports%20encryption%20at%20rest%20and%20in%20transit%2C%20ensuring%20your%20files%20are%20protected%20from%20external%20threats%2E) _cloudinary.com_
 
 Render's upstream provides use encryption at rest. [^render-security]
 
@@ -175,7 +173,7 @@ Cloudinary encrypts its data at rest. [^cloudinary-encryption-at-rest]
 ### Transactional Mailing
 
 Projectify uses the transactional mailing service Mailgun
- (Sinch America, Inc.) to send you emails. Mailgun encrypts user data at rest [^mailgun-hipaa].
+(Sinch America, Inc.) to send you emails. Mailgun encrypts user data at rest [^mailgun-hipaa].
 
 [^mailgun-hipaa]: [How does Mailgun keep your emails protected?](https://www.mailgun.com/blog/product/mailgun-email-protection/) *www.mailgun.com/blog*
 
@@ -218,18 +216,18 @@ To prevent vulnerabilities, Projectify contains the following measures:
 - Projectify sends Session ID cookies over HTTPS only [^cookie-secure] and does
   not expose them to scripts. [^http-only]
 - Projectify's Django backend prevents SQL injections in its ORM. [^django-sql]
-Projectify does not use raw SQL queries.
+  Projectify does not use raw SQL queries.
 - Projectify's Django backend prevents cross-site scripting (XSS) by escaping untrusted inputs.
   [^django-xss]
 - Projectify's Django backend prevents cross-site request forgery (CSRF) by checking for a `csrf`
   [^django-csrf]
   form attribute or HTTP header.
 
-[^cookie-secure]: [Secure cookie configuration - `Secure`](https://developer.mozilla.org/en-US/docs/Web/Security/Practical_implementation_guides/Cookies#secure) *developer.mozilla.org*
-[^http-only]: [Secure cookie configuration - `HttpOnly`](https://developer.mozilla.org/en-US/docs/Web/Security/Practical_implementation_guides/Cookies#httponly) *developer.mozilla.org*
-[^django-sql]: [Security in Django - SQL injection protection](https://docs.djangoproject.com/en/6.0/topics/security/#sql-injection-protection) *docs.djangoproject.com*
-[^django-xss]: [Security in Django - Cross site scripting (XSS) protection](https://docs.djangoproject.com/en/6.0/topics/security/#cross-site-scripting-xss-protection) *docs.djangoproject.com*
-[^django-csrf]: [Security in Django - Cross site request forgery (CSRF) protection](https://docs.djangoproject.com/en/6.0/topics/security/#cross-site-request-forgery-csrf-protection) *docs.djangoproject.com*
+[^cookie-secure]: [Secure cookie configuration - `Secure`](https://developer.mozilla.org/en-US/docs/Web/Security/Practical_implementation_guides/Cookies#secure) _developer.mozilla.org_
+[^http-only]: [Secure cookie configuration - `HttpOnly`](https://developer.mozilla.org/en-US/docs/Web/Security/Practical_implementation_guides/Cookies#httponly) _developer.mozilla.org_
+[^django-sql]: [Security in Django - SQL injection protection](https://docs.djangoproject.com/en/6.0/topics/security/#sql-injection-protection) _docs.djangoproject.com_
+[^django-xss]: [Security in Django - Cross site scripting (XSS) protection](https://docs.djangoproject.com/en/6.0/topics/security/#cross-site-scripting-xss-protection) _docs.djangoproject.com_
+[^django-csrf]: [Security in Django - Cross site request forgery (CSRF) protection](https://docs.djangoproject.com/en/6.0/topics/security/#cross-site-request-forgery-csrf-protection) _docs.djangoproject.com_
 
 ## Time to fix vulnerabilities
 
