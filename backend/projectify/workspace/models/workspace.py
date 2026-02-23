@@ -80,7 +80,8 @@ class Workspace(TitleDescriptionModel, BaseModel):
             models.CheckConstraint(
                 name="title",
                 # Match period followed by space, or not period
-                check=models.Q(title__regex=r"^([.:]\s|[^.:])*[.:]?$"),
+                # type: ignore[call-arg]
+                condition=models.Q(title__regex=r"^([.:]\s|[^.:])*[.:]?$"),
                 violation_error_message=_(
                     "Workspace title can only contain '.' or ':' if followed "
                     "by whitespace or if located at the end."

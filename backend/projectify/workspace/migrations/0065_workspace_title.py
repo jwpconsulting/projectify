@@ -20,7 +20,10 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="workspace",
             constraint=models.CheckConstraint(
-                check=models.Q(("title__regex", "^([.:]\\s|[^.:])*[.:]?$")),
+                # type: ignore[call-arg]
+                condition=models.Q(
+                    ("title__regex", "^([.:]\\s|[^.:])*[.:]?$")
+                ),
                 name="title",
                 violation_error_message="Workspace title can only contain '.' or ':' if followed by whitespace or if located at the end.",
             ),

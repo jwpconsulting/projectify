@@ -73,7 +73,7 @@ class TestTaskCreateView:
     ) -> None:
         """Test creating a task."""
         initial_task_count = Task.objects.count()
-        with django_assert_num_queries(26):
+        with django_assert_num_queries(27):
             response = user_client.post(
                 resource_url,
                 {
@@ -162,7 +162,7 @@ class TestTaskUpdateView:
     ) -> None:
         """Test updating a task."""
         original_title = task.title
-        with django_assert_num_queries(26):
+        with django_assert_num_queries(27):
             response = user_client.post(
                 resource_url,
                 {
@@ -210,7 +210,7 @@ class TestTaskUpdateView:
 
         existing_subtask = task.subtask_set.get()
 
-        with django_assert_num_queries(27):
+        with django_assert_num_queries(28):
             response = user_client.post(
                 resource_url,
                 {
@@ -363,7 +363,8 @@ class TestTaskCreate(UnauthenticatedTestMixin):
         # 26 now
         # 24 now
         # 21 now Justus 2024-05-23
-        with django_assert_num_queries(25):
+        # 26 now  Justus 2026-02-23
+        with django_assert_num_queries(26):
             response = rest_user_client.post(
                 resource_url,
                 {**payload, "assignee": {"uuid": str(team_member.uuid)}},
@@ -457,7 +458,7 @@ class TestTaskUpdate(UnauthenticatedTestMixin):
     ) -> None:
         """Test updating when authenticated."""
         original_title = task.title
-        with django_assert_num_queries(34):
+        with django_assert_num_queries(35):
             response = rest_user_client.put(
                 resource_url,
                 {**payload, "assignee": {"uuid": str(team_member.uuid)}},

@@ -9,6 +9,10 @@ description = "Projectify Backend"
 maintainers = ["Justus Perlwitz <justus@jwpconsulting.net>"]
 authors = ["The Projectify Authors"]
 readme = "README.md"
+packages = [
+    { include = "projectify" },
+    { include = "configurations" },
+]
 exclude = [
     "projectify/*/test",
 ]
@@ -19,11 +23,10 @@ channels = {version = "^4.1.0"}
 channels-redis = "^4.2"
 cryptography = "^44.0.1"
 dj-database-url = "~2.1.0"
-django = "^5.2.11"
+django = "^6.0.0"
 django-anymail = {extras = ["mailgun"], version = "~10.3"}
 django-celery-results = "~2.5.0"
 django-cloudinary-storage = "~0.3.0"
-django-configurations = "^2.5.1"
 django-pgtrigger = "~4.11.0"
 djangorestframework = "^3"
 gunicorn = "^23"
@@ -86,6 +89,8 @@ line-length=79
 extend-exclude = [
     # Nix build
     "result/",
+    # Vendored in django-configurations
+    "configurations",
 ]
 
 [tool.ruff.lint]
@@ -218,8 +223,16 @@ exclude = [
     # Pyright thinks that Deferrable.DEFERRED, a string, is not assignable
     # to Deferrable | None
     "projectify/workspace/models/task.py",
+    # CheckConstraint false positive, in mypy we can ignore call-arg
+    # pyright emits reportCallIssue instead
+    "projectify/workspace/models/workspace.py",
+    "projectify/workspace/models/label.py",
+    "projectify/user/models/user.py",
+    # Other issues
     "projectify/workspace/models/section.py",
     "projectify/workspace/models/sub_task.py",
+    # Vendored in
+    "configurations/**/*.py",
 
 ]
 # Mypy doesn't complain about these, so it's fine
@@ -241,6 +254,7 @@ exclude = [
     "settings",
     "migrations",
     "result/",
+    "configurations/",
 ]
 min_confidence = 70
 
@@ -268,21 +282,4 @@ DJANGO_SETTINGS_MODULE = "projectify.settings.test"
 DJANGO_CONFIGURATION = "Test"
 asyncio_mode = "auto"
 junit_family = "xunit1"
-filterwarnings = [
-    "error",
-    # Wait for celery to get kombu upgraded
-    "ignore:SelectableGroups dict interface is deprecated. Use select.:DeprecationWarning",
-    # Some issue with daphne or twisted
-    "ignore:'cgi' is deprecated and slated for removal in Python 3.13:DeprecationWarning",
-    # Some issue with django-configurations
-    "ignore:The FORMS_URLFIELD_ASSUME_HTTPS transitional setting is deprecated:django.utils.deprecation.RemovedInDjango60Warning",
-    # Again, another issue with djagno-configurations
-    # https://github.com/jazzband/django-configurations/issues/367
-    "ignore:the imp module is deprecated:DeprecationWarning",
-    "ignore:ConfigurationImporter:ImportWarning",
-    "ignore:ConfigurationLoader:ImportWarning",
-    "ignore:ConfigurationLoader:ImportWarning",
-    # XXX
-    # Can't fix this yet, need to wait for django type stubs to be updated
-    "ignore:CheckConstraint.check:django.utils.deprecation.RemovedInDjango60Warning"
-]
+filterwarnings = ["error"]

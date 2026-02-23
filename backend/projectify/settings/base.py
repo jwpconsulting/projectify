@@ -17,10 +17,13 @@ import os
 import warnings
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
+
+from django.utils.csp import CSP  # type: ignore
 
 import dj_database_url
-from configurations.base import Configuration
+
+from configurations import Configuration  # type: ignore
 
 from .monkeypatch import patch
 from .types import (
@@ -33,7 +36,7 @@ from .types import (
 patch()
 
 
-class Base(Configuration):
+class Base(Configuration):  # type:ignore
     """
     Base configuration.
 
@@ -80,9 +83,37 @@ class Base(Configuration):
     CSRF_TRUSTED_ORIGINS: Optional[Sequence[str]]
 
     # HSTS
-    SECURE_HSTS_SECONDS = 3600
+    SECURE_HSTS_SECONDS = 15768000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+
+    # CSP
+    # https://docs.djangoproject.com/en/6.0/ref/settings/#secure-csp
+    SECURE_CSP: dict[str, Any] = {
+        "default-src": [
+            CSP.SELF,
+            CSP.NONCE,
+        ],
+        "script-src": [
+            CSP.SELF,
+            CSP.NONCE,
+        ],
+        "font-src": [
+            CSP.SELF,
+        ],
+        "style-src": [
+            CSP.SELF,
+            CSP.NONCE,
+            # htmx
+            "'sha256-bsV5JivYxvGywDAZ22EZJKBFip65Ng9xoJVLbBg7bdo='",
+        ],
+        "img-src": [CSP.SELF, "res.cloudinary.com"],
+        "form-action": [CSP.SELF],
+        "connect-src": [CSP.SELF],
+        "frame-ancestors": [CSP.SELF],
+        "object-src": [CSP.SELF],
+        "frame-src": [CSP.NONE],
+    }
 
     # Installed applications
     # Applications from Django project
@@ -135,6 +166,7 @@ class Base(Configuration):
 
     MIDDLEWARE = [
         "django.middleware.security.SecurityMiddleware",
+        "django.middleware.csp.ContentSecurityPolicyMiddleware",
         "projectify.middleware.reverse_proxy",
         "django.middleware.gzip.GZipMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
@@ -228,6 +260,7 @@ class Base(Configuration):
             "OPTIONS": {
                 "context_processors": (
                     "projectify.context_processors.frontend_url",
+                    "django.template.context_processors.csp",
                     "django.template.context_processors.debug",
                     "django.template.context_processors.request",
                     "django.contrib.auth.context_processors.auth",

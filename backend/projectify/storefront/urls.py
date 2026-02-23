@@ -26,7 +26,7 @@ app_name = "storefront"
 
 solution_patterns = [
     path("", solutions_index, name="list"),
-    path("<slug:page>/", solutions_detail, name="detail"),
+    path("<slug:page>", solutions_detail, name="detail"),
 ]
 
 security_patterns = [

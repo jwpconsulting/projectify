@@ -3,10 +3,11 @@
 # SPDX-FileCopyrightText: 2021, 2023 JWP Consulting GK
 """Celery app."""
 
-import configurations
 from celery import Celery
 
-configurations.setup()
+import configurations
+
+configurations.setup()  # type: ignore
 
 app = Celery("proj")
 app.config_from_object("django.conf:settings", namespace="CELERY")
