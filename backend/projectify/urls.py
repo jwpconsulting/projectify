@@ -13,19 +13,22 @@ This module also contains a 500 exception handler.
 """
 
 from collections.abc import Sequence
-from typing import Optional, Union
+from typing import Union
 
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.urls import URLPattern, URLResolver, include, path
-from django.utils.translation import gettext_lazy as _
 
-from django_ratelimit.exceptions import Ratelimited
-
-from projectify.lib.settings import get_settings
-from projectify.lib.views import colored_icon, manifest_view
 from projectify.workspace.consumers import ChangeConsumer
+
+from .lib.settings import get_settings
+from .lib.views import (
+    colored_icon,
+    handler403,
+    handler404,
+    handler500,
+    manifest_view,
+)
 
 settings = get_settings()
 
@@ -77,6 +80,14 @@ if settings.BROWSER_RELOAD:
         path("__reload__/", include("django_browser_reload.urls")),
     )
 
+if settings.DEBUG_ERROR_PAGES:
+    urlpatterns = (
+        *urlpatterns,
+        path("403.html", handler403),
+        path("404.html", handler404),
+        path("500.html", handler500),
+    )
+
 if settings.DEBUG_AUTH:
     urlpatterns = [
         *urlpatterns,
@@ -116,12 +127,4 @@ websocket_urlpatterns = (
 )
 
 
-def handler403(
-    request: HttpRequest, exception: Optional[Exception] = None
-) -> HttpResponse:
-    """Handle Throttled exceptions."""
-    del request
-    print(f"{exception=}")
-    if isinstance(exception, Ratelimited):
-        return HttpResponse(_("Too many requests."), status=429)
-    return HttpResponseForbidden(_("Forbidden."))
+__all__ = ("handler404", "handler500", "handler403")

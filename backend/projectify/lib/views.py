@@ -5,13 +5,23 @@
 
 import logging
 from pathlib import Path
-from typing import Any, Protocol
+from typing import Any, Optional, Protocol
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.staticfiles import finders
 from django.contrib.staticfiles.storage import staticfiles_storage
-from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
+from django.http import (
+    Http404,
+    HttpRequest,
+    HttpResponse,
+    HttpResponseForbidden,
+    JsonResponse,
+)
+from django.shortcuts import render
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import cache_control
+
+from django_ratelimit.exceptions import Ratelimited
 
 from projectify.lib.types import AuthenticatedHttpRequest
 
@@ -115,3 +125,30 @@ def manifest_view(request: HttpRequest) -> JsonResponse:
         ],
     }
     return JsonResponse(manifest_data)
+
+
+def handler403(
+    request: HttpRequest, exception: Optional[Exception] = None
+) -> HttpResponse:
+    """Handle Throttled exceptions."""
+    del request
+    if isinstance(exception, Ratelimited):
+        return HttpResponse(_("Too many requests."), status=429)
+    return HttpResponseForbidden(_("Forbidden."))
+
+
+def handler404(
+    request: HttpRequest, exception: Optional[Exception] = None
+) -> HttpResponse:
+    """Handle 404 errors with a custom page."""
+    if exception:
+        context = {"error": str(exception)}
+    else:
+        context = {}
+    logger.warning("Handling 404 error for exception=%s", exception)
+    return render(request, "404.html", status=404, context=context)
+
+
+def handler500(request: HttpRequest) -> HttpResponse:
+    """Handle 500 errors with a custom page."""
+    return render(request, "500.html", status=500)

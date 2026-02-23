@@ -62,6 +62,8 @@ class Base(Configuration):  # type:ignore
     DEBUG_TOOLBAR = False
     # Should Projectify make authentication debug views available?
     DEBUG_AUTH = False
+    # Do we let users see error pages directly?
+    DEBUG_ERROR_PAGES = False
 
     # Frontend URL configuration
     # --------------------------
