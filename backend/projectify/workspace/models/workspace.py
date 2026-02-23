@@ -7,7 +7,6 @@ import uuid
 from typing import TYPE_CHECKING, Optional
 
 from django.conf import settings
-from django.contrib.auth.models import AbstractBaseUser
 from django.db import models, transaction
 from django.utils.translation import gettext_lazy as _
 
@@ -22,6 +21,7 @@ if TYPE_CHECKING:
     from django.db.models.manager import RelatedManager  # noqa: F401
 
     from projectify.corporate.models import Customer
+    from projectify.user.models import User  # noqa: F401
 
     from . import Label, Project, TeamMember
     from .team_member_invite import TeamMemberInvite
@@ -34,7 +34,7 @@ class Workspace(TitleDescriptionModel, BaseModel):
         settings.AUTH_USER_MODEL,
         through="TeamMember",
         through_fields=("workspace", "user"),
-    )  # type: models.ManyToManyField[AbstractBaseUser, "TeamMember"]
+    )  # type: models.ManyToManyField[User, "TeamMember"]
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     picture = models.ImageField(
         upload_to="workspace_picture/",
@@ -57,20 +57,6 @@ class Workspace(TitleDescriptionModel, BaseModel):
         teammember_set: RelatedManager["TeamMember"]
         teammemberinvite_set: RelatedManager["TeamMemberInvite"]
         label_set: RelatedManager["Label"]
-
-    # TODO I wish this worked with TeamMember instead?
-    @transaction.atomic
-    def remove_user(self, user: AbstractBaseUser) -> AbstractBaseUser:
-        """
-        Remove user from projectify.workspace.
-
-        Removes the user from task assignments.
-
-        Return user.
-        """
-        team_member = self.teammember_set.get(user=user)
-        team_member.delete()
-        return user
 
     @transaction.atomic
     def increment_highest_task_number(self) -> int:

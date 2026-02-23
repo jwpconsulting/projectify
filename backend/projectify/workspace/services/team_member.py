@@ -7,21 +7,22 @@ from typing import Optional
 
 from django.db import transaction
 from django.utils.timezone import now
+from django.utils.translation import gettext_lazy as _
+
+from rest_framework import serializers
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
-from projectify.workspace.models.const import TeamMemberRoles
-from projectify.workspace.models.project import Project
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.services.signals import send_change_signal
+
+from ..models.const import TeamMemberRoles
+from ..models.project import Project
+from ..models.team_member import TeamMember
+from .signals import send_change_signal
 
 
 @transaction.atomic
 def team_member_update(
-    *,
-    team_member: TeamMember,
-    who: User,
-    job_title: Optional[str] = None,
+    *, team_member: TeamMember, who: User, job_title: Optional[str] = None
 ) -> TeamMember:
     """Update a team member."""
     validate_perm("workspace.update_team_member", who, team_member.workspace)
@@ -33,10 +34,7 @@ def team_member_update(
 
 @transaction.atomic
 def team_member_change_role(
-    *,
-    team_member: TeamMember,
-    who: User,
-    role: TeamMemberRoles,
+    *, team_member: TeamMember, who: User, role: TeamMemberRoles
 ) -> TeamMember:
     """Change a team member's role."""
     validate_perm("workspace.update_team_member_role", who, team_member)
@@ -47,11 +45,7 @@ def team_member_change_role(
 
 
 @transaction.atomic
-def team_member_delete(
-    *,
-    team_member: TeamMember,
-    who: User,
-) -> None:
+def team_member_delete(*, team_member: TeamMember, who: User) -> None:
     """
     Delete a team member.
 
@@ -65,6 +59,10 @@ def team_member_delete(
     so big TODO maybe?
     """
     validate_perm("workspace.delete_team_member", who, team_member)
+    if team_member.user == who:
+        raise serializers.ValidationError(
+            _("You can't remove yourself from this workspace")
+        )
     team_member.delete()
     send_change_signal("changed", team_member.workspace)
 
