@@ -125,7 +125,7 @@ class TaskCreateForm(forms.Form):
         super().__init__(*args, **kwargs)
         assignee_widget = forms.RadioSelect()
         assignee_widget.option_template_name = (
-            "workspace/forms/widgets/select_assignee_option.html"
+            "workspace/forms/widgets/select_team_member_option.html"
         )
         self.fields["assignee"] = forms.ModelChoiceField(
             required=False,
@@ -359,7 +359,7 @@ class TaskUpdateForm(forms.Form):
         super().__init__(*args, **kwargs)
         assignee_widget = forms.RadioSelect()
         assignee_widget.option_template_name = (
-            "workspace/forms/widgets/select_assignee_option.html"
+            "workspace/forms/widgets/select_team_member_option.html"
         )
         self.fields["assignee"] = forms.ModelChoiceField(
             required=False,

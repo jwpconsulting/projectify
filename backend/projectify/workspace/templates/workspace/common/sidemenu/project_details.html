@@ -135,7 +135,7 @@
                 </div>
             </button>
         </form>
-        <fieldset class="flex flex-col overflow-y-auto w-full max-w-full min-w-0 pb-4{% if current_team_member_qs.minimized_label_filter %} hidden{% endif %}">
+        <fieldset class="flex flex-col overflow-y-auto overflow-x-hidden w-full max-w-full min-w-0 pb-4{% if current_team_member_qs.minimized_label_filter %} hidden{% endif %}">
             <legend class="px-2 font-bold">{{ task_filter_form.filter_by_label.label }}</legend>
             {{ task_filter_form.filter_by_label }}
             {% if workspace %}

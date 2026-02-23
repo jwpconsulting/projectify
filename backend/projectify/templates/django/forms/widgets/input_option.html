@@ -8,6 +8,6 @@
     {% endif %}
     {% include "django/forms/widgets/input.html" %}
     {% if widget.wrap_label %}
-        {{ widget.label }}
+        <span class="pl-2">{{ widget.label }}</span>
     </label>
 {% endif %}

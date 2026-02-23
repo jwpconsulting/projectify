@@ -18,6 +18,7 @@ from django.db.models import (
 from django.db.models.functions import NullIf
 
 from projectify.user.models import User
+from projectify.workspace.models.team_member import TeamMember
 
 from ..models.chat_message import ChatMessage
 from ..models.label import Label
@@ -33,22 +34,25 @@ TaskDetailQuerySet: QuerySet[Task] = (
     )
     .prefetch_related(
         "subtask_set",
-    )
-    .prefetch_related(
         Prefetch(
             "labels",
             queryset=labels_annotate_with_colors(Label.objects.all()),
         ),
-    )
-    .prefetch_related(
         Prefetch(
             "workspace__label_set",
             queryset=labels_annotate_with_colors(
                 Label.objects.annotate(task_count=Count("task"))
             ),
         ),
-    )
-    .prefetch_related(
+        Prefetch(
+            "workspace__teammember_set",
+            queryset=TeamMember.objects.select_related("user").annotate(
+                task_count=Count(
+                    "task",
+                    filter=Q(task__section__project__archived__isnull=True),
+                )
+            ),
+        ),
         Prefetch(
             "chatmessage_set",
             queryset=ChatMessage.objects.select_related(
@@ -56,8 +60,6 @@ TaskDetailQuerySet: QuerySet[Task] = (
                 "author__user",
             ),
         ),
-    )
-    .prefetch_related(
         Prefetch(
             "workspace__project_set",
             queryset=Project.objects.filter(archived__isnull=True),

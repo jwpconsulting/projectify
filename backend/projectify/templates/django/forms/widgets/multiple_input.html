@@ -3,7 +3,7 @@
 {# SPDX-License-Identifier: BSD-3-Clause #}
 {# SPDX-FileCopyrightText: Django Software Foundation and individual contributors. #}
 {% with id=widget.attrs.id %}
-    <div class="grid grid-cols-[auto_1fr] gap-2"
+    <div class="grid grid-cols-[auto_max-content] items-center"
          {% if id %}id="{{ id }}"{% endif %}
          {% if widget.attrs.class %}class="{{ widget.attrs.class }}"{% endif %}>
         {% for group, options, index in widget.optgroups %}
@@ -12,7 +12,7 @@
                     <label>{{ group }}</label>
                 {% endif %}
                 {% for option in options %}
-                    <div class="contents">{% include option.template_name with widget=option %}</div>
+                    {% include option.template_name with widget=option %}
                 {% endfor %}
                 {% if group %}</div>{% endif %}
         {% endfor %}
