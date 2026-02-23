@@ -14,7 +14,6 @@ from projectify.workspace.models.task import Task
 from projectify.workspace.selectors.team_member import (
     team_member_find_for_workspace,
 )
-from projectify.workspace.services.signals import send_change_signal
 
 
 # TODO this could take an author instead of who -> user is derived from author
@@ -33,5 +32,4 @@ def chat_message_create(
     instance = ChatMessage.objects.create(
         task=task, text=text, author=team_member
     )
-    send_change_signal("changed", task)
     return instance

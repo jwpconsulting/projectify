@@ -20,7 +20,6 @@ from ..models.label import Label
 from ..models.section import Section
 from ..models.task import Task
 from ..models.team_member import TeamMember
-from ..services.signals import send_change_signal
 from ..services.sub_task import (
     ValidatedData,
     sub_task_create_many,
@@ -121,7 +120,6 @@ def task_create_nested(
         task=task,
         create_sub_tasks=create_sub_tasks,
     )
-    send_change_signal("changed", task.section.project)
     return task
 
 
@@ -156,8 +154,6 @@ def task_update_nested(
             create_sub_tasks=sub_tasks["create_sub_tasks"] or [],
             update_sub_tasks=sub_tasks["update_sub_tasks"] or [],
         )
-    send_change_signal("changed", task.section.project)
-    send_change_signal("changed", task)
     return task
 
 
@@ -167,8 +163,6 @@ def task_delete(*, task: Task, who: User) -> None:
     """Delete a task."""
     validate_perm("workspace.delete_task", who, task.workspace)
     task.delete()
-    send_change_signal("changed", task.section.project)
-    send_change_signal("gone", task)
 
 
 @transaction.atomic
@@ -250,6 +244,4 @@ def task_move_after(
     # Set the order
     section.set_task_order(order_list)
     section.save()
-    send_change_signal("changed", task.section.project)
-    send_change_signal("changed", task)
     return task

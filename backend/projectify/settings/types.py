@@ -6,9 +6,6 @@
 from collections.abc import Sequence
 from typing import Any, Mapping, TypedDict
 
-ChannelLayer = Mapping[str, Any]
-ChannelLayers = Mapping[str, ChannelLayer]
-
 
 class TemplateConfig(TypedDict):
     """Configure one templating module."""

@@ -14,7 +14,6 @@ from projectify.lib.auth import validate_perm
 from projectify.premail.email import EmailAddress
 from projectify.user.models import User, UserInvite
 from projectify.user.services.user_invite import user_invite_create
-from projectify.workspace.services.signals import send_change_signal
 
 from ..emails import TeamMemberInviteEmail
 from ..models.const import TeamMemberRoles
@@ -155,7 +154,6 @@ def team_member_invite_create(
     )
     email_to_send.send()
 
-    send_change_signal("changed", workspace)
     return team_member_invite
 
 
@@ -176,4 +174,3 @@ def team_member_invite_delete(
             )
         case TeamMemberInvite() as team_member_invite:
             team_member_invite.delete()
-    send_change_signal("changed", workspace)

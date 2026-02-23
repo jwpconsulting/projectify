@@ -17,7 +17,6 @@ from projectify.user.models import User
 from ..models.const import TeamMemberRoles
 from ..models.project import Project
 from ..models.team_member import TeamMember
-from .signals import send_change_signal
 
 
 @transaction.atomic
@@ -28,7 +27,6 @@ def team_member_update(
     validate_perm("workspace.update_team_member", who, team_member.workspace)
     team_member.job_title = job_title
     team_member.save()
-    send_change_signal("changed", team_member.workspace)
     return team_member
 
 
@@ -40,7 +38,6 @@ def team_member_change_role(
     validate_perm("workspace.update_team_member_role", who, team_member)
     team_member.role = role
     team_member.save()
-    send_change_signal("changed", team_member.workspace)
     return team_member
 
 
@@ -64,7 +61,6 @@ def team_member_delete(*, team_member: TeamMember, who: User) -> None:
             _("You can't remove yourself from this workspace")
         )
     team_member.delete()
-    send_change_signal("changed", team_member.workspace)
 
 
 def team_member_visit_workspace(*, team_member: TeamMember) -> None:

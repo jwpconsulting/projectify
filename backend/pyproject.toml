@@ -19,8 +19,6 @@ exclude = [
 
 [tool.poetry.dependencies]
 celery = {extras = ["redis"], version = "~5.4"}
-channels = {version = "^4.1.0"}
-channels-redis = "^4.2"
 cryptography = "^44.0.1"
 dj-database-url = "~2.1.0"
 django = "^6.0.0"
@@ -37,7 +35,6 @@ redis = "^5"
 rules = "^3.3"
 stripe = "^8"
 uvicorn = "~0.17.6"
-websockets = "~10.3"
 whitenoise = "~6.2.0"
 django-ratelimit = "^4.1.0"
 django-tailwind = {extras = ["reload"], version = "^3.8.0"}
@@ -46,9 +43,6 @@ django-markdownify = "^0.9.5"
 [tool.poetry.group.dev]
 
 [tool.poetry.group.dev.dependencies]
-# Require the same channels as in the main dependencies, except that we add
-# daphne
-channels = {version = "^4.1.0", extras = ["daphne"]}
 python-dotenv = "^1"
 faker = "^19.13.0"
 django-extensions = "~3.2.0"

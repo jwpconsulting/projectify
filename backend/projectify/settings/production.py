@@ -5,9 +5,7 @@
 
 import os
 import warnings
-from collections.abc import Mapping
 from pathlib import Path
-from typing import Any
 
 from projectify.lib.settings import populate_production_middleware
 
@@ -26,40 +24,6 @@ def get_redis_tls_url() -> str:
     raise ValueError(
         "Neither REDIS_TLS_URL nor REDIS_URL could be found in the environment"
     )
-
-
-def get_redis_channel_layer_hosts(redis_url: str) -> Mapping[str, Any]:
-    """
-    Return django channels redis config.
-
-    If rediss:// URL is given IGNORE ssl cert requirements.
-
-    Both options are equally bad IMO.
-    """
-    if redis_url.startswith("rediss://"):
-        warnings.warn(
-            "Initializing channels redis layer with TLS url and instructing the redis client to ignore SSL certificate requirements!",
-        )
-        return {
-            "hosts": [
-                {
-                    "address": redis_url,
-                    "ssl_cert_reqs": None,
-                }
-            ],
-        }
-    else:
-        warnings.warn(
-            "Initializing channels redis layer with non-TLS url and potentially"
-            "transmitting queries in clear text!",
-        )
-        return {
-            "hosts": [
-                {
-                    "address": redis_url,
-                }
-            ],
-        }
 
 
 class Production(Base):
@@ -131,22 +95,6 @@ class Production(Base):
     STRIPE_SECRET_KEY = os.environ["STRIPE_SECRET_KEY"]
     STRIPE_PRICE_OBJECT = os.environ["STRIPE_PRICE_OBJECT"]
     STRIPE_ENDPOINT_SECRET = os.environ["STRIPE_ENDPOINT_SECRET"]
-
-    # REDIS
-    # https://devcenter.heroku.com/articles/connecting-heroku-redis#connecting-in-python
-    # Obviously, this isn't great
-    # https://github.com/django/channels_redis/issues/235
-    # https://github.com/django/channels_redis/pull/337
-
-    CHANNEL_LAYERS = {
-        "default": {
-            "BACKEND": "channels_redis.core.RedisChannelLayer",
-            "CONFIG": {
-                **get_redis_channel_layer_hosts(REDIS_TLS_URL),
-                "symmetric_encryption_keys": [SECRET_KEY],
-            },
-        },
-    }
 
     # Logging config
     LOGGING = Base.LOGGING
