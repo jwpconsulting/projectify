@@ -1,7 +1,0 @@
-#!/bin/bash
-# SPDX-License-Identifier: AGPL-3.0-or-later
-# SPDX-FileCopyrightText: 2023 JWP Consulting GK
-#
-# Wrap check-i18n.ts script
-# node >= 20.7
-exec node --import node-esm-loader/register src/bin/check-i18n.ts
