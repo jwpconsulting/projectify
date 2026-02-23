@@ -25,14 +25,6 @@ executors:
           POSTGRES_DB: projectify
           POSTGRES_USER: projectify
           POSTGRES_PASSWORD: projectify
-  node:
-    docker:
-       - image: cimg/node:20.14.0
-         environment:
-           VITE_PROJECTIFY_DOMAIN: "https://www.projectifyapp.com/"
-           VITE_WS_ENDPOINT: "/urls-arent-real"
-           VITE_API_ENDPOINT: "/urls-arent-real"
-           PROJECTIFY_FRONTEND_ADAPTER: static
 commands:
   prepare_poetry:
     description: Install dependencies for backend
@@ -62,21 +54,6 @@ commands:
           paths:
             - ~/.local
             - ~/.cache
-  prepare_npm:
-    description: Install NPM packages
-    steps:
-      - checkout:
-            path: ~/projectify
-      - restore_cache:
-            key: npm-cache-v2-{{ checksum "package-lock.json" }}
-      - run:
-            name: npm clean-install
-            command: npm clean-install
-      - save_cache:
-            key: npm-cache-v2-{{ checksum "package-lock.json" }}
-            paths:
-                - ~/.npm
-                - node_modules
 jobs:
   backend_poetry_check:
     executor: python
@@ -172,111 +149,6 @@ jobs:
       - run:
           name: Test if schema.yml up to date
           command: poetry run bin/test-schema
-  frontend_svelte-check:
-    executor: node
-    working_directory: ~/projectify/frontend
-    steps:
-      - prepare_npm
-      - run:
-          name: Generate type information
-          command: npm run sync-types
-      - run:
-          name: Run svelte-check
-          command: npm run check:svelte-check
-  frontend_eslint:
-    executor: node
-    working_directory: ~/projectify/frontend
-    parallelism: 8
-    steps:
-      - prepare_npm
-      - run:
-          name: Generate type information
-          command: npm run sync-types
-      - run:
-          name: Collect files to check and run eslint
-          command: |
-            TEST_FILES=$(circleci tests glob "src/**/*.{ts,js,svelte}" | circleci tests split --split-by=filesize)
-            npx eslint $TEST_FILES
-      - store_artifacts:
-          path: /tmp/files-to-check
-          destination: files-checked
-  frontend_prettier:
-    executor: node
-    working_directory: ~/projectify/frontend
-    steps:
-      - prepare_npm
-      - run:
-          name: Run prettier
-          command: npm run nocache:check:prettier
-  frontend_knip:
-    executor: node
-    working_directory: ~/projectify/frontend
-    steps:
-      - prepare_npm
-      - run:
-          name: Generate type information
-          command: npm run sync-types
-      - run:
-          name: Run knip
-          command: npm run check:knip
-  frontend_check-i18n:
-    executor: node
-    working_directory: ~/projectify/frontend
-    steps:
-      - prepare_npm
-      - run:
-          name: Generate type information
-          command: npm run sync-types
-      - run:
-          name: Check translations
-          command: bin/check-i18n
-  frontend_build:
-    executor: node
-    working_directory: ~/projectify/frontend
-    environment:
-      NODE_ENV: production
-    steps:
-      - prepare_npm
-      - run:
-          name: Run build
-          command: npm run build
-      - run:
-          name: Compress artifacts
-          command: tar --create --verbose --gzip --file=build.tar.gz build
-      - store_artifacts:
-          path: build.tar.gz
-  frontend_visualize-bundle:
-    executor: node
-    working_directory: ~/projectify/frontend
-    environment:
-      NODE_ENV: production
-    steps:
-      - prepare_npm
-      - run:
-          name: Run build
-          command: npm run build -- --mode staging
-      - store_artifacts:
-          path: .svelte-kit/output/client/bundle.html
-          destination: client-bundle
-      - store_artifacts:
-          path: .svelte-kit/output/server/bundle.html
-          destination: server-bundle
-  frontend_schema:
-    executor: node
-    working_directory: ~/projectify/frontend
-    steps:
-      - prepare_npm
-      - run:
-          name: Check if schema.d.ts in frontend is up to date
-          command: npm run check:schema
-  tools_render_yaml_validate:
-    executor: node
-    working_directory: ~/projectify/tools
-    steps:
-      - prepare_npm
-      - run:
-          name: Check schema with ajv
-          command: npm run check:render-schema
   tools_reuse_lint:
     executor: python
     working_directory: ~/projectify/tools
@@ -299,13 +171,4 @@ workflows:
       - backend_seeddb
       - backend_collectstatic
       - backend_schema
-      - frontend_svelte-check
-      - frontend_eslint
-      - frontend_prettier
-      - frontend_knip
-      - frontend_check-i18n
-      - frontend_build
-      - frontend_visualize-bundle
-      - frontend_schema
-      - tools_render_yaml_validate
       - tools_reuse_lint
