@@ -6,27 +6,7 @@
 # Helpful links for Caddy security headers
 # https://github.com/jpcaparas/caddy-csp/blob/f241472610a5a4e4f8d74e0976120bbb2cca84cc/Caddyfile
 # https://paulbradley.dev/caddyfile-web-security-headers/
-(frontend_headers) {
-	# We need to relax the CSP a bit, since Svelte has some inline js.
-	# Compared to backend_headers, we removed default-src and script-src
-	# Furthermore, we have to make sure we don't override any CSP headers
-	# Should SvelteKit with adapter-node decide to return a header itself
-	# We have to relax style-src here as well, in case of a page transition
-	# from landing (prerendered) to dashboard (ssr/csr)
-	# Refer to
-	# See https://github.com/sveltejs/kit/issues/11747 and
-	# https://kit.svelte.dev/docs/configuration
-	header ?Content-Security-Policy "
-		style-src 'self' 'unsafe-inline';
-		font-src 'self';
-		img-src 'self' blob: res.cloudinary.com;
-		form-action 'self';
-		connect-src 'self';
-		frame-ancestors 'none';
-		object-src 'self';
-		base-uri 'self';
-	"
-}
+# TODO rename to headers, or just inline them below
 (backend_headers) {
 	# The backend is locked down more
 	header {
@@ -73,7 +53,7 @@
 		reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
 	}
 	handle /* {
-		import frontend_headers
-		reverse_proxy {$FRONTEND_HOST}:{$FRONTEND_PORT}
+		import backend_headers
+		reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
 	}
 }
