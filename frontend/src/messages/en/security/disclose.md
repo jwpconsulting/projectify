@@ -12,7 +12,7 @@ JWP Consulting GK welcomes feedback from security researchers and the general pu
 
 ## Systems in Scope
 
-This policy applies to any digital assets owned, operated, or maintained by JWP Consulting GK.
+This policy applies to any digital assets related to Projectify that are owned, operated, and maintained by JWP Consulting GK.
 
 ## Out of Scope
 

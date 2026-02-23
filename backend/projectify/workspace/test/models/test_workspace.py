@@ -10,13 +10,11 @@ import psycopg.errors
 import pytest
 
 from projectify.user.models import User
-from projectify.workspace.models.const import TeamMemberRoles
 
 from ...models.task import Task
 from ...models.team_member import TeamMember
 from ...models.workspace import Workspace
 from ...services.project import project_create
-from ...services.workspace import workspace_add_user
 
 
 @pytest.mark.django_db
@@ -92,65 +90,6 @@ class TestWorkspace:
             board2,
             board,
         ]
-
-    # TODO these tests should be in workspace service tests
-    def test_add_user(self, workspace: Workspace, other_user: User) -> None:
-        """Test adding a user."""
-        count = workspace.users.count()
-        workspace_add_user(
-            workspace=workspace,
-            user=other_user,
-            role=TeamMemberRoles.OBSERVER,
-        )
-        assert workspace.users.count() == count + 1
-
-    def test_add_user_twice(
-        self,
-        workspace: Workspace,
-        team_member: TeamMember,
-        other_user: User,
-    ) -> None:
-        """Test that adding a user twice won't work."""
-        workspace_add_user(
-            workspace=workspace,
-            user=other_user,
-            role=TeamMemberRoles.OBSERVER,
-        )
-        # XXX TODO should be validationerror, not integrityerror
-        # We might get a bad 500 here, could be 400 instead
-        with pytest.raises(db.IntegrityError):
-            workspace_add_user(
-                workspace=workspace,
-                user=other_user,
-                role=TeamMemberRoles.OBSERVER,
-            )
-
-    def test_remove_user(
-        self,
-        workspace: Workspace,
-        team_member: TeamMember,
-        user: User,
-    ) -> None:
-        """Test remove_user."""
-        count = workspace.users.count()
-        workspace.remove_user(user)
-        assert workspace.users.count() == count - 1
-
-    def test_remove_user_when_assigned(
-        self,
-        workspace: Workspace,
-        task: Task,
-        team_member: TeamMember,
-        user: User,
-    ) -> None:
-        """Assert that the user is removed when removing the team member."""
-        task.assignee = team_member
-        task.save()
-        task.refresh_from_db()
-        assert task.assignee == team_member
-        workspace.remove_user(user)
-        task.refresh_from_db()
-        assert task.assignee is None
 
     def test_increment_highest_task_number(self, workspace: Workspace) -> None:
         """Test set_highest_task_number."""

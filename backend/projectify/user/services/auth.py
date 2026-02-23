@@ -110,6 +110,7 @@ def user_confirm_email(
         )
     user.is_active = True
     user.save()
+    logger.info("Confirmed email for user %s", email)
     # TODO do not return User here
     return user
 

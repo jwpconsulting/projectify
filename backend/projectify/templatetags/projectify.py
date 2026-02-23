@@ -76,6 +76,27 @@ def anchor(
 
 
 @register.simple_tag
+def circle_button(
+    label: str,
+    icon_style: str,
+    name: str,
+    value: Optional[str] = None,
+    disabled: bool = False,
+) -> SafeText:
+    """Render a circular button."""
+    return format_html(
+        '<button name="{name}"{value}{disabled} type="submit" hx-swap="outerHTML" '
+        'aria-label="{label}"'
+        ' class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:opacity-20">{icon}</button>',
+        name=name,
+        disabled=" disabled" if disabled else "",
+        value=format_html(' value="{}"', value) if value else "",
+        icon=icon(icon_style),
+        label=label,
+    )
+
+
+@register.simple_tag
 def action_button(
     text: str,
     icon: Optional[str] = None,
@@ -83,23 +104,26 @@ def action_button(
     value: Optional[str] = None,
     name: Optional[str] = None,
     grow: bool = True,
+    disabled: bool = False,
 ) -> SafeText:
     """Render a styled action button with icon."""
     # Source: frontend/src/lib/funabashi/buttons/Button.svelte
     color_classes = {
-        "secondary": "text-secondary-content hover:bg-secondary-hover hover:text-secondary-content-hover active:bg-secondary-pressed active:text-secondary-content-hover",
-        "destructive": "text-destructive hover:bg-destructive-secondary-hover hover:text-destructive-hover active:bg-destructive-secondary-pressed active:text-destructive-pressed",
+        "secondary": " text-secondary-content hover:bg-secondary-hover hover:text-secondary-content-hover active:bg-secondary-pressed active:text-secondary-content-hover",
+        "destructive": " text-destructive hover:bg-destructive-secondary-hover hover:text-destructive-hover active:bg-destructive-secondary-pressed active:text-destructive-pressed",
     }
 
     return format_html(
         '<button type="submit" '
-        'class="{width_class} {color_classes} flex min-w-0 flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold"'
-        "{value}{name}>"
+        'class="{width_class}{color_classes}{disabled_class} flex min-w-0 flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold"'
+        "{disabled_attr}{value}{name}>"
         "{icon}"
         '<span class="truncate">{text}</span>'
         "</button>",
         width_class="w-full" if grow else "",
         color_classes=color_classes[style],
+        disabled_class=" opacity-20" if disabled else "",
+        disabled_attr=" disabled" if disabled else "",
         icon=format_html(
             '<img class="w-6 h-6 shrink-0" src="{src}" aria-hidden="true">',
             src=reverse(
@@ -136,14 +160,20 @@ def icon(
         src = reverse("colored-icon", kwargs={"icon": icon, "color": color})
     else:
         src = static.static(static_path)
-
+    try:
+        size_class = (
+            format_html(" class={}", {4: "size-4", 6: "size-6"}[size])
+            if size
+            else ""
+        )
+    except KeyError:
+        logger.error(f"Missing size class for size {size}")
+        size_class = ""
     return format_html(
-        '<img src="{src}" aria-hidden="true"{size}>',
+        '<img src="{src}" aria-hidden="true"{size_class}>',
         src=src,
         icon=icon,
-        size=format_html(" class={}", {4: "size-4", 6: "size-6"}[size])
-        if size
-        else "",
+        size_class=size_class,
     )
 
 

@@ -54,13 +54,15 @@
                         <span class="shrink-0 font-bold">#1</span>
                         <span id="task-title" class="text-ellipsis line-clamp-3">{{ task.title }}</span>
                     </div>
-                    <div class="flex flex-row items-center justify-start flex-wrap gap-2">
-                        <div id="label-preview"
-                             class="truncate rounded-full px-3 py-1 font-bold bg-label-orange text-label-text-orange">
-                            {{ task.labels.first.name }}
+                    {% if task.labels.first %}
+                        <div class="flex flex-row items-center justify-start flex-wrap gap-2">
+                            <div id="label-preview"
+                                 class="truncate rounded-full px-3 py-1 font-bold bg-label-orange text-label-text-orange">
+                                {{ task.labels.first.name }}
+                            </div>
+                            {% user_avatar task.assignee %}
                         </div>
-                        {% user_avatar task.assignee %}
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

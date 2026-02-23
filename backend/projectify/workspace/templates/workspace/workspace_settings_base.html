@@ -1,40 +1,33 @@
-{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "dashboard_base.html" %}
 {% load i18n %}
-{% block dashboard_projects %}
-    {% include "workspace/common/sidebar/project_details.html" with projects=projects %}
-{% endblock dashboard_projects %}
 {% block dashboard_content %}
-    <div class="min-w-0 grow" role="presentation">
-        <div class="flex h-full flex-col items-center bg-background px-0 py-8 sm:px-2">
-            <div class="flex w-full max-w-xl flex-col gap-4">
-                <h1 class="px-2 text-2xl font-bold sm:px-0">{% trans "Workspace settings" %}</h1>
-                <main class="flex w-full max-w-xl flex-col gap-10 rounded-lg bg-foreground p-4 shadow-context-menu">
-                    <div class="flex flex-row flex-wrap">
-                        {% url "dashboard:workspaces:settings" workspace.uuid as general_url %}
-                        {% include "workspace/workspace_settings/tab.html" with tab_url=general_url label=_("General") name="general" %}
-                        {% url 'dashboard:workspaces:projects' workspace.uuid as projects_url %}
-                        {% include "workspace/workspace_settings/tab.html" with tab_url=projects_url label=_("Projects") name="projects" %}
-                        {% url 'dashboard:workspaces:labels' workspace.uuid as labels_url %}
-                        {% include "workspace/workspace_settings/tab.html" with tab_url=labels_url label=_("Labels") name="labels" %}
-                        {% url 'dashboard:workspaces:team-members' workspace.uuid as team_url %}
-                        {% include "workspace/workspace_settings/tab.html" with tab_url=team_url label=_("Team") name="team" %}
-                        {% url 'dashboard:workspaces:billing' workspace.uuid as billing_url %}
-                        {% include "workspace/workspace_settings/tab.html" with tab_url=billing_url label=_("Billing") name="billing" %}
-                        {% url 'dashboard:workspaces:quota' workspace.uuid as quota_url %}
-                        {% include "workspace/workspace_settings/tab.html" with tab_url=quota_url label=_("Quota") name="quota" %}
-                        <div class="grow border-b-2 border-border"></div>
-                    </div>
-                    <div id="settings-content" class="flex flex-col gap-10">
-                        {% block workspace_settings_content %}
-                        {% endblock workspace_settings_content %}
-                    </div>
-                    <!--<+page>-->
-                </main>
-            </div>
-            <!--<+layout>-->
+    <div class="grow flex flex-col items-center bg-background px-0 py-8 sm:px-2"
+         role="presentation">
+        <div class="flex w-full max-w-xl flex-col gap-4">
+            <h1 class="px-2 text-2xl font-bold sm:px-0">{% trans "Workspace settings" %}</h1>
+            <main class="flex w-full max-w-xl flex-col gap-10 rounded-lg bg-foreground p-4 shadow-context-menu">
+                <div class="flex flex-row flex-wrap">
+                    {% url "dashboard:workspaces:settings" workspace.uuid as general_url %}
+                    {% include "workspace/workspace_settings/tab.html" with tab_url=general_url label=_("General") name="general" %}
+                    {% url 'dashboard:workspaces:projects' workspace.uuid as projects_url %}
+                    {% include "workspace/workspace_settings/tab.html" with tab_url=projects_url label=_("Projects") name="projects" %}
+                    {% url 'dashboard:workspaces:labels' workspace.uuid as labels_url %}
+                    {% include "workspace/workspace_settings/tab.html" with tab_url=labels_url label=_("Labels") name="labels" %}
+                    {% url 'dashboard:workspaces:team-members' workspace.uuid as team_url %}
+                    {% include "workspace/workspace_settings/tab.html" with tab_url=team_url label=_("Team") name="team" %}
+                    {% url 'dashboard:workspaces:billing' workspace.uuid as billing_url %}
+                    {% include "workspace/workspace_settings/tab.html" with tab_url=billing_url label=_("Billing") name="billing" %}
+                    {% url 'dashboard:workspaces:quota' workspace.uuid as quota_url %}
+                    {% include "workspace/workspace_settings/tab.html" with tab_url=quota_url label=_("Quota") name="quota" %}
+                    <div class="grow border-b-2 border-border"></div>
+                </div>
+                <div id="settings-content" class="flex flex-col gap-10">
+                    {% block workspace_settings_content %}
+                    {% endblock workspace_settings_content %}
+                </div>
+            </main>
         </div>
-        <!--<+layout>-->
     </div>
 {% endblock dashboard_content %}

@@ -27,14 +27,11 @@ from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.schema import extend_schema
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
-from projectify.workspace.models.section import Section
-from projectify.workspace.selectors.section import (
-    SectionDetailQuerySet,
-    section_find_for_user_and_uuid,
-)
 
 from ..models import Project, Workspace
 from ..models.label import Label
+from ..models.section import Section
+from ..models.task import Task
 from ..models.team_member import TeamMember
 from ..selectors.project import (
     ProjectDetailQuerySet,
@@ -58,6 +55,7 @@ from ..services.project import (
     project_update,
 )
 from ..services.section import section_minimize
+from ..services.task import task_move_in_direction
 from ..services.team_member import (
     team_member_minimize_label_filter,
     team_member_minimize_team_member_filter,
@@ -198,13 +196,6 @@ class ProjectFilterForm(forms.Form):
         return data
 
 
-class MinimizeForm(forms.Form):
-    """Form for handling minimize actions."""
-
-    action = forms.CharField(required=True)
-    minimized = forms.BooleanField(required=False)
-
-
 class SectionMinimizeForm(forms.Form):
     """Form for handling section minimize actions."""
 
@@ -216,6 +207,28 @@ class SectionMinimizeForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.fields["section"] = forms.ModelChoiceField(
             queryset=project.section_set.all(),
+            to_field_name="uuid",
+            required=True,
+        )
+
+
+class TaskMoveForm(forms.Form):
+    """Form for handling task move actions."""
+
+    action = forms.CharField(required=True)
+    direction = forms.ChoiceField(
+        choices=[
+            ("up", _("Up")),
+            ("down", _("Down")),
+        ]
+    )
+
+    def __init__(self, project: Project, *args: Any, **kwargs: Any) -> None:
+        """Initialize form with task choices from project."""
+        super().__init__(*args, **kwargs)
+        # TODO rename to just 'task'
+        self.fields["task_uuid"] = forms.ModelChoiceField(
+            queryset=Task.objects.filter(section__project=project),
             to_field_name="uuid",
             required=True,
         )
@@ -234,70 +247,13 @@ def project_detail_view(
     if project is None:
         raise Http404(_("No project found for this uuid"))
 
-    context: dict[str, Any] = {}
+    team_member = team_member_find_for_workspace(
+        user=request.user, workspace=project.workspace
+    )
+    if team_member is None:
+        raise RuntimeError("No team member")
 
-    match request.method, request.POST.get("action"):
-        case "POST", "minimize_section":
-            section_minimize_form = SectionMinimizeForm(
-                project=project, data=request.POST
-            )
-            if not section_minimize_form.is_valid():
-                raise BadRequest()
-
-            section: Section = section_minimize_form.cleaned_data["section"]
-            minimized: bool = section_minimize_form.cleaned_data["minimized"]
-
-            section_minimize(
-                who=request.user, section=section, minimized=minimized
-            )
-
-            querydict = request.POST
-            template = "workspace/project_detail/section.html"
-            setattr(section, "minimized", minimized)
-            # Populate context with section. this section has all the
-            # necessary task and label annotations
-            # TODO not optimal
-            enriched_section = section_find_for_user_and_uuid(
-                section_uuid=section.uuid,
-                user=request.user,
-                qs=SectionDetailQuerySet,
-            )
-            assert enriched_section, "Section disappeared"
-            setattr(enriched_section, "minimized", minimized)
-            context = {**context, "section": enriched_section}
-        case "POST", _:
-            minimize_form = MinimizeForm(request.POST)
-            if not minimize_form.is_valid():
-                raise BadRequest()
-
-            action = minimize_form.cleaned_data["action"]
-            minimized = minimize_form.cleaned_data["minimized"]
-
-            team_member = team_member_find_for_workspace(
-                user=request.user, workspace=project.workspace
-            )
-            if team_member is None:
-                raise RuntimeError("No team member")
-
-            match action:
-                case "minimize_team_member_filter":
-                    team_member_minimize_team_member_filter(
-                        team_member=team_member,
-                        minimized=minimized,
-                    )
-                case "minimize_label_filter":
-                    team_member_minimize_label_filter(
-                        team_member=team_member,
-                        minimized=minimized,
-                    )
-                case invalid:
-                    raise BadRequest(f"Invalid action {invalid}")
-            querydict = request.POST
-            template = "workspace/common/sidebar/project_details.html"
-        case _:
-            querydict = request.GET
-            template = "workspace/project_detail.html"
-
+    querydict = request.POST if request.method == "POST" else request.GET
     filter_by_team_member: Optional[QuerySet[TeamMember]] = None
     filter_by_label: Optional[QuerySet[Label]] = None
     filter_by_unlabeled: bool = False
@@ -330,15 +286,78 @@ def project_detail_view(
         who=request.user,
         prefetch_labels=True,
     )
+
+    context: dict[str, Any] = {}
+
+    template = "workspace/project_detail.html"
+    enrich_section: Optional[Section] = None
+    match request.method, request.POST.get("action"):
+        case "POST", "minimize_section":
+            section_minimize_form = SectionMinimizeForm(
+                project=project, data=request.POST
+            )
+            if not section_minimize_form.is_valid():
+                raise BadRequest()
+
+            enrich_section = section_minimize_form.cleaned_data["section"]
+            minimized: bool = section_minimize_form.cleaned_data["minimized"]
+            # TODO
+            # setattr(enrich_section, "minimzed", minimized)
+
+            section_minimize(
+                who=request.user,
+                section=section_minimize_form.cleaned_data["section"],
+                minimized=minimized,
+            )
+
+            template = "workspace/project_detail/section.html"
+        case "POST", "move_task":
+            task_move_form = TaskMoveForm(project=project, data=request.POST)
+            if not task_move_form.is_valid():
+                raise BadRequest()
+            task: Task = task_move_form.cleaned_data["task_uuid"]
+            enrich_section = task.section
+            task_move_in_direction(
+                who=request.user,
+                task=task,
+                direction=task_move_form.cleaned_data["direction"],
+            )
+            template = "workspace/project_detail/section.html"
+        case "POST", "minimize_team_member_filter":
+            team_member_minimize_team_member_filter(
+                team_member=team_member,
+                minimized=request.POST.get("minimized") == "true",
+            )
+            template = "workspace/common/sidemenu/project_details.html"
+        case "POST", "minimize_label_filter":
+            team_member_minimize_label_filter(
+                team_member=team_member,
+                minimized=request.POST.get("minimized") == "true",
+            )
+            template = "workspace/common/sidemenu/project_details.html"
+        case _:
+            pass
+
+    # TODO run this before the match: case:
     project = project_find_by_project_uuid(
         who=request.user, project_uuid=project_uuid, qs=qs
     )
     assert project, "Project disappeared"
 
+    section: Optional[Section] = (
+        next(
+            filter(
+                lambda s: s.pk == enrich_section.pk, project.section_set.all()
+            ),
+            None,
+        )
+        if enrich_section
+        else None
+    )
+    context = {**context, "section": section}
+
     # Mark this project as most recently visited
-    team_member_qs = getattr(project.workspace, "current_team_member_qs", None)
-    assert team_member_qs
-    team_member_visit_project(team_member=team_member_qs[0], project=project)
+    team_member_visit_project(team_member=team_member, project=project)
 
     project.workspace.quota = workspace_get_all_quotas(project.workspace)
     team_members = project.workspace.teammember_set.all()

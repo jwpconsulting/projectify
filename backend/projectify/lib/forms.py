@@ -5,7 +5,9 @@
 """Form utilities."""
 
 import logging
+from typing import Union
 
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.forms import BaseForm
 
 from rest_framework.exceptions import ValidationError
@@ -13,10 +15,29 @@ from rest_framework.exceptions import ValidationError
 logger = logging.getLogger(__name__)
 
 
+def populate_form_with_django_errors(
+    form: BaseForm, error: DjangoValidationError
+) -> None:
+    """Populate a django form with errors from a Django ValidationError."""
+    match error.error_dict:
+        case None:
+            return
+        case error_dict:
+            pass
+    for k, errors in error_dict.items():
+        for error in errors:
+            form.add_error(k, error)
+
+
 def populate_form_with_drf_errors(
-    form: BaseForm, error: ValidationError
+    form: BaseForm, error: Union[ValidationError, DjangoValidationError]
 ) -> None:
     """Populate a Django form with errors from a DRF ValidationError."""
+    match error:
+        case ValidationError():
+            pass
+        case DjangoValidationError():
+            return populate_form_with_django_errors(form, error)
     match error.detail:
         case dict():
             pass

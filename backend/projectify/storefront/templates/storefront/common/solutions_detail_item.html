@@ -1,43 +1,37 @@
-{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load static %}
 {% load i18n %}
-{% if imgPosition == "left" %}
-    <section class="flex flex-col items-center gap-6 sm:grid sm:grid-cols-2">
-        <div class="flex flex-col gap-6 sm:order-last">
-            <h4 class="text-xl font-bold sm:text-4xl">{% trans title %}</h4>
-            <p class="text-l">{% trans text %}</p>
+{% load projectify %}
+{# djlint:off H006 ignore image sizing #}
+<section class="flex flex-col items-center gap-6 md:grid grid-cols-2">
+    {% if imgPosition == "left" %}
+        <div class="w-full max-w-md justify-self-center">
             {% if learnmore_url %}
-                <a href="{{ learnmore_url }}"
-                   class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Learn more here" %}</a>
+                <a href="{{ learnmore_url }}">
+                    <img src="{% static src %}" alt="{% trans alt %}">
+                </a>
+            {% else %}
+                <img src="{% static src %}" alt="{% trans alt %}">
             {% endif %}
         </div>
-        <div class="w-full max-w-xs justify-self-center">
-            <picture>
-                <img src="{% static src %}"
-                     alt="{% trans alt %}"
-                     width="1279"
-                     height="548">
-            </picture>
-        </div>
-    </section>
-{% else %}
-    <section class="flex flex-col items-center gap-6 sm:grid sm:grid-cols-2">
-        <div class="flex flex-col gap-6">
-            <h4 class="text-xl font-bold sm:text-4xl">{% trans title %}</h4>
-            <p class="text-l">{% trans text %}</p>
+    {% endif %}
+    <div class="flex flex-col gap-6 order-last sm:order-none">
+        <h4 class="text-xl font-bold sm:text-4xl">{% trans title %}</h4>
+        <p class="text-l">{% trans text %}</p>
+        {% if learnmore_url %}
+            {% anchor learnmore_url label=_("Learn more here") %}
+        {% endif %}
+    </div>
+    {% if imgPosition == "right" %}
+        <div class="w-full max-w-md justify-self-center">
             {% if learnmore_url %}
-                <a href="{{ learnmore_url }}"
-                   class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Learn more here" %}</a>
+                <a href="{{ learnmore_url }}">
+                    <img src="{% static src %}" alt="{% trans alt %}">
+                </a>
+            {% else %}
+                <img src="{% static src %}" alt="{% trans alt %}">
             {% endif %}
         </div>
-        <div class="w-full max-w-xs justify-self-center">
-            <picture>
-                <img src="{% static src %}"
-                     alt="{% trans alt %}"
-                     width="1279"
-                     height="548">
-            </picture>
-        </div>
-    </section>
-{% endif %}
+    {% endif %}
+</section>

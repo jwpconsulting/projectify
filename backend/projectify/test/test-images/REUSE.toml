@@ -1,0 +1,13 @@
+# SPDX-FileCopyrightText: 2026 JWP Consulting GK
+# SPDX-License-Identifier: AGPL-3.0-or-later
+version = 1
+
+[[annotations]]
+path = ["*.jpg"]
+precedence = "aggregate"
+SPDX-License-Identifier = "CC0-1.0"
+SPDX-FileCopyrightText = "None"
+# cat-1.jpg: https://publicdomainpictures.net/view-image.php?image=14178&picture=cat-lying-on-sidewalk
+# cat-2.jpg: https://www.publicdomainpictures.net/view-image.php?image=313297&picture=tabby-cat
+# cat-3.jpg: https://www.publicdomainpictures.net/view-image.php?image=36940&picture=cat
+# cat-4.jpg: https://www.publicdomainpictures.net/en/view-image.php?image=254472&picture=cute-cats-face

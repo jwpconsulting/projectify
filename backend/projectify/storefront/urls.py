@@ -9,6 +9,7 @@ from projectify.storefront.views import (
     accessibility,
     contact_us,
     credits,
+    download,
     ethicalads,
     free_software,
     index,
@@ -29,13 +30,14 @@ solution_patterns = [
 ]
 
 security_patterns = [
-    path("general/", security_general, name="general"),
-    path("disclose/", security_disclose, name="disclose"),
+    path("general", security_general, name="general"),
+    path("disclose", security_disclose, name="disclose"),
 ]
 
 urlpatterns = [
     path("accessibility", accessibility, name="accessibility"),
     path("contact-us", contact_us, name="contact_us"),
+    path("download", download, name="download"),
     path("ethicalads", ethicalads, name="ethicalads"),
     path("free-software", free_software, name="free_software"),
     path("credits", credits, name="credits"),

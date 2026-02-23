@@ -2,64 +2,46 @@
 title: Projectify Architecture
 author: Justus Perlwitz
 date: 2024-03-18
+updated: 2026-02-20
 ---
 
 <!--
-SPDX-FileCopyrightText: 2024 JWP Consulting GK
+SPDX-FileCopyrightText: 2024,2026 JWP Consulting GK
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 This document describes the software architecture of the Projectify software.
-It was written with a deployment on Heroku in mind, so certain parts might
+It was written with a deployment on Render in mind, so certain parts might
 change when deployed on a different infrastructure.
 
-The Projectify software is divided into two main parts that in turn interface
-with external components. These two parts are a
-
-- frontend, being executed in the browser by a Projectify user, and a
-- backend, serving requests made by the frontend.
+The Projectify software is implemented using Django.
 
 # General run time requirements
 
-The frontend relies on
+To use Projectify, users need a computer that meets the following criteria:
 
-- a browser being able to run a recent version of ECMAScript (basically
-  JavaScript, but with more standardization),
-- a stable internet connection to the backend, and asset storage, and
-- a modest amount of computing resources (imagine a laptop computer from 2010).
+1. Run a modern browser that can run a recent version of ECMAScript.
+2. Have a stable internet connection to the Projectify domains.
+3. Provide a modest amount of computing resources (imagine a laptop computer from 2010).
 
-The backend requires
+The Projectify software has the following requirements for its runtime:
 
-- a PostgreSQL database instance,
-- a Redis instance (for queuing, caching, and WebSocket connections),
-- a modest amount of computing resources, and
-- reliable connectivity to the wherever a frontend is run,
+1. Provide a PostgreSQL database instance,
+2. Provide a Redis instance (for queuing, caching, and WebSocket connections),
+3. Provide a modest amount of computing resources, and
+4. Have a reliable and fast (more than 1 Gbit per second) internet connection
+   to its users.
 
-# Frontend components
+# Components
 
-The frontend is implemented using SvelteKit[^1]. SvelteKit is a frontend
-application framework that in turn is powered by Svelte[^2].
+Projectify uses Django [^django] with PostgreSQL version 15.5 [^postgresql] and higher.
+To connect to PostgreSQL instances, Projectify uses Psycopg version 3 [^psycopg].
 
-In order to communicate with the backend, the frontend uses a combination of
-fetch [^3] requests and WebSocket. For WebSocket, a library called Sarus [^3]
-is used.
+The frontend templates use HTMX [^htmx] and Tailwind CSS [^tailwind] is used.
 
-To style the frontend, Tailwind CSS [^4] is used.
-
-There are dozens of helper libraries used in the frontend as well, so a look at
-`frontend/package.json` under `dependencies` will show what else is used.
-
-# Backend components
-
-The backend is implemented in Django [^5] and Django REST Framework [^6].
-Asynchronous WebSocket communication is enabled using Django Channels [^7].
-
-For the DBMS PostgreSQL version 15.5 [^8] and higher is used and supported. To
-connect to a PostgreSQL instance, Psycopg version 3 [^9] is used.
-
-The style guide for this Django Project is derived from the HackSoftware
-Django-Styleguide [^10]. This is not always strictly enforced, but roughly,
+The style guide for this Django Project derives from the HackSoftware
+Django-Styleguide [^django-styleguide]. This is not always strictly enforced, but roughly,
 
 - selectors,
 - services,
@@ -69,7 +51,7 @@ Django-Styleguide [^10]. This is not always strictly enforced, but roughly,
 are used. Since the transition to the Django-Styleguide came late in the
 project, not every part of the backend is written this way.
 
-In order to validate authorization, rules [^11] is used.
+To validate user authorization, Projectify uses django-rules [^django-rules].
 
 # API Security
 
@@ -80,27 +62,28 @@ registered user, or disturb other users from using the Projectify software.
 
 Authorization validation happens as part of a call to a service function in the
 backend. Further optical validation, such as disabling or hiding functionality
-in the frontend is not relevant to API security. Authorization checking also
+in the frontend templates is not relevant to API security. Authorization checking also
 involves validating quotas, such as ensuring that a workspace can not have too
 many team members added.
 
-Roughly, flow from frontend to successful authorization is as follows:
+Roughly, the steps required, from accessing Projectify in the browser to successful authorization, are as follows:
 
-1. User initiates action in frontend, such as adding a new task
-2. The frontend initiates a POST request to the backend's create task endpoint.
-   This request contains the user's session id cookie.
-3. The backend receives the request. It validates that the session id is valid,
-   which means that the session id is signed correctly, not expired, not
-   removed in the backend's session table, and points to an existing user.
-4. The create task APIView de-serializes the contents of the request, and as
-   part of the de-serialization, workspace and section used for this task are
-   retrieved and validated to be accessible by the authenticated user. A user
-   can only access a workspace that they are a team member of.
-5. The task creation data is passed to the task creation service method.
-6. The service method validates the user's permissions and thus establishes
+1. The User initiates an action in their browser, such as adding a new task.
+2. The browser sends a POST request to the backend. This request contains the user's session id cookie.
+3. The backend receives the request. It validates that the session ID is valid.
+   This means that the session ID is signed correctly, not expired, not
+   removed in the backend's session table, and that it points to an existing user.
+4. The create task view `task_create` in `projectify/workspace/views/task.py` de-serializes the contents of the request using a Django Form.
+   As
+   part of the de-serialization, the backend checks whether the user is allowed
+   to access the workspace and sections for this task
+    A user can only access a workspace that they are a team member of.
+5. The create task view passes the validated data to the task creation service method
+   `task_create` in `projectify/workspace/services/task.py`.
+6. The task creation service method validates the user's permissions and thus establishes
    that they are authorized to create a task for this workspace.
-7. Now the task is created, and a successful status code is returned to the
-   frontend.
+7. Now task creation service method creates the task and the backend returns
+a confirmation page to the browser.
 
 In the case of a missing or invalid session cookie, the above flow would fail
 at step 3, since the APIView requires authenticated users.
@@ -121,8 +104,8 @@ In terms of performance, Projectify has several goals:
 
 - Projectify shall work acceptably with slow internet connections. (high
   latency, low bandwidth)
-- Projectify shall work acceptably with slow computers. (low available working
-  memory, low CPU resources) used to run the frontend
+- Projectify shall work acceptably with slow computers and browsers. (low available working
+  memory, low CPU resources)
 - Projectify shall work acceptably when run on a low-spec server used to run
   the backend.
 - Projectify shall work acceptably with large workspace and project sizes.
@@ -136,33 +119,13 @@ In terms of performance, Projectify has several goals:
 To keep the Projectify software reliable and trustworthy, it shall be designed
 according to the following criteria:
 
-- A bug in the frontend shall never cause state in the backend to become
-  invalid
-- The frontend shall fail in the gentlest way possible when no connection can
-  be established with the backend
-- No interaction in the frontend shall inadvertently destroy or modify data,
-  against the intentions of a user
-- The frontend shall crash in gentle ways, and the user interface shall always
-  guide the user to restart or reset the frontend to a known good state
+- The Projecitfy backend shall prevent bugs from corrupting user state.
+- Projectify shall prevent users from inadvertently destroying or modify data.
 
-[^1]: SvelteKit: https://kit.svelte.dev/
-
-[^2]: Svelte: https://svelte.dev/
-
-[^3]: Sarus: https://github.com/anephenix/sarus/
-
-[^4]: Tailwind CSS: https://tailwindcss.com/
-
-[^5]: Django: https://www.djangoproject.com/
-
-[^6]: Django REST Framework: https://www.django-rest-framework.org/
-
-[^7]: Django Channels: https://channels.readthedocs.io/en/latest/
-
-[^8]: PostgreSQL: https://www.postgresql.org/
-
-[^9]: Psycopg: https://www.psycopg.org/
-
-[^10]: Django-Styleguide: https://github.com/HackSoftware/Django-Styleguide
-
-[^11]: rules: https://github.com/dfunckt/django-rules
+[^htmx]: [</> htmx - high power tools for HTML](https://htmx.org/) *htmx.org*
+[^tailwind]: [Tailwind CSS](https://tailwindcss.com) *tailwindcss.com*
+[^django]: [The web framework for perfectionists with deadlines - Django](https://www.djangoproject.com/) *www.djangoproject.com*
+[^postgresql]: [PostgreSQL: The World's Most Advanced Open Source Relational Database](https://www.postgresql.org) *www.postgresql.org*
+[^psycopg]: [PostgreSQL driver for Python — Psycopg](https://www.psycopg.org) *www.psycopg.org*
+[^django-styleguide]: [Django styleguide used in HackSoft projects](https://github.com/HackSoftware/Django-Styleguide) *github.com/HackSoftware/Django-Styleguide*
+[^django-rules]: [Awesome Django authorization, without the database](https://github.com/dfunckt/django-rules) *github.com/dfunckt/django-rules*

@@ -55,6 +55,7 @@ django-debug-toolbar = "^4.3.0"
 ipython = "~8.22"
 ruff = "0.6.1"
 drf-spectacular = {extras = ["sidecar"], version = "^0.27.2"}
+selenium = "^4.40.0"
 
 [tool.poetry.group.test]
 
@@ -74,6 +75,7 @@ types-redis = "~4.6.0.5"
 vulture = "^2.9.1"
 types-requests = "^2.32.0.20240712"
 djlint = "^1.36.1"
+types-markdown = "^3.10.2.20260211"
 
 [build-system]
 requires = ["poetry-core"]
@@ -190,6 +192,8 @@ exclude = [
     "projectify/*/migrations/*.py",
     # Missing type stub
     "projectify/workspace/test/test_migrations.py",
+    # Type confusion over next(filter())
+    "projectify/workspace/views/project.py",
     # This one is sort of covered by mypy
     "projectify/settings/monkeypatch.py",
     # TODO cloudinary stub

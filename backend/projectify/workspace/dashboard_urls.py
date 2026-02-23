@@ -41,10 +41,8 @@ from projectify.workspace.views.workspace import (
     workspace_settings_new_label,
     workspace_settings_projects,
     workspace_settings_quota,
-    workspace_settings_team_member_remove,
-    workspace_settings_team_member_uninvite,
+    workspace_settings_team_member_update,
     workspace_settings_team_members,
-    workspace_settings_team_members_invite,
     workspace_view,
 )
 
@@ -99,19 +97,9 @@ workspace_patterns = (
         name="team-members",
     ),
     path(
-        "<uuid:workspace_uuid>/settings/team-members/invite",
-        workspace_settings_team_members_invite,
-        name="team-members-invite",
-    ),
-    path(
-        "<uuid:workspace_uuid>/team-member/<uuid:team_member_uuid>/remove",
-        workspace_settings_team_member_remove,
-        name="team-member-remove",
-    ),
-    path(
-        "<uuid:workspace_uuid>/team-member/uninvite",
-        workspace_settings_team_member_uninvite,
-        name="team-member-uninvite",
+        "<uuid:workspace_uuid>/settings/team-members/<uuid:team_member_uuid>",
+        workspace_settings_team_member_update,
+        name="team-member-update",
     ),
     path(
         "<uuid:workspace_uuid>/settings/billing",

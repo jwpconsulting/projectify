@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 # Create a task
 
 Tasks are the backbone of Projectify. In order to create a task simply click
-the **Add task button** in a section panel. If you do not know how to create a
+the **Add task** button in a section panel. If you do not know how to create a
 section, please see the [help page on sections](/help/sections).
 
 # Add context to a task
@@ -22,14 +22,11 @@ task.
 # Edit a task
 
 Once a task has been saved, you can go back in and edit the task by clicking
-the task title. This will open up the same page mentioned in the previous
+the task. This will open up the same page mentioned in the previous
 section _Add context to a task_ above.
 
-You can also open this page with the **task ellipsis button** (...) on the far
-right and clicking **Open task**.
-
 To begin editing the task, you can either press the **Edit** button in the top
-right, or press the **pencil button** at the right side of each task field.
+right, or press the **pencil icon** at the right side of each task field.
 
 When you are done editing the task, you can save your changes using the
 **Update task** button in the top right. To continue viewing the task after
@@ -48,22 +45,16 @@ Moving tasks is simple. On the right of a task are three buttons:
 
 - An **up button**,
 - a **down button**, and
-- the **task ellipsis button** (...).
+- the **task actions button** (…).
 
-The **up** and **down** buttons move the task inside the workpace board
-section.
+The **up** and **down** buttons move the task inside the section.
 
-The **task ellipsis button** (...) opens a context menu that allows you to
+The **task actions button** (…) takes you to a task actions page that allows you to
 select a section to move the task to, as well as more actions inside the
 current section such as **Move to top** and **Move to bottom**.
 
-# Copy a task link
-
-To copy a link to a task, click the **task ellipsis button** (...) to the right
-of the task to open the task context menu and click **Copy link**.
-
 # Delete a task
 
-In order to delete a task, click the **task ellipsis button** (...) in the task
-card and select **Delete task** from the context menu. This will open an
-overlay for you to confirm your choice to delete this task.
+In order to delete a task, click the **task actions button** (…) in the task
+card and select **Delete task** from the task actions page. This will ask you to
+confirm your choice to delete this task.

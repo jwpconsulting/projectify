@@ -125,7 +125,7 @@ class TaskCreateForm(forms.Form):
         super().__init__(*args, **kwargs)
         assignee_widget = forms.RadioSelect()
         assignee_widget.option_template_name = (
-            "workspace/forms/widgets/select_assignee_option.html"
+            "workspace/forms/widgets/select_team_member_option.html"
         )
         self.fields["assignee"] = forms.ModelChoiceField(
             required=False,
@@ -359,7 +359,7 @@ class TaskUpdateForm(forms.Form):
         super().__init__(*args, **kwargs)
         assignee_widget = forms.RadioSelect()
         assignee_widget.option_template_name = (
-            "workspace/forms/widgets/select_assignee_option.html"
+            "workspace/forms/widgets/select_team_member_option.html"
         )
         self.fields["assignee"] = forms.ModelChoiceField(
             required=False,
@@ -641,7 +641,15 @@ def task_actions(
     request: AuthenticatedHttpRequest, task_uuid: UUID
 ) -> HttpResponse:
     """Render task actions menu page."""
-    task = get_object(request, task_uuid)
+    task = task_find_by_task_uuid(
+        who=request.user, task_uuid=task_uuid, qs=TaskDetailQuerySet
+    )
+    if task is None:
+        raise Http404(
+            _("Could not find task with uuid {task_uuid}").format(
+                task_uuid=task_uuid
+            )
+        )
     workspace = task.workspace
     context = {
         **get_task_view_context(request, workspace),

@@ -9,11 +9,13 @@ from uuid import UUID
 from django.db.models import (
     Count,
     Exists,
+    Max,
     OuterRef,
     Prefetch,
     Q,
     QuerySet,
     Value,
+    Window,
 )
 from django.db.models.functions import NullIf
 
@@ -98,13 +100,24 @@ def project_detail_query_set(
     label_qs = label_qs.annotate(is_filtered=label_is_filtered)
 
     if task_search_query is not None:
-        task_q = task_q & Q(title__icontains=task_search_query)
+        task_q = task_q & (
+            Q(number__icontains=task_search_query)
+            | Q(title__icontains=task_search_query)
+            | Q(section__title__icontains=task_search_query)
+            | Q(section__project__title__icontains=task_search_query)
+        )
 
     task_qs = (
         Task.objects.annotate(
             sub_task_progress=Count("subtask", filter=Q(subtask__done=True))
             * 1.0
             / NullIf(Count("subtask"), 0),
+            first=Q(_order=Value(0)),
+            last=Q(
+                _order=Window(
+                    expression=Max("_order"), partition_by="section_id"
+                )
+            ),
         )
         .order_by("_order")
         .select_related("assignee__user")

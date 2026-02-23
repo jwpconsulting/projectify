@@ -4,11 +4,9 @@
 {% block content %}
     <div class="flex grow flex-col">
         {% include "common/navigation/header/landing.html" %}
-        <div class="flex grow flex-col">
-            <div class="flex grow flex-col justify-between">
-                {% block storefront_content %}
-                {% endblock storefront_content %}
-            </div>
+        <div class="flex grow flex-col justify-between">
+            {% block storefront_content %}
+            {% endblock storefront_content %}
         </div>
     </div>
     {% include "common/footer.html" %}

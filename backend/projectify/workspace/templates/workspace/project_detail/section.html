@@ -30,7 +30,11 @@
         </div>
         <div class="flex shrink-0 flex-row items-center gap-1">
             {% include "workspace/common/loading_spinner.html" %}
-            {% action_button text=_("Add Task") icon="plus" %}
+            <a href="{% url 'dashboard:sections:create-task' section.uuid %}"
+               class="text-secondary-content hover:bg-secondary-hover hover:text-secondary-content-hover active:bg-secondary-pressed active:text-secondary-content-hover flex flex-row gap-2 rounded-lg px-4 py-2 font-bold">
+                {% icon "plus" size=6 color="primary" %}
+                <span class="truncate">{% translate "Add task" %}</span>
+            </a>
         </div>
     </form>
     {% if not section.minimized %}
@@ -60,30 +64,18 @@
                                 </div>
                             {% endif %}
                             {% user_avatar task.assignee %}
-                            <form hx-target="#project-detail"
-                                  hx-post="{% url 'dashboard:tasks:move' task.uuid %}"
-                                  hx-select="#project-detail"
-                                  action="{% url 'dashboard:tasks:move' task.uuid %}"
+                            <form hx-target="#section-{{ section.uuid }}"
+                                  hx-post="{% url 'dashboard:projects:detail' project.uuid %}"
+                                  hx-include="#task-filter,#team-member-filters,#label-filters"
                                   class="flex flex-row items-center gap-1"
                                   hx-swap="outerHTML"
                                   method="post">
-                                <button name="direction"
-                                        value="up"
-                                        type="submit"
-                                        aria-label="Move task up"
-                                        {% if forloop.first %}disabled{% endif %}
-                                        class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                    {% icon "chevron-up" %}
-                                </button>
-                                <button name="direction"
-                                        value="down"
-                                        type="submit"
-                                        hx-swap="outerHTML"
-                                        aria-label="Move task down"
-                                        {% if forloop.last %}disabled{% endif %}
-                                        class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
-                                    {% icon "chevron-down" %}
-                                </button>
+                                <input type="hidden" name="action" value="move_task">
+                                <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
+                                <div hx-swap="outerHTML">
+                                    {% circle_button label=_("Move task up") value="up" name="direction" disabled=task.first icon_style="chevron-up" %}
+                                    {% circle_button label=_("Move task down") value="down" name="direction" disabled=task.last icon_style="chevron-down" %}
+                                </div>
                                 {% csrf_token %}
                                 <p class="htmx-indicator">...</p>
                                 <a aria-label="Navigate to task menu"
@@ -91,7 +83,7 @@
                                    hx-target="#project-detail"
                                    hx-select="#task-actions"
                                    href="{% url "dashboard:tasks:actions" task.uuid %}"
-                                   class="w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:text-disabled">
+                                   class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background">
                                     {% icon "dots-horizontal" %}
                                 </a>
                             </form>

@@ -12,5 +12,5 @@ app_name = "help"
 urlpatterns = [
     path("", help_list, name="list"),
     # TODO: Add safe urls for help detail pages
-    path("<slug:page>/", help_detail, name="detail"),
+    path("<slug:page>", help_detail, name="detail"),
 ]

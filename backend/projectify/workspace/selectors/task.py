@@ -6,10 +6,19 @@
 from typing import Optional
 from uuid import UUID
 
-from django.db.models import Count, Prefetch, Q, QuerySet
+from django.db.models import (
+    Count,
+    OuterRef,
+    Prefetch,
+    Q,
+    QuerySet,
+    Subquery,
+    Value,
+)
 from django.db.models.functions import NullIf
 
 from projectify.user.models import User
+from projectify.workspace.models.team_member import TeamMember
 
 from ..models.chat_message import ChatMessage
 from ..models.label import Label
@@ -25,22 +34,25 @@ TaskDetailQuerySet: QuerySet[Task] = (
     )
     .prefetch_related(
         "subtask_set",
-    )
-    .prefetch_related(
         Prefetch(
             "labels",
             queryset=labels_annotate_with_colors(Label.objects.all()),
         ),
-    )
-    .prefetch_related(
         Prefetch(
             "workspace__label_set",
             queryset=labels_annotate_with_colors(
                 Label.objects.annotate(task_count=Count("task"))
             ),
         ),
-    )
-    .prefetch_related(
+        Prefetch(
+            "workspace__teammember_set",
+            queryset=TeamMember.objects.select_related("user").annotate(
+                task_count=Count(
+                    "task",
+                    filter=Q(task__section__project__archived__isnull=True),
+                )
+            ),
+        ),
         Prefetch(
             "chatmessage_set",
             queryset=ChatMessage.objects.select_related(
@@ -48,8 +60,6 @@ TaskDetailQuerySet: QuerySet[Task] = (
                 "author__user",
             ),
         ),
-    )
-    .prefetch_related(
         Prefetch(
             "workspace__project_set",
             queryset=Project.objects.filter(archived__isnull=True),
@@ -62,6 +72,15 @@ TaskDetailQuerySet: QuerySet[Task] = (
         )
         * 1.0
         / NullIf(Count("subtask"), 0),
+        first=Q(_order=Value(0)),
+        last=Q(
+            _order=Subquery(
+                # The order of the last task in this section
+                Task.objects.filter(section_id=OuterRef("section_id"))
+                .order_by("-_order")
+                .values("_order")[:1]
+            )
+        ),
     )
 )
 

@@ -31,9 +31,14 @@
                 </ul>
             </nav>
             <div class="prose">
-                {# TODO: Add markdown index list #}
+                {% if toc_html %}
+                    <nav class="toc mb-8">
+                        <h3 class="text-lg font-semibold mb-4">{% trans "Table of Contents" %}</h3>
+                        {{ toc_html }}
+                    </nav>
+                {% endif %}
                 <main>
-                    {{ help_text|markdownify }}
+                    {{ help_html }}
                 </main>
             </div>
         </div>

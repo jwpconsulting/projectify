@@ -7,112 +7,135 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 # Security
 
 This page explains measures taken by JWP Consulting GK (hereinafter referred to
-as "we") to ensure the security of the Projectify software (hereinafter
-referred to as the "Product"). The Product is offered to Users as defined in
-the [terms of service](/tos) and those who are interested in using the Product
-(both hereinafter referred to as "You") .
+as "JWP") to ensure the security of the Projectify software (hereinafter
+referred to as "Projectify"). JWP offers Projectify to users as defined in
+the [terms of service](/tos) and those who are interested in using Projectify
+(both hereinafter referred to as "you") .
 
-This page is a security-assessment created while reviewing the [Minimum Viable
-Secure Product checklist v2.0](https://mvsp.dev/mvsp.en/v2.0-20221012/). We
-invite You to share Your [feedback with us](/contact-us). For security related
-inquiries, please refer to our [security disclosure
-policy](/security/disclose).
+This page contains a security assessment created following the [Minimum Viable
+Secure Product checklist v2.0](https://mvsp.dev/mvsp.en/v2.0-20221012/). JWP
+invites you to [share your feedback](/contact-us). For security related
+inquiries, please refer to the [security disclosure policy](/security/disclose).
 
 # Version History
 
-This page has been created on 2024-03-29.
+| Date           | Changes                                           | Author                                |
+| -------------- | ------------------------------------------------- | ------------------------------------- |
+| **2026-02-20** | Adjusted content based on Django frontend rewrite | Justus W. Perlwitz, JWP Consulting GK |
+| **2024-03-29** | Created page                                      | Justus W. Perlwitz, JWP Consulting GK |
 
 # Business Controls
 
-We offer a point of contact for vulnerability reports on our [security disclosure
-policy page](/security/disclose).
+JWP offers a point of contact for Projectify-related vulnerability reports on
+Projectify's [security disclosure policy page](/security/disclose).
 
-If You would like to evaluate the security of the Product, We offer dedicated
-test environments. Please [contact Us](/contact-us) for more details.
+If you would like to evaluate the security of Projectify, JWP offers dedicated
+test environments. Please [contact JWP](/contact-us) for more details.
 
-We have **not** commissioned external penetration testing of the Product as of
+JWP has **not** commissioned external penetration testing of Projectify as of
 2024-03-29.
 
-We train our personnel in information security. We stay up to date with
-vulnerabilities and threats and securely design and implement the Product.
+JWP trains its personnel in information security and stays up to date with
+threats. JWP follows industry standards to securely design, implement, and operate Projectify.
 
 ## Compliance
 
-We offer the Product in compliance with Japanese and EU (GDPR) privacy
-regulations, which You can [review here](/privacy). The Product is offered
-according to the terms of service [found here](/tos).
+JWP offers Projectify in compliance with [Japanese and EU (GDPR) privacy
+regulations](/privacy). To use Projectify, you have to agree with its
+[terms of service](/tos).
 
-Please [contact Us](/contact-us) for any other compliance inquiries.
+Please [reach out](/contact-us) if you have any compliance related inquiries.
 
 ## Incident handling
 
-In the case of a security incident affecting You, we will inform You no later
+When a security incident on Projectify affects you, JWP will contact you no later
 than 72 hours with the following information:
 
-- How You are affected
+- How you are affected
 - Preliminary technical analysis of the breach
 - Remediation plan with reasonable timelines
-- Point of contact for Your inquiries
+- Point of contact for your inquiries
 
 ## Data handling
 
-We have not implemented any specific measures for data handling.
+JWP does not store your data on its own premises. All third parties handling
+user data follow
+data sanitization best practices.
 
 # Application design controls
 
-The Product does not implement Single Sign-On.
+Projectify does not implement Single Sign-On (SSO).
 
-The Product can only be used using HTTPS. Any HTTP connection to the domains
-www.projectifyapp.com and api.projectifyapp.com will be redirected to use
-HTTPS. HSTS is used (strict-transport-security max-age=31536000). [HSTS
-preloading](https://hstspreload.org/) is not used.
+You can only use Projectify using HTTPS. Projectify redirects HTTP connections to
+`www.projectifyapp.com` to the corresponding HTTPS address. Example:
 
-The Product's frontend at www.projectifyapp.com uses the following Content
-Security Policy:
+`http://www.projectifyapp.com/dashboard` becomes `https://www.projectifyap.com/dashboard`.
+
+Projectify uses the following HSTS policy:
+
+```
+strict-transport-security max-age=31536000
+```
+
+Projectify does not use HSTS preloading. [^hsts]
+
+[^hsts]: [HSTS Preload List Submission](https://hstspreload.org/) _hstspreload.org_
+
+Projectify uses the following Content Security Policy[^csp]:
 
 ```
 script-src 'self'
 ```
 
-No specific measures for iframes have been taken.
+[^csp]: [Content Security Policy (CSP)](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP) _developer.mozilla.org_
+
+To prevent `iframe` embedding, Projectify sets the `X-Frame-Options` HTTP
+response header to `DENY`.
 
 ## Password policy
 
-PBKDF2 with SHA256 is used for password storage. There are no inherent limits
-on password lengths in the backend. Since the password has to be transmitted
-over HTTPS by a browser, fit into forms, and so on, we guarantee that passwords
-up to 128 character are handled without any difficulties.
+Projectify's Django backend stores your password in a secure form by hashing it with a salt using PBKDF2 with SHA256[^django-passwords]. You can use passwords containg up to 128 characters. Your browser transmits your password to Projectify over an encrypted connection (HTTPS) when you set your password or log in.
 
-In order to reset Your password, We send a reset confirmation email to You.
-The Product does not use secret questions for password resets. Confirming the
-reset email is required to reset Your password.
+Projectify never stores or log your password in plain text.
 
-To change Your password, You must provide Your old password. A confirmation
-email is sent to You when Your password is changed.
+To change your password, you must provide your old password. Projectify
+sends you a confirmation mail when your password changes.
 
-**No** measures have been taken to prevent brute-forcing or credential
-stuffing.
+To reset your password, you can request a password reset. When you request a password reset, Projectify sends you a reset confirmation email.
+Clicking the reset link inside the email lets you set a new password and finish
+the password reset process. Projectify sends you a confirmation mail when your
+password resets.
 
-## Security libraries
+Projectify does not use secret questions for logging in or resetting passwords.
 
-User submitted data is sanitized in the backend by Django and Django Rest
-Framework. Only translation data in the frontend is output as raw HTML,
-everything else is escaped within the frontend's Svelte templates.
+Projectify prevents password brute-forcing, dictionary attacks, and credential
+stuffing by limiting the number of failed log-in attempts
+that someone can perform in a given amount
+of time.
 
-The Product is hardened against SQL injections as database access is handled by
-Django's ORM.
+Projectify enforces password policies that prevent users from using weak and
+easy to guess
+passwords.
+
+[^django-passwords]: ["By default, Django uses the PBKDF2 algorithm with a SHA256 hash, a password stretching mechanism recommended by NIST."](https://docs.djangoproject.com/en/6.0/topics/auth/passwords/#how-django-stores-passwords) _docs.djangoproject.com_
 
 ## Dependency patching
 
-We keep the Product's third dependencies up to date and respond to known
-vulnerabilities. The Product's [GitHub
-repository](https://github.com/jwpconsulting/projectify) enables Us to stay
-informed of vulnerabilities by using
-[Dependabot](https://docs.github.com/en/code-security/dependabot/working-with-dependabot)
+JWP keeps Projectify's third dependencies up to date and responds to known
+vulnerabilities.
+JWP uses Dependabot [^dependabot] to monitor new vulnerabilities in Projectify's
+source code repository [^repository].
+
+[^dependabot]: [About Dependabot](https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/dependabot-quickstart-guide#about-dependabot) _docs.github.com_
+[^repository]: [Projectify source code repository](https://github.com/jwpconsulting/projectify) _github.com/jwpconsulting/projectify_
 
 ## Logging
 
-We do **not** log the following information:
+To help you understand how someone accessed your account, Projectify logs the following information:
+
+- Last time of successful log-in
+
+Projectify does **not** log the following information:
 
 - Users logging in and out
 - Read, write, delete operations on application and system users and objects
@@ -121,120 +144,123 @@ We do **not** log the following information:
 
 ## Encryption
 
-Specific measures on our end have been taken to protect sensitive data in
-transit between the Product's systems and in data storage and backups.
+We've taken specific measures to protect your sensitive data
+in transit and in storage.
 
-Apart from the frontend communicating with the backend using HTTPS, the
-Product's systems use TLS for the following connections:
+### Application and database server
 
-- Django backend to Redis Key-Value DB (Heroku Data for Redis)
-- Django backend to PostgreSQL DBMS (Heroku Postgres)
+Projectify uses TLS for the following connections:
 
-For asset storage, it has **not** been verified whether the Cloudinary
-(Cloudinary Inc.) APIs are accessed exclusively using a secure connection. It
-is **not** known if Cloudinary uses encryption at rest. Cloudinary uses AWS S3
-as a storage backend.
+- When your browser connects to Projectify
+- Django backend to Render Key Value [^render-key-value]
+- Django backend to Render Postgres[^render-postgres]
+- Sending mails with Mailgun
 
-Heroku (Salesforce, Inc.) PostgreSQL storage and its backups are [encrypted at
-rest](https://devcenter.heroku.com/articles/heroku-postgres-production-tier-technical-characterization#data-encryption).
+[^render-key-value]: [Render Key Value](https://render.com/docs/key-value) _render.com/docs_
+[^render-postgres]: [Render Postgres](https://render.com/docs/postgresql) _render.com/docs_
+[^cloudinary-encryption-at-rest]: [Digital Asset Library: The Ultimate Guide - Role of a Digital Asset Library in Data Security](https://cloudinary.com/guides/digital-asset-management/digital-asset-library#:~:text=Additionally%2C%20Cloudinary%20supports%20encryption%20at%20rest%20and%20in%20transit%2C%20ensuring%20your%20files%20are%20protected%20from%20external%20threats%2E) _cloudinary.com_
 
-Heroku Data for Redis does **not** use encryption at rest by itself. Some data
-stored in Heroku Data for Redis is encrypted using symmetric encryption
-(Django Channels messages). Other data is **not** encrypted using symmetric
-encryption (Celery jobs).
+Render's upstream provides use encryption at rest. [^render-security]
 
-It is **not** known what communication or at rest encryption the logging service
-Papertrail (SolarWinds Worldwide, LLC) uses.
+### Asset storage
 
-It is **not** known what communication or at rest encryption the APM service
-New Relic (New Relic, Inc.) uses.
+For asset storage, we have **not** verified whether Projectify uses Cloudinary
+(Cloudinary Inc.) APIs exclusively over an encrypted connection.
+Cloudinary encrypts its data at rest. [^cloudinary-encryption-at-rest]
 
-It is **not** known what communication or at rest encryption the transaction
-mailing service Mailgun (Sinch America, Inc.) uses.
+[^render-security]: [Security and Trust](https://render.com/security) _render.com/security_
+
+### Transactional Mailing
+
+Projectify uses the transactional mailing service Mailgun
+(Sinch America, Inc.) to send you emails. Mailgun encrypts user data at rest [^mailgun-hipaa].
+
+[^mailgun-hipaa]: [How does Mailgun keep your emails protected?](https://www.mailgun.com/blog/product/mailgun-email-protection/) *www.mailgun.com/blog*
 
 # Application implementation controls
 
 ## List of data
 
 Please review the [privacy policy](/privacy) for a detailed listing of sensitive
-data handled by the Product.
+data handled by Projectify.
 
 ## Data flow diagram
 
-All user submitted data goes from the Product's frontend served from
-www.projectifyapp.com to the API served from api.projectifyapp.com to the
-various backend services:
+Your browser connects to Projectify using the `www.projectifyapp.com` address
+and
+some user data flows from Projectify to various backend services. See the
+following diagram:
 
 ```
-                .----------.
-      .---------|Cloudinary|
-      |         .---+------.
-      |             |         .----------.
-      |             .---------+PostgreSQL|
-      |             |         .----------.
-  .---+----.    .---+---.     .-----.
-  |Frontend+----+Backend+-----+Redis|
-  .--------.    .---+---.     .-----.
-                    |         .---------.
-                    +---------+New Relic|
-                    |         .---------.
-                    |         .----------.
-                    +---------+Papertrail|
-                    |         .----------.
-                    |         .--------.
-                    .---------+Sendgrid|
-                              .--------.
+                    .------------.
+        .-----------+ Cloudinary |
+        |           .---+--------.
+        |               |         .-----------------.
+        |               |  +------+ Render Postgres |
+        |               |  |      .-----------------.
+.-------+------.    .---+--+--.   .------------------.
+| Your Browser +----+ Backend +---+ Render Key Value |
+.--------------.    .---+-----.   .------------------.
+                        |
+                        |         .---------.
+                        .---------+ Mailgun |
+                                  .---------.
 ```
 
-## Vulnerability prevention
+## Vulnerability prevention and security libraries
 
-The Product uses access controls to prevent users from accessing data or
-admin features that they are not authorized to.
+To prevent vulnerabilities, Projectify contains the following measures:
 
-Session IDs are handled using secure and HTTP-only cookies.
+- Projectify uses access controls to prevent users from accessing data or
+  admin features that they are not authorized to.
+- Projectify sends Session ID cookies over HTTPS only [^cookie-secure] and does
+  not expose them to scripts. [^http-only]
+- Projectify's Django backend prevents SQL injections in its ORM. [^django-sql]
+  Projectify does not use raw SQL queries.
+- Projectify's Django backend prevents cross-site scripting (XSS) by escaping untrusted inputs.
+  [^django-xss]
+- Projectify's Django backend prevents cross-site request forgery (CSRF) by checking for a `csrf`
+  [^django-csrf]
+  form attribute or HTTP header.
 
-SQL Injections are prevented using the Django ORM.
-
-Cross site scripting is prevented by using Svelte frontend templating and only
-allowing raw HTML where it is used as part of translation and there ensuring no
-user submittable content is used for translation.
-
-**No** measures have been taken to mitigate cross-site request forgery (CSRF).
-
-The usage of vulnerable libraries is monitored using Dependabot.
+[^cookie-secure]: [Secure cookie configuration - `Secure`](https://developer.mozilla.org/en-US/docs/Web/Security/Practical_implementation_guides/Cookies#secure) _developer.mozilla.org_
+[^http-only]: [Secure cookie configuration - `HttpOnly`](https://developer.mozilla.org/en-US/docs/Web/Security/Practical_implementation_guides/Cookies#httponly) _developer.mozilla.org_
+[^django-sql]: [Security in Django - SQL injection protection](https://docs.djangoproject.com/en/6.0/topics/security/#sql-injection-protection) _docs.djangoproject.com_
+[^django-xss]: [Security in Django - Cross site scripting (XSS) protection](https://docs.djangoproject.com/en/6.0/topics/security/#cross-site-scripting-xss-protection) _docs.djangoproject.com_
+[^django-csrf]: [Security in Django - Cross site request forgery (CSRF) protection](https://docs.djangoproject.com/en/6.0/topics/security/#cross-site-request-forgery-csrf-protection) _docs.djangoproject.com_
 
 ## Time to fix vulnerabilities
 
-Any known vulnerabilities will be patched within 90 days of discovery.
+JWP fixes any known exploitable vulnerabilities within 90 days of discovery.
 
 ## Build process
 
 The build and deploy process is fully automated. Any dependencies used in the
-Product are included in a reproducible way using NPM and Poetry lock files.
+Product are included in a reproducible way using Poetry lock files.
 
 # Operational controls
 
 ## Physical access
 
-All of the Product's infrastructure is hosted by third parties which in turn
+All of Projectify's infrastructure is hosted by third parties which in turn
 implement strict physical access controls.
 
 ## Logical access
 
-Only Product administrators with a legitimate need have access to the Product's
+Only Product administrators with a legitimate need have access to Projectify's
 infrastructure or admin site.
 
 Administrative accounts that are no longer needed are deactivated in a timely
 manner.
 
-We regularly review administrative accounts and only grant administrative
+JWP regularly reviews administrative accounts and only grants administrative
 privileges to administrators where absolutely necessary.
 
-Administrative access to the Product's infrastructure is only possible using
+Administrative access to Projectify's infrastructure is only possible using
 Multi-Factor Authentication (MFA).
 
-Administrative access to the Product's admin site at
-api.projectifyapp.com/admin is **not** secured by MFA.
+Administrative access to Projectify's admin site at
+`www.projectifyapp.com/admin` is **not** secured by MFA.
 
 ## Subprocessors
 
@@ -243,8 +269,10 @@ policy](/privacy) under **Article 6 (Cross-Border Data Transfer)**.
 
 ## Backup and Disaster Recovery
 
-Heroku Postgres has continuous rollbacks enabled spanning 4 days. Daily backups
-at 00:00 UTC for the production PostgreSQL database are enabled.
+Render Postgres has continuous rollbacks enabled spanning 7 days.
+[^render-backups]
+
+[^render-backups]: [Render Postgres Recovery and Backups](https://render.com/docs/postgresql-backups) _render.com/docs_
 
 Assets stored with Cloudinary are **not** backed up.
 
@@ -254,4 +282,4 @@ Assets stored with Cloudinary are **not** backed up.
 
 # Inquiries
 
-Should You have any questions, please [contact Us](/contact-us).
+Should you have any questions, please [reach out](/contact-us).

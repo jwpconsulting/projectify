@@ -14,6 +14,7 @@ from projectify.workspace.models.label import Label
 from projectify.workspace.models.project import Project
 from projectify.workspace.models.section import Section
 from projectify.workspace.models.task import Task
+from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.selectors.labels import labels_annotate_with_colors
 
 SectionDetailQuerySet = Section.objects.prefetch_related(
@@ -43,6 +44,15 @@ SectionDetailQuerySet = Section.objects.prefetch_related(
         "project__workspace__label_set",
         queryset=labels_annotate_with_colors(
             Label.objects.annotate(task_count=Count("task"))
+        ),
+    ),
+    Prefetch(
+        "project__workspace__teammember_set",
+        queryset=TeamMember.objects.select_related("user").annotate(
+            task_count=Count(
+                "task",
+                filter=Q(task__section__project__archived__isnull=True),
+            )
         ),
     ),
 ).select_related(

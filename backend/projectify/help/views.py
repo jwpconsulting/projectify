@@ -9,9 +9,12 @@ from django.conf import settings
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
-help_topics = {
+import markdown
+
+HELP_TOPICS = {
     "basics": {
         "title": _("Basics"),
         "description": _("Your first steps towards productivity"),
@@ -84,12 +87,6 @@ help_topics = {
         "markdown_file": Path("roles.md"),
         "href": reverse_lazy("help:detail", args=("roles",)),
     },
-    "keyboard-shortcuts": {
-        "title": _("Keyboard shortcuts"),
-        "description": _("Use keyboard shortcuts to improve productivity"),
-        "markdown_file": Path("keyboard-shortcuts.md"),
-        "href": reverse_lazy("help:detail", args=("keyboard-shortcuts",)),
-    },
 }
 
 help_topics_with_index = {
@@ -99,13 +96,13 @@ help_topics_with_index = {
         "markdown_file": Path("overview.md"),
         "href": reverse_lazy("help:list"),
     },
-    **help_topics,
+    **HELP_TOPICS,
 }
 
 
 def help_list(request: HttpRequest) -> HttpResponse:
     """Serve Help list page."""
-    context = {"helptopics": help_topics.values()}
+    context = {"helptopics": HELP_TOPICS.values()}
     return render(request, "help/help_list.html", context)
 
 
@@ -116,7 +113,7 @@ def help_detail(request: HttpRequest, page: str) -> HttpResponse:
     Because `page` is used to load a markdown file, extra care needs to be
     taken to not let the user load arbitrary files.
     """
-    topic = help_topics.get(page)
+    topic = HELP_TOPICS.get(page)
     if topic is None:
         raise Http404(
             _("{page} is not a valid help page title").format(page=page)
@@ -126,8 +123,20 @@ def help_detail(request: HttpRequest, page: str) -> HttpResponse:
     ]
     markdowntext = help_page.read_text()
 
+    # Skip markdownify and generate Markdown directly
+    md = markdown.Markdown(
+        extensions=settings.MARKDOWNIFY["default"]["MARKDOWN_EXTENSIONS"]
+    )
+    # NOTE: This is safe as long as we don't let the user control the page
+    # (e.g., local file inclusion)
+    help_html = mark_safe(md.convert(markdowntext))
+    toc_html = mark_safe(getattr(md, "toc", None))
+    assert toc_html
+
     context = {
         "help_text": markdowntext,
+        "help_html": help_html,
+        "toc_html": toc_html,
         "helptopics": help_topics_with_index.values(),
         "helptopic": topic,
     }

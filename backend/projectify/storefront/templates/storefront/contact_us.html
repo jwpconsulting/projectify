@@ -1,4 +1,4 @@
-{# SPDX-FileCopyrightText: 2024-2025 JWP Consulting GK #}
+{# SPDX-FileCopyrightText: 2024-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "storefront_base.html" %}
 {% load markdownify %}
@@ -9,21 +9,14 @@
 {% endblock title %}
 {% block storefront_content %}
     <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
-        {% trans "Contact" as title %}
-        {% include "storefront/common/storefront_header.html" with title=title %}
-        <div class="w-full p-6 max-w-4xl">
-            <div class="flex flex-row items-center justify-center gap-8">
-                <main class="prose">
-                    {{ markdowntext|markdownify }}
-                </main>
-                <div class="hidden shrink basis-1/4 md:block">
-                    <picture>
-                        <img src="{% static "contact-us.png" %}"
-                             alt="{% trans "An illustration of a phone booth" %}"
-                             width="818"
-                             height="1000">
-                    </picture>
-                </div>
+        {% include "storefront/common/storefront_header.html" with title=_("Contact") %}
+        <div class="w-full p-6 max-w-4xl flex flex-row items-center justify-center gap-8">
+            <div class="prose">{{ markdowntext|markdownify }}</div>
+            <div class="hidden shrink basis-1/4 md:block">
+                <img src="{% static "contact-us.png" %}"
+                     alt="{% trans "An illustration of a phone booth" %}"
+                     width="818"
+                     height="1000">
             </div>
         </div>
     </main>

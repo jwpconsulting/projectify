@@ -5,6 +5,7 @@
 
 from typing import cast
 
+from django import db
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db.models.fields.files import FileDescriptor
 
@@ -13,6 +14,7 @@ from faker import Faker
 from rest_framework.exceptions import ValidationError
 
 from projectify.user.models.user import User
+from projectify.workspace.models.const import TeamMemberRoles
 from projectify.workspace.models.project import Project
 from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.models.workspace import Workspace
@@ -23,6 +25,7 @@ from projectify.workspace.services.team_member_invite import (
     team_member_invite_delete,
 )
 from projectify.workspace.services.workspace import (
+    workspace_add_user,
     workspace_delete,
     workspace_update,
 )
@@ -102,3 +105,21 @@ def test_workspace_update(
     assert updated_workspace.title == new_title
     assert updated_workspace.description == new_description
     assert "picture/test" in updated_workspace.picture.path
+
+
+def test_add_user(
+    workspace: Workspace,
+    other_user: User,
+) -> None:
+    """Test that adding a user twice won't work."""
+    count = workspace.users.count()
+    workspace_add_user(
+        workspace=workspace, user=other_user, role=TeamMemberRoles.OBSERVER
+    )
+    assert workspace.users.count() == count + 1
+    # XXX TODO should be validationerror, not integrityerror
+    # We might get a bad 500 here, could be 400 instead
+    with pytest.raises(db.IntegrityError):
+        workspace_add_user(
+            workspace=workspace, user=other_user, role=TeamMemberRoles.OBSERVER
+        )

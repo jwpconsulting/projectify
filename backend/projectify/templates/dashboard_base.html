@@ -1,5 +1,5 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{# SPDX-FileCopyrightText: 2024 JWP Consulting GK #}
+{# SPDX-FileCopyrightText: 2024-2026 JWP Consulting GK #}
 {% extends "base.html" %}
 {% load static %}
 {% load i18n %}
@@ -9,18 +9,39 @@
         {% include "common/navigation/header/dashboard.html" %}
         <div class="flex min-h-0 shrink grow flex-col md:flex-row">
             <nav class="max-w-full md:max-w-xs 2xl:max-w-md h-full shrink-0 flex flex-col py-4">
-                <div class="flex flex-col gap-2 px-4 pb-4">
-                    {% if workspace %}
-                        <div class="min-w-0 grow">{% include "workspace/common/sidebar/workspace_details.html" %}</div>
-                    {% endif %}
-                </div>
+                {% if workspace %}
+                    <details name="workspace-select" class="min-w-0 grow w-full px-4 pb-4 ">
+                        <summary class="flex items-center gap-2 hover:bg-secondary-hover font-bold border rounded cursor-pointer p-2">
+                            {% icon "briefcase" size=4 %}
+                            <span class="truncate">{{ workspace.title }}</span>
+                        </summary>
+                        <ul class="flex flex-col max-h-40 overflow-y-auto">
+                            <li class="flex items-center gap-2 border-b">
+                                <a href="{% url 'dashboard:workspaces:settings' workspace.uuid %}"
+                                   class="flex w-full flex-row items-center gap-2 px-4 py-2 hover:bg-secondary-hover active:bg-disabled disabled:active:bg-secondary-hover text-base-content">
+                                    {% icon "cog" size=4 %}
+                                    {% trans "Workspace Settings" %}
+                                </a>
+                            </li>
+                            {% for w in workspaces %}
+                                <li>
+                                    <a href="{% url "dashboard:workspaces:detail" w.uuid %}"
+                                       class="flex w-full flex-row items-center gap-2 px-4 py-2 hover:bg-secondary-hover active:bg-disabled disabled:active:bg-secondary-hover text-base-content">
+                                        {% icon "briefcase" size=4 %}
+                                        <span class="truncate">{{ w.title }}</span>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </details>
+                {% endif %}
                 <p class="px-4">
                     {% url "help:detail" page="billing" as trial_workspace_help %}
                     <strong>{% trans "Trial workspace" %}</strong>
                     {% anchor href=trial_workspace_help label=_("Learn more") external=True %}
                 </p>
                 {% block dashboard_projects %}
-                    {% include "workspace/common/sidebar/project_details.html" %}
+                    {% include "workspace/common/sidemenu/project_details.html" %}
                 {% endblock dashboard_projects %}
             </nav>
             {% block dashboard_content %}

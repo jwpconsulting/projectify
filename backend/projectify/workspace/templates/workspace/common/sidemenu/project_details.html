@@ -2,10 +2,10 @@
 {# SPDX-FileCopyrightText: 2024-2025 JWP Consulting GK #}
 {% load i18n %}
 {% load projectify %}
-<div id="sidebar-project-section">
+<div id="sidemenu-project-section">
     <form hx-post="{% url 'dashboard:workspaces:minimize-project-list' workspace.uuid %}"
           hx-swap="outerHTML"
-          hx-target="#sidebar-project-section">
+          hx-target="#sidemenu-project-section">
         {% csrf_token %}
         <input type="hidden"
                name="minimized"
@@ -135,11 +135,15 @@
                 </div>
             </button>
         </form>
-        <fieldset class="flex flex-col overflow-y-auto w-full max-w-full min-w-0 pb-4{% if current_team_member_qs.minimized_label_filter %} hidden{% endif %}">
+        <fieldset class="flex flex-col overflow-y-auto overflow-x-hidden w-full max-w-full min-w-0 pb-4{% if current_team_member_qs.minimized_label_filter %} hidden{% endif %}">
             <legend class="px-2 font-bold">{{ task_filter_form.filter_by_label.label }}</legend>
             {{ task_filter_form.filter_by_label }}
             {% if workspace %}
-                {% anchor "dashboard:workspaces:labels" _("Edit labels") workspace_uuid=workspace.uuid %}
+                <a href="{% url 'dashboard:workspaces:labels' workspace_uuid=workspace.uuid %}"
+                   class="flex w-full flex-row items-center gap-2 px-4 py-2 font-bold hover:bg-secondary-hover active:bg-disabled disabled:active:bg-secondary-hover text-primary">
+                    <span class="size-4">{% icon "plus" "primary" %}</span>
+                    <span class="truncate">{% translate "Add more labels" %}</span>
+                </a>
             {% endif %}
         </fieldset>
         {% include "projectify/forms/submit.html" with text=_("Filter")  form_name="task-filter" %}

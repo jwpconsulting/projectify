@@ -24,7 +24,7 @@ from django.utils.translation import gettext_lazy as _
 from django_ratelimit.exceptions import Ratelimited
 
 from projectify.lib.settings import get_settings
-from projectify.lib.views import colored_icon
+from projectify.lib.views import colored_icon, manifest_view
 from projectify.workspace.consumers import ChangeConsumer
 
 settings = get_settings()
@@ -53,6 +53,7 @@ if settings.ENABLE_DJANGO_FRONTEND:
         path("", include("projectify.storefront.urls")),
         path("help/", include("projectify.help.urls")),
         path("onboarding/", include("projectify.onboarding.urls")),
+        path("manifest.json", manifest_view, name="manifest"),
     )
 
 if settings.PREMAIL_PREVIEW:

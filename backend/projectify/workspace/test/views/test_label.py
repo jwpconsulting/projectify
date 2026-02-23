@@ -78,7 +78,7 @@ class TestLabelCreate:
             "status": "invalid",
             "code": 400,
             "details": {},
-            "general": "Label with this Workspace and Name already exists.",
+            "general": "You can only create one label with this name.",
         }
 
 

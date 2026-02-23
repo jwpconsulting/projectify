@@ -2,6 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "help_base.html" %}
 {% load i18n %}
+{% load static %}
 {% block title %}
     {% translate "Help - Projectify" %}
 {% endblock title %}
@@ -16,8 +17,7 @@
                     </div>
                     <div class="w-full max-w-xs justify-self-center">
                         <picture>
-                            {# TODO: Add proper static assets #}
-                            <img src="{{ FRONTEND_URL }}/src/routes/(storefront)/help/hero-help.png"
+                            <img src="{% static "hero-help.png" %}"
                                  alt="{% trans "Our mascot poly flying into the air using a jetpack" %}"
                                  width="977"
                                  height="575">

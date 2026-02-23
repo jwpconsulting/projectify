@@ -3,7 +3,8 @@
 # SPDX-FileCopyrightText: 2025 JWP Consulting GK
 """Onboading urlpatterns."""
 
-from django.urls import path
+from django.urls import path, reverse_lazy
+from django.views.generic.base import RedirectView
 
 from projectify.onboarding.views import (
     about_you,
@@ -18,6 +19,11 @@ from projectify.onboarding.views import (
 app_name = "onboarding"
 
 urlpatterns = [
+    path(
+        "",
+        RedirectView.as_view(url=reverse_lazy("onboarding:welcome")),
+        name="welcome",
+    ),
     path("welcome/", welcome, name="welcome"),
     path("about-you/", about_you, name="about_you"),
     path("new-workspace/", new_workspace, name="new_workspace"),

@@ -4,15 +4,13 @@ SPDX-FileCopyrightText: 2024 JWP Consulting GK
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-You need to be workspace owner to your workspace's billing settings. [Learn
-more about roles here](/help/roles).
+You need to be workspace owner to edit your workspace's billing settings. [Learn more about roles here](/help/roles).
 
 # Billing settings
 
 To edit your billing settings, go to the **Billing** tab in the workspace
-settings. You can access the workspace settings by clicking **workspace
-ellipsis button** (...) and clicking **Workspace settings** in the context
-menu. From there select the **Billing** tab.
+settings. You can access the workspace settings by clicking the **workspace selector** in the side
+menu to expand it, then click **Workspace Settings** at the top of the list. From there select the **Billing** tab.
 
 # Upgrading a trial workspace
 
@@ -20,13 +18,13 @@ To upgrade a trial workspace to a paid workspace, first select the number of
 workspace seats you would like to add to your workspace using the **Workspace
 seats** field.
 
-Click the **Go to checkout button** and you will be redirected to a checkout
+Click the **Go to checkout** button and you will be redirected to a checkout
 page where you can enter your payment details. The checkout page is implemented
 using Stripe billing and Stripe will securely handle your payment information.
 
 Learn more about what a trial workspace can do on the [trial workspace help
 page](/help/trial). To understand the differences between a trial workspace and
-a paid workspace, please refer to the [workspace quotas help
+a paid workspace, please refer to the [quota help
 page](/help/quota).
 
 # Manage a subscription and retrieve invoices
