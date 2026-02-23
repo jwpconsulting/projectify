@@ -19,7 +19,7 @@ from django.views.decorators.http import require_http_methods
 
 from django_ratelimit.decorators import ratelimit
 from rest_framework import parsers, serializers, views
-from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.exceptions import NotFound
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import (
@@ -55,7 +55,6 @@ from ..selectors.labels import (
 from ..selectors.project import project_find_by_workspace_uuid
 from ..selectors.quota import workspace_get_all_quotas
 from ..selectors.team_member import (
-    team_member_find_by_team_member_uuid,
     team_member_find_for_workspace,
     team_member_last_project_for_user,
 )
@@ -273,7 +272,7 @@ def workspace_settings_general(
             who=request.user,
             picture=data["picture"],
         )
-    except ValidationError as error:
+    except serializers.ValidationError as error:
         populate_form_with_drf_errors(form, error)
         context = {**context, "form": form}
         return render(
@@ -419,7 +418,7 @@ def workspace_settings_new_label(
             color=form.cleaned_data["color"],
             who=request.user,
         )
-    except (exceptions.ValidationError, ValidationError) as error:
+    except (exceptions.ValidationError, serializers.ValidationError) as error:
         populate_form_with_drf_errors(form, error)
         return render(
             request,
@@ -516,7 +515,7 @@ def workspace_settings_edit_label(
             name=form.cleaned_data["name"],
             color=form.cleaned_data["color"],
         )
-    except (exceptions.ValidationError, ValidationError) as error:
+    except (exceptions.ValidationError, serializers.ValidationError) as error:
         populate_form_with_drf_errors(form, error)
         return render(
             request,
@@ -539,148 +538,6 @@ class InviteTeamMemberForm(forms.Form):
         ),
     )
 
-    class Meta:
-        """Meta."""
-
-        fields = "title", "description", "picture"
-        model = Workspace
-
-
-@require_http_methods(["GET"])
-@platform_view
-def workspace_settings_team_members(
-    request: AuthenticatedHttpRequest, workspace_uuid: UUID
-) -> HttpResponse:
-    """Show team member settings."""
-    # TODO add role change form
-    workspace = workspace_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=workspace_uuid,
-        qs=workspace_build_detail_query_set(who=None),
-    )
-    if workspace is None:
-        raise Http404(_("Workspace not found"))
-    context = {
-        **_get_workspace_settings_context(
-            request=request, workspace=workspace, active_tab="team"
-        ),
-        "form": InviteTeamMemberForm(),
-    }
-    return render(
-        request,
-        "workspace/workspace_settings_team_members.html",
-        context=context,
-    )
-
-
-@require_http_methods(["POST"])
-@platform_view
-def workspace_settings_team_members_invite(
-    request: AuthenticatedHttpRequest, workspace_uuid: UUID
-) -> HttpResponse:
-    """HTMX view to invite a team member."""
-    workspace = workspace_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=workspace_uuid,
-        qs=workspace_build_detail_query_set(who=None),
-    )
-    if workspace is None:
-        raise Http404(_("Workspace not found"))
-
-    context = _get_workspace_settings_context(
-        request=request, workspace=workspace, active_tab="team"
-    )
-
-    form = InviteTeamMemberForm(request.POST)
-
-    context = {**context, "form": form}
-    if not form.is_valid():
-        return render(
-            request,
-            "workspace/workspace_settings_team_members.html",
-            context=context,
-            status=400,
-        )
-
-    try:
-        team_member_invite_create(
-            who=request.user,
-            workspace=workspace,
-            email_or_user=form.cleaned_data["email"],
-        )
-    # TODO get rid of exceptions altogether
-    except (UserAlreadyInvited, UserAlreadyAdded) as e:
-        match e:
-            case UserAlreadyInvited():
-                form.add_error(
-                    "email",
-                    _("User has already been invited to this workspace."),
-                )
-            case UserAlreadyAdded():
-                form.add_error(
-                    "email",
-                    _("User has already been added to this workspace."),
-                )
-
-        context = {**context, "form": form}
-        return render(
-            request,
-            "workspace/workspace_settings_team_members.html",
-            context=context,
-            status=400,
-        )
-
-    workspace.refresh_from_db()
-    return render(
-        request,
-        "workspace/workspace_settings_team_members.html",
-        context=context,
-    )
-
-
-@require_http_methods(["DELETE"])
-@platform_view
-def workspace_settings_team_member_remove(
-    request: AuthenticatedHttpRequest,
-    workspace_uuid: UUID,
-    team_member_uuid: UUID,
-) -> HttpResponse:
-    """HTMX view to remove a team member."""
-    workspace = workspace_find_by_workspace_uuid(
-        who=request.user, workspace_uuid=workspace_uuid
-    )
-    if workspace is None:
-        raise Http404(_("Workspace not found"))
-
-    team_member = team_member_find_by_team_member_uuid(
-        who=request.user, team_member_uuid=team_member_uuid
-    )
-    if team_member is None:
-        raise Http404(_("Team member not found"))
-
-    try:
-        team_member_delete(team_member=team_member, who=request.user)
-    except ValidationError as error:
-        return HttpResponse(
-            _("Failed to remove team member: {error}").format(
-                error=str(error)
-            ),
-            status=400,
-        )
-
-    workspace.refresh_from_db()
-    context = {
-        **_get_workspace_settings_context(
-            request=request, workspace=workspace, active_tab="team"
-        ),
-        "form": InviteTeamMemberForm(),
-    }
-    return render(
-        request,
-        "workspace/workspace_settings_team_members.html",
-        context=context,
-    )
-
 
 class UninviteTeamMemberForm(forms.Form):
     """Form for uninviting users."""
@@ -688,50 +545,114 @@ class UninviteTeamMemberForm(forms.Form):
     email = forms.EmailField(widget=forms.HiddenInput())
 
 
-@require_http_methods(["POST"])
+class RemoveTeamMemberForm(forms.Form):
+    """Form for removing team members."""
+
+    def __init__(self, workspace: Workspace, *args: Any, **kwargs: Any):
+        """Initialize form with workspace team members."""
+        super().__init__(*args, **kwargs)
+        self.fields["team_member"] = forms.ModelChoiceField(
+            to_field_name="uuid",
+            widget=forms.HiddenInput(),
+            queryset=workspace.teammember_set.all(),
+        )
+
+
+@require_http_methods(["GET", "POST"])
 @platform_view
-def workspace_settings_team_member_uninvite(
+def workspace_settings_team_members(
     request: AuthenticatedHttpRequest, workspace_uuid: UUID
 ) -> HttpResponse:
-    """HTMX view to uninvite a team member."""
+    """Show team member settings and handle role changes."""
     workspace = workspace_find_by_workspace_uuid(
         who=request.user,
         workspace_uuid=workspace_uuid,
-        qs=WorkspaceDetailQuerySet,
+        qs=workspace_build_detail_query_set(who=None)
+        if request.method == "GET"
+        else None,
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
+    template = "workspace/workspace_settings_team_members.html"
 
-    form = UninviteTeamMemberForm(request.POST)
-    if not form.is_valid():
-        return HttpResponse(_("Invalid form data"), status=400)
+    additional_context = {}
+    match request.method, request.POST.get("action"):
+        case "POST", "invite":
+            invite_form = InviteTeamMemberForm(request.POST)
+            additional_context = {"invite_form": invite_form}
+            if invite_form.is_valid():
+                try:
+                    team_member_invite_create(
+                        who=request.user,
+                        workspace=workspace,
+                        email_or_user=invite_form.cleaned_data["email"],
+                    )
+                    status = 200
+                except serializers.ValidationError as e:
+                    populate_form_with_drf_errors(invite_form, e)
+                    status = 400
+            else:
+                status = 400
+        case "POST", "uninvite":
+            uninvite_form = UninviteTeamMemberForm(request.POST)
+            if not uninvite_form.is_valid():
+                return HttpResponse(_("Invalid form data"), status=400)
+            try:
+                team_member_invite_delete(
+                    workspace=workspace,
+                    who=request.user,
+                    email=uninvite_form.cleaned_data["email"],
+                )
+            except serializers.ValidationError as error:
+                # TODO formset
+                return HttpResponse(
+                    _("Failed to uninvite team member: {error}").format(
+                        error=str(error)
+                    ),
+                    status=400,
+                )
+            status = 200
+        case "POST", "team_member_remove":
+            remove_member_form = RemoveTeamMemberForm(
+                workspace, data=request.POST
+            )
+            if not remove_member_form.is_valid():
+                return HttpResponse(_("Invalid form data"), status=400)
+            team_member = remove_member_form.cleaned_data["team_member"]
+            try:
+                team_member_delete(team_member=team_member, who=request.user)
+            except serializers.ValidationError as error:
+                # TODO formset
+                return HttpResponse(
+                    _("Failed to remove team member: {error}").format(
+                        error=str(error)
+                    ),
+                    status=400,
+                )
+            workspace.refresh_from_db()
+            status = 200
+        case _:
+            status = 200
 
-    try:
-        team_member_invite_delete(
-            workspace=workspace,
-            who=request.user,
-            email=form.cleaned_data["email"],
-        )
-    except ValidationError as error:
-        return HttpResponse(
-            _("Failed to uninvite team member: {error}").format(
-                error=str(error)
-            ),
-            status=400,
-        )
-
-    workspace.refresh_from_db()
     context = {
         **_get_workspace_settings_context(
             request=request, workspace=workspace, active_tab="team"
         ),
-        "form": InviteTeamMemberForm(),
+        "invite_form": InviteTeamMemberForm(),
+        "remove_form": RemoveTeamMemberForm(workspace=workspace),
+        "uninvite_form": UninviteTeamMemberForm(),
+        **additional_context,
     }
-    return render(
-        request,
-        "workspace/workspace_settings_team_members.html",
-        context=context,
-    )
+
+    if request.method == "POST":
+        workspace = workspace_find_by_workspace_uuid(
+            who=request.user,
+            workspace_uuid=workspace_uuid,
+            qs=workspace_build_detail_query_set(who=None),
+        )
+        assert workspace
+
+    return render(request, template, context=context, status=status)
 
 
 class WorkspaceBillingForm(forms.Form):
@@ -788,7 +709,7 @@ def workspace_settings_billing_edit(
         session = create_billing_portal_session_for_customer(
             customer=customer, who=request.user
         )
-    except ValidationError:
+    except serializers.ValidationError:
         # TODO show a more meaningful error
         return HttpResponseBadRequest()
     return redirect(session.url)
@@ -871,7 +792,7 @@ def workspace_settings_billing(
                     who=request.user,
                     seats=data["seats"],
                 )
-            except ValidationError as e:
+            except serializers.ValidationError as e:
                 populate_form_with_drf_errors(form, e)
                 return render(
                     request,
@@ -884,7 +805,7 @@ def workspace_settings_billing(
                 coupon_redeem(
                     who=request.user, code=data["code"], workspace=workspace
                 )
-            except ValidationError as e:
+            except serializers.ValidationError as e:
                 populate_form_with_drf_errors(form, e)
                 return render(
                     request,

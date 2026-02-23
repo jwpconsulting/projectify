@@ -213,23 +213,22 @@ class TestWorkspaceSettingsTeamMembers:
     """Test team member invite view."""
 
     @pytest.fixture
-    def invite_url(self, workspace: Workspace) -> str:
+    def resource_url(self, workspace: Workspace) -> str:
         """Return URL to this view."""
         return reverse(
-            "dashboard:workspaces:team-members-invite", args=(workspace.uuid,)
+            "dashboard:workspaces:team-members", args=(workspace.uuid,)
         )
 
-    def test_invite_new_user(
+    def test_invite_then_uninvite(
         self,
         user_client: Client,
-        invite_url: str,
-        workspace: Workspace,
+        resource_url: str,
         team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
-        """Test inviting a new user."""
-        initial_invite_count = workspace.teammemberinvite_set.count()
-
+        """Test inviting and uninviting a new user."""
+        count = team_member.workspace.teammemberinvite_set.count()
+        count = team_member.workspace.teammemberinvite_set.count()
         # Justus 2025-07-29 query count went up   10 -> 19 XXX
         # Justus 2025-07-29 query count went up   19 -> 33 XXX
         # Justus 2025-07-29 query count went down 33 -> 32
@@ -237,53 +236,86 @@ class TestWorkspaceSettingsTeamMembers:
         # Query count went up 33 -> 34
         with django_assert_num_queries(34):
             response = user_client.post(
-                invite_url, {"email": "newuser@example.com"}
+                resource_url, {"action": "invite", "email": "mail@bla.com"}
             )
             assert response.status_code == 200
+        assert "mail@bla.com" in response.content.decode()
+        assert team_member.workspace.teammemberinvite_set.count() == count + 1
 
-        assert (
-            workspace.teammemberinvite_set.count() == initial_invite_count + 1
+        # can't invite a second time
+        with django_assert_num_queries(30):
+            response = user_client.post(
+                resource_url, {"action": "invite", "email": "mail@bla.com"}
+            )
+            assert response.status_code == 400
+        assert "already invited" in response.content.decode()
+
+        with django_assert_num_queries(26):
+            response = user_client.post(
+                resource_url, {"action": "uninvite", "email": "mail@bla.com"}
+            )
+            assert response.status_code == 200
+        assert "mail@bla.com" not in response.content.decode()
+        assert team_member.workspace.teammemberinvite_set.count() == count
+
+        # Can't do it a second time
+        response = user_client.post(
+            resource_url, {"action": "uninvite", "email": "mail@bla.com"}
         )
+        assert response.status_code == 400
 
     def test_invite_existing_user(
         self,
         user_client: Client,
-        invite_url: str,
-        workspace: Workspace,
+        resource_url: str,
         team_member: TeamMember,
         other_user: User,
     ) -> None:
         """Test inviting an existing user."""
-        initial_team_member_count = workspace.teammember_set.count()
-
-        response = user_client.post(invite_url, {"email": other_user.email})
-
-        assert response.status_code == 200
-        assert (
-            workspace.teammember_set.count() == initial_team_member_count + 1
-        )
-
-    def test_invite_already_invited_user(
-        self, user_client: Client, invite_url: str, team_member: TeamMember
-    ) -> None:
-        """Test inviting a user who was already invited."""
-        user_client.post(invite_url, {"email": "duplicate@example.com"})
-
+        count = team_member.workspace.teammember_set.count()
         response = user_client.post(
-            invite_url, {"email": "duplicate@example.com"}
+            resource_url, {"action": "invite", "email": other_user.email}
         )
-        assert response.status_code == 400
-        assert b"already been invited" in response.content
+        assert response.status_code == 200
+        assert team_member.workspace.teammember_set.count() == count + 1
 
     def test_invite_existing_team_member(
-        self, user_client: Client, invite_url: str, team_member: TeamMember
+        self, user_client: Client, resource_url: str, team_member: TeamMember
     ) -> None:
         """Test inviting someone who is already a team member."""
+        email = team_member.user.email
         response = user_client.post(
-            invite_url, {"email": team_member.user.email}
+            resource_url, {"action": "invite", "email": email}
         )
         assert response.status_code == 400
-        assert b"already been added" in response.content
+        assert "already is a team member" in response.content.decode()
+
+    def test_remove_team_member(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        other_team_member: TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test removing an existing team member."""
+        workspace = team_member.workspace
+        initial = workspace.teammember_set.count()
+        uid = str(other_team_member.uuid)
+        with django_assert_num_queries(29):
+            response = user_client.post(
+                resource_url,
+                {"action": "team_member_remove", "team_member": uid},
+            )
+        assert response.status_code == 200
+        assert workspace.teammember_set.count() == initial - 1
+        assert str(other_team_member) not in response.content.decode()
+
+        # Can't do it a second time
+        response = user_client.post(
+            resource_url, {"action": "team_member_remove", "team_member": uid}
+        )
+        assert response.status_code == 400
 
 
 class TestWorkspaceSettingsLabels:
@@ -868,8 +900,7 @@ class TestInviteUserToWorkspace:
             "status": "invalid",
             "code": 400,
             "details": {
-                "email": f"User with email {team_member.user.email} has "
-                "already been added to this workspace."
+                "email": "This user already is a team member in your workspace."
             },
             "general": None,
         }
@@ -890,8 +921,7 @@ class TestInviteUserToWorkspace:
             "status": "invalid",
             "code": 400,
             "details": {
-                "email": "User with email hello@example.com has already been "
-                "invited to this workspace."
+                "email": "You've already invited this email address to your workspace."
             },
             "general": None,
         }

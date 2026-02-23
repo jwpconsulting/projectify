@@ -19,8 +19,6 @@ from projectify.workspace.services.team_member_invite import (
     team_member_invite_delete,
 )
 
-from ...exceptions import UserAlreadyAdded, UserAlreadyInvited
-
 
 @pytest.mark.django_db
 class TestAddOrInviteTeamMember:
@@ -87,7 +85,7 @@ class TestAddOrInviteTeamMember:
             workspace=workspace,
             email_or_user="hello@example.com",
         )
-        with pytest.raises(UserAlreadyInvited):
+        with pytest.raises(serializers.ValidationError):
             team_member_invite_create(
                 who=team_member.user,
                 workspace=workspace,
@@ -98,7 +96,7 @@ class TestAddOrInviteTeamMember:
         self, workspace: Workspace, team_member: TeamMember
     ) -> None:
         """Test that inviting a pre-existing user won't work."""
-        with pytest.raises(UserAlreadyAdded):
+        with pytest.raises(serializers.ValidationError):
             team_member_invite_create(
                 workspace=workspace,
                 who=team_member.user,

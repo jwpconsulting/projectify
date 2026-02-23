@@ -17,7 +17,6 @@ from projectify.user.services.user_invite import user_invite_create
 from projectify.workspace.services.signals import send_change_signal
 
 from ..emails import TeamMemberInviteEmail
-from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
 from ..models.const import TeamMemberRoles
 from ..models.team_member import TeamMember
 from ..models.team_member_invite import TeamMemberInvite
@@ -106,7 +105,13 @@ def team_member_invite_create(
 
     match _try_find_team_member(workspace, email):
         case TeamMember():
-            raise UserAlreadyAdded()
+            raise serializers.ValidationError(
+                {
+                    "email": _(
+                        "This user already is a team member in your workspace."
+                    ).format(email)
+                }
+            )
         case User() as user:
             return workspace_add_user(
                 workspace=workspace,
@@ -122,7 +127,13 @@ def team_member_invite_create(
 
     match _try_find_invitation(workspace, email):
         case TeamMemberInvite():
-            raise UserAlreadyInvited(_("Email is already invited"))
+            raise serializers.ValidationError(
+                {
+                    "email": _(
+                        "You've already invited this email address to your workspace."
+                    ).format(email)
+                }
+            )
         case UserInvite() as found:
             user_invite = found
         case None:
