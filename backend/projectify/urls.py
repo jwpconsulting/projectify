@@ -38,23 +38,20 @@ urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     path(
         "icons/<str:icon>/<str:color>.svg", colored_icon, name="colored-icon"
     ),
+    # New Django frontend urls
+    path(
+        "dashboard/",
+        include("projectify.workspace.dashboard_urls"),
+    ),
+    path(
+        "user/",
+        include("projectify.user.dashboard_urls"),
+    ),
+    path("", include("projectify.storefront.urls")),
+    path("help/", include("projectify.help.urls")),
+    path("onboarding/", include("projectify.onboarding.urls")),
+    path("manifest.json", manifest_view, name="manifest"),
 )
-if settings.ENABLE_DJANGO_FRONTEND:
-    urlpatterns = (
-        *urlpatterns,
-        path(
-            "dashboard/",
-            include("projectify.workspace.dashboard_urls"),
-        ),
-        path(
-            "user/",
-            include("projectify.user.dashboard_urls"),
-        ),
-        path("", include("projectify.storefront.urls")),
-        path("help/", include("projectify.help.urls")),
-        path("onboarding/", include("projectify.onboarding.urls")),
-        path("manifest.json", manifest_view, name="manifest"),
-    )
 
 if settings.PREMAIL_PREVIEW:
     urlpatterns = (

@@ -160,9 +160,6 @@ class Development(SpectacularSettings, Base):
     # Enable live reloading
     BROWSER_RELOAD = True
 
-    # Feature flags
-    ENABLE_DJANGO_FRONTEND = True
-
     # Enable template debugging
     TEMPLATES = Base.TEMPLATES
     TEMPLATES[0]["OPTIONS"] = {

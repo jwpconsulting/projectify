@@ -51,9 +51,6 @@ class Test(SpectacularSettings, Base):
     # Enable premail preview for testing
     PREMAIL_PREVIEW = True
 
-    # Enable new Django frontend for testing
-    ENABLE_DJANGO_FRONTEND = True
-
     @classmethod
     def pre_setup(cls) -> None:
         """Load environment variables from .env."""
