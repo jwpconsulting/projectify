@@ -7,7 +7,6 @@ from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 from projectify.workspace.models.label import Label
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.services.signals import send_change_signal
 
 
 # Create
@@ -23,7 +22,6 @@ def label_create(
     """Create a label."""
     validate_perm("workspace.create_label", who, workspace)
     label = Label.objects.create(workspace=workspace, name=name, color=color)
-    send_change_signal("changed", workspace)
     return label
 
 
@@ -41,7 +39,6 @@ def label_update(
     label.name = name
     label.color = color
     label.save()
-    send_change_signal("changed", label.workspace)
     return label
 
 
@@ -51,4 +48,3 @@ def label_delete(*, who: User, label: Label) -> None:
     """Delete a label."""
     validate_perm("workspace.delete_label", who, label.workspace)
     label.delete()
-    send_change_signal("changed", label.workspace)

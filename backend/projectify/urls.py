@@ -20,8 +20,6 @@ from django.contrib import admin
 from django.urls import URLPattern, URLResolver, include, path
 from django.views.generic import TemplateView
 
-from projectify.workspace.consumers import ChangeConsumer
-
 from .lib.settings import get_settings
 from .lib.views import (
     colored_icon,
@@ -141,10 +139,6 @@ if settings.SERVE_SPECTACULAR:
             name="redoc",
         ),
     )
-
-websocket_urlpatterns = (
-    path("ws/workspace/change", ChangeConsumer.as_asgi()),
-)
 
 
 __all__ = ("handler404", "handler500", "handler403")

@@ -3,21 +3,12 @@
 # SPDX-FileCopyrightText: 2022-2024 JWP Consulting GK
 """Projectify middlewares."""
 
-import asyncio
 import logging
-import random
 from collections.abc import Awaitable
 from typing import Callable, Optional
 
-from django.core.exceptions import ImproperlyConfigured
-from django.core.handlers.asgi import ASGIHandler
-from django.http import HttpRequest, HttpResponse, JsonResponse
-from django.utils.decorators import async_only_middleware
+from django.http import HttpRequest, HttpResponse
 
-from channels.security.websocket import OriginValidator
-from rest_framework import exceptions
-
-from projectify.lib.exception_handler import exception_handler
 from projectify.lib.settings import get_settings
 
 GetResponse = Callable[[HttpRequest], HttpResponse]
@@ -87,90 +78,4 @@ def reverse_proxy(get_response: GetResponse) -> GetResponse:
     return process_request
 
 
-def CsrfTrustedOriginsOriginValidator(application: ASGIHandler) -> ASGIHandler:
-    """Return an OriginValidator configured to use CSRF_TRUSTED_ORIGINS."""
-    settings = get_settings()
-    origins = settings.CSRF_TRUSTED_ORIGINS
-    if origins is None:
-        raise ImproperlyConfigured(
-            "Need to specify CSRF_TRUSTED_ORIGINS in settings"
-        )
-    return OriginValidator(application, origins)
-
-
 logger = logging.getLogger(__name__)
-
-
-@async_only_middleware
-def microsloth(get_response: AsyncGetResponse) -> AsyncGetResponse:
-    """Simulate a slow connection."""
-
-    async def process_request(request: HttpRequest) -> HttpResponse:
-        """Process the request."""
-        response = await get_response(request)
-        if settings.SLEEP_MIN_MAX_MS is None:
-            return response
-        min, max = settings.SLEEP_MIN_MAX_MS
-        sleep_dur = random.randrange(min, max) / 1000
-        await asyncio.sleep(sleep_dur)
-        return response
-
-    return process_request
-
-
-def errorsloth(get_response: GetResponse) -> GetResponse:
-    """Simulate an unreliable connection. Trigger error before response."""
-
-    def process_request(request: HttpRequest) -> HttpResponse:
-        """Process the request."""
-        if settings.ERROR_RATE_PCT is None:
-            return get_response(request)
-        if random.randint(1, 100) <= settings.ERROR_RATE_PCT:
-            response = exception_handler(
-                exceptions.APIException("You have been slothed"),
-                {},
-            )
-            assert response
-            logger.info("Returning error error")
-            return JsonResponse(
-                data=response.data, status=response.status_code
-            )
-
-        return get_response(request)
-
-    return process_request
-
-
-class ErrorChannelator(ASGIHandler):
-    """
-    Randomly interrupt requests while they are running.
-
-    Useful for interrupting long websocket connections.
-    """
-
-    application: ASGIHandler
-
-    def __init__(self, application: ASGIHandler):
-        """Initialize with application."""
-        self.application = application
-
-    async def __call__(
-        self, scope: object, receive: object, send: object
-    ) -> None:
-        """Wait a few seconds, then crash."""
-        if settings.ERROR_RATE_PCT is None and settings.CHANNEL_ERROR is None:
-            return await self.application(scope, receive, send)
-        if settings.ERROR_RATE_PCT:
-            crash_start = random.randint(1, 100) <= settings.ERROR_RATE_PCT
-            if crash_start:
-                logger.info("Crashing channel before start")
-                raise Exception("Channelated")
-        if settings.CHANNEL_ERROR:
-            timeout = random.randint(1, settings.CHANNEL_ERROR)
-            try:
-                return await asyncio.wait_for(
-                    self.application(scope, receive, send), timeout=timeout
-                )
-            except TimeoutError as e:
-                logger.info("Crashing channel during connection")
-                raise Exception("Channelated") from e

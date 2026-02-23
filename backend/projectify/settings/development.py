@@ -29,8 +29,6 @@ def add_dev_middleware(
             yield m
             if debug_toolbar:
                 yield "debug_toolbar.middleware.DebugToolbarMiddleware"
-            yield "projectify.middleware.microsloth"
-            yield "projectify.middleware.errorsloth"
             yield "django_browser_reload.middleware.BrowserReloadMiddleware"
         else:
             yield m
@@ -145,12 +143,6 @@ class Development(SpectacularSettings, Base):
         **Base.REST_FRAMEWORK,
         "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     }
-
-    # Settings for slow connection emulation
-    SLEEP_MIN_MAX_MS = 200, 500
-    # ERROR_RATE_PCT = 20
-    CHANNEL_ERROR = 20
-    ASGI_APPLICATION = "projectify.test.asgi.error_application"
 
     # Admins for local logging
     ADMINS = [["Local user", "user@localhost"]]

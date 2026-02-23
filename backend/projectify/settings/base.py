@@ -26,12 +26,7 @@ import dj_database_url
 from configurations import Configuration  # type: ignore
 
 from .monkeypatch import patch
-from .types import (
-    ChannelLayers,
-    LoggingConfig,
-    StoragesConfig,
-    TemplatesConfig,
-)
+from .types import LoggingConfig, StoragesConfig, TemplatesConfig
 
 patch()
 
@@ -120,7 +115,6 @@ class Base(Configuration):  # type:ignore
     # Installed applications
     # Applications from Django project
     INSTALLED_APPS_DJANGO = (
-        "channels",
         "django.contrib.auth",
         "django.contrib.contenttypes",
         "django.contrib.sessions",
@@ -185,26 +179,9 @@ class Base(Configuration):  # type:ignore
     WSGI_APPLICATION = "projectify.wsgi.application"
     ASGI_APPLICATION = "projectify.asgi.application"
 
-    # TODO remove when Svelte frontend is gone
-    # Channels
-    CHANNEL_LAYERS: ChannelLayers = {
-        "default": {
-            "BACKEND": "channels.layers.InMemoryChannelLayer",
-        },
-    }
-
     # Database
     # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
     DATABASES: dict[str, dj_database_url.DBConfig]
-    # There was a reason why we added this - some weird issue
-    # with channels timing out. I am commenting this out temporarily.
-    # DATABASES["default"]["OPTIONS"] = {
-    #     "options": (
-    #         "-c statement_timeout=5000 "
-    #         "-c lock_timeout=5000 "
-    #         "-c idle_in_transaction_session_timeout=5000 "
-    #     ),
-    # }
 
     # Password validation
     # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -353,14 +330,6 @@ class Base(Configuration):  # type:ignore
 
     # premail
     PREMAIL_PREVIEW = False
-
-    # simulate slow and unreliable connections
-    SLEEP_MIN_MAX_MS: Optional[tuple[int, int]] = None
-    # Percentage (int from 0 to 100) of requests that should fail
-    ERROR_RATE_PCT: Optional[int] = None
-    # TODO remove when Svelte frontend is gone
-    # N seconds after which 100% of requests time out
-    CHANNEL_ERROR: Optional[int] = None
 
     # tailwind
     # https://django-tailwind.readthedocs.io/en/latest/installation.html

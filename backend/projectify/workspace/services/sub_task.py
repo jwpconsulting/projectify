@@ -12,7 +12,6 @@ from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 from projectify.workspace.models.sub_task import SubTask
 from projectify.workspace.models.task import Task
-from projectify.workspace.services.signals import send_change_signal
 
 
 class ValidatedDatum(TypedDict):
@@ -40,12 +39,6 @@ class ValidatedData(TypedDict):
     update_sub_tasks: Optional[Sequence[ValidatedDatumWithUuid]]
 
 
-def _sub_task_changed(task: Task) -> None:
-    """Broadcast changes upon sub task save/delete."""
-    send_change_signal("changed", task.section.project)
-    send_change_signal("changed", task)
-
-
 @transaction.atomic
 def sub_task_create(
     *,
@@ -60,7 +53,6 @@ def sub_task_create(
     sub_task = SubTask.objects.create(
         task=task, title=title, description=description, done=done
     )
-    _sub_task_changed(task)
     return sub_task
 
 
@@ -77,7 +69,6 @@ def sub_task_create_many(
     sub_tasks: list[SubTask] = SubTask.objects.bulk_create(
         SubTask(task=task, **sub_task) for sub_task in create_sub_tasks
     )
-    _sub_task_changed(task)
     return sub_tasks
 
 
@@ -148,5 +139,4 @@ def sub_task_update_many(
         result += create_instances
     # 4) fix order
     # XXX ? is fix order missing?
-    _sub_task_changed(task)
     return result

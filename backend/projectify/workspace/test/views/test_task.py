@@ -624,7 +624,8 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
     ) -> None:
         """Test deleting a task."""
         # Gone up from 11 -> 13, since we added filtering annotations
-        with django_assert_num_queries(14):
+        # gone down to 12 again Justus 2026-02-23
+        with django_assert_num_queries(12):
             response = rest_user_client.delete(resource_url)
             assert response.status_code == 204, response.content
         # Ensure that the task is gone for good
@@ -657,7 +658,7 @@ class TestMoveTaskToSection:
         """Test moving a task."""
         assert task.section == section
         # Gone up from 19 -> 23, since we added filtering annotations
-        with django_assert_num_queries(24):
+        with django_assert_num_queries(23):
             response = rest_user_client.post(
                 resource_url,
                 data={"section_uuid": str(other_section.uuid)},
@@ -689,7 +690,7 @@ class TestTaskMoveAfterTask:
     ) -> None:
         """Test as an authenticated user."""
         # Gone up from 18 -> 22, since we added filtering annotations
-        with django_assert_num_queries(23):
+        with django_assert_num_queries(22):
             response = rest_user_client.post(
                 resource_url,
                 data={"task_uuid": str(other_task.uuid)},

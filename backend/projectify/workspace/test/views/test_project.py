@@ -229,7 +229,7 @@ class TestProjectDetailView:
         ]
 
         # Move task2 up (should swap positions)
-        with django_assert_num_queries(33):
+        with django_assert_num_queries(32):
             response = user_client.post(
                 resource_url,
                 {
@@ -245,7 +245,7 @@ class TestProjectDetailView:
         ]
 
         # Move task1 up (should swap back)
-        with django_assert_num_queries(33):
+        with django_assert_num_queries(32):
             response = user_client.post(
                 resource_url,
                 {

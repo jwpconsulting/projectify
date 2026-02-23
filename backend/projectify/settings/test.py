@@ -27,9 +27,6 @@ class Test(SpectacularSettings, Base):
     # TODO populate me
     SECRET_KEY = "test"
 
-    # Allow localhost, so that websocket connections may pass
-    CSRF_TRUSTED_ORIGINS = ("http://localhost",)
-
     FRONTEND_URL = "https://example.com"
 
     # Email
@@ -65,22 +62,5 @@ class TestCollectstatic(Test):
         **Base.STORAGES,
         "staticfiles": {
             "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-        },
-    }
-
-
-class TestRedis(Test):
-    """
-    Settings used to test the connection to Redis on localhost.
-
-    See bin/test_redis.sh
-    """
-
-    CHANNEL_LAYERS = {
-        "default": {
-            "BACKEND": "channels_redis.core.RedisChannelLayer",
-            "CONFIG": {
-                "hosts": [("127.0.0.1", 6379)],
-            },
         },
     }

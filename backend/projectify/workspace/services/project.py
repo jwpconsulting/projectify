@@ -12,7 +12,6 @@ from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 from projectify.workspace.models import Project
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.services.signals import send_change_signal
 
 
 # Create
@@ -31,7 +30,6 @@ def project_create(
         title=title, description=description, due_date=due_date
     )
     # 1+1 query?
-    send_change_signal("changed", project.workspace)
     return project
 
 
@@ -53,9 +51,6 @@ def project_update(
         raise ValueError(f"tzinfo must be specified, got {due_date}")
     project.due_date = due_date
     project.save()
-    # 1 + 1 query performance problem ?
-    send_change_signal("changed", project.workspace)
-    send_change_signal("changed", project)
     return project
 
 
@@ -65,9 +60,6 @@ def project_delete(*, who: User, project: Project) -> None:
     """Delete a project."""
     validate_perm("workspace.delete_project", who, project.workspace)
     project.delete()
-    # 1 + 1 query performance problem ?
-    send_change_signal("changed", project.workspace)
-    send_change_signal("gone", project)
 
 
 # RPC
@@ -80,7 +72,4 @@ def project_archive(*, who: User, project: Project, archived: bool) -> Project:
     else:
         project.archived = None
     project.save()
-    # 1 + 1 query performance problem ?
-    send_change_signal("changed", project.workspace)
-    send_change_signal("gone", project)
     return project
