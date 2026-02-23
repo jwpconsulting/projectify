@@ -18,7 +18,8 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="label",
             constraint=models.CheckConstraint(
-                check=models.Q(("color__gte", 0), ("color__lte", 7)),
+                # type: ignore[call-arg]
+                condition=models.Q(("color__gte", 0), ("color__lte", 7)),
                 name="label_color_range",
                 violation_error_message="Color must be between 0 and 7",
             ),

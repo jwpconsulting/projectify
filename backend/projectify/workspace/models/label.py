@@ -78,7 +78,8 @@ class Label(BaseModel):
         ordering = ("-modified",)
         constraints = [
             CheckConstraint(
-                check=Q(color__gte=0) & Q(color__lte=7),
+                # type: ignore[call-arg]
+                condition=Q(color__gte=0) & Q(color__lte=7),
                 name="label_color_range",
                 violation_error_message=_("Color must be between 0 and 7"),
             ),

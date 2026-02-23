@@ -23,7 +23,8 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="user",
             constraint=models.CheckConstraint(
-                check=models.Q(
+                # type: ignore[call-arg]
+                condition=models.Q(
                     ("preferred_name__regex", "^([.:]\\s|[^.:])*[.:]?$")
                 ),
                 name="preferred_name",

@@ -79,7 +79,8 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
                 name="preferred_name",
                 # Match period, colon followed by space, or not period
                 # or period, colon at end of word
-                check=models.Q(
+                # type: ignore[call-arg]
+                condition=models.Q(
                     preferred_name__regex=r"^([.:]\s|[^.:])*[.:]?$"
                 ),
                 violation_error_message=_(
