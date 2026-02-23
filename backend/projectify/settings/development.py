@@ -69,6 +69,7 @@ class Development(SpectacularSettings, Base):
     DEBUG = True
     DEBUG_TOOLBAR = True
     DEBUG_AUTH = True
+    DEBUG_ERROR_PAGES = True
 
     ALLOWED_HOSTS = os.getenv(
         "ALLOWED_HOSTS", ".localhost,127.0.0.1,[::1]"

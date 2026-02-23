@@ -1,9 +1,0 @@
-#!/usr/bin/env sh
-# SPDX-License-Identifier: AGPL-3.0-or-later
-# SPDX-FileCopyrightText: 2024 JWP Consulting GK
-#
-# Update the auto-generated TypeScript API schema and format it
-npx openapi-typescript \
-    ../backend/schema/schema.yml \
-    --output src/lib/types/schema.d.ts || exit
-npm run prettier -- --write src/lib/types/schema.d.ts || exit
