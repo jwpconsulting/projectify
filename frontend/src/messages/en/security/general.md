@@ -127,7 +127,7 @@ JWP uses Dependabot [^dependabot] to monitor new vulnerabilities in Projectify's
 source code repository [^repository].
 
 [^dependabot]: [About Dependabot](https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/dependabot-quickstart-guide#about-dependabot) _docs.github.com_
-[^repository]: [Projectify source code repository](github.com/jwpconsulting/projectify) _github.com/jwpconsulting/projectify_
+[^repository]: [Projectify source code repository](https://github.com/jwpconsulting/projectify) _github.com/jwpconsulting/projectify_
 
 ## Logging
 
