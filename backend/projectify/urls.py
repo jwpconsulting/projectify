@@ -18,6 +18,7 @@ from typing import Union
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import URLPattern, URLResolver, include, path
+from django.views.generic import TemplateView
 
 from projectify.workspace.consumers import ChangeConsumer
 
@@ -54,6 +55,25 @@ urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     path("help/", include("projectify.help.urls")),
     path("onboarding/", include("projectify.onboarding.urls")),
     path("manifest.json", manifest_view, name="manifest"),
+    path(
+        "robots.txt",
+        TemplateView.as_view(
+            template_name="robots.txt", content_type="text/plain; charset=UTF8"
+        ),
+    ),
+    path(
+        "humans.txt",
+        TemplateView.as_view(
+            template_name="humans.txt", content_type="text/plain; charset=UTF8"
+        ),
+    ),
+    path(
+        ".well-known/security.txt",
+        TemplateView.as_view(
+            template_name="well-known-security.txt",
+            content_type="text/plain; charset=UTF8",
+        ),
+    ),
 )
 
 if settings.PREMAIL_PREVIEW:
