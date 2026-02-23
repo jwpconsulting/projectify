@@ -108,16 +108,16 @@ in
   checkGroups = [ ];
   outputs = [ "out" "static" ];
   preConfigure = ''
-    mkdir -p projectify/theme/static/css
-    cp ${tailwind-deps}/styles.css projectify/theme/static/css
+    mkdir projectify/theme/static projectify/theme/static/css
+    cp -r ${tailwind-deps}/dist projectify/theme/static/css/dist
   '';
   postInstall = ''
-    mkdir -p $out/bin $out/etc
+    mkdir $out/{bin,etc}
     cp manage.py "$out/bin"
 
     cp gunicorn.conf.py gunicorn-error.log $out/etc/
 
-    mkdir -p $static
+    mkdir $static
     env \
       DJANGO_SETTINGS_MODULE=projectify.settings.collect_static \
       DJANGO_CONFIGURATION=CollectStatic \
