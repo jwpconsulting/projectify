@@ -30,8 +30,8 @@ solution_patterns = [
 ]
 
 security_patterns = [
-    path("general/", security_general, name="general"),
-    path("disclose/", security_disclose, name="disclose"),
+    path("general", security_general, name="general"),
+    path("disclose", security_disclose, name="disclose"),
 ]
 
 urlpatterns = [
