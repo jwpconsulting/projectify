@@ -7,8 +7,6 @@ import os
 import warnings
 from pathlib import Path
 
-from projectify.lib.settings import populate_production_middleware
-
 from .base import Base
 
 
@@ -81,12 +79,6 @@ class Production(Base):
             "BACKEND": Base.MEDIA_CLOUDINARY_STORAGE,
         },
     }
-
-    # Disable CSRF protection
-    # TODO override this in a cleaner way
-    # XXX actually, I don't know why we have it in the first place,
-    # and at this point I am afraid to ask.
-    MIDDLEWARE = list(populate_production_middleware(Base.MIDDLEWARE))
 
     CSRF_COOKIE_DOMAIN = os.getenv("CSRF_COOKIE_DOMAIN", None)
 
