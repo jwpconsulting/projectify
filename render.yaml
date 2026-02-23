@@ -14,11 +14,6 @@ services:
             sync: false
           - key: PORT
             value: 80
-          - key: FRONTEND_HOST
-            fromService:
-              name: projectify-frontend
-              type: pserv
-              property: host
           - key: FRONTEND_PORT
             value: 5001
           - key: BACKEND_HOST
@@ -28,14 +23,6 @@ services:
               property: host
           - key: BACKEND_PORT
             value: 5002
-    - name: projectify-frontend
-      type: pserv
-      runtime: image
-      image:
-        url: ghcr.io/jwpconsulting/projectify/projectify-frontend-node:latest
-      envVars:
-          - key: SVELTE_KIT_PORT
-            value: 5001
     - name: projectify-backend
       type: pserv
       runtime: image
