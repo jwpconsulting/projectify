@@ -41,6 +41,7 @@ from projectify.workspace.views.workspace import (
     workspace_settings_new_label,
     workspace_settings_projects,
     workspace_settings_quota,
+    workspace_settings_team_member_update,
     workspace_settings_team_members,
     workspace_view,
 )
@@ -94,6 +95,11 @@ workspace_patterns = (
         "<uuid:workspace_uuid>/settings/team-members",
         workspace_settings_team_members,
         name="team-members",
+    ),
+    path(
+        "<uuid:workspace_uuid>/settings/team-members/<uuid:team_member_uuid>",
+        workspace_settings_team_member_update,
+        name="team-member-update",
     ),
     path(
         "<uuid:workspace_uuid>/settings/billing",

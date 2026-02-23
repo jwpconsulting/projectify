@@ -234,7 +234,8 @@ class TestWorkspaceSettingsTeamMembers:
         # Justus 2025-07-29 query count went down 33 -> 32
         # Justus 2025-07-29 query count went up   32 -> 33 XXX
         # Query count went up 33 -> 34
-        with django_assert_num_queries(34):
+        # Query count went up 34 -> 35 Justus 2026-02-23
+        with django_assert_num_queries(35):
             response = user_client.post(
                 resource_url, {"action": "invite", "email": "mail@bla.com"}
             )
@@ -243,7 +244,7 @@ class TestWorkspaceSettingsTeamMembers:
         assert team_member.workspace.teammemberinvite_set.count() == count + 1
 
         # can't invite a second time
-        with django_assert_num_queries(30):
+        with django_assert_num_queries(31):
             response = user_client.post(
                 resource_url, {"action": "invite", "email": "mail@bla.com"}
             )
@@ -316,6 +317,51 @@ class TestWorkspaceSettingsTeamMembers:
             resource_url, {"action": "team_member_remove", "team_member": uid}
         )
         assert response.status_code == 400
+
+
+class TestWorkspaceSettingsTeamMemberUpdate:
+    """Test team member update view."""
+
+    @pytest.fixture
+    def resource_url(
+        self, workspace: Workspace, other_team_member: TeamMember
+    ) -> str:
+        """Return URL to this view."""
+        return reverse(
+            "dashboard:workspaces:team-member-update",
+            args=(workspace.uuid, other_team_member.uuid),
+        )
+
+    def test_get_update_form(
+        self, user_client: Client, resource_url: str, team_member: TeamMember
+    ) -> None:
+        """Test getting the team member update form."""
+        response = user_client.get(resource_url)
+        assert response.status_code == 200
+
+    def test_update_team_member_role(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        other_team_member: TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test updating role and job title."""
+        other_team_member.role = TeamMemberRoles.CONTRIBUTOR
+        other_team_member.job_title = "Developer"
+        other_team_member.save()
+
+        with django_assert_num_queries(14):
+            response = user_client.post(
+                resource_url,
+                {"role": TeamMemberRoles.MAINTAINER, "job_title": "Foo"},
+            )
+            assert response.status_code == 302
+
+        other_team_member.refresh_from_db()
+        assert other_team_member.role == TeamMemberRoles.MAINTAINER
+        assert other_team_member.job_title == "Foo"
 
 
 class TestWorkspaceSettingsLabels:

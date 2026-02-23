@@ -1,0 +1,13 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{# SPDX-License-Identifier: BSD-3-Clause #}
+{# SPDX-FileCopyrightText: Django Software Foundation and individual contributors. #}
+{% if widget.wrap_label %}
+    <label class="contents"
+           {% if widget.attrs.id %}for="{{ widget.attrs.id }}"{% endif %}>
+    {% endif %}
+    {% include "django/forms/widgets/input.html" %}
+    {% if widget.wrap_label %}
+        {{ widget.label }}
+    </label>
+{% endif %}

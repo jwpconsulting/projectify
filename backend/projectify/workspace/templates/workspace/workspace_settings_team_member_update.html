@@ -1,0 +1,32 @@
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "workspace/workspace_settings_base.html" %}
+{% load i18n %}
+{% load projectify %}
+{% block title %}
+    {% blocktrans with workspace_title=workspace.title team_member=team_member %}Update {{ team_member }} in {{ workspace_title }} - Projectify{% endblocktrans %}
+{% endblock title %}
+{% block workspace_settings_content %}
+    <section class="flex flex-col gap-4">
+        <h2 class="text-xl font-bold">{% blocktrans %}Update team member{% endblocktrans %}</h2>
+        <div class="flex flex-row items-center gap-2">
+            {% user_avatar team_member %}
+            <div class="shrink min-w-0 flex flex-col gap-1">
+                <span class="font-bold overflow-hidden truncate">{{ team_member }}</span>
+                <span>{{ team_member.job_title|default:_("No job title") }}</span>
+            </div>
+        </div>
+        <form class="flex flex-col gap-4" method="post" hx-boost>
+            {% csrf_token %}
+            {{ form }}
+            {% include "projectify/forms/submit.html" with text=_("Update") %}
+        </form>
+        {% anchor href="dashboard:workspaces:team-members" workspace_uuid=workspace.uuid label=_("Go back") %}
+    </section>
+    <section class="flex flex-col gap-2">
+        <h3 class="font-bold">{% trans "Learn more about team member roles" %}</h3>
+        <ul class="list-inside list-disc">
+            <li>{% anchor href="/help/roles#available-roles" label=_("Available roles in Projectify") external=True %}</li>
+        </ul>
+    </section>
+{% endblock workspace_settings_content %}

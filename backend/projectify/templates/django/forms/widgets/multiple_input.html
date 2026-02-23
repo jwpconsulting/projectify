@@ -1,0 +1,20 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{# SPDX-License-Identifier: BSD-3-Clause #}
+{# SPDX-FileCopyrightText: Django Software Foundation and individual contributors. #}
+{% with id=widget.attrs.id %}
+    <div class="grid grid-cols-[auto_1fr] gap-2"
+         {% if id %}id="{{ id }}"{% endif %}
+         {% if widget.attrs.class %}class="{{ widget.attrs.class }}"{% endif %}>
+        {% for group, options, index in widget.optgroups %}
+            {% if group %}
+                <div class="flex items-center">
+                    <label>{{ group }}</label>
+                {% endif %}
+                {% for option in options %}
+                    <div class="contents">{% include option.template_name with widget=option %}</div>
+                {% endfor %}
+                {% if group %}</div>{% endif %}
+        {% endfor %}
+    </div>
+{% endwith %}

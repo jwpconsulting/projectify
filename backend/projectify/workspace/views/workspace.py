@@ -47,6 +47,7 @@ from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
 from ..models import Workspace
 from ..models.const import COLOR_MAP
 from ..models.label import Label
+from ..models.team_member import TeamMember
 from ..selectors.labels import (
     LabelDetailQuerySet,
     label_find_by_label_uuid,
@@ -55,6 +56,7 @@ from ..selectors.labels import (
 from ..selectors.project import project_find_by_workspace_uuid
 from ..selectors.quota import workspace_get_all_quotas
 from ..selectors.team_member import (
+    team_member_find_by_team_member_uuid,
     team_member_find_for_workspace,
     team_member_last_project_for_user,
 )
@@ -70,6 +72,7 @@ from ..services.label import label_create, label_delete, label_update
 from ..services.team_member import (
     team_member_delete,
     team_member_minimize_project_list,
+    team_member_update,
     team_member_visit_workspace,
 )
 from ..services.team_member_invite import (
@@ -653,6 +656,85 @@ def workspace_settings_team_members(
         assert workspace
 
     return render(request, template, context=context, status=status)
+
+
+class TeamMemberUpdateForm(forms.ModelForm):
+    """Form for updating team member roles and job title."""
+
+    class Meta:
+        """Meta."""
+
+        model = TeamMember
+        fields = "role", "job_title"
+        widgets = {
+            "role": forms.RadioSelect(),
+            "job_title": forms.TextInput(
+                attrs={"placeholder": _("Enter job title")}
+            ),
+        }
+
+
+@require_http_methods(["GET", "POST"])
+@platform_view
+def workspace_settings_team_member_update(
+    request: AuthenticatedHttpRequest,
+    workspace_uuid: UUID,
+    team_member_uuid: UUID,
+) -> HttpResponse:
+    """Update a team member's role."""
+    workspace = workspace_find_by_workspace_uuid(
+        who=request.user,
+        workspace_uuid=workspace_uuid,
+        qs=WorkspaceDetailQuerySet,
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+
+    team_member = team_member_find_by_team_member_uuid(
+        who=request.user, team_member_uuid=team_member_uuid
+    )
+    if team_member is None or team_member.workspace != workspace:
+        raise Http404(_("Team member not found"))
+
+    context = {
+        **_get_workspace_settings_context(
+            request=request, workspace=workspace, active_tab="team"
+        ),
+        "team_member": team_member,
+    }
+
+    match request.method:
+        case "POST":
+            form = TeamMemberUpdateForm(
+                data=request.POST, instance=team_member
+            )
+            if not form.is_valid():
+                context = {**context, "form": form}
+                status = 400
+
+            try:
+                team_member_update(
+                    who=request.user,
+                    team_member=team_member,
+                    job_title=form.cleaned_data.get("job_title"),
+                )
+                return redirect(
+                    "dashboard:workspaces:team-members", workspace.uuid
+                )
+            except serializers.ValidationError as error:
+                populate_form_with_drf_errors(form, error)
+                context = {**context, "form": form}
+                status = 400
+        case _:
+            form = TeamMemberUpdateForm(instance=team_member)
+            context = {**context, "form": form}
+            status = 200
+    return render(
+        request,
+        "workspace/workspace_settings_team_member_update.html",
+        context=context,
+        status=status,
+    )
 
 
 class WorkspaceBillingForm(forms.Form):
