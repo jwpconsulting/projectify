@@ -357,16 +357,18 @@ class TestLogInDjango:
         cache.clear()
         settings.RATELIMIT_ENABLE = True
 
-        for i in range(5):
+        for email in [faker.email() for _ in range(5)]:
             response = client.post(
                 resource_url,
-                {"email": faker.email(), "password": "wrong"},
+                {"email": email, "password": "w"},
+                REMOTE_ADDR="127.0.0.1",
             )
-            assert response.status_code == 400, f"Attempt {i}"
+            assert response.status_code == 400
 
         response = client.post(
             resource_url,
-            {"email": faker.email(), "password": "wrong"},
+            {"email": faker.email(), "password": "w"},
+            REMOTE_ADDR="127.0.0.1",
         )
         assert response.status_code == 429
 

@@ -17,8 +17,8 @@ buildNpmPackage {
     cd projectify/theme/static_src
   '';
   installPhase = ''
-    mkdir -p $out
-    cp ../static/css/dist/styles.css $out/styles.css
+    mkdir $out
+    cp -r ../static/css/dist $out/dist
   '';
   npmConfigHook = importNpmLock.npmConfigHook;
 }
