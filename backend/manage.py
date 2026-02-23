@@ -33,7 +33,9 @@ def main() -> None:
             "available configuration classes."
         )
     try:
-        from configurations.management import execute_from_command_line
+        from configurations.management import (  # type: ignore[attr-defined]
+            execute_from_command_line,
+        )
     except ImportError as exc:
         raise ImportError(
             "Couldn't import configurations. Are you sure it's installed and "

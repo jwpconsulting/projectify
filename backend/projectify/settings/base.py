@@ -20,7 +20,8 @@ from pathlib import Path
 from typing import Optional
 
 import dj_database_url
-from configurations.base import Configuration
+
+from configurations import Configuration  # type: ignore
 
 from .monkeypatch import patch
 from .types import (
@@ -33,7 +34,7 @@ from .types import (
 patch()
 
 
-class Base(Configuration):
+class Base(Configuration):  # type:ignore
     """
     Base configuration.
 

@@ -23,7 +23,6 @@ django = "^6.0.0"
 django-anymail = {extras = ["mailgun"], version = "~10.3"}
 django-celery-results = "~2.5.0"
 django-cloudinary-storage = "~0.3.0"
-django-configurations = "^2.5.1"
 django-pgtrigger = "~4.11.0"
 djangorestframework = "^3"
 gunicorn = "^23"
@@ -86,6 +85,8 @@ line-length=79
 extend-exclude = [
     # Nix build
     "result/",
+    # Vendored in django-configurations
+    "configurations",
 ]
 
 [tool.ruff.lint]
@@ -226,6 +227,8 @@ exclude = [
     # Other issues
     "projectify/workspace/models/section.py",
     "projectify/workspace/models/sub_task.py",
+    # Vendored in
+    "configurations/**/*.py",
 
 ]
 # Mypy doesn't complain about these, so it's fine
@@ -247,6 +250,7 @@ exclude = [
     "settings",
     "migrations",
     "result/",
+    "configurations/",
 ]
 min_confidence = 70
 

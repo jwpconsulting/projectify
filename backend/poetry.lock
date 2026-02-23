@@ -834,28 +834,6 @@ requests = ">=2.10.0"
 video = ["python-magic (>=0.4.12)"]
 
 [[package]]
-name = "django-configurations"
-version = "2.5.1"
-description = "A helper for organizing Django settings."
-optional = false
-python-versions = "<4.0,>=3.8"
-groups = ["main"]
-files = [
-    {file = "django-configurations-2.5.1.tar.gz", hash = "sha256:6e5083757e2bbdf9bb7850567536b96a93515f6b17503d74928ff628db2e0e94"},
-    {file = "django_configurations-2.5.1-py3-none-any.whl", hash = "sha256:ceb84858da2dac846b15e715c2fd936cfc4c7917c074aff8d31700564093955e"},
-]
-
-[package.dependencies]
-django = ">=3.2"
-
-[package.extras]
-cache = ["django-cache-url"]
-database = ["dj-database-url"]
-email = ["dj-email-url"]
-search = ["dj-search-url"]
-testing = ["dj-database-url", "dj-email-url", "dj-search-url", "django-cache-url (>=1.0.0)"]
-
-[[package]]
 name = "django-debug-toolbar"
 version = "4.3.0"
 description = "A configurable set of panels that display various debug information about the current request/response."
@@ -3383,4 +3361,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "~3.12.7"
-content-hash = "a6295f1c7b784145de4912775d3e3a2671a285cce028868d53e21c324f33046d"
+content-hash = "7f80a46374e28adcc3734925d49e5f925b52f3c7b8d5495db2f712898b789364"

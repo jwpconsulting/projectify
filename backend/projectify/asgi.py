@@ -14,8 +14,10 @@ import os
 
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
-from configurations.asgi import get_asgi_application
 
+from configurations.asgi import (  # type: ignore[attr-defined]
+    get_asgi_application,
+)
 from projectify.middleware import CsrfTrustedOriginsOriginValidator
 
 # TODO still needed? We should just let the server crash when this env var is
