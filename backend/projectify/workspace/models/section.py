@@ -51,7 +51,7 @@ class Section(TitleDescriptionModel, BaseModel):
 
     def get_absolute_url(self) -> str:
         """Get URL to section within project."""
-        return f"{reverse("dashboard:projects:detail", args=(str(self.project.uuid),))}#section-{self.uuid}"
+        return f"{reverse('dashboard:projects:detail', args=(str(self.project.uuid),))}#section-{self.uuid}"
 
     class Meta:
         """Meta."""
