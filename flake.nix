@@ -24,8 +24,6 @@
           PORT=80
           BACKEND_HOST=localhost
           BACKEND_PORT=1000
-          FRONTEND_HOST=localhost
-          FRONTEND_PORT=1001
         '';
         caddyfileFormatted = pkgs.runCommand "Caddyfile" { } ''
           mkdir $out
@@ -50,42 +48,7 @@
       in
       {
         packages = rec {
-          projectify-frontend-static = pkgs.callPackage frontend/build-frontend.nix {
-            adapter = "static";
-            inherit (self) lastModifiedDate;
-            rev = self.rev or "dirty";
-          };
-          projectify-frontend-node =
-            let
-              frontend = (pkgs.callPackage frontend/build-frontend.nix {
-                adapter = "node";
-                inherit (self) lastModifiedDate;
-                rev = self.rev or "dirty";
-              });
-            in
-            pkgs.writeShellApplication {
-              name = "projectify-frontend-node";
-              runtimeInputs = [
-                frontend
-                frontend.passthru.nodejs
-              ];
-              text = ''
-                exec node ${frontend}
-              '';
-              passthru = {
-                nodejs = frontend.passthru.nodejs;
-              };
-            };
-          projectify-frontend-node-container = pkgs.dockerTools.streamLayeredImage {
-            name = "projectify-frontend-node";
-            tag = "latest";
-            contents = [
-              projectify-frontend-node
-            ];
-            config = {
-              Cmd = [ "projectify-frontend-node" ];
-            };
-          };
+          inherit projectify-bundle;
           projectify-manage = pkgs.writeShellApplication {
             name = "projectify-manage";
             runtimeInputs = [ projectify-bundle.dependencyEnv ];
@@ -155,7 +118,6 @@
             # TODO I temporarily commented out these build inputs. Are they
             # still needed?
             # backend
-            # frontend
             # revproxy
             # celery
             # manage
@@ -182,9 +144,6 @@
 
             # License
             pkgs.reuse
-
-            # For frontend and backend
-            self.outputs.packages.${system}.projectify-frontend-node.passthru.nodejs
           ];
         };
       });
