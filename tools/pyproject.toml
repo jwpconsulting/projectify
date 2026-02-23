@@ -6,7 +6,6 @@ package-mode = false
 description = "Tooling for Projectify frontend"
 authors = ["Justus Perlwitz <justus@jwpconsulting.net>"]
 license = "AGPL"
-readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
