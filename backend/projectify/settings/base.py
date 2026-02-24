@@ -162,6 +162,7 @@ class Base(Configuration):  # type:ignore
 
     MIDDLEWARE = [
         "django.middleware.security.SecurityMiddleware",
+        "whitenoise.middleware.WhiteNoiseMiddleware",
         "django.middleware.csp.ContentSecurityPolicyMiddleware",
         "projectify.middleware.reverse_proxy",
         "django.middleware.gzip.GZipMiddleware",
