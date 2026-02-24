@@ -85,39 +85,6 @@ class TestWorkspaceSettingsBillingEdit:
         ), response.headers
 
 
-# Read
-class TestWorkspaceCustomerRetrieve:
-    """Test WorkspaceCustomerRetrieve."""
-
-    @pytest.fixture
-    def resource_url(self, paid_customer: Customer) -> str:
-        """Return URL to resource."""
-        return reverse(
-            "corporate:customers:read", args=(paid_customer.workspace.uuid,)
-        )
-
-    def test_authenticated(
-        self,
-        user_client: APIClient,
-        resource_url: str,
-        team_member: TeamMember,
-        django_assert_num_queries: DjangoAssertNumQueries,
-    ) -> None:
-        """Test as authenticated user."""
-        with django_assert_num_queries(4):
-            response = user_client.get(resource_url)
-            assert response.status_code == 200, response.content
-
-    def test_404(
-        self,
-        rest_meddling_client: APIClient,
-        resource_url: str,
-    ) -> None:
-        """Test no workspace/customer locatable for current user."""
-        response = rest_meddling_client.get(resource_url)
-        assert response.status_code == 404, response.content
-
-
 # RPC
 class MockSession:
     """Checkout and billing portal mock session."""

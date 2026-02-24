@@ -5,23 +5,15 @@
 
 from django.urls import include, path
 
-from projectify.corporate.views.coupon import CouponRedeem
 from projectify.corporate.views.customer import (
     WorkspaceBillingPortalSessionCreate,
     WorkspaceCheckoutSessionCreate,
-    WorkspaceCustomerRetrieve,
 )
 from projectify.corporate.views.stripe import stripe_webhook
 
 app_name = "corporate"
 
 customer_url_patterns = (
-    # Read
-    path(
-        "<uuid:workspace_uuid>/customer",
-        WorkspaceCustomerRetrieve.as_view(),
-        name="read",
-    ),
     # RPC
     path(
         "<uuid:workspace_uuid>/create-checkout-session",
@@ -35,20 +27,10 @@ customer_url_patterns = (
     ),
 )
 
-coupon_url_patterns = (
-    # RPC
-    path(
-        "<uuid:workspace_uuid>/redeem-coupon",
-        CouponRedeem.as_view(),
-        name="redeem-coupon",
-    ),
-)
 
 urlpatterns = [
     # Customer
     path("workspace/", include((customer_url_patterns, "customers"))),
-    # Coupon
-    path("workspace/", include((coupon_url_patterns, "coupons"))),
     # Stripe
     path("stripe-webhook/", stripe_webhook, name="stripe-webhook"),
 ]

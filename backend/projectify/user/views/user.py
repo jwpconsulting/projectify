@@ -3,38 +3,27 @@
 # SPDX-FileCopyrightText: 2022-2024 JWP Consulting GK
 """User app user model views."""
 
-from typing import Any, Union, cast
+from typing import Any
 
 from django import forms
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.password_validation import (
     password_validators_help_texts,
 )
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
-from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
 from django_ratelimit.core import UNSAFE
 from django_ratelimit.decorators import ratelimit
-from rest_framework import parsers, serializers, views
-from rest_framework.exceptions import PermissionDenied, ValidationError
-from rest_framework.permissions import AllowAny
-from rest_framework.request import Request
-from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
+from rest_framework.exceptions import ValidationError
 
 from projectify.lib.forms import populate_form_with_drf_errors
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 from projectify.user.models import User
-from projectify.user.serializers import (
-    AnonymousUserSerializer,
-    LoggedInUserSerializer,
-)
 from projectify.user.services.internal import Token
 from projectify.user.services.user import (
     user_change_password,
@@ -251,158 +240,3 @@ def email_address_update_confirmed(
 ) -> HttpResponse:
     """Show confirmation that email address update was confirmed."""
     return render(request, "user/email_address_update_confirmed.html")
-
-
-# Create
-# Read
-class UserRead(views.APIView):
-    """Read user, regardless of logged in/out."""
-
-    permission_classes = (AllowAny,)
-
-    def get(self, request: Request) -> Response:
-        """Handle GET."""
-        user = cast(Union[User, AnonymousUser], request.user)
-        serializer: serializers.Serializer
-        if user.is_anonymous:
-            serializer = AnonymousUserSerializer(
-                instance={"kind": "unauthenticated"}
-            )
-        else:
-            serializer = LoggedInUserSerializer(instance=user)
-        return Response(data=serializer.data)
-
-
-class UserUpdate(views.APIView):
-    """Update user."""
-
-    class UserUpdateSerializer(serializers.ModelSerializer[User]):
-        """Take only preferred_name in."""
-
-        class Meta:
-            """Meta."""
-
-            fields = ("preferred_name",)
-            model = User
-
-    def put(self, request: Request) -> Response:
-        """Update a user."""
-        user = cast(Union[User, AnonymousUser], request.user)
-        if not isinstance(user, User):
-            raise PermissionDenied(
-                _("Must be authenticated in order to update a user")
-            )
-        serializer = self.UserUpdateSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-        user = user_update(
-            who=user,
-            user=user,
-            preferred_name=data.get("preferred_name"),
-            profile_picture=None,
-        )
-        output_serializer = LoggedInUserSerializer(instance=user)
-        return Response(data=output_serializer.data, status=HTTP_200_OK)
-
-
-# Delete
-
-
-# RPC
-# TODO merge this into user_update
-class ProfilePictureUpload(views.APIView):
-    """View that allows uploading a profile picture."""
-
-    parser_classes = (parsers.MultiPartParser,)
-
-    class ProfilePictureUploadSerializer(serializers.Serializer):
-        """Deserialize picture upload."""
-
-        file = serializers.ImageField(required=False)
-
-    def post(self, request: Request) -> Response:
-        """Handle POST."""
-        serializer = self.ProfilePictureUploadSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        file_obj = serializer.validated_data.get("file", None)
-        user = request.user
-        if file_obj is None:
-            user.profile_picture.delete()
-        else:
-            user.profile_picture = file_obj
-        user.save()
-        return Response(status=204)
-
-
-class ChangePassword(views.APIView):
-    """Allow changing password by specifying old and new password."""
-
-    class ChangePasswordSerializer(serializers.Serializer):
-        """Accept old and new password."""
-
-        current_password = serializers.CharField()
-        new_password = serializers.CharField()
-
-    @method_decorator(ratelimit(key="user", rate="5/h"))
-    def post(self, request: Request) -> Response:
-        """Handle POST."""
-        user = request.user
-        serializer = self.ChangePasswordSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-        user_change_password(
-            user=user,
-            current_password=data["current_password"],
-            new_password=data["new_password"],
-            request=request,
-        )
-        return Response(status=HTTP_204_NO_CONTENT)
-
-
-class RequestEmailAddressUpdate(views.APIView):
-    """Request an email address update."""
-
-    class RequestEmailAddressUpdateSerializer(serializers.Serializer):
-        """Accept new email."""
-
-        password = serializers.CharField()
-        new_email = serializers.EmailField()
-
-    @method_decorator(ratelimit(key="user", rate="5/h"))
-    def post(self, request: Request) -> Response:
-        """Handle POST."""
-        user = request.user
-        serializer = self.RequestEmailAddressUpdateSerializer(
-            data=request.data
-        )
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-        user_request_email_address_update(
-            user=user,
-            password=data["password"],
-            new_email=data["new_email"],
-        )
-        return Response(status=HTTP_204_NO_CONTENT)
-
-
-class ConfirmEmailAddressUpdate(views.APIView):
-    """Confirm an email address update."""
-
-    class ConfirmEmailAddressUpdateSerializer(serializers.Serializer):
-        """Accept new email."""
-
-        confirmation_token = serializers.CharField()
-
-    def post(self, request: Request) -> Response:
-        """Handle POST."""
-        user = request.user
-        serializer = self.ConfirmEmailAddressUpdateSerializer(
-            data=request.data
-        )
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-        user_confirm_email_address_update(
-            user=user,
-            confirmation_token=data["confirmation_token"],
-        )
-        return Response(status=HTTP_204_NO_CONTENT)
