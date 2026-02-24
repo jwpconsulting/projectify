@@ -15,11 +15,7 @@ from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
-from rest_framework import serializers, status
-from rest_framework.exceptions import NotFound, ValidationError
-from rest_framework.request import Request
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.exceptions import ValidationError
 
 from projectify.lib.forms import populate_form_with_drf_errors
 from projectify.lib.htmx import HttpResponseClientRefresh
@@ -32,10 +28,8 @@ from ..models.section import Section
 from ..models.task import Task
 from ..models.team_member import TeamMember
 from ..selectors.project import (
-    ProjectDetailQuerySet,
     project_detail_query_set,
     project_find_by_project_uuid,
-    project_find_by_workspace_uuid,
 )
 from ..selectors.quota import workspace_get_all_quotas
 from ..selectors.team_member import team_member_find_for_workspace
@@ -44,8 +38,6 @@ from ..selectors.workspace import (
     workspace_find_by_workspace_uuid,
     workspace_find_for_user,
 )
-from ..serializers.base import ProjectBaseSerializer
-from ..serializers.project import ProjectDetailSerializer
 from ..services.project import (
     project_archive,
     project_create,
@@ -591,179 +583,3 @@ def project_delete_view(
 
     project_delete(project=project, who=request.user)
     return HttpResponseClientRefresh()
-
-
-# Create
-class ProjectCreate(APIView):
-    """Create a project."""
-
-    class ProjectCreateSerializer(serializers.ModelSerializer[Project]):
-        """Parse project creation input."""
-
-        workspace_uuid = serializers.UUIDField()
-
-        class Meta:
-            """Restrict to the bare minimum needed for creation."""
-
-            model = Project
-            fields = "title", "description", "workspace_uuid", "due_date"
-
-    def post(self, request: Request) -> Response:
-        """Create a project."""
-        user = request.user
-        serializer = self.ProjectCreateSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        workspace_uuid: UUID = serializer.validated_data.pop("workspace_uuid")
-        workspace = workspace_find_by_workspace_uuid(
-            workspace_uuid=workspace_uuid,
-            who=user,
-        )
-        if workspace is None:
-            raise serializers.ValidationError(
-                {"workspace_uuid": _("No workspace found for this UUID")}
-            )
-        project = project_create(
-            title=serializer.validated_data["title"],
-            description=serializer.validated_data.get("description"),
-            due_date=serializer.validated_data.get("due_date"),
-            who=user,
-            workspace=workspace,
-        )
-
-        output_serializer = ProjectBaseSerializer(instance=project)
-        return Response(data=output_serializer.data, status=201)
-
-
-# Read + Update + Delete
-class ProjectReadUpdateDelete(APIView):
-    """Project retrieve view."""
-
-    def get(self, request: Request, project_uuid: UUID) -> Response:
-        """Handle GET."""
-        project = project_find_by_project_uuid(
-            who=request.user,
-            project_uuid=project_uuid,
-            qs=ProjectDetailQuerySet,
-        )
-        if project is None:
-            raise NotFound(_("No project found for this uuid"))
-        project.workspace.quota = workspace_get_all_quotas(project.workspace)
-        serializer = ProjectDetailSerializer(instance=project)
-        return Response(serializer.data)
-
-    class ProjectUpdateSerializer(serializers.ModelSerializer[Project]):
-        """Serializer for PUT."""
-
-        class Meta:
-            """Meta."""
-
-            model = Project
-            fields = (
-                "title",
-                "description",
-                "due_date",
-            )
-
-    def put(self, request: Request, project_uuid: UUID) -> Response:
-        """Handle PUT."""
-        project = project_find_by_project_uuid(
-            who=request.user,
-            project_uuid=project_uuid,
-        )
-        if project is None:
-            raise NotFound(_("No project found for this uuid"))
-        serializer = self.ProjectUpdateSerializer(
-            instance=project,
-            data=request.data,
-        )
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-        project_update(
-            who=self.request.user,
-            project=project,
-            title=data["title"],
-            description=data.get("description"),
-            due_date=data.get("due_date"),
-        )
-        return Response(data, status.HTTP_200_OK)
-
-    def delete(self, request: Request, project_uuid: UUID) -> Response:
-        """Handle DELETE."""
-        project = project_find_by_project_uuid(
-            who=request.user,
-            project_uuid=project_uuid,
-            archived=True,
-        )
-        if project is None:
-            raise NotFound(_("No project found for this uuid"))
-        project_delete(
-            who=self.request.user,
-            project=project,
-        )
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-# List
-class ProjectArchivedList(APIView):
-    """List archived projects inside a workspace."""
-
-    class ArchivedProjectSerializer(serializers.ModelSerializer[Project]):
-        """Serialize an archived project."""
-
-        class Meta:
-            """Include only the bare minimum."""
-
-            model = Project
-            fields = (
-                "title",
-                "uuid",
-                "archived",
-            )
-
-    def get(self, request: Request, workspace_uuid: UUID) -> Response:
-        """Get queryset."""
-        workspace = workspace_find_by_workspace_uuid(
-            workspace_uuid=workspace_uuid, who=request.user
-        )
-        if workspace is None:
-            raise NotFound(_("No workspace found for this UUID"))
-        projects = project_find_by_workspace_uuid(
-            who=request.user,
-            workspace_uuid=workspace_uuid,
-            archived=True,
-        )
-        serializer = self.ArchivedProjectSerializer(
-            instance=projects,
-            many=True,
-        )
-        return Response(serializer.data)
-
-
-# RPC
-# TODO surely this can all be refactored
-class ProjectArchive(APIView):
-    """Toggle the archived status of a board on or off."""
-
-    class ProjectArchiveSerializer(serializers.Serializer):
-        """Accept the desired archival status."""
-
-        archived = serializers.BooleanField()
-
-    def post(self, request: Request, project_uuid: UUID) -> Response:
-        """Process request."""
-        serializer = self.ProjectArchiveSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        archived = serializer.validated_data["archived"]
-        project = project_find_by_project_uuid(
-            project_uuid=project_uuid,
-            who=request.user,
-            archived=not archived,
-        )
-        if project is None:
-            raise NotFound(
-                _("No project found for this UUID where archived={}").format(
-                    not archived
-                )
-            )
-        project_archive(project=project, archived=archived, who=request.user)
-        return Response(status=status.HTTP_204_NO_CONTENT)

@@ -5,12 +5,6 @@
 
 from django.urls import include, path
 
-from projectify.workspace.views.project import (
-    ProjectArchive,
-    ProjectCreate,
-    ProjectReadUpdateDelete,
-)
-
 from .views.team_member import TeamMemberReadUpdateDelete
 
 app_name = "workspace"
@@ -26,26 +20,7 @@ team_member_patterns = (
     ),
 )
 
-project_patterns = (
-    # Create
-    path(
-        "",
-        ProjectCreate.as_view(),
-        name="create",
-    ),
-    # Read + Update + Delete
-    path(
-        "<uuid:project_uuid>",
-        ProjectReadUpdateDelete.as_view(),
-        name="read-update-delete",
-    ),
-    # RPC
-    path(
-        "<uuid:project_uuid>/archive",
-        ProjectArchive.as_view(),
-        name="archive",
-    ),
-)
+project_patterns = ()
 
 section_patterns = ()
 
