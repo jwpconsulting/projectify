@@ -33,20 +33,8 @@
                 {% for quota_row in quota_rows %}
                     <tr>
                         <td>{{ quota_row.label }}</td>
-                        <td class="text-right">
-                            {% if quota_row.quota.current == None %}
-                                {% trans "n/a" %}
-                            {% else %}
-                                {{ quota_row.quota.current }}
-                            {% endif %}
-                        </td>
-                        <td class="text-right">
-                            {% if quota_row.quota.limit == None %}
-                                {% trans "Unlimited" %}
-                            {% else %}
-                                {{ quota_row.quota.limit }}
-                            {% endif %}
-                        </td>
+                        <td class="text-right">{{ quota_row.quota.current|default_if_none:_("n/a") }}</td>
+                        <td class="text-right">{{ quota_row.quota.limit|default_if_none:_("Unlimited") }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
