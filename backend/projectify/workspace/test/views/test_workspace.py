@@ -13,6 +13,7 @@ from django.urls import reverse
 
 import pytest
 
+from projectify.corporate.services.stripe import customer_cancel_subscription
 from projectify.user.models.user import User
 from projectify.workspace.models.label import Label
 from pytest_types import DjangoAssertNumQueries
@@ -550,137 +551,55 @@ class TestWorkspaceSettingsEditLabel:
         assert user_client.get(url).status_code == 404
 
 
-# TODO test workspace quota screen
-'''TODO
-    def test_get(
-        self,
-        rest_user_client: APIClient,
-        resource_url: str,
-        user: User,
-        workspace: Workspace,
-        team_member: TeamMember,
-        project: Project,
-        archived_project: Project,
-        django_assert_num_queries: DjangoAssertNumQueries,
-    ) -> None:
-        """Assert we can GET this view this while being logged in."""
-        # Make sure we have an unredeemed invite
-        team_member_invite_create(
-            email_or_user="rando@calrissian.org",
-            who=team_member.user,
-            workspace=workspace,
-        )
-        # Went up from 5 to 7, since we now return the quota for remaining
-        # seats
-        # One more for user invites
-        with django_assert_num_queries(8):
-            response = rest_user_client.get(resource_url)
-            assert response.status_code == 200, response.data
-        assert response.data == {
-            "title": workspace.title,
-            "description": workspace.description,
-            "uuid": str(workspace.uuid),
-            "picture": None,
-            "team_members": [
-                unittest.mock.ANY,
-                unittest.mock.ANY,
-            ],
-            "team_member_invites": [
-                {"email": "rando@calrissian.org", "created": unittest.mock.ANY}
-            ],
-            "projects": [
-                unittest.mock.ANY,
-            ],
-            "labels": [],
-            # TODO
-            "quota": {
-                "workspace_status": "full",
-                "chat_messages": unittest.mock.ANY,
-                "labels": unittest.mock.ANY,
-                "sub_tasks": unittest.mock.ANY,
-                "tasks": unittest.mock.ANY,
-                "task_labels": unittest.mock.ANY,
-                "projects": unittest.mock.ANY,
-                "sections": unittest.mock.ANY,
-                "team_members_and_invites": {
-                    "current": 3,
-                    "limit": 10,
-                    "can_create_more": True,
-                },
-            },
-        }
+class TestWorkspaceSettingsQuota:
+    """Test workspace quota settings view."""
 
-    def test_get_trial(
+    @pytest.fixture
+    def resource_url(self, workspace: Workspace) -> str:
+        """Return URL to this view."""
+        return reverse("dashboard:workspaces:quota", args=(workspace.uuid,))
+
+    def test_get_quota_page(
         self,
-        rest_user_client: APIClient,
+        user_client: Client,
         resource_url: str,
-        workspace: Workspace,
         team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
-        """Assert that trial limits are annotated correctly."""
-        customer_cancel_subscription(customer=workspace.customer)
-        with django_assert_num_queries(13):
-            response = rest_user_client.get(resource_url)
-        assert response.status_code == 200, response.data
-        assert response.data == {
-            "title": workspace.title,
-            "description": workspace.description,
-            "uuid": str(workspace.uuid),
-            "picture": None,
-            "team_members": [
-                {
-                    "user": {
-                        "email": team_member.user.email,
-                        "preferred_name": team_member.user.preferred_name,
-                        "profile_picture": None,
-                    },
-                    "uuid": str(team_member.uuid),
-                    "job_title": team_member.job_title,
-                    "role": "OWNER",
-                }
-            ],
-            "team_member_invites": [],
-            "projects": [],
-            "labels": [],
-            "quota": {
-                "workspace_status": "trial",
-                "chat_messages": {
-                    "current": 0,
-                    "limit": 0,
-                    "can_create_more": False,
-                },
-                "labels": {"current": 0, "limit": 10, "can_create_more": True},
-                "sub_tasks": {
-                    "current": 0,
-                    "limit": 1000,
-                    "can_create_more": True,
-                },
-                "tasks": {
-                    "current": 0,
-                    "limit": 1000,
-                    "can_create_more": True,
-                },
-                "task_labels": {
-                    "current": None,
-                    "limit": None,
-                    "can_create_more": True,
-                },
-                "projects": {
-                    "current": 0,
-                    "limit": 10,
-                    "can_create_more": True,
-                },
-                "sections": {
-                    "current": 0,
-                    "limit": 100,
-                    "can_create_more": True,
-                },
-                "team_members_and_invites": {
-                    "current": 1,
-                    "limit": 2,
-                    "can_create_more": True,
-                },
-            },
-        }
-'''
+        """Test getting the quota page."""
+        with django_assert_num_queries(12):
+            response = user_client.get(resource_url)
+            assert response.status_code == 200
+        # Only Team members and invites is in the list
+        content = response.content.decode()
+        # XXX Flaky HTML
+        assert "<td>Team members and invites" in content
+        assert "<td>Projects" not in content
+        assert "<td>Sections" not in content
+        assert "<td>Tasks" not in content
+        assert "<td>Labels" not in content
+        assert "<td>Sub tasks" not in content
+
+    def test_get_quota_page_no_subscription(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test getting the quota page."""
+        customer_cancel_subscription(customer=team_member.workspace.customer)
+        with django_assert_num_queries(17):
+            response = user_client.get(resource_url)
+            assert response.status_code == 200
+        # These quotas should be listed
+        # it's a bit tedious to test for the values since we're not giving back
+        # JSON anymore
+        content = response.content.decode()
+        # Flaky HTML
+        assert "<td>Team members and invites" in content
+        assert "<td>Projects" in content
+        assert "<td>Sections" in content
+        assert "<td>Tasks" in content
+        assert "<td>Labels" in content
+        assert "<td>Sub tasks" in content
