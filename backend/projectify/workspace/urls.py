@@ -10,11 +10,6 @@ from projectify.workspace.views.project import (
     ProjectCreate,
     ProjectReadUpdateDelete,
 )
-from projectify.workspace.views.section import (
-    SectionCreate,
-    SectionMove,
-    SectionReadUpdateDelete,
-)
 
 from .views.team_member import TeamMemberReadUpdateDelete
 
@@ -52,26 +47,7 @@ project_patterns = (
     ),
 )
 
-section_patterns = (
-    # Create
-    path(
-        "",
-        SectionCreate.as_view(),
-        name="create",
-    ),
-    # Read + Update + Delete
-    path(
-        "<uuid:section_uuid>",
-        SectionReadUpdateDelete.as_view(),
-        name="read-update-delete",
-    ),
-    # RPC
-    path(
-        "<uuid:section_uuid>/move",
-        SectionMove.as_view(),
-        name="move",
-    ),
-)
+section_patterns = ()
 
 task_patterns = ()
 
