@@ -325,9 +325,6 @@ class Base(Configuration):  # type:ignore
     # django-ratelimit
     RATELIMIT_ENABLE = True
 
-    # drf-spectacular
-    SERVE_SPECTACULAR = False
-
     # premail
     PREMAIL_PREVIEW = False
 
