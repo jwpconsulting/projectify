@@ -354,20 +354,20 @@ class TestLogInDjango:
         cache.clear()
         settings.RATELIMIT_ENABLE = True
 
-        for email in [faker.email() for _ in range(5)]:
-            response = client.post(
-                resource_url,
-                {"email": email, "password": "w"},
-                REMOTE_ADDR="127.0.0.1",
-            )
-            assert response.status_code == 400
+        has_429 = False
+        # I like deterministic tests. django-ratelimit does not work with
+        # sliding windows, but fixed windows. see
+        # https://github.com/jsocol/django-ratelimit/issues/64
+        for email in [faker.email() for _ in range(10)]:
+            data = {"email": email, "password": "w"}
+            response = client.post(resource_url, data=data)
+            if response.status_code == 429:
+                has_429 = True
+                break
+        else:
+            assert False, "Rate limit never hit"
 
-        response = client.post(
-            resource_url,
-            {"email": faker.email(), "password": "w"},
-            REMOTE_ADDR="127.0.0.1",
-        )
-        assert response.status_code == 429
+        assert has_429
 
 
 class TestPasswordResetRequestDjango:
