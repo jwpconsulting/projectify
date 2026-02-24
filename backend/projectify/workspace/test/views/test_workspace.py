@@ -13,6 +13,11 @@ from django.urls import reverse
 
 import pytest
 
+from projectify.corporate.models.coupon import Coupon
+from projectify.corporate.models.customer import Customer
+from projectify.corporate.selectors.customer import (
+    customer_check_active_for_workspace,
+)
 from projectify.corporate.services.stripe import customer_cancel_subscription
 from projectify.user.models.user import User
 from projectify.workspace.models.label import Label
@@ -570,7 +575,7 @@ class TestWorkspaceSettingsQuota:
         with django_assert_num_queries(12):
             response = user_client.get(resource_url)
             assert response.status_code == 200
-        # Only Team members and invites is in the list
+
         content = response.content.decode()
         # XXX Flaky HTML
         assert "<td>Team members and invites" in content
@@ -603,3 +608,61 @@ class TestWorkspaceSettingsQuota:
         assert "<td>Tasks" in content
         assert "<td>Labels" in content
         assert "<td>Sub tasks" in content
+
+
+class TestWorkspaceSettingsBillingCoupon:
+    """Test coupon redemption in workspace billing settings."""
+
+    @pytest.fixture
+    def resource_url(self, workspace: Workspace) -> str:
+        """Return URL to this view."""
+        return reverse("dashboard:workspaces:billing", args=(workspace.uuid,))
+
+    def test_redeeming_invalid_code(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        workspace: Workspace,
+        unpaid_customer: Customer,
+    ) -> None:
+        """Test that nothing bad happens with an invalid coupon code."""
+        active = customer_check_active_for_workspace(workspace=workspace)
+        assert active == "trial"
+        with django_assert_num_queries(22):
+            res = user_client.post(
+                resource_url,
+                data={"action": "redeem_coupon", "code": "foo"},
+            )
+            assert res.status_code == 400
+
+        assert "No coupon is available for this code" in res.content.decode()
+        unpaid_customer.refresh_from_db()
+        active = customer_check_active_for_workspace(workspace=workspace)
+        assert active == "trial"
+
+    def test_redeeming_valid_code(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        coupon: Coupon,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        workspace: Workspace,
+        unpaid_customer: Customer,
+    ) -> None:
+        """Test that workspace subscription is activated correctly."""
+        assert unpaid_customer.seats != 20
+        active = customer_check_active_for_workspace(workspace=workspace)
+        assert active == "trial"
+        with django_assert_num_queries(22):
+            data = {"action": "redeem_coupon", "code": coupon.code}
+            response = user_client.post(resource_url, data=data)
+            assert response.status_code == 302
+
+        unpaid_customer.refresh_from_db()
+        active = customer_check_active_for_workspace(workspace=workspace)
+        assert active == "full"
+        # Should be 20
+        assert unpaid_customer.seats == coupon.seats

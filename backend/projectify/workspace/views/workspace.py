@@ -878,6 +878,7 @@ def workspace_settings_billing(
                     request,
                     "workspace/workspace_settings_billing.html",
                     context=context,
+                    status=400,
                 )
             return redirect("dashboard:workspaces:billing", workspace.uuid)
         case _:
