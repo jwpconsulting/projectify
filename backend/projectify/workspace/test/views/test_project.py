@@ -1001,37 +1001,6 @@ class TestProjectReadUpdateDelete:
             ), response.data
 
 
-# Read (list)
-class TestProjectsArchivedList:
-    """Test ProjectsArchived list."""
-
-    @pytest.fixture
-    def resource_url(self, workspace: Workspace) -> str:
-        """Return URL to this view."""
-        return reverse(
-            "workspace:workspaces:archived-projects", args=(workspace.uuid,)
-        )
-
-    def test_authenticated(
-        self,
-        rest_user_client: APIClient,
-        resource_url: str,
-        team_member: TeamMember,
-        # In total 2 projects, but only one shall be returned
-        project: Project,
-        archived_project: Project,
-        django_assert_num_queries: DjangoAssertNumQueries,
-    ) -> None:
-        """Assert we can GET this view this while being logged in."""
-        del team_member
-        del project
-        with django_assert_num_queries(2):
-            response = rest_user_client.get(resource_url)
-            assert response.status_code == 200, response.content
-        assert len(response.data) == 1
-        assert response.data[0]["uuid"] == str(archived_project.uuid)
-
-
 # RPC
 class TestProjectArchive:
     """Test project archival."""

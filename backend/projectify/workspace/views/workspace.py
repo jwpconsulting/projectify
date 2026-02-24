@@ -13,20 +13,10 @@ from django.core import exceptions
 from django.db.models import QuerySet
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
-from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
-from django_ratelimit.decorators import ratelimit
-from rest_framework import parsers, serializers, views
-from rest_framework.exceptions import NotFound
-from rest_framework.request import Request
-from rest_framework.response import Response
-from rest_framework.status import (
-    HTTP_200_OK,
-    HTTP_201_CREATED,
-    HTTP_204_NO_CONTENT,
-)
+from rest_framework import serializers
 
 from projectify.corporate.selectors.customer import (
     customer_find_by_workspace_uuid,
@@ -41,7 +31,6 @@ from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 
-from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
 from ..models import Workspace
 from ..models.const import COLOR_MAP
 from ..models.label import Label
@@ -64,8 +53,6 @@ from ..selectors.workspace import (
     workspace_find_by_workspace_uuid,
     workspace_find_for_user,
 )
-from ..serializers.base import WorkspaceBaseSerializer
-from ..serializers.workspace import WorkspaceDetailSerializer
 from ..services.label import label_create, label_delete, label_update
 from ..services.team_member import (
     team_member_delete,
@@ -77,7 +64,7 @@ from ..services.team_member_invite import (
     team_member_invite_create,
     team_member_invite_delete,
 )
-from ..services.workspace import workspace_create, workspace_update
+from ..services.workspace import workspace_update
 from ..types import Quota
 
 logger = logging.getLogger(__name__)
@@ -954,207 +941,3 @@ def workspace_settings_quota(
     return render(
         request, "workspace/workspace_settings_quota.html", context=context
     )
-
-
-# Create
-class WorkspaceCreate(views.APIView):
-    """Create a workspace."""
-
-    class WorkspaceCreateSerializer(serializers.ModelSerializer[Workspace]):
-        """Accept title, description."""
-
-        class Meta:
-            """Meta."""
-
-            fields = "title", "description"
-            model = Workspace
-
-    def post(self, request: Request) -> Response:
-        """Create the workspace and add this user."""
-        serializer = self.WorkspaceCreateSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        workspace = workspace_create(
-            title=serializer.validated_data["title"],
-            description=serializer.validated_data.get("description"),
-            owner=self.request.user,
-        )
-        result = WorkspaceBaseSerializer(instance=workspace)
-        return Response(status=HTTP_201_CREATED, data=result.data)
-
-
-# Read
-class UserWorkspaces(views.APIView):
-    """List all workspaces for a user."""
-
-    class UserWorkspaceSerializer(serializers.ModelSerializer[Workspace]):
-        """Serialize a workspace for overview purposes."""
-
-        class Meta:
-            """Return only the bare minimum."""
-
-            fields = ("title", "uuid")
-            model = Workspace
-
-    def get(self, request: Request) -> Response:
-        """Handle GET."""
-        workspaces = workspace_find_for_user(who=request.user)
-        serializer = self.UserWorkspaceSerializer(
-            instance=workspaces, many=True
-        )
-        return Response(status=HTTP_200_OK, data=serializer.data)
-
-
-# Read + Update
-class WorkspaceReadUpdate(views.APIView):
-    """Workspace read and update view."""
-
-    def get(self, request: Request, workspace_uuid: UUID) -> Response:
-        """Handle GET."""
-        workspace = workspace_find_by_workspace_uuid(
-            who=request.user,
-            workspace_uuid=workspace_uuid,
-            qs=WorkspaceDetailQuerySet,
-        )
-        if workspace is None:
-            raise NotFound(_("Could not find workspace with this UUID"))
-        workspace.quota = workspace_get_all_quotas(workspace)
-        serializer = WorkspaceDetailSerializer(instance=workspace)
-        return Response(status=HTTP_200_OK, data=serializer.data)
-
-    class WorkspaceUpdateSerializer(serializers.ModelSerializer[Workspace]):
-        """Accept title, description."""
-
-        class Meta:
-            """Meta."""
-
-            fields = "title", "description"
-            model = Workspace
-
-    def put(self, request: Request, workspace_uuid: UUID) -> Response:
-        """Handle PUT."""
-        workspace = workspace_find_by_workspace_uuid(
-            who=request.user,
-            workspace_uuid=workspace_uuid,
-            qs=WorkspaceDetailQuerySet,
-        )
-        if workspace is None:
-            raise NotFound(_("Could not find workspace with this UUID"))
-
-        serializer = self.WorkspaceUpdateSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        workspace_update(
-            workspace=workspace,
-            title=serializer.validated_data["title"],
-            description=serializer.validated_data.get("description"),
-            who=self.request.user,
-            picture=None,
-        )
-        return Response(status=HTTP_200_OK, data=serializer.data)
-
-
-# Delete
-
-
-# RPC
-class WorkspacePictureUploadView(views.APIView):
-    """View that allows uploading a profile picture."""
-
-    parser_classes = (parsers.MultiPartParser,)
-
-    class WorkspacePictureUploadSerializer(serializers.Serializer):
-        """Deserialize an image attachment."""
-
-        file = serializers.ImageField(required=False)
-
-    def post(self, request: Request, workspace_uuid: UUID) -> Response:
-        """Handle POST."""
-        workspace = workspace_find_by_workspace_uuid(
-            who=request.user, workspace_uuid=workspace_uuid
-        )
-        if workspace is None:
-            raise NotFound(
-                _("Could not find workspace with UUID for picture upload")
-            )
-
-        serializer = self.WorkspacePictureUploadSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        file_obj = serializer.validated_data.get("file")
-        if file_obj is None:
-            workspace.picture.delete()
-        else:
-            workspace.picture = file_obj
-        workspace.save()
-        return Response(status=204)
-
-
-class InviteUserToWorkspace(views.APIView):
-    """Invite a user to a workspace."""
-
-    class InviteUserToWorkspaceSerializer(serializers.Serializer):
-        """Accept email."""
-
-        email = serializers.EmailField()
-
-    @method_decorator(ratelimit(key="user", rate="5/h"))
-    def post(self, request: Request, workspace_uuid: UUID) -> Response:
-        """Handle POST."""
-        workspace = workspace_find_by_workspace_uuid(
-            workspace_uuid=workspace_uuid, who=request.user
-        )
-        if workspace is None:
-            raise NotFound(_("No workspace found for this UUID"))
-
-        serializer = self.InviteUserToWorkspaceSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        email: str = serializer.validated_data["email"]
-        try:
-            team_member_invite_create(
-                who=request.user, workspace=workspace, email_or_user=email
-            )
-        except UserAlreadyInvited:
-            raise serializers.ValidationError(
-                {
-                    "email": _(
-                        "User with email {email} has already been invited to "
-                        "this workspace."
-                    ).format(email=email)
-                }
-            )
-        except UserAlreadyAdded:
-            raise serializers.ValidationError(
-                {
-                    "email": _(
-                        "User with email {email} has already been added to "
-                        "this workspace."
-                    ).format(email=email)
-                }
-            )
-        return Response(data=serializer.data, status=HTTP_201_CREATED)
-
-
-class UninviteUserFromWorkspace(views.APIView):
-    """Remove a user invitation."""
-
-    class UninviteUserFromWorkspaceSerializer(serializers.Serializer):
-        """Accept email."""
-
-        email = serializers.EmailField()
-
-    def post(self, request: Request, workspace_uuid: UUID) -> Response:
-        """Handle POST."""
-        workspace = workspace_find_by_workspace_uuid(
-            workspace_uuid=workspace_uuid, who=request.user
-        )
-        if workspace is None:
-            raise NotFound(_("No workspace found for this UUID"))
-        serializer = self.UninviteUserFromWorkspaceSerializer(
-            data=request.data
-        )
-        serializer.is_valid(raise_exception=True)
-        team_member_invite_delete(
-            workspace=workspace,
-            who=request.user,
-            email=serializer.validated_data["email"],
-        )
-        return Response(data=serializer.data, status=HTTP_204_NO_CONTENT)

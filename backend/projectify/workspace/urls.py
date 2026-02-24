@@ -25,62 +25,10 @@ from .views.task import (
     TaskRetrieveUpdateDelete,
 )
 from .views.team_member import TeamMemberReadUpdateDelete
-from .views.workspace import (
-    InviteUserToWorkspace,
-    UninviteUserFromWorkspace,
-    UserWorkspaces,
-    WorkspaceCreate,
-    WorkspacePictureUploadView,
-    WorkspaceReadUpdate,
-)
 
 app_name = "workspace"
 
-workspace_patterns = (
-    # Create
-    path(
-        "",
-        WorkspaceCreate.as_view(),
-        name="create",
-    ),
-    # Read + Update
-    path(
-        "<uuid:workspace_uuid>",
-        WorkspaceReadUpdate.as_view(),
-        name="read-update",
-    ),
-    # Read
-    path(
-        "user-workspaces/",
-        UserWorkspaces.as_view(),
-        name="user-workspaces",
-    ),
-    # Update
-    # Delete
-    # RPC
-    path(
-        "<uuid:workspace_uuid>/picture-upload",
-        WorkspacePictureUploadView.as_view(),
-        name="upload-picture",
-    ),
-    path(
-        "<uuid:workspace_uuid>/invite-team-member",
-        InviteUserToWorkspace.as_view(),
-        name="invite-team-member",
-    ),
-    path(
-        "<uuid:workspace_uuid>/uninvite-team-member",
-        UninviteUserFromWorkspace.as_view(),
-        name="uninvite-team-member",
-    ),
-    # Related
-    # Archived projects
-    path(
-        "<uuid:workspace_uuid>/archived-projects/",
-        ProjectArchivedList.as_view(),
-        name="archived-projects",
-    ),
-)
+workspace_patterns = ()
 
 team_member_patterns = (
     # Read + Update + Destroy
