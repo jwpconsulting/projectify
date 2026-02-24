@@ -7,7 +7,6 @@ from django.urls import include, path
 
 from projectify.workspace.views.project import (
     ProjectArchive,
-    ProjectArchivedList,
     ProjectCreate,
     ProjectReadUpdateDelete,
 )
@@ -17,12 +16,6 @@ from projectify.workspace.views.section import (
     SectionReadUpdateDelete,
 )
 
-from .views.task import (
-    TaskCreate,
-    TaskMoveAfterTask,
-    TaskMoveToSection,
-    TaskRetrieveUpdateDelete,
-)
 from .views.team_member import TeamMemberReadUpdateDelete
 
 app_name = "workspace"
@@ -80,32 +73,7 @@ section_patterns = (
     ),
 )
 
-task_patterns = (
-    # Create
-    path(
-        "",
-        TaskCreate.as_view(),
-        name="create",
-    ),
-    # Read, Update, Delete
-    path(
-        "<uuid:task_uuid>",
-        # TODO Rename all views to use standard CRUD terminology
-        TaskRetrieveUpdateDelete.as_view(),
-        name="read-update-delete",
-    ),
-    # RPC
-    path(
-        "<uuid:task_uuid>/move-to-section",
-        TaskMoveToSection.as_view(),
-        name="move-to-section",
-    ),
-    path(
-        "<uuid:task_uuid>/move-after-task",
-        TaskMoveAfterTask.as_view(),
-        name="move-after-task",
-    ),
-)
+task_patterns = ()
 
 label_patterns = ()
 

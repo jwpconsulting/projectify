@@ -17,11 +17,8 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods, require_POST
 
-from rest_framework import serializers, status
 from rest_framework.exceptions import NotFound
 from rest_framework.request import Request
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from projectify.lib.htmx import HttpResponseClientRedirect
 from projectify.lib.types import AuthenticatedHttpRequest
@@ -30,8 +27,6 @@ from projectify.workspace.selectors.team_member import (
     team_member_find_for_workspace,
 )
 
-from ..models.label import Label
-from ..models.section import Section
 from ..models.task import Task
 from ..models.workspace import Workspace
 from ..selectors.section import (
@@ -40,16 +35,7 @@ from ..selectors.section import (
 )
 from ..selectors.task import TaskDetailQuerySet, task_find_by_task_uuid
 from ..selectors.workspace import workspace_find_for_user
-from ..serializers.task_detail import (
-    TaskCreateSerializer,
-    TaskDetailSerializer,
-    TaskUpdateSerializer,
-)
-from ..services.sub_task import (
-    ValidatedData,
-    ValidatedDatum,
-    ValidatedDatumWithUuid,
-)
+from ..services.sub_task import ValidatedDatum, ValidatedDatumWithUuid
 from ..services.task import (
     task_create_nested,
     task_delete,
@@ -665,169 +651,3 @@ def task_delete_view(
     task = get_object(request, task_uuid)
     task_delete(who=request.user, task=task)
     return HttpResponseClientRedirect(task.section.get_absolute_url())
-
-
-# Create
-class TaskCreate(APIView):
-    """Create a task."""
-
-    def post(self, request: Request) -> Response:
-        """Handle POST."""
-        serializer = TaskCreateSerializer(
-            data=request.data, context={"request": request}
-        )
-        serializer.is_valid(raise_exception=True)
-        validated_data = serializer.validated_data
-
-        section: Section = validated_data["section"]
-
-        sub_tasks: ValidatedData
-        if "sub_tasks" in validated_data:
-            sub_tasks = validated_data.pop("sub_tasks")
-        else:
-            sub_tasks = {"create_sub_tasks": [], "update_sub_tasks": []}
-
-        labels: list[Label] = validated_data.pop("labels")
-        task = task_create_nested(
-            who=request.user,
-            section=section,
-            title=validated_data["title"],
-            description=validated_data.get("description"),
-            assignee=validated_data.get("assignee"),
-            due_date=validated_data.get("due_date"),
-            labels=labels,
-            sub_tasks=sub_tasks,
-        )
-        output_serializer = TaskDetailSerializer(instance=task)
-        return Response(
-            data=output_serializer.data, status=status.HTTP_201_CREATED
-        )
-
-
-# Read + Update + Delete
-class TaskRetrieveUpdateDelete(APIView):
-    """Retrieve a task."""
-
-    def get(self, request: Request, task_uuid: UUID) -> Response:
-        """Handle GET."""
-        instance = get_object(request, task_uuid)
-        serializer = TaskDetailSerializer(instance=instance)
-        return Response(data=serializer.data)
-
-    def put(self, request: Request, task_uuid: UUID) -> Response:
-        """
-        Override update behavior. Return using different serializer.
-
-        The idea is that we accept abbreviated nested fields, but return
-        the data whole. (ws board section, sub tasks, labels, etc.)
-        """
-        # Copied from
-        # https://github.com/encode/django-rest-framework/blob/d32346bae55f3e4718a185fb60e9f7a28e389c85/rest_framework/mixins.py#L65
-        # We probably don't have to get the full object here!
-        instance = get_object(request, task_uuid)
-        serializer = TaskUpdateSerializer(
-            instance,
-            data=request.data,
-            # Mild code duplication from
-            # https://github.com/encode/django-rest-framework/blob/d32346bae55f3e4718a185fb60e9f7a28e389c85/rest_framework/generics.py#L113
-            # :)
-            context={"request": request},
-        )
-        serializer.is_valid(raise_exception=True)
-        validated_data = serializer.validated_data
-        labels: list[Label] = validated_data.pop("labels")
-
-        sub_tasks: ValidatedData
-        if "sub_tasks" in validated_data:
-            sub_tasks = validated_data.pop("sub_tasks")
-        else:
-            sub_tasks = {"create_sub_tasks": [], "update_sub_tasks": []}
-
-        task_update_nested(
-            who=request.user,
-            task=instance,
-            title=validated_data["title"],
-            description=validated_data.get("description"),
-            assignee=validated_data.get("assignee"),
-            due_date=validated_data.get("due_date"),
-            labels=labels,
-            sub_tasks=sub_tasks,
-        )
-
-        instance = get_object(request, task_uuid)
-        response_serializer = TaskDetailSerializer(instance=instance)
-        return Response(
-            status=status.HTTP_200_OK, data=response_serializer.data
-        )
-
-    def delete(self, request: Request, task_uuid: UUID) -> Response:
-        """Delete task."""
-        instance = get_object(request, task_uuid)
-        task_delete(task=instance, who=self.request.user)
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-# RPC
-class TaskMoveToSection(APIView):
-    """Move a task to the beginning of a section."""
-
-    class TaskMoveToSectionSerializer(serializers.Serializer):
-        """Accept the target section uuid."""
-
-        section_uuid = serializers.UUIDField()
-
-    def post(self, request: Request, task_uuid: UUID) -> Response:
-        """Process the request."""
-        user = request.user
-        serializer = self.TaskMoveToSectionSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-        task = task_find_by_task_uuid(who=user, task_uuid=task_uuid)
-        if task is None:
-            raise NotFound(_("Task for this UUID not found"))
-        section = section_find_for_user_and_uuid(
-            section_uuid=data["section_uuid"],
-            user=user,
-        )
-        if section is None:
-            raise serializers.ValidationError(
-                {"section_uuid": _("No section was found for the given uuid")}
-            )
-        task_move_after(task=task, who=user, after=section)
-        task = task_find_by_task_uuid(
-            who=user, task_uuid=task_uuid, qs=TaskDetailQuerySet
-        )
-        output_serializer = TaskDetailSerializer(instance=task)
-        return Response(output_serializer.data, status=status.HTTP_200_OK)
-
-
-# TODO inaccuracy: Might want to be able to move in front of a given task as
-# well
-class TaskMoveAfterTask(APIView):
-    """Move a task right behind another task."""
-
-    class TaskMoveAfterTaskSerializer(serializers.Serializer):
-        """Accept a task uuid after which this task should be moved."""
-
-        task_uuid = serializers.UUIDField()
-
-    def post(self, request: Request, task_uuid: UUID) -> Response:
-        """Process the request."""
-        user = request.user
-        serializer = self.TaskMoveAfterTaskSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-        task = task_find_by_task_uuid(who=user, task_uuid=task_uuid)
-        if task is None:
-            raise NotFound(_("Task for this UUID not found"))
-        after = task_find_by_task_uuid(task_uuid=data["task_uuid"], who=user)
-        if after is None:
-            raise serializers.ValidationError(
-                {"after_task_uuid": _("No task was found for the given uuid")}
-            )
-        task_move_after(task=task, who=user, after=after)
-        task = task_find_by_task_uuid(
-            who=user, task_uuid=task_uuid, qs=TaskDetailQuerySet
-        )
-        output_serializer = TaskDetailSerializer(instance=task)
-        return Response(output_serializer.data, status=status.HTTP_200_OK)
