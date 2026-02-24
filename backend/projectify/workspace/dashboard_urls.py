@@ -2,6 +2,7 @@
 #
 # SPDX-FileCopyrightText: 2024 JWP Consulting GK
 """Workspace URLs for dashboard."""
+# TODO rename to projectify.workspace.urls
 
 from django.urls import include, path
 
@@ -46,6 +47,8 @@ from projectify.workspace.views.workspace import (
     workspace_view,
 )
 
+# TODO rename to workspace
+# app_name = "workspace"
 app_name = "dashboard"
 workspace_patterns = (
     # HTML

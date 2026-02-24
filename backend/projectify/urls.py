@@ -35,12 +35,13 @@ urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     # TODO may I use projectify.admin.admin.urls here?
     path("admin/", admin.site.urls),
     path("user/", include("projectify.user.urls")),
-    path("workspace/", include("projectify.workspace.urls")),
     path("corporate/", include("projectify.corporate.urls")),
     path(
         "icons/<str:icon>/<str:color>.svg", colored_icon, name="colored-icon"
     ),
     # New Django frontend urls
+    # TODO make this
+    # path("workspace/", include("projectify.workspace.urls")),
     path(
         "dashboard/",
         include("projectify.workspace.dashboard_urls"),
