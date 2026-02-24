@@ -14,9 +14,6 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
 
-from projectify.lib.error_schema import DeriveSchema
-from projectify.lib.schema import extend_schema
-
 from ..selectors.customer import customer_find_by_workspace_uuid
 from ..serializers import CustomerSerializer
 from ..services.customer import (
@@ -30,9 +27,6 @@ logger = logging.getLogger(__name__)
 class WorkspaceCustomerRetrieve(APIView):
     """Retrieve customer for a workspace."""
 
-    @extend_schema(
-        responses={200: CustomerSerializer},
-    )
     def get(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle GET."""
         user = request.user
@@ -68,13 +62,6 @@ class WorkspaceCheckoutSessionCreate(APIView):
         # was only needed if a stripe url is constructed client side
         url = serializers.URLField()
 
-    @extend_schema(
-        request=WorkspaceCheckoutSessionCreateInputSerializer,
-        responses={
-            200: WorkspaceCheckoutSessionCreateOutputSerializer,
-            400: DeriveSchema,
-        },
-    )
     def post(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle POST."""
         customer = customer_find_by_workspace_uuid(
@@ -112,10 +99,6 @@ class WorkspaceBillingPortalSessionCreate(APIView):
 
         url = serializers.URLField()
 
-    @extend_schema(
-        request=None,
-        responses={200: WorkspaceBillingPortalSessionCreateOutputSerializer},
-    )
     def post(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle POST."""
         customer = customer_find_by_workspace_uuid(

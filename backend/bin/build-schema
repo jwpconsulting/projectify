@@ -1,8 +1,0 @@
-#!/usr/bin/env sh
-# SPDX-License-Identifier: AGPL-3.0-or-later
-# SPDX-FileCopyrightText: 2024 JWP Consulting GK
-#
-# Build an up-to-date OpenAPI schema for the Projectify backend using
-# drf-spectacular
-set -e
-./manage.py spectacular --file schema/schema.yml --fail-on-warn --validate

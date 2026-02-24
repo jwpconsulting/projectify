@@ -112,33 +112,5 @@ if settings.DEBUG_AUTH:
         path("test/", include("projectify.user.testing_urls")),
     ]
 
-if settings.SERVE_SPECTACULAR:
-    try:
-        from drf_spectacular.views import (
-            SpectacularAPIView,
-            SpectacularRedocView,
-            SpectacularSwaggerView,
-        )
-    except ImportError as e:
-        raise RuntimeError(
-            "drf_spectacular was not found. Did you enable SERVE_SPECTACULAR "
-            "while running in production?"
-        ) from e
-
-    urlpatterns = (
-        *urlpatterns,
-        path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
-        path(
-            "api/schema/swagger-ui/",
-            SpectacularSwaggerView.as_view(url_name="schema"),
-            name="swagger-ui",
-        ),
-        path(
-            "api/schema/redoc/",
-            SpectacularRedocView.as_view(url_name="schema"),
-            name="redoc",
-        ),
-    )
-
 
 __all__ = ("handler404", "handler500", "handler403")

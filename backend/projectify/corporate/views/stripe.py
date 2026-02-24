@@ -23,7 +23,6 @@ from rest_framework.status import (
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
 
-from projectify.lib.schema import extend_schema
 from projectify.lib.settings import get_settings
 
 from ..lib.stripe import stripe_client
@@ -317,11 +316,6 @@ def _handle_event(
     return "ok"
 
 
-@extend_schema(
-    # TODO request schema
-    request=None,
-    responses={200: None, 400: None},
-)
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes([AllowAny])

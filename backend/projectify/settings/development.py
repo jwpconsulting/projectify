@@ -16,7 +16,6 @@ except ImportError as e:
     ) from e
 
 from .base import Base
-from .spectacular import SpectacularSettings
 
 
 def add_dev_middleware(
@@ -45,7 +44,7 @@ def environ_get_or_warn(key: str) -> Optional[str]:
     return None
 
 
-class Development(SpectacularSettings, Base):
+class Development(Base):
     """Development configuration."""
 
     SITE_TITLE = "Local Development"
@@ -57,8 +56,6 @@ class Development(SpectacularSettings, Base):
         # Needs to be there before django.contrib.staticfiles
         "daphne",
         *Base.INSTALLED_APPS,
-        "drf_spectacular",
-        "drf_spectacular_sidecar",
         "django_browser_reload",
         "django_extensions",
     )
@@ -137,12 +134,6 @@ class Development(SpectacularSettings, Base):
     SESSION_COOKIE_SECURE = False
     # TODO remove after Svelte frontend is gone
     SESSION_COOKIE_SAMESITE = "Lax"
-
-    # Rest Framework settings for drf-spectacular
-    REST_FRAMEWORK = {
-        **Base.REST_FRAMEWORK,
-        "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    }
 
     # Admins for local logging
     ADMINS = [["Local user", "user@localhost"]]

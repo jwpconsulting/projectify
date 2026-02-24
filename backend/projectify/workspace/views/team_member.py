@@ -13,8 +13,6 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
-from projectify.lib.error_schema import DeriveSchema
-from projectify.lib.schema import extend_schema
 from projectify.user.serializers import UserSerializer
 from projectify.workspace.selectors.team_member import (
     team_member_find_by_team_member_uuid,
@@ -53,9 +51,6 @@ class TeamMemberReadUpdateDelete(views.APIView):
                 "job_title": {"required": True},
             }
 
-    @extend_schema(
-        responses={200: TeamMemberDetailSerializer},
-    )
     def get(self, request: Request, team_member_uuid: UUID) -> Response:
         """Handle GET."""
         team_member = team_member_find_by_team_member_uuid(
@@ -77,10 +72,6 @@ class TeamMemberReadUpdateDelete(views.APIView):
             fields = "job_title", "role"
             model = TeamMember
 
-    @extend_schema(
-        request=TeamMemberUpdateSerializer,
-        responses={200: TeamMemberDetailSerializer, 400: DeriveSchema},
-    )
     def put(self, request: Request, team_member_uuid: UUID) -> Response:
         """Handle PUT."""
         team_member = team_member_find_by_team_member_uuid(
@@ -108,9 +99,6 @@ class TeamMemberReadUpdateDelete(views.APIView):
         )
         return Response(status=HTTP_200_OK, data=output_serializer.data)
 
-    @extend_schema(
-        responses={204: None},
-    )
     def delete(self, request: Request, team_member_uuid: UUID) -> Response:
         """Handle DELETE."""
         team_member = team_member_find_by_team_member_uuid(

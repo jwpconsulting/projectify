@@ -11,16 +11,10 @@ except ImportError as e:
     ) from e
 
 from .base import Base
-from .spectacular import SpectacularSettings
 
 
-class Test(SpectacularSettings, Base):
+class Test(Base):
     """Test configuration."""
-
-    INSTALLED_APPS = (
-        *Base.INSTALLED_APPS,
-        "drf_spectacular",
-    )
 
     SITE_TITLE = "Projectify Pytest"
 
@@ -38,12 +32,6 @@ class Test(SpectacularSettings, Base):
 
     # django-ratelimit
     RATELIMIT_ENABLE = False
-
-    # Rest Framework settings for drf-spectacular
-    REST_FRAMEWORK = {
-        **Base.REST_FRAMEWORK,
-        "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    }
 
     # Enable premail preview for testing
     PREMAIL_PREVIEW = True

@@ -51,7 +51,6 @@ django-debug-toolbar = "^4.3.0"
 
 ipython = "~8.22"
 ruff = "0.6.1"
-drf-spectacular = {extras = ["sidecar"], version = "^0.27.2"}
 selenium = "^4.40.0"
 
 [tool.poetry.group.test]
@@ -203,15 +202,10 @@ exclude = [
     "projectify/premail/views.py",
     "projectify/premail/test/test_views.py",
     "projectify/premail/test/test_emails.py",
-    # TODO typing for spectacular is underspecified
-    "projectify/lib/error_schema.py",
     # TODO false positive in base_url override
     "projectify/storage.py",
     # Nix build
     "result",
-    # spectacular classes are being overriden here, we avoid having
-    # to conditonally ignore no-redef (mypy) or reportAssignmentType (pyright)
-    "projectify/lib/schema.py",
     # Pyright reports a few unknown types here that mypy doesn't catch
     "projectify/workspace/views/task.py",
     # Pyright thinks that Deferrable.DEFERRED, a string, is not assignable
