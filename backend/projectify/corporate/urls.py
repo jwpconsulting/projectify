@@ -8,19 +8,12 @@ from django.urls import include, path
 from projectify.corporate.views.customer import (
     WorkspaceBillingPortalSessionCreate,
     WorkspaceCheckoutSessionCreate,
-    WorkspaceCustomerRetrieve,
 )
 from projectify.corporate.views.stripe import stripe_webhook
 
 app_name = "corporate"
 
 customer_url_patterns = (
-    # Read
-    path(
-        "<uuid:workspace_uuid>/customer",
-        WorkspaceCustomerRetrieve.as_view(),
-        name="read",
-    ),
     # RPC
     path(
         "<uuid:workspace_uuid>/create-checkout-session",

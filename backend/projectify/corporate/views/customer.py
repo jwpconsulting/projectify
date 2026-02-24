@@ -15,31 +15,12 @@ from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
 
 from ..selectors.customer import customer_find_by_workspace_uuid
-from ..serializers import CustomerSerializer
 from ..services.customer import (
     create_billing_portal_session_for_customer,
     customer_create_stripe_checkout_session,
 )
 
 logger = logging.getLogger(__name__)
-
-
-class WorkspaceCustomerRetrieve(APIView):
-    """Retrieve customer for a workspace."""
-
-    def get(self, request: Request, workspace_uuid: UUID) -> Response:
-        """Handle GET."""
-        user = request.user
-        customer = customer_find_by_workspace_uuid(
-            who=user,
-            workspace_uuid=workspace_uuid,
-        )
-        if customer is None:
-            raise exceptions.NotFound(
-                _("No customer found for this workspace uuid")
-            )
-        serializer = CustomerSerializer(instance=customer)
-        return Response(status=HTTP_200_OK, data=serializer.data)
 
 
 # RPC
