@@ -13,6 +13,20 @@ except ImportError as e:
 from .base import Base
 
 
+def clean_middleware(middleware: list[str]) -> list[str]:
+    """
+    Remove whitenoise from middleware list.
+
+    Whitenoise needs you to create the staticfiles directory,
+    which isn't too relevant for testing.
+    """
+    return [
+        m
+        for m in middleware
+        if m not in ["whitenoise.middleware.WhiteNoiseMiddleware"]
+    ]
+
+
 class Test(Base):
     """Test configuration."""
 
@@ -22,6 +36,9 @@ class Test(Base):
     SECRET_KEY = "test"
 
     FRONTEND_URL = "https://example.com"
+
+    # Middleware
+    MIDDLEWARE = clean_middleware(Base.MIDDLEWARE)
 
     # Email
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
