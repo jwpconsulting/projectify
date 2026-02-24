@@ -130,6 +130,7 @@ def create_billing_portal_session_for_customer(
     """Create a billing session for a user given a workspace uuid."""
     validate_perm("corporate.can_update_customer", who, customer.workspace)
     customer_id = customer.stripe_customer_id
+    # XXX we may need to validate whether the user has an active subscription
     if customer_id is None:
         raise serializers.ValidationError(
             _(

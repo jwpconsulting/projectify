@@ -51,5 +51,6 @@ def customer_update_seats(*, customer: Customer, seats: int) -> None:
 
 def customer_cancel_subscription(*, customer: Customer) -> None:
     """Cancel a customer's subscription."""
+    # TODO investigate whether we need to reset the stripe customer id here
     customer.subscription_status = CustomerSubscriptionStatus.CANCELLED
     customer.save()

@@ -40,7 +40,11 @@ class TestCouponCreate:
 class TestCouponRedeem:
     """Test redeeming coupons."""
 
-    def test_invalid_code(self, team_member: TeamMember) -> None:
+    def test_invalid_code(
+        self,
+        team_member: TeamMember,
+        unpaid_customer: Customer,
+    ) -> None:
         """Make sure nothing bad happens with an invalid code."""
         assert (
             customer_check_active_for_workspace(
@@ -63,7 +67,10 @@ class TestCouponRedeem:
         )
 
     def test_redeem_twice_different_workspace(
-        self, coupon: Coupon, team_member: TeamMember
+        self,
+        coupon: Coupon,
+        team_member: TeamMember,
+        unpaid_customer: Customer,
     ) -> None:
         """Make sure we can't redeem a code twice."""
         user = team_member.user
@@ -104,6 +111,7 @@ class TestCouponRedeem:
         coupon: Coupon,
         team_member: TeamMember,
         superuser: User,
+        unpaid_customer: Customer,
     ) -> None:
         """Make sure we can't redeem two codes for a workspace."""
         workspace = team_member.workspace

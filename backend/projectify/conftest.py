@@ -31,7 +31,13 @@ import pytest
 from faker import Faker
 from rest_framework.test import APIClient
 
-from projectify.corporate.services.stripe import customer_activate_subscription
+from projectify.corporate.models import Customer
+from projectify.corporate.models.coupon import Coupon
+from projectify.corporate.services.coupon import coupon_create
+from projectify.corporate.services.stripe import (
+    customer_activate_subscription,
+    customer_cancel_subscription,
+)
 from projectify.user import models as user_models
 from projectify.user.models import User, UserInvite
 from projectify.user.services.internal import (
@@ -593,3 +599,73 @@ def chat_message(
         task=task,
         text=faker.paragraph(),
     )
+
+
+@pytest.fixture
+def stripe_publishable_key(faker: Faker) -> str:
+    """Return a convincing looking stripe publishable key."""
+    key: str = faker.hexify(
+        "pk_test_^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    )
+    return key
+
+
+@pytest.fixture
+def stripe_secret_key(faker: Faker) -> str:
+    """Return a convincing looking stripe secret key."""
+    key: str = faker.hexify(
+        "sk_test_^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    )
+    return key
+
+
+@pytest.fixture
+def stripe_price_object(faker: Faker) -> str:
+    """Return a convincing looking stripe price object."""
+    key: str = faker.hexify("price_^^^^^^^^^^^^^^^^^^^^^^^^")
+    return key
+
+
+@pytest.fixture
+def stripe_endpoint_secret(faker: Faker) -> str:
+    """Return a convincing looking stripe endpoint secret."""
+    key: str = faker.hexify(
+        "whsec_^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    )
+    return key
+
+
+@pytest.fixture
+def unpaid_customer(workspace: Workspace) -> Customer:
+    """Create customer."""
+    customer_cancel_subscription(customer=workspace.customer)
+    # Workaround, since activating a subscription sets the stripe customer id
+    workspace.customer.stripe_customer_id = None
+    workspace.customer.save()
+    return workspace.customer
+
+
+@pytest.fixture
+def stripe_customer_id(faker: Faker) -> str:
+    """Return a convincing stripe customer id."""
+    stripe_customer_id: str = faker.bothify("stripe_###???###")
+    return stripe_customer_id
+
+
+@pytest.fixture
+def paid_customer(
+    unpaid_customer: Customer, stripe_customer_id: str
+) -> Customer:
+    """Create customer."""
+    customer_activate_subscription(
+        customer=unpaid_customer,
+        stripe_customer_id=stripe_customer_id,
+        seats=1337,
+    )
+    return unpaid_customer
+
+
+@pytest.fixture
+def coupon(superuser: User) -> Coupon:
+    """Create a working coupon."""
+    return coupon_create(who=superuser, seats=20, prefix="i-am-a-test-coupon")
