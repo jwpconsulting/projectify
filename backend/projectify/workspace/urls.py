@@ -5,7 +5,6 @@
 
 from django.urls import include, path
 
-from projectify.workspace.views.label import LabelCreate, LabelUpdateDelete
 from projectify.workspace.views.project import (
     ProjectArchive,
     ProjectArchivedList,
@@ -108,22 +107,7 @@ task_patterns = (
     ),
 )
 
-label_patterns = (
-    # Create
-    path(
-        "",
-        LabelCreate.as_view(),
-        name="create",
-    ),
-    # Read
-    # Update
-    path(
-        "<uuid:label_uuid>",
-        LabelUpdateDelete.as_view(),
-        name="update-delete",
-    ),
-    # Delete
-)
+label_patterns = ()
 
 urlpatterns = (
     # Workspace
