@@ -17,8 +17,11 @@ from typing import Union
 
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
 from django.urls import URLPattern, URLResolver, include, path
 from django.views.generic import TemplateView
+
+from projectify.storefront.sitemap import StorefrontSitemap
 
 from .lib.settings import get_settings
 from .lib.views import (
@@ -30,6 +33,10 @@ from .lib.views import (
 )
 
 settings = get_settings()
+
+sitemaps = {
+    "storefront": StorefrontSitemap,
+}
 
 urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     # TODO may I use projectify.admin.admin.urls here?
@@ -67,6 +74,12 @@ urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
             template_name="well-known-security.txt",
             content_type="text/plain; charset=UTF8",
         ),
+    ),
+    path(
+        "sitemap.xml",
+        sitemap,
+        {"sitemaps": sitemaps},
+        name="django.contrib.sitemaps.views.sitemap",
     ),
 )
 

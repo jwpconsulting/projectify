@@ -119,6 +119,7 @@ class Base(Configuration):  # type:ignore
         "django.contrib.contenttypes",
         "django.contrib.sessions",
         "django.contrib.messages",
+        "django.contrib.sitemaps",
         "django.contrib.staticfiles",
     )
 
