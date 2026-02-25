@@ -93,8 +93,9 @@ line-length=79
 extend-exclude = [
     # Nix build
     "result/",
-    # Vendored in django-configurations
+    # Vendored in django-configurations, rules
     "configurations",
+    "rules",
 ]
 
 [tool.ruff.lint]
@@ -138,6 +139,9 @@ section-order = [
     "local-folder",
 ]
 split-on-trailing-comma = false
+known-third-party = [
+    "rules"
+]
 known-first-party = [
     "configurations",
     "projectify",
@@ -232,6 +236,7 @@ exclude = [
     "projectify/workspace/models/sub_task.py",
     # Vendored in
     "configurations/**/*.py",
+    "rules/predicates.py",
 
 ]
 # Mypy doesn't complain about these, so it's fine

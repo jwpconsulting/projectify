@@ -13,7 +13,7 @@ class RulesConfig(AppConfig):
 class AutodiscoverRulesConfig(RulesConfig):
     default = False
 
-    def ready(self):
+    def ready(self) -> None:
         from django.utils.module_loading import autodiscover_modules
 
         autodiscover_modules("rules")
