@@ -24,7 +24,7 @@
                 {% for project in projects %}
                     <tr class="contents">
                         <td class="flex items-center gap-2 overflow-hidden">
-                            {% has_perm "workspace.update_project" user project as can_update_project %}
+                            {% has_perm "workspace.update_project" user workspace as can_update_project %}
                             {% if can_update_project %}
                                 <a href="{% url 'dashboard:projects:update' project_uuid=project.uuid %}"
                                    class="flex items-center gap-1 text-primary truncate">
@@ -37,7 +37,7 @@
                         </td>
                         <td class="flex items-center"></td>
                         <td class="flex gap-4 items-center">
-                            {% has_perm "workspace.update_project" user project as can_update_project %}
+                            {% has_perm "workspace.update_project" user workspace as can_update_project %}
                             {% if can_update_project %}
                                 {# XXX limitation: This only works if javascript is enabled #}
                                 <form class="w-full"
@@ -65,7 +65,7 @@
                     <tr class="contents">
                         <td class="flex items-center">{{ archived_project }}</td>
                         <td class="flex items-center">
-                            {% has_perm "workspace.update_project" user project as can_update_project %}
+                            {% has_perm "workspace.update_project" user workspace as can_update_project %}
                             {% if can_update_project %}
                                 <form hx-post="{% url 'dashboard:projects:recover' project_uuid=archived_project.uuid %}"
                                       hx-confirm="{% blocktranslate with project=archived_project.title %}Are you sure you want to recover the '{{ project }}' project?{% endblocktranslate %}"
@@ -77,7 +77,7 @@
                             {% endif %}
                         </td>
                         <td class="flex items-center">
-                            {% has_perm "workspace.delete_project" user project as can_delete_project %}
+                            {% has_perm "workspace.delete_project" user workspace as can_delete_project %}
                             {% if can_delete_project %}
                                 <form hx-post="{% url 'dashboard:projects:delete' project_uuid=archived_project.uuid %}"
                                       hx-confirm="{% blocktranslate with project=archived_project.title %}Are you sure you want to permanently delete the '{{ project }}' project? This action cannot be undone. {% endblocktranslate %}"

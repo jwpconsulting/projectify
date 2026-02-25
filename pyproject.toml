@@ -24,6 +24,7 @@ version = "2025.12.4"
 packages = [
     { include = "projectify" },
     { include = "configurations" },
+    { include = "rules" },
 ]
 exclude = [
     "projectify/*/test",
@@ -44,10 +45,10 @@ gunicorn = "^23"
 pillow = "^11"
 psycopg = {version = "^3.1.18", extras = ["c"]}
 python = "~3.12.12"
-rules = "^3.3"
 stripe = "^8"
 whitenoise = "~6.2.0"
 django-ratelimit = "^4.1.0"
+django-tailwind = {extras = ["reload"], version = "^3.8.0"}
 django-markdownify = "^0.9.5"
 
 [tool.poetry.group.dev]
@@ -62,7 +63,6 @@ django-debug-toolbar = "^4.3.0"
 ipython = "~8.22"
 ruff = "0.6.1"
 selenium = "^4.40.0"
-django-tailwind = {extras = ["reload"], version = "^3.8.0"}
 
 [tool.poetry.group.test]
 
@@ -80,9 +80,6 @@ types-requests = "^2.32.0.20240712"
 djlint = "^1.36.1"
 types-markdown = "^3.10.2.20260211"
 reuse = "^6.2.0"
-# Duplicated from test
-# TODO find a way to de-duplicate it
-django-tailwind = {extras = ["reload"], version = "^3.8.0"}
 
 [build-system]
 requires = ["poetry-core"]
@@ -93,8 +90,9 @@ line-length=79
 extend-exclude = [
     # Nix build
     "result/",
-    # Vendored in django-configurations
+    # Vendored in django-configurations, rules
     "configurations",
+    "rules",
 ]
 
 [tool.ruff.lint]
@@ -138,6 +136,9 @@ section-order = [
     "local-folder",
 ]
 split-on-trailing-comma = false
+known-third-party = [
+    "rules"
+]
 known-first-party = [
     "configurations",
     "projectify",
@@ -232,6 +233,7 @@ exclude = [
     "projectify/workspace/models/sub_task.py",
     # Vendored in
     "configurations/**/*.py",
+    "rules/predicates.py",
 
 ]
 # Mypy doesn't complain about these, so it's fine

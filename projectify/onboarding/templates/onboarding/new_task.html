@@ -55,8 +55,7 @@
             </div>
         </div>
     </div>
-</div>
-<script nonce="{{ csp_nonce }}">
+    <script nonce="{{ csp_nonce }}">
         (() => {
             const titleInput = document.querySelector('input[name="title"]');
             if (!titleInput) { return; }
@@ -72,5 +71,5 @@
                 taskTitle.textContent = title;
             });
         })();
-</script>
+    </script>
 {% endblock onboarding_preview %}

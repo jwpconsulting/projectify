@@ -3,8 +3,9 @@
 # SPDX-FileCopyrightText: 2021-2024 JWP Consulting GK
 """User model in user app."""
 
-from typing import Any, ClassVar
+from typing import Any, ClassVar, Optional
 
+from django.contrib.auth import models as auth_models
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -70,6 +71,11 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     def __str__(self) -> str:
         """Return printable user name."""
         return self.preferred_name or self.email
+
+    def has_perm(self, perm: str, obj: Optional[object] = None) -> bool:
+        """Override and ignore is_superuser."""
+        result: bool = auth_models._user_has_perm(self, perm, obj)  # type: ignore
+        return result
 
     class Meta(BaseModel.Meta):
         """Add constraints."""
