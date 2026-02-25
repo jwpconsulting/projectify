@@ -7,8 +7,7 @@
     {% translate "Add your first project - Projectify" %}
 {% endblock title %}
 {% block onboarding_content %}
-    <form method="post"
-          class="col-span-1 flex shrink grow flex-col gap-16 px-12 py-20 pb-8">
+    <form method="post" class="flex shrink grow flex-col gap-16">
         {% csrf_token %}
         <div class="flex flex-col gap-4">
             <h1 class="min-w-fit max-w-lg text-4xl font-bold">{% trans "Add your first project" %}</h1>
@@ -28,23 +27,23 @@
         {% include "projectify/forms/submit.html" with text=_("Continue") %}
         {% include "onboarding/common/step_counter.html" with step=2 step_count=5 %}
     </form>
-    <div class="hidden h-full min-w-0 shrink grow flex-col items-center justify-center overflow-hidden bg-background md:flex xl:col-span-2 p-4">
-        <div class="py-2 ring-4 gap-2 flex flex-col ring-border bg-foreground"
-             inert>
-            <div class="mx-4 px-4 flex items-center gap-2 font-bold border rounded p-2">
-                {% icon "briefcase" size=4 %}
-                <span class="max-w-xs truncate">{{ workspace.title }}</span>
-            </div>
-            <div class="mx-4 flex flex-row items-center justify-start text-utility gap-2">
-                {% icon "folder" size=4 %}
-                <div class="font-bold mr-auto">{% trans "Projects" %}</div>
-                {% icon "chevron-up" size=4 %}
-            </div>
-            <div class="flex w-full flex-row items-center gap-1 px-4 py-1">
-                {% icon "folder" size=4 %}
-                {% translate "Your project" as project_title_default %}
-                <div id="project-title" class="max-w-xs line-clamp-1 min-w-0 font-bold">{{ project_title_default }}</div>
-            </div>
+{% endblock onboarding_content %}
+{% block onboarding_preview %}
+    <div class="py-2 ring-4 gap-2 flex flex-col ring-border bg-foreground"
+         inert>
+        <div class="mx-4 px-4 flex items-center gap-2 font-bold border rounded p-2">
+            {% icon "briefcase" size=4 %}
+            <span class="max-w-xs truncate">{{ workspace.title }}</span>
+        </div>
+        <div class="mx-4 flex flex-row items-center justify-start text-utility gap-2">
+            {% icon "folder" size=4 %}
+            <div class="font-bold mr-auto">{% trans "Projects" %}</div>
+            {% icon "chevron-up" size=4 %}
+        </div>
+        <div class="flex w-full flex-row items-center gap-1 px-4 py-1">
+            {% icon "folder" size=4 %}
+            {% translate "Your project" as project_title_default %}
+            <div id="project-title" class="max-w-xs line-clamp-1 min-w-0 font-bold">{{ project_title_default }}</div>
         </div>
     </div>
     <script nonce="{{ csp_nonce }}">
@@ -64,4 +63,4 @@
             });
         })();
     </script>
-{% endblock onboarding_content %}
+{% endblock onboarding_preview %}
