@@ -121,6 +121,7 @@ class BaseModel(Model):
 
     created = CreationDateTimeField(verbose_name=_("created"))
     modified = ModificationDateTimeField(verbose_name=_("modified"))
+    # TODO add full_clean() on save()
 
     class Meta:
         """Make this model abstract."""
