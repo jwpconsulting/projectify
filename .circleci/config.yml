@@ -185,6 +185,7 @@ workflows:
     jobs:
       - backend_poetry_check
       - backend_lint
+      - backend_djlint
       - backend_mypy
       - backend_pyright
       - backend_tests
