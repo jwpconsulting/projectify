@@ -32,7 +32,7 @@
             --envfile ${caddyFileTestEnv} \
             --config $out/Caddyfile
         '';
-        revproxy = pkgs.writeShellApplication {
+        projectify-revproxy = pkgs.writeShellApplication {
           name = "projectify-revproxy";
           runtimeInputs = [ pkgs.caddy ];
           text = ''
@@ -98,11 +98,18 @@
               Cmd = [ "projectify-celery" ];
             };
           };
+          # Run with
+          # HOST=http://localhost \
+          #     PORT=8001 \
+          #     BACKEND_HOST=http://localhost \
+          #     BACKEND_PORT=8000 \
+          #     result/bin/projectify-revproxy
+          inherit projectify-revproxy;
           projectify-revproxy-container = pkgs.dockerTools.streamLayeredImage {
             name = "projectify-revproxy";
             tag = "latest";
             contents = [
-              revproxy
+              projectify-revproxy
             ];
             config = {
               Cmd = [ "projectify-revproxy" ];
