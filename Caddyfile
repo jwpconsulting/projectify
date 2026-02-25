@@ -36,20 +36,5 @@
 		Strict-Transport-Security "max-age=15768000; includeSubDomains; preload"
 		X-Content-Type-Options nosniff
 	}
-	handle /admin/* {
-		import backend_headers
-		reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
-	}
-	handle /static/django/* {
-		import backend_headers
-		reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
-	}
-	handle /ws/* {
-		import backend_headers
-		reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
-	}
-	handle /* {
-		import backend_headers
-		reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
-	}
+	reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
 }
