@@ -22,7 +22,7 @@
                     <tr class="contents items-center">
                         <td class="flex items-center gap-2 overflow-hidden">
                             <div class="shrink-0 w-6 h-6 rounded-full {{ label.bg_class }} border {{ label.border_class }}"></div>
-                            {% has_perm "workspace.update_label" user label as can_update_label %}
+                            {% has_perm "workspace.update_label" user workspace as can_update_label %}
                             {% if can_update_label %}
                                 <a href="{% url 'dashboard:workspaces:edit-label' workspace_uuid=workspace.uuid label_uuid=label.uuid %}"
                                    class="flex items-center gap-1 text-primary truncate">
@@ -34,7 +34,7 @@
                             {% endif %}
                         </td>
                         <td class="flex items-center">
-                            {% has_perm "workspace.delete_label" user label as can_delete_label %}
+                            {% has_perm "workspace.delete_label" user workspace as can_delete_label %}
                             {% if can_delete_label %}
                                 <form hx-delete="{% url "dashboard:workspaces:edit-label" workspace_uuid=workspace.uuid label_uuid=label.uuid %}"
                                       hx-confirm="{% blocktranslate with label=label.name %}Are you sure you want to delete the '{{ label }}' label?{% endblocktranslate %}">
