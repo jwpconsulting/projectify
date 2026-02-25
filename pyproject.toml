@@ -24,6 +24,7 @@ version = "2025.12.4"
 packages = [
     { include = "projectify" },
     { include = "configurations" },
+    { include = "rules" },
 ]
 exclude = [
     "projectify/*/test",
@@ -44,7 +45,6 @@ gunicorn = "^23"
 pillow = "^11"
 psycopg = {version = "^3.1.18", extras = ["c"]}
 python = "~3.12.12"
-rules = "^3.3"
 stripe = "^8"
 whitenoise = "~6.2.0"
 django-ratelimit = "^4.1.0"

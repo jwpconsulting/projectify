@@ -2077,18 +2077,6 @@ files = [
 ]
 
 [[package]]
-name = "rules"
-version = "3.5"
-description = "Awesome Django authorization, without the database"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "rules-3.5-py2.py3-none-any.whl", hash = "sha256:0f00fc9ee448b3f82e9aff9334ab0c56c76dce4dfa14f1598f57969f1022acc0"},
-    {file = "rules-3.5.tar.gz", hash = "sha256:f01336218f4561bab95f53672d22418b4168baea271423d50d9e8490d64cb27a"},
-]
-
-[[package]]
 name = "selenium"
 version = "4.40.0"
 description = "Official Python bindings for Selenium WebDriver"
@@ -2579,4 +2567,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "~3.12.12"
-content-hash = "3d8212a16bf04a42a6ab8e81f9f52bb7488d34b219ed61f8e6f846d930fc5966"
+content-hash = "65b248446c2d5ffbe7ff23de45f3fa0294107dd7ecb694c5a975d7ba4e568458"
