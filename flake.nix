@@ -44,38 +44,6 @@
               exec gunicorn --config ${projectify-bundle}/etc/gunicorn.conf.py --log-config ${projectify-bundle}/etc/gunicorn-error.log --access-logfile -
             '';
           };
-          projectify-celery = pkgs.writeShellApplication {
-            name = "projectify-celery";
-            runtimeInputs = [ projectify-bundle.dependencyEnv ];
-            # TODO make worker independent of STATIC_ROOT
-            text = ''
-              export STATIC_ROOT="${projectify-bundle.static}"
-              exec celery --app projectify.celery worker --concurrency 1
-            '';
-          };
-
-          projectify-backend-container = pkgs.dockerTools.streamLayeredImage {
-            name = "projectify-backend";
-            tag = "latest";
-            contents = [
-              projectify-backend
-              projectify-manage
-            ];
-            config = {
-              Cmd = [ "projectify-backend" ];
-            };
-          };
-          projectify-celery-container = pkgs.dockerTools.streamLayeredImage {
-            name = "projectify-celery";
-            tag = "latest";
-            contents = [
-              projectify-celery
-            ];
-            config = {
-              Cmd = [ "projectify-celery" ];
-            };
-          };
-          skopeo = pkgs.skopeo;
         };
         devShell = pkgs.mkShell {
           LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [ projectify-bundle.passthru.postgresql ];
@@ -84,18 +52,10 @@
             # TODO I temporarily commented out these build inputs. Are they
             # still needed?
             # backend
-            # celery
             # manage
 
             # Run things locally
-            pkgs.redis
-            pkgs.python312Packages.supervisor
             pkgs.librsvg
-
-            # Test docker stuff
-            pkgs.skopeo
-            pkgs.podman-compose
-            pkgs.hadolint
 
             # Docs
             pkgs.nodePackages.prettier

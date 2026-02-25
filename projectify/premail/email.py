@@ -6,7 +6,6 @@
 import re
 from typing import Any, Generic, NewType, TypeVar, Union
 
-from django.conf import settings
 from django.template import loader
 from django.utils.safestring import SafeText, mark_safe
 
@@ -76,10 +75,7 @@ class TemplateEmail(Generic[T]):
 
         subject = self.render_subject()
         body = self.render_body()
-        if settings.EMAIL_EAGER:
-            send_mail(subject, body, self.to)
-        else:
-            send_mail.delay(subject, body, self.to)
+        send_mail(subject, body, self.to)
 
     @property
     def addressee(self) -> str:

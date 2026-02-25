@@ -10,27 +10,10 @@ from pathlib import Path
 from .base import Base
 
 
-def get_redis_tls_url() -> str:
-    """Get the correct redis tls url, because Heroku."""
-    # I am looking at you, Heroku :(((
-    # Heroku unsets REDIS_TLS_URL when migrating to premium redis
-    # TODO consider leaving Heroku (after 10 years!)
-    if "REDIS_TLS_URL" in os.environ:
-        return os.environ["REDIS_TLS_URL"]
-    elif "REDIS_URL" in os.environ:
-        return os.environ["REDIS_URL"]
-    raise ValueError(
-        "Neither REDIS_TLS_URL nor REDIS_URL could be found in the environment"
-    )
-
-
 class Production(Base):
     """Production configuration."""
 
     SITE_TITLE = os.getenv("SITE_TITLE", "Projectify Production")
-
-    # Redis URL
-    REDIS_TLS_URL = get_redis_tls_url()
 
     SECRET_KEY = os.environ["SECRET_KEY"]
 
@@ -46,9 +29,6 @@ class Production(Base):
     }
     EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
-    # Celery
-    CELERY_BROKER_URL = REDIS_TLS_URL
-
     # We want to permit multiple URLs here to allow migrating between hosts.
     # This way, we can have a standby available at another host already
     # configured with a new domain, but also letting old requests through
@@ -61,7 +41,7 @@ class Production(Base):
 
     # Static files
     # We allow overriding this value in case the static files come prebuilt,
-    # for example in a Docker container, and an exact path is contained in
+    # for example in a container, and an exact path is contained in
     # the STATIC_ROOT environment variable
     STATIC_ROOT = (
         Path(os.environ["STATIC_ROOT"])

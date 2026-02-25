@@ -141,17 +141,17 @@ Subject to change.
 
 These are sub-steps of the implementation stage.
 
-- [ ] Remove `frontend/`
-- [ ] Remove frontend Docker builds
-- [ ] Remove reverse proxy
-- [ ] Remove frontend stuff from GitHub actions and CircleCI config
-- [ ] Remove frontend from render.com blueprint
-- [ ] Remove WebSocket API
-- [ ] Remove REST API
+- [x] Remove `frontend/`
+- [x] Remove frontend Docker builds
+- [x] Remove reverse proxy
+- [x] Remove frontend stuff from GitHub actions and CircleCI config
+- [x] Remove frontend from render.com blueprint
+- [x] Remove WebSocket API
+- [x] Remove REST API
 
 ## Testing
 
-- [ ] Test and compare the two implementations.
+- [x] Test and compare the two implementations.
 - [ ] Perform thorough test of billing logic.
 - [x] Security audit. Check CSPs and other gotchas. Update security docs.
 - [ ] Good enough? Continue. Broken? Go back to Analysis
@@ -159,7 +159,7 @@ These are sub-steps of the implementation stage.
 
 ## Deployment
 
-- [ ] Deploy on render.com. Test thoroughly.
+- [x] Deploy on render.com. Test thoroughly.
 - [ ] Security audit for Projectify on render.com
 
 ## Acceptance test
