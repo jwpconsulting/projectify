@@ -63,12 +63,12 @@ commands:
       - checkout:
             path: ~/projectify
       - restore_cache:
-            key: npm-cache-v2-{{ checksum "~/backend/projectify/theme/static_src/package-lock.json" }}
+            key: npm-cache-v2-{{ checksum "~/projectify/theme/static_src/package-lock.json" }}
       - run:
             name: npm clean-install
             command: npm clean-install
       - save_cache:
-            key: npm-cache-v2-{{ checksum "~/backend/projectify/theme/static_src/package-lock.json" }}
+            key: npm-cache-v2-{{ checksum "~/projectify/theme/static_src/package-lock.json" }}
             paths:
                 - ~/.npm
                 - node_modules
@@ -88,10 +88,10 @@ jobs:
       - prepare_poetry
       - run:
           name: Run ruff format
-          command: poetry run ruff format --check backend
+          command: poetry run ruff format --check .
       - run:
           name: Run ruff
-          command: poetry run ruff check backend
+          command: poetry run ruff check .
   backend_djlint:
     executor: python
     working_directory: ~/projectify
@@ -99,10 +99,10 @@ jobs:
       - prepare_poetry
       - run:
           name: Run djlint --check
-          command: poetry run djlint --check backend
+          command: poetry run djlint --check .
       - run:
           name: Run djlint --lint
-          command: poetry run djlint --lint backend
+          command: poetry run djlint --lint .
   backend_mypy:
     executor: python
     working_directory: ~/projectify
@@ -110,7 +110,7 @@ jobs:
       - prepare_poetry
       - run:
           name: Run mypy
-          command: poetry run mypy backend
+          command: poetry run mypy .
   backend_pyright:
     executor: python
     working_directory: ~/projectify
@@ -118,7 +118,7 @@ jobs:
       - prepare_poetry
       - run:
           name: Run pyright
-          command: poetry run pyright backend
+          command: poetry run pyright .
   backend_collectstatic:
     executor: python
     working_directory: ~/projectify
@@ -126,14 +126,14 @@ jobs:
       - prepare_poetry
       - run:
           name: Run collectstatic
-          command: poetry run backend/manage.py collectstatic --noinput
+          command: poetry run ./manage.py collectstatic --noinput
           environment:
             DJANGO_CONFIGURATION: TestCollectstatic
   backend_tests:
     executor: python_and_postgres
     # TODO change to
     # working_directory: ~/projectify
-    working_directory: ~/projectify/backend
+    working_directory: ~/projectify
     parallelism: 8
     steps:
       - prepare_poetry
@@ -157,10 +157,10 @@ jobs:
       - prepare_poetry
       - run:
           name: Migrate
-          command: poetry run backend/manage.py migrate
+          command: poetry run ./manage.py migrate
       - run:
           name: Seed DB
-          command: poetry run backend/manage.py seeddb --n-users 3 --n-workspaces 1 --n-projects 1 --n-labels 1 --n-tasks 1
+          command: poetry run ./manage.py seeddb --n-users 3 --n-workspaces 1 --n-projects 1 --n-labels 1 --n-tasks 1
   frontend_tailwind_check:
     executor: node
     working_directory: ~/projectify
