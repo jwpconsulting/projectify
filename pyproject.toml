@@ -45,7 +45,7 @@ djangorestframework = "^3"
 gunicorn = "^23"
 pillow = "^11"
 psycopg = {version = "^3.1.18", extras = ["c"]}
-python = "~3.12.7"
+python = "~3.12.12"
 redis = "^5"
 rules = "^3.3"
 stripe = "^8"
