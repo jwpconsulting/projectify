@@ -47,7 +47,7 @@ def coupon_create(
     """Create a coupon for seats, for a user, with a given prefix."""
     suffix = get_random_string(10, COUPON_CHARS)
     code = f"{prefix}-{suffix}"
-    validate_perm("corporate.create_coupon", who)
+    validate_perm("corporate.can_create_coupon", who)
     return Coupon.objects.create(code=code, used=None, seats=seats)
 
 

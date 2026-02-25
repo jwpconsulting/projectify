@@ -69,13 +69,13 @@ class TestPredicates:
         self,
         workspace: Workspace,
         observer: TeamMember,
-        superuser: User,
+        user: User,
     ) -> None:
         """Test is_at_least_contributor."""
         assert not rules.is_at_least_contributor(observer.user, workspace)
         team_member_change_role(
             team_member=observer,
-            who=superuser,
+            who=user,
             role=TeamMemberRoles.CONTRIBUTOR,
         )
         assert rules.is_at_least_contributor(observer.user, workspace)
@@ -94,13 +94,13 @@ class TestPredicates:
         self,
         workspace: Workspace,
         observer: TeamMember,
-        superuser: User,
+        user: User,
     ) -> None:
         """Test is_at_least_maintainer."""
         assert not rules.is_at_least_maintainer(observer.user, workspace)
         team_member_change_role(
             team_member=observer,
-            who=superuser,
+            who=user,
             role=TeamMemberRoles.MAINTAINER,
         )
         assert rules.is_at_least_maintainer(observer.user, workspace)
@@ -119,13 +119,13 @@ class TestPredicates:
         self,
         workspace: Workspace,
         observer: TeamMember,
-        superuser: User,
+        user: User,
     ) -> None:
         """Test is_at_least_owner."""
         assert not rules.is_at_least_owner(observer.user, workspace)
         team_member_change_role(
             team_member=observer,
-            who=superuser,
+            who=user,
             role=TeamMemberRoles.OWNER,
         )
         assert rules.is_at_least_owner(observer.user, workspace)

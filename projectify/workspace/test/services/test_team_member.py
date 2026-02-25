@@ -4,7 +4,6 @@
 """Test team member services."""
 
 import pytest
-from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 
 from projectify.user.models import User
@@ -83,7 +82,7 @@ def test_team_member_delete_self(team_member: TeamMember) -> None:
     """Test that you can't delete yourself, even superusers."""
     team_member.user.is_superuser = True
     team_member.user.save()
-    with pytest.raises(serializers.ValidationError):
+    with pytest.raises(PermissionDenied):
         team_member_delete(team_member=team_member, who=team_member.user)
 
 
