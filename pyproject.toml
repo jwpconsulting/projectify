@@ -179,8 +179,8 @@ stubPath = "backend/mypy/stubs"
 typeCheckingMode = "strict"
 typeshedPath = ""
 exclude = [
-    "backend/.venv",
-    "backend/.direnv",
+    ".venv",
+    ".direnv",
     "backend/**/__pycache__/",
     # TODO consider just removing whitelist.py
     "backend/whitelist.py",
@@ -201,7 +201,7 @@ exclude = [
     "backend/projectify/premail/test/test_views.py",
     "backend/projectify/premail/test/test_emails.py",
     # TODO false positive in base_url override
-    "projectify/storage.py",
+    "backend/projectify/storage.py",
     # Nix build
     "backend/result",
     # Pyright reports a few unknown types here that mypy doesn't catch
