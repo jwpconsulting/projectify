@@ -51,8 +51,7 @@
             <div class="line-clamp-1 min-w-0 font-bold">{% trans "Your project" %}</div>
         </div>
     </div>
-</div>
-<script nonce="{{ csp_nonce }}">
+    <script nonce="{{ csp_nonce }}">
         (() => {
             const titleInput = document.querySelector('input[name="title"]');
             if (!titleInput) { return; }
@@ -68,5 +67,5 @@
                 workspaceTitle.textContent = title;
             });
         })();
-</script>
+    </script>
 {% endblock onboarding_preview %}
