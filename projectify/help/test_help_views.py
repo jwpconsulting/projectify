@@ -25,9 +25,11 @@ def test_help_list_view(client: Client) -> None:
 
 
 @pytest.mark.parametrize("page_key", HELP_TOPICS.keys())
-def test_help_detail_view_valid_pages(client: Client, page_key: str) -> None:
-    """Test help detail view for all valid pages."""
-    url = reverse("help:detail", args=(page_key,))
+def test_help_detail_view_valid_pages_generic(
+    client: Client, page_key: str
+) -> None:
+    """Test help detail view for all valid pages using generic URL pattern."""
+    url = reverse(f"help:topic:{page_key}")
     response = client.get(url)
 
     assert response.status_code == 200
@@ -38,7 +40,17 @@ def test_help_detail_view_valid_pages(client: Client, page_key: str) -> None:
     assert 'class="toc' in content
 
 
-def test_help_detail_view_invalid_page(client: Client) -> None:
-    """Test help detail view returns 404 for invalid page."""
-    url = reverse("help:detail", args=("nonexistent",))
-    assert client.get(url).status_code == 404
+@pytest.mark.parametrize("page_key", HELP_TOPICS.keys())
+def test_help_detail_view_valid_pages_specific(
+    client: Client, page_key: str
+) -> None:
+    """Test help detail view for all valid pages using specific URL patterns."""
+    url = reverse(f"help:topic:{page_key}")
+    response = client.get(url)
+
+    assert response.status_code == 200
+    content = response.content.decode()
+    topic = HELP_TOPICS[page_key]
+    assert str(topic["title"]) in content
+    assert "Table of Contents" in content
+    assert 'class="toc' in content

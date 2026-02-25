@@ -119,12 +119,8 @@
     <section class="flex flex-col gap-2">
         <strong>{% trans "Help" %}</strong>
         <ul class="flex list-inside list-disc flex-col gap-2">
-            <li>
-                {% url 'help:detail' page='team-members' as team_members_url %}{% anchor href=team_members_url label=_("About team members") external=True %}
-            </li>
-            <li>
-                {% url 'help:detail' page='roles' as roles_url %}{% anchor href=roles_url label=_("About roles") external=True %}
-            </li>
+            <li>{% anchor href="help:topic:team-members" label=_("About team members") external=True %}</li>
+            <li>{% anchor href="help:topic:roles" label=_("About roles") external=True %}</li>
         </ul>
     </section>
 {% endblock workspace_settings_content %}
