@@ -3,9 +3,8 @@
 # SPDX-FileCopyrightText: 2025 JWP Consulting GK
 """Storefront Views."""
 
-from django.http import Http404, HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
-from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.settings import get_settings
 
@@ -110,28 +109,19 @@ def solutions_index(request: HttpRequest) -> HttpResponse:
     return render(request, "storefront/solutions/solutions_index.html")
 
 
-def solutions_detail(request: HttpRequest, page: str) -> HttpResponse:
-    """Serve Solutions Detail page."""
-    match page:
-        case "development-teams":
-            return render(
-                request, "storefront/solutions/development-teams.html"
-            )
-        case "research":
-            return render(request, "storefront/solutions/research.html")
-        case "project-management":
-            return render(
-                request, "storefront/solutions/project-management.html"
-            )
-        case "academic":
-            return render(request, "storefront/solutions/academic.html")
-        case "remote-work":
-            return render(request, "storefront/solutions/remote-work.html")
-        case "personal-use":
-            return render(request, "storefront/solutions/personal-use.html")
-        case _:
-            # TODO:Add proper solutions detail route implementations
-            raise Http404(_("Solution page does not exist."))
+def solutions_development_teams(request: HttpRequest) -> HttpResponse:
+    """Serve development teams solutions page."""
+    return render(request, "storefront/solutions/development-teams.html")
+
+
+def solutions_project_management(request: HttpRequest) -> HttpResponse:
+    """Serve project management solutions page."""
+    return render(request, "storefront/solutions/project-management.html")
+
+
+def solutions_academic(request: HttpRequest) -> HttpResponse:
+    """Serve academic solutions page."""
+    return render(request, "storefront/solutions/academic.html")
 
 
 def tos(request: HttpRequest) -> HttpResponse:
