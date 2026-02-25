@@ -115,7 +115,7 @@ in
     mkdir $out/{bin,etc}
     cp backend/manage.py "$out/bin"
 
-    cp backend/{gunicorn.conf.py,gunicorn-error.log} $out/etc/
+    cp gunicorn.conf.py gunicorn-error.log $out/etc/
 
     mkdir $static
     env \
