@@ -68,7 +68,6 @@
             # manage
 
             # Run things locally
-            pkgs.python312Packages.supervisor
             pkgs.librsvg
 
             # Test docker stuff
