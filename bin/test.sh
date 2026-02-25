@@ -5,7 +5,7 @@
 # Note:
 # Run within a poetry, nix, or similar environment
 set -e
-target="${1-backend}"
+target="${1-.}"
 echo "Testing $target"
 
 if mypy "$target"
