@@ -41,7 +41,7 @@ class Production(Base):
 
     # Static files
     # We allow overriding this value in case the static files come prebuilt,
-    # for example in a Docker container, and an exact path is contained in
+    # for example in a container, and an exact path is contained in
     # the STATIC_ROOT environment variable
     STATIC_ROOT = (
         Path(os.environ["STATIC_ROOT"])

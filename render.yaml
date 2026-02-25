@@ -2,7 +2,6 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-# Largely derived from docker-compose.yaml
 # TODO out of sync and disconnected from production right now
 projects:
   - name: Projectify

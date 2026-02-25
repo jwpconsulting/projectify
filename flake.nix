@@ -44,19 +44,6 @@
               exec gunicorn --config ${projectify-bundle}/etc/gunicorn.conf.py --log-config ${projectify-bundle}/etc/gunicorn-error.log --access-logfile -
             '';
           };
-
-          projectify-backend-container = pkgs.dockerTools.streamLayeredImage {
-            name = "projectify-backend";
-            tag = "latest";
-            contents = [
-              projectify-backend
-              projectify-manage
-            ];
-            config = {
-              Cmd = [ "projectify-backend" ];
-            };
-          };
-          skopeo = pkgs.skopeo;
         };
         devShell = pkgs.mkShell {
           LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [ projectify-bundle.passthru.postgresql ];
@@ -69,11 +56,6 @@
 
             # Run things locally
             pkgs.librsvg
-
-            # Test docker stuff
-            pkgs.skopeo
-            pkgs.podman-compose
-            pkgs.hadolint
 
             # Docs
             pkgs.nodePackages.prettier
