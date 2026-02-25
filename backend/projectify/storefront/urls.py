@@ -17,8 +17,10 @@ from projectify.storefront.views import (
     privacy,
     security_disclose,
     security_general,
-    solutions_detail,
+    solutions_academic,
+    solutions_development_teams,
     solutions_index,
+    solutions_project_management,
     tos,
 )
 
@@ -26,7 +28,9 @@ app_name = "storefront"
 
 solution_patterns = [
     path("", solutions_index, name="list"),
-    path("<slug:page>", solutions_detail, name="detail"),
+    path("development-teams", solutions_development_teams, name="development_teams"),
+    path("project-management", solutions_project_management, name="project_management"),
+    path("academic", solutions_academic, name="academic"),
 ]
 
 security_patterns = [
