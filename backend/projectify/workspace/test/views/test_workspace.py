@@ -3,7 +3,9 @@
 # SPDX-FileCopyrightText: 2023, 2024 JWP Consulting GK
 """Test workspace CRUD views."""
 
+from collections.abc import Iterable
 from typing import cast
+from unittest import mock
 from uuid import uuid4
 
 from django.core.files import File
@@ -19,6 +21,7 @@ from projectify.corporate.selectors.customer import (
     customer_check_active_for_workspace,
 )
 from projectify.corporate.services.stripe import customer_cancel_subscription
+from projectify.settings.base import Base
 from projectify.user.models.user import User
 from projectify.workspace.models.label import Label
 from pytest_types import DjangoAssertNumQueries
@@ -28,6 +31,12 @@ from ...models.team_member import TeamMember
 from ...models.workspace import Workspace
 
 pytestmark = pytest.mark.django_db
+
+
+class MockSession:
+    """Checkout and billing portal mock session."""
+
+    url = "https://www.example.com"
 
 
 class TestMinimizeLists:
@@ -610,6 +619,177 @@ class TestWorkspaceSettingsQuota:
         assert "<td>Sub tasks" in content
 
 
+@pytest.fixture(autouse=True)
+def patch_stripe_settings(
+    settings: Base,
+    stripe_price_object: str,
+    stripe_secret_key: str,
+    stripe_endpoint_secret: str,
+) -> None:
+    """Patch stripe settings."""
+    settings.STRIPE_SECRET_KEY = stripe_secret_key
+    settings.STRIPE_ENDPOINT_SECRET = stripe_endpoint_secret
+    settings.STRIPE_PRICE_OBJECT = stripe_price_object
+
+
+class TestWorkspaceSettingsBilling:
+    """Test workspace_settings_billing view."""
+
+    @pytest.fixture
+    def resource_url(self, workspace: Workspace) -> str:
+        """Return URL to this view."""
+        return reverse("dashboard:workspaces:billing", args=(workspace.uuid,))
+
+    @pytest.fixture(autouse=True)
+    def mock_stripe_billing_portal(self) -> Iterable[mock.MagicMock]:
+        """Mock stripe billing portal session creation."""
+        with mock.patch(
+            "stripe.billing_portal._session_service.SessionService.create"
+        ) as m:
+            m.return_value = MockSession()
+            yield m
+
+    @pytest.fixture(autouse=True)
+    def mock_stripe_checkout(
+        self,
+    ) -> Iterable[mock.MagicMock]:
+        """Mock stripe checkout session creation."""
+        with mock.patch(
+            "stripe.checkout._session_service.SessionService.create"
+        ) as m:
+            m.return_value = MockSession()
+            yield m
+
+    def test_with_unpaid_customer(
+        self,
+        user_client: Client,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        unpaid_customer: Customer,
+        resource_url: str,
+        team_member: TeamMember,
+    ) -> None:
+        """Assert that an unpaid customer can't edit their billing settings."""
+        data = {"action": "checkout", "seats": 5}
+        with django_assert_num_queries(21):
+            response = user_client.post(resource_url, data=data)
+            assert response.status_code == 302
+        assert response.headers["Location"] == "https://www.example.com"
+
+    def test_with_paying_customer_billing_edit(
+        self,
+        user_client: Client,
+        # paid_customer: Customer,
+        resource_url: str,
+        team_member: TeamMember,
+    ) -> None:
+        """Test that you can't go checkout as a paying customer."""
+        response = user_client.post(
+            resource_url, {"action": "checkout", "seats": 5}
+        )
+        assert response.status_code == 400
+        content = response.content.decode()
+        assert "already activated a subscription" in content
+
+    def test_wrong_workspace(
+        self,
+        user_client: Client,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        team_member: TeamMember,
+        unrelated_workspace: Workspace,
+    ) -> None:
+        """Test passing in an invalid uuid."""
+        resource_url = reverse(
+            "dashboard:workspaces:billing",
+            args=(str(unrelated_workspace.uuid),),
+        )
+        data = {"action": "checkout", "seats": "99"}
+        with django_assert_num_queries(3):
+            response = user_client.post(resource_url, data=data)
+            assert response.status_code == 404
+
+    def test_posting_normal_data(
+        self,
+        user_client: Client,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        unpaid_customer: Customer,
+        resource_url: str,
+        team_member: TeamMember,
+    ) -> None:
+        """Test we can get a redirect when posting valid checkout data."""
+        data = {"action": "checkout", "seats": "99"}
+        with django_assert_num_queries(21):
+            response = user_client.post(resource_url, data=data)
+            assert response.status_code == 302, response.content.decode()
+        assert response.headers["Location"] == "https://www.example.com"
+
+    def test_paid_customer(
+        self,
+        user_client: Client,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        paid_customer: Customer,
+        resource_url: str,
+        team_member: TeamMember,
+    ) -> None:
+        """Test that there is an error on paid customer for checkout."""
+        data = {"action": "checkout", "seats": 100}
+        response = user_client.post(resource_url, data=data)
+        assert response.status_code == 400
+        assert b"already activated a subscription" in response.content
+
+    def test_checkout_missing_seats(
+        self,
+        user_client: Client,
+        unpaid_customer: Customer,
+        resource_url: str,
+        team_member: TeamMember,
+    ) -> None:
+        """Test checkout action with missing seats."""
+        response = user_client.post(resource_url, {"action": "checkout"})
+        assert response.status_code == 400, response.content
+        assert b"This field is required" in response.content
+
+    def test_checkout_invalid_seats(
+        self,
+        user_client: Client,
+        unpaid_customer: Customer,
+        resource_url: str,
+        team_member: TeamMember,
+    ) -> None:
+        """Test checkout action with invalid seats."""
+        data = {"action": "checkout", "seats": 0}
+        response = user_client.post(resource_url, data)
+        assert response.status_code == 400, response.content
+        assert b"greater than or equal to 1" in response.content
+
+    def test_get_with_unpaid_customer(
+        self,
+        user_client: Client,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        unpaid_customer: Customer,
+        resource_url: str,
+        team_member: TeamMember,
+    ) -> None:
+        """Test GET request with unpaid customer shows billing form."""
+        with django_assert_num_queries(17):
+            response = user_client.get(resource_url)
+            assert response.status_code == 200
+        assert b"Use a coupon code" in response.content
+
+    def test_get_with_paying_customer(
+        self,
+        user_client: Client,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        paid_customer: Customer,
+        resource_url: str,
+        team_member: TeamMember,
+    ) -> None:
+        """Test GET request with paying customer shows billing info."""
+        with django_assert_num_queries(12):
+            response = user_client.get(resource_url)
+            assert response.status_code == 200
+        assert b"You have a paid workspace" in response.content
+
+
 class TestWorkspaceSettingsBillingCoupon:
     """Test coupon redemption in workspace billing settings."""
 
@@ -630,13 +810,10 @@ class TestWorkspaceSettingsBillingCoupon:
         """Test that nothing bad happens with an invalid coupon code."""
         active = customer_check_active_for_workspace(workspace=workspace)
         assert active == "trial"
+        data = {"action": "redeem_coupon", "code": "foo"}
         with django_assert_num_queries(22):
-            res = user_client.post(
-                resource_url,
-                data={"action": "redeem_coupon", "code": "foo"},
-            )
+            res = user_client.post(resource_url, data=data)
             assert res.status_code == 400
-
         assert "No coupon is available for this code" in res.content.decode()
         unpaid_customer.refresh_from_db()
         active = customer_check_active_for_workspace(workspace=workspace)
@@ -656,8 +833,8 @@ class TestWorkspaceSettingsBillingCoupon:
         assert unpaid_customer.seats != 20
         active = customer_check_active_for_workspace(workspace=workspace)
         assert active == "trial"
+        data = {"action": "redeem_coupon", "code": coupon.code}
         with django_assert_num_queries(22):
-            data = {"action": "redeem_coupon", "code": coupon.code}
             response = user_client.post(resource_url, data=data)
             assert response.status_code == 302
 

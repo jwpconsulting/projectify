@@ -70,7 +70,7 @@ def customer_create_stripe_checkout_session(
         resource="TeamMemberAndInvite", workspace=workspace
     )
     if quota.current is None:
-        logger.info("Customer for workspace %s has no seat quota")
+        logger.warning("Customer for workspace %s has no seat quota")
     elif seats < quota.current:
         raise serializers.ValidationError(
             {
