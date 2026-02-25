@@ -83,7 +83,7 @@ services:
                 property: connectionString
           - fromGroup: projectify-backend-shared
     - name: projectify-redis-production
-      type: redis
+      type: keyvalue
       ipAllowList: []
 databases:
     - name: projectify-postgres-production
