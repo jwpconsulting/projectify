@@ -108,14 +108,14 @@ in
   checkGroups = [ ];
   outputs = [ "out" "static" ];
   preConfigure = ''
-    mkdir projectify/theme/static projectify/theme/static/css
-    cp -r ${tailwind-deps}/dist projectify/theme/static/css/dist
+    mkdir backend/projectify/theme/{static,static/css}
+    cp -r ${tailwind-deps}/dist backend/projectify/theme/static/css/dist
   '';
   postInstall = ''
     mkdir $out/{bin,etc}
-    cp manage.py "$out/bin"
+    cp backend/manage.py "$out/bin"
 
-    cp gunicorn.conf.py gunicorn-error.log $out/etc/
+    cp backend/{gunicorn.conf.py,gunicorn-error.log} $out/etc/
 
     mkdir $static
     env \

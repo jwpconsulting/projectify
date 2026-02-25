@@ -40,8 +40,8 @@
           '';
         };
 
-        tailwind-deps = pkgs.callPackage backend/build-tailwind-deps.nix { };
-        projectify-bundle = pkgs.callPackage backend/build-projectify-bundle.nix {
+        tailwind-deps = pkgs.callPackage ./build-tailwind-deps.nix { };
+        projectify-bundle = pkgs.callPackage ./build-projectify-bundle.nix {
           inherit tailwind-deps;
           poetry2nix = poetry2nix.lib.mkPoetry2Nix { inherit pkgs; };
         };

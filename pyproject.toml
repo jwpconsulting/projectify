@@ -10,11 +10,11 @@ maintainers = ["Justus Perlwitz <justus@jwpconsulting.net>"]
 authors = ["The Projectify Authors"]
 readme = "README.md"
 packages = [
-    { include = "projectify" },
-    { include = "configurations" },
+    { include = "projectify", from = "backend" },
+    { include = "configurations", from = "backend" },
 ]
 exclude = [
-    "projectify/*/test",
+    "backend/projectify/*/test",
 ]
 
 [tool.poetry.dependencies]
