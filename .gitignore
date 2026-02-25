@@ -26,8 +26,6 @@ node_modules/
 /backend/.direnv
 /backend/.mypy_cache/
 /backend/.coverage
-# Nix build
-/backend/result
 # Django Tailwind
 /backend/projectify/theme/static_src/node_modules
 /backend/projectify/theme/static/css/dist/styles.css
@@ -49,8 +47,6 @@ node_modules/
 /frontend/build
 /frontend/.svelte-kit
 /frontend/package
-# Nix build
-/frontend/result
 
 # Linters
 # -------
@@ -88,3 +84,5 @@ supervisord.pid
 # ============
 *.bak
 
+# Nix build
+result*

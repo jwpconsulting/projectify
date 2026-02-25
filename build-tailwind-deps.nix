@@ -8,9 +8,9 @@
 
 buildNpmPackage {
   name = "tailwind-deps";
-  src = ./.;
+  src = ./backend;
   npmDeps = importNpmLock {
-    npmRoot = ./projectify/theme/static_src;
+    npmRoot = ./backend/projectify/theme/static_src;
   };
   buildInputs = [ nodejs ];
   preConfigure = ''
