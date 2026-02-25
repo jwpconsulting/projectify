@@ -134,48 +134,6 @@ account with the following credentials for you:
 Log in using these credentials and you have full access to the administration
 page.
 
-## Celery
-
-If you need to run the celery worker, make sure that you have KeyDB or Redis installed.
-KeyDB is compatible with Redis.
-
-- [KeyDB installation instructions](https://docs.keydb.dev/docs/open-source-getting-started)
-- [Redis installation instructions](https://redis.io/docs/latest/operate/oss_and_stack/install/archive/install-redis/)
-
-Make sure that you can access your KeyDB or Redis at the following URL:
-
-```
-redis://localhost:6379/0
-```
-
-If you have Redis installed, this is how you can test whether the Redis server
-is available:
-
-```bash
-redis-cli -u redis://localhost:6379/0
-```
-
-If you see a message like the following, please check whether Redis is running
-correctly:
-
-```
-Could not connect to Redis at localhost:6379: Connection refused
-```
-
-Now, add the following variable to your `.env` file:
-
-```
-REDIS_TLS_URL = redis://localhost:6379/0
-```
-
-Once you have made sure that KeyDB or Redis runs correctly, start the `celery`
-worker like so:
-
-```bash
-# Make sure that you are inside a poetry shell
-celery -A projectify worker -c 1
-```
-
 ## Neovim
 
 You can use Neovim with the [Pyright](https://github.com/microsoft/pyright) Language Server Protococol (LSP) server. To make sure that Neovim uses the right Pyright from
@@ -204,7 +162,6 @@ You can run Projectify with Nix. There are three entry points to
 the application:
 
 - projectify-backend: the Projectify backend wrapped inside gunicorn
-- projectify-celery: the Projectify background worker wrapped in celery
 - projectify-manage: the Projectify backend's management tool, using Django
 management commands.
 
@@ -222,15 +179,7 @@ You can launch and test the start-up behavior of a production-like `projectify-b
 
 ```bash
 # Adjust env vars accordingly
-env PORT=2000 STRIPE_ENDPOINT_SECRET= STRIPE_PRICE_OBJECT= STRIPE_SECRET_KEY= STRIPE_PUBLISHABLE_KEY= MAILGUN_DOMAIN= MAILGUN_API_KEY= FRONTEND_URL= ALLOWED_HOSTS=localhost SECRET_KEY= REDIS_URL= DJANGO_SETTINGS_MODULE=projectify.settings.production DJANGO_CONFIGURATION=Production nix run .#projectify-backend
-```
-
-## Launching projectify-celery
-
-You can launch a production-like `projectify-celery` locally like so:
-
-```
-dotenv -f .env.production-sample run nix run .#projectify-celery
+env PORT=2000 STRIPE_ENDPOINT_SECRET= STRIPE_PRICE_OBJECT= STRIPE_SECRET_KEY= STRIPE_PUBLISHABLE_KEY= MAILGUN_DOMAIN= MAILGUN_API_KEY= FRONTEND_URL= ALLOWED_HOSTS=localhost SECRET_KEY= DJANGO_SETTINGS_MODULE=projectify.settings.production DJANGO_CONFIGURATION=Production nix run .#projectify-backend
 ```
 
 ## Launching projectify-manage

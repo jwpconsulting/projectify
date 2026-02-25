@@ -42,10 +42,6 @@ class Test(Base):
 
     # Email
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-    EMAIL_EAGER = True
-
-    # Celery
-    CELERY_BROKER_URL = "memory://"
 
     # django-ratelimit
     RATELIMIT_ENABLE = False

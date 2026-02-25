@@ -31,31 +31,7 @@ projects:
                     fromDatabase:
                         name: projectify-postgres-production
                         property: connectionString
-                  - key: REDIS_TLS_URL
-                    fromService:
-                        name: projectify-redis-production
-                        type: redis
-                        property: connectionString
                   - fromGroup: projectify-backend-shared
-            - name: projectify-celery
-              type: worker
-              runtime: image
-              image:
-                url: ghcr.io/jwpconsulting/projectify/projectify-celery:latest
-              envVars:
-                  - key: DATABASE_URL
-                    fromDatabase:
-                        name: projectify-postgres-production
-                        property: connectionString
-                  - key: REDIS_TLS_URL
-                    fromService:
-                        name: projectify-redis-production
-                        type: redis
-                        property: connectionString
-                  - fromGroup: projectify-backend-shared
-            - name: projectify-redis-production
-              type: keyvalue
-              ipAllowList: []
         databases:
             - name: projectify-postgres-production
               postgresMajorVersion: "15"

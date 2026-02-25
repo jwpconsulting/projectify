@@ -21,7 +21,6 @@ services:
             DJANGO_CONFIGURATION: Production
             # Database
             DATABASE_URL: postgres://projectify:projectify@postgres:5432/projectify
-            REDIS_TLS_URL: redis://keydb:6379/0
             FRONTEND_URL: http://localhost:5000
             # Stripe
             STRIPE_PUBLISHABLE_KEY: pk_test_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -43,23 +42,6 @@ services:
         command: projectify-manage migrate
         depends_on:
             - postgres
-    worker:
-        image: projectify-celery:latest
-        restart: always
-        environment: *backend-env
-        depends_on:
-            - keydb
-            - postgres
-    keydb:
-        image: docker.io/eqalpha/keydb:latest
-        restart: always
-        volumes:
-            - keydb-data:/data
-        healthcheck:
-            test: ["CMD", "redis-cli", "ping"]
-            interval: 1s
-            timeout: 3s
-            retries: 30
     postgres:
         image: docker.io/postgres:15
         restart: always

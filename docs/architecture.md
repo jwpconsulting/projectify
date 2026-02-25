@@ -28,9 +28,8 @@ To use Projectify, users need a computer that meets the following criteria:
 The Projectify software has the following requirements for its runtime:
 
 1. Provide a PostgreSQL database instance,
-2. Provide a Redis instance (for queuing, caching, and WebSocket connections),
-3. Provide a modest amount of computing resources, and
-4. Have a reliable and fast (more than 1 Gbit per second) internet connection
+2. Provide a modest amount of computing resources, and
+3. Have a reliable and fast (more than 1 Gbit per second) internet connection
    to its users.
 
 # Components

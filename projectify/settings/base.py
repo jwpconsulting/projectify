@@ -128,7 +128,6 @@ class Base(Configuration):  # type:ignore
     INSTALLED_APPS_THIRD_PARTY = (
         "cloudinary",
         "cloudinary_storage",
-        "django_celery_results",
         "pgtrigger",
         "rules.apps.AutodiscoverRulesConfig",
         "tailwind",
@@ -249,16 +248,8 @@ class Base(Configuration):  # type:ignore
     ]
     FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
-    # Celery
-    CELERY_TIMEZONE = "Asia/Tokyo"
-    CELERY_TASK_TRACK_STARTED = True
-    CELERY_TASK_TIME_LIMIT = 30 * 60
-    CELERY_RESULT_BACKEND = "django-db"
-    CELERY_BROKER_URL: Optional[str] = None
-
     # Email
     DEFAULT_FROM_EMAIL = '"Projectify" <hello@projectifyapp.com>'
-    EMAIL_EAGER = False
 
     # Where to store media
     MEDIA_ROOT = BASE_DIR / "media"
