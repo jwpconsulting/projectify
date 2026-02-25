@@ -49,8 +49,7 @@ urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     ),
     # New Django frontend urls
     # TODO make this
-    # path("dashboard/", include("projectify.workspace.urls")),
-    path("dashboard/", include("projectify.workspace.dashboard_urls")),
+    path("dashboard/", include("projectify.workspace.urls")),
     # TODO make this
     # path("user/", include("projectify.user.urls")),
     path("user/", include("projectify.user.dashboard_urls")),
