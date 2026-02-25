@@ -19,54 +19,13 @@ node_modules/
 
 # Backend
 # =======
-/backend/.env
-/backend/projectify/media/
-/backend/projectify/staticfiles/
-/backend/**/__pycache__
-/backend/.direnv
-/backend/.mypy_cache/
-/backend/.coverage
+projectify/media/
+projectify/staticfiles/
+**/__pycache__
+.mypy_cache/
+.coverage
 # Django Tailwind
-/backend/projectify/theme/static_src/node_modules
-
-# Frontend
-# ========
-# Favicons
-# --------
-/frontend/static/yandex*
-/frontend/static/favicon*
-/frontend/static/shortcut1*
-/frontend/static/mstile*
-/frontend/static/browserconfig.xml
-/frontend/static/manifest.webmanifest
-/frontend/static/apple-touch-*
-/frontend/static/android-chrome-*
-# SvelteKit
-# ---------
-/frontend/build
-/frontend/.svelte-kit
-/frontend/package
-
-# Linters
-# -------
-/frontend/.eslintcache
-
-# TODO still needed?
-# ------------------
-/frontend/.vercel
-/frontend/.netlify
-/frontend/tmp
-
-# Frontend stories
-# ========
-/stories/.svelte-kit
-# Linters
-# -------
-/stories/.eslintcache
-
-# Tooling
-# =======
-/tools/.mypy_cache/
+projectify/theme/static_src/node_modules
 
 # Supervisor
 # ==========

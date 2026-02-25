@@ -7,7 +7,7 @@ set -e
 version="$(date "+%Y.%-m.%-d")"
 echo "Version: $version"
 
-BACKEND_PYPROJECT_TOML="backend/pyproject.toml"
+BACKEND_PYPROJECT_TOML="pyproject.toml"
 FRONTEND_DIR="frontend"
 FRONTEND_PACKAGE_JSON="$FRONTEND_DIR/package.json"
 FRONTEND_LOCK_FILE="$FRONTEND_DIR/package-lock.json"
