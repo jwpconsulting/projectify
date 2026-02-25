@@ -13,63 +13,12 @@ from .. import models
 
 # TODO extract into workspace/test/models/test_label.py
 @pytest.mark.django_db
-class TestLabelManager:
-    """Test Label queryset/manager."""
-
-    def test_filter_by_workspace_pks(
-        self, label: models.Label, workspace: models.Workspace
-    ) -> None:
-        """Test filter_by_workspace_pks."""
-        qs = models.Label.objects.filter_by_workspace_pks([workspace.pk])
-        labels = [label]
-        assert list(qs) == labels
-
-    def test_filter_for_user_and_uuid(
-        self, label: models.Label, team_member: models.TeamMember
-    ) -> None:
-        """Test filter_for_user_and_uuid."""
-        assert (
-            models.Label.objects.filter_for_user_and_uuid(
-                team_member.user,
-                label.uuid,
-            ).get()
-            == label
-        )
-
-
-# TODO extract into workspace/test/models/test_label.py
-@pytest.mark.django_db
 class TestLabel:
     """Test Label model."""
 
     def test_factory(self, label: models.Label) -> None:
         """Test factory."""
         assert label.color is not None
-
-
-# TODO extract into workspace/test/models/test_sub_task.py
-@pytest.mark.django_db
-class TestSubTaskManager:
-    """Test SubTask manager."""
-
-    def test_filter_by_task_pks(
-        self, task: models.Task, sub_task: models.SubTask
-    ) -> None:
-        """Test filter_by_task_pks."""
-        qs = models.SubTask.objects.filter_by_task_pks([task.pk])
-        assert list(qs) == [sub_task]
-
-    def test_filter_for_user_and_uuid(
-        self, sub_task: models.SubTask, team_member: models.TeamMember
-    ) -> None:
-        """Test filter_for_user_and_uuid."""
-        assert (
-            models.SubTask.objects.filter_for_user_and_uuid(
-                team_member.user,
-                sub_task.uuid,
-            ).get()
-            == sub_task
-        )
 
 
 # TODO extract into workspace/test/models/test_sub_task.py
@@ -140,33 +89,6 @@ class TestSubTask:
             sub_task,
         ]
         assert sub_task._order == 0
-
-
-# TODO extract into workspace/test/models/test_chat_message.py
-@pytest.mark.django_db
-class TestChatMessageManager:
-    """Test ChatMessage Manager."""
-
-    def test_filter_by_task_pks(
-        self, chat_message: models.ChatMessage, task: models.Task
-    ) -> None:
-        """Test filter_by_task_pks."""
-        qs = models.ChatMessage.objects.filter_by_task_pks([task.pk])
-        assert list(qs) == [chat_message]
-
-    def test_filter_for_user_and_uuid(
-        self,
-        chat_message: models.ChatMessage,
-        team_member: models.TeamMember,
-    ) -> None:
-        """Test filter_for_user_and_uuid."""
-        assert (
-            models.ChatMessage.objects.filter_for_user_and_uuid(
-                team_member.user,
-                chat_message.uuid,
-            ).get()
-            == chat_message
-        )
 
 
 # TODO extract into workspace/test/models/test_chat_message.py

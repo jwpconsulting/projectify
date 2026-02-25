@@ -4,40 +4,13 @@
 """Customer model for corporate app."""
 
 import uuid
-from typing import TYPE_CHECKING, ClassVar, Self, cast
+from typing import TYPE_CHECKING
 
-from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 
 from projectify.corporate.types import CustomerSubscriptionStatus
 from projectify.lib.models import BaseModel
 from projectify.workspace.models import Workspace
-
-
-class CustomerQuerySet(models.QuerySet["Customer"]):
-    """Customer QuerySet."""
-
-    def get_by_uuid(self, uuid: uuid.UUID) -> "Customer":
-        """Get Customer by UUID."""
-        return self.get(uuid=uuid)
-
-    def get_by_workspace_uuid(self, workspace_uuid: uuid.UUID) -> "Customer":
-        """Get workpsace by UUID."""
-        return self.get(workspace__uuid=workspace_uuid)
-
-    def filter_by_user(self, user: AbstractBaseUser) -> Self:
-        """Filter by user."""
-        return self.filter(workspace__users=user)
-
-    def get_for_user_and_uuid(
-        self, user: AbstractBaseUser, uuid: uuid.UUID
-    ) -> "Customer":
-        """Get customer by user and uuid."""
-        return self.filter_by_user(user).get(uuid=uuid)
-
-    def get_by_stripe_customer_id(self, stripe_customer_id: str) -> "Customer":
-        """Get customer by stripe customer id."""
-        return self.get(stripe_customer_id=stripe_customer_id)
 
 
 class Customer(BaseModel):
@@ -79,10 +52,6 @@ class Customer(BaseModel):
         # Justus 2024-02-23
         # unique=True,
         # db_index=True,
-    )
-
-    objects: ClassVar[CustomerQuerySet] = cast(  # type: ignore[assignment]
-        CustomerQuerySet, CustomerQuerySet.as_manager()
     )
 
     if TYPE_CHECKING:

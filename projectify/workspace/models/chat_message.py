@@ -4,34 +4,13 @@
 """Chat message model."""
 
 import uuid
-from typing import ClassVar, Self, cast
 
-from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 
 from projectify.lib.models import BaseModel
 
 from .task import Task
 from .team_member import TeamMember
-from .types import Pks
-
-
-class ChatMessageQuerySet(models.QuerySet["ChatMessage"]):
-    """ChatMessage query set."""
-
-    def filter_by_task_pks(self, task_pks: Pks) -> Self:
-        """Filter by task pks."""
-        return self.filter(task__pk__in=task_pks)
-
-    def filter_for_user_and_uuid(
-        self, user: AbstractBaseUser, uuid: uuid.UUID
-    ) -> Self:
-        """Get for a specific team member and uuid."""
-        kwargs = {
-            "task__section__project__workspace__users": user,
-            "uuid": uuid,
-        }
-        return self.filter(**kwargs)
 
 
 class ChatMessage(BaseModel):
@@ -48,11 +27,6 @@ class ChatMessage(BaseModel):
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
-    )
-
-    # XXX
-    objects: ClassVar[ChatMessageQuerySet] = cast(  # type: ignore[assignment]
-        ChatMessageQuerySet, ChatMessageQuerySet.as_manager()
     )
 
     class Meta:

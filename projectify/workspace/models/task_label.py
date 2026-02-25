@@ -3,23 +3,12 @@
 # SPDX-FileCopyrightText: 2021, 2022, 2023 JWP Consulting GK
 """Task label model."""
 
-from typing import ClassVar, Self, cast
-
 from django.db import models
 
 from projectify.lib.models import BaseModel
 
 from .label import Label
 from .task import Task
-from .types import Pks
-
-
-class TaskLabelQuerySet(models.QuerySet["TaskLabel"]):
-    """QuerySet for TaskLabel."""
-
-    def filter_by_task_pks(self, pks: Pks) -> Self:
-        """Filter by task pks."""
-        return self.filter(task__pk__in=pks)
 
 
 class TaskLabel(BaseModel):
@@ -32,10 +21,6 @@ class TaskLabel(BaseModel):
     label = models.ForeignKey["Label"](
         Label,
         on_delete=models.CASCADE,
-    )
-
-    objects: ClassVar[TaskLabelQuerySet] = cast(  # type: ignore[assignment]
-        TaskLabelQuerySet, TaskLabelQuerySet.as_manager()
     )
 
     class Meta:
