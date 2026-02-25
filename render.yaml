@@ -1,126 +1,131 @@
-# SPDX-FileCopyrightText: 2024 JWP Consulting GK
+# SPDX-FileCopyrightText: 2024-2026 JWP Consulting GK
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Largely derived from docker-compose.yaml
-services:
-    - name: projectify
-      type: web
-      runtime: image
-      image:
-        url: ghcr.io/jwpconsulting/projectify/projectify-revproxy:latest
-      envVars:
-          - key: HOST
-            sync: false
-          - key: PORT
-            value: 80
-          - key: FRONTEND_PORT
-            value: 5001
-          - key: BACKEND_HOST
-            fromService:
-              name: projectify-backend
+projects:
+  - name: Projectify
+    environments:
+      - name: production
+        services:
+            - name: projectify
+              type: web
+              runtime: image
+              image:
+                url: ghcr.io/jwpconsulting/projectify/projectify-revproxy:latest
+              envVars:
+                  - key: HOST
+                    sync: false
+                  - key: PORT
+                    value: 80
+                  - key: FRONTEND_PORT
+                    value: 5001
+                  - key: BACKEND_HOST
+                    fromService:
+                      name: projectify-backend
+                      type: pserv
+                      property: host
+                  - key: BACKEND_PORT
+                    value: 5002
+            - name: projectify-django
+              type: web
+              runtime: "python"
+              repo: "https://github.com/jwpconsulting/projectify"
+              branch: "main"
+              autoDeployTrigger: "checksPass"
+              # https://render.com/docs/deploy-django
+              startCommand: 'python -m gunicorn --config gunicorn.conf.py --log-config gunicorn-error.log --access-logfile -'
+              preDeployCommand: 'pip install -r requirements.txt && python ./manage.py collectstatic --no-input && python ./manage.py migrate'
+              # TODO
+              # domains:
+              #   - "www.projectifyapp.com"
+              # TODO
+              # healthCheckPath: /health-check
+              # docs/backend/configuration.md
+              envVars:
+                  - key: PORT
+                    value: 10000
+                  - key: DATABASE_URL
+                    fromDatabase:
+                        name: projectify-postgres-production
+                        property: connectionString
+                  - key: REDIS_TLS_URL
+                    fromService:
+                        name: projectify-redis-production
+                        type: redis
+                        property: connectionString
+                  - fromGroup: projectify-backend-shared
+            - name: projectify-backend
               type: pserv
-              property: host
-          - key: BACKEND_PORT
-            value: 5002
-    - name: projectify-django
-      type: web
-      runtime: "python"
-      repo: "https://github.com/jwpconsulting/projectify"
-      branch: "main"
-      autoDeployTrigger: "checksPass"
-      # https://render.com/docs/deploy-django
-      startCommand: 'python -m gunicorn --config gunicorn.conf.py --log-config gunicorn-error.log --access-logfile -'
-      preDeployCommand: 'pip install -r requirements.txt && python ./manage.py collectstatic --no-input && python ./manage.py migrate'
-      domains:
-        - "www.projectifyapp.com"
-      # TODO
-      # healthCheckPath: /health-check
-      # docs/backend/configuration.md
-      envVars:
-          - key: PORT
-            value: 10000
-          - key: DATABASE_URL
-            fromDatabase:
-                name: projectify-postgres-production
-                property: connectionString
-          - key: REDIS_TLS_URL
-            fromService:
-                name: projectify-redis-production
-                type: redis
-                property: connectionString
-          - fromGroup: projectify-backend-shared
-    - name: projectify-backend
-      type: pserv
-      runtime: image
-      image:
-        url: ghcr.io/jwpconsulting/projectify/projectify-backend:latest
-      # docs/backend/configuration.md
-      envVars:
-          - key: PORT
-            value: 5002
-          - key: DATABASE_URL
-            fromDatabase:
-                name: projectify-postgres-production
-                property: connectionString
-          - key: REDIS_TLS_URL
-            fromService:
-                name: projectify-redis-production
-                type: redis
-                property: connectionString
-          - fromGroup: projectify-backend-shared
-    - name: projectify-celery
-      type: worker
-      runtime: image
-      image:
-        url: ghcr.io/jwpconsulting/projectify/projectify-celery:latest
-      envVars:
-          - key: DATABASE_URL
-            fromDatabase:
-                name: projectify-postgres-production
-                property: connectionString
-          - key: REDIS_TLS_URL
-            fromService:
-                name: projectify-redis-production
-                type: redis
-                property: connectionString
-          - fromGroup: projectify-backend-shared
-    - name: projectify-redis-production
-      type: keyvalue
-      ipAllowList: []
-databases:
-    - name: projectify-postgres-production
-      postgresMajorVersion: "15"
-      plan: standard
-      ipAllowList: []
-envVarGroups:
-    - name: projectify-backend-shared
-      envVars:
-          - key: DJANGO_SETTINGS_MODULE
-            value: projectify.settings.production
-          - key: ADMIN_NAME
-            sync: false
-          - key: ADMIN_EMAIL
-            sync: false
-          - key: DJANGO_CONFIGURATION
-            value: Production
-          - key: SECRET_KEY
-            generateValue: true
-          - key: ALLOWED_HOSTS
-            sync: false
-          - key: FRONTEND_URL
-            sync: false
-          - key: STRIPE_PUBLISHABLE_KEY
-            sync: false
-          - key: STRIPE_SECRET_KEY
-            sync: false
-          - key: STRIPE_PRICE_OBJECT
-            sync: false
-          - key: STRIPE_ENDPOINT_SECRET
-            sync: false
-          - key: MAILGUN_API_KEY
-            sync: false
-          - key: MAILGUN_DOMAIN
-            sync: false
-          - key: CSRF_COOKIE_DOMAIN
-            sync: false
+              runtime: image
+              image:
+                url: ghcr.io/jwpconsulting/projectify/projectify-backend:latest
+              # docs/backend/configuration.md
+              envVars:
+                  - key: PORT
+                    value: 5002
+                  - key: DATABASE_URL
+                    fromDatabase:
+                        name: projectify-postgres-production
+                        property: connectionString
+                  - key: REDIS_TLS_URL
+                    fromService:
+                        name: projectify-redis-production
+                        type: redis
+                        property: connectionString
+                  - fromGroup: projectify-backend-shared
+            - name: projectify-celery
+              type: worker
+              runtime: image
+              image:
+                url: ghcr.io/jwpconsulting/projectify/projectify-celery:latest
+              envVars:
+                  - key: DATABASE_URL
+                    fromDatabase:
+                        name: projectify-postgres-production
+                        property: connectionString
+                  - key: REDIS_TLS_URL
+                    fromService:
+                        name: projectify-redis-production
+                        type: redis
+                        property: connectionString
+                  - fromGroup: projectify-backend-shared
+            - name: projectify-redis-production
+              type: keyvalue
+              ipAllowList: []
+        databases:
+            - name: projectify-postgres-production
+              postgresMajorVersion: "15"
+              plan: standard
+              ipAllowList: []
+        envVarGroups:
+            - name: projectify-backend-shared
+              envVars:
+                  - key: DJANGO_SETTINGS_MODULE
+                    value: projectify.settings.production
+                  - key: ADMIN_NAME
+                    sync: false
+                  - key: ADMIN_EMAIL
+                    sync: false
+                  - key: DJANGO_CONFIGURATION
+                    value: Production
+                  - key: SECRET_KEY
+                    generateValue: true
+                  - key: ALLOWED_HOSTS
+                    sync: false
+                  - key: FRONTEND_URL
+                    sync: false
+                  - key: STRIPE_PUBLISHABLE_KEY
+                    sync: false
+                  - key: STRIPE_SECRET_KEY
+                    sync: false
+                  - key: STRIPE_PRICE_OBJECT
+                    sync: false
+                  - key: STRIPE_ENDPOINT_SECRET
+                    sync: false
+                  - key: MAILGUN_API_KEY
+                    sync: false
+                  - key: MAILGUN_DOMAIN
+                    sync: false
+                  - key: CSRF_COOKIE_DOMAIN
+                    sync: false
