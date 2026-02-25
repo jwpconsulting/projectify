@@ -49,7 +49,6 @@ python = "~3.12.12"
 redis = "^5"
 rules = "^3.3"
 stripe = "^8"
-uvicorn = "~0.17.6"
 whitenoise = "~6.2.0"
 django-ratelimit = "^4.1.0"
 django-tailwind = {extras = ["reload"], version = "^3.8.0"}
