@@ -17,6 +17,9 @@ exclude = [
     "backend/projectify/*/test",
 ]
 
+[tool.poetry.requires-plugins]
+poetry-plugin-export = ">=1.8"
+
 [tool.poetry.dependencies]
 celery = {extras = ["redis"], version = "~5.4"}
 cryptography = "^44.0.1"
