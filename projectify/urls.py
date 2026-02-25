@@ -21,6 +21,7 @@ from django.contrib.sitemaps.views import sitemap
 from django.urls import URLPattern, URLResolver, include, path
 from django.views.generic import TemplateView
 
+from projectify.help.sitemap import HelpSitemap
 from projectify.storefront.sitemap import StorefrontSitemap
 
 from .lib.settings import get_settings
@@ -36,6 +37,7 @@ settings = get_settings()
 
 sitemaps = {
     "storefront": StorefrontSitemap,
+    "help": HelpSitemap,
 }
 
 urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
