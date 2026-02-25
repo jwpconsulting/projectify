@@ -48,10 +48,6 @@
 		import backend_headers
 		reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
 	}
-	handle_path /api/* {
-		import backend_headers
-		reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
-	}
 	handle /* {
 		import backend_headers
 		reverse_proxy {$BACKEND_HOST}:{$BACKEND_PORT}
