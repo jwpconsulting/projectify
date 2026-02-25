@@ -22,11 +22,11 @@ maintainers = [
 name = "projectify"
 version = "2025.12.4"
 packages = [
-    { include = "projectify", from = "backend" },
-    { include = "configurations", from = "backend" },
+    { include = "projectify" },
+    { include = "configurations" },
 ]
 exclude = [
-    "backend/projectify/*/test",
+    "projectify/*/test",
 ]
 
 [tool.poetry.requires-plugins]
@@ -191,50 +191,50 @@ module = [
 disallow_untyped_defs = false
 
 [tool.pyright]
-stubPath = "backend/mypy/stubs"
+stubPath = "mypy/stubs"
 typeCheckingMode = "strict"
 typeshedPath = ""
 exclude = [
     ".venv",
     ".direnv",
-    "backend/**/__pycache__/",
+    "__pycache__/",
     # TODO consider just removing whitelist.py
-    "backend/whitelist.py",
+    "whitelist.py",
     # Created by django so we don't bother
-    "backend/projectify/*/migrations/*.py",
+    "projectify/*/migrations/*.py",
     # Missing type stub
-    "backend/projectify/workspace/test/test_migrations.py",
+    "projectify/workspace/test/test_migrations.py",
     # Type confusion over next(filter())
-    "backend/projectify/workspace/views/project.py",
+    "projectify/workspace/views/project.py",
     # This one is sort of covered by mypy
-    "backend/projectify/settings/monkeypatch.py",
+    "projectify/settings/monkeypatch.py",
     # TODO cloudinary stub
-    "backend/projectify/utils.py",
+    "projectify/utils.py",
     # TODO django rules stub
-    "backend/projectify/*/rules.py",
+    "projectify/*/rules.py",
     # TODO write typings
-    "backend/projectify/premail/views.py",
-    "backend/projectify/premail/test/test_views.py",
-    "backend/projectify/premail/test/test_emails.py",
+    "projectify/premail/views.py",
+    "projectify/premail/test/test_views.py",
+    "projectify/premail/test/test_emails.py",
     # TODO false positive in base_url override
-    "backend/projectify/storage.py",
+    "projectify/storage.py",
     # Nix build
-    "backend/result",
+    "result",
     # Pyright reports a few unknown types here that mypy doesn't catch
-    "backend/projectify/workspace/views/task.py",
+    "projectify/workspace/views/task.py",
     # Pyright thinks that Deferrable.DEFERRED, a string, is not assignable
     # to Deferrable | None
-    "backend/projectify/workspace/models/task.py",
+    "projectify/workspace/models/task.py",
     # CheckConstraint false positive, in mypy we can ignore call-arg
     # pyright emits reportCallIssue instead
-    "backend/projectify/workspace/models/workspace.py",
-    "backend/projectify/workspace/models/label.py",
-    "backend/projectify/user/models/user.py",
+    "projectify/workspace/models/workspace.py",
+    "projectify/workspace/models/label.py",
+    "projectify/user/models/user.py",
     # Other issues
-    "backend/projectify/workspace/models/section.py",
-    "backend/projectify/workspace/models/sub_task.py",
+    "projectify/workspace/models/section.py",
+    "projectify/workspace/models/sub_task.py",
     # Vendored in
-    "backend/configurations/**/*.py",
+    "configurations/**/*.py",
 
 ]
 # Mypy doesn't complain about these, so it's fine

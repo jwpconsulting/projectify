@@ -6,4 +6,4 @@ set -e
 export DJANGO_SETTINGS_MODULE=projectify.settings.test
 export DJANGO_CONFIGURATION=TestCollectstatic
 export TEST_STATICFILES_STORAGE=
-poetry run backend/manage.py collectstatic --noinput
+poetry run ./manage.py collectstatic --noinput

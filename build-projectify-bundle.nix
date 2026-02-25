@@ -107,7 +107,7 @@ in
   outputs = [ "out" "static" ];
   postInstall = ''
     mkdir $out/{bin,etc}
-    cp backend/manage.py "$out/bin"
+    cp manage.py "$out/bin"
 
     cp gunicorn.conf.py gunicorn-error.log $out/etc/
 

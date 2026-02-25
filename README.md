@@ -112,16 +112,16 @@ To finish with step 6., configure Projectify and run using the following command
 
 ```bash
 # Run the Django migration command
-poetry run backend/manage.py migrate
+poetry run ./manage.py migrate
 # Seed the database with test data using `seeddb`
-poetry run backend/manage.py seeddb
+poetry run ./manage.py seeddb
 # Start the development server
-poetry run backend/manage.py runserver
+poetry run ./manage.py runserver
 # Open a new terminal and navigate to the repository again
 # Install the tailwind development tool dependencies
-poetry run backend/manage tailwind install
+poetry run ./manage tailwind install
 # Run the tailwind development tool
-poetry run backend/manage tailwind start
+poetry run ./manage tailwind start
 ```
 
 Once you have done all of this, go to Django administration page at

@@ -23,7 +23,7 @@ Use the `has_perm` template tags from django rules like so:
 # Custom template tags
 
 You can find the source code for the template tags in
-`backend/projectify/templatetags/projectify.py`
+`projectify/templatetags/projectify.py`
 
 ## Percent
 
