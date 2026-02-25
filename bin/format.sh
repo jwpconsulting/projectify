@@ -5,6 +5,6 @@
 # Note:
 # Run within a poetry, nix, or similar environment
 set -e
-ruff format .
-ruff check --fix .
-djlint --reformat .
+ruff format backend
+ruff check --fix backend
+djlint --reformat backend

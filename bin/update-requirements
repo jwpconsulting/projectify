@@ -1,0 +1,19 @@
+#!/bin/bash
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: 2023-2026 JWP Consulting GK
+#
+# Update requirements.txt and exit with status 1 if it has
+# changed
+if ! poetry check
+then
+    echo "Poetry check failed. Please fix any issues before using this tool"
+    exit 1
+fi
+
+poetry export --format requirements.txt --output requirements.txt
+
+if ! git diff --exit-code --quiet HEAD -- requirements.txt; then
+    echo "requirements.txt has changed"
+    echo "Please commit"
+    exit 1
+fi

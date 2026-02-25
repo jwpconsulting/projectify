@@ -5,7 +5,7 @@
 # Note:
 # Run within a poetry, nix, or similar environment
 set -e
-target="${1-.}"
+target="${1-backend}"
 echo "Testing $target"
 
 if mypy "$target"
@@ -31,7 +31,7 @@ else
     exit 1
 fi
 
-if djlint --check .
+if djlint --check "$target"
 then
     echo "djlint --check ran successfully"
 else
@@ -49,7 +49,7 @@ else
     exit 1
 fi
 
-if djlint --lint .
+if djlint --lint "$target"
 then
     echo "djlint --lint ran successfully"
 else

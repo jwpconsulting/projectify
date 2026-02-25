@@ -27,7 +27,7 @@ export STRIPE_SECRET_KEY=
 export STRIPE_PRICE_OBJECT=
 export STRIPE_ENDPOINT_SECRET=
 
-if ! poetry run ./manage.py collectstatic --no-input
+if ! poetry run backend/manage.py collectstatic --no-input
 then
     echo "Couldn't perform collectstatic"
     exit 1

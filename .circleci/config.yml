@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2024 JWP Consulting GK
+# SPDX-FileCopyrightText: 2024-2026 JWP Consulting GK
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -6,6 +6,9 @@ version: 2.1
 orbs:
   cli: circleci/circleci-cli@0.1.9
 executors:
+  node:
+    docker:
+       - image: cimg/node:lts
   python:
     docker:
       - image: python:3.12.7
@@ -54,65 +57,82 @@ commands:
           paths:
             - ~/.local
             - ~/.cache
+  prepare_npm:
+    description: Install NPM packages
+    steps:
+      - checkout:
+            path: ~/projectify
+      - restore_cache:
+            key: npm-cache-v2-{{ checksum "~/backend/projectify/theme/static_src/package-lock.json" }}
+      - run:
+            name: npm clean-install
+            command: npm clean-install
+      - save_cache:
+            key: npm-cache-v2-{{ checksum "~/backend/projectify/theme/static_src/package-lock.json" }}
+            paths:
+                - ~/.npm
+                - node_modules
 jobs:
   backend_poetry_check:
     executor: python
-    working_directory: ~/projectify/backend
+    working_directory: ~/projectify
     steps:
       - prepare_poetry
       - run:
-          name: Poetry check
-          command: poetry check
+          name: Poetry check and update requirements
+          command: bin/update-requirements
   backend_lint:
     executor: python
-    working_directory: ~/projectify/backend
+    working_directory: ~/projectify
     steps:
       - prepare_poetry
       - run:
           name: Run ruff format
-          command: poetry run ruff format --check .
+          command: poetry run ruff format --check backend
       - run:
           name: Run ruff
-          command: poetry run ruff check .
+          command: poetry run ruff check backend
   backend_djlint:
     executor: python
-    working_directory: ~/projectify/backend
+    working_directory: ~/projectify
     steps:
       - prepare_poetry
       - run:
           name: Run djlint --check
-          command: poetry run djlint --check .
+          command: poetry run djlint --check backend
       - run:
           name: Run djlint --lint
-          command: poetry run djlint --lint .
+          command: poetry run djlint --lint backend
   backend_mypy:
     executor: python
-    working_directory: ~/projectify/backend
+    working_directory: ~/projectify
     steps:
       - prepare_poetry
       - run:
           name: Run mypy
-          command: poetry run mypy .
+          command: poetry run mypy backend
   backend_pyright:
     executor: python
-    working_directory: ~/projectify/backend
+    working_directory: ~/projectify
     steps:
       - prepare_poetry
       - run:
           name: Run pyright
-          command: poetry run pyright .
+          command: poetry run pyright backend
   backend_collectstatic:
     executor: python
-    working_directory: ~/projectify/backend
+    working_directory: ~/projectify
     steps:
       - prepare_poetry
       - run:
           name: Run collectstatic
-          command: poetry run ./manage.py collectstatic --noinput
+          command: poetry run backend/manage.py collectstatic --noinput
           environment:
             DJANGO_CONFIGURATION: TestCollectstatic
   backend_tests:
     executor: python_and_postgres
+    # TODO change to
+    # working_directory: ~/projectify
     working_directory: ~/projectify/backend
     parallelism: 8
     steps:
@@ -132,15 +152,23 @@ jobs:
           path: test-results
   backend_seeddb:
     executor: python_and_postgres
-    working_directory: ~/projectify/backend
+    working_directory: ~/projectify
     steps:
       - prepare_poetry
       - run:
           name: Migrate
-          command: poetry run ./manage.py migrate
+          command: poetry run backend/manage.py migrate
       - run:
           name: Seed DB
-          command: poetry run ./manage.py seeddb --n-users 3 --n-workspaces 1 --n-projects 1 --n-labels 1 --n-tasks 1
+          command: poetry run backend/manage.py seeddb --n-users 3 --n-workspaces 1 --n-projects 1 --n-labels 1 --n-tasks 1
+  frontend_tailwind_check:
+    executor: node
+    working_directory: ~/projectify
+    steps:
+      - prepare_npm
+      - run:
+          name: Build Tailwind CSS
+          command: bin/build-tailwind-styles
   tools_reuse_lint:
     executor: python
     working_directory: ~/projectify
@@ -162,4 +190,5 @@ workflows:
       - backend_tests
       - backend_seeddb
       - backend_collectstatic
+      - frontend_tailwind_check
       - tools_reuse_lint

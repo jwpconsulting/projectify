@@ -2,13 +2,25 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-[tool.poetry]
+[project]
 name = "projectify"
 version = "2025.12.4"
 description = "Projectify Backend"
-maintainers = ["Justus Perlwitz <justus@jwpconsulting.net>"]
-authors = ["The Projectify Authors"]
 readme = "README.md"
+license = "AGPL-3.0-or-later"
+license-files = [
+    "LICENSES/*"
+]
+authors = [
+    { name = "The Projectify Authors", email = "hello@projectifyapp.com" },
+]
+maintainers = [
+    { name = "Justus Perlwitz", email = "justus@jwpconsulting.net" },
+]
+
+[tool.poetry]
+name = "projectify"
+version = "2025.12.4"
 packages = [
     { include = "projectify", from = "backend" },
     { include = "configurations", from = "backend" },
@@ -16,6 +28,9 @@ packages = [
 exclude = [
     "backend/projectify/*/test",
 ]
+
+[tool.poetry.requires-plugins]
+poetry-plugin-export = ">=1.8"
 
 [tool.poetry.dependencies]
 celery = {extras = ["redis"], version = "~5.4"}

@@ -6,8 +6,6 @@
 , python312
 , postgresql_15
 
-, tailwind-deps
-
 , poetry2nix
 }:
 let
@@ -107,15 +105,11 @@ in
   groups = [ "main" ];
   checkGroups = [ ];
   outputs = [ "out" "static" ];
-  preConfigure = ''
-    mkdir backend/projectify/theme/{static,static/css}
-    cp -r ${tailwind-deps}/dist backend/projectify/theme/static/css/dist
-  '';
   postInstall = ''
     mkdir $out/{bin,etc}
     cp backend/manage.py "$out/bin"
 
-    cp backend/{gunicorn.conf.py,gunicorn-error.log} $out/etc/
+    cp gunicorn.conf.py gunicorn-error.log $out/etc/
 
     mkdir $static
     env \

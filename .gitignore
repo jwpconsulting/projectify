@@ -28,7 +28,6 @@ node_modules/
 /backend/.coverage
 # Django Tailwind
 /backend/projectify/theme/static_src/node_modules
-/backend/projectify/theme/static/css/dist/styles.css
 
 # Frontend
 # ========
