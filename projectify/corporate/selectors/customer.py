@@ -23,8 +23,7 @@ logger = logging.getLogger(__name__)
 def customer_find_by_uuid(*, customer_uuid: UUID) -> Optional[Customer]:
     """Find a customer by UUID."""
     try:
-        # The following method can be refactored in here
-        return Customer.objects.get_by_uuid(customer_uuid)
+        return Customer.objects.get(uuid=customer_uuid)
     except Customer.DoesNotExist:
         return None
 
@@ -35,8 +34,7 @@ def customer_find_by_stripe_customer_id(
 ) -> Optional[Customer]:
     """Find a customer by stripe id."""
     try:
-        # The following method can be refactored in here
-        return Customer.objects.get_by_stripe_customer_id(stripe_customer_id)
+        return Customer.objects.get(stripe_customer_id=stripe_customer_id)
     except Customer.DoesNotExist:
         return None
 

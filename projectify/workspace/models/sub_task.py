@@ -4,35 +4,14 @@
 """Contain sub task model and manager."""
 
 import uuid
-from typing import ClassVar, Self, cast
 
-from django.contrib.auth.models import AbstractBaseUser
 from django.db import models, transaction
 from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import BaseModel, TitleDescriptionModel
 
 from .task import Task
-from .types import Pks
 from .workspace import Workspace as Workspace
-
-
-class SubTaskQuerySet(models.QuerySet["SubTask"]):
-    """Sub task queryset."""
-
-    def filter_by_task_pks(self, task_pks: Pks) -> Self:
-        """Filter by task pks."""
-        return self.filter(task__pk__in=task_pks)
-
-    def filter_for_user_and_uuid(
-        self, user: AbstractBaseUser, uuid: uuid.UUID
-    ) -> Self:
-        """Get sub task for a certain user and sub task uuid."""
-        kwargs = {
-            "task__section__project__workspace__users": user,
-            "uuid": uuid,
-        }
-        return self.filter(**kwargs)
 
 
 class SubTask(TitleDescriptionModel, BaseModel):
@@ -46,10 +25,6 @@ class SubTask(TitleDescriptionModel, BaseModel):
     done = models.BooleanField(
         default=False,
         help_text=_("Designate whether this sub task is done"),
-    )
-
-    objects: ClassVar[SubTaskQuerySet] = cast(  # type: ignore[assignment]
-        SubTaskQuerySet, SubTaskQuerySet.as_manager()
     )
 
     # Ordering related
