@@ -3,30 +3,12 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Largely derived from docker-compose.yaml
+# TODO out of sync and disconnected from production right now
 projects:
   - name: Projectify
     environments:
       - name: production
         services:
-            - name: projectify
-              type: web
-              runtime: image
-              image:
-                url: ghcr.io/jwpconsulting/projectify/projectify-revproxy:latest
-              envVars:
-                  - key: HOST
-                    sync: false
-                  - key: PORT
-                    value: 80
-                  - key: FRONTEND_PORT
-                    value: 5001
-                  - key: BACKEND_HOST
-                    fromService:
-                      name: projectify-backend
-                      type: pserv
-                      property: host
-                  - key: BACKEND_PORT
-                    value: 5002
             - name: projectify-django
               type: web
               runtime: "python"
@@ -45,25 +27,6 @@ projects:
               envVars:
                   - key: PORT
                     value: 10000
-                  - key: DATABASE_URL
-                    fromDatabase:
-                        name: projectify-postgres-production
-                        property: connectionString
-                  - key: REDIS_TLS_URL
-                    fromService:
-                        name: projectify-redis-production
-                        type: redis
-                        property: connectionString
-                  - fromGroup: projectify-backend-shared
-            - name: projectify-backend
-              type: pserv
-              runtime: image
-              image:
-                url: ghcr.io/jwpconsulting/projectify/projectify-backend:latest
-              # docs/backend/configuration.md
-              envVars:
-                  - key: PORT
-                    value: 5002
                   - key: DATABASE_URL
                     fromDatabase:
                         name: projectify-postgres-production
