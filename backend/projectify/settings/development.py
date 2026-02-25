@@ -52,9 +52,6 @@ class Development(Base):
     SECRET_KEY = "development"
 
     INSTALLED_APPS: Sequence[str] = (
-        # Add daphne for ./manage.py runserver
-        # Needs to be there before django.contrib.staticfiles
-        "daphne",
         *Base.INSTALLED_APPS,
         "django_browser_reload",
         "django_extensions",
