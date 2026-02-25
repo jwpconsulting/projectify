@@ -7,5 +7,5 @@
            name="{{ widget.name }}"
            {% if widget.value != None %}value="{{ widget.value|stringformat:'s' }}"{% endif %}
            {% include "django/forms/widgets/attrs.html" %}>
-    <span class="hidden absolute pointer-events-none peer-checked:block">{% icon "check" %}</span>
+    <span class="hidden absolute pointer-events-none peer-checked:block">{% icon "check" size=4 %}</span>
 </div>
