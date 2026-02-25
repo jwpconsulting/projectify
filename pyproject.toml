@@ -126,17 +126,16 @@ section-order = [
     "local-folder",
 ]
 split-on-trailing-comma = false
+known-first-party = [
+    "configurations",
+    "projectify",
+    "pytest_types",
+]
 
 [tool.ruff.lint.isort.sections]
 django = [
     "django"
 ]
-# third-party = [
-#     "asgiref",
-#     "channels",
-#     "pytest",
-#     "rest_framework"
-# ]
 
 [tool.mypy]
 mypy_path = [
