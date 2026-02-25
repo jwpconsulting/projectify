@@ -23,12 +23,31 @@ services:
               property: host
           - key: BACKEND_PORT
             value: 5002
+    - name: projectify-django
+      type: web
+      runtime: image
+      image:
+        url: ghcr.io/jwpconsulting/projectify/projectify-backend:latest
+      preDeployCommand: projectify-manage migrate
+      # docs/backend/configuration.md
+      envVars:
+          - key: PORT
+            value: 10000
+          - key: DATABASE_URL
+            fromDatabase:
+                name: projectify-postgres-production
+                property: connectionString
+          - key: REDIS_TLS_URL
+            fromService:
+                name: projectify-redis-production
+                type: redis
+                property: connectionString
+          - fromGroup: projectify-backend-shared
     - name: projectify-backend
       type: pserv
       runtime: image
       image:
         url: ghcr.io/jwpconsulting/projectify/projectify-backend:latest
-      preDeployCommand: projectify-manage migrate
       # docs/backend/configuration.md
       envVars:
           - key: PORT
