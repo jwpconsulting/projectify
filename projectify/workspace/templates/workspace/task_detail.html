@@ -122,32 +122,22 @@
                     </div>
                 {% endif %}
             </div>
-            <div id="subtasks" class="flex grow flex-col">
+            <div id="subtasks" class="flex grow flex-col px-4">
                 {% for sub_task in task.subtask_set.all %}
                     <div class="flex grow flex-row items-center gap-2 px-2 py-1">
-                        <label for="checkbox-{{ sub_task.uuid }}" class="sr-only">{% trans "Sub task done" %}</label>
-                        <div class="relative m-0.5 h-4 w-4 rounded border border-secondary-hover ">
-                            <input class="absolute -left-[3px] -top-[3px] h-5 w-5 appearance-none rounded-md border border-transparent"
-                                   type="checkbox"
-                                   id="checkbox-{{ sub_task.uuid }}"
-                                   checked="{{ sub_task.done|yesno:"true,false" }}"
-                                   disabled="">
+                        <div class="size-4 shrink-0 rounded border border-secondary-hover"
+                             role="img"
+                             aria-label="{% if sub_task.done %}{% trans 'Subtask completed' %}{% else %}{% trans 'Subtask not completed' %}{% endif %}">
+                            {% if sub_task.done %}
+                                {% icon "check" size=4 %}
+                            {% endif %}
                         </div>
-                        <div class="grow">
-                            <label for="{{ sub_task.uuid }}" class="sr-only">{% trans "Enter a subtask" %}</label>
-                            <div class="flex w-full flex-row items-center gap-2">
-                                <input type="text"
-                                       class="placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2"
-                                       id="{{ sub_task.uuid }}"
-                                       name="sub-task-{{ sub_task.uuid }}"
-                                       value="{{ sub_task.title }}"
-                                       placeholder="{% trans 'Enter a subtask' %}"
-                                       readonly="true">
-                                <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=subtask&subtask_uuid={{ sub_task.uuid }}"
-                                   class="flex flex-row">
-                                    <div class="h-4 w-4">{% icon "pencil" %}</div>
-                                </a>
-                            </div>
+                        <div class="shrink flex min-w-0 items-center gap-2">
+                            <p class="h-full w-full truncate overflow-x-hidden">{{ sub_task.title }}</p>
+                            <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=subtask&subtask_uuid={{ sub_task.uuid }}"
+                               class="flex flex-row">
+                                <div class="h-4 w-4">{% icon "pencil" %}</div>
+                            </a>
                         </div>
                     </div>
                 {% empty %}
