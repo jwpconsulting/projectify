@@ -48,11 +48,8 @@ urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
         "icons/<str:icon>/<str:color>.svg", colored_icon, name="colored-icon"
     ),
     # New Django frontend urls
-    # TODO make this
     path("dashboard/", include("projectify.workspace.urls")),
-    # TODO make this
-    # path("user/", include("projectify.user.urls")),
-    path("user/", include("projectify.user.dashboard_urls")),
+    path("user/", include("projectify.user.urls")),
     path("", include("projectify.storefront.urls")),
     path("help/", include("projectify.help.urls")),
     path("onboarding/", include("projectify.onboarding.urls")),
