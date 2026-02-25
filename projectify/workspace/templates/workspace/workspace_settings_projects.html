@@ -97,9 +97,7 @@
     <section class="flex flex-col gap-2">
         <strong>{% trans "Help" %}</strong>
         <ul class="flex list-inside list-disc flex-col gap-2">
-            <li>
-                {% url 'help:detail' page='projects' as help_url %}{% anchor href=help_url label=_("About projects") external=True %}
-            </li>
+            <li>{% anchor href="help:topic:projects" label=_("About projects") external=True %}</li>
         </ul>
     </section>
 {% endblock workspace_settings_content %}

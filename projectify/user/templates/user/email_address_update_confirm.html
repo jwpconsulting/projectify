@@ -26,7 +26,7 @@
             <h2 class="font-bold">{% translate "What to do" %}</h2>
             <ul class="list-disc pl-5 mt-2">
                 <li>
-                    <a href="{% url "users-django:update-email-address" %}"
+                    <a href="{% url "users:update-email-address" %}"
                        class="text-blue-600 hover:underline">{% translate "Try updating your email address one more time" %}</a>
                 </li>
                 <li>
@@ -37,7 +37,7 @@
         </div>
     </div>
     <div class="flex flex-row gap-2">
-        <a href="{% url "users-django:profile" %}"
+        <a href="{% url "users:profile" %}"
            class="w-full text-secondary-content hover:bg-secondary-hover hover:text-secondary-content-hover active:bg-secondary-pressed active:text-secondary-content-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content"> {% translate "Go back to profile" %} </a>
     </div>
 {% endblock user_profile_content %}

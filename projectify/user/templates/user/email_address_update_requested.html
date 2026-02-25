@@ -11,7 +11,7 @@
         <p>
             {% trans "We will send an email with to your new email address containing a link that you can click to confirm your new email address. Please follow the instructions in the email." %}
         </p>
-        <a href="{% url "users-django:profile" %}"
+        <a href="{% url "users:profile" %}"
            class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Go back to profile" %}</a>
     </div>
 {% endblock user_profile_content %}

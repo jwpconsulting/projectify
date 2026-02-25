@@ -17,8 +17,12 @@ from typing import Union
 
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
 from django.urls import URLPattern, URLResolver, include, path
 from django.views.generic import TemplateView
+
+from projectify.help.sitemap import HelpSitemap
+from projectify.storefront.sitemap import StorefrontSitemap
 
 from .lib.settings import get_settings
 from .lib.views import (
@@ -31,6 +35,11 @@ from .lib.views import (
 
 settings = get_settings()
 
+sitemaps = {
+    "storefront": StorefrontSitemap,
+    "help": HelpSitemap,
+}
+
 urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     # TODO may I use projectify.admin.admin.urls here?
     path("admin/", admin.site.urls),
@@ -39,12 +48,8 @@ urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
         "icons/<str:icon>/<str:color>.svg", colored_icon, name="colored-icon"
     ),
     # New Django frontend urls
-    # TODO make this
-    # path("dashboard/", include("projectify.workspace.urls")),
-    path("dashboard/", include("projectify.workspace.dashboard_urls")),
-    # TODO make this
-    # path("user/", include("projectify.user.urls")),
-    path("user/", include("projectify.user.dashboard_urls")),
+    path("dashboard/", include("projectify.workspace.urls")),
+    path("user/", include("projectify.user.urls")),
     path("", include("projectify.storefront.urls")),
     path("help/", include("projectify.help.urls")),
     path("onboarding/", include("projectify.onboarding.urls")),
@@ -67,6 +72,12 @@ urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
             template_name="well-known-security.txt",
             content_type="text/plain; charset=UTF8",
         ),
+    ),
+    path(
+        "sitemap.xml",
+        sitemap,
+        {"sitemaps": sitemaps},
+        name="django.contrib.sitemaps.views.sitemap",
     ),
 )
 

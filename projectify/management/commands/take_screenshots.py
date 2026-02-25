@@ -350,7 +350,7 @@ class Command(BaseCommand):
         assert self.essay_task
         assert self.branding_task
 
-        driver.get(f"{base_url}{reverse('users-django:log-in')}")
+        driver.get(f"{base_url}{reverse('users:log-in')}")
         wait = WebDriverWait(driver, 2)
         email_field = wait.until(
             EC.presence_of_element_located((By.NAME, "email"))

@@ -25,9 +25,7 @@ from projectify.user.views.user import (
     user_profile,
 )
 
-# TODO Rename to
-# app_name = "users"
-app_name = "users-django"
+app_name = "users"
 
 urlpatterns = (
     path("profile/", user_profile, name="profile"),
