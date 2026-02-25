@@ -75,7 +75,7 @@ commands:
 jobs:
   backend_poetry_check:
     executor: python
-    working_directory: ~/projectify/backend
+    working_directory: ~/projectify
     steps:
       - prepare_poetry
       - run:
@@ -83,54 +83,56 @@ jobs:
           command: bin/update-requirements
   backend_lint:
     executor: python
-    working_directory: ~/projectify/backend
+    working_directory: ~/projectify
     steps:
       - prepare_poetry
       - run:
           name: Run ruff format
-          command: poetry run ruff format --check .
+          command: poetry run ruff format --check backend
       - run:
           name: Run ruff
-          command: poetry run ruff check .
+          command: poetry run ruff check backend
   backend_djlint:
     executor: python
-    working_directory: ~/projectify/backend
+    working_directory: ~/projectify
     steps:
       - prepare_poetry
       - run:
           name: Run djlint --check
-          command: poetry run djlint --check .
+          command: poetry run djlint --check backend
       - run:
           name: Run djlint --lint
-          command: poetry run djlint --lint .
+          command: poetry run djlint --lint backend
   backend_mypy:
     executor: python
-    working_directory: ~/projectify/backend
+    working_directory: ~/projectify
     steps:
       - prepare_poetry
       - run:
           name: Run mypy
-          command: poetry run mypy .
+          command: poetry run mypy backend
   backend_pyright:
     executor: python
-    working_directory: ~/projectify/backend
+    working_directory: ~/projectify
     steps:
       - prepare_poetry
       - run:
           name: Run pyright
-          command: poetry run pyright .
+          command: poetry run pyright backend
   backend_collectstatic:
     executor: python
-    working_directory: ~/projectify/backend
+    working_directory: ~/projectify
     steps:
       - prepare_poetry
       - run:
           name: Run collectstatic
-          command: poetry run ./manage.py collectstatic --noinput
+          command: poetry run backend/manage.py collectstatic --noinput
           environment:
             DJANGO_CONFIGURATION: TestCollectstatic
   backend_tests:
     executor: python_and_postgres
+    # TODO change to
+    # working_directory: ~/projectify
     working_directory: ~/projectify/backend
     parallelism: 8
     steps:
@@ -150,15 +152,15 @@ jobs:
           path: test-results
   backend_seeddb:
     executor: python_and_postgres
-    working_directory: ~/projectify/backend
+    working_directory: ~/projectify
     steps:
       - prepare_poetry
       - run:
           name: Migrate
-          command: poetry run ./manage.py migrate
+          command: poetry run backend/manage.py migrate
       - run:
           name: Seed DB
-          command: poetry run ./manage.py seeddb --n-users 3 --n-workspaces 1 --n-projects 1 --n-labels 1 --n-tasks 1
+          command: poetry run backend/manage.py seeddb --n-users 3 --n-workspaces 1 --n-projects 1 --n-labels 1 --n-tasks 1
   frontend_tailwind_check:
     executor: node
     working_directory: ~/projectify
