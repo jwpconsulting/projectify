@@ -9,8 +9,6 @@ from django.test.client import Client
 from django.urls import reverse
 
 import pytest
-from rest_framework.response import Response
-from rest_framework.test import APIClient
 
 from projectify.workspace.models.section import Section
 from projectify.workspace.models.task import Task
@@ -18,25 +16,6 @@ from pytest_types import DjangoAssertNumQueries
 
 from ... import models
 from ...services.sub_task import sub_task_create
-
-
-class UnauthenticatedTestMixin:
-    """Test that resource cannot be accessed without authorization."""
-
-    def test_unauthenticated(
-        self, resource_url: str, rest_client: APIClient
-    ) -> None:
-        """Test we cannot access the resource."""
-        response: Response = rest_client.options(resource_url)
-        # It's not 403, because DRF does not return the www authenticate realm
-        # as a response to an API user.
-        # See
-        # https://github.com/encode/django-rest-framework/blob/605cc4f7367f58002056453d9befd3c1918f6a38/rest_framework/authentication.py#L112
-        # there is no "authenticate_header" method. If it existed, we would
-        # get a 401 instead. I was confused at first, but by their logic it
-        # makes some sense.
-        assert response.status_code == 403, response.data
-
 
 pytestmark = pytest.mark.django_db
 
