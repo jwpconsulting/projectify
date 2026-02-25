@@ -4,7 +4,7 @@
 """Task CRUD views."""
 
 import logging
-from typing import Any, Literal, Optional, Union
+from typing import Any, Literal, Optional
 from uuid import UUID
 
 from django import forms
@@ -16,9 +16,6 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods, require_POST
-
-from rest_framework.exceptions import NotFound
-from rest_framework.request import Request
 
 from projectify.lib.htmx import HttpResponseClientRedirect
 from projectify.lib.types import AuthenticatedHttpRequest
@@ -47,9 +44,7 @@ from ..services.task import (
 logger = logging.getLogger(__name__)
 
 
-def get_object(
-    request: Union[Request, AuthenticatedHttpRequest], task_uuid: UUID
-) -> Task:
+def get_object(request: AuthenticatedHttpRequest, task_uuid: UUID) -> Task:
     """Get object for user and uuid."""
     user = request.user
     obj = task_find_by_task_uuid(
@@ -60,7 +55,7 @@ def get_object(
         qs=TaskDetailQuerySet,
     )
     if obj is None:
-        raise NotFound(
+        raise Http404(
             _("Task with uuid {task_uuid} not found").format(
                 task_uuid=task_uuid
             )

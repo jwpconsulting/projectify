@@ -57,7 +57,7 @@
                         {% trans "Select the amount of workspace seats. For each team member that is invited or added, a seat is used up." %}
                     </p>
                 </header>
-                {{ form.seats.as_field_group }}
+                {{ billing_form }}
                 {% include "projectify/forms/submit.html" with text=_("Go to checkout") name="action" value="checkout" %}
             </form>
             <form method="post" class="flex flex-col gap-4">
@@ -68,7 +68,7 @@
                         {% trans "If someone has given you a coupon code, you can use it here to upgrade your workspace. Please refer to the details given to you for more information on what features will be unlocked for your workspace. If you have any questions, please ask the person who gave you the coupon code or contact us." %}
                     </p>
                 </header>
-                {{ form.code.as_field_group }}
+                {{ coupon_form }}
                 {% include "projectify/forms/submit.html" with text=_("Redeem coupon code") name="action" value="redeem_coupon" %}
             </form>
         {% elif workspace.customer.subscription_status == "CUSTOM" %}

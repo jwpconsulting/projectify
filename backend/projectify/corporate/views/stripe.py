@@ -8,20 +8,17 @@ from collections.abc import Callable, Mapping
 from typing import Any, Literal, Optional, Union
 from uuid import UUID
 
+from django.http import (
+    HttpRequest,
+    HttpResponse,
+    HttpResponseBadRequest,
+    HttpResponseServerError,
+)
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 
 import stripe
 from rest_framework import serializers
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
-from rest_framework.request import Request
-from rest_framework.response import Response
-from rest_framework.status import (
-    HTTP_200_OK,
-    HTTP_400_BAD_REQUEST,
-    HTTP_500_INTERNAL_SERVER_ERROR,
-)
 
 from projectify.lib.settings import get_settings
 
@@ -317,27 +314,37 @@ def _handle_event(
 
 
 @csrf_exempt
-@api_view(["POST"])
-@permission_classes([AllowAny])
-def stripe_webhook(request: Request) -> Response:
+def stripe_webhook(request: HttpRequest) -> HttpResponse:
     """Construct event type using data coming from stripe."""
     payload = request.body
-    sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
+    if "stripe-signature" not in request.headers:
+        logger.warning(
+            "Missing Stripe-Signature in stripe webhook. Available headers: %s",
+            request.headers.keys(),
+        )
+        return HttpResponseBadRequest(content=_("Missing signature"))
+    sig_header: str = request.headers["stripe-signature"]
 
     event = _construct_event(payload, sig_header)
     match event:
         case "invalid_payload":
-            return Response(status=HTTP_400_BAD_REQUEST)
+            logger.warning("Invalid payload in stripe webhook")
+            return HttpResponseBadRequest(content=_("Missing payload"))
         case "invalid_signature":
-            return Response(status=HTTP_400_BAD_REQUEST)
+            logger.warning("Invalid signature in stripe webhook")
+            return HttpResponseBadRequest(content=_("Invalid signature"))
         case event:
             pass
 
     result = _handle_event(event)
     match result:
         case "bad_request":
-            return Response(status=HTTP_400_BAD_REQUEST)
+            return HttpResponseBadRequest(
+                content=_("Could not process this payload")
+            )
         case "internal_server_error":
-            return Response(status=HTTP_500_INTERNAL_SERVER_ERROR)
+            return HttpResponseServerError(
+                content=_("Something went wrong on our side")
+            )
         case "ok":
-            return Response(status=HTTP_200_OK)
+            return HttpResponse()

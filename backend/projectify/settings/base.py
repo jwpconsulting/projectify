@@ -130,7 +130,6 @@ class Base(Configuration):  # type:ignore
         "cloudinary_storage",
         "django_celery_results",
         "pgtrigger",
-        "rest_framework",
         "rules.apps.AutodiscoverRulesConfig",
         "tailwind",
         "markdownify.apps.MarkdownifyConfig",
@@ -261,18 +260,6 @@ class Base(Configuration):  # type:ignore
     # Email
     DEFAULT_FROM_EMAIL = '"Projectify" <hello@projectifyapp.com>'
     EMAIL_EAGER = False
-
-    # Rest framework
-    REST_FRAMEWORK = {
-        "DEFAULT_AUTHENTICATION_CLASSES": [
-            "rest_framework.authentication.SessionAuthentication",
-        ],
-        "DEFAULT_PERMISSION_CLASSES": (
-            "rest_framework.permissions.IsAuthenticated",
-        ),
-        "EXCEPTION_HANDLER": "projectify.lib.exception_handler.exception_handler",
-        "NON_FIELD_ERRORS_KEY": "drf_general",
-    }
 
     # Where to store media
     MEDIA_ROOT = BASE_DIR / "media"

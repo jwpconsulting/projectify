@@ -722,41 +722,27 @@ def workspace_settings_team_member_update(
     )
 
 
-class WorkspaceBillingForm(forms.Form):
-    """Django form for workspace billing actions."""
+class WorkspaceCouponForm(forms.Form):
+    """Form for adding a coupon to a workspace."""
 
-    action = forms.CharField(widget=forms.HiddenInput)
+    code = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={"placeholder": _("Enter coupon code")}),
+        label=_("Coupon code"),
+    )
+
+
+class WorkspaceBillingForm(forms.Form):
+    """Checkout form."""
+
     seats = forms.IntegerField(
         min_value=1,
         max_value=100,
-        required=False,
         widget=forms.NumberInput(
             attrs={"placeholder": _("Number of workspace seats")}
         ),
         label=_("Workspace seats"),
     )
-    code = forms.CharField(
-        max_length=100,
-        required=False,
-        widget=forms.TextInput(attrs={"placeholder": _("Enter coupon code")}),
-        label=_("Coupon code"),
-    )
-
-    def clean(self) -> dict[str, Any]:
-        """Make sure the right values are passed based on the action."""
-        data = self.cleaned_data
-        match data["action"]:
-            case "redeem_coupon":
-                if not data["code"]:
-                    self.add_error("code", _("Must enter coupon code"))
-            case "checkout":
-                if not data["seats"]:
-                    self.add_error("seats", _("Must enter number of seats"))
-
-            case _:
-                # XXX this error is not visible
-                self.add_error(None, _("Invalid action selected"))
-        return super().clean()
 
 
 # XXX this should be in the corporate app
@@ -807,12 +793,20 @@ def workspace_settings_billing(
         request=request, workspace=workspace, active_tab="billing"
     )
 
-    if request.method == "GET":
-        match workspace.customer.subscription_status:
-            case "UNPAID" | "CANCELLED":
-                form = WorkspaceBillingForm()
-                context = {**context, "form": form}
-            case "ACTIVE":
+    template = "workspace/workspace_settings_billing.html"
+    context = {
+        **context,
+        "billing_form": WorkspaceBillingForm(),
+        "coupon_form": WorkspaceCouponForm(),
+    }
+
+    match (
+        request.method,
+        request.POST.get("action"),
+        workspace.customer.subscription_status,
+    ):
+        case "GET", _, _:
+            if workspace.customer.subscription_status == "ACTIVE":
                 quota = workspace.quota.team_members_and_invites
                 seats_remaining = (quota.limit or 0) - (quota.current or 0)
                 context = {
@@ -821,68 +815,48 @@ def workspace_settings_billing(
                     "seats_remaining": seats_remaining,
                     "price_per_seat": PRICE_PER_SEAT,
                 }
-            case "CUSTOM":
-                pass
-            case other:
-                raise ValueError(f"Unexpected subscription_status {other}")
 
-        return render(
-            request,
-            "workspace/workspace_settings_billing.html",
-            context=context,
-        )
-    form = WorkspaceBillingForm(request.POST)
-
-    match workspace.customer.subscription_status:
-        case "UNPAID" | "CANCELLED":
-            pass
-        case _:
+            return render(request, template, context=context)
+        case "POST", _, "ACTIVE":
             return HttpResponseBadRequest(
                 _(
                     "You've already activated a subscription for this workspace"
                 ),
             )
-    context = {**context, "form": form}
-    if not form.is_valid():
-        return render(
-            request,
-            "workspace/workspace_settings_billing.html",
-            context=context,
-        )
-    data = form.cleaned_data
-    # Checkout session
-    match data["action"]:
-        case "checkout":
+        case "POST", "checkout", _:
+            billing_form = WorkspaceBillingForm(request.POST)
+            if not billing_form.is_valid():
+                context = {**context, "billing_form": billing_form}
+                return render(request, template, context=context, status=400)
             try:
                 session = customer_create_stripe_checkout_session(
                     customer=workspace.customer,
                     who=request.user,
-                    seats=data["seats"],
+                    seats=billing_form.cleaned_data["seats"],
                 )
             except serializers.ValidationError as e:
-                populate_form_with_drf_errors(form, e)
-                return render(
-                    request,
-                    "workspace/workspace_settings_billing.html",
-                    context=context,
-                )
+                populate_form_with_drf_errors(billing_form, e)
+                context = {**context, "billing_form": billing_form}
+                return render(request, template, context=context, status=400)
             return redirect(session.url)
-        case "redeem_coupon":
+        case "POST", "redeem_coupon", _:
+            coupon_form = WorkspaceCouponForm(request.POST)
+            if not coupon_form.is_valid():
+                context = {**context, "coupon_form": coupon_form}
+                return render(request, template, context=context, status=400)
             try:
                 coupon_redeem(
-                    who=request.user, code=data["code"], workspace=workspace
+                    who=request.user,
+                    code=coupon_form.cleaned_data["code"],
+                    workspace=workspace,
                 )
             except serializers.ValidationError as e:
-                populate_form_with_drf_errors(form, e)
-                return render(
-                    request,
-                    "workspace/workspace_settings_billing.html",
-                    context=context,
-                    status=400,
-                )
+                populate_form_with_drf_errors(coupon_form, e)
+                context = {**context, "coupon_form": coupon_form}
+                return render(request, template, context=context, status=400)
             return redirect("dashboard:workspaces:billing", workspace.uuid)
         case _:
-            return HttpResponseBadRequest()
+            return HttpResponseBadRequest(_("Expected action"))
 
 
 QuotaEntry = TypedDict("QuotaEntry", {"label": str, "quota": Quota})
