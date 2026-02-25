@@ -26,7 +26,7 @@
             <h1 class="text-center text-4xl font-bold">{% trans "Email address confirmed" %}</h1>
             <div class="flex flex-col gap-6">
                 <p class="text-center">{% trans "Your email address was confirmed successfully. You may now proceed to log in." %}</p>
-                <a href="{% url "users-django:log-in" %}"
+                <a href="{% url "users:log-in" %}"
                    class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
                     {% trans "Continue to log in" %}
                 </a>

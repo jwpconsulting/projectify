@@ -59,16 +59,14 @@ def email_confirm_test(request: HttpRequest) -> HttpResponse:
     invalid_email = "nonexistent@example.com"
 
     # Generate URLs for the three scenarios
-    valid_url = reverse(
-        "users-django:confirm-email", args=(user.email, valid_token)
-    )
+    valid_url = reverse("users:confirm-email", args=(user.email, valid_token))
 
     invalid_token_url = reverse(
-        "users-django:confirm-email", args=(user.email, invalid_token)
+        "users:confirm-email", args=(user.email, invalid_token)
     )
 
     invalid_email_url = reverse(
-        "users-django:confirm-email", args=(invalid_email, valid_token)
+        "users:confirm-email", args=(invalid_email, valid_token)
     )
 
     context = {
@@ -111,15 +109,15 @@ def password_reset_confirm_test(request: HttpRequest) -> HttpResponse:
 
     # Generate URLs for the three scenarios
     valid_url = reverse(
-        "users-django:confirm-password-reset", args=(user.email, valid_token)
+        "users:confirm-password-reset", args=(user.email, valid_token)
     )
 
     invalid_token_url = reverse(
-        "users-django:confirm-password-reset", args=(user.email, invalid_token)
+        "users:confirm-password-reset", args=(user.email, invalid_token)
     )
 
     invalid_email_url = reverse(
-        "users-django:confirm-password-reset",
+        "users:confirm-password-reset",
         args=(invalid_email, valid_token),
     )
 
@@ -163,11 +161,11 @@ def email_update_confirm_test(
 
     # Generate URLs for different scenarios
     valid_url = reverse(
-        "users-django:confirm-email-address-update", args=(valid_token,)
+        "users:confirm-email-address-update", args=(valid_token,)
     )
 
     invalid_url = reverse(
-        "users-django:confirm-email-address-update", args=(invalid_token,)
+        "users:confirm-email-address-update", args=(invalid_token,)
     )
 
     context = {

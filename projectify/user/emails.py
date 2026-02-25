@@ -24,7 +24,7 @@ class UserEmailConfirmationEmail(TemplateEmail[User]):
 
         email = self.obj.email
         token = user_make_token(user=self.obj, kind="confirm_email_address")
-        url = reverse("users-django:confirm-email", args=(email, token))
+        url = reverse("users:confirm-email", args=(email, token))
         return {
             **super().get_context(),
             "url": f"{settings.FRONTEND_URL}{url}",
@@ -47,9 +47,7 @@ class UserPasswordResetEmail(TemplateEmail[User]):
         settings = get_settings()
         email = self.obj.email
         token = user_make_token(user=self.obj, kind="reset_password")
-        url = reverse(
-            "users-django:confirm-password-reset", args=(email, token)
-        )
+        url = reverse("users:confirm-password-reset", args=(email, token))
         return {
             **super().get_context(),
             "url": f"{settings.FRONTEND_URL}{url}",
@@ -88,9 +86,7 @@ class UserEmailAddressUpdateEmail(TemplateEmail[User]):
         """Add reset password token."""
         settings = get_settings()
         token = user_make_token(user=self.obj, kind="update_email_address")
-        url = reverse(
-            "users-django:confirm-email-address-update", args=(token,)
-        )
+        url = reverse("users:confirm-email-address-update", args=(token,))
         return {
             **super().get_context(),
             "url": f"{settings.FRONTEND_URL}{url}",

@@ -123,7 +123,7 @@ def sign_up(request: HttpRequest) -> HttpResponse:
         rate="3/h",
         increment=True,
     )
-    return redirect("users-django:sent-email-confirmation-link")
+    return redirect("users:sent-email-confirmation-link")
 
 
 def email_confirmation_link_sent(request: HttpRequest) -> HttpResponse:
@@ -173,7 +173,7 @@ class LogInForm(forms.Form):
         self.fields[
             "password"
         ].help_text = '<a class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base" href="{href}">{text}</a>'.format(
-            href=reverse_lazy("users-django:request-password-reset"),
+            href=reverse_lazy("users:request-password-reset"),
             text=_("Forgot password"),
         )
 
@@ -274,7 +274,7 @@ def password_reset_request(request: HttpRequest) -> HttpResponse:
             status=400,
         )
 
-    return redirect("users-django:requested-password-reset")
+    return redirect("users:requested-password-reset")
 
 
 def password_reset_requested(request: HttpRequest) -> HttpResponse:
@@ -340,7 +340,7 @@ def password_reset_confirm(
             status=400,
         )
 
-    return redirect("users-django:reset-password")
+    return redirect("users:reset-password")
 
 
 def password_reset(request: HttpRequest) -> HttpResponse:

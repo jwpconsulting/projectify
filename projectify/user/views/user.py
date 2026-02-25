@@ -69,7 +69,7 @@ def user_profile(request: HttpRequest) -> HttpResponse:
                 preferred_name=form.cleaned_data["preferred_name"],
                 profile_picture=form.cleaned_data["profile_picture"],
             )
-            return redirect(reverse("users-django:profile"))
+            return redirect(reverse("users:profile"))
         raise ValueError()
     else:
         form = UserProfileForm(instance=user)
@@ -138,7 +138,7 @@ def password_change(request: AuthenticatedHttpRequest) -> HttpResponse:
         return render(
             request, "user/password_change.html", context=context, status=400
         )
-    return redirect("users-django:profile")
+    return redirect("users:profile")
 
 
 class EmailAddressUpdateForm(forms.Form):
@@ -200,7 +200,7 @@ def email_address_update(request: AuthenticatedHttpRequest) -> HttpResponse:
             context=context,
             status=400,
         )
-    return redirect("users-django:requested-email-address-update")
+    return redirect("users:requested-email-address-update")
 
 
 @login_required
@@ -223,7 +223,7 @@ def email_address_update_confirm(
             status=400,
         )
     else:
-        return redirect("users-django:confirmed-email-address-update")
+        return redirect("users:confirmed-email-address-update")
 
 
 @login_required

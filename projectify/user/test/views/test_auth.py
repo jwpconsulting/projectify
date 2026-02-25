@@ -27,7 +27,7 @@ class TestLogOutDjango:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("users-django:log-out")
+        return reverse("users:log-out")
 
     def test_log_out(
         self,
@@ -40,7 +40,7 @@ class TestLogOutDjango:
         """Test logging out a user."""
         # First log in
         response = client.post(
-            reverse("users-django:log-in"),
+            reverse("users:log-in"),
             {"email": user.email, "password": password},
             follow=True,
         )
@@ -66,7 +66,7 @@ class TestSignUpDjango:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("users-django:sign-up")
+        return reverse("users:sign-up")
 
     def test_signing_up(
         self,
@@ -91,7 +91,7 @@ class TestSignUpDjango:
         assert response.status_code == 200, response.content
         assert User.objects.count() == 1
         assert response.redirect_chain == [
-            (reverse("users-django:sent-email-confirmation-link"), 302)
+            (reverse("users:sent-email-confirmation-link"), 302)
         ]
 
     def test_signing_up_weak_pw(
@@ -196,7 +196,7 @@ class TestEmailConfirmationLinkSent:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("users-django:sent-email-confirmation-link")
+        return reverse("users:sent-email-confirmation-link")
 
     def test_get_email_confirmation_link_sent(
         self,
@@ -230,7 +230,7 @@ class TestConfirmEmailDjango:
         with django_assert_num_queries(8):
             response = client.get(
                 reverse(
-                    "users-django:confirm-email",
+                    "users:confirm-email",
                     args=("hello@world.com", token),
                 ),
                 follow=True,
@@ -255,7 +255,7 @@ class TestConfirmEmailDjango:
         with django_assert_num_queries(4):
             response = client.get(
                 reverse(
-                    "users-django:confirm-email",
+                    "users:confirm-email",
                     args=("hello@world.com", "invalid_token"),
                 ),
                 follow=True,
@@ -273,7 +273,7 @@ class TestLogInDjango:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("users-django:log-in")
+        return reverse("users:log-in")
 
     def test_log_in(
         self,
@@ -376,7 +376,7 @@ class TestPasswordResetRequestDjango:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("users-django:request-password-reset")
+        return reverse("users:request-password-reset")
 
     def test_get_password_reset_request(
         self,
@@ -406,7 +406,7 @@ class TestPasswordResetRequestDjango:
             )
             assert response.status_code == 200, response.content
         assert response.redirect_chain == [
-            (reverse("users-django:requested-password-reset"), 302)
+            (reverse("users:requested-password-reset"), 302)
         ]
 
     def test_post_password_reset_request_invalid_email(
@@ -496,7 +496,7 @@ class TestPasswordResetRequestedDjango:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("users-django:requested-password-reset")
+        return reverse("users:requested-password-reset")
 
     def test_get_password_reset_requested(
         self,
@@ -529,7 +529,7 @@ class TestPasswordResetConfirmDjango:
         with django_assert_num_queries(8):
             response = client.post(
                 reverse(
-                    "users-django:confirm-password-reset",
+                    "users:confirm-password-reset",
                     args=(user.email, token),
                 ),
                 {
@@ -554,7 +554,7 @@ class TestPasswordResetConfirmDjango:
         with django_assert_num_queries(0):
             response = client.get(
                 reverse(
-                    "users-django:confirm-password-reset",
+                    "users:confirm-password-reset",
                     args=(user.email, token),
                 ),
             )
@@ -574,7 +574,7 @@ class TestPasswordResetConfirmDjango:
         with django_assert_num_queries(3):
             response = client.post(
                 reverse(
-                    "users-django:confirm-password-reset",
+                    "users:confirm-password-reset",
                     args=(user.email, token),
                 ),
                 {
@@ -600,7 +600,7 @@ class TestPasswordResetConfirmDjango:
         with django_assert_num_queries(4):
             response = client.post(
                 reverse(
-                    "users-django:confirm-password-reset",
+                    "users:confirm-password-reset",
                     args=(user.email, "invalid_token"),
                 ),
                 {
@@ -629,7 +629,7 @@ class TestPasswordResetConfirmDjango:
         with django_assert_num_queries(4):
             response = client.post(
                 reverse(
-                    "users-django:confirm-password-reset",
+                    "users:confirm-password-reset",
                     args=(wrong_email, token),
                 ),
                 {

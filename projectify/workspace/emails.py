@@ -30,7 +30,7 @@ class TeamMemberInviteEmail(TemplateEmail[TeamMemberInvite]):
     def get_context(self) -> Context:
         """Add name of inviter, current date."""
         settings = get_settings()
-        url = reverse("users-django:sign-up")
+        url = reverse("users:sign-up")
         return {
             **super().get_context(),
             "invited_by": self.who.preferred_name or self.who.email,

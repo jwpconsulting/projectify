@@ -31,7 +31,7 @@
                 <p class="font-bold">{% trans "Your current email address" %}</p>
                 <p>{{ request.user.email }}</p>
                 <p>
-                    <a href="{% url 'users-django:update-email-address' %}"
+                    <a href="{% url 'users:update-email-address' %}"
                        class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Update email address" %}</a><!--<Anchor>-->
                 </p>
             </div>
@@ -46,7 +46,7 @@
     </form>
     <div class="flex flex-col gap-2">
         <h3 class="font-bold">{% trans "Other settings" %}</h3>
-        <a href="{% url 'users-django:change-password' %}"
+        <a href="{% url 'users:change-password' %}"
            class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Change password" %}</a><!--<Anchor>-->
     </div>
     <div class="flex flex-col gap-2">

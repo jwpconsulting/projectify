@@ -31,7 +31,7 @@ class TestUserProfile:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("users-django:profile")
+        return reverse("users:profile")
 
     def test_get_form(
         self, user: User, user_client: Client, resource_url: str
@@ -60,9 +60,7 @@ class TestUserProfile:
                 follow=True,
             )
             assert response.status_code == 200
-            assert response.redirect_chain[-1][0] == reverse(
-                "users-django:profile"
-            )
+            assert response.redirect_chain[-1][0] == reverse("users:profile")
 
         user.refresh_from_db()
         assert user.preferred_name == "New Preferred Name"
@@ -85,9 +83,7 @@ class TestUserProfile:
             follow=True,
         )
         assert response.status_code == 200
-        assert response.redirect_chain[-1][0] == reverse(
-            "users-django:profile"
-        )
+        assert response.redirect_chain[-1][0] == reverse("users:profile")
 
         user.refresh_from_db()
         assert not user.profile_picture
@@ -99,7 +95,7 @@ class TestPasswordChangeDjango:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("users-django:change-password")
+        return reverse("users:change-password")
 
     def test_with_correct_password(
         self,
@@ -216,7 +212,7 @@ class TestEmailAddressUpdateDjango:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("users-django:update-email-address")
+        return reverse("users:update-email-address")
 
     def test_get_form(self, user_client: Client, resource_url: str) -> None:
         """Test that the form is displayed correctly."""
@@ -245,7 +241,7 @@ class TestEmailAddressUpdateDjango:
             assert response.status_code == 200
 
         assert response.redirect_chain[-1][0] == reverse(
-            "users-django:requested-email-address-update"
+            "users:requested-email-address-update"
         )
 
         # Verify that this doesn't update the email, yet
@@ -351,7 +347,7 @@ class TestEmailAddressUpdateConfirm:
         user.save()
 
         resource_url = reverse(
-            "users-django:confirm-email-address-update",
+            "users:confirm-email-address-update",
             args=(user_make_token(user=user, kind="update_email_address"),),
         )
 
@@ -360,7 +356,7 @@ class TestEmailAddressUpdateConfirm:
             assert response.status_code == 200
 
         assert response.redirect_chain[-1][0] == reverse(
-            "users-django:confirmed-email-address-update"
+            "users:confirmed-email-address-update"
         )
 
         user.refresh_from_db()
@@ -373,7 +369,7 @@ class TestEmailAddressUpdateConfirm:
         user.save()
 
         resource_url = reverse(
-            "users-django:confirm-email-address-update",
+            "users:confirm-email-address-update",
             args=("invalid-token-123",),
         )
 
@@ -391,7 +387,7 @@ class TestEmailAddressUpdateConfirm:
         old_email = user.email
 
         resource_url = reverse(
-            "users-django:confirm-email-address-update",
+            "users:confirm-email-address-update",
             args=(user_make_token(user=user, kind="update_email_address"),),
         )
 
