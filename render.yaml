@@ -30,7 +30,8 @@ services:
       branch: "main"
       autoDeployTrigger: "checksPass"
       preDeployCommand: projectify-manage migrate
-      domains: "www.projectifyapp.com"
+      domains:
+        - "www.projectifyapp.com"
       # TODO
       # healthCheckPath: /health-check
       # docs/backend/configuration.md
