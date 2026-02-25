@@ -48,6 +48,7 @@ python = "~3.12.12"
 stripe = "^8"
 whitenoise = "~6.2.0"
 django-ratelimit = "^4.1.0"
+django-tailwind = {extras = ["reload"], version = "^3.8.0"}
 django-markdownify = "^0.9.5"
 
 [tool.poetry.group.dev]
@@ -62,7 +63,6 @@ django-debug-toolbar = "^4.3.0"
 ipython = "~8.22"
 ruff = "0.6.1"
 selenium = "^4.40.0"
-django-tailwind = {extras = ["reload"], version = "^3.8.0"}
 
 [tool.poetry.group.test]
 
@@ -80,9 +80,6 @@ types-requests = "^2.32.0.20240712"
 djlint = "^1.36.1"
 types-markdown = "^3.10.2.20260211"
 reuse = "^6.2.0"
-# Duplicated from test
-# TODO find a way to de-duplicate it
-django-tailwind = {extras = ["reload"], version = "^3.8.0"}
 
 [build-system]
 requires = ["poetry-core"]
