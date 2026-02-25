@@ -143,7 +143,7 @@ jobs:
           command: poetry run ./manage.py seeddb --n-users 3 --n-workspaces 1 --n-projects 1 --n-labels 1 --n-tasks 1
   tools_reuse_lint:
     executor: python
-    working_directory: ~/projectify/tools
+    working_directory: ~/projectify
     steps:
       - prepare_poetry
       - run:
