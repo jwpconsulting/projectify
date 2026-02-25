@@ -19,27 +19,6 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        caddyFileTestEnv = pkgs.writeText "caddy-envfile" ''
-          HOST=http://localhost
-          PORT=80
-          BACKEND_HOST=localhost
-          BACKEND_PORT=1000
-        '';
-        caddyfileFormatted = pkgs.runCommand "Caddyfile" { } ''
-          mkdir $out
-          ${pkgs.caddy}/bin/caddy fmt - <${./Caddyfile} > $out/Caddyfile
-          ${pkgs.caddy}/bin/caddy validate \
-            --envfile ${caddyFileTestEnv} \
-            --config $out/Caddyfile
-        '';
-        projectify-revproxy = pkgs.writeShellApplication {
-          name = "projectify-revproxy";
-          runtimeInputs = [ pkgs.caddy ];
-          text = ''
-            exec caddy --config ${caddyfileFormatted}/Caddyfile run
-          '';
-        };
-
         projectify-bundle = pkgs.callPackage ./build-projectify-bundle.nix {
           poetry2nix = poetry2nix.lib.mkPoetry2Nix { inherit pkgs; };
         };
@@ -96,24 +75,6 @@
               Cmd = [ "projectify-celery" ];
             };
           };
-          # Run with
-          # HOST=http://localhost \
-          #     PORT=8001 \
-          #     BACKEND_HOST=http://localhost \
-          #     BACKEND_PORT=8000 \
-          #     result/bin/projectify-revproxy
-          inherit projectify-revproxy;
-          projectify-revproxy-container = pkgs.dockerTools.streamLayeredImage {
-            name = "projectify-revproxy";
-            tag = "latest";
-            contents = [
-              projectify-revproxy
-            ];
-            config = {
-              Cmd = [ "projectify-revproxy" ];
-            };
-          };
-
           skopeo = pkgs.skopeo;
         };
         devShell = pkgs.mkShell {
@@ -123,7 +84,6 @@
             # TODO I temporarily commented out these build inputs. Are they
             # still needed?
             # backend
-            # revproxy
             # celery
             # manage
 

@@ -177,7 +177,6 @@ class Base(Configuration):  # type:ignore
     ROOT_URLCONF = "projectify.urls"
 
     WSGI_APPLICATION = "projectify.wsgi.application"
-    ASGI_APPLICATION = "projectify.asgi.application"
 
     # Database
     # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
