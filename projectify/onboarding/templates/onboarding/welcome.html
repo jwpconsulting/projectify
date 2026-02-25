@@ -6,11 +6,7 @@
     {% translate "Onboarding - Projectify" %}
 {% endblock title %}
 {% block onboarding_content %}
-    <div class="col-span-1 flex shrink grow flex-col gap-16 px-12 py-20 pb-8">
-        {% include "onboarding/common/form_description.html" with title=_("Welcome") text_1=_("In the following steps you will create a new workspace and create your first task.") text_2=_("You can use the workspace in trial mode at the beginning, and upgrade to a paid version anytime by going to the workspace settings.") target_blank="True" href="/help/quota#quotas-for-trial-workspaces" href_label=_("Learn more about features available during trial mode") %}
-        <a href="{% url "onboarding:about_you" %}"
-           class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Continue" %}</a>
-    </div>
-    <div class="hidden h-full min-w-0 shrink grow flex-col items-center justify-center overflow-hidden bg-background md:flex xl:col-span-2">
-    </div>
+    {% include "onboarding/common/form_description.html" with title=_("Welcome") text_1=_("In the following steps you will create a new workspace and create your first task.") text_2=_("You can use the workspace in trial mode at the beginning, and upgrade to a paid version anytime by going to the workspace settings.") target_blank="True" href="/help/quota#quotas-for-trial-workspaces" href_label=_("Learn more about features available during trial mode") %}
+    <a href="{% url "onboarding:about_you" %}"
+       class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Continue" %}</a>
 {% endblock onboarding_content %}

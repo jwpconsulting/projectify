@@ -5,7 +5,13 @@
 {% block content %}
     {% include "common/navigation/header/dashboard.html" %}
     <main class="flex grow flex-col md:grid md:grid-cols-2 xl:grid-cols-3">
-        {% block onboarding_content %}
-        {% endblock onboarding_content %}
+        <div class="col-span-1 flex shrink grow flex-col gap-16 px-12 py-20 pb-8">
+            {% block onboarding_content %}
+            {% endblock onboarding_content %}
+        </div>
+        <div class="hidden h-full min-w-0 shrink grow flex-col items-center justify-center overflow-hidden bg-background md:flex xl:col-span-2">
+            {% block onboarding_preview %}
+            {% endblock onboarding_preview %}
+        </div>
     </main>
 {% endblock content %}

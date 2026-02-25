@@ -6,25 +6,24 @@
     {% translate "About you - Projectify" %}
 {% endblock title %}
 {% block onboarding_content %}
-    <form method="post"
-          class="col-span-1 flex shrink grow flex-col gap-16 px-12 py-20 pb-8">
+    <form method="post" class="flex shrink grow flex-col gap-16">
         {% csrf_token %}
         {% include "onboarding/common/form_description.html" with title=_("About you") text_1=_("Tell us your preferred name. You can also keep it empty and continue by clicking the button below.") %}
         {{ form }}
         {% include "projectify/forms/submit.html" with text=_("Continue") %}
     </form>
-    <div class="hidden h-full min-w-0 shrink grow flex-col items-center justify-center overflow-hidden bg-background md:flex xl:col-span-2">
-        <h1 class="w-full overflow-hidden text-ellipsis text-center text-4xl font-bold">
-            {% translate "Welcome" as welcome %}
-            <span id="welcome-message">
-                {% if user.preferred_name %}
-                    {% blocktrans with name=user.preferred_name %}Welcome, {{ name }}{% endblocktrans %}
-                {% else %}
-                    {{ welcome }}
-                {% endif %}
-            </span>👋
-        </h1>
-    </div>
+{% endblock onboarding_content %}
+{% block onboarding_preview %}
+    <h1 class="w-full overflow-hidden text-ellipsis text-center text-4xl font-bold">
+        {% translate "Welcome" as welcome %}
+        <span id="welcome-message">
+            {% if user.preferred_name %}
+                {% blocktrans with name=user.preferred_name %}Welcome, {{ name }}{% endblocktrans %}
+            {% else %}
+                {{ welcome }}
+            {% endif %}
+        </span>👋
+    </h1>
     <script nonce="{{ csp_nonce }}">
         (() => {
             const nameInput = document.querySelector('input[name="preferred_name"]');
@@ -42,4 +41,4 @@
             });
         })();
     </script>
-{% endblock onboarding_content %}
+{% endblock onboarding_preview %}
