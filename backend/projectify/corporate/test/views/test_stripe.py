@@ -5,10 +5,10 @@
 
 from unittest import mock
 
+from django.test.client import Client
 from django.urls import reverse
 
 import pytest
-from rest_framework.test import APIClient
 
 from projectify.corporate.types import CustomerSubscriptionStatus
 from projectify.settings.base import Base
@@ -41,11 +41,11 @@ class TestStripeWebhook:
         self,
         stripe_client: mock.MagicMock,
         unpaid_customer: Customer,
-        rest_client: APIClient,
+        client: Client,
         resource_url: str,
     ) -> None:
         """Test the handling of a checkout session."""
-        header = {"HTTP_STRIPE_SIGNATURE": "dummy_sig"}
+        headers = {"stripe-signature": "dummy_sig"}
 
         event = mock.MagicMock()
         event.type = "checkout.session.completed"
@@ -61,8 +61,8 @@ class TestStripeWebhook:
         stripe_client.return_value.construct_event.return_value = event
 
         # TODO count queries
-        response = rest_client.post(resource_url, **header)
-        assert response.status_code == 200, response.data
+        response = client.post(resource_url, headers=headers)
+        assert response.status_code == 200, response.content
         unpaid_customer.refresh_from_db()
         assert (
             unpaid_customer.subscription_status
@@ -76,11 +76,11 @@ class TestStripeWebhook:
         self,
         stripe_client: mock.MagicMock,
         paid_customer: Customer,
-        rest_client: APIClient,
+        client: Client,
         resource_url: str,
     ) -> None:
         """Test customer.subscription.updated."""
-        header = {"HTTP_STRIPE_SIGNATURE": "dummy_sig"}
+        header = {"stripe-signature": "dummy_sig"}
         new_seats = paid_customer.seats + 1
 
         event = mock.MagicMock()
@@ -95,8 +95,8 @@ class TestStripeWebhook:
         stripe_client.return_value.construct_event.return_value = event
 
         # TODO count queries
-        response = rest_client.post(resource_url, **header)
-        assert response.status_code == 200, response.data
+        response = client.post(resource_url, headers=header)
+        assert response.status_code == 200, response.content
         paid_customer.refresh_from_db()
         assert paid_customer.seats == new_seats
 
@@ -105,11 +105,11 @@ class TestStripeWebhook:
         self,
         stripe_client: mock.MagicMock,
         paid_customer: Customer,
-        rest_client: APIClient,
+        client: Client,
         resource_url: str,
     ) -> None:
         """Test cancelling Subscription when payment fails."""
-        header = {"HTTP_STRIPE_SIGNATURE": "dummy_sig"}
+        headers = {"stripe-signature": "dummy_sig"}
         event = mock.MagicMock()
         event.type = "invoice.payment_failed"
         event["data"]["object"].customer = paid_customer.stripe_customer_id
@@ -117,8 +117,8 @@ class TestStripeWebhook:
         stripe_client.return_value.construct_event.return_value = event
 
         # TODO count queries
-        response = rest_client.post(resource_url, **header)
-        assert response.status_code == 200, response.data
+        response = client.post(resource_url, headers=headers)
+        assert response.status_code == 200, response.content
         paid_customer.refresh_from_db()
         assert (
             paid_customer.subscription_status
@@ -130,20 +130,20 @@ class TestStripeWebhook:
         self,
         stripe_client: mock.MagicMock,
         paid_customer: Customer,
-        rest_client: APIClient,
+        client: Client,
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test cancelling Subscription when payment fails."""
-        header = {"HTTP_STRIPE_SIGNATURE": "dummy_sig"}
+        headers = {"stripe-signature": "dummy_sig"}
         event = mock.MagicMock()
         event.type = "customer.subscription.deleted"
         event["data"]["object"].customer = paid_customer.stripe_customer_id
         stripe_client.return_value.construct_event.return_value = event
 
         with django_assert_num_queries(2):
-            response = rest_client.post(resource_url, **header)
-        assert response.status_code == 200, response.data
+            response = client.post(resource_url, headers=headers)
+        assert response.status_code == 200, response.content
         paid_customer.refresh_from_db()
         assert (
             paid_customer.subscription_status
