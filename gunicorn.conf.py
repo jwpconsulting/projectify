@@ -6,16 +6,12 @@
 
 import os
 
-wsgi_app = "projectify.asgi"
+wsgi_app = "projectify.wsgi"
 
 # Refer to
 # https://docs.gunicorn.org/en/stable/configure.html#configuration-file
 bind = f"0.0.0.0:{os.environ['PORT']}"
 
-# The docs recommend:
-# import multiprocessing
-# workers = multiprocessing.cpu_count() * 2 + 1
-workers = 1
-worker_class = "uvicorn.workers.UvicornWorker"
+# TODO understand how many workers to configure
 
 logconfig = "gunicorn-error.log"
