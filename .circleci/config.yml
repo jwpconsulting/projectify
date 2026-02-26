@@ -138,7 +138,7 @@ jobs:
       - run:
           name: Collect tests and run pytest
           command: |
-            TEST_FILES=$(circleci tests glob "**/test_*.py" | circleci tests split --split-by=timings)
+            TEST_FILES=$(circleci tests glob "projectify/**/test_*.py" | circleci tests split --split-by=timings)
             uv run pytest --junitxml=test-results/junit.xml $TEST_FILES
       - store_test_results:
           path: test-results
