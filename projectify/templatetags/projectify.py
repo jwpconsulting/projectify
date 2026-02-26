@@ -72,7 +72,7 @@ def anchor(
         a_extra = ""
         extra = ""
     return format_html(
-        '<a href="{url}" {aria_label}class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"{a_extra}>{label}{extra}</a>',
+        '<a href="{url}"{aria_label} class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"{a_extra}>{label}{extra}</a>',
         aria_label=format_html(' aria-label="{label}"', label=aria_label)
         if aria_label is not None
         else "",
