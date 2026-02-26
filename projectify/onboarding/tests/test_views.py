@@ -10,7 +10,7 @@ from django.urls import reverse
 
 import pytest
 
-from projectify.user.models.user import User
+from projectify.user.models import User
 from projectify.workspace.models.label import Label
 from projectify.workspace.models.project import Project
 from projectify.workspace.models.task import Task

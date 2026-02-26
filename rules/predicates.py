@@ -21,7 +21,7 @@ from typing import (
 )
 
 if TYPE_CHECKING:
-    from projectify.user.models.user import User
+    from projectify.user.models import User
 
 logger = logging.getLogger("rules")
 

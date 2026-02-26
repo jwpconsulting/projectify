@@ -12,7 +12,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 
 from projectify.admin.admin import ProjectifyAdmin
-from projectify.user.models.user import User
+from projectify.user.models import User
 
 from .registry import registry
 

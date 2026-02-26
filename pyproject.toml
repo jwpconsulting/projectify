@@ -220,7 +220,7 @@ exclude = [
     # pyright emits reportCallIssue instead
     "projectify/workspace/models/workspace.py",
     "projectify/workspace/models/label.py",
-    "projectify/user/models/user.py",
+    "projectify/user/models.py",
     # Other issues
     "projectify/workspace/models/section.py",
     "projectify/workspace/models/sub_task.py",

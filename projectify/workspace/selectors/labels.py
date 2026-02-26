@@ -10,7 +10,7 @@ from uuid import UUID
 from django.db.models import Case, Prefetch, QuerySet, Value, When
 from django.utils.encoding import force_str
 
-from projectify.user.models.user import User
+from projectify.user.models import User
 
 from ..models.const import COLOR_MAP
 from ..models.label import Label

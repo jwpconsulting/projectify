@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any, ParamSpec
 from .rulesets import RuleSet
 
 if TYPE_CHECKING:
-    from projectify.user.models.user import User  # noqa
+    from projectify.user.models import User  # noqa
     from . import Predicate
 
 P = ParamSpec("P")
