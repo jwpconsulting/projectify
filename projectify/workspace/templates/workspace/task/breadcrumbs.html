@@ -3,9 +3,9 @@
 {% load projectify %}
 <div class="font-bold text-utility">
     {% anchor "dashboard:projects:detail" label=section.project.title project_uuid=section.project.uuid %}
-    &gt;
+    <span aria-hidden="true">&gt;</span>
     {% anchor href=section.get_absolute_url label=section.title %}
-    &gt;
+    <span aria-hidden="true">&gt;</span>
     {% if current_page_label and current_page_url %}
         {% anchor href=current_page_url label=current_page_label %}
     {% else %}
