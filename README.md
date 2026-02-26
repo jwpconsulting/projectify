@@ -158,44 +158,14 @@ poetry run reuse lint
 
 # Nix
 
-You can run Projectify with Nix. There are three entry points to
-the application:
+You can use the included `flake.nix` Flake file to open a Nix Flake shell
+with all development dependencies:
 
-- projectify-backend: the Projectify backend wrapped inside gunicorn
-- projectify-manage: the Projectify backend's management tool, using Django
-management commands.
+1. Download Nix: <https://nixos.org/download/> (skip if you use NixOS)
+2. Enable Nix Flakes: <https://wiki.nixos.org/wiki/Flakes#Enabling_flakes_permanently>
+3. Open a Nix Flake shell by running `nix shell` in your terminal
 
-There are sample configuration variables in `.env.production-sample`. These are
-all variables needed to load up the above three commands.
-
-Assuming you have direnv installed, all the necessary configuration variables
-can be exposed using `dotenv -f .env.production run COMMAND`.
-
-## Launching projectify-backend
-
-You can launch and test the start-up behavior of a production-like `projectify-backend` locally like so:
-
-<!-- Note: update if production variables change -->
-
-```bash
-# Adjust env vars accordingly
-env PORT=2000 STRIPE_ENDPOINT_SECRET= STRIPE_PRICE_OBJECT= STRIPE_SECRET_KEY= STRIPE_PUBLISHABLE_KEY= MAILGUN_DOMAIN= MAILGUN_API_KEY= FRONTEND_URL= ALLOWED_HOSTS=localhost SECRET_KEY= DJANGO_SETTINGS_MODULE=projectify.settings.production DJANGO_CONFIGURATION=Production nix run .#projectify-backend
-```
-
-## Launching projectify-manage
-
-You can launch a production-like `projectify-manage` locally like so:
-
-```
-dotenv -f .env.production-sample run nix run .#projectify-manage help
-```
-
-## Flake
-
-There is a nix flake in this repository.
-
-- https://github.com/nix-community/poetry2nix
-- https://github.com/nix-community/nix-direnv
+Alternatively, configure [direnv](https://direnv.net/) and [nix-direnv](https://github.com/nix-community/nix-direnv) to automatically jump into a Nix flake shell.
 
 # Translations
 
