@@ -129,3 +129,9 @@ def handler404(
 def handler500(request: HttpRequest) -> HttpResponse:
     """Handle 500 errors with a custom page."""
     return render(request, "500.html", status=500)
+
+
+def health_check(request: HttpRequest) -> HttpResponse:
+    """Health check endpoint that returns 204 No Content."""
+    del request
+    return HttpResponse(status=204)
