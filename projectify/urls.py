@@ -45,7 +45,7 @@ sitemaps = {
 urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     # TODO may I use projectify.admin.admin.urls here?
     path("admin/", admin.site.urls),
-    path("health-check/", health_check, name="health-check"),
+    path("healthz", health_check, name="health-check"),
     path("corporate/", include("projectify.corporate.urls")),
     path(
         "icons/<str:icon>/<str:color>.svg", colored_icon, name="colored-icon"
