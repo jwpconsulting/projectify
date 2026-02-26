@@ -36,7 +36,8 @@ then
     echo "djlint --check ran successfully"
 else
     echo "There was an error running djlint --check"
-    if ! djlint --reformat .; then
+    djlint --reformat "$target"
+    if ! djlint --check "$target"; then
         echo "Couldn't fix with djlint --reformat"
         exit 1
     fi
