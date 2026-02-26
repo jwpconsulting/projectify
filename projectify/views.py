@@ -32,6 +32,7 @@ def colored_icon(request: HttpRequest, icon: str, color: str) -> HttpResponse:
     # See `const colors` projectify/theme/static_src/tailwind.config.js
     color_map = {
         "primary": "#2563EB",
+        "secondary": "#2563EB",
         "destructive": "#dc2626",
         "white": "#ffffff",
     }
