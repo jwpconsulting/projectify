@@ -43,6 +43,10 @@ commands:
       - run:
           name: Install dependencies
           command: uv sync --all-groups
+      # https://docs.astral.sh/uv/concepts/cache/#caching-in-continuous-integration
+      - run:
+          name: Prune cache
+          command: uv cache prune --ci
       - save_cache:
           key: uv-cache-v1-{{ checksum "~/projectify/uv.lock" }}
           paths:
