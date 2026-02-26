@@ -32,38 +32,46 @@
         </div>
     </form>
     {% if not section.minimized %}
-        <table class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4 lg:grid lg:grid-cols-[8fr_3fr_max-content] lg:gap-2 lg:items-center">
+        <table class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4 lg:grid lg:grid-cols-[8fr_3fr_max-content_max-content] lg:gap-1 lg:items-center">
             <tbody class="contents">
                 {% for task in section.task_set.all %}
                     <tr class="flex w-full flex-col items-center gap-1 rounded-lg border border-border p-3 lg:contents">
                         <td class="contents">
                             <a href="{% url 'dashboard:tasks:detail' task.uuid %}"
+                               title="{% translate "Task details" %}"
                                class="flex flex-row items-start items-center gap-1 self-start sm:gap-6 lg:self-center ">
-                                <span class="shrink-0 font-bold">#{{ task.number }}</span>
+                                <span class="shrink-0 font-bold" aria-hidden>#{{ task.number }}</span>
+                                <span class="sr-only">{{ task.readable_number }}</span>
                                 <span class="line-clamp-3 justify-self-start hover:text-primary lg:line-clamp-1 lg:h-6">{{ task.title }}</span>
                             </a>
                         </td>
                         <td class="flex w-full flex-row items-center justify-start gap-1 self-start overflow-x-auto">
                             {% for label in task.labels.all %}
-                                <div class="max-w-xs shrink-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-full px-3 py-1 font-bold {{ label.bg_class }} {{ label.text_class }}">
-                                    {{ label.name }}
-                                </div>
+                                <div class="max-w-xs shrink-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-full px-3 py-1 font-bold {{ label.bg_class }} {{ label.text_class }}"
+                                     title="{% translate "Label" %}">{{ label.name }}</div>
                             {% endfor %}
                         </td>
-                        <td class="flex flex-row justify-end items-center gap-2">
-                            {% if task.sub_task_progress %}
-                                <div class="flex shrink-0 flex-row items-center gap-0.5 justify-between px-2 py-1">
-                                    <div class="size-5 shrink-0">{% icon "view-list" "primary" %}</div>
-                                    <div class="font-bold text-primary">{{ task.sub_task_progress|percent }}</div>
-                                </div>
-                            {% endif %}
-                            {% user_avatar task.assignee %}
+                        <td class="flex flex-row lg:contents">
+                            <div class="grow flex shrink-0 flex-row items-center gap-0.5 justify-between px-2 py-1"
+                                 title="{% translate "Sub task progress" %}">
+                                {% if task.sub_task_progress is None %}
+                                    <div class="opacity-20">{% icon "view-list" "primary" size=6 %}</div>
+                                {% else %}
+                                    {% icon "view-list" "primary" size=6 %}
+                                {% endif %}
+                                {% if task.sub_task_progress is not None %}
+                                    <div class="grow text-right font-bold text-primary">{{ task.sub_task_progress|percent }}</div>
+                                {% else %}
+                                    <span class="sr-only">{% translate "No sub tasks" %}</span>
+                                {% endif %}
+                            </div>
                             <form hx-target="#section-{{ section.uuid }}"
                                   hx-post="{% url 'dashboard:projects:detail' project.uuid %}"
                                   hx-include="#task-filter,#team-member-filters,#label-filters"
                                   class="flex flex-row items-center gap-1"
                                   hx-swap="outerHTML"
                                   method="post">
+                                {% user_avatar task.assignee %}
                                 <input type="hidden" name="action" value="move_task">
                                 <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
                                 <div hx-swap="outerHTML">
