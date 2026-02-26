@@ -5,7 +5,7 @@
 
 import pytest
 
-from projectify.user.models.user import User
+from projectify.user.models import User
 from pytest_types import Mailbox
 
 from ..emails import SampleEmail

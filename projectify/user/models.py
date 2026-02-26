@@ -1,10 +1,11 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2021-2024 JWP Consulting GK
-"""User model in user app."""
+# SPDX-FileCopyrightText: 2021-2026 JWP Consulting GK
+"""User app models."""
 
 from typing import Any, ClassVar, Optional
 
+from django.conf import settings
 from django.contrib.auth import models as auth_models
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -95,3 +96,38 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
                 ),
             ),
         )
+
+
+class UserInvite(BaseModel):
+    """User invite model."""
+
+    email = models.EmailField(
+        verbose_name=_("Email"),
+    )
+    user = models.ForeignKey[User](
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        help_text=_("Matched user"),
+    )
+    redeemed = models.BooleanField(
+        default=False,
+        help_text=_("Has this invite been redeemed?"),
+    )
+    # TODO add redeemed_when
+
+
+class PreviousEmailAddress(BaseModel):
+    """Store a previous email address that was associated with a user."""
+
+    user = models.ForeignKey[User](
+        User,
+        on_delete=models.CASCADE,
+        help_text=_("User this email address belongs to"),
+    )
+    email = models.EmailField(help_text=_("Previous email address"))
+
+    def __str__(self) -> str:
+        """Return email."""
+        return self.email

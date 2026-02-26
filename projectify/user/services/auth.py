@@ -21,7 +21,7 @@ from projectify.user.emails import (
     UserEmailConfirmationEmail,
     UserPasswordResetEmail,
 )
-from projectify.user.models.user import User
+from projectify.user.models import User
 from projectify.user.selectors.user import user_find_by_email
 from projectify.user.services.internal import (
     Token,

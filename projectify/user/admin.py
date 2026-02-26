@@ -9,8 +9,7 @@ from django.contrib import admin
 from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
-from projectify.user.models.user import User
-from projectify.user.models.user_invite import UserInvite
+from projectify.user.models import User, UserInvite
 
 
 @admin.register(User)

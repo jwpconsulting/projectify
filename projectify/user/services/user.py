@@ -23,8 +23,7 @@ from projectify.user.emails import (
     UserEmailAddressUpdateEmail,
     UserPasswordChangedEmail,
 )
-from projectify.user.models.previous_email_address import PreviousEmailAddress
-from projectify.user.models.user import User
+from projectify.user.models import PreviousEmailAddress, User
 from projectify.user.services.internal import Token, user_check_token
 
 logger = logging.getLogger(__name__)

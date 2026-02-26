@@ -10,7 +10,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
-from projectify.user.models.user import User
+from projectify.user.models import User
 from projectify.user.services.user_invite import user_invite_redeem_many
 
 

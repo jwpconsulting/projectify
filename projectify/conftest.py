@@ -22,7 +22,6 @@ import random
 from datetime import datetime
 from datetime import timezone as dt_timezone
 
-from django.contrib.auth.models import AbstractBaseUser
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import client
 from django.utils import timezone
@@ -147,18 +146,14 @@ def redeemed_user_invite(faker: Faker) -> user_models.UserInvite:
 
 
 @pytest.fixture
-def user_client(
-    client: client.Client, user: AbstractBaseUser
-) -> client.Client:
+def user_client(client: client.Client, user: User) -> client.Client:
     """Return logged in client."""
     client.force_login(user)
     return client
 
 
 @pytest.fixture
-def superuser_client(
-    client: client.Client, superuser: AbstractBaseUser
-) -> client.Client:
+def superuser_client(client: client.Client, superuser: User) -> client.Client:
     """Return logged in super user client."""
     client.force_login(superuser)
     return client
@@ -171,7 +166,7 @@ def rest_client() -> APIClient:
 
 
 @pytest.fixture
-def rest_user_client(user: AbstractBaseUser) -> APIClient:
+def rest_user_client(user: User) -> APIClient:
     """Return a logged in client that we can use to test DRF views."""
     client = APIClient()
     client.force_authenticate(user)
@@ -179,7 +174,7 @@ def rest_user_client(user: AbstractBaseUser) -> APIClient:
 
 
 @pytest.fixture
-def rest_meddling_client(meddling_user: AbstractBaseUser) -> APIClient:
+def rest_meddling_client(meddling_user: User) -> APIClient:
     """Return a test client to check third party logged in access."""
     client = APIClient()
     client.force_authenticate(meddling_user)

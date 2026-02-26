@@ -4,7 +4,7 @@
 
 from django.http import HttpRequest
 
-from projectify.user.models.user import User
+from projectify.user.models import User
 
 from .htmx import HtmxDetails
 

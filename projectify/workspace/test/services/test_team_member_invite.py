@@ -7,8 +7,7 @@ import pytest
 from faker import Faker
 from rest_framework import serializers
 
-from projectify.user.models import User
-from projectify.user.models.user_invite import UserInvite
+from projectify.user.models import User, UserInvite
 from projectify.user.services.internal import user_create
 from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.models.team_member_invite import TeamMemberInvite

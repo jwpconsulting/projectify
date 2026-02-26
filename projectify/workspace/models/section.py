@@ -18,7 +18,7 @@ from .types import GetOrder, SetOrder
 if TYPE_CHECKING:
     from django.db.models.manager import RelatedManager  # noqa: F401
 
-    from projectify.user.models.user import User  # noqa: F401
+    from projectify.user.models import User  # noqa: F401
 
     from . import Project  # noqa: F401
 

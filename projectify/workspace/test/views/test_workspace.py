@@ -22,7 +22,7 @@ from projectify.corporate.selectors.customer import (
 )
 from projectify.corporate.services.stripe import customer_cancel_subscription
 from projectify.settings.base import Base
-from projectify.user.models.user import User
+from projectify.user.models import User
 from projectify.workspace.models.label import Label
 from pytest_types import DjangoAssertNumQueries
 

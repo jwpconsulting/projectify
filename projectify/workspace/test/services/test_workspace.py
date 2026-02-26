@@ -13,7 +13,7 @@ import pytest
 from faker import Faker
 from rest_framework.exceptions import ValidationError
 
-from projectify.user.models.user import User
+from projectify.user.models import User
 from projectify.workspace.models.const import TeamMemberRoles
 from projectify.workspace.models.project import Project
 from projectify.workspace.models.team_member import TeamMember

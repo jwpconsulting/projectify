@@ -10,7 +10,7 @@ from django.template import loader
 from django.utils.safestring import SafeText, mark_safe
 
 from projectify.context_processors import frontend_url
-from projectify.user.models.user import User
+from projectify.user.models import User
 
 Context = dict[str, Any]
 

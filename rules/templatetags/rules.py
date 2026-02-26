@@ -9,7 +9,7 @@ from django import template
 from ..rulesets import default_rules
 
 if TYPE_CHECKING:
-    from projectify.user.models.user import User
+    from projectify.user.models import User
 
 register = template.Library()
 

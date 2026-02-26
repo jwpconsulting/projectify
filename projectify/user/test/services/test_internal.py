@@ -9,7 +9,7 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 import pytest
 
-from ...models.user import User
+from ...models import User
 from ...services.internal import (
     Token,
     TokenKind,
