@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2024 JWP Consulting GK
+SPDX-FileCopyrightText: 2024,2026 JWP Consulting GK
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
@@ -34,14 +34,6 @@ sub folder.
 
 ```
 pushd /opt/local/lib/postgresql15; sudo -u postgres /opt/local/lib/postgresql15/bin/psql
-```
-
-## Psycopg2 installation with macports
-
-Try this:
-
-```
-env PATH="/opt/local/lib/postgresql15/bin:$PATH" poetry install
 ```
 
 ## No user role

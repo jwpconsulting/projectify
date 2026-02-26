@@ -15,7 +15,7 @@ Official instance:
 # Development Requirements
 
 - Python version >= 3.12.12 (I recommend using [asdf](https://asdf-vm.com/))
-- [poetry](https://python-poetry.org/docs/)
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
 - [PostgreSQL](https://www.postgresql.org/) >= 15.5
 - [Node.js](https://nodejs.org/en/download) >= 24.13.1
 
@@ -68,13 +68,13 @@ After making sure that you've added the dependencies, follow these
 steps to start developing with Projectify:
 
 1. Clone [this repository](https://github.com/jwpconsulting/projectify).
-2. Install all dependencies using the Python `poetry` tool.
+2. Install all dependencies using the Python `uv` tool.
 3. Create a `.env` environment file by copying the `.env.template` file.
 4. Edit the `DATABASE_URL` variable in the `.env` file and point it to your
    local PostgreSQL 15 instance.
 5. Create a `projectify` PostgreSQL database inside your local PostgreSQL 15
    instance using the `createdb` command.
-6. Then, inside a `poetry` shell, perform the following:
+6. Then, inside a `uv` shell, perform the following:
   a. Migrate the `projectify` database that you have just created.
   b. Seed the `projectify` database with test data using the `seeddb` command.
   c. Start the development server.
@@ -89,7 +89,7 @@ Run these shell commands to accomplish the steps 1. to 5.:
 # Clone the repository
 git clone git@github.com:jwpconsulting/projectify.git
 # Install dependencies
-poetry install --with dev --with test --no-root
+uv sync --all-groups
 # Create your `.env` file
 cp .env.template .env
 # Edit the `.env` file using your preferred editor:
@@ -112,16 +112,16 @@ To finish with step 6., configure Projectify and run using the following command
 
 ```bash
 # Run the Django migration command
-poetry run ./manage.py migrate
+uv run ./manage.py migrate
 # Seed the database with test data using `seeddb`
-poetry run ./manage.py seeddb
+uv run ./manage.py seeddb
 # Start the development server
-poetry run ./manage.py runserver
+uv run ./manage.py runserver
 # Open a new terminal and navigate to the repository again
 # Install the tailwind development tool dependencies
-poetry run ./manage tailwind install
+uv run ./manage tailwind install
 # Run the tailwind development tool
-poetry run ./manage tailwind start
+uv run ./manage tailwind start
 ```
 
 Once you have done all of this, go to Django administration page at
@@ -137,23 +137,23 @@ page.
 ## Neovim
 
 You can use Neovim with the [Pyright](https://github.com/microsoft/pyright) Language Server Protococol (LSP) server. To make sure that Neovim uses the right Pyright from
-this repository, run neovim inside a poetry environment like so:
+this repository, run neovim inside `uv`:
 
 ```
-poetry run nvim
+uv run nvim
 ```
 
 # Formatting
+
 ```
-poetry run bin/format.sh
+uv run bin/format.sh
 ```
 
 # Copyright and licencing information
 To look for files missing copyright and licencing information:
 
 ```
-# Assume you are in backend directory
-poetry run reuse lint
+uv run reuse lint
 ```
 
 # Nix

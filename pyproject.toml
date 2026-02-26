@@ -188,7 +188,6 @@ typeshedPath = ""
 exclude = [
     ".venv",
     ".direnv",
-    ".poetry",
     "__pycache__/",
     # TODO consider just removing whitelist.py
     "whitelist.py",

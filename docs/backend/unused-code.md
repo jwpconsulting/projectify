@@ -9,11 +9,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 Unused code is unavoidable in any project during its growth.
 
 There are a few heuristics on determining whether we are using something or
-not. One tool that seems to do part of the job is vulture. It's added to the
-poetry dependencies and can be run (with the existing whitelist) using
+not. One tool that seems to do part of the job is [Vulture](https://github.com/jendrikseipp/vulture). It's part of the
+Python project dependencies. Here's how to run it:
 
 ```
-poetry run vulture .
+uv run vulture .
 ```
 
 It gives a lot of false positives. Unfortunately, due to the declarative nature
