@@ -5,6 +5,7 @@
 {% load i18n %}
 {% load projectify %}
 {% block content %}
+    <a href="#skip-to-content" class="sr-only">{% translate "Skip to main content" %}</a>
     <div class="flex min-h-screen grow flex-col">
         {% include "common/navigation/header/dashboard.html" %}
         <div class="flex min-h-0 shrink grow flex-col md:flex-row">
@@ -44,8 +45,10 @@
                     {% include "workspace/common/sidemenu/project_details.html" %}
                 {% endblock dashboard_projects %}
             </nav>
-            {% block dashboard_content %}
-            {% endblock dashboard_content %}
+            <div id="skip-to-content">
+                {% block dashboard_content %}
+                {% endblock dashboard_content %}
+            </div>
         </div>
     </div>
     {% include "common/footer.html" %}
