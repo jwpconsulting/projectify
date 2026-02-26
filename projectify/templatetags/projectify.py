@@ -121,10 +121,7 @@ def circle_anchor(
     """Render a circular anchor link."""
     if not href:
         raise ValueError("Empty href supplied")
-    try:
-        url = reverse(href, args=args, kwargs=kwargs)
-    except NoReverseMatch:
-        url = href
+    url = reverse(href, args=args, kwargs=kwargs)
     return format_html(
         '<a href="{url}" aria-label="{label}"{title} class="shrink-0 size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background">{icon}</a>',
         url=url,
@@ -201,10 +198,7 @@ def go_to_action(
     """
     if href == "":
         raise ValueError("Empty href supplied")
-    try:
-        url = reverse(href, args=args, kwargs=kwargs)
-    except NoReverseMatch:
-        url = href
+    url = reverse(href, args=args, kwargs=kwargs)
 
     return format_html(
         '<a href="{url}"{title} class="bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold">{label}</a>',

@@ -37,9 +37,8 @@
                     </details>
                 {% endif %}
                 <p class="px-4">
-                    {% url "help:topic:billing" as trial_workspace_help %}
                     <strong>{% trans "Trial workspace" %}</strong>
-                    {% anchor href=trial_workspace_help label=_("Learn more") external=True %}
+                    {% anchor href="help:topic:billing" label=_("Learn more") external=True %}
                 </p>
                 {% block dashboard_projects %}
                     {% include "workspace/common/sidemenu/project_details.html" %}
