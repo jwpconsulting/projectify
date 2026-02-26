@@ -22,7 +22,7 @@ def user_invite_create(*, email: str) -> Optional[UserInvite]:
     if user:
         return None
     # TODO make this a selector
-    invite_qs = UserInvite.objects.by_email(email).is_redeemed(False)
+    invite_qs = UserInvite.objects.filter(redeemed=False, email=email)
     if invite_qs.exists():
         return invite_qs.get()
     return UserInvite.objects.create(email=email)
@@ -55,6 +55,6 @@ def user_invite_redeem(*, user_invite: UserInvite, user: User) -> None:
 @transaction.atomic
 def user_invite_redeem_many(*, user: User) -> None:
     """Redeem all invites for a user."""
-    invites = UserInvite.objects.is_redeemed(False).by_email(user.email)
+    invites = UserInvite.objects.filter(redeemed=False, email=user.email)
     for invitation in invites.iterator():
         user_invite_redeem(user_invite=invitation, user=user)

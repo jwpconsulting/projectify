@@ -60,27 +60,6 @@ class TestUser:
 
 
 @pytest.mark.django_db
-class TestUserInviteQuerySet:
-    """Test UserInviteQuerySet."""
-
-    def test_is_redeemed(
-        self,
-        user: User,
-        redeemed_user_invite: UserInvite,
-        user_invite: UserInvite,
-    ) -> None:
-        """Test is_redeemed."""
-        assert UserInvite.objects.count() == 2
-        assert UserInvite.objects.is_redeemed().count() == 1
-
-    def test_by_email(self, redeemed_user_invite: UserInvite) -> None:
-        """Test by_email."""
-        user = redeemed_user_invite.user
-        assert user is not None
-        assert UserInvite.objects.by_email(user.email).count() == 1
-
-
-@pytest.mark.django_db
 class TestUserInvite:
     """Test UserInvite."""
 

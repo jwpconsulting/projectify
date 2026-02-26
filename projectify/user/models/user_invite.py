@@ -3,29 +3,13 @@
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 """User invite model in user app."""
 
-from typing import ClassVar, cast
-
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from typing_extensions import Self
-
 from projectify.lib.models import BaseModel
 
 from .user import User
-
-
-class UserInviteQuerySet(models.QuerySet["UserInvite"]):
-    """User invite QuerySet."""
-
-    def is_redeemed(self, redeemed: bool = True) -> Self:
-        """Return not self redeemed invites."""
-        return self.filter(redeemed=redeemed)
-
-    def by_email(self, email: str) -> Self:
-        """Filter by email."""
-        return self.filter(email=email)
 
 
 class UserInvite(BaseModel):
@@ -46,7 +30,3 @@ class UserInvite(BaseModel):
         help_text=_("Has this invite been redeemed?"),
     )
     # TODO add redeemed_when
-
-    objects: ClassVar[UserInviteQuerySet] = cast(  # type: ignore[assignment]
-        UserInviteQuerySet, UserInviteQuerySet.as_manager()
-    )
