@@ -25,7 +25,7 @@ from projectify.help.sitemap import HelpSitemap
 from projectify.storefront.sitemap import StorefrontSitemap
 
 from .lib.settings import get_settings
-from .lib.views import (
+from .views import (
     colored_icon,
     handler403,
     handler404,
