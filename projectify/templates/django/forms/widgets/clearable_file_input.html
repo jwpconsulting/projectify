@@ -1,0 +1,37 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{# SPDX-License-Identifier: BSD-3-Clause #}
+{# SPDX-FileCopyrightText: Django Software Foundation and individual contributors. #}
+{% load projectify %}
+<div class="flex flex-col w-full gap-2">
+    {% if widget.is_initial %}
+        {% if widget.value %}
+            <figure class="flex flex-col items-center gap-2">
+                <img alt="{{ widget.attrs.initial_text|default:widget.initial_text }}"
+                     height="300"
+                     width="300"
+                     class="max-h-32 object-contain"
+                     src="{{ widget.value.url }}" />
+                <figcaption>{% anchor href=widget.value.url label=widget.attrs.initial_text|default:widget.initial_text %}</figcaption>
+            </figure>
+        {% else %}
+            <p>{{ widget.attrs.cleared }}</p>
+        {% endif %}
+    {% endif %}
+    {% if not widget.required %}
+        <label for="{{ widget.checkbox_id }}">
+            <input type="checkbox"
+                   name="{{ widget.checkbox_name }}"
+                   id="{{ widget.checkbox_id }}"
+                   {% if widget.attrs.disabled %}disabled{% endif %}
+                   {% if widget.attrs.checked %}checked{% endif %}>
+            <strong>{{ widget.attrs.clear_checkbox_label|default:widget.clear_checkbox_label }}</strong>
+        </label>
+    {% endif %}
+    <div class="flex flex-col">
+        <strong>{{ widget.input_text }}:</strong>
+        <input type="{{ widget.type }}"
+               name="{{ widget.name }}"
+               {% include "django/forms/widgets/attrs.html" %}>
+    </div>
+</div>

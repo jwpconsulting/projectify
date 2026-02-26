@@ -212,8 +212,20 @@ class WorkspaceSettingsForm(forms.ModelForm):
     class Meta:
         """Meta."""
 
-        fields = "title", "description", "picture"
+        fields = "picture", "title", "description"
         model = Workspace
+        labels = {
+            "picture": _("Workspace picture"),
+        }
+        widgets = {
+            "picture": forms.ClearableFileInput(
+                attrs={
+                    "initial_text": _("No picture uploaded"),
+                    "clear_checkbox_label": _("Remove workspace picture"),
+                    "cleared": _("You haven't uploaded a workspace picture"),
+                }
+            ),
+        }
 
 
 @require_http_methods(["GET", "POST"])

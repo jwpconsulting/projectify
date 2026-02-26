@@ -3,8 +3,6 @@
 # SPDX-FileCopyrightText: 2022-2024 JWP Consulting GK
 """User app user model views."""
 
-from typing import Any
-
 from django import forms
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.password_validation import (
@@ -38,18 +36,25 @@ from projectify.user.services.user import (
 class UserProfileForm(forms.ModelForm):
     """Form for user profile update."""
 
-    def __init__(self, *args: Any, **kwargs: Any):
-        """Override constructor and populate placeholders."""
-        super().__init__(*args, **kwargs)
-        self.fields["preferred_name"].widget.attrs.update(
-            placeholder=_("Enter your preferred name")
-        )
-
     class Meta:
         """Form meta."""
 
         model = User
-        fields = ("preferred_name", "profile_picture")
+        fields = ("profile_picture", "preferred_name")
+        labels = {"profile_picture": _("Profile picture")}
+        widgets = {
+            # https://docs.djangoproject.com/en/5.2/ref/forms/widgets/#clearablefileinput
+            "profile_picture": forms.ClearableFileInput(
+                attrs={
+                    "initial_text": _("Your current profile picture"),
+                    "clear_checkbox_label": _("Remove profile picture"),
+                    "cleared": _("You haven't uploaded a profile picture"),
+                }
+            ),
+            "preferred_name": forms.TextInput(
+                attrs={"placeholder": _("Enter your preferred name")}
+            ),
+        }
 
 
 @require_http_methods(["GET", "POST"])

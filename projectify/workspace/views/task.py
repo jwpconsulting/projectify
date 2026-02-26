@@ -300,6 +300,8 @@ def task_detail(
         "task": task,
         "project": task.section.project,
     }
+    # TODO map sub task progress to 20 piece 5 % increment w-[X%] tailwind
+    # classes to solve CSP issue
     return render(request, "workspace/task_detail.html", context)
 
 
