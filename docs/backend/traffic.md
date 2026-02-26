@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2024 JWP Consulting GK
+SPDX-FileCopyrightText: 2024,2026 JWP Consulting GK
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
@@ -393,7 +393,7 @@ We have to run Django from the same ip namespace:
 
 ```fish
 sudo ip netns exec django sudo --user $USER -- \
-  (which fish) -c "poetry run ./manage.py runserver 192.168.128.1:8000"
+  (which fish) -c "uv run ./manage.py runserver 192.168.128.1:8000"
 ```
 
 We can now try httperf:

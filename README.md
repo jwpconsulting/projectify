@@ -15,7 +15,7 @@ Official instance:
 # Development Requirements
 
 - Python version >= 3.12.12 (I recommend using [asdf](https://asdf-vm.com/))
-- [poetry](https://python-poetry.org/docs/)
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
 - [PostgreSQL](https://www.postgresql.org/) >= 15.5
 - [Node.js](https://nodejs.org/en/download) >= 24.13.1
 
@@ -68,13 +68,13 @@ After making sure that you've added the dependencies, follow these
 steps to start developing with Projectify:
 
 1. Clone [this repository](https://github.com/jwpconsulting/projectify).
-2. Install all dependencies using the Python `poetry` tool.
+2. Install all dependencies using the Python `uv` tool.
 3. Create a `.env` environment file by copying the `.env.template` file.
 4. Edit the `DATABASE_URL` variable in the `.env` file and point it to your
    local PostgreSQL 15 instance.
 5. Create a `projectify` PostgreSQL database inside your local PostgreSQL 15
    instance using the `createdb` command.
-6. Then, inside a `poetry` shell, perform the following:
+6. Then, inside a `uv` shell, perform the following:
   a. Migrate the `projectify` database that you have just created.
   b. Seed the `projectify` database with test data using the `seeddb` command.
   c. Start the development server.
@@ -89,7 +89,7 @@ Run these shell commands to accomplish the steps 1. to 5.:
 # Clone the repository
 git clone git@github.com:jwpconsulting/projectify.git
 # Install dependencies
-poetry install --with dev --with test --no-root
+uv sync --all-groups
 # Create your `.env` file
 cp .env.template .env
 # Edit the `.env` file using your preferred editor:
@@ -112,16 +112,16 @@ To finish with step 6., configure Projectify and run using the following command
 
 ```bash
 # Run the Django migration command
-poetry run ./manage.py migrate
+uv run ./manage.py migrate
 # Seed the database with test data using `seeddb`
-poetry run ./manage.py seeddb
+uv run ./manage.py seeddb
 # Start the development server
-poetry run ./manage.py runserver
+uv run ./manage.py runserver
 # Open a new terminal and navigate to the repository again
 # Install the tailwind development tool dependencies
-poetry run ./manage tailwind install
+uv run ./manage tailwind install
 # Run the tailwind development tool
-poetry run ./manage tailwind start
+uv run ./manage tailwind start
 ```
 
 Once you have done all of this, go to Django administration page at
@@ -137,65 +137,35 @@ page.
 ## Neovim
 
 You can use Neovim with the [Pyright](https://github.com/microsoft/pyright) Language Server Protococol (LSP) server. To make sure that Neovim uses the right Pyright from
-this repository, run neovim inside a poetry environment like so:
+this repository, run neovim inside `uv`:
 
 ```
-poetry run nvim
+uv run nvim
 ```
 
 # Formatting
+
 ```
-poetry run bin/format.sh
+uv run bin/format.sh
 ```
 
 # Copyright and licencing information
 To look for files missing copyright and licencing information:
 
 ```
-# Assume you are in backend directory
-poetry run reuse lint
+uv run reuse lint
 ```
 
 # Nix
 
-You can run Projectify with Nix. There are three entry points to
-the application:
+You can use the included `flake.nix` Flake file to open a Nix Flake shell
+with all development dependencies:
 
-- projectify-backend: the Projectify backend wrapped inside gunicorn
-- projectify-manage: the Projectify backend's management tool, using Django
-management commands.
+1. Download Nix: <https://nixos.org/download/> (skip if you use NixOS)
+2. Enable Nix Flakes: <https://wiki.nixos.org/wiki/Flakes#Enabling_flakes_permanently>
+3. Open a Nix Flake shell by running `nix shell` in your terminal
 
-There are sample configuration variables in `.env.production-sample`. These are
-all variables needed to load up the above three commands.
-
-Assuming you have direnv installed, all the necessary configuration variables
-can be exposed using `dotenv -f .env.production run COMMAND`.
-
-## Launching projectify-backend
-
-You can launch and test the start-up behavior of a production-like `projectify-backend` locally like so:
-
-<!-- Note: update if production variables change -->
-
-```bash
-# Adjust env vars accordingly
-env PORT=2000 STRIPE_ENDPOINT_SECRET= STRIPE_PRICE_OBJECT= STRIPE_SECRET_KEY= STRIPE_PUBLISHABLE_KEY= MAILGUN_DOMAIN= MAILGUN_API_KEY= FRONTEND_URL= ALLOWED_HOSTS=localhost SECRET_KEY= DJANGO_SETTINGS_MODULE=projectify.settings.production DJANGO_CONFIGURATION=Production nix run .#projectify-backend
-```
-
-## Launching projectify-manage
-
-You can launch a production-like `projectify-manage` locally like so:
-
-```
-dotenv -f .env.production-sample run nix run .#projectify-manage help
-```
-
-## Flake
-
-There is a nix flake in this repository.
-
-- https://github.com/nix-community/poetry2nix
-- https://github.com/nix-community/nix-direnv
+Alternatively, configure [direnv](https://direnv.net/) and [nix-direnv](https://github.com/nix-community/nix-direnv) to automatically jump into a Nix flake shell.
 
 # Translations
 

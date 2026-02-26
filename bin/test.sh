@@ -1,9 +1,9 @@
 #!/bin/sh
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2023 JWP Consulting GK
+# SPDX-FileCopyrightText: 2023-2026 JWP Consulting GK
 # Note:
-# Run within a poetry, nix, or similar environment
+# Run within uv shell, nix flake shell, or similar environment
 set -e
 target="${1-.}"
 echo "Testing $target"
@@ -70,4 +70,13 @@ then
     echo "Vulture did not find any issues"
 else
     echo "There were some issues when running vulture. See the output above."
+    exit 1
+fi
+
+if reuse lint
+then
+    echo "reuse lint did not find any issues"
+else
+    echo "There was an error running reuse lint"
+    exit 1
 fi

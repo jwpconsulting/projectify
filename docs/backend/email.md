@@ -26,7 +26,7 @@ Open a Django shell using the following command in the ssh session you have
 just connected to:
 
 ```bash
-projectify-manage
+python ./manage.py
 ```
 
 Then, once the Django shell is open, you need to find a User model to send

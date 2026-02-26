@@ -29,34 +29,28 @@ executors:
           POSTGRES_USER: projectify
           POSTGRES_PASSWORD: projectify
 commands:
-  prepare_poetry:
+  prepare_uv:
     description: Install dependencies for backend
     steps:
       - checkout:
           path: ~/projectify
       - restore_cache:
           keys:
-            - poetry-cache-v1-{{ checksum "~/projectify/poetry.lock" }}
+            - uv-cache-v1-{{ checksum "~/projectify/uv.lock" }}
       - run:
-          name: Create venv
-          command: python3 -m venv ~/.local/share/poetry
+          name: Install uv
+          command: pip install uv
       - run:
-          name: Install pip and setuptools
-          command: ~/.local/share/poetry/bin/pip install -U pip setuptools
+          name: Install dependencies
+          command: uv sync --group=test
+      # https://docs.astral.sh/uv/concepts/cache/#caching-in-continuous-integration
       - run:
-          name: Install poetry
-          command: ~/.local/share/poetry/bin/pip install poetry
-      - run:
-          name: Link poetry (XXX hack)
-          command: ln -sv ~/.local/share/poetry/bin/poetry /usr/local/bin
-      - run:
-          name: Install pip packages
-          command: poetry install --all-extras --no-root
+          name: Prune cache
+          command: uv cache prune --ci
       - save_cache:
-          key: poetry-cache-v1-{{ checksum "~/projectify/poetry.lock" }}
+          key: uv-cache-v1-{{ checksum "~/projectify/uv.lock" }}
           paths:
-            - ~/.local
-            - ~/.cache
+            - ~/.cache/uv
   prepare_npm:
     description: Install NPM packages
     steps:
@@ -73,60 +67,60 @@ commands:
                 - ~/.npm
                 - node_modules
 jobs:
-  backend_poetry_check:
+  backend_uv_check:
     executor: python
     working_directory: ~/projectify
     steps:
-      - prepare_poetry
+      - prepare_uv
       - run:
-          name: Poetry check and update requirements
+          name: UV check and update requirements
           command: bin/update-requirements
   backend_lint:
     executor: python
     working_directory: ~/projectify
     steps:
-      - prepare_poetry
+      - prepare_uv
       - run:
           name: Run ruff format
-          command: poetry run ruff format --check .
+          command: uv run ruff format --check .
       - run:
           name: Run ruff
-          command: poetry run ruff check .
+          command: uv run ruff check .
   backend_djlint:
     executor: python
     working_directory: ~/projectify
     steps:
-      - prepare_poetry
+      - prepare_uv
       - run:
           name: Run djlint --check
-          command: poetry run djlint --check .
+          command: uv run djlint --check .
       - run:
           name: Run djlint --lint
-          command: poetry run djlint --lint .
+          command: uv run djlint --lint .
   backend_mypy:
     executor: python
     working_directory: ~/projectify
     steps:
-      - prepare_poetry
+      - prepare_uv
       - run:
           name: Run mypy
-          command: poetry run mypy .
+          command: uv run mypy .
   backend_pyright:
     executor: python
     working_directory: ~/projectify
     steps:
-      - prepare_poetry
+      - prepare_uv
       - run:
           name: Run pyright
-          command: poetry run pyright .
+          command: uv run pyright .
   backend_collectstatic:
     executor: python
     working_directory: ~/projectify
     steps:
-      - prepare_poetry
+      - prepare_uv
       - run:
           name: Run collectstatic
-          command: poetry run ./manage.py collectstatic --noinput
+          command: uv run ./manage.py collectstatic --noinput
           environment:
             DJANGO_CONFIGURATION: TestCollectstatic
   backend_tests:
@@ -136,7 +130,7 @@ jobs:
     working_directory: ~/projectify
     parallelism: 8
     steps:
-      - prepare_poetry
+      - prepare_uv
       - run:
           name: Create junit folder
           command: mkdir junit
@@ -144,8 +138,8 @@ jobs:
       - run:
           name: Collect tests and run pytest
           command: |
-            TEST_FILES=$(circleci tests glob "**/test_*.py" | circleci tests split --split-by=timings)
-            poetry run pytest --junitxml=test-results/junit.xml $TEST_FILES
+            TEST_FILES=$(circleci tests glob "projectify/**/test_*.py" | circleci tests split --split-by=timings)
+            uv run pytest --junitxml=test-results/junit.xml $TEST_FILES
       - store_test_results:
           path: test-results
       - store_artifacts:
@@ -154,13 +148,13 @@ jobs:
     executor: python_and_postgres
     working_directory: ~/projectify
     steps:
-      - prepare_poetry
+      - prepare_uv
       - run:
           name: Migrate
-          command: poetry run ./manage.py migrate
+          command: uv run ./manage.py migrate
       - run:
           name: Seed DB
-          command: poetry run ./manage.py seeddb --n-users 3 --n-workspaces 1 --n-projects 1 --n-labels 1 --n-tasks 1
+          command: uv run ./manage.py seeddb --n-users 3 --n-workspaces 1 --n-projects 1 --n-labels 1 --n-tasks 1
   frontend_tailwind_check:
     executor: node
     working_directory: ~/projectify
@@ -173,17 +167,17 @@ jobs:
     executor: python
     working_directory: ~/projectify
     steps:
-      - prepare_poetry
+      - prepare_uv
       - run:
-          name: Poetry check
-          command: poetry check
+          name: UV check
+          command: uv tree --quiet
       - run:
           name: Run reuse lint
-          command: poetry run reuse lint
+          command: uv run reuse lint
 workflows:
   test_all:
     jobs:
-      - backend_poetry_check
+      - backend_uv_check
       - backend_lint
       - backend_djlint
       - backend_mypy

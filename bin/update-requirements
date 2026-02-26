@@ -4,13 +4,13 @@
 #
 # Update requirements.txt and exit with status 1 if it has
 # changed
-if ! poetry check
+if ! uv tree --quiet > /dev/null 2>&1
 then
-    echo "Poetry check failed. Please fix any issues before using this tool"
+    echo "uv tree failed. Please fix any issues before using this tool"
     exit 1
 fi
 
-poetry export --format requirements.txt --output requirements.txt
+uv export --format requirements-txt --output-file requirements.txt
 
 if ! git diff --exit-code --quiet HEAD -- requirements.txt; then
     echo "requirements.txt has changed"

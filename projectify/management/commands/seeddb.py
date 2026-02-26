@@ -15,8 +15,8 @@ Assuming your development database is called projectify, you can do a full test
 run by running
 dropdb projectify && \
     createdb projectify && \
-    poetry run ./manage.py migrate && \
-    poetry run ./manage.py seeddb
+    uv run ./manage.py migrate && \
+    uv run ./manage.py seeddb
 """
 
 from argparse import ArgumentParser
