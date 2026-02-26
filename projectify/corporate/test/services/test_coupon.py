@@ -8,11 +8,10 @@ from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 
 from projectify.user.models import User
-from projectify.workspace.models.team_member import TeamMember
+from projectify.workspace.models import TeamMember
 from projectify.workspace.services.workspace import workspace_create
 
-from ...models.coupon import Coupon
-from ...models.customer import Customer
+from ...models import Coupon, Customer
 from ...selectors.customer import customer_check_active_for_workspace
 from ...services.coupon import coupon_create, coupon_redeem
 

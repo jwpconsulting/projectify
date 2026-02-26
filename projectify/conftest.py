@@ -30,8 +30,7 @@ import pytest
 from faker import Faker
 from rest_framework.test import APIClient
 
-from projectify.corporate.models import Customer
-from projectify.corporate.models.coupon import Coupon
+from projectify.corporate.models import Coupon, Customer
 from projectify.corporate.services.coupon import coupon_create
 from projectify.corporate.services.stripe import (
     customer_activate_subscription,
@@ -48,10 +47,12 @@ from projectify.user.services.user_invite import (
     user_invite_redeem,
 )
 from projectify.workspace import models
-from projectify.workspace.models.label import Label
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.models.team_member_invite import TeamMemberInvite
-from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models import (
+    Label,
+    TeamMember,
+    TeamMemberInvite,
+    Workspace,
+)
 from projectify.workspace.selectors.team_member import (
     team_member_find_for_workspace,
 )

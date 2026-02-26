@@ -10,7 +10,7 @@ from django.contrib import admin
 from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
-from projectify.corporate.models.coupon import Coupon
+from projectify.corporate.models import Coupon
 from projectify.corporate.services.coupon import coupon_create
 from projectify.user.models import User
 

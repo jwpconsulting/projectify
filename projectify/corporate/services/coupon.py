@@ -12,12 +12,12 @@ from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 
-from projectify.corporate.types import CustomerSubscriptionStatus
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 from projectify.workspace.models.workspace import Workspace
 
-from ..models.coupon import Coupon
+from ..models import Coupon
+from ..types import CustomerSubscriptionStatus
 
 # Took this as an inspiration
 # https://github.com/tytso/pwgen/blob/1459a31e07fa208cddb2c4f3f72071503c37b8bc/pw_rand.c#L20

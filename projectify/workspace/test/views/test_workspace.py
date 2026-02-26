@@ -15,20 +15,17 @@ from django.urls import reverse
 
 import pytest
 
-from projectify.corporate.models.coupon import Coupon
-from projectify.corporate.models.customer import Customer
+from projectify.corporate.models import Coupon, Customer
 from projectify.corporate.selectors.customer import (
     customer_check_active_for_workspace,
 )
 from projectify.corporate.services.stripe import customer_cancel_subscription
 from projectify.settings.base import Base
 from projectify.user.models import User
-from projectify.workspace.models.label import Label
 from pytest_types import DjangoAssertNumQueries
 
+from ...models import Label, TeamMember, Workspace
 from ...models.const import TeamMemberRoles
-from ...models.team_member import TeamMember
-from ...models.workspace import Workspace
 
 pytestmark = pytest.mark.django_db
 
