@@ -35,6 +35,7 @@ def anchor(
     href: str,
     label: str,
     aria_label: Optional[str] = None,
+    title: Optional[str] = None,
     external: bool = False,
     *args: Any,
     **kwargs: Any,
@@ -72,9 +73,12 @@ def anchor(
         a_extra = ""
         extra = ""
     return format_html(
-        '<a href="{url}"{aria_label} class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"{a_extra}>{label}{extra}</a>',
+        '<a href="{url}"{aria_label}{title} class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"{a_extra}>{label}{extra}</a>',
         aria_label=format_html(' aria-label="{label}"', label=aria_label)
         if aria_label is not None
+        else "",
+        title=format_html(' title="{title}"', title=title)
+        if title is not None
         else "",
         a_extra=a_extra,
         url=url,
@@ -101,6 +105,34 @@ def circle_button(
         value=format_html(' value="{}"', value) if value else "",
         icon=icon(icon_style),
         label=label,
+    )
+
+
+@register.simple_tag
+def circle_anchor(
+    label: str,
+    icon_style: str,
+    href: str,
+    title: Optional[str] = None,
+    size: Literal[None, 4, 6] = None,
+    *args: Any,
+    **kwargs: Any,
+) -> SafeText:
+    """Render a circular anchor link."""
+    if not href:
+        raise ValueError("Empty href supplied")
+    try:
+        url = reverse(href, args=args, kwargs=kwargs)
+    except NoReverseMatch:
+        url = href
+    return format_html(
+        '<a href="{url}" aria-label="{label}"{title} class="shrink-0 size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background">{icon}</a>',
+        url=url,
+        label=label,
+        title=format_html(' title="{title}"', title=title)
+        if title is not None
+        else "",
+        icon=icon(icon_style, size=size),
     )
 
 
@@ -149,6 +181,36 @@ def action_button(
         text=text,
         value=format_html(' value="{value}"', value=value) if value else "",
         name=format_html(' name="{name}"', name=name) if name else "",
+    )
+
+
+@register.simple_tag
+def go_to_action(
+    href: str,
+    label: str,
+    title: Optional[str] = None,
+    *args: Any,
+    **kwargs: Any,
+) -> SafeText:
+    """
+    Render a primary action button link.
+
+    Used for main actions like "Edit", "Create", etc.
+    """
+    if href == "":
+        raise ValueError("Empty href supplied")
+    try:
+        url = reverse(href, args=args, kwargs=kwargs)
+    except NoReverseMatch:
+        url = href
+
+    return format_html(
+        '<a href="{url}"{title} class="bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold">{label}</a>',
+        url=url,
+        title=format_html(' title="{title}"', title=title)
+        if title is not None
+        else "",
+        label=label,
     )
 
 

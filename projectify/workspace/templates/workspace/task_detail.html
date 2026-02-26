@@ -18,16 +18,9 @@
             <div class="flex items-center justify-between gap-4 sm:flex-row">
                 {% has_perm "workspace.update_task" user task.workspace as can_update_task %}
                 {% if can_update_task %}
-                    <a href="{% url "dashboard:tasks:update" task.uuid %}"
-                       class=" bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                        {% trans "Edit" %}
-                    </a>
+                    {% go_to_action "dashboard:tasks:update" label=_("Edit") title=_("Edit this task") task_uuid=task.uuid %}
                 {% endif %}
-                <a aria-label="{% trans 'Open task context menu' %}"
-                   href="{% url 'dashboard:tasks:actions' task.uuid %}"
-                   class="focus:base-content relative h-8 w-8 rounded-lg border border-transparent p-1 focus:border-base-content focus:outline-none active:text-display hover:bg-secondary-hover active:bg-primary text-base-content">
-                    {% icon "dots-vertical" %}
-                </a>
+                {% circle_anchor label=_("Task menu") title=_("Open task context menu") icon_style="dots-vertical" href="dashboard:tasks:actions" task_uuid=task.uuid %}
             </div>
         </div>
         <div class="flex flex-col gap-8">
@@ -37,10 +30,7 @@
                         <th scope="row" class="col-span-1 text-left font-bold">{% trans "Task title" %}</th>
                         <td class="col-span-3 flex flex-row gap-4 items-center">
                             {{ task.title }}
-                            <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=title"
-                               class="flex flex-row">
-                                <div class="h-4 w-4">{% icon "pencil" %}</div>
-                            </a>
+                            {% circle_anchor label=_("Edit task title") icon_style="pencil" href="dashboard:tasks:update" title=_("Edit task title") size=4 task_uuid=task.uuid %}
                         </td>
                     </tr>
                     <tr class="contents">
@@ -52,9 +42,7 @@
                                 {% user_avatar task.assignee %}
                                 <div class="truncate">{{ task.assignee|default:"No team member assigned" }}</div>
                             </button>
-                            <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=assignee">
-                                <div class="h-4 w-4">{% icon "pencil" %}</div>
-                            </a>
+                            {% circle_anchor label=_("Edit assignee") icon_style="pencil" href="dashboard:tasks:update" title=_("Edit assignee") size=4 task_uuid=task.uuid %}
                         </td>
                     </tr>
                     <tr class="contents">
@@ -69,9 +57,7 @@
                                     </div>
                                 {% endfor %}
                             </div>
-                            <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=labels">
-                                <div class="h-4 w-4">{% icon "pencil" %}</div>
-                            </a>
+                            {% circle_anchor label=_("Edit labels") icon_style="pencil" href="dashboard:tasks:update" title=_("Edit labels") size=4 task_uuid=task.uuid %}
                         </td>
                     </tr>
                     <tr class="contents">
@@ -82,10 +68,7 @@
                             {% else %}
                                 <p class="text-base-content">{% trans "No due date" %}</p>
                             {% endif %}
-                            <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=due_date"
-                               class="flex flex-row">
-                                <div class="h-4 w-4">{% icon "pencil" %}</div>
-                            </a>
+                            {% circle_anchor label=_("Edit due date") icon_style="pencil" href="dashboard:tasks:update" title=_("Edit due date") size=4 task_uuid=task.uuid %}
                         </td>
                     </tr>
                     <tr class="contents">
@@ -96,9 +79,7 @@
                             {% else %}
                                 <p class="text-base-content">{% trans "No description" %}</p>
                             {% endif %}
-                            <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=description">
-                                <div class="h-4 w-4">{% icon "pencil" %}</div>
-                            </a>
+                            {% circle_anchor label=_("Edit description") icon_style="pencil" href="dashboard:tasks:update" title=_("Edit description") size=4 task_uuid=task.uuid %}
                         </td>
                     </tr>
                 </tbody>
@@ -106,10 +87,7 @@
             <div class="flex flex-col gap-4">
                 <div class="flex flex-row items-center gap-4">
                     <h4 class="text-xl font-bold">{% trans "Sub tasks" %}</h4>
-                    <a href="{% url 'dashboard:tasks:update' task.uuid %}#subtasks"
-                       class="flex flex-row">
-                        <div class="h-4 w-4">{% icon "pencil" %}</div>
-                    </a>
+                    {% circle_anchor label=_("Edit sub tasks") icon_style="pencil" href="dashboard:tasks:update" title=_("Edit sub tasks") size=4 task_uuid=task.uuid %}
                 </div>
                 {% if task.sub_task_progress %}
                     <div class="flex flex-row items-center gap-4">
@@ -134,10 +112,7 @@
                         </div>
                         <div class="shrink flex min-w-0 items-center gap-2">
                             <p class="h-full w-full truncate overflow-x-hidden">{{ sub_task.title }}</p>
-                            <a href="{% url 'dashboard:tasks:update' task.uuid %}?focus=subtask&subtask_uuid={{ sub_task.uuid }}"
-                               class="flex flex-row">
-                                <div class="h-4 w-4">{% icon "pencil" %}</div>
-                            </a>
+                            {% circle_anchor label=_("Edit sub task") icon_style="pencil" href="dashboard:tasks:update" title=_("Edit sub task") size=4 task_uuid=task.uuid %}
                         </div>
                     </div>
                 {% empty %}

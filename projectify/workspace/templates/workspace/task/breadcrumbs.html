@@ -3,15 +3,13 @@
 {% load projectify %}
 {% load i18n %}
 <div class="font-bold text-utility">
-    <span aria-label="{% translate "Project" %}">
-        {% anchor "dashboard:projects:detail" label=section.project.title project_uuid=section.project.uuid %}
-    </span>
+    {% anchor "dashboard:projects:detail" title=_("Project link") label=section.project.title project_uuid=section.project.uuid %}
     <span aria-hidden="true">&gt;</span>
-    <span aria-label="{% translate "Section" %}">{% anchor href=section.get_absolute_url label=section.title %}</span>
+    {% anchor href=section.get_absolute_url title=_("Section link") label=section.title %}
     <span aria-hidden="true">&gt;</span>
     {% if current_page_label and current_page_url %}
         {% anchor href=current_page_url label=current_page_label %}
     {% else %}
-        {% anchor "dashboard:tasks:detail" aria_label=task.readable_number label=task.number task_uuid=task.uuid %}
+        {% anchor "dashboard:tasks:detail" aria_label=task.readable_number title=_("Task link") label=task.number task_uuid=task.uuid %}
     {% endif %}
 </div>
