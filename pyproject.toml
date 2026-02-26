@@ -26,8 +26,8 @@ dependencies = [
     "stripe>=8,<9",
     "whitenoise~=6.2.0",
     "django-ratelimit>=4.1.0,<5",
-    "django-tailwind[reload]>=3.8.0,<4",
     "django-markdownify>=0.9.5,<0.10",
+    "django-browser-reload>=1.21.0",
 ]
 authors = [
     { name = "The Projectify Authors", email = "hello@projectifyapp.com" },

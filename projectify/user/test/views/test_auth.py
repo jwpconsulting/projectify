@@ -358,7 +358,9 @@ class TestLogInDjango:
         # I like deterministic tests. django-ratelimit does not work with
         # sliding windows, but fixed windows. see
         # https://github.com/jsocol/django-ratelimit/issues/64
-        for email in [faker.email() for _ in range(10)]:
+        # Rate limit is
+        # @ratelimit(key="ip", rate="5/m", method=UNSAFE)
+        for email in [faker.email() for _ in range(11)]:
             data = {"email": email, "password": "w"}
             response = client.post(resource_url, data=data)
             if response.status_code == 429:

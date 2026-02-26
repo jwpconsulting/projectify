@@ -89,12 +89,10 @@
                     <h4 class="text-xl font-bold">{% trans "Sub tasks" %}</h4>
                     {% circle_anchor label=_("Edit sub tasks") icon_style="pencil" href="dashboard:tasks:update" title=_("Edit sub tasks") size=4 task_uuid=task.uuid %}
                 </div>
-                {% if task.sub_task_progress %}
+                {% if task.sub_task_progress is not None %}
                     <div class="flex flex-row items-center gap-4">
                         <div class="h-2 w-full overflow-hidden rounded bg-disabled">
-                            {# djlint:off H021 #}
-                            <div class="h-full bg-primary"
-                                 style="width: {{ task.sub_task_progress|percent }}"></div>
+                            <div class="h-full bg-primary {{ subtask_progress_style }}"></div>
                         </div>
                         <p class="min-w-max font-bold">{{ task.sub_task_progress|percent }}</p>
                     </div>

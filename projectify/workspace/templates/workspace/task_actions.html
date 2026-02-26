@@ -8,35 +8,34 @@
          class="min-w-0 grow flex flex-col gap-4"
          role="presentation">
         {% include "workspace/task/breadcrumbs.html" with task=task section=task.section %}
-        <h1 class="text-2xl font-bold">{% translate "Task actions" %}</h1>
-        <form hx-post="{% url 'dashboard:tasks:move' task.uuid %}"
-              hx-target="#app-content"
-              hx-select="#app-content"
-              hx-swap="outerHTML"
-              hx-push-url="true"
-              class="flex flex-col gap-1">
-            <div class="flex flex-col items-start gap-2">
-                {% action_button text=_("Move to top") icon="arrow-up" value="top" name="direction" disabled=task.first %}
-                {% action_button text=_("Move to bottom") icon="arrow-down" value="bottom" name="direction" disabled=task.last %}
-            </div>
+        <h1 class="text-2xl font-bold">
+            {% translate "Task actions" %}
+            <span class="htmx-indicator">{% translate "Saving..." %}</span>
+        </h1>
+        <form action="{% url 'dashboard:tasks:move' task.uuid %}"
+              method="post"
+              hx-boost
+              class="flex flex-col">
+            {% action_button justify_left=True text=_("Move to top") icon="arrow-up" value="top" name="direction" disabled=task.first %}
+            {% action_button justify_left=True text=_("Move to bottom") icon="arrow-down" value="bottom" name="direction" disabled=task.last %}
             {% csrf_token %}
-            <p class="htmx-indicator">{% translate "Saving..." %}</p>
         </form>
-        <form hx-post="{% url 'dashboard:tasks:move-to-section' task.uuid %}"
-              hx-target="#app-content"
-              hx-select="#app-content"
-              hx-swap="outerHTML"
-              hx-push-url="true"
-              class="flex flex-col gap-1">
+        <form action="{% url 'dashboard:tasks:move-to-section' task.uuid %}"
+              method="post"
+              hx-boost
+              class="flex flex-col gap-2">
             <h2 class="font-bold">{% trans "Move to section" %}</h2>
-            <ul class="flex flex-col">
+            <ul class="flex flex-col items-left">
                 {% for section in sections %}
-                    <li class="overflow-x-hidden">
-                        {% action_button text=section.title icon="selector" value=section.uuid name="section_uuid" %}
-                    </li>
+                    {% if section.uuid != task.section.uuid %}
+                        <li class="overflow-x-hidden">
+                            {% action_button justify_left=True text=section.title icon="selector" value=section.uuid name="section_uuid" %}
+                        </li>
+                    {% endif %}
                 {% endfor %}
             </ul>
             <p class="htmx-indicator">{% trans "Saving..." %}</p>
+            {% csrf_token %}
         </form>
         <form hx-post="{% url 'dashboard:tasks:delete' task.uuid %}"
               hx-confirm="{% blocktrans with title=task.title %}Are you sure you want to delete the following task: {{ title }}{% endblocktrans %}">

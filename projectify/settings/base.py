@@ -131,7 +131,6 @@ class Base(Configuration):  # type:ignore
         "cloudinary_storage",
         "pgtrigger",
         "rules.apps.AutodiscoverRulesConfig",
-        "tailwind",
         "markdownify.apps.MarkdownifyConfig",
     )
 
@@ -307,9 +306,7 @@ class Base(Configuration):  # type:ignore
     # premail
     PREMAIL_PREVIEW = False
 
-    # tailwind
-    # https://django-tailwind.readthedocs.io/en/latest/installation.html
-    TAILWIND_APP_NAME = "projectify.theme"
+    # https://github.com/adamchainz/django-browser-reload
     BROWSER_RELOAD = False
 
     # Markdownify

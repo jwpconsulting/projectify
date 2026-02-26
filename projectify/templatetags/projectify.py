@@ -25,7 +25,7 @@ register = template.Library()
 @register.filter
 def percent(value: Optional[float]) -> Optional[str]:
     """Format value as percentage."""
-    if not value:
+    if value is None:
         return None
     return _("{sub_task_done} %").format(sub_task_done=round(value * 100))
 
@@ -121,10 +121,7 @@ def circle_anchor(
     """Render a circular anchor link."""
     if not href:
         raise ValueError("Empty href supplied")
-    try:
-        url = reverse(href, args=args, kwargs=kwargs)
-    except NoReverseMatch:
-        url = href
+    url = reverse(href, args=args, kwargs=kwargs)
     return format_html(
         '<a href="{url}" aria-label="{label}"{title} class="shrink-0 size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background">{icon}</a>',
         url=url,
@@ -145,17 +142,18 @@ def action_button(
     name: Optional[str] = None,
     grow: bool = True,
     disabled: bool = False,
+    justify_left: bool = False,
 ) -> SafeText:
     """Render a styled action button with icon."""
     # Source: frontend/src/lib/funabashi/buttons/Button.svelte
     color_classes = {
-        "secondary": " text-secondary-content hover:bg-secondary-hover hover:text-secondary-content-hover active:bg-secondary-pressed active:text-secondary-content-hover",
-        "destructive": " text-destructive hover:bg-destructive-secondary-hover hover:text-destructive-hover active:bg-destructive-secondary-pressed active:text-destructive-pressed",
+        "secondary": "text-secondary-content hover:bg-secondary-hover hover:text-secondary-content-hover active:bg-secondary-pressed active:text-secondary-content-hover",
+        "destructive": "text-destructive hover:bg-destructive-secondary-hover hover:text-destructive-hover active:bg-destructive-secondary-pressed active:text-destructive-pressed",
     }
 
     return format_html(
         '<button type="submit" '
-        'class="{width_class}{color_classes}{disabled_class} flex min-w-0 flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold"'
+        'class="{width_class} {color_classes}{disabled_class} flex min-w-0 flex-row {justify} gap-2 rounded-lg px-4 py-2 font-bold"'
         "{disabled_attr}{value}{name}>"
         "{icon}"
         '<span class="truncate">{text}</span>'
@@ -164,6 +162,9 @@ def action_button(
         color_classes=color_classes[style],
         disabled_class=" opacity-20" if disabled else "",
         disabled_attr=" disabled" if disabled else "",
+        justify="justify-left" if justify_left else "justify-center",
+        # TODO
+        # icon=icon(icon, style, 6) if icon else "",
         icon=format_html(
             '<img class="w-6 h-6 shrink-0" src="{src}" aria-hidden="true">',
             src=reverse(
@@ -189,6 +190,9 @@ def go_to_action(
     href: str,
     label: str,
     title: Optional[str] = None,
+    icon_style: Optional[str] = None,
+    style: Literal["primary", "secondary", "destructive"] = "secondary",
+    justify_left: bool = False,
     *args: Any,
     **kwargs: Any,
 ) -> SafeText:
@@ -199,17 +203,26 @@ def go_to_action(
     """
     if href == "":
         raise ValueError("Empty href supplied")
-    try:
-        url = reverse(href, args=args, kwargs=kwargs)
-    except NoReverseMatch:
-        url = href
+    url = reverse(href, args=args, kwargs=kwargs)
+
+    # Define color classes for different styles
+    color_classes = {
+        "primary": "bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed",
+        "secondary": "text-secondary-content hover:bg-secondary-hover hover:text-secondary-content-hover active:bg-secondary-pressed active:text-secondary-content-hover",
+        "destructive": "text-destructive hover:bg-destructive-secondary-hover hover:text-destructive-hover active:bg-destructive-secondary-pressed active:text-destructive-pressed",
+    }
+
+    justify_class = "justify-start" if justify_left else "justify-center"
 
     return format_html(
-        '<a href="{url}"{title} class="bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold">{label}</a>',
+        '<a href="{url}"{title} class="{color_classes} text-base flex min-w-max flex-row {justify_class} gap-2 rounded-lg px-4 py-2 font-bold">{icon}<span class="truncate">{label}</span></a>',
         url=url,
         title=format_html(' title="{title}"', title=title)
         if title is not None
         else "",
+        color_classes=color_classes[style],
+        justify_class=justify_class,
+        icon=icon(icon_style, style, 6) if icon_style else "",
         label=label,
     )
 
@@ -217,7 +230,7 @@ def go_to_action(
 @register.simple_tag
 def icon(
     icon: str,
-    color: Optional[Literal["primary", "destructive"]] = None,
+    color: Optional[Literal["primary", "secondary", "destructive"]] = None,
     size: Literal[None, 4, 6] = None,
 ) -> SafeText:
     """Return a rendered heroicon SVG file with optional color."""
