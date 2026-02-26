@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!-- SPDX-FileCopyrightText: 2021-2026 JWP Consulting GK -->
-{% load static tailwind_tags %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -28,13 +28,12 @@
                     e.detail.isError = false;
                 }
             })
-
         </script>
         <link rel="icon" href="{% static 'favicon.ico' %}" sizes="32x32">
         <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
         <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}">
         <link rel="manifest" href="/manifest.json">
-        {% tailwind_css %}
+        <link rel="stylesheet" href="{% static "css/dist/styles.css" %}">
     </head>
     <body class="min-h-screen w-full max-w-full bg-foreground text-base-content"
           hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>

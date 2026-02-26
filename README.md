@@ -78,8 +78,7 @@ steps to start developing with Projectify:
   a. Migrate the `projectify` database that you have just created.
   b. Seed the `projectify` database with test data using the `seeddb` command.
   c. Start the development server.
-  d. Install the Django-Tailwind[^django-tailwind] tool dependencies.
-  e. Start the Django-Tailwind tool.
+  d. Start tailwind
 
 [^django-tailwind]: [Django-Tailwind](https://django-tailwind.readthedocs.io/en/latest/installation.html) *django-tailwind.readthedocs.io*
 
@@ -119,9 +118,9 @@ uv run ./manage.py seeddb
 uv run ./manage.py runserver
 # Open a new terminal and navigate to the repository again
 # Install the tailwind development tool dependencies
-uv run ./manage tailwind install
+npm clean-install
 # Run the tailwind development tool
-uv run ./manage tailwind start
+npm run dev
 ```
 
 Once you have done all of this, go to Django administration page at

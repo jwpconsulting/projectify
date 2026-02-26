@@ -138,17 +138,16 @@ django==6.0.2 \
     #   django-extensions
     #   django-markdownify
     #   django-pgtrigger
-    #   django-tailwind
     #   djangorestframework
     #   projectify
 django-anymail==10.3 \
     --hash=sha256:1e72f059e96930d3675d35fe4c61f82b138ae4a7fcb0337be39dcb4823f94a4f \
     --hash=sha256:35d8ec20b06000af3c1638492e32f416fd1a584f0a572cded03f1bc570169ed0
     # via projectify
-django-browser-reload==1.17.0 \
-    --hash=sha256:3667939cde0eee1a6d698dbe3b78cf10b573dabc4e711fb7933f1ba91fb98da4 \
-    --hash=sha256:d372c12c1c5962c02279a53cac7e8a020c48f104592c637a06d0768b28d2d6be
-    # via django-tailwind
+django-browser-reload==1.21.0 \
+    --hash=sha256:0b2a86ab460774fa9bb142a121c70e75a72f18109f51a4f6de409cd633d3a70d \
+    --hash=sha256:3335ad3d107eb657f623d1a8e680dfbcab8a83ae1f94df1895e069dddf5604ba
+    # via projectify
 django-cloudinary-storage==0.3.0 \
     --hash=sha256:95c855c7334141b2a485ea7eb5716de87bb6ce0d848e205debb3a3ab7bbbd49a \
     --hash=sha256:debd403a5f225c9d35c4af508ff4abc7fdc262129464134b60b2feeb2c44d3e1
@@ -170,10 +169,6 @@ django-pgtrigger==4.11.0 \
 django-ratelimit==4.1.0 \
     --hash=sha256:555943b283045b917ad59f196829530d63be2a39adb72788d985b90c81ba808b \
     --hash=sha256:d047a31cf94d83ef1465d7543ca66c6fc16695559b5f8d814d1b51df15110b92
-    # via projectify
-django-tailwind==3.8.0 \
-    --hash=sha256:31c2f4a7879d685c2de0feaf0b63f246200b37337bea4d7dbafb59bc3f10c008 \
-    --hash=sha256:fa969c5b95d314b173fe2b2ed2cb2c03f2e2c94fdc2c01ff73a993fa159085da
     # via projectify
 django-test-migrations==1.3.0 \
     --hash=sha256:b42edb1af481e08c9d91c95aa9b373e76e905a931bc19c086ec00a6cb936876e \

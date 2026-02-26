@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: 2026 JWP Consulting GK
-cd projectify/theme/static_src
 npm run build
 
 if ! git diff --exit-code --quiet HEAD -- projectify/theme/static/css/dist/styles.css; then

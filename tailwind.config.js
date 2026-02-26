@@ -100,14 +100,14 @@ const config = {
     // ../../ is the projectify directory
     content: [
         // Apps
-        "../../../projectify/*/templates/**/*.html",
-        "../../../projectify/**/const.py",
+        "projectify/*/templates/**/*.html",
+        "projectify/**/const.py",
         // Shared templates
-        "../../../projectify/templates/**/*.html",
+        "projectify/templates/**/*.html",
         // Heroicons
-        "../../../projectify/templates/heroicons/*.svg",
+        "projectify/templates/heroicons/*.svg",
         // Templatetags
-        "../../../projectify/templatetags/*.py",
+        "projectify/templatetags/*.py",
     ],
     theme: {
         extend: {
