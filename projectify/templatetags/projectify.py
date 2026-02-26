@@ -123,7 +123,7 @@ def circle_anchor(
         raise ValueError("Empty href supplied")
     url = reverse(href, args=args, kwargs=kwargs)
     return format_html(
-        '<a href="{url}" aria-label="{label}"{title} class="shrink-0 size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background">{icon}</a>',
+        '<a href="{url}" aria-label="{label}"{title} class="inline-block shrink-0 size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background">{icon}</a>',
         url=url,
         label=label,
         title=format_html(' title="{title}"', title=title)
