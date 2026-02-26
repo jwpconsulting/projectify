@@ -32,7 +32,12 @@ def percent(value: Optional[float]) -> Optional[str]:
 
 @register.simple_tag
 def anchor(
-    href: str, label: str, external: bool = False, *args: Any, **kwargs: Any
+    href: str,
+    label: str,
+    aria_label: Optional[str] = None,
+    external: bool = False,
+    *args: Any,
+    **kwargs: Any,
 ) -> SafeText:
     """
     Render a fully styled HTML anchor.
@@ -67,7 +72,10 @@ def anchor(
         a_extra = ""
         extra = ""
     return format_html(
-        '<a href="{url}" class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"{a_extra}>{label}{extra}</a>',
+        '<a href="{url}" {aria_label}class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"{a_extra}>{label}{extra}</a>',
+        aria_label=format_html(' aria-label="{label}"', label=aria_label)
+        if aria_label is not None
+        else "",
         a_extra=a_extra,
         url=url,
         label=label,

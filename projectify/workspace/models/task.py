@@ -74,11 +74,6 @@ class Task(TitleDescriptionModel, BaseModel):
         _order: int
         id: int
 
-    def get_next_section(self) -> "Section":
-        """Return instance of the next section."""
-        next_section: "Section" = self.section.get_next_in_order()
-        return next_section
-
     # TODO we can probably do better than any here
     def save(self, *args: Any, **kwargs: Any) -> None:
         """Override save to add task number."""
@@ -89,6 +84,10 @@ class Task(TitleDescriptionModel, BaseModel):
     def __str__(self) -> str:
         """Return title."""
         return self.title
+
+    def readable_number(self) -> str:
+        """Return title with number. This is useful for AT."""
+        return _("Task number {task_number}").format(task_number=self.number)
 
     class Meta:
         """Meta."""

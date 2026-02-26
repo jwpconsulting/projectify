@@ -19,22 +19,6 @@ class TestTask:
         assert task.section == section
         assert task.due_date is not None
 
-    def test_get_next_section(
-        self,
-        project: models.Project,
-        task: models.Task,
-        other_section: models.Section,
-    ) -> None:
-        """Test getting the next section."""
-        assert task.get_next_section() == other_section
-
-    def test_get_next_section_no_next_section(
-        self, project: models.Project, task: models.Task
-    ) -> None:
-        """Test getting the next section when there is none."""
-        with pytest.raises(models.Section.DoesNotExist):
-            task.get_next_section()
-
     def test_task_number(
         self, task: models.Task, other_task: models.Task
     ) -> None:
