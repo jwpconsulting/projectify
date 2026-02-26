@@ -9,12 +9,12 @@ from unittest import mock
 import pytest
 from rest_framework import serializers
 
-from projectify.corporate.models.customer import Customer
+from projectify.corporate.models import Customer
 from projectify.corporate.services.customer import (
     customer_create_stripe_checkout_session,
 )
 from projectify.settings.base import Base
-from projectify.workspace.models.team_member import TeamMember
+from projectify.workspace.models import TeamMember
 
 pytestmark = pytest.mark.django_db
 

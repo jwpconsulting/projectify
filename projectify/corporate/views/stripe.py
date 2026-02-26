@@ -23,7 +23,7 @@ from rest_framework import serializers
 from projectify.lib.settings import get_settings
 
 from ..lib.stripe import stripe_client
-from ..models.customer import Customer
+from ..models import Customer
 from ..selectors.customer import (
     customer_find_by_stripe_customer_id,
     customer_find_by_uuid,
