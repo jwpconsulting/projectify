@@ -20,6 +20,7 @@ from django.views.decorators.http import require_http_methods, require_POST
 from projectify.lib.htmx import HttpResponseClientRedirect
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
+from projectify.workspace.models.const import SUBTASK_PROGRESS_CLASSES
 from projectify.workspace.selectors.team_member import (
     team_member_find_for_workspace,
 )
@@ -295,13 +296,23 @@ def task_detail(
         )
 
     workspace = task.workspace
+
+    sub_task_progress = getattr(task, "sub_task_progress", None)
+    if sub_task_progress is not None:
+        # 21 classes between 0 and 100
+        # 5 points between classes
+        progress_percent = min(100, max(round(sub_task_progress * 20) * 5, 0))
+        subtask_progress_style = SUBTASK_PROGRESS_CLASSES[progress_percent]
+    else:
+        # If task has no sub tasks, this is None
+        subtask_progress_style = None
+
     context = {
         **get_task_view_context(request, workspace),
         "task": task,
         "project": task.section.project,
+        "subtask_progress_style": subtask_progress_style,
     }
-    # TODO map sub task progress to 20 piece 5 % increment w-[X%] tailwind
-    # classes to solve CSP issue
     return render(request, "workspace/task_detail.html", context)
 
 

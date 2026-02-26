@@ -25,7 +25,7 @@ register = template.Library()
 @register.filter
 def percent(value: Optional[float]) -> Optional[str]:
     """Format value as percentage."""
-    if not value:
+    if value is None:
         return None
     return _("{sub_task_done} %").format(sub_task_done=round(value * 100))
 
