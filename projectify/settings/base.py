@@ -103,6 +103,8 @@ class Base(Configuration):  # type:ignore
             CSP.NONCE,
             # htmx
             "'sha256-bsV5JivYxvGywDAZ22EZJKBFip65Ng9xoJVLbBg7bdo='",
+            # htmx
+            "'sha256-IOPJoLjlywWMOiXjm9gstcOWbflCWb+PHbhcDgSPqcg='",
         ],
         "img-src": [CSP.SELF, "res.cloudinary.com"],
         "form-action": [CSP.SELF],

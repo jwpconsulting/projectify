@@ -6,15 +6,15 @@
     {% include "workspace/common/sidemenu/project_details.html" %}
 {% endblock dashboard_projects %}
 {% block dashboard_content %}
-    <div class="grow flex flex-col items-center bg-background px-0 py-8 sm:px-2">
-        <main id="main"
-              class="flex w-full max-w-xl flex-col gap-10 rounded-lg bg-foreground p-4 shadow-context-menu">
+    <main id="main"
+          class="grow flex flex-col items-center bg-background px-0 py-8 sm:px-2">
+        <div class="flex w-full max-w-xl flex-col gap-10 rounded-lg bg-foreground p-4 shadow-context-menu">
             <h1 class="px-2 text-2xl font-bold sm:px-0">
                 {% block form_title %}
                 {% endblock form_title %}
             </h1>
             {% block form_content %}
             {% endblock form_content %}
-        </main>
-    </div>
+        </div>
+    </main>
 {% endblock dashboard_content %}
