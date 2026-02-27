@@ -3,7 +3,8 @@
 {% load static %}
 {% load i18n %}
 {% load projectify %}
-<nav class="flex-row items-center justify-between border-b-2 border-border bg-foreground px-6 py-4 md:flex">
+<nav title="{% translate "Dashboard header" %}"
+     class="flex-row items-center justify-between border-b-2 border-border bg-foreground px-6 py-4 md:flex">
     <a href="{% url "dashboard:dashboard" %}" class="shrink">
         <img src="{% static "polylogo.svg" %}"
              width="171"

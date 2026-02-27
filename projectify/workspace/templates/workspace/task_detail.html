@@ -30,19 +30,15 @@
                         <th scope="row" class="col-span-1 text-left font-bold">{% trans "Task title" %}</th>
                         <td class="col-span-3 flex flex-row gap-4 items-center">
                             {{ task.title }}
-                            {% circle_anchor label=_("Edit task title") icon_style="pencil" href="dashboard:tasks:update" title=_("Edit task title") size=4 task_uuid=task.uuid %}
+                            {% circle_anchor label=_("Edit task title") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit task title") size=4 task_uuid=task.uuid focus_field="title" %}
                         </td>
                     </tr>
                     <tr class="contents">
                         <th scope="row" class="col-span-1 text-left font-bold">{% trans "Assignee" %}</th>
                         <td class="col-span-3 flex flex-row gap-2 items-center">
-                            <button class="flex w-full flex-row items-center gap-2 rounded-2.5xl border-primary px-2 py-1 font-bold text-primary bg-task-hover"
-                                    type="button"
-                                    disabled="">
-                                {% user_avatar task.assignee %}
-                                <div class="truncate">{{ task.assignee|default:"No team member assigned" }}</div>
-                            </button>
-                            {% circle_anchor label=_("Edit assignee") icon_style="pencil" href="dashboard:tasks:update" title=_("Edit assignee") size=4 task_uuid=task.uuid %}
+                            {% user_avatar task.assignee %}
+                            <span class="truncate">{{ task.assignee|default:"No team member assigned" }}</span>
+                            {% circle_anchor label=_("Edit assignee") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit assignee") size=4 task_uuid=task.uuid focus_field="assignee" %}
                         </td>
                     </tr>
                     <tr class="contents">
@@ -50,14 +46,12 @@
                         <td class="col-span-3 gap-2 flex flex-row items-center">
                             <div class="flex flex-row flex-wrap items-center gap-x-1 gap-y-2">
                                 {% for label in task.labels.all %}
-                                    <div class="shrink-0">
-                                        <button class="group rounded-2.5xl px-3 py-1 font-bold {{ label.bg_class }} {{ label.text_class }}"
-                                                type="button"
-                                                disabled="">{{ label.name }}</button>
-                                    </div>
+                                    <span class="min-w-0 rounded-2.5xl px-3 py-1 font-bold {{ label.bg_class }} {{ label.text_class }}"
+                                          type="button"
+                                          disabled="">{{ label.name }}</span>
                                 {% endfor %}
                             </div>
-                            {% circle_anchor label=_("Edit labels") icon_style="pencil" href="dashboard:tasks:update" title=_("Edit labels") size=4 task_uuid=task.uuid %}
+                            {% circle_anchor label=_("Edit labels") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit labels") size=4 task_uuid=task.uuid focus_field="labels" %}
                         </td>
                     </tr>
                     <tr class="contents">
@@ -68,7 +62,7 @@
                             {% else %}
                                 <p class="text-base-content">{% trans "No due date" %}</p>
                             {% endif %}
-                            {% circle_anchor label=_("Edit due date") icon_style="pencil" href="dashboard:tasks:update" title=_("Edit due date") size=4 task_uuid=task.uuid %}
+                            {% circle_anchor label=_("Edit due date") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit due date") size=4 task_uuid=task.uuid focus_field="due_date" %}
                         </td>
                     </tr>
                     <tr class="contents">
@@ -79,7 +73,7 @@
                             {% else %}
                                 <p class="text-base-content">{% trans "No description" %}</p>
                             {% endif %}
-                            {% circle_anchor label=_("Edit description") icon_style="pencil" href="dashboard:tasks:update" title=_("Edit description") size=4 task_uuid=task.uuid %}
+                            {% circle_anchor label=_("Edit description") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit description") size=4 task_uuid=task.uuid focus_field="description" %}
                         </td>
                     </tr>
                 </tbody>
@@ -87,7 +81,7 @@
             <div class="flex flex-col gap-4">
                 <div class="flex flex-row items-center gap-4">
                     <h4 class="text-xl font-bold">{% trans "Sub tasks" %}</h4>
-                    {% circle_anchor label=_("Edit sub tasks") icon_style="pencil" href="dashboard:tasks:update" title=_("Edit sub tasks") size=4 task_uuid=task.uuid %}
+                    {% circle_anchor label=_("Edit sub tasks") icon_style="pencil" href="dashboard:tasks:update" fragment="subtasks" title=_("Edit sub tasks") size=4 task_uuid=task.uuid %}
                 </div>
                 {% if task.sub_task_progress is not None %}
                     <div class="flex flex-row items-center gap-4">
@@ -104,15 +98,9 @@
                    class="grid grow items-center grid-cols-[min-content_1fr_min-content] gap-x-1 gap-y-1">
                 <thead class="contents">
                     <tr class="contents">
-                        <th class="sr-only">
-                            {% translate "Done" %}
-                        </td>
-                        <th class="sr-only">
-                            {% translate "Sub task" %}
-                        </td>
-                        <th class="sr-only">
-                            {% translate "Edit sub task" %}
-                        </td>
+                        <th class="sr-only">{% translate "Done" %}</th>
+                        <th class="sr-only">{% translate "Sub task" %}</th>
+                        <th class="sr-only">{% translate "Edit sub task" %}</th>
                     </tr>
                 </thead>
                 <tbody class="contents">
@@ -127,7 +115,7 @@
                             </td>
                             <td class="px-2 py-1">{{ sub_task.title }}</td>
                             <td>
-                                {% circle_anchor label=_("Edit sub task") icon_style="pencil" href="dashboard:tasks:update" title=_("Edit sub task") size=4 task_uuid=task.uuid %}
+                                {% circle_anchor label=_("Edit sub task") icon_style="pencil" href="dashboard:tasks:update-sub-task" title=_("Edit sub task") size=4 task_uuid=task.uuid sub_task_uuid=sub_task.uuid %}
                             </td>
                         </tr>
                     {% empty %}

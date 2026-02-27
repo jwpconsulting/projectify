@@ -112,7 +112,9 @@ def circle_button(
 def circle_anchor(
     label: str,
     icon_style: str,
+    # TODO rename to path, since we don't accept full URLs anymore
     href: str,
+    fragment: Optional[str] = None,
     title: Optional[str] = None,
     size: Literal[None, 4, 6] = None,
     *args: Any,
@@ -124,7 +126,7 @@ def circle_anchor(
     url = reverse(href, args=args, kwargs=kwargs)
     return format_html(
         '<a href="{url}" aria-label="{label}"{title} class="inline-block shrink-0 size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background">{icon}</a>',
-        url=url,
+        url=f"{url}#{fragment}" if fragment else url,
         label=label,
         title=format_html(' title="{title}"', title=title)
         if title is not None
@@ -187,6 +189,7 @@ def action_button(
 
 @register.simple_tag
 def go_to_action(
+    # TODO rename to path, since we don't accept full URLs anymore
     href: str,
     label: str,
     title: Optional[str] = None,

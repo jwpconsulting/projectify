@@ -11,6 +11,8 @@
           class="min-w-0 grow flex flex-col items-center gap-4 bg-background py-4">
         {% if task_filter_form %}
             <form id="task-filter"
+                  role="search"
+                  title="{% translate "Task search form" %}"
                   class="flex w-full max-w-md flex-col gap-2 rounded-xl bg-foreground px-4 py-4">
                 <label for="{{ task_filter_form.task_search_query.id_for_label }}"
                        class="font-bold text-base-content first-letter:uppercase">{% translate "Task search" %}</label>
