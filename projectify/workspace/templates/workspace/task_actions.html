@@ -7,9 +7,7 @@
     {% blocktrans with title=task.title %}{{ title }} task actions - Projectify{% endblocktrans %}
 {% endblock title %}
 {% block form_content %}
-    <div id="task-actions"
-         class="min-w-0 grow flex flex-col gap-4"
-         role="presentation">
+    <div class="min-w-0 grow flex flex-col gap-4">
         {% include "workspace/task/breadcrumbs.html" with task=task section=task.section %}
         <h1 class="text-2xl font-bold">
             {% translate "Task actions" %}

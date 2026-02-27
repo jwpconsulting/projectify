@@ -77,14 +77,14 @@
                                 <span class="sr-only">{% translate "No sub tasks" %}</span>
                             {% endif %}
                         </td>
-                        <td class="flex grow">
+                        <td class="flex ml-auto">
                             <form action="{% url 'dashboard:projects:detail' project.uuid %}"
                                   method="post"
                                   hx-include="#task-filter,#team-member-filters,#label-filters"
                                   hx-boost="true"
                                   hx-target="#section-{{ section.uuid }}"
                                   hx-swap="outerHTML"
-                                  class="ml-auto flex flex-row items-center gap-1">
+                                  class="flex flex-row items-center gap-1">
                                 {# TODO in AT, say "currently assigned to ..." #}
                                 {% user_avatar task.assignee %}
                                 <input type="hidden" name="action" value="move_task">
@@ -93,15 +93,13 @@
                                 {% circle_button label=_("Move task down") value="down" name="direction" disabled=task.last icon_style="chevron-down" %}
                                 {% csrf_token %}
                                 <p class="htmx-indicator">...</p>
-                                <a aria-label="Task menu"
-                                   hx-boost
-                                   hx-target="#project-detail"
-                                   hx-select="#main"
-                                   href="{% url "dashboard:tasks:actions" task.uuid %}"
-                                   class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background">
-                                    {% icon "dots-horizontal" %}
-                                </a>
                             </form>
+                            <a aria-label="{% translate "Task menu" %}"
+                               hx-boost
+                               href="{% url "dashboard:tasks:actions" task.uuid %}"
+                               class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background">
+                                {% icon "dots-horizontal" %}
+                            </a>
                         </td>
                     </tr>
                 {% empty %}
