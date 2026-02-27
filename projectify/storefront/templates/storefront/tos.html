@@ -8,7 +8,8 @@
     {% translate "Terms of service - Projectify" %}
 {% endblock title %}
 {% block storefront_content %}
-    <main class="flex flex-col items-center gap-10 bg-foreground pb-20 pt-10">
+    <main id="main"
+          class="flex flex-col items-center gap-10 bg-foreground pb-20 pt-10">
         <div class="flex w-full max-w-5xl grow flex-col gap-4 bg-foreground p-6 sm:flex-row sm:gap-8">
             <nav class="flex max-w-xs grow flex-col gap-2">
                 <p id="top" class="font-bold">{% trans "Terms of service" %}</p>
@@ -27,6 +28,6 @@
                 </section>
                 {% anchor label=_("Jump back to top") href="#top" %}
             </div>
-        </main>
-    </div>
+        </div>
+    </main>
 {% endblock storefront_content %}

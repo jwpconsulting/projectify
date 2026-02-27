@@ -9,7 +9,8 @@
     {% translate "Download - Projectify" %}
 {% endblock title %}
 {% block storefront_content %}
-    <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
+    <main id="main"
+          class="flex flex-col items-center gap-10 bg-foreground pb-20">
         {% include "storefront/common/storefront_header.html" with title=_("Download and install Projectify") %}
         <div class="w-full p-6 max-w-4xl flex flex-row items-center justify-center prose">
             <div class="prose">{{ markdowntext|markdownify }}</div>

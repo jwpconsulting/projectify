@@ -15,6 +15,7 @@
         {% has_perm "workspace.create_team_member" user workspace as can_create_team_member %}
         {% if can_create_team_member %}
             <form class="flex flex-col gap-4"
+                  aria-label="{% translate "Invite team member" %}"
                   method="post"
                   action="{% url "dashboard:workspaces:team-members" workspace.uuid %}"
                   hx-boost
@@ -24,8 +25,9 @@
                 {% include "projectify/forms/submit.html" with name="action" value="invite" text=_("Invite team member") %}
             </form>
         {% endif %}
-        <h2 class="text-xl font-bold">{% trans "Team members" %}</h2>
-        <table class="grid w-full grid-cols-[1fr_auto_auto] items-center gap-y-4">
+        <h2 id="team-members-table-title" class="text-xl font-bold">{% trans "Team members" %}</h2>
+        <table aria-labelledby="team-memberts-table-title"
+               class="grid w-full grid-cols-[1fr_auto_auto] items-center gap-y-4">
             <thead class="contents">
                 <tr class="contents">
                     <th class="border-b border-border text-left font-bold">{% trans "Team member" %}</th>
@@ -68,6 +70,8 @@
                                            value="{{ team_member.uuid }}">
                                     {% action_button text=_("Remove") icon="x" style="destructive" grow=True name="action" value="team_member_remove" %}
                                 </form>
+                            {% else %}
+                                <span class="sr-only">{% translate "No action available" %}</span>
                             {% endif %}
                         </td>
                     </tr>
@@ -76,10 +80,11 @@
         </table>
     </section>
     <section class="flex flex-col gap-4">
-        <h2 class="text-xl font-bold">{% trans "Team member invites" %}</h2>
+        <h2 id="team-member-invites-table-title" class="text-xl font-bold">{% trans "Team member invites" %}</h2>
         {% with invites=workspace.teammemberinvite_set.all %}
             {% if invites.count %}
-                <table class="grid w-full grid-cols-[1fr_auto_auto] items-center gap-y-4">
+                <table aria-labelledby="team-member-invites-table-title"
+                       class="grid w-full grid-cols-[1fr_auto_auto] items-center gap-y-4 gap-x-2">
                     <thead class="contents">
                         <tr class="contents">
                             <th class="border-b border-border text-left font-bold">{% trans "Invited email" %}</th>
@@ -95,8 +100,8 @@
                                 <td>
                                     <form hx-post="{% url 'dashboard:workspaces:team-members' workspace.uuid %}"
                                           hx-confirm="{% blocktrans with email=team_member_invite.user_invite.email %}Would you like to uninvite '{{ email }}' from this workspace? This action cannot be undone.{% endblocktrans %}"
-                                          hx-target="#settings-content"
-                                          hx-select="#settings-content"
+                                          hx-target="#main"
+                                          hx-select="#main"
                                           hx-swap="outerHTML">
                                         {% csrf_token %}
                                         {{ uninvite_form }}

@@ -1,6 +1,7 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!-- SPDX-FileCopyrightText: 2021-2026 JWP Consulting GK -->
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -37,6 +38,7 @@
     </head>
     <body class="min-h-screen w-full max-w-full bg-foreground text-base-content"
           hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+        <a href="#main" class="sr-only">{% translate "Skip to main content" %}</a>
         {% if debug %}
             {% include "common/navigation/header/development_view_bar.html" %}
         {% endif %}

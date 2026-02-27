@@ -9,7 +9,8 @@
     {% translate "Solutions - Projectify" %}
 {% endblock title %}
 {% block solutions_content %}
-    <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
+    <main id="main"
+          class="flex flex-col items-center gap-10 bg-foreground pb-20">
         {% include "storefront/common/solutions_header.html" with title=_("Solutions for every type of user") alt=_("An illustration showing users of different backgrounds") src="solutions/hero-solutions.png" text=_("Explore the different ways users are using Projectify to meet due dates, reach targets and be productive.") %}
         <div class="w-full p-6 max-w-4xl flex flex-col items-center gap-12 md:grid md:grid-cols-3 md:gap-8">
             <section class="flex h-full flex-col justify-between gap-4">

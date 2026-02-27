@@ -8,10 +8,11 @@
     {% translate "Editing task - Projectify" %}
 {% endblock title %}
 {% block dashboard_content %}
-    <form action="{% url 'dashboard:tasks:update' task.uuid %}"
+    <form id="main"
+          action="{% url 'dashboard:tasks:update' task.uuid %}"
           method="post"
           class="min-w-0 grow"
-          role="presentation">
+          aria-label="{% translate "Update task" %}">
         {{ form.errors }}
         <div class="flex h-full flex-col p-4 pt-0">
             <div class="sticky top-0 flex flex-row flex-wrap items-center justify-between gap-x-2 gap-y-4 bg-foreground pb-8 pt-4 lg:flex-nowrap">

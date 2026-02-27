@@ -277,7 +277,7 @@ def user_avatar(
             return format_html(
                 '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary"><img src="{src}" alt="{alt}" height="24" width="24" class="h-full w-full overflow-x-auto rounded-full object-cover object-center"></div>',
                 src=user.profile_picture.url,
-                alt=str(user),
+                alt=_("Team member {} avatar").format(str(user)),
             )
         case TeamMember(user=user) as team_member:
             avatar_url = reverse(
@@ -286,7 +286,7 @@ def user_avatar(
             return format_html(
                 '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary"><img src="{src}?size=24" alt="{alt}" height="24" width="24" class="h-full w-full overflow-x-auto rounded-full object-cover object-center"></div>',
                 src=avatar_url,
-                alt=str(user),
+                alt=_("Team member {} avatar").format(str(user)),
             )
         case _:
             return mark_safe(

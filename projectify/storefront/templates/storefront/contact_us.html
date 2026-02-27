@@ -8,7 +8,8 @@
     {% translate "Contact - Projectify" %}
 {% endblock title %}
 {% block storefront_content %}
-    <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
+    <main id="main"
+          class="flex flex-col items-center gap-10 bg-foreground pb-20">
         {% include "storefront/common/storefront_header.html" with title=_("Contact") %}
         <div class="w-full p-6 max-w-4xl flex flex-row items-center justify-center gap-8">
             <div class="prose">{{ markdowntext|markdownify }}</div>

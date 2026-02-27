@@ -10,7 +10,8 @@
     <form action="{% url "dashboard:projects:create-section" project.uuid %}"
           method="post"
           class="min-w-0 grow"
-          role="presentation">
+          aria-lable="{% translate "Create section" %}"
+          id="main">
         {{ form.errors }}
         <div class="flex h-full flex-col p-4 pt-0">
             <div class="flex flex-col gap-8">
