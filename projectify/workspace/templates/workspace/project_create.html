@@ -10,8 +10,8 @@
     <form action="{% url 'dashboard:workspaces:create-project' workspace.uuid %}"
           method="post"
           class="min-w-0 grow"
-          role="presentation">
-        {{ form.errors }}
+          id="main">
+        {{ form.errors }}{# TODO refactor error display #}
         <div class="flex h-full flex-col p-4 pt-0">
             <div class="flex flex-col gap-8">
                 <div class="flex flex-col gap-6">

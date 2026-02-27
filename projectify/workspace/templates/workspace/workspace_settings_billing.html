@@ -34,13 +34,13 @@
             </form>
         {% elif workspace.customer.subscription_status == "UNPAID" or workspace.customer.subscription_status == "CANCELLED" %}
             <section>
-                <p class="font-bold">
+                <h1 class="font-bold">
                     {% if workspace.customer.subscription_status == "UNPAID" %}
                         {% trans "Trial mode" %}
                     {% else %}
                         {% trans "Subscription cancelled" %}
                     {% endif %}
-                </p>
+                </h1>
                 <p>
                     {% if workspace.customer.subscription_status == "UNPAID" %}
                         {% trans "You are currently using this workspace in trial mode. To create a subscription and use all available features for this workspace, please continue using the checkout below. Alternatively, you can enter a coupon code further below." %}

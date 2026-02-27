@@ -163,6 +163,16 @@ section_patterns = (
 task_patterns = (
     path("<uuid:task_uuid>", task_detail, name="detail"),
     path("<uuid:task_uuid>/update", task_update_view, name="update"),
+    path(
+        "<uuid:task_uuid>/update/sub-task/<uuid:sub_task_uuid>",
+        task_update_view,
+        name="update-sub-task",
+    ),
+    path(
+        "<uuid:task_uuid>/update/focus/<str:focus_field>",
+        task_update_view,
+        name="update-focus-field",
+    ),
     # Move/delete actions menu
     path("<uuid:task_uuid>/actions", task_actions, name="actions"),
     path("<uuid:task_uuid>/delete", task_delete_view, name="delete"),

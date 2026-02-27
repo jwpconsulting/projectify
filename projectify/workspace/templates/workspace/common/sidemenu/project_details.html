@@ -12,6 +12,8 @@
                value="{% if current_team_member_qs.minimized_project_list %}false{% else %}true{% endif %}">
         {% if project %}<input type="hidden" name="current_project" value="{{ project.uuid }}">{% endif %}
         <button type="submit"
+                aria-label="{% if current_team_member_qs.minimized_project_list %}{% translate "Project list, minimized" %}{% else %}{% translate "Project list, expanded" %}{% endif %}"
+                aria-describedby="sidemenu-project-section-help"
                 class="flex w-full flex-row items-center justify-between gap-2 px-4 py-2 text-utility hover:text-base-content">
             <div class="flex flex-row items-center gap-4">
                 <div class="flex flex-row items-center gap-2">
@@ -29,9 +31,17 @@
             </div>
         </button>
     </form>
+    <span class="hidden" id="sidemenu-project-section-help">
+        {% if current_team_member_qs.minimized_project_list %}
+            {% translate "Activate to show projects" %}
+        {% else %}
+            {% translate "Activate to hide projects" %}
+        {% endif %}
+    </span>
     {% if not current_team_member_qs.minimized_project_list %}
         {% for project_item in projects %}
             <a class="flex flex-row items-center gap-2 px-4 py-1 hover:bg-base-200"
+               aria-label="{% blocktranslate with project=project_item.title %}{{ project }} project{%endblocktranslate %}"
                href="{% url "dashboard:projects:detail" project_item.uuid %}">
                 <div class="shrink-0 rounded-md p-1{% if project_item == project %} bg-primary-focus{% endif %}">
                     {% if project_item == project %}
@@ -49,41 +59,49 @@
     {% endif %}
 </div>
 {% if task_filter_form %}
-    <div id="team-member-filters" class="flex flex-col px-4">
-        <form id="minimize-team-member-filter-form"
-              hx-post="{% url 'dashboard:projects:detail' project.uuid %}"
-              hx-swap="outerHTML"
-              hx-target="#team-member-filters"
-              hx-select="#team-member-filters"
-              hx-include="#task-filter,#team-member-filters,#label-filters">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="minimize_team_member_filter">
-            <input type="hidden"
-                   name="minimized"
-                   value="{% if current_team_member_qs.minimized_team_member_filter %}false{% else %}true{% endif %}">
-            <button type="submit"
-                    form="minimize-team-member-filter-form"
-                    class="flex w-full flex-row items-center justify-between gap-2 py-2 text-utility hover:text-base-content">
-                <div class="flex flex-row items-center gap-2">
-                    <div class="w-4 h-4">{% icon "user" %}</div>
-                    <span class="font-bold truncate">
-                        {% if has_team_member_filter %}
-                            {% trans "Team members (filtered)" %}
-                        {% else %}
-                            {% trans "Team members" %}
-                        {% endif %}
-                    </span>
-                </div>
-                <div class="flex flex-row items-center gap-2">
-                    {% include "workspace/common/loading_spinner.html" %}
-                    {% if current_team_member_qs.minimized_team_member_filter %}
-                        {% icon "chevron-up" size=4 %}
+    <form id="team-member-filters" {# TODO hx-boost #}
+        class="flex flex-col px-4"
+        hx-post="{% url 'dashboard:projects:detail' project.uuid %}"
+        hx-swap="outerHTML"
+        hx-target="#team-member-filters"
+        hx-select="#team-member-filters"
+        hx-include="#task-filter,#team-member-filters,#label-filters"
+        aria-label="{% if has_team_member_filter %}{% translate "Team member filter form, selected" %}{% else %}{% translate "Team member filter form, not selected" %}{% endif %}">
+        {% csrf_token %}
+        <input type="hidden"
+               name="minimized"
+               value="{% if current_team_member_qs.minimized_team_member_filter %}false{% else %}true{% endif %}">
+        <button type="submit"
+                name="action"
+                value="minimize_team_member_filter"
+                class="flex w-full flex-row items-center justify-between gap-2 py-2 text-utility hover:text-base-content"
+                aria-describedby="team-member-filter-help">
+            <div class="flex flex-row items-center gap-2">
+                <div class="w-4 h-4">{% icon "user" %}</div>
+                <span id="team-member-filter-title" class="font-bold truncate">
+                    {% if has_team_member_filter %}
+                        {% trans "Team members (selected)" %}
                     {% else %}
-                        {% icon "chevron-down" size=4 %}
+                        {% trans "Team members" %}
                     {% endif %}
-                </div>
-            </button>
-        </form>
+                </span>
+            </div>
+            <div class="flex flex-row items-center gap-2">
+                {% include "workspace/common/loading_spinner.html" %}
+                {% if current_team_member_qs.minimized_team_member_filter %}
+                    {% icon "chevron-up" size=4 %}
+                {% else %}
+                    {% icon "chevron-down" size=4 %}
+                {% endif %}
+            </div>
+        </button>
+        <span id="team-member-filter-help" class="hidden">
+            {% if current_team_member_qs.minimized_label_filter %}
+                {% trans "Activate to show filter team member list" %}
+            {% else %}
+                {% trans "Activate to hide filter team member list" %}
+            {% endif %}
+        </span>
         <fieldset class="w-full max-w-full{% if current_team_member_qs.minimized_team_member_filter %} hidden{% endif %}">
             <legend class="px-2 font-bold">{{ task_filter_form.filter_by_team_member.label }}</legend>
             {{ task_filter_form.filter_by_team_member }}
@@ -91,42 +109,51 @@
                 {% go_to_action href="dashboard:workspaces:team-members" label=_("Add more team members") style="secondary" icon_style="plus" justify_left=True workspace_uuid=workspace.uuid %}
             {% endif %}
         </fieldset>
-    </div>
-    <div id="label-filters" class="flex flex-col px-4">
-        <form id="minimize-label-filter-form"
-              hx-post="{% url 'dashboard:projects:detail' project.uuid %}"
-              hx-swap="outerHTML"
-              hx-target="#label-filters"
-              hx-select="#label-filters"
-              hx-include="#task-filter,#team-member-filters,#label-filters">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="minimize_label_filter">
-            <input type="hidden"
-                   name="minimized"
-                   value="{% if current_team_member_qs.minimized_label_filter %}false{% else %}true{% endif %}">
-            <button type="submit"
-                    form="minimize-label-filter-form"
-                    class="flex w-full flex-row items-center justify-between gap-2 py-2 text-utility hover:text-base-content">
-                <div class="flex flex-row items-center gap-2">
-                    <div class="w-4 h-4">{% icon "tag" %}</div>
-                    <span class="font-bold truncate">
-                        {% if has_label_filter %}
-                            {% trans "Labels (active)" %}
-                        {% else %}
-                            {% trans "Labels" %}
-                        {% endif %}
-                    </span>
-                </div>
-                <div class="flex flex-row items-center gap-2">
-                    {% include "workspace/common/loading_spinner.html" %}
-                    {% if current_team_member_qs.minimized_label_filter %}
-                        {% icon "chevron-up" size=4 %}
+        {% include "projectify/forms/submit.html" with text=_("Filter")  form_name="task-filter" %}
+    </form>
+    <form id="label-filters" {# TODO: hx-boost #}
+        class="flex flex-col px-4"
+        hx-post="{% url 'dashboard:projects:detail' project.uuid %}"
+        hx-swap="outerHTML"
+        hx-target="#label-filters"
+        hx-select="#label-filters"
+        hx-include="#task-filter,#team-member-filters,#label-filters"
+        aria-label="{% if has_label_filter %}{% translate "Label filter form, selected" %}{% else %}{% translate "Label filter form, not selected" %}{% endif %}">
+        {% csrf_token %}
+        <input type="hidden"
+               name="minimized"
+               value="{% if current_team_member_qs.minimized_label_filter %}false{% else %}true{% endif %}">
+        <button type="submit"
+                name="action"
+                value="minimize_label_filter"
+                class="flex w-full flex-row items-center justify-between gap-2 py-2 text-utility hover:text-base-content"
+                aria-describedby="label-filter-help">
+            <div class="flex flex-row items-center gap-2">
+                <div class="w-4 h-4">{% icon "tag" %}</div>
+                <span id="label-filter-title" class="font-bold truncate">
+                    {% if has_label_filter %}
+                        {% trans "Labels (selected)" %}
                     {% else %}
-                        {% icon "chevron-down" size=4 %}
+                        {% trans "Labels" %}
                     {% endif %}
-                </div>
-            </button>
-        </form>
+                </span>
+            </div>
+            <div class="flex flex-row items-center gap-2">
+                {% include "workspace/common/loading_spinner.html" %}
+                {% if current_team_member_qs.minimized_label_filter %}
+                    {% icon "chevron-up" size=4 %}
+                {% else %}
+                    {% icon "chevron-down" size=4 %}
+                {% endif %}
+            </div>
+        </button>
+        <span id="label-filter-help" class="hidden">
+            {% if current_team_member_qs.minimized_label_filter %}
+                {% trans "Activate to show filter label list" %}
+            {% else %}
+                {% trans "Activate to hide filter label list" %}
+            {% endif %}
+        </span>
         <fieldset class="flex flex-col overflow-y-auto overflow-x-hidden w-full max-w-full min-w-0 pb-4{% if current_team_member_qs.minimized_label_filter %} hidden{% endif %}">
             <legend class="px-2 font-bold">{{ task_filter_form.filter_by_label.label }}</legend>
             {{ task_filter_form.filter_by_label }}
@@ -135,5 +162,5 @@
             {% endif %}
         </fieldset>
         {% include "projectify/forms/submit.html" with text=_("Filter")  form_name="task-filter" %}
-    </div>
+    </form>
 {% endif %}

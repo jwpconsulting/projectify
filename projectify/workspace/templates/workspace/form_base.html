@@ -6,9 +6,9 @@
     {% include "workspace/common/sidemenu/project_details.html" %}
 {% endblock dashboard_projects %}
 {% block dashboard_content %}
-    <div class="grow flex flex-col items-center bg-background px-0 py-8 sm:px-2"
-         role="presentation">
-        <main class="flex w-full max-w-xl flex-col gap-10 rounded-lg bg-foreground p-4 shadow-context-menu">
+    <div class="grow flex flex-col items-center bg-background px-0 py-8 sm:px-2">
+        <main id="main"
+              class="flex w-full max-w-xl flex-col gap-10 rounded-lg bg-foreground p-4 shadow-context-menu">
             <h1 class="px-2 text-2xl font-bold sm:px-0">
                 {% block form_title %}
                 {% endblock form_title %}

@@ -9,15 +9,13 @@
 {% endblock title %}
 {% block workspace_settings_content %}
     <section class="flex flex-col gap-2">
-        <table class="grid w-full gap-x-2 gap-y-3 grid-cols-[3fr_max-content_max-content]">
+        <h1 id="projects-table-title" class="font-bold text-lg">{% translate "Projects" %}</h1>
+        <table aria-labelledby="projects-table-title"
+               class="grid w-full gap-x-2 gap-y-3 grid-cols-[3fr_max-content]">
             <thead class="contents">
                 <tr class="contents">
-                    <th class="text-left col-span-3 font-bold text-lg">{% translate "Projects" %}</th>
-                </tr>
-                <tr class="contents">
-                    <th class="text-left">{% translate "Project name" %}</th>
-                    <th></th>
-                    <th></th>
+                    <th class="text-left col-span-2">{% translate "Project name" %}</th>
+                    <th class="sr-only">{% translate "Archive project" %}</th>
                 </tr>
             </thead>
             <tbody class="contents">
@@ -35,7 +33,6 @@
                                 <span class="truncate">{{ project }}</span>
                             {% endif %}
                         </td>
-                        <td class="flex items-center"></td>
                         <td class="flex gap-4 items-center">
                             {% has_perm "workspace.update_project" user workspace as can_update_project %}
                             {% if can_update_project %}
@@ -52,15 +49,18 @@
                     </tr>
                 {% endfor %}
             </tbody>
+        </table>
+        <h1 id="archived-projects-table-title" class="font-bold text-lg">{% translate "Archived projects" %}</h1>
+        <table aria-labelledby="archived-projects-table-title"
+               class="grid w-full gap-x-2 gap-y-3 grid-cols-[3fr_max-content_max-content]">
+            <thead class="contents">
+                <tr class="contents">
+                    <th class="text-left col-span-3">{% translate "Project name" %}</th>
+                    <th class="sr-only">{% translate "Recover project" %}</th>
+                    <th class="sr-only">{% translate "Delete project" %}</th>
+                </tr>
+            </thead>
             <tbody class="contents">
-                <tr class="contents">
-                    <th class="text-left col-span-3 font-bold text-lg">{% translate "Archived projects" %}</th>
-                </tr>
-                <tr class="contents">
-                    <th class="text-left">{% translate "Project name" %}</th>
-                    <th></th>
-                    <th></th>
-                </tr>
                 {% for archived_project in archived_projects %}
                     <tr class="contents">
                         <td class="flex items-center">{{ archived_project }}</td>
@@ -88,6 +88,10 @@
                                 </form>
                             {% endif %}
                         </td>
+                    </tr>
+                {% empty %}
+                    <tr class="contents">
+                        <td class="col-span-3">{% translate "No archived projects" %}</td>
                     </tr>
                 {% endfor %}
             </tbody>

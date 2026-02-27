@@ -8,7 +8,8 @@
     {% translate "Accessibility statement - Projectify" %}
 {% endblock title %}
 {% block storefront_content %}
-    <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
+    <main id="main"
+          class="flex flex-col items-center gap-10 bg-foreground pb-20">
         <div class="flex w-full flex-col items-center bg-background">
             <div class="w-full max-w-4xl px-6 py-6 sm:py-12">
                 <header class="flex w-full flex-col items-center gap-4 sm:grid sm:grid-cols-2">
@@ -28,9 +29,7 @@
             </div>
         </div>
         <div class="w-full p-6 max-w-4xl">
-            <main class="prose">
-                {{ markdowntext|markdownify }}
-            </main>
+            <div class="prose">{{ markdowntext|markdownify }}</div>
         </div>
     </main>
 {% endblock storefront_content %}

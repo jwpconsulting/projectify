@@ -4,7 +4,8 @@
 {% load static %}
 {% block content %}
     {% include "common/navigation/header/dashboard.html" %}
-    <main class="flex grow flex-col md:grid md:grid-cols-2 xl:grid-cols-3">
+    <main id="main"
+          class="flex grow flex-col md:grid md:grid-cols-2 xl:grid-cols-3">
         <div class="col-span-1 flex shrink grow flex-col gap-16 px-12 py-20 pb-8">
             {% block onboarding_content %}
             {% endblock onboarding_content %}

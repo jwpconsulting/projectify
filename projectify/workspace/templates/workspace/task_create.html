@@ -10,8 +10,9 @@
     <form action="{% url 'dashboard:sections:create-task' section.uuid %}"
           method="post"
           class="min-w-0 grow"
-          role="presentation">
-        {{ form.errors }}
+          aria-label="{% translate "Task creation form" %}"
+          id="main">
+        {{ form.errors }}{# TODO check if this is still needed #}
         <div class="flex h-full flex-col p-4 pt-0">
             <div class="sticky top-0 flex flex-row flex-wrap items-center justify-between gap-x-2 gap-y-4 bg-foreground pb-8 pt-4 lg:flex-nowrap">
                 <div class="flex shrink flex-row items-center gap-6">

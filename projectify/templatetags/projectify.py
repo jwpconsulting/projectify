@@ -112,7 +112,9 @@ def circle_button(
 def circle_anchor(
     label: str,
     icon_style: str,
+    # TODO rename to path, since we don't accept full URLs anymore
     href: str,
+    fragment: Optional[str] = None,
     title: Optional[str] = None,
     size: Literal[None, 4, 6] = None,
     *args: Any,
@@ -123,8 +125,8 @@ def circle_anchor(
         raise ValueError("Empty href supplied")
     url = reverse(href, args=args, kwargs=kwargs)
     return format_html(
-        '<a href="{url}" aria-label="{label}"{title} class="shrink-0 size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background">{icon}</a>',
-        url=url,
+        '<a href="{url}" aria-label="{label}"{title} class="inline-block shrink-0 size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background">{icon}</a>',
+        url=f"{url}#{fragment}" if fragment else url,
         label=label,
         title=format_html(' title="{title}"', title=title)
         if title is not None
@@ -187,6 +189,7 @@ def action_button(
 
 @register.simple_tag
 def go_to_action(
+    # TODO rename to path, since we don't accept full URLs anymore
     href: str,
     label: str,
     title: Optional[str] = None,
@@ -274,7 +277,7 @@ def user_avatar(
             return format_html(
                 '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary"><img src="{src}" alt="{alt}" height="24" width="24" class="h-full w-full overflow-x-auto rounded-full object-cover object-center"></div>',
                 src=user.profile_picture.url,
-                alt=str(user),
+                alt=_("Team member {} avatar").format(str(user)),
             )
         case TeamMember(user=user) as team_member:
             avatar_url = reverse(
@@ -283,7 +286,7 @@ def user_avatar(
             return format_html(
                 '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary"><img src="{src}?size=24" alt="{alt}" height="24" width="24" class="h-full w-full overflow-x-auto rounded-full object-cover object-center"></div>',
                 src=avatar_url,
-                alt=str(user),
+                alt=_("Team member {} avatar").format(str(user)),
             )
         case _:
             return mark_safe(

@@ -9,12 +9,13 @@
 {% endblock title %}
 {% block workspace_settings_content %}
     <section class="flex flex-col gap-2">
-        <h2 class="font-bold text-lg">{% translate "Labels" %}</h2>
-        <table class="grid w-full gap-x-2 gap-y-3 grid-cols-[1fr_max-content]">
+        <h2 id="labels-table-title" class="font-bold text-lg">{% translate "Labels" %}</h2>
+        <table aria-labelledby="labels-table-title"
+               class="grid w-full gap-x-2 gap-y-3 grid-cols-[1fr_max-content]">
             <thead class="contents">
                 <tr class="contents">
-                    <th class="text-left">{% translate "Label name" %}</th>
-                    <th></th>
+                    <th class="text-left col-span-2">{% translate "Label name" %}</th>
+                    <th class="sr-only">{% translate "Delete label" %}</th>
                 </tr>
             </thead>
             <tbody class="contents">

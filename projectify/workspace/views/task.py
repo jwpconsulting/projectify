@@ -4,7 +4,7 @@
 """Task CRUD views."""
 
 import logging
-from typing import Any, Literal, Optional
+from typing import Any, Literal, Optional, Type, cast
 from uuid import UUID
 
 from django import forms
@@ -185,8 +185,11 @@ class TaskUpdateSubTaskFormSet(forms.BaseFormSet):  # type:ignore[type-arg]
         form.fields["title"].widget.attrs["autofocus"] = True
 
 
-TaskUpdateSubTaskForms = forms.formset_factory(
-    TaskUpdateSubTaskForm, formset=TaskUpdateSubTaskFormSet, extra=0
+TaskUpdateSubTaskForms = cast(
+    Type[TaskUpdateSubTaskFormSet],
+    forms.formset_factory(
+        TaskUpdateSubTaskForm, formset=TaskUpdateSubTaskFormSet, extra=0
+    ),
 )
 
 
@@ -384,23 +387,21 @@ class TaskUpdateForm(forms.Form):
             return
         if focus_field in self.fields:
             self.fields[focus_field].widget.attrs["autofocus"] = True
+        elif focus_field == "subtasks":
+            pass
         else:
             logger.warning(
                 "Couldn't find focus_field=%s in self.fields", focus_field
             )
 
 
-class TaskUpdateFocusForm(forms.Form):
-    """Form for parsing focus field and subtask UUID from query parameters."""
-
-    focus = forms.CharField(required=False)
-    subtask_uuid = forms.UUIDField(required=False)
-
-
 @platform_view
 @require_http_methods(["GET", "POST"])
 def task_update_view(
-    request: AuthenticatedHttpRequest, task_uuid: UUID
+    request: AuthenticatedHttpRequest,
+    task_uuid: UUID,
+    focus_field: Optional[str] = None,
+    sub_task_uuid: Optional[UUID] = None,
 ) -> HttpResponse:
     """Update task. Render errors."""
     task = task_find_by_task_uuid(
@@ -412,14 +413,6 @@ def task_update_view(
                 task_uuid=task_uuid
             )
         )
-
-    focus_form = TaskUpdateFocusForm(request.GET)
-    focus_field: Optional[str] = None
-    subtask_uuid: Optional[UUID] = None
-    if not focus_form.is_valid():
-        raise BadRequest("Invalid form data for update focus form")
-    focus_field = focus_form.cleaned_data.get("focus")
-    subtask_uuid = focus_form.cleaned_data.get("subtask_uuid")
 
     workspace = task.workspace
     context: dict[str, Any] = get_task_view_context(request, workspace)
@@ -460,7 +453,7 @@ def task_update_view(
             form = TaskUpdateForm(
                 data=post, workspace=workspace, focus_field=focus_field
             )
-            formset = TaskUpdateSubTaskForms(data=post)  # type: ignore[arg-type]
+            formset = TaskUpdateSubTaskForms(data=post)
             context = {
                 **context,
                 "form": form,
@@ -475,8 +468,8 @@ def task_update_view(
                 focus_field=focus_field,
             )
             formset = TaskUpdateSubTaskForms(
-                subtask_uuid,
-                initial=sub_tasks_initial,  # type: ignore[arg-type]
+                focus_subtask_uuid=sub_task_uuid,
+                initial=sub_tasks_initial,
             )
             context = {
                 **context,
@@ -506,8 +499,8 @@ def task_update_view(
     )
     form.full_clean()
     formset = TaskUpdateSubTaskForms(
-        data=request.POST,  # type: ignore[arg-type]
-        initial=sub_tasks_initial,  # type: ignore[arg-type]
+        data=request.POST,
+        initial=sub_tasks_initial,
     )
     formset.full_clean()
     if not form.is_valid() or not formset.is_valid():

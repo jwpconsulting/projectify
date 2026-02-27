@@ -10,7 +10,7 @@
 {% block content %}
     {% include "common/navigation/header/landing.html" %}
     <div class="flex grow flex-col items-center gap-12 p-20">
-        <main class="flex max-w-lg flex-col gap-6">
+        <main id="main" class="flex max-w-lg flex-col gap-6">
             <h1 class="text-5xl font-bold">{% trans "Page not found" %}</h1>
             <img src="{% static 'status404Image.png' %}"
                  alt="{% trans "Illustration of Poly the mascot looking lost" %}"

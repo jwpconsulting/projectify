@@ -2,12 +2,17 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load i18n %}
 {% load projectify %}
-<section class="flex flex-col" id="section-{{ section.uuid }}">
+<section class="flex flex-col"
+         id="section-{{ section.uuid }}"
+         aria-labelledby="section-{{ section.uuid }}-header"
+         title="{% blocktranslate with title=section.title project=section.project.title %}{{ title }} section in {{ project }} project{% endblocktranslate %}">
     <form method="post"
           hx-post="{% url 'dashboard:projects:detail' section.project.uuid %}"
           hx-target="#section-{{ section.uuid }}"
           hx-swap="outerHTML"
           hx-include="#task-filter,#team-member-filters,#label-filters"
+          aria-label="{% translate "Section actions" %}"
+          title="{% blocktranslate with title=section.title %}Actions for {{title}} section{% endblocktranslate %}"
           class="sticky top-0 flex w-full flex-row items-center justify-between bg-foreground px-4 py-2 gap-3">
         <input type="hidden" name="action" value="minimize_section">
         <input type="hidden" name="section" value="{{ section.uuid }}">
@@ -22,7 +27,7 @@
                 {% icon "chevron-down" %}
             </button>
             <div class="min-w-0 flex flex-row gap-2 items-center">
-                <h1 class="truncate font-bold">{{ section.title }}</h1>
+                <h1 id="section-{{ section.uuid }}-header" class="truncate font-bold">{{ section.title }}</h1>
                 {% circle_anchor label=_("Update section") icon_style="pencil" href="dashboard:sections:update" section_uuid=section.uuid size=4 %}
             </div>
         </div>
@@ -32,58 +37,66 @@
         </div>
     </form>
     {% if not section.minimized %}
-        <table class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4 lg:grid lg:grid-cols-[8fr_3fr_max-content_max-content] lg:gap-1 lg:items-center">
+        <table aria-label="{% blocktranslate with section=section.title %}{{section}} tasks{% endblocktranslate %}"
+               class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4 lg:grid lg:grid-cols-[8fr_3fr_max-content_max-content] lg:gap-1 lg:items-center">
+            <thead class="sr-only">
+                <th class="sr-only">{% translate "Task title" %}</th>
+                <th class="sr-only">{% translate "Task labels" %}</th>
+                <th class="sr-only">{% translate "Sub task progress" %}</th>
+                <th class="sr-only">{% translate "Task actions" %}</th>
+            </thead>
             <tbody class="contents">
                 {% for task in section.task_set.all %}
-                    <tr class="flex w-full flex-col items-center gap-1 rounded-lg border border-border p-3 lg:contents">
-                        <td class="contents">
+                    <tr class="flex w-full flex-wrap items-center gap-1 rounded-lg border border-border p-3 lg:contents"
+                        aria-labelledby="task-{{ task.uuid }}-title">
+                        <td class="block">
                             <a href="{% url 'dashboard:tasks:detail' task.uuid %}"
-                               title="{% translate "Task details" %}"
-                               class="flex flex-row items-start items-center gap-1 self-start sm:gap-6 lg:self-center ">
-                                <span class="shrink-0 font-bold" aria-hidden>#{{ task.number }}</span>
+                               class="flex flex-row items-start items-center min-w-0 gap-1 self-start sm:gap-6 lg:self-center">
+                                <span class="shrink-0 font-bold" aria-hidden="true">#{{ task.number }}</span>
                                 <span class="sr-only">{{ task.readable_number }}</span>
-                                <span class="line-clamp-3 justify-self-start hover:text-primary lg:line-clamp-1 lg:h-6">{{ task.title }}</span>
+                                <span class="line-clamp-3 justify-self-start hover:text-primary lg:line-clamp-1 lg:h-6"
+                                      id="task-{{ task.uuid }}-title">{{ task.title }}</span>
                             </a>
                         </td>
                         <td class="flex w-full flex-row items-center justify-start gap-1 self-start overflow-x-auto">
                             {% for label in task.labels.all %}
-                                <div class="max-w-xs shrink-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-full px-3 py-1 font-bold {{ label.bg_class }} {{ label.text_class }}"
-                                     title="{% translate "Label" %}">{{ label.name }}</div>
+                                <div class="max-w-xs shrink-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-full px-3 py-1 font-bold {{ label.bg_class }} {{ label.text_class }}">
+                                    {{ label.name }}
+                                </div>
                             {% endfor %}
                         </td>
-                        <td class="flex flex-row lg:contents">
-                            <div class="grow flex shrink-0 flex-row items-center gap-0.5 justify-between px-2 py-1"
-                                 title="{% translate "Sub task progress" %}">
-                                {% if task.sub_task_progress is None %}
-                                    <div class="opacity-20">{% icon "view-list" "primary" size=6 %}</div>
-                                {% else %}
-                                    {% icon "view-list" "primary" size=6 %}
-                                {% endif %}
-                                {% if task.sub_task_progress is not None %}
-                                    <div class="grow text-right font-bold text-primary">{{ task.sub_task_progress|percent }}</div>
-                                {% else %}
-                                    <span class="sr-only">{% translate "No sub tasks" %}</span>
-                                {% endif %}
-                            </div>
-                            <form hx-target="#section-{{ section.uuid }}"
-                                  hx-post="{% url 'dashboard:projects:detail' project.uuid %}"
+                        <td class="flex shrink flex-row items-center gap-0.5 lg:justify-between px-2 py-1 lg:min-w-16">
+                            {% if task.sub_task_progress is None %}
+                                <div class="opacity-20">{% icon "view-list" "primary" size=6 %}</div>
+                            {% else %}
+                                {% icon "view-list" "primary" size=6 %}
+                            {% endif %}
+                            {% if task.sub_task_progress is not None %}
+                                <div class="grow text-right font-bold text-primary">{{ task.sub_task_progress|percent }}</div>
+                            {% else %}
+                                <span class="sr-only">{% translate "No sub tasks" %}</span>
+                            {% endif %}
+                        </td>
+                        <td class="flex grow">
+                            <form action="{% url 'dashboard:projects:detail' project.uuid %}"
+                                  method="post"
                                   hx-include="#task-filter,#team-member-filters,#label-filters"
-                                  class="flex flex-row items-center gap-1"
+                                  hx-boost="true"
+                                  hx-target="#section-{{ section.uuid }}"
                                   hx-swap="outerHTML"
-                                  method="post">
+                                  class="ml-auto flex flex-row items-center gap-1">
+                                {# TODO in AT, say "currently assigned to ..." #}
                                 {% user_avatar task.assignee %}
                                 <input type="hidden" name="action" value="move_task">
                                 <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
-                                <div hx-swap="outerHTML">
-                                    {% circle_button label=_("Move task up") value="up" name="direction" disabled=task.first icon_style="chevron-up" %}
-                                    {% circle_button label=_("Move task down") value="down" name="direction" disabled=task.last icon_style="chevron-down" %}
-                                </div>
+                                {% circle_button label=_("Move task up") value="up" name="direction" disabled=task.first icon_style="chevron-up" %}
+                                {% circle_button label=_("Move task down") value="down" name="direction" disabled=task.last icon_style="chevron-down" %}
                                 {% csrf_token %}
                                 <p class="htmx-indicator">...</p>
-                                <a aria-label="Navigate to task menu"
+                                <a aria-label="Task menu"
                                    hx-boost
                                    hx-target="#project-detail"
-                                   hx-select="#task-actions"
+                                   hx-select="#main"
                                    href="{% url "dashboard:tasks:actions" task.uuid %}"
                                    class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background">
                                     {% icon "dots-horizontal" %}

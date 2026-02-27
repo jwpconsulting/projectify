@@ -7,10 +7,13 @@
     {% blocktrans with title=project.title %}{{ title }} - Projectify{% endblocktrans %}
 {% endblock title %}
 {% block dashboard_content %}
-    <main id="project-detail"
+    <main id="main"
+          title="{% blocktranslate with title=project.title ws=project.workspace.title %}{{ title }} project in {{ ws }} workspace {% endblocktranslate %}"
           class="min-w-0 grow flex flex-col items-center gap-4 bg-background py-4">
         {% if task_filter_form %}
             <form id="task-filter"
+                  role="search"
+                  title="{% translate "Task search form" %}"
                   class="flex w-full max-w-md flex-col gap-2 rounded-xl bg-foreground px-4 py-4">
                 <label for="{{ task_filter_form.task_search_query.id_for_label }}"
                        class="font-bold text-base-content first-letter:uppercase">{% translate "Task search" %}</label>
@@ -28,7 +31,8 @@
             {% for section in project.section_set.all %}
                 {% include "workspace/project_detail/section.html" with section=section %}
             {% empty %}
-                <div class="flex flex-col bg-foreground text-center rounded-sm gap-4 p-8">
+                <div title="{% translate "No sections in this project" %}"
+                     class="flex flex-col bg-foreground text-center rounded-sm gap-4 p-8">
                     <h2 class="text-xl font-bold">{% translate "No sections yet" %}</h2>
                     <p>{% translate "Create your first section to start organizing tasks." %}</p>
                     {% go_to_action href="dashboard:projects:create-section" project_uuid=project.uuid label=_("Create section") title=_("Create a new section") %}

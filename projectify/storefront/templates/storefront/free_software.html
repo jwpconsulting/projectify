@@ -7,7 +7,8 @@
     {% translate "Free software - Projectify" %}
 {% endblock title %}
 {% block storefront_content %}
-    <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
+    <main id="main"
+          class="flex flex-col items-center gap-10 bg-foreground pb-20">
         {% trans "Free Software and License Information" as title %}
         {% include "storefront/common/storefront_header.html" with title=title %}
         <div class="w-full p-6 max-w-4xl">

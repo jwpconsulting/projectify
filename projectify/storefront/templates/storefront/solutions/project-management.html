@@ -8,7 +8,8 @@
     {% translate "Project management with Projectify" %}
 {% endblock title %}
 {% block solutions_content %}
-    <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
+    <main id="main"
+          class="flex flex-col items-center gap-10 bg-foreground pb-20">
         {% trans "Project management solutions" as title %}
         {% trans "How project managers can use Projectify to efficiently manage tasks, projects and team members of their team." as text %}
         {% trans "Two Polys in a factory pointing at machines symbolized by huge gears. The mascot on the left holds a wrench." as alt %}
@@ -22,7 +23,6 @@
             {% trans "Permissions to control access" as title %}
             {% trans "Make sure nothing important gets deleted. With permission roles - Owner, Maintainer, Contributor and Observer, you can be safe in knowing there won't be any accidental data loss." as text %}
             {% trans "An illustration of a settings screen showing team members belonging to a team member and their role within the workspace. The illustration also shows a button allowing filtering by role and another button letting a user invite new team members" as alt %}
-            {# TODO update screenshot of team members settings #}
             {% include "storefront/common/solutions_detail_item.html" with title=title text=text src="solutions/project-management-permissions.png" alt=alt imgPosition="right" %}
         </div>
         {% anchor href="storefront:solutions:list" label=_("Find other solutions for your project management needs") %}

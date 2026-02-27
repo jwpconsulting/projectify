@@ -5,11 +5,11 @@
 {% load i18n %}
 {% load projectify %}
 {% block content %}
-    <a href="#skip-to-content" class="sr-only">{% translate "Skip to main content" %}</a>
     <div class="flex min-h-screen grow flex-col">
         {% include "common/navigation/header/dashboard.html" %}
         <div class="flex min-h-0 shrink grow flex-col md:flex-row">
-            <nav class="max-w-full md:max-w-xs 2xl:max-w-md h-full shrink-0 flex flex-col py-4">
+            <nav aria-label="{% translate "Side menu" %}"
+                 class="max-w-full md:max-w-xs 2xl:max-w-md h-full shrink-0 flex flex-col py-4">
                 {% if workspace %}
                     <details name="workspace-select" class="min-w-0 grow w-full px-4 pb-4 ">
                         <summary class="flex items-center gap-2 hover:bg-secondary-hover font-bold border rounded cursor-pointer p-2">
@@ -44,10 +44,8 @@
                     {% include "workspace/common/sidemenu/project_details.html" %}
                 {% endblock dashboard_projects %}
             </nav>
-            <div id="skip-to-content" class="contents">
-                {% block dashboard_content %}
-                {% endblock dashboard_content %}
-            </div>
+            {% block dashboard_content %}
+            {% endblock dashboard_content %}
         </div>
     </div>
     {% include "common/footer.html" %}

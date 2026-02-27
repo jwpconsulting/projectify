@@ -7,7 +7,7 @@
     {% blocktrans with topic=helptopic.title %}{{ topic }} help - Projectify{% endblocktrans %}
 {% endblock title %}
 {% block help_content %}
-    <main class="flex flex-col items-center gap-10 bg-foreground pb-20">
+    <div class="flex flex-col items-center gap-10 bg-foreground pb-20">
         <div class="flex w-full flex-col items-center bg-background">
             <div class="w-full max-w-4xl px-6 py-6 sm:py-12">
                 <header class="flex w-full flex-col items-center gap-4 justify-center">
@@ -30,7 +30,7 @@
                     {% endfor %}
                 </ul>
             </nav>
-            <div class="prose">
+            <main id="main" class="prose">
                 {% if toc_html %}
                     <nav class="toc mb-8">
                         <h3 class="text-lg font-semibold mb-4">{% trans "Table of Contents" %}</h3>
@@ -40,7 +40,7 @@
                 <main>
                     {{ help_html }}
                 </main>
-            </div>
+            </main>
         </div>
-    </main>
+    </div>
 {% endblock help_content %}

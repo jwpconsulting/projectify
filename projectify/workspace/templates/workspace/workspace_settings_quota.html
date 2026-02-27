@@ -8,6 +8,7 @@
 {% endblock title %}
 {% block workspace_settings_content %}
     <section class="flex flex-col gap-2">
+        <h1 class="text-xl font-bold" id="workspace-quotas-title">{% translate "Workspace quotas" %}</h1>
         <p>
             <strong>{% trans "Workspace status:" %}</strong>
             {% if workspace.quota.workspace_status == "full" %}
@@ -21,7 +22,7 @@
         <p>
             {% blocktrans with title=workspace.title %}These are the quotas for the '{{ title }}' workspace:{% endblocktrans %}
         </p>
-        <table>
+        <table aria-labelledby="workspace-quotas-title">
             <thead>
                 <tr>
                     <th class="text-left">{% trans "Resource" %}</th>
@@ -41,7 +42,7 @@
         </table>
     </section>
     <section class="flex flex-col gap-2">
-        <h3 class="font-bold">{% trans "Learn more about workspace quotas" %}</h3>
+        <h2 class="font-bold">{% trans "Learn more about workspace quotas" %}</h2>
         <ul class="list-inside list-disc">
             <li>{% anchor href="/help/quota#paid" label=_("Quotas for paid workspaces") external=True %}</li>
             <li>{% anchor href="/help/quota#trial" label=_("Quotas for trial workspaces") external=True %}</li>

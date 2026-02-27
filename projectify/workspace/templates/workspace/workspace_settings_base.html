@@ -3,12 +3,12 @@
 {% extends "dashboard_base.html" %}
 {% load i18n %}
 {% block dashboard_content %}
-    <div class="grow flex flex-col items-center bg-background px-0 py-8 sm:px-2"
-         role="presentation">
+    <div class="grow flex flex-col items-center bg-background px-0 py-8 sm:px-2">
         <div class="flex w-full max-w-xl flex-col gap-4">
             <h1 class="px-2 text-2xl font-bold sm:px-0">{% trans "Workspace settings" %}</h1>
-            <main class="flex w-full max-w-xl flex-col gap-10 rounded-lg bg-foreground p-4 shadow-context-menu">
-                <div class="flex flex-row flex-wrap">
+            <div class="flex w-full max-w-xl flex-col gap-10 rounded-lg bg-foreground p-4 shadow-context-menu">
+                <nav class="flex flex-row flex-wrap"
+                     aria-label="{% translate "Workspace settings tabs" %}">
                     {% url "dashboard:workspaces:settings" workspace.uuid as general_url %}
                     {% include "workspace/workspace_settings/tab.html" with tab_url=general_url label=_("General") name="general" %}
                     {% url 'dashboard:workspaces:projects' workspace.uuid as projects_url %}
@@ -22,12 +22,12 @@
                     {% url 'dashboard:workspaces:quota' workspace.uuid as quota_url %}
                     {% include "workspace/workspace_settings/tab.html" with tab_url=quota_url label=_("Quota") name="quota" %}
                     <div class="grow border-b-2 border-border"></div>
-                </div>
-                <div id="settings-content" class="flex flex-col gap-10">
+                </nav>
+                <main id="main" class="flex flex-col gap-10">
                     {% block workspace_settings_content %}
                     {% endblock workspace_settings_content %}
-                </div>
-            </main>
+                </main>
+            </div>
         </div>
     </div>
 {% endblock dashboard_content %}

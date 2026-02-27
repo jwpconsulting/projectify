@@ -3,6 +3,9 @@
 {% extends "workspace/form_base.html" %}
 {% load i18n %}
 {% load projectify rules %}
+{% block title %}
+    {% blocktrans with title=task.title %}{{ title }} task actions - Projectify{% endblocktrans %}
+{% endblock title %}
 {% block form_content %}
     <div id="task-actions"
          class="min-w-0 grow flex flex-col gap-4"
