@@ -23,9 +23,9 @@
                     </div>
                     {% include "workspace/task/breadcrumbs.html" with section=section current_page_label=_("New task (currently creating)") current_page_url=request.get_full_path %}
                 </div>
-                <div class="grid grid-cols-2 gap-4 min-w-0">
+                <div class="contents sm:flex items-center justify-between gap-4 sm:flex-row">
                     {% include "projectify/forms/submit.html" with name="action" value="create" text=_("Create task") %}
-                    {% action_button text=_("Create and stay") name="action" value="create_stay" %}
+                    <div class="shrink-0 grow">{% action_button text=_("Create and stay") name="action" value="create_stay" %}</div>
                 </div>
             </div>
             <div class="flex flex-col gap-8">

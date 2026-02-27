@@ -24,7 +24,7 @@
                     </div>
                     {% include "workspace/task/breadcrumbs.html" with section=task.section task=task %}
                 </div>
-                <div class="flex items-center justify-between gap-4 sm:flex-row">
+                <div class="contents sm:flex items-center justify-between gap-4 sm:flex-row">
                     {% include "projectify/forms/submit.html" with name="action" value="update" text=_("Update task") %}
                     {% include "projectify/forms/submit.html" with name="action" value="update_stay" text=_("Update task and stay") %}
                 </div>
