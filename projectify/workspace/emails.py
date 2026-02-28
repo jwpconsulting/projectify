@@ -10,7 +10,7 @@ from projectify.lib.settings import get_settings
 from projectify.premail.email import Context, EmailAddress, TemplateEmail
 from projectify.user.models import User
 
-from .models.team_member_invite import TeamMemberInvite
+from .models import TeamMemberInvite
 
 
 class TeamMemberInviteEmail(TemplateEmail[TeamMemberInvite]):

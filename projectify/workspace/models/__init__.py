@@ -11,13 +11,13 @@ from django.db import models, transaction
 from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import BaseModel, TitleDescriptionModel
+from projectify.user.models import UserInvite
 
 from .const import TeamMemberRoles
 from .label import Label
 from .project import Project
 from .section import Section
 from .task import Task
-from .team_member_invite import TeamMemberInvite
 from .workspace import Workspace
 
 if TYPE_CHECKING:
@@ -76,6 +76,37 @@ class SubTask(TitleDescriptionModel, BaseModel):
                 deferrable=models.Deferrable.DEFERRED,
             )
         ]
+
+
+class TeamMemberInvite(BaseModel):
+    """UserInvites belonging to this workspace."""
+
+    user_invite = models.ForeignKey[UserInvite](
+        "user.UserInvite",
+        on_delete=models.CASCADE,
+    )
+    workspace = models.ForeignKey["Workspace"](
+        "Workspace",
+        on_delete=models.CASCADE,
+    )
+    # TODO use redeemed_when only
+    redeemed = models.BooleanField(
+        default=False,
+        help_text=_("Has this invite been redeemed?"),
+    )
+    redeemed_when = models.DateTimeField(
+        blank=True,
+        null=True,
+        editable=False,
+        default=None,
+        help_text=_("When has this invite been redeemed?"),
+    )
+
+    class Meta:
+        """Meta."""
+
+        unique_together = ("user_invite", "workspace")
+        ordering = ("created",)
 
 
 class TeamMember(BaseModel):

@@ -5,7 +5,7 @@
 
 import pytest
 
-from projectify.workspace.models.team_member_invite import TeamMemberInvite
+from ...models import TeamMemberInvite
 
 
 @pytest.mark.django_db

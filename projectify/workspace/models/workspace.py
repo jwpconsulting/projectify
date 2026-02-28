@@ -23,8 +23,7 @@ if TYPE_CHECKING:
     from projectify.corporate.models import Customer
     from projectify.user.models import User  # noqa: F401
 
-    from . import Label, Project, TeamMember
-    from .team_member_invite import TeamMemberInvite
+    from . import Label, Project, TeamMember, TeamMemberInvite
 
 
 class Workspace(TitleDescriptionModel, BaseModel):

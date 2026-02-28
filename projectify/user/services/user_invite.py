@@ -10,8 +10,8 @@ from django.utils.timezone import now
 
 from projectify.user.models import User, UserInvite
 from projectify.user.selectors.user import user_find_by_email
+from projectify.workspace.models import TeamMemberInvite
 from projectify.workspace.models.const import TeamMemberRoles
-from projectify.workspace.models.team_member_invite import TeamMemberInvite
 from projectify.workspace.services.workspace import workspace_add_user
 
 
