@@ -43,3 +43,4 @@ class TeamMemberInvite(BaseModel):
         """Meta."""
 
         unique_together = ("user_invite", "workspace")
+        ordering = ("created",)

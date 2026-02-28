@@ -98,3 +98,4 @@ class TeamMember(BaseModel):
         """Meta."""
 
         unique_together = ("workspace", "user")
+        ordering = ("created",)

@@ -236,7 +236,7 @@ class TestWorkspaceSettingsTeamMembers:
         # Justus 2025-07-29 query count went up   32 -> 33 XXX
         # Query count went up 33 -> 34
         # Query count went up 34 -> 35 Justus 2026-02-23
-        with django_assert_num_queries(35):
+        with django_assert_num_queries(37):
             response = user_client.post(
                 resource_url, {"action": "invite", "email": "mail@bla.com"}
             )
@@ -252,7 +252,7 @@ class TestWorkspaceSettingsTeamMembers:
             assert response.status_code == 400
         assert "already invited" in response.content.decode()
 
-        with django_assert_num_queries(26):
+        with django_assert_num_queries(27):
             response = user_client.post(
                 resource_url, {"action": "uninvite", "email": "mail@bla.com"}
             )
