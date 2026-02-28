@@ -16,10 +16,9 @@ from django.db.models import (
 )
 
 from projectify.user.models import User
-from projectify.workspace.models.label import Label
-from projectify.workspace.selectors.labels import labels_annotate_with_colors
 
-from ..models import Project, TeamMember, TeamMemberInvite, Workspace
+from ..models import Label, Project, TeamMember, TeamMemberInvite, Workspace
+from .labels import labels_annotate_with_colors
 
 logger = logging.getLogger(__name__)
 
