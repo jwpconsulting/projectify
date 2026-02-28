@@ -5,10 +5,11 @@
 
 import logging
 import uuid
-from typing import TYPE_CHECKING, Any, Optional, cast
+from typing import TYPE_CHECKING, Any, Callable, Optional, cast
 
 from django.conf import settings
 from django.db import models, transaction
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 import pgtrigger
@@ -19,7 +20,6 @@ from projectify.user.models import UserInvite
 from .const import TeamMemberRoles
 from .label import Label
 from .project import Project
-from .section import Section
 from .types import GetOrder, SetOrder
 from .workspace import Workspace
 
@@ -31,6 +31,49 @@ if TYPE_CHECKING:
 
 
 logger = logging.getLogger(__name__)
+
+
+class Section(TitleDescriptionModel, BaseModel):
+    """Section of a Project."""
+
+    project = models.ForeignKey["Project"]("Project", on_delete=models.CASCADE)
+    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+    minimized_by = models.ManyToManyField(
+        "user.User",
+        blank=True,
+        related_name="minimized_sections",
+        help_text=_("Users who have minimized this section"),
+    )  # type: models.ManyToManyField[User, "Section"]
+
+    if TYPE_CHECKING:
+        # Related managers
+        task_set: RelatedManager["Task"]
+
+        # For ordering
+        get_task_order: GetOrder
+        set_task_order: SetOrder
+        get_next_in_order: Callable[[], "Section"]
+        _order: int
+
+    def __str__(self) -> str:
+        """Return title."""
+        return self.title
+
+    def get_absolute_url(self) -> str:
+        """Get URL to section within project."""
+        return f"{reverse('dashboard:projects:detail', args=(str(self.project.uuid),))}#section-{self.uuid}"
+
+    class Meta:
+        """Meta."""
+
+        order_with_respect_to = "project"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["project", "_order"],
+                name="unique_project_order",
+                deferrable=models.Deferrable.DEFERRED,
+            )
+        ]
 
 
 class Task(TitleDescriptionModel, BaseModel):
