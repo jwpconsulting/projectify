@@ -15,10 +15,27 @@ from .project import Project
 from .section import Section
 from .sub_task import SubTask
 from .task import Task
-from .task_label import TaskLabel
 from .team_member import TeamMember
 from .team_member_invite import TeamMemberInvite
 from .workspace import Workspace
+
+
+class TaskLabel(BaseModel):
+    """A label to task assignment."""
+
+    task = models.ForeignKey["Task"](
+        Task,
+        on_delete=models.CASCADE,
+    )
+    label = models.ForeignKey["Label"](
+        Label,
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        """Meta."""
+
+        unique_together = ("task", "label")
 
 
 class ChatMessage(BaseModel):
