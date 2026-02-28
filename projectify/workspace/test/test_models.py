@@ -12,8 +12,9 @@ import pytest
 from ..models import ChatMessage, Label, SubTask, Task, TeamMember, Workspace
 from ..services.sub_task import sub_task_create
 
+pytestmark = pytest.mark.django_db
 
-@pytest.mark.django_db
+
 class TestWorkspace:
     """Test Workspace."""
 
@@ -79,7 +80,6 @@ class TestWorkspace:
         assert isinstance(e.value.__cause__, psycopg.errors.RaiseException)
 
 
-@pytest.mark.django_db
 class TestLabel:
     """Test Label model."""
 
@@ -88,7 +88,6 @@ class TestLabel:
         assert label.color is not None
 
 
-@pytest.mark.django_db
 class TestSubTask:
     """Test SubTask."""
 
@@ -150,7 +149,6 @@ class TestSubTask:
         assert sub_task._order == 0
 
 
-@pytest.mark.django_db
 class TestChatMessage:
     """Test ChatMessage."""
 
@@ -159,3 +157,46 @@ class TestChatMessage:
     ) -> None:
         """Test that chat message belongs to user."""
         assert chat_message.author == team_member
+
+
+class TestTask:
+    """Test Task."""
+
+    def test_task_number(self, task: Task, other_task: Task) -> None:
+        """Test unique task number."""
+        other_task.refresh_from_db()
+        task.refresh_from_db()
+        assert other_task.number == task.number + 1
+        task.workspace.refresh_from_db()
+        assert task.workspace.highest_task_number == other_task.number
+
+    def test_save(self, task: Task) -> None:
+        """Test saving and assert number does not change."""
+        num = task.number
+        task.save()
+        assert task.number == num
+
+    def test_save_no_number(self, task: Task, workspace: Workspace) -> None:
+        """Test saving with no number."""
+        # With psycopg2 we had an db.InternalError, now with psycopg 3 it
+        # became db.ProgrammingError instead
+        with pytest.raises(db.ProgrammingError):
+            task.number = None  # type: ignore[assignment]
+            task.save()
+            workspace.refresh_from_db()
+
+    def test_save_different_number(self, task: Task) -> None:
+        """Test saving with different number."""
+        # Changed from db.InternalError, see above in test_save_no_number
+        with pytest.raises(db.ProgrammingError):
+            task.number = 154785787
+            task.save()
+
+    def test_task_workspace_pgtrigger(
+        self, task: Task, unrelated_workspace: Workspace
+    ) -> None:
+        """Test database trigger for wrong workspace assignment."""
+        # Changed from db.InternalError, see above in test_save_no_number
+        with pytest.raises(db.ProgrammingError):
+            task.workspace = unrelated_workspace
+            task.save()
