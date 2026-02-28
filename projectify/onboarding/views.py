@@ -20,10 +20,7 @@ from rest_framework.exceptions import ValidationError
 from projectify.lib.forms import populate_form_with_drf_errors
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.user.models import User
-from projectify.workspace.models.label import Label
-from projectify.workspace.models.project import Project
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models import Label, Project, Task, Workspace
 from projectify.workspace.selectors.project import (
     ProjectDetailQuerySet,
     project_find_by_project_uuid,

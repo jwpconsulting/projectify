@@ -11,8 +11,7 @@ from typing import Union
 from rest_framework.exceptions import PermissionDenied
 
 from projectify.user.models import User
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models import TeamMember, Workspace
 
 logger = logging.getLogger(__name__)
 

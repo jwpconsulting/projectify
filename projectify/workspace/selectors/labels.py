@@ -12,9 +12,8 @@ from django.utils.encoding import force_str
 
 from projectify.user.models import User
 
+from ..models import Label, Project
 from ..models.const import COLOR_MAP
-from ..models.label import Label
-from ..models.project import Project
 
 logger = logging.getLogger(__name__)
 

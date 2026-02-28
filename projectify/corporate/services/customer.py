@@ -17,7 +17,7 @@ from projectify.corporate.lib.stripe import stripe_client
 from projectify.lib.auth import validate_perm
 from projectify.lib.settings import get_settings
 from projectify.user.models import User
-from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models import Workspace
 from projectify.workspace.selectors.quota import workspace_quota_for
 
 from ..models import Customer

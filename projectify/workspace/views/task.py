@@ -20,18 +20,15 @@ from django.views.decorators.http import require_http_methods, require_POST
 from projectify.lib.htmx import HttpResponseClientRedirect
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
-from projectify.workspace.models.const import SUBTASK_PROGRESS_CLASSES
-from projectify.workspace.selectors.team_member import (
-    team_member_find_for_workspace,
-)
 
-from ..models.task import Task
-from ..models.workspace import Workspace
+from ..models import Task, Workspace
+from ..models.const import SUBTASK_PROGRESS_CLASSES
 from ..selectors.section import (
     SectionDetailQuerySet,
     section_find_for_user_and_uuid,
 )
 from ..selectors.task import TaskDetailQuerySet, task_find_by_task_uuid
+from ..selectors.team_member import team_member_find_for_workspace
 from ..selectors.workspace import workspace_find_for_user
 from ..services.sub_task import ValidatedDatum, ValidatedDatumWithUuid
 from ..services.task import (

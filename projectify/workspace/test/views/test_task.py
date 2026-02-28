@@ -10,11 +10,9 @@ from django.urls import reverse
 
 import pytest
 
-from projectify.workspace.models.section import Section
-from projectify.workspace.models.task import Task
 from pytest_types import DjangoAssertNumQueries
 
-from ... import models
+from ...models import Section, Task, TeamMember
 from ...services.sub_task import sub_task_create
 
 pytestmark = pytest.mark.django_db
@@ -33,7 +31,7 @@ class TestTaskCreateView:
         user_client: Client,
         resource_url: str,
         section: Section,
-        team_member: models.TeamMember,
+        team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test GETting the task creation page."""
@@ -46,7 +44,7 @@ class TestTaskCreateView:
         self,
         user_client: Client,
         resource_url: str,
-        team_member: models.TeamMember,
+        team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test creating a task."""
@@ -77,7 +75,7 @@ class TestTaskCreateView:
         assert subtask.done is False
 
     def test_section_not_found(
-        self, user_client: Client, team_member: models.TeamMember
+        self, user_client: Client, team_member: TeamMember
     ) -> None:
         """Test accessing task creation for non-existent section."""
         url = reverse("dashboard:sections:create-task", args=(uuid4(),))
@@ -135,7 +133,7 @@ class TestTaskUpdateView:
         user_client: Client,
         resource_url: str,
         task: Task,
-        team_member: models.TeamMember,
+        team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating a task."""
@@ -171,7 +169,7 @@ class TestTaskUpdateView:
         user_client: Client,
         resource_url: str,
         task: Task,
-        team_member: models.TeamMember,
+        team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test adding a subtask to a task that already has one."""
@@ -226,7 +224,7 @@ class TestTaskUpdateView:
         user_client: Client,
         resource_url: str,
         task: Task,
-        team_member: models.TeamMember,
+        team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test marking an existing subtask for deletion."""

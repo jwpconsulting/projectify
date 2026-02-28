@@ -8,8 +8,7 @@ from unittest import mock
 import pytest
 from rest_framework import serializers
 
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models import TeamMember, Workspace
 
 from ...models import Customer
 from ...selectors.customer import customer_check_active_for_workspace

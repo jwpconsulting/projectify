@@ -9,16 +9,18 @@ from django.contrib import admin
 from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
-from .models.chat_message import ChatMessage
-from .models.label import Label
-from .models.project import Project
-from .models.section import Section
-from .models.sub_task import SubTask
-from .models.task import Task
-from .models.task_label import TaskLabel
-from .models.team_member import TeamMember
-from .models.team_member_invite import TeamMemberInvite
-from .models.workspace import Workspace
+from .models import (
+    ChatMessage,
+    Label,
+    Project,
+    Section,
+    SubTask,
+    Task,
+    TaskLabel,
+    TeamMember,
+    TeamMemberInvite,
+    Workspace,
+)
 
 
 class TeamMemberInline(admin.TabularInline[TeamMember]):

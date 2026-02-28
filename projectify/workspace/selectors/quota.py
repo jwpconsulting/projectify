@@ -29,14 +29,17 @@ from typing import Literal, TypedDict, Union
 from projectify.corporate.selectors.customer import (
     customer_check_active_for_workspace,
 )
-from projectify.workspace.models.chat_message import ChatMessage
-from projectify.workspace.models.label import Label
-from projectify.workspace.models.section import Section
-from projectify.workspace.models.sub_task import SubTask
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.task_label import TaskLabel
-from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.types import Quota, WorkspaceQuota
+
+from ..models import (
+    ChatMessage,
+    Label,
+    Section,
+    SubTask,
+    Task,
+    TaskLabel,
+    Workspace,
+)
 
 Resource = Literal[
     "ChatMessage",

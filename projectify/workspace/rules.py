@@ -12,10 +12,9 @@ from functools import partial
 import rules
 
 from projectify.user.models import User
-from projectify.workspace.models.team_member import TeamMember
 
+from .models import TeamMember, Workspace
 from .models.const import TeamMemberRoles
-from .models.workspace import Workspace
 from .selectors.quota import Resource, workspace_quota_for
 from .selectors.team_member import team_member_find_for_workspace
 

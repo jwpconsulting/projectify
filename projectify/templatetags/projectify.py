@@ -15,7 +15,7 @@ from django.utils.safestring import SafeText, mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from projectify.user.models import User
-from projectify.workspace.models.team_member import TeamMember
+from projectify.workspace.models import TeamMember
 
 logger = logging.getLogger(__name__)
 

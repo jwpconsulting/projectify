@@ -21,11 +21,7 @@ from django.db.models.functions import NullIf
 
 from projectify.user.models import User
 
-from ..models.label import Label
-from ..models.project import Project
-from ..models.section import Section
-from ..models.task import Task
-from ..models.team_member import TeamMember
+from ..models import Label, Project, Section, Task, TeamMember
 from .labels import labels_annotate_with_colors
 
 

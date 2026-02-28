@@ -5,8 +5,7 @@
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
-from projectify.workspace.models.label import Label
-from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models import Label, Workspace
 
 
 # Create

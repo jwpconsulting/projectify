@@ -5,17 +5,13 @@
 
 import pytest
 
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.services.project import project_archive
-
-from ...models.project import Project
-from ...models.team_member import TeamMember
+from ...models import Project, Task, TeamMember, Workspace
 from ...selectors.project import (
     project_detail_query_set,
     project_find_by_project_uuid,
     project_find_by_workspace_uuid,
 )
+from ...services.project import project_archive
 
 # So apparently this is also possible:
 pytestmark = pytest.mark.django_db

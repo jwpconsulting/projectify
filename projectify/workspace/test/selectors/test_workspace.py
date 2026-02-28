@@ -5,7 +5,7 @@
 
 import pytest
 
-from ...models.team_member import TeamMember
+from ...models import TeamMember
 from ...selectors.workspace import (
     workspace_find_by_workspace_uuid,
     workspace_find_for_user,

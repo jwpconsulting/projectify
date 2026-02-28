@@ -14,7 +14,7 @@ from rest_framework import serializers
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
-from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models import Workspace
 
 from ..models import Coupon
 from ..types import CustomerSubscriptionStatus

@@ -8,10 +8,8 @@ from django.db import IntegrityError
 
 import pytest
 
-from projectify.workspace.models.label import Label
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.services.label import label_create, label_update
+from ...models import Label, TeamMember, Workspace
+from ...services.label import label_create, label_update
 
 pytestmark = pytest.mark.django_db
 

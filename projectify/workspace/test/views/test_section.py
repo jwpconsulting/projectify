@@ -11,8 +11,7 @@ from django.urls import reverse
 
 import pytest
 
-from projectify.workspace.models import Section
-from projectify.workspace.models.team_member import TeamMember
+from projectify.workspace.models import Section, TeamMember
 from pytest_types import DjangoAssertNumQueries
 
 pytestmark = pytest.mark.django_db

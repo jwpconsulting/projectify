@@ -10,13 +10,8 @@ from django.urls import reverse
 import pytest
 from faker import Faker
 
-from projectify.workspace.models.project import Project
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.services.project import (
-    project_archive,
-    project_create,
-)
+from ...models import Project, TeamMember, Workspace
+from ...services.project import project_archive, project_create
 
 pytestmark = pytest.mark.django_db
 

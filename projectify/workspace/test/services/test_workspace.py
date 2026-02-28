@@ -14,17 +14,15 @@ from faker import Faker
 from rest_framework.exceptions import ValidationError
 
 from projectify.user.models import User
-from projectify.workspace.models.const import TeamMemberRoles
-from projectify.workspace.models.project import Project
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.services.project import project_delete
-from projectify.workspace.services.team_member import team_member_delete
-from projectify.workspace.services.team_member_invite import (
+
+from ...models import Project, TeamMember, TeamMemberRoles, Workspace
+from ...services.project import project_delete
+from ...services.team_member import team_member_delete
+from ...services.team_member_invite import (
     team_member_invite_create,
     team_member_invite_delete,
 )
-from projectify.workspace.services.workspace import (
+from ...services.workspace import (
     workspace_add_user,
     workspace_delete,
     workspace_update,

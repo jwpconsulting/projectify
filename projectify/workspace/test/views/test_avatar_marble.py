@@ -10,8 +10,9 @@ from django.urls import reverse
 
 import pytest
 
-from projectify.workspace.models.team_member import TeamMember
 from pytest_types import DjangoAssertNumQueries
+
+from ...models import TeamMember
 
 pytestmark = pytest.mark.django_db
 

@@ -31,10 +31,8 @@ from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 
-from ..models import Workspace
+from ..models import Label, TeamMember, Workspace
 from ..models.const import COLOR_MAP
-from ..models.label import Label
-from ..models.team_member import TeamMember
 from ..selectors.labels import (
     LabelDetailQuerySet,
     label_find_by_label_uuid,

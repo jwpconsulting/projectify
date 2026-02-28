@@ -16,10 +16,7 @@ from rest_framework.exceptions import ValidationError
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 
-from ..models.label import Label
-from ..models.section import Section
-from ..models.task import Task
-from ..models.team_member import TeamMember
+from ..models import Label, Section, Task, TeamMember
 from ..services.sub_task import (
     ValidatedData,
     sub_task_create_many,

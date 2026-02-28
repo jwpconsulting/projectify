@@ -10,25 +10,19 @@ from projectify.corporate.services.stripe import customer_cancel_subscription
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 from projectify.user.services.internal import user_create
-from projectify.workspace.models.const import TeamMemberRoles
-from projectify.workspace.models.project import Project
-from projectify.workspace.models.section import Section
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.services.chat_message import chat_message_create
-from projectify.workspace.services.label import label_create
-from projectify.workspace.services.project import project_create
-from projectify.workspace.services.section import section_create
-from projectify.workspace.services.sub_task import sub_task_create
-from projectify.workspace.services.task import task_create
-from projectify.workspace.services.team_member import team_member_change_role
-from projectify.workspace.services.team_member_invite import (
-    team_member_invite_create,
-)
 from projectify.workspace.services.workspace import workspace_add_user
 
 from .. import rules
+from ..models import Project, Section, Task, TeamMember, Workspace
+from ..models.const import TeamMemberRoles
+from ..services.chat_message import chat_message_create
+from ..services.label import label_create
+from ..services.project import project_create
+from ..services.section import section_create
+from ..services.sub_task import sub_task_create
+from ..services.task import task_create
+from ..services.team_member import team_member_change_role
+from ..services.team_member_invite import team_member_invite_create
 
 
 @pytest.fixture

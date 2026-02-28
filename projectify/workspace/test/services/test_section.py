@@ -5,11 +5,9 @@
 
 import pytest
 
-from projectify.workspace.models import Project
-from projectify.workspace.models.section import Section
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.services.section import (
+from ...models import Project, Section, Task, TeamMember
+from ...services.section import (
+    section_create,
     section_delete,
     section_minimize,
     section_move,
@@ -17,6 +15,29 @@ from projectify.workspace.services.section import (
 )
 
 pytestmark = pytest.mark.django_db
+
+
+def test_section_create(project: Project, team_member: TeamMember) -> None:
+    """Test section creation."""
+    assert project.section_set.count() == 0
+    section = section_create(
+        who=team_member.user,
+        project=project,
+        title="hello",
+        description="world",
+    )
+    assert project.section_set.count() == 1
+    section2 = section_create(
+        who=team_member.user,
+        project=project,
+        title="hello",
+        description="world",
+    )
+    assert project.section_set.count() == 2
+    assert list(project.section_set.all()) == [
+        section,
+        section2,
+    ]
 
 
 def test_delete_non_empty_section(

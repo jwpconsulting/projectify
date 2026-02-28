@@ -10,12 +10,9 @@ from django.db.models import Count, Prefetch, Q, QuerySet
 from django.db.models.functions import NullIf
 
 from projectify.user.models import User
-from projectify.workspace.models.label import Label
-from projectify.workspace.models.project import Project
-from projectify.workspace.models.section import Section
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.selectors.labels import labels_annotate_with_colors
+
+from ..models import Label, Project, Section, Task, TeamMember
+from ..selectors.labels import labels_annotate_with_colors
 
 SectionDetailQuerySet = Section.objects.prefetch_related(
     Prefetch(
