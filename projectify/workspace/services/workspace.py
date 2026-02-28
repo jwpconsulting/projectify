@@ -20,9 +20,8 @@ from projectify.corporate.services.customer import customer_create
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 
+from ..models import TeamMember, Workspace
 from ..models.const import TeamMemberRoles
-from ..models.team_member import TeamMember
-from ..models.workspace import Workspace
 
 logger = logging.getLogger(__name__)
 

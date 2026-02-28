@@ -14,9 +14,8 @@ from rest_framework import serializers
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 
+from ..models import Project, TeamMember
 from ..models.const import TeamMemberRoles
-from ..models.project import Project
-from ..models.team_member import TeamMember
 
 
 @transaction.atomic

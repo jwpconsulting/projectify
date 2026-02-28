@@ -10,13 +10,15 @@ from rest_framework import exceptions
 
 from projectify.workspace.services.label import label_create
 
-from ...models import Project
-from ...models.label import Label
-from ...models.section import Section
-from ...models.sub_task import SubTask
-from ...models.task import Task
-from ...models.team_member import TeamMember
-from ...models.workspace import Workspace
+from ...models import (
+    Label,
+    Project,
+    Section,
+    SubTask,
+    Task,
+    TeamMember,
+    Workspace,
+)
 from ...services.task import (
     task_assign_labels,
     task_create,

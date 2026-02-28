@@ -22,11 +22,7 @@ from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 
-from ..models import Project, Workspace
-from ..models.label import Label
-from ..models.section import Section
-from ..models.task import Task
-from ..models.team_member import TeamMember
+from ..models import Label, Project, Section, Task, TeamMember, Workspace
 from ..selectors.project import (
     project_detail_query_set,
     project_find_by_project_uuid,

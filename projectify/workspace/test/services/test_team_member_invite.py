@@ -9,11 +9,10 @@ from rest_framework import serializers
 
 from projectify.user.models import User, UserInvite
 from projectify.user.services.internal import user_create
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.models.team_member_invite import TeamMemberInvite
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.services.team_member import team_member_delete
-from projectify.workspace.services.team_member_invite import (
+
+from ...models import TeamMember, TeamMemberInvite, Workspace
+from ...services.team_member import team_member_delete
+from ...services.team_member_invite import (
     team_member_invite_create,
     team_member_invite_delete,
 )

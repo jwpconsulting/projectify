@@ -11,11 +11,13 @@ from django.urls import reverse
 import pytest
 
 from projectify.user.models import User
-from projectify.workspace.models.label import Label
-from projectify.workspace.models.project import Project
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models import (
+    Label,
+    Project,
+    Task,
+    TeamMember,
+    Workspace,
+)
 from pytest_types import DjangoAssertNumQueries
 
 pytestmark = pytest.mark.django_db

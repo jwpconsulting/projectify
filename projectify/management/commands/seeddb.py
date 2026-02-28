@@ -42,13 +42,13 @@ from projectify.workspace.models import (
     Label,
     Project,
     Section,
+    SubTask,
     Task,
     TaskLabel,
+    TeamMember,
     Workspace,
 )
 from projectify.workspace.models.const import TeamMemberRoles
-from projectify.workspace.models.sub_task import SubTask
-from projectify.workspace.models.team_member import TeamMember
 
 Altogether = TypedDict(
     "Altogether",

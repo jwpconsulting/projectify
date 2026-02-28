@@ -5,38 +5,29 @@
 
 import pytest
 
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.services.sub_task import sub_task_create
-
-from .. import models
+from ..models import ChatMessage, Label, SubTask, Task, TeamMember
+from ..services.sub_task import sub_task_create
 
 
-# TODO extract into workspace/test/models/test_label.py
 @pytest.mark.django_db
 class TestLabel:
     """Test Label model."""
 
-    def test_factory(self, label: models.Label) -> None:
+    def test_factory(self, label: Label) -> None:
         """Test factory."""
         assert label.color is not None
 
 
-# TODO extract into workspace/test/models/test_sub_task.py
 @pytest.mark.django_db
 class TestSubTask:
     """Test SubTask."""
 
-    def test_factory(
-        self, task: models.Task, sub_task: models.SubTask
-    ) -> None:
+    def test_factory(self, task: Task, sub_task: SubTask) -> None:
         """Test that sub task correctly belongs to task."""
         assert sub_task.task == task
 
     def test_moving_sub_task(
-        self,
-        task: models.Task,
-        sub_task: models.SubTask,
-        team_member: TeamMember,
+        self, task: Task, sub_task: SubTask, team_member: TeamMember
     ) -> None:
         """Test moving a sub task around."""
         other_sub_task = sub_task_create(
@@ -76,9 +67,7 @@ class TestSubTask:
         ]
 
     def test_moving_within_empty_task(
-        self,
-        task: models.Task,
-        sub_task: models.SubTask,
+        self, task: Task, sub_task: SubTask
     ) -> None:
         """Test moving when there are no other sub tasks."""
         assert list(task.subtask_set.all()) == [
@@ -91,15 +80,12 @@ class TestSubTask:
         assert sub_task._order == 0
 
 
-# TODO extract into workspace/test/models/test_chat_message.py
 @pytest.mark.django_db
 class TestChatMessage:
     """Test ChatMessage."""
 
     def test_factory(
-        self,
-        team_member: models.TeamMember,
-        chat_message: models.ChatMessage,
+        self, team_member: TeamMember, chat_message: ChatMessage
     ) -> None:
         """Test that chat message belongs to user."""
         assert chat_message.author == team_member

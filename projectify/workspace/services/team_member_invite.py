@@ -16,10 +16,8 @@ from projectify.user.models import User, UserInvite
 from projectify.user.services.user_invite import user_invite_create
 
 from ..emails import TeamMemberInviteEmail
+from ..models import TeamMember, TeamMemberInvite, Workspace
 from ..models.const import TeamMemberRoles
-from ..models.team_member import TeamMember
-from ..models.team_member_invite import TeamMemberInvite
-from ..models.workspace import Workspace
 from ..services.workspace import workspace_add_user
 
 

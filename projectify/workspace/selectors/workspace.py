@@ -19,10 +19,7 @@ from projectify.user.models import User
 from projectify.workspace.models.label import Label
 from projectify.workspace.selectors.labels import labels_annotate_with_colors
 
-from ..models.project import Project
-from ..models.team_member import TeamMember
-from ..models.team_member_invite import TeamMemberInvite
-from ..models.workspace import Workspace
+from ..models import Project, TeamMember, TeamMemberInvite, Workspace
 
 logger = logging.getLogger(__name__)
 

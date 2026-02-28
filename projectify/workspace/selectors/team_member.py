@@ -7,9 +7,8 @@ from typing import Optional
 from uuid import UUID
 
 from projectify.user.models import User
-from projectify.workspace.models.project import Project
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.models.workspace import Workspace
+
+from ..models import Project, TeamMember, Workspace
 
 
 def team_member_find_for_workspace(

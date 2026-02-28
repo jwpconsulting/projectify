@@ -6,15 +6,14 @@
 import pytest
 
 from projectify.user.models import User
-from projectify.workspace.models.project import Project
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.selectors.team_member import (
+
+from ...models import Project, TeamMember, Workspace
+from ...selectors.team_member import (
     team_member_find_for_workspace,
     team_member_last_project_for_user,
     team_member_last_workspace_for_user,
 )
-from projectify.workspace.services.team_member import (
+from ...services.team_member import (
     team_member_visit_project,
     team_member_visit_workspace,
 )

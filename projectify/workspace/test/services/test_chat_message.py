@@ -6,16 +6,13 @@
 import pytest
 from faker import Faker
 
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.services.chat_message import chat_message_create
+from ...models import Task, TeamMember
+from ...services.chat_message import chat_message_create
 
 
 @pytest.mark.django_db
 def test_add_chat_message(
-    task: Task,
-    team_member: TeamMember,
-    faker: Faker,
+    task: Task, team_member: TeamMember, faker: Faker
 ) -> None:
     """Test adding a chat message."""
     assert task.chatmessage_set.count() == 0

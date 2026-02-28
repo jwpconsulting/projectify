@@ -8,9 +8,8 @@ from rest_framework.exceptions import PermissionDenied
 
 from projectify.user.models import User
 
+from ...models import Project, TeamMember
 from ...models.const import TeamMemberRoles
-from ...models.project import Project
-from ...models.team_member import TeamMember
 from ...services.team_member import (
     team_member_change_role,
     team_member_delete,

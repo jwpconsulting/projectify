@@ -8,8 +8,7 @@ from uuid import UUID
 
 import pytest
 
-from ...models import SubTask, Task
-from ...models.team_member import TeamMember
+from ...models import SubTask, Task, TeamMember
 from ...services.sub_task import (
     ValidatedDatum,
     sub_task_create,

@@ -11,9 +11,7 @@ import pytest
 
 from projectify.user.models import User
 
-from ...models.task import Task
-from ...models.team_member import TeamMember
-from ...models.workspace import Workspace
+from ...models import Task, TeamMember, Workspace
 from ...services.project import project_create
 
 
