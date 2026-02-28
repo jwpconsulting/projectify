@@ -5,7 +5,7 @@
 
 import pytest
 
-from projectify.corporate.models import Customer
+from ..models import Customer
 
 
 @pytest.mark.django_db
