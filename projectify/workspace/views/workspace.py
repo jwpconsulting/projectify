@@ -588,12 +588,16 @@ def workspace_settings_team_members(
                         email_or_user=invite_form.cleaned_data["email"],
                     )
                     status = 200
+                    workspace.refresh_from_db()
                 except serializers.ValidationError as e:
                     populate_form_with_drf_errors(invite_form, e)
                     status = 400
             else:
                 status = 400
         case "POST", "uninvite":
+            # I thought about adding aformset for editing the team
+            # members and invites. I've decided that I can always do that later
+            # Justus 2026-02-28
             uninvite_form = UninviteTeamMemberForm(request.POST)
             if not uninvite_form.is_valid():
                 return HttpResponse(_("Invalid form data"), status=400)
@@ -604,13 +608,13 @@ def workspace_settings_team_members(
                     email=uninvite_form.cleaned_data["email"],
                 )
             except serializers.ValidationError as error:
-                # TODO formset
                 return HttpResponse(
                     _("Failed to uninvite team member: {error}").format(
                         error=str(error)
                     ),
                     status=400,
                 )
+            workspace.refresh_from_db()
             status = 200
         case "POST", "team_member_remove":
             remove_member_form = RemoveTeamMemberForm(
@@ -622,7 +626,6 @@ def workspace_settings_team_members(
             try:
                 team_member_delete(team_member=team_member, who=request.user)
             except serializers.ValidationError as error:
-                # TODO formset
                 return HttpResponse(
                     _("Failed to remove team member: {error}").format(
                         error=str(error)
