@@ -10,8 +10,8 @@ from django.db import transaction
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
-from projectify.workspace.models.sub_task import SubTask
-from projectify.workspace.models.task import Task
+
+from ..models import SubTask, Task
 
 
 class ValidatedDatum(TypedDict):

@@ -46,12 +46,17 @@ from projectify.user.services.user_invite import (
     user_invite_create,
     user_invite_redeem,
 )
-from projectify.workspace import models
 from projectify.workspace.models import (
     ChatMessage,
     Label,
+    Project,
+    Section,
+    SubTask,
+    Task,
+    TaskLabel,
     TeamMember,
     TeamMemberInvite,
+    TeamMemberRoles,
     Workspace,
 )
 from projectify.workspace.selectors.team_member import (
@@ -212,7 +217,7 @@ def now() -> datetime:
 
 
 @pytest.fixture
-def workspace(faker: Faker, user: User) -> models.Workspace:
+def workspace(faker: Faker, user: User) -> Workspace:
     """Return workspace."""
     workspace = workspace_create(
         title=faker.company(),
@@ -233,7 +238,7 @@ def workspace(faker: Faker, user: User) -> models.Workspace:
 
 
 @pytest.fixture
-def other_workspace(user: User) -> models.Workspace:
+def other_workspace(user: User) -> Workspace:
     """Return workspace."""
     workspace = workspace_create(
         title="Other workspace",
@@ -253,9 +258,7 @@ def other_workspace(user: User) -> models.Workspace:
 
 
 @pytest.fixture
-def unrelated_workspace(
-    faker: Faker, unrelated_user: User
-) -> models.Workspace:
+def unrelated_workspace(faker: Faker, unrelated_user: User) -> Workspace:
     """Return workspace."""
     workspace = workspace_create(
         title=faker.company(),
@@ -277,12 +280,12 @@ def unrelated_workspace(
 
 @pytest.fixture
 def team_member_invite(
-    workspace: models.Workspace,
+    workspace: Workspace,
     team_member: TeamMember,
     # TODO user_invite needed to redeem invite, right? verify.
     user_invite: UserInvite,
     faker: Faker,
-) -> models.TeamMemberInvite:
+) -> TeamMemberInvite:
     """Return team member invite."""
     email: str = faker.email()
     invite = team_member_invite_create(
@@ -293,7 +296,7 @@ def team_member_invite(
 
 
 @pytest.fixture
-def team_member(workspace: models.Workspace, user: User) -> models.TeamMember:
+def team_member(workspace: Workspace, user: User) -> TeamMember:
     """Return team member with owner status."""
     team_member = team_member_find_for_workspace(
         workspace=workspace, user=user
@@ -303,14 +306,12 @@ def team_member(workspace: models.Workspace, user: User) -> models.TeamMember:
 
 
 @pytest.fixture
-def other_team_member(
-    workspace: models.Workspace, other_user: User
-) -> models.TeamMember:
+def other_team_member(workspace: Workspace, other_user: User) -> TeamMember:
     """Return team member for other_user."""
     team_member = workspace_add_user(
         workspace=workspace,
         user=other_user,
-        role=models.TeamMemberRoles.OWNER,
+        role=TeamMemberRoles.OWNER,
     )
     assert team_member
     return team_member
@@ -318,8 +319,8 @@ def other_team_member(
 
 @pytest.fixture
 def unrelated_team_member(
-    unrelated_workspace: models.Workspace, unrelated_user: User
-) -> models.TeamMember:
+    unrelated_workspace: Workspace, unrelated_user: User
+) -> TeamMember:
     """Return team member for other_user."""
     team_member = team_member_find_for_workspace(
         workspace=unrelated_workspace, user=unrelated_user
@@ -332,8 +333,8 @@ def unrelated_team_member(
 def project(
     other_team_member: TeamMember,
     faker: Faker,
-    workspace: models.Workspace,
-) -> models.Project:
+    workspace: Workspace,
+) -> Project:
     """Return project."""
     return project_create(
         who=other_team_member.user,
@@ -347,9 +348,7 @@ def project(
 
 
 @pytest.fixture
-def other_project_same_workspace(
-    user: User, workspace: models.Workspace
-) -> models.Project:
+def other_project_same_workspace(user: User, workspace: Workspace) -> Project:
     """Return project that belongs to the normal workspace."""
     return project_create(
         who=user,
@@ -361,9 +360,7 @@ def other_project_same_workspace(
 
 
 @pytest.fixture
-def other_project(
-    user: User, other_workspace: models.Workspace
-) -> models.Project:
+def other_project(user: User, other_workspace: Workspace) -> Project:
     """
     Return project that belongs to the other workspace.
 
@@ -382,8 +379,8 @@ def other_project(
 def unrelated_project(
     unrelated_team_member: TeamMember,
     faker: Faker,
-    unrelated_workspace: models.Workspace,
-) -> models.Project:
+    unrelated_workspace: Workspace,
+) -> Project:
     """Return an unrelated project."""
     return project_create(
         who=unrelated_team_member.user,
@@ -397,10 +394,10 @@ def unrelated_project(
 
 @pytest.fixture
 def archived_project(
-    workspace: models.Workspace,
+    workspace: Workspace,
     other_team_member: TeamMember,
     faker: Faker,
-) -> models.Project:
+) -> Project:
     """Return archived project."""
     project = project_create(
         who=other_team_member.user,
@@ -418,13 +415,13 @@ def archived_project(
 
 @pytest.fixture
 def section(
-    project: models.Project,
+    project: Project,
     # Another team member creates it, so that we can correctly assess
     # permissions and not implicitly associate the main user with this
     # workspace
     other_team_member: TeamMember,
     faker: Faker,
-) -> models.Section:
+) -> Section:
     """Return section."""
     return section_create(
         who=other_team_member.user,
@@ -435,10 +432,10 @@ def section(
 
 @pytest.fixture
 def other_section(
-    project: models.Project,
+    project: Project,
     team_member: TeamMember,
     faker: Faker,
-) -> models.Section:
+) -> Section:
     """Create another section."""
     return section_create(
         who=team_member.user,
@@ -449,10 +446,10 @@ def other_section(
 
 @pytest.fixture
 def other_other_section(
-    project: models.Project,
+    project: Project,
     team_member: TeamMember,
     faker: Faker,
-) -> models.Section:
+) -> Section:
     """Create yet another section."""
     return section_create(
         who=team_member.user,
@@ -463,10 +460,10 @@ def other_other_section(
 
 @pytest.fixture
 def unrelated_section(
-    unrelated_project: models.Project,
+    unrelated_project: Project,
     unrelated_team_member: TeamMember,
     faker: Faker,
-) -> models.Section:
+) -> Section:
     """Return unrelated section."""
     return section_create(
         who=unrelated_team_member.user,
@@ -477,10 +474,10 @@ def unrelated_section(
 
 @pytest.fixture
 def task(
-    section: models.Section,
-    team_member: models.TeamMember,
+    section: Section,
+    team_member: TeamMember,
     faker: Faker,
-) -> models.Task:
+) -> Task:
     """Return task."""
     return task_create(
         who=team_member.user,
@@ -493,9 +490,7 @@ def task(
 
 
 @pytest.fixture
-def other_task(
-    task: models.Task, section: models.Section, team_member: models.TeamMember
-) -> models.Task:
+def other_task(task: Task, section: Section, team_member: TeamMember) -> Task:
     """Return another task belonging to the same section."""
     # Make sure that this is created AFTER `task`
     del task
@@ -508,9 +503,9 @@ def other_task(
 
 @pytest.fixture
 def unrelated_task(
-    unrelated_section: models.Section,
-    unrelated_team_member: models.TeamMember,
-) -> models.Task:
+    unrelated_section: Section,
+    unrelated_team_member: TeamMember,
+) -> Task:
     """Return another task belonging to the same section."""
     return task_create(
         who=unrelated_team_member.user,
@@ -521,8 +516,8 @@ def unrelated_task(
 
 @pytest.fixture
 def label(
-    faker: Faker, workspace: models.Workspace, team_member: TeamMember
-) -> models.Label:
+    faker: Faker, workspace: Workspace, team_member: TeamMember
+) -> Label:
     """Return a label."""
     return label_create(
         workspace=workspace,
@@ -535,9 +530,9 @@ def label(
 @pytest.fixture
 def unrelated_label(
     faker: Faker,
-    unrelated_workspace: models.Workspace,
+    unrelated_workspace: Workspace,
     unrelated_team_member: TeamMember,
-) -> models.Label:
+) -> Label:
     """Create an unrelated label."""
     return label_create(
         workspace=unrelated_workspace,
@@ -563,17 +558,15 @@ def labels(workspace: Workspace, team_member: TeamMember) -> list[Label]:
 
 
 @pytest.fixture
-def task_label(task: models.Task, label: models.Label) -> models.TaskLabel:
+def task_label(task: Task, label: Label) -> TaskLabel:
     """Return a label."""
     # TODO we will use a task_add_label service here in the future
     task.labels.add(label)
-    return models.TaskLabel.objects.get(task=task)
+    return TaskLabel.objects.get(task=task)
 
 
 @pytest.fixture
-def sub_task(
-    faker: Faker, task: models.Task, team_member: TeamMember
-) -> models.SubTask:
+def sub_task(faker: Faker, task: Task, team_member: TeamMember) -> SubTask:
     """Return subtask."""
     return sub_task_create(
         who=team_member.user,
@@ -586,8 +579,8 @@ def sub_task(
 
 @pytest.fixture
 def chat_message(
-    task: models.Task,
-    team_member: models.TeamMember,
+    task: Task,
+    team_member: TeamMember,
     faker: Faker,
 ) -> ChatMessage:
     """Return ChatMessage instance."""

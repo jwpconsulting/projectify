@@ -7,16 +7,15 @@ import uuid
 from typing import TYPE_CHECKING
 
 from django.conf import settings
-from django.db import models
+from django.db import models, transaction
 from django.utils.translation import gettext_lazy as _
 
-from projectify.lib.models import BaseModel
+from projectify.lib.models import BaseModel, TitleDescriptionModel
 
 from .const import TeamMemberRoles
 from .label import Label
 from .project import Project
 from .section import Section
-from .sub_task import SubTask
 from .task import Task
 from .team_member_invite import TeamMemberInvite
 from .workspace import Workspace
@@ -26,6 +25,57 @@ if TYPE_CHECKING:
     from django.db.models.manager import RelatedManager  # noqa: F401
 
     from projectify.user.models import User, UserInvite  # noqa: F401
+
+
+class SubTask(TitleDescriptionModel, BaseModel):
+    """SubTask, belongs to Task."""
+
+    task = models.ForeignKey[Task](
+        Task,
+        on_delete=models.CASCADE,
+    )
+    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+    done = models.BooleanField(
+        default=False,
+        help_text=_("Designate whether this sub task is done"),
+    )
+
+    # Ordering related
+    _order: int
+
+    def move_to(self, order: int) -> None:
+        """
+        Move to specified order n within task.
+
+        No save required.
+        """
+        neighbor_subtasks = self.task.subtask_set.select_for_update()
+        with transaction.atomic():
+            # Force queryset to be evaluated to lock them for the time of
+            # this transaction
+            len(neighbor_subtasks)
+            current_task = self.task
+            # Django docs wrong, need to cast to list
+            order_list = list(current_task.get_subtask_order())
+            # The list is ordered by pk, which is not uuid for us
+            current_object_index = order_list.index(self.pk)
+            # Mutate to perform move operation
+            order_list.insert(order, order_list.pop(current_object_index))
+            # Set new order
+            current_task.set_subtask_order(order_list)
+            current_task.save()
+
+    class Meta:
+        """Meta."""
+
+        order_with_respect_to = "task"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["task", "_order"],
+                name="unique_sub_task_order",
+                deferrable=models.Deferrable.DEFERRED,
+            )
+        ]
 
 
 class TeamMember(BaseModel):
@@ -41,6 +91,7 @@ class TeamMember(BaseModel):
         on_delete=models.CASCADE,
     )
     role = models.CharField(
+        # XXX why 11?
         max_length=11,
         choices=TeamMemberRoles.choices,
         default=TeamMemberRoles.OBSERVER,
