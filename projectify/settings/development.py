@@ -74,31 +74,18 @@ class Development(Base):
     # match Django's ./manage.py runserver port
     FRONTEND_URL = "http://localhost:8000"
 
-    # Workaround for connecting over .local domain
-    # ============================================
-    #
-    # Add this if you are serving the frontend from a local network host other
-    # than localhost, and vite is proxying the backend
-    # LOCAL_DOMAIN = "blabla"
-    # FRONTEND_URL = f"http://{LOCAL_DOMAIN}.local:3000/"
-    # CSRF_COOKIE_SECURE = False
-    # CSRF_COOKIE_SAMESITE = "Lax"
-    # XXX this might have to revised, not sure what the correct suffix is
-    # MEDIA_URL = f"http://{LOCAL_DOMAIN}.local:3000/media/"
-
-    # TODO remove when Svelte frontend is gone
-    CSRF_TRUSTED_ORIGINS = (
-        # Vite dev
-        "http://localhost:3000",
-        # Caddy rev proxy
-        "http://localhost:5000",
-        # See above, add this if you want to serve from another local domain
-        # f"http://{LOCAL_DOMAIN}.local:3000",
-        # Storybook
-        "http://localhost:6006",
-        # See above
-        # f"http://{LOCAL_DOMAIN}.local:6006",
-    )
+    # CSRF Cookie settings
+    # ====================
+    # Needed for Safari, since it refuses to set cookies when
+    # receiving them from localhost, see:
+    # https://github.com/lucia-auth/lucia/discussions/1755#discussioncomment-11496827
+    # and
+    # draft-ietf-httpbis-rfc6265bis-latest
+    # https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html#name-top-level-requests-with-uns
+    # > 4.1.2.5. The Secure Attribute
+    # > The Secure attribute limits the scope of the cookie to "secure"
+    # channels (where "secure" is defined by the user agent). […]
+    CSRF_COOKIE_SECURE = False
 
     # Email
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
