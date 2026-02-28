@@ -16,14 +16,6 @@ else
     exit 1
 fi
 
-if pyright "$target"
-then
-    echo "pyright ran successfully"
-else
-    echo "There was an error running pyright"
-    exit 1
-fi
-
 if ruff format "$target"; then
     echo "ruff format ran successfully"
 else

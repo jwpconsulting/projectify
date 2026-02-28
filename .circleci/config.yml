@@ -105,14 +105,6 @@ jobs:
       - run:
           name: Run mypy
           command: uv run mypy .
-  backend_pyright:
-    executor: python
-    working_directory: ~/projectify
-    steps:
-      - prepare_uv
-      - run:
-          name: Run pyright
-          command: uv run pyright .
   backend_collectstatic:
     executor: python
     working_directory: ~/projectify
@@ -181,7 +173,6 @@ workflows:
       - backend_lint
       - backend_djlint
       - backend_mypy
-      - backend_pyright
       - backend_tests
       - backend_seeddb
       - backend_collectstatic
