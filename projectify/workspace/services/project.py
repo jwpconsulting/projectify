@@ -10,8 +10,7 @@ from django.utils.timezone import now
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
-from projectify.workspace.models import Project
-from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models import Project, Workspace
 
 
 # Create

@@ -12,7 +12,8 @@ from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import BaseModel
 
-from .workspace import Workspace as Workspace
+if TYPE_CHECKING:
+    from . import Workspace  # noqa: F401
 
 # TODO Here we could be using __all__
 
@@ -34,8 +35,8 @@ class Label(BaseModel):
     color = models.PositiveBigIntegerField(
         help_text=_("Color index"),
     )
-    workspace = models.ForeignKey[Workspace](
-        Workspace,
+    workspace = models.ForeignKey["Workspace"](
+        "Workspace",
         on_delete=models.CASCADE,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)

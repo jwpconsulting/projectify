@@ -10,7 +10,7 @@ from uuid import UUID
 from projectify.corporate.models import Customer
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
-from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models import Workspace
 
 from ..types import CustomerSubscriptionStatus, WorkspaceFeatures
 
