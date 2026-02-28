@@ -12,7 +12,6 @@ from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import BaseModel, TitleDescriptionModel
 
-from .task import Task
 from .types import GetOrder, SetOrder
 
 if TYPE_CHECKING:
@@ -20,7 +19,10 @@ if TYPE_CHECKING:
 
     from projectify.user.models import User  # noqa: F401
 
-    from . import Project  # noqa: F401
+    from . import (
+        Project,  # noqa: F401
+        Task,
+    )
 
 
 class Section(TitleDescriptionModel, BaseModel):

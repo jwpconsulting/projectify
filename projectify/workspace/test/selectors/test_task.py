@@ -6,10 +6,10 @@
 import pytest
 
 from projectify.user.models import User
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.selectors.task import task_find_by_task_uuid
 from pytest_types import DjangoAssertNumQueries
+
+from ...models import Task, Workspace
+from ...selectors.task import task_find_by_task_uuid
 
 
 @pytest.mark.django_db
