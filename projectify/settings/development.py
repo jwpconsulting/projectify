@@ -19,16 +19,21 @@ from .base import Base
 
 
 def add_dev_middleware(
-    middleware: Sequence[str], debug_toolbar: bool
+    middleware: Sequence[str], debug_toolbar: bool, browser_reload: bool
 ) -> Iterable[str]:
-    """Add the debug toolbar to debug middleware."""
+    """
+    Add the debug and reload middleware after the gzip mdware.
+
+    Control with `debug_toolbar` and `browser_reload`.
+    """
     gzip_middleware = "django.middleware.gzip.GZipMiddleware"
     for m in middleware:
         if m == gzip_middleware:
             yield m
             if debug_toolbar:
                 yield "debug_toolbar.middleware.DebugToolbarMiddleware"
-            yield "django_browser_reload.middleware.BrowserReloadMiddleware"
+            if browser_reload:
+                yield "django_browser_reload.middleware.BrowserReloadMiddleware"
         else:
             yield m
 
@@ -141,5 +146,7 @@ class Development(Base):
         if cls.DEBUG_TOOLBAR:
             cls.INSTALLED_APPS = (*cls.INSTALLED_APPS, "debug_toolbar")
         cls.MIDDLEWARE = list(
-            add_dev_middleware(Base.MIDDLEWARE, cls.DEBUG_TOOLBAR)
+            add_dev_middleware(
+                Base.MIDDLEWARE, cls.DEBUG_TOOLBAR, cls.BROWSER_RELOAD
+            )
         )
