@@ -18,12 +18,8 @@ from django.db.models import (
 from django.db.models.functions import NullIf
 
 from projectify.user.models import User
-from projectify.workspace.models.team_member import TeamMember
 
-from ..models.chat_message import ChatMessage
-from ..models.label import Label
-from ..models.project import Project
-from ..models.task import Task
+from ..models import ChatMessage, Label, Project, Task, TeamMember
 from .labels import labels_annotate_with_colors
 
 TaskDetailQuerySet: QuerySet[Task] = (

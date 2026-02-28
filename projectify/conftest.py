@@ -48,6 +48,7 @@ from projectify.user.services.user_invite import (
 )
 from projectify.workspace import models
 from projectify.workspace.models import (
+    ChatMessage,
     Label,
     TeamMember,
     TeamMemberInvite,
@@ -588,12 +589,10 @@ def chat_message(
     task: models.Task,
     team_member: models.TeamMember,
     faker: Faker,
-) -> models.ChatMessage:
+) -> ChatMessage:
     """Return ChatMessage instance."""
     return chat_message_create(
-        who=team_member.user,
-        task=task,
-        text=faker.paragraph(),
+        who=team_member.user, task=task, text=faker.paragraph()
     )
 
 
