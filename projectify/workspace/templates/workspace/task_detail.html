@@ -113,7 +113,7 @@
                                     {% icon "check" size=4 %}
                                 {% endif %}
                             </td>
-                            <td class="px-2 py-1">{{ sub_task.title }}</td>
+                            <td class="px-2 py-1 truncate">{{ sub_task.title }}</td>
                             <td>
                                 {% circle_anchor label=_("Edit sub task") icon_style="pencil" href="dashboard:tasks:update-sub-task" title=_("Edit sub task") size=4 task_uuid=task.uuid sub_task_uuid=sub_task.uuid %}
                             </td>
