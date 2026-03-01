@@ -19,7 +19,7 @@ from ..services.chat_message import chat_message_create
 from ..services.label import label_create
 from ..services.project import project_create
 from ..services.section import section_create
-from ..services.task import task_create
+from ..services.task import task_create_nested
 from ..services.team_member import team_member_change_role
 from ..services.team_member_invite import team_member_invite_create
 
@@ -216,7 +216,7 @@ class TestTrialRules:
         assert validate_perm("workspace.create_task", user, workspace)
         customer_cancel_subscription(customer=workspace.customer)
         assert validate_perm("workspace.create_task", user, workspace)
-        task_create(
+        task_create_nested(
             section=section,
             title="task title",
             who=team_member.user,

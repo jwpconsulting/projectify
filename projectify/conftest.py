@@ -68,7 +68,7 @@ from projectify.workspace.services.project import (
     project_create,
 )
 from projectify.workspace.services.section import section_create
-from projectify.workspace.services.task import task_create
+from projectify.workspace.services.task import task_create_nested
 from projectify.workspace.services.team_member_invite import (
     team_member_invite_create,
 )
@@ -477,7 +477,7 @@ def task(
     faker: Faker,
 ) -> Task:
     """Return task."""
-    return task_create(
+    return task_create_nested(
         who=team_member.user,
         section=section,
         title=faker.sentence(),
@@ -492,7 +492,7 @@ def other_task(task: Task, section: Section, team_member: TeamMember) -> Task:
     """Return another task belonging to the same section."""
     # Make sure that this is created AFTER `task`
     del task
-    return task_create(
+    return task_create_nested(
         who=team_member.user,
         section=section,
         title="I am the other task",
@@ -505,7 +505,7 @@ def unrelated_task(
     unrelated_team_member: TeamMember,
 ) -> Task:
     """Return another task belonging to the same section."""
-    return task_create(
+    return task_create_nested(
         who=unrelated_team_member.user,
         section=unrelated_section,
         title="I am an unrelated task",

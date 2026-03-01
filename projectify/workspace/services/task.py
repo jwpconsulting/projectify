@@ -90,7 +90,7 @@ def task_create_nested(
     section: Section,
     title: str,
     # TODO make label optional
-    labels: Sequence[Label],
+    labels: Optional[Sequence[Label]] = None,
     description: Optional[str] = None,
     due_date: Optional[datetime] = None,
     assignee: Optional[TeamMember] = None,
@@ -104,7 +104,8 @@ def task_create_nested(
         assignee=assignee,
         due_date=due_date,
     )
-    task_assign_labels(task=task, labels=labels)
+    if labels is not None:
+        task_assign_labels(task=task, labels=labels)
     return task
 
 
