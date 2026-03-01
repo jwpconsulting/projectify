@@ -47,7 +47,9 @@
             <tbody class="contents">
                 {% for task in section.task_set.all %}
                     <tr class="flex w-full flex-wrap items-center gap-1 rounded-lg border border-border p-3 lg:contents"
-                        aria-labelledby="task-{{ task.uuid }}-title">
+                        id="task-{{ task.uuid }}-row"
+                        aria-labelledby="task-{{ task.uuid }}-title"
+                        x-data="{ menuOpen: false }">
                         <td class="flex flex-row items-center gap-2">
                             <form action="{% url 'dashboard:projects:detail' section.project.uuid %}"
                                   method="post"
@@ -104,13 +106,14 @@
                                 <p class="htmx-indicator">...</p>
                             </form>
                             <a aria-label="{% translate "Task menu" %}"
-                               hx-boost
                                href="{% url "dashboard:tasks:actions" task.uuid %}"
-                               class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background">
-                                {% icon "dots-horizontal" %}
-                            </a>
+                               class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background"
+                               hx-get="{% url "dashboard:tasks:actions" task.uuid %}"
+                               hx-target="#task-{{ task.uuid }}-menu"
+                               hx-swap="outerHTML">{% icon "dots-horizontal" %}</a>
                         </td>
                     </tr>
+                    <tr id="task-{{ task.uuid }}-menu" class="hidden"></tr>
                 {% empty %}
                     <tr class="contents">
                         <td class="lg:col-span-3">

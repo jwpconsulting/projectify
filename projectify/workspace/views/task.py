@@ -16,7 +16,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods, require_POST
 
-from projectify.lib.htmx import HttpResponseClientRedirect
+from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 
@@ -467,6 +467,10 @@ def task_actions(
         "sections": task.section.project.section_set.all(),
         "project": task.section.project,
     }
+
+    if request.htmx:
+        return render(request, "workspace/task_actions_dropdown.html", context)
+
     return render(request, "workspace/task_actions.html", context)
 
 
@@ -476,4 +480,4 @@ def task_delete_view(
     """Delete task."""
     task = get_object(request, task_uuid)
     task_delete(who=request.user, task=task)
-    return HttpResponseClientRedirect(task.section.get_absolute_url())
+    return HttpResponseClientRefresh()
