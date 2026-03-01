@@ -40,47 +40,6 @@ def task_assign_labels(*, task: Task, labels: Sequence[Label]) -> None:
             )
         task.labels.set(intersection)
 
-    # TODO maybe it makes more sense to fire signals from serializers,
-    # not manually patch things like the following...
-    # 2023-11-28: Now that I have a lot of success refactoring into
-    # services, this should be handled in a service
-
-
-# Create
-def task_create(
-    *,
-    who: User,
-    section: Section,
-    title: str,
-    description: Optional[str] = None,
-    due_date: Optional[datetime] = None,
-    assignee: Optional[TeamMember] = None,
-) -> Task:
-    """Add a task to this section."""
-    validate_perm(
-        "workspace.create_task",
-        who,
-        section.project.workspace,
-    )
-    # XXX Implicit N+1 here
-    workspace = section.project.workspace
-    if assignee and assignee.workspace != workspace:
-        raise serializers.ValidationError(
-            {
-                "assignee": _(
-                    "The team member to be assigned belongs to a different workspace"
-                )
-            }
-        )
-    return Task.objects.create(
-        section=section,
-        title=title,
-        description=description,
-        due_date=due_date,
-        workspace=workspace,
-        assignee=assignee,
-    )
-
 
 # TODO make this the regular task_create
 @transaction.atomic
@@ -96,13 +55,28 @@ def task_create_nested(
     assignee: Optional[TeamMember] = None,
 ) -> Task:
     """Create a task. This will replace the above task_create method."""
-    task = task_create(
-        who=who,
+    validate_perm(
+        "workspace.create_task",
+        who,
+        section.project.workspace,
+    )
+    # XXX Implicit N+1 here
+    workspace = section.project.workspace
+    if assignee and assignee.workspace != workspace:
+        raise serializers.ValidationError(
+            {
+                "assignee": _(
+                    "The team member to be assigned belongs to a different workspace"
+                )
+            }
+        )
+    task = Task.objects.create(
         section=section,
         title=title,
         description=description,
-        assignee=assignee,
         due_date=due_date,
+        workspace=workspace,
+        assignee=assignee,
     )
     if labels is not None:
         task_assign_labels(task=task, labels=labels)
@@ -111,6 +85,7 @@ def task_create_nested(
 
 # Update
 @transaction.atomic
+# TODO rename task_update
 def task_update_nested(
     *,
     who: User,
