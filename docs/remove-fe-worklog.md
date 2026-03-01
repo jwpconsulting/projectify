@@ -592,3 +592,101 @@ for s in backend/projectify/templates/heroicons/*.svg
       $s
 end
 ```
+
+# 2026-03-01
+
+I've launched the new version last week. It's going well so far. I wanted to
+update this worklog with pagespeed insights:
+
+![Landing page PageSpeed insights for mobile from 2026-03-01](./lighthouse_2026-03-01_mobile.png)
+![Landing page Pagespeed insights for desktop from 2026-03-01](./lighthouse_2026-03-01_desktop.png)
+
+| Measurement    | Mobile | Browser |
+| -------------- | ------ | ------- |
+| Performance    | 99     | 100     |
+| Accessibility  | 98     | 98      |
+| Best Practices | 100    | 100     |
+| SEO            | 100    | 100     |
+
+For some reason, the accessibility went up.
+
+![lighthouse_2026-03-01_desktop_insights](./lighthouse_2026-03-01_desktop_insights.png)
+
+For the **Browser** target, PageSpeed Insights suggests:
+
+- Improve image delivery _Est savings of 537 KiB_
+- Render blocking requests _Est savings of 170 ms_
+- LCP request discovery: _fetchpriority=high should be applied_ for landing
+  page hero image
+- Network dependency tree: For the Tailwind styles and htmx
+- Use efficient cache lifetimes: Suggested for _external_links/primary.svg_
+  (used for external links anchor)
+
+## Firefox network tab measurements
+
+Again, I'm comparing to the previously noted values.
+
+When accessing `https://www.projectifyapp.com/`, I see the following values in
+the network tab in a cache-less load:
+
+- 15 requests
+- 805.11 kB / 657.47 transferred
+- Finish: 1.19 s
+- `DOMContentLoaded`: 367 ms
+- `load`: 1.03 ms
+
+With throttling set to "Good 3G", I see:
+
+- 15 requests
+- 793.71 kB / 647.98 kB transferred
+- Finish: 3.85 ms
+- `DOMContentLoaded`: 812 ms
+- `load`: 3.85
+
+Then, for `https://www.projectifyapp.com/dashboard/`:
+
+- 23 requests
+- 1.02 MB / 336.83 kB transferred
+- Finish: 965 ms
+- `DOMContentLoaded`: 669 ms
+- `load`: 964 ms
+
+With throttling set to "Good 3G", I see:
+
+- 36 requests
+- 1.20 MB / 319.61 kB transferred
+- Finish: 2.09 s
+- `DOMContentLoaded`: 756 ms
+- `load`: 2.56 s
+
+## PageSpeed Insights before and after
+
+| Measurement    | Mobile before | Mobile after | Browser before | Browser after |
+| -------------- | ------------- | ------------ | -------------- | ------------- |
+| Performance    | 98            | 99           | 100            | 100           |
+| Accessibility  | 93            | 98           | 98             | 98            |
+| Best Practices | 100           | 100          | 100            | 100           |
+| SEO            | 100           | 100          | 100            | 100           |
+
+## Firefox before after
+
+| Page             | Metric                     | Previous             | New                   |
+| ---------------- | -------------------------- | -------------------- | --------------------- |
+| **Landing Page** | Requests                   | 84                   | 15                    |
+|                  | Transferred                | 1.04 MB / 427.63 kB  | 805.11 kB / 657.47 kB |
+|                  | Normal - Finish            | 961 ms               | 1.19 s                |
+|                  | Normal - DOMContentLoaded  | 390 ms               | 367 ms                |
+|                  | Good 3G - Finish           | 2.52 ms              | 3.85 ms               |
+|                  | Good 3G - DOMContentLoaded | 572 ms               | 812 ms                |
+| **Dashboard**    | Requests                   | 87                   | 23                    |
+|                  | Transferred                | 712.68kb / 319.08 kb | 1.02 MB / 336.83 kB   |
+|                  | Normal - Finish            | 2.79s                | 965 ms                |
+|                  | Normal - DOMContentLoaded  | 170 ms               | 669 ms                |
+|                  | Good 3G - Finish           | 3.28 s               | 2.09 s                |
+|                  | Good 3G - DOMContentLoaded | 222 ms               | 756 ms                |
+
+## Conclusion
+
+While the request count went down, the finish durations and transfer volume are
+a mixed bag. For the dashboard, the finish time went down. For the landing
+page, the transfer volume went down.
