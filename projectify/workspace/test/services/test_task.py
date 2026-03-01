@@ -13,7 +13,7 @@ from projectify.workspace.services.label import label_create
 from ...models import Label, Project, Section, Task, TeamMember, Workspace
 from ...services.task import (
     task_assign_labels,
-    task_create_nested,
+    task_create,
     task_mark_done,
     task_move_after,
     task_update_nested,
@@ -69,14 +69,14 @@ def test_create_task(
 ) -> None:
     """Test adding tasks to a project."""
     count = section.task_set.count()
-    task = task_create_nested(
+    task = task_create(
         who=team_member.user,
         section=section,
         title="foo",
         description="bar",
     )
     assert section.task_set.count() == count + 1
-    task2 = task_create_nested(
+    task2 = task_create(
         who=team_member.user,
         section=section,
         title="foo",
@@ -94,7 +94,7 @@ def test_create_task_unrelated_teammember(
 ) -> None:
     """Test adding tasks to a project."""
     with pytest.raises(exceptions.ValidationError) as e:
-        task_create_nested(
+        task_create(
             who=team_member.user,
             section=section,
             title="foo",
@@ -109,7 +109,7 @@ def test_task_create_nested(
     section: Section,
 ) -> None:
     """Test task_create_nested."""
-    task = task_create_nested(
+    task = task_create(
         who=team_member.user,
         section=section,
         title="hello",
@@ -128,7 +128,7 @@ def test_add_task_due_date(
     now: datetime,
 ) -> None:
     """Test adding a task with a due date."""
-    task = task_create_nested(
+    task = task_create(
         section=section,
         who=team_member.user,
         title="foo",
@@ -171,7 +171,7 @@ def test_moving_task_within_section(
     team_member: TeamMember,
 ) -> None:
     """Test moving a task around within the same section."""
-    other_task = task_create_nested(
+    other_task = task_create(
         who=team_member.user,
         title="don't care",
         section=section,
@@ -209,7 +209,7 @@ def test_moving_task_to_other_section(
     team_member: TeamMember,
 ) -> None:
     """Test moving a task around to another section."""
-    other_task = task_create_nested(
+    other_task = task_create(
         who=team_member.user,
         title="don't care",
         section=section,
@@ -218,7 +218,7 @@ def test_moving_task_to_other_section(
         task,
         other_task,
     ]
-    other_section_task = task_create_nested(
+    other_section_task = task_create(
         who=team_member.user,
         title="don't care",
         section=other_section,

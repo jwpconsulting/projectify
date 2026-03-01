@@ -29,7 +29,7 @@ from ..selectors.task import TaskDetailQuerySet, task_find_by_task_uuid
 from ..selectors.team_member import team_member_find_for_workspace
 from ..selectors.workspace import workspace_find_for_user
 from ..services.task import (
-    task_create_nested,
+    task_create,
     task_delete,
     task_move_after,
     task_move_in_direction,
@@ -131,7 +131,7 @@ class TaskCreateForm(forms.Form):
 
 @platform_view
 @require_http_methods(["GET", "POST"])
-def task_create(
+def task_create_view(
     request: AuthenticatedHttpRequest, section_uuid: UUID
 ) -> HttpResponse:
     """Create a task. Render form error if unsuccessful."""
@@ -170,7 +170,7 @@ def task_create(
             status=400,
         )
 
-    task = task_create_nested(
+    task = task_create(
         who=request.user,
         section=section,
         title=form.cleaned_data["title"],

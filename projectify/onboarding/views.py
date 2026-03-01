@@ -37,10 +37,7 @@ from projectify.workspace.selectors.workspace import (
 from projectify.workspace.services.label import label_create
 from projectify.workspace.services.project import project_create
 from projectify.workspace.services.section import section_create
-from projectify.workspace.services.task import (
-    task_create_nested,
-    task_update_nested,
-)
+from projectify.workspace.services.task import task_create, task_update_nested
 from projectify.workspace.services.workspace import workspace_create
 
 
@@ -299,7 +296,7 @@ def new_task(
 
     form = TaskForm(request.POST)
     if form.is_valid():
-        task = task_create_nested(
+        task = task_create(
             who=request.user,
             section=section,
             title=form.cleaned_data["title"],

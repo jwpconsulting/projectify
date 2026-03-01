@@ -24,7 +24,7 @@ from projectify.workspace.views.section import (
 )
 from projectify.workspace.views.task import (
     task_actions,
-    task_create,
+    task_create_view,
     task_delete_view,
     task_detail,
     task_move,
@@ -157,7 +157,9 @@ section_patterns = (
     path("<uuid:section_uuid>/update", section_update_view, name="update"),
     path("<uuid:section_uuid>/delete", section_delete_view, name="delete"),
     # Create task within section
-    path("<uuid:section_uuid>/create-task", task_create, name="create-task"),
+    path(
+        "<uuid:section_uuid>/create-task", task_create_view, name="create-task"
+    ),
 )
 task_patterns = (
     path("<uuid:task_uuid>", task_detail, name="detail"),

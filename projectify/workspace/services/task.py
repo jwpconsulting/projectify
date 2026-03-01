@@ -41,9 +41,8 @@ def task_assign_labels(*, task: Task, labels: Sequence[Label]) -> None:
         task.labels.set(intersection)
 
 
-# TODO make this the regular task_create
 @transaction.atomic
-def task_create_nested(
+def task_create(
     *,
     who: User,
     section: Section,

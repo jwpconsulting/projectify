@@ -15,7 +15,7 @@ import pytest
 from pytest_types import DjangoAssertNumQueries
 
 from ...models import Label, Project, Section, Task, TeamMember, Workspace
-from ...services.task import task_create_nested
+from ...services.task import task_create
 
 pytestmark = pytest.mark.django_db
 
@@ -212,7 +212,7 @@ class TestProjectDetailViewActions:
     ) -> None:
         """Test moving tasks up and down within a section."""
         section = task.section
-        task2 = task_create_nested(
+        task2 = task_create(
             who=team_member.user, section=task.section, title="Second task"
         )
         assert list(section.task_set.values_list("pk", flat=True)) == [

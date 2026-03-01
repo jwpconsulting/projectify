@@ -34,7 +34,7 @@ from projectify.workspace.services.project import (
     project_create,
     project_delete,
 )
-from projectify.workspace.services.task import task_create_nested
+from projectify.workspace.services.task import task_create
 from projectify.workspace.services.team_member_invite import (
     team_member_invite_create,
 )
@@ -174,7 +174,7 @@ class Command(BaseCommand):
         )
 
         # Used in development team solutions page
-        task_create_nested(
+        task_create(
             who=self.owner,
             section=self.in_progress_section,
             title="Beta testing for level 6",
@@ -196,7 +196,7 @@ class Command(BaseCommand):
             ),
         ]
         for title, description, label_name in tasks_data:
-            task_create_nested(
+            task_create(
                 who=self.owner,
                 section=self.in_progress_section,
                 title=title,
@@ -206,7 +206,7 @@ class Command(BaseCommand):
             )
 
         # Used in academic solutions page
-        self.essay_task = task_create_nested(
+        self.essay_task = task_create(
             who=self.owner,
             section=self.coursework_section,
             title="Write essay for assignment",
@@ -214,7 +214,7 @@ class Command(BaseCommand):
             labels=[labels["Investigate"]],
             assignee=fake.random_element(elements=team_members),
         )
-        task_create_nested(
+        task_create(
             who=self.owner,
             section=self.coursework_section,
             title="Research methodology review",
@@ -222,7 +222,7 @@ class Command(BaseCommand):
             assignee=fake.random_element(elements=team_members),
         )
 
-        task_create_nested(
+        task_create(
             who=self.owner,
             section=self.coursework_section,
             title="Prepare presentation slides",
@@ -232,7 +232,7 @@ class Command(BaseCommand):
 
         for label_name in labels.keys():
             for _ in range(fake.random_int(min=20, max=30)):
-                task_create_nested(
+                task_create(
                     who=self.owner,
                     section=todo_section,
                     title=fake.catch_phrase(),
