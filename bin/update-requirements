@@ -10,7 +10,7 @@ then
     exit 1
 fi
 
-if ! uv export --format requirements.txt --no-emit-project --output-file requirements.txt > /dev/null; then
+if ! uv export --no-default-groups --no-sources --format requirements.txt --no-emit-project --output-file requirements.txt > /dev/null; then
     echo "uv export failed."
     exit 1
 fi
