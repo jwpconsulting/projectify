@@ -97,8 +97,7 @@ def project_detail_query_set(
 
     if task_search_query is not None:
         task_q = task_q & (
-            Q(number__icontains=task_search_query)
-            | Q(title__icontains=task_search_query)
+            Q(title__icontains=task_search_query)
             | Q(section__title__icontains=task_search_query)
             | Q(section__project__title__icontains=task_search_query)
         )

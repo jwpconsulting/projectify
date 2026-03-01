@@ -52,8 +52,6 @@
                         <td class="block">
                             <a href="{% url 'dashboard:tasks:detail' task.uuid %}"
                                class="flex flex-row items-start items-center min-w-0 gap-1 self-start sm:gap-6 lg:self-center">
-                                <span class="shrink-0 font-bold" aria-hidden="true">#{{ task.number }}</span>
-                                <span class="sr-only">{{ task.readable_number }}</span>
                                 <span class="line-clamp-3 justify-self-start hover:text-primary lg:line-clamp-1 lg:h-6"
                                       id="task-{{ task.uuid }}-title">{{ task.title }}</span>
                             </a>

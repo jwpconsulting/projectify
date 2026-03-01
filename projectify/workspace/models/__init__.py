@@ -5,7 +5,7 @@
 
 import logging
 import uuid
-from typing import TYPE_CHECKING, Any, Callable, Optional, cast
+from typing import TYPE_CHECKING, Any, Callable, Optional
 
 from django.conf import settings
 from django.db import models, transaction
@@ -47,8 +47,6 @@ class Workspace(TitleDescriptionModel, BaseModel):
         null=True,
     )
 
-    highest_task_number = models.IntegerField(default=0)
-
     # Optional annotation to show trial limits
     # Since it involves additional queries, it is None by default
     quota: Optional[WorkspaceQuota] = None
@@ -63,17 +61,6 @@ class Workspace(TitleDescriptionModel, BaseModel):
         teammemberinvite_set: RelatedManager["TeamMemberInvite"]
         label_set: RelatedManager["Label"]
         active_invites: Optional[RelatedManager["TeamMemberInvite"]]
-
-    @transaction.atomic
-    def increment_highest_task_number(self) -> int:
-        """
-        Increment and return highest task number.
-
-        Atomic.
-        """
-        qs = Workspace.objects.filter(pk=self.pk).select_for_update()
-        qs.update(highest_task_number=models.F("highest_task_number") + 1)
-        return qs.get().highest_task_number
 
     def __str__(self) -> str:
         """Return title."""
@@ -101,27 +88,6 @@ class Workspace(TitleDescriptionModel, BaseModel):
                     "Workspace title can only contain '.' or ':' if followed "
                     "by whitespace or if located at the end."
                 ),
-            ),
-        )
-
-        triggers = (
-            pgtrigger.Trigger(
-                name="ensure_correct_highest_task_number",
-                when=pgtrigger.Before,
-                operation=pgtrigger.Update,
-                func="""
-              DECLARE
-                max_task_number   INTEGER;
-              BEGIN
-                SELECT MAX(workspace_task.number) INTO max_task_number
-                FROM workspace_task
-                WHERE workspace_task.workspace_id = NEW.id;
-                IF NEW.highest_task_number < max_task_number THEN
-                    RAISE EXCEPTION 'invalid highest_task_number:  \
-                    highest_task_number cannot be lower than a task number.';
-                END IF;
-                RETURN NEW;
-              END;""",
             ),
         )
 
@@ -295,8 +261,6 @@ class Task(TitleDescriptionModel, BaseModel):
         through="workspace.TaskLabel",
     )  # type: models.ManyToManyField["Label", "TaskLabel"]
 
-    number = models.PositiveIntegerField()
-
     if TYPE_CHECKING:
         # Related fields
         subtask_set: RelatedManager["SubTask"]
@@ -309,20 +273,9 @@ class Task(TitleDescriptionModel, BaseModel):
         _order: int
         id: int
 
-    # TODO we can probably do better than any here
-    def save(self, *args: Any, **kwargs: Any) -> None:
-        """Override save to add task number."""
-        if cast(Optional[int], self.number) is None:
-            self.number = self.workspace.increment_highest_task_number()
-        super().save(*args, **kwargs)
-
     def __str__(self) -> str:
         """Return title."""
         return self.title
-
-    def readable_number(self) -> str:
-        """Return title with number. This is useful for AT."""
-        return _("Task number {task_number}").format(task_number=self.number)
 
     class Meta:
         """Meta."""
@@ -334,27 +287,9 @@ class Task(TitleDescriptionModel, BaseModel):
                 name="unique_task_order",
                 deferrable=models.Deferrable.DEFERRED,
             ),
-            models.UniqueConstraint(
-                fields=["workspace", "number"],
-                name="unique_task_number",
-                deferrable=models.Deferrable.DEFERRED,
-            ),
         ]
 
         triggers = (
-            pgtrigger.Trigger(
-                name="read_only_task_number",
-                when=pgtrigger.Before,
-                operation=pgtrigger.Update,
-                func="""
-              BEGIN
-                IF NEW.number != OLD.number THEN
-                    RAISE EXCEPTION 'invalid number: Task number \
-                        cannot be modified after inserting Task.';
-                END IF;
-                RETURN NEW;
-              END;""",
-            ),
             pgtrigger.Trigger(
                 name="ensure_correct_workspace",
                 when=pgtrigger.Before,

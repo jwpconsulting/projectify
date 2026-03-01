@@ -6,7 +6,6 @@
 from django import db
 from django.core.exceptions import ValidationError
 
-import psycopg.errors
 import pytest
 
 from ..models import ChatMessage, Label, SubTask, Task, TeamMember, Workspace
@@ -59,25 +58,6 @@ class TestWorkspace:
 
         workspace.title = "Foob. Ar"
         workspace.full_clean()
-
-    def test_increment_highest_task_number(self, workspace: Workspace) -> None:
-        """Test set_highest_task_number."""
-        num = workspace.highest_task_number
-        new = workspace.increment_highest_task_number()
-        assert new == num + 1
-        workspace.refresh_from_db()
-        assert workspace.highest_task_number == new
-
-    def test_wrong_highest_task_number(
-        self, workspace: Workspace, task: Task
-    ) -> None:
-        """Test db trigger when highest_task_number < highest child task."""
-        # Changed from db.InternalError
-        with pytest.raises(db.ProgrammingError) as e:
-            task.save()
-            workspace.highest_task_number = 0
-            workspace.save()
-        assert isinstance(e.value.__cause__, psycopg.errors.RaiseException)
 
 
 class TestLabel:
@@ -161,36 +141,6 @@ class TestChatMessage:
 
 class TestTask:
     """Test Task."""
-
-    def test_task_number(self, task: Task, other_task: Task) -> None:
-        """Test unique task number."""
-        other_task.refresh_from_db()
-        task.refresh_from_db()
-        assert other_task.number == task.number + 1
-        task.workspace.refresh_from_db()
-        assert task.workspace.highest_task_number == other_task.number
-
-    def test_save(self, task: Task) -> None:
-        """Test saving and assert number does not change."""
-        num = task.number
-        task.save()
-        assert task.number == num
-
-    def test_save_no_number(self, task: Task, workspace: Workspace) -> None:
-        """Test saving with no number."""
-        # With psycopg2 we had an db.InternalError, now with psycopg 3 it
-        # became db.ProgrammingError instead
-        with pytest.raises(db.ProgrammingError):
-            task.number = None  # type: ignore[assignment]
-            task.save()
-            workspace.refresh_from_db()
-
-    def test_save_different_number(self, task: Task) -> None:
-        """Test saving with different number."""
-        # Changed from db.InternalError, see above in test_save_no_number
-        with pytest.raises(db.ProgrammingError):
-            task.number = 154785787
-            task.save()
 
     def test_task_workspace_pgtrigger(
         self, task: Task, unrelated_workspace: Workspace

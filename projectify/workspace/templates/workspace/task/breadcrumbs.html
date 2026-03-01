@@ -10,6 +10,6 @@
     {% if current_page_label and current_page_url %}
         {% anchor href=current_page_url label=current_page_label %}
     {% else %}
-        {% anchor "dashboard:tasks:detail" aria_label=task.readable_number title=_("Task link") label=task.number task_uuid=task.uuid %}
+        {% anchor "dashboard:tasks:detail" aria_label=task.title label=task.title task_uuid=task.uuid %}
     {% endif %}
 </div>

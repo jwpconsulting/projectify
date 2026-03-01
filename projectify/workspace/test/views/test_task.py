@@ -49,7 +49,7 @@ class TestTaskCreateView:
     ) -> None:
         """Test creating a task."""
         initial_task_count = Task.objects.count()
-        with django_assert_num_queries(27):
+        with django_assert_num_queries(23):
             response = user_client.post(
                 resource_url,
                 {
