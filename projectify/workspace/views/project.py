@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
+# SPDX-FileCopyrightText: 2023-2026 JWP Consulting GK
 """Project views."""
 
 import logging
@@ -41,7 +41,7 @@ from ..services.project import (
     project_update,
 )
 from ..services.section import section_minimize
-from ..services.task import task_move_in_direction
+from ..services.task import task_mark_done, task_move_in_direction
 from ..services.team_member import (
     team_member_minimize_label_filter,
     team_member_minimize_team_member_filter,
@@ -220,6 +220,95 @@ class TaskMoveForm(forms.Form):
         )
 
 
+class TaskMarkDoneForm(forms.Form):
+    """Form for handling task mark done actions."""
+
+    done = forms.BooleanField(required=False)
+
+    def __init__(self, project: Project, *args: Any, **kwargs: Any) -> None:
+        """Initialize form with task choices from project."""
+        super().__init__(*args, **kwargs)
+        self.fields["task_uuid"] = forms.ModelChoiceField(
+            queryset=Task.objects.filter(section__project=project),
+            to_field_name="uuid",
+            required=True,
+        )
+
+
+# Factored out of project_detail_view
+def _project_detail_view_actions(
+    request: AuthenticatedHttpRequest,
+    project: Project,
+    team_member: TeamMember,
+) -> tuple[str, Optional[Section], dict[str, Any]]:
+    """Handle POST actions for project detail view."""
+    template = "workspace/project_detail.html"
+    enrich_section: Optional[Section] = None
+    context: dict[str, Any] = {}
+    match request.method, request.POST.get("action"):
+        case "POST", "minimize_section":
+            section_minimize_form = SectionMinimizeForm(
+                project=project, data=request.POST
+            )
+            if not section_minimize_form.is_valid():
+                raise BadRequest()
+
+            enrich_section = section_minimize_form.cleaned_data["section"]
+            minimized: bool = section_minimize_form.cleaned_data["minimized"]
+            # TODO
+            # setattr(enrich_section, "minimzed", minimized)
+
+            section_minimize(
+                who=request.user,
+                section=section_minimize_form.cleaned_data["section"],
+                minimized=minimized,
+            )
+
+            template = "workspace/project_detail/section.html"
+        case "POST", "move_task":
+            task_move_form = TaskMoveForm(project=project, data=request.POST)
+            if not task_move_form.is_valid():
+                raise BadRequest()
+            task: Task = task_move_form.cleaned_data["task_uuid"]
+            enrich_section = task.section
+            task_move_in_direction(
+                who=request.user,
+                task=task,
+                direction=task_move_form.cleaned_data["direction"],
+            )
+            template = "workspace/project_detail/section.html"
+        case "POST", "mark_task_done":
+            task_mark_done_form = TaskMarkDoneForm(
+                project=project, data=request.POST
+            )
+            if not task_mark_done_form.is_valid():
+                raise BadRequest()
+            task = task_mark_done_form.cleaned_data["task_uuid"]
+            enrich_section = task.section
+            task_mark_done(
+                who=request.user,
+                task=task,
+                done=task_mark_done_form.cleaned_data["done"],
+            )
+            template = "workspace/project_detail/section.html"
+        case "POST", "minimize_team_member_filter":
+            team_member_minimize_team_member_filter(
+                team_member=team_member,
+                minimized=request.POST.get("minimized") == "true",
+            )
+            template = "workspace/common/sidemenu/project_details.html"
+        case "POST", "minimize_label_filter":
+            team_member_minimize_label_filter(
+                team_member=team_member,
+                minimized=request.POST.get("minimized") == "true",
+            )
+            template = "workspace/common/sidemenu/project_details.html"
+        case _:
+            pass
+
+    return template, enrich_section, context
+
+
 # HTML
 @require_http_methods(["GET", "POST"])
 @platform_view
@@ -273,56 +362,9 @@ def project_detail_view(
         prefetch_labels=True,
     )
 
-    context: dict[str, Any] = {}
-
-    template = "workspace/project_detail.html"
-    enrich_section: Optional[Section] = None
-    match request.method, request.POST.get("action"):
-        case "POST", "minimize_section":
-            section_minimize_form = SectionMinimizeForm(
-                project=project, data=request.POST
-            )
-            if not section_minimize_form.is_valid():
-                raise BadRequest()
-
-            enrich_section = section_minimize_form.cleaned_data["section"]
-            minimized: bool = section_minimize_form.cleaned_data["minimized"]
-            # TODO
-            # setattr(enrich_section, "minimzed", minimized)
-
-            section_minimize(
-                who=request.user,
-                section=section_minimize_form.cleaned_data["section"],
-                minimized=minimized,
-            )
-
-            template = "workspace/project_detail/section.html"
-        case "POST", "move_task":
-            task_move_form = TaskMoveForm(project=project, data=request.POST)
-            if not task_move_form.is_valid():
-                raise BadRequest()
-            task: Task = task_move_form.cleaned_data["task_uuid"]
-            enrich_section = task.section
-            task_move_in_direction(
-                who=request.user,
-                task=task,
-                direction=task_move_form.cleaned_data["direction"],
-            )
-            template = "workspace/project_detail/section.html"
-        case "POST", "minimize_team_member_filter":
-            team_member_minimize_team_member_filter(
-                team_member=team_member,
-                minimized=request.POST.get("minimized") == "true",
-            )
-            template = "workspace/common/sidemenu/project_details.html"
-        case "POST", "minimize_label_filter":
-            team_member_minimize_label_filter(
-                team_member=team_member,
-                minimized=request.POST.get("minimized") == "true",
-            )
-            template = "workspace/common/sidemenu/project_details.html"
-        case _:
-            pass
+    template, enrich_section, context = _project_detail_view_actions(
+        request, project, team_member
+    )
 
     # TODO run this before the match: case:
     project = project_find_by_project_uuid(
