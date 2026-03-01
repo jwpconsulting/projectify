@@ -24,6 +24,15 @@ class TestRedirectToDashboard:
         """Return URL to this view."""
         return reverse("dashboard:dashboard")
 
+    def test_anonymous_user_redirected_to_login(
+        self, client: Client, resource_url: str
+    ) -> None:
+        """Test accessing as an anonymous user."""
+        response = client.get(resource_url)
+        assert isinstance(response, HttpResponseRedirect)
+        assert response.status_code == 302
+        assert reverse("users:log-in") in response.url
+
     def test_redirect_to_welcome_when_no_workspace(
         self, user_client: Client, resource_url: str
     ) -> None:
