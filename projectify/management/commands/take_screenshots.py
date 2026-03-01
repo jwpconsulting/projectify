@@ -66,7 +66,6 @@ class Command(BaseCommand):
     owner: Optional[User] = None
     test_users: list[User] = []
     essay_task = None
-    branding_task = None
     in_progress_section = None
     coursework_section = None
     software_project = None
@@ -278,7 +277,6 @@ class Command(BaseCommand):
         assert self.in_progress_section
         assert self.coursework_section
         assert self.essay_task
-        assert self.branding_task
 
         driver.get(f"{base_url}{reverse('users:log-in')}")
         wait = WebDriverWait(driver, 2)
