@@ -630,7 +630,10 @@ def workspace_settings_team_members(
             status = 200
 
     if request.method == "POST":
-        workspace.refresh_from_db()
+        workspace = workspace_find_by_workspace_uuid(
+            who=request.user, workspace_uuid=workspace_uuid, qs=workspace_qs
+        )
+        assert workspace
 
     context = {
         **_get_workspace_settings_context(

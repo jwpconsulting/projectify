@@ -39,6 +39,9 @@ def workspace_build_detail_query_set(
                 output_field=BooleanField(),
             )
         )
+    teammember_prefetch: Prefetch[TeamMember] = Prefetch(
+        "teammember_set", queryset=teammembers
+    )
 
     labels: QuerySet[Label] = Label.objects.all()
     if annotate_labels:
@@ -50,7 +53,7 @@ def workspace_build_detail_query_set(
             "project_set",
             queryset=Project.objects.filter(archived__isnull=True),
         ),
-        Prefetch("teammember_set", queryset=teammembers),
+        teammember_prefetch,
         Prefetch(
             "teammemberinvite_set",
             # Is there a privacy impact in having a workspace be able to resolve
