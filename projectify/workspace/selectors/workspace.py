@@ -24,9 +24,7 @@ logger = logging.getLogger(__name__)
 
 
 def workspace_build_detail_query_set(
-    *,
-    who: Optional[User],
-    annotate_labels: bool = False,
+    *, who: Optional[User], annotate_labels: bool = False
 ) -> QuerySet[Workspace]:
     """
     Build workspace detail query set.
@@ -41,9 +39,6 @@ def workspace_build_detail_query_set(
                 output_field=BooleanField(),
             )
         )
-    teammember_prefetch: Prefetch[TeamMember] = Prefetch(
-        "teammember_set", queryset=teammembers
-    )
 
     labels: QuerySet[Label] = Label.objects.all()
     if annotate_labels:
@@ -55,7 +50,7 @@ def workspace_build_detail_query_set(
             "project_set",
             queryset=Project.objects.filter(archived__isnull=True),
         ),
-        teammember_prefetch,
+        Prefetch("teammember_set", queryset=teammembers),
         Prefetch(
             "teammemberinvite_set",
             # Is there a privacy impact in having a workspace be able to resolve
@@ -67,6 +62,7 @@ def workspace_build_detail_query_set(
             queryset=TeamMemberInvite.objects.select_related(
                 "user_invite"
             ).filter(redeemed=False),
+            to_attr="active_invites",
         ),
     )
 

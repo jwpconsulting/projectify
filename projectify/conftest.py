@@ -37,7 +37,7 @@ from projectify.corporate.services.stripe import (
     customer_cancel_subscription,
 )
 from projectify.user import models as user_models
-from projectify.user.models import User, UserInvite
+from projectify.user.models import User
 from projectify.user.services.internal import (
     user_create,
     user_create_superuser,
@@ -280,11 +280,7 @@ def unrelated_workspace(faker: Faker, unrelated_user: User) -> Workspace:
 
 @pytest.fixture
 def team_member_invite(
-    workspace: Workspace,
-    team_member: TeamMember,
-    # TODO user_invite needed to redeem invite, right? verify.
-    user_invite: UserInvite,
-    faker: Faker,
+    workspace: Workspace, team_member: TeamMember, faker: Faker
 ) -> TeamMemberInvite:
     """Return team member invite."""
     email: str = faker.email()

@@ -562,12 +562,9 @@ def workspace_settings_team_members(
     request: AuthenticatedHttpRequest, workspace_uuid: UUID
 ) -> HttpResponse:
     """Show team member settings and handle role changes."""
+    workspace_qs = workspace_build_detail_query_set(who=None)
     workspace = workspace_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=workspace_uuid,
-        qs=workspace_build_detail_query_set(who=None)
-        if request.method == "GET"
-        else None,
+        who=request.user, workspace_uuid=workspace_uuid, qs=workspace_qs
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
@@ -586,7 +583,6 @@ def workspace_settings_team_members(
                         email_or_user=invite_form.cleaned_data["email"],
                     )
                     status = 200
-                    workspace.refresh_from_db()
                 except serializers.ValidationError as e:
                     populate_form_with_drf_errors(invite_form, e)
                     status = 400
@@ -612,7 +608,6 @@ def workspace_settings_team_members(
                     ),
                     status=400,
                 )
-            workspace.refresh_from_db()
             status = 200
         case "POST", "team_member_remove":
             remove_member_form = RemoveTeamMemberForm(
@@ -630,10 +625,12 @@ def workspace_settings_team_members(
                     ),
                     status=400,
                 )
-            workspace.refresh_from_db()
             status = 200
         case _:
             status = 200
+
+    if request.method == "POST":
+        workspace.refresh_from_db()
 
     context = {
         **_get_workspace_settings_context(
@@ -644,14 +641,6 @@ def workspace_settings_team_members(
         "uninvite_form": UninviteTeamMemberForm(),
         **additional_context,
     }
-
-    if request.method == "POST":
-        workspace = workspace_find_by_workspace_uuid(
-            who=request.user,
-            workspace_uuid=workspace_uuid,
-            qs=workspace_build_detail_query_set(who=None),
-        )
-        assert workspace
 
     return render(request, template, context=context, status=status)
 
