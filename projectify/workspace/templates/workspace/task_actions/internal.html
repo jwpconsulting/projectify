@@ -1,0 +1,35 @@
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% load i18n %}
+{% load projectify %}
+<form action="{% url 'dashboard:tasks:move' task.uuid %}"
+      method="post"
+      hx-boost
+      aria-label="{% translate "Move task within section" %}"
+      class="flex flex-col">
+    {% action_button justify_left=True text=_("Move to top") icon="arrow-up" value="top" name="direction" disabled=task.first %}
+    {% action_button justify_left=True text=_("Move to bottom") icon="arrow-down" value="bottom" name="direction" disabled=task.last %}
+    {% csrf_token %}
+</form>
+<form action="{% url 'dashboard:tasks:move-to-section' task.uuid %}"
+      method="post"
+      hx-boost
+      aria-label="{% translate "Move task to other section" %}"
+      class="flex flex-col gap-2">
+    <h2 class="font-bold">{% trans "Move to section" %}</h2>
+    <ul class="flex flex-col items-left">
+        {% for section in sections %}
+            {% if section.uuid != task.section.uuid %}
+                <li class="overflow-x-hidden">
+                    {% action_button justify_left=True text=section.title icon="selector" value=section.uuid name="section_uuid" %}
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    <p class="htmx-indicator">{% trans "Saving..." %}</p>
+    {% csrf_token %}
+</form>
+<form hx-post="{% url 'dashboard:tasks:delete' task.uuid %}"
+      hx-confirm="{% blocktrans with title=task.title %}Are you sure you want to delete the following task: {{ title }}{% endblocktrans %}">
+    {% action_button text=_("Delete task") icon="trash" style="destructive" %}
+</form>

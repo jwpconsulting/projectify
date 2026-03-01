@@ -1,0 +1,17 @@
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% load i18n %}
+{% load projectify %}
+<tr id="task-{{ task.uuid }}-menu"
+    class="contents"
+    x-data="{ open: true }"
+    x-show="open">
+    <td class="lg:col-span-3 rounded-lg border border-border p-3">
+        <div class="flex items-center justify-between">
+            <span class="htmx-indicator">{% translate "Saving..." %}</span>
+            <button aria-label="{% translate "Close task menu" %}"
+                    x-on:click="open = false">{% icon "x" size=4 %}</button>
+        </div>
+        {% include "workspace/task_actions/internal.html" %}
+    </td>
+</tr>
