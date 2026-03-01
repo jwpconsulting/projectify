@@ -316,9 +316,9 @@ Based on the above values, some speed requirements were defined in
 
 # 2024-12-09
 
-I noticed that I haven't investigated adding widget templates for Django
-forms. I also have to figure out how easy it is to reimplement the
-more complex serializers as Django forms.
+I noticed that I haven't investigated adding widget templates for Django forms.
+I also have to figure out how easy it is to reimplement the more complex
+serializers as Django forms.
 
 The widgets can be overwritten by creating templates in
 `django/forms/templates`. Reference:
@@ -331,8 +331,8 @@ The most complex serializer that Projectify has is the
 `projectify/workspace/serializers/task_detail.py`. That thing is really, really
 complex.
 
-I've added a form for tasks. It was quite simple, including the related
-fields. Next time I will work on the dynamic sub task creation.
+I've added a form for tasks. It was quite simple, including the related fields.
+Next time I will work on the dynamic sub task creation.
 
 # 2024-12-11
 
@@ -342,19 +342,18 @@ tasks. Doing this with an SPA is straightforward in the beginning. Updating
 tasks and not deleting sub tasks is a different challenge, of course.
 
 The solution was to create a sub task formset view that renders the next
-required Django `FormSet` item by passing back an `empty_form`. We also have
-to keep track of how many sub tasks have been created. Luckily, HTMX has an
-"out of band" insertion feature
+required Django `FormSet` item by passing back an `empty_form`. We also have to
+keep track of how many sub tasks have been created. Luckily, HTMX has an "out
+of band" insertion feature
 
 https://htmx.org/docs/#oob_swaps
 
-With this, we can append a new sub task after the existing sub tasks,
-update the button that is used to request new sub task lines, and update a
-hidden input field containing the total number of sub tasks. Does this work
-without JavaScript enabled? Unfortunately not. But it was still extremely
-straight forward to implement. A JS-less way of appending sub tasks would be
-to have the user create the task first, and then add sub tasks while updating
-the task.
+With this, we can append a new sub task after the existing sub tasks, update
+the button that is used to request new sub task lines, and update a hidden
+input field containing the total number of sub tasks. Does this work without
+JavaScript enabled? Unfortunately not. But it was still extremely straight
+forward to implement. A JS-less way of appending sub tasks would be to have the
+user create the task first, and then add sub tasks while updating the task.
 
 We could of course have a very complicated mechanism here to re-render the task
 creation page server-side when a new sub task is required. That would
@@ -389,23 +388,23 @@ I've fully mocked up the task creation page:
 
 Happy new year.
 
-I want to create the task update page as well in the prototyping phase
-to make sure that the sub task diffing works well.
+I want to create the task update page as well in the prototyping phase to make
+sure that the sub task diffing works well.
 
 # 2025-01-06
 
-Working on the task update page now. The goal is to make sure we have all
-the functinoality needed to diff sub tasks updates. In the beginning, the
-previous API had some issues with losing sub tasks when updating tasks.
+Working on the task update page now. The goal is to make sure we have all the
+functinoality needed to diff sub tasks updates. In the beginning, the previous
+API had some issues with losing sub tasks when updating tasks.
 
 ## 2025-01-07
 
 I've started working on the update task view. I also went back and fixed some
-minor issues in the project view. One issue was that the table containing
-each section's tasks had a `<tbody>` element that was preventing the grid
-style from working. The browser inserts `<tbody>` where you don't add it
-yourself in the HTML. Since I work with `display: contents`, I need to add
-my own table body element with `display: contents` applied to it as well.
+minor issues in the project view. One issue was that the table containing each
+section's tasks had a `<tbody>` element that was preventing the grid style from
+working. The browser inserts `<tbody>` where you don't add it yourself in the
+HTML. Since I work with `display: contents`, I need to add my own table body
+element with `display: contents` applied to it as well.
 
 I've also spent some time on adding a Django template filter for formatting
 percentages. I did this hoping that it would make percentages easier to
@@ -425,8 +424,8 @@ Most of this work can then be re-used in the new task view.
 # 2025-01-08
 
 I've added the sub task formset rendering to the task update page. It's not
-done yet. Some validation error seems to occur, so I want to render that
-in the UI. This might be helpful:
+done yet. Some validation error seems to occur, so I want to render that in the
+UI. This might be helpful:
 
 https://docs.djangoproject.com/en/5.1/topics/forms/formsets/#using-a-formset-in-views-and-templates
 
@@ -435,8 +434,8 @@ to call things what they are instead. Gotta think on this one.
 
 # 2025-01-09
 
-Today I finished the formset -> sub task update conversion and make the
-basic use case 1. "Make it possible to update existing sub tasks" work.
+Today I finished the formset -> sub task update conversion and make the basic
+use case 1. "Make it possible to update existing sub tasks" work.
 
 There are no error messages or anything right now.
 
@@ -452,10 +451,10 @@ I've now added a checkbox that lets you delete an existing sub task
 
 # 2025-01-12
 
-I realize that modifying forms can be done server-side as well. Here's the
-use case: While adding or updating a task, I'd like to add a sub task.
-Perhaps I've already entered a few sub tasks when editing an existing task.
-Or I am adding a new task and I want to add my first sub task row.
+I realize that modifying forms can be done server-side as well. Here's the use
+case: While adding or updating a task, I'd like to add a sub task. Perhaps I've
+already entered a few sub tasks when editing an existing task. Or I am adding a
+new task and I want to add my first sub task row.
 
 The solution so far was the following: Since Projectify had a JavaScript
 frontend, I could just manage the amount of sub tasks I want to add in the
@@ -463,14 +462,14 @@ frontend state. With Svelte, you'd use stores for this. The same applies to
 ordering both new or existing sub tasks.
 
 If I want to do this without a JavasScript frontend, I need to find other means
-of managing the state of a task without having to store an intermediate
-state of a task somewhere in the backend or database.
+of managing the state of a task without having to store an intermediate state
+of a task somewhere in the backend or database.
 
 The solution is to submit a draft form to the server and let it know in the
-POST request that this is a draft, not a final *save* request. A form can
-have several *submit* buttons, not only one. If each submit button has a
-different `name=` attribute, you can let the backend know which button was
-pressed in the browser.
+POST request that this is a draft, not a final _save_ request. A form can have
+several _submit_ buttons, not only one. If each submit button has a different
+`name=` attribute, you can let the backend know which button was pressed in the
+browser.
 
 Let's say one of these buttons has the name `add-new-sub-task`. The POST
 request will then let the backend know that this button has been pressed. The
@@ -480,9 +479,9 @@ with a new sub tasks row added at the end.
 
 # 2025-01-15
 
-Yesterday, I found a solution to make adding new sub task fields work. The
-idea is to increase the total formset count by manually updating the POST
-data. This is the relevant code:
+Yesterday, I found a solution to make adding new sub task fields work. The idea
+is to increase the total formset count by manually updating the POST data. This
+is the relevant code:
 
 ```python
 def view(request: HttpRequest) -> HttpResponse:
@@ -503,31 +502,30 @@ def view(request: HttpRequest) -> HttpResponse:
     return render(request, "workspace/task_update.html", context)
 ```
 
-Furthermore, I've decided to not implement sub task reordering. I question
-the utility of sub task reordering in general, so I want to hold off on that
+Furthermore, I've decided to not implement sub task reordering. I question the
+utility of sub task reordering in general, so I want to hold off on that
 feature for now.
 
 # 2025-01-20
 
-Today I will try out hiding Projectify UI features using `django-rules`.
-Users can have different roles depending on which workspace they belong to.
-For example, if a user has the *Observer* role, they can only look at
-tasks, but not change them. So, if someone has the Observer role, Projectify
-should hide the *Edit task* button. If someone has at least the *Contributor*
-role, Projectify should show them the *Edit task* button.
+Today I will try out hiding Projectify UI features using `django-rules`. Users
+can have different roles depending on which workspace they belong to. For
+example, if a user has the _Observer_ role, they can only look at tasks, but
+not change them. So, if someone has the Observer role, Projectify should hide
+the _Edit task_ button. If someone has at least the _Contributor_ role,
+Projectify should show them the _Edit task_ button.
 
-To query `django-rules` inside a template, add the following at the
-top of the HTML template file:
+To query `django-rules` inside a template, add the following at the top of the
+HTML template file:
 
 ```
 {% load rules %}
 ```
 
-Here, I change the `task_detail.html` file and make the *Edit task* button
-only visible when a user can update the current task. First, I add
-a line that calls the `has_perm` template function from `django_rules.` It
-takes a variable number of arguments. Here, it takes the user and the task
-in question.
+Here, I change the `task_detail.html` file and make the _Edit task_ button only
+visible when a user can update the current task. First, I add a line that calls
+the `has_perm` template function from `django_rules.` It takes a variable
+number of arguments. Here, it takes the user and the task in question.
 
 ```
 {% has_perm "workspace.update_task" user task.workspace as can_update_task %}
@@ -543,8 +541,8 @@ When checking for permissions, be careful with the following:
 
 1. If you test as a superuser, all permission checks will evaluate to true.
    Check as another user.
-2. The permission checks are purely visual, any real permission checks
-   should happen in the services or selectors Python modules.
+2. The permission checks are purely visual, any real permission checks should
+   happen in the services or selectors Python modules.
 3. A permission check always takes a user and a workspace instance. If the
    current object is a project, dereference `project.workspace`. Dereference
    `Section` and other models similarly.
@@ -556,8 +554,8 @@ This is, for example, how to check permissions on a project:
 ```
 
 I visually confirmed that the above works by signing in as `guest@localhost`.
-While switching this user between Maintainer and Observer, I verified that
-the *Edit task* button disappears and re-appears.
+While switching this user between Maintainer and Observer, I verified that the
+_Edit task_ button disappears and re-appears.
 
 # 2025-01-21
 
@@ -568,8 +566,8 @@ A search through the frontend code reveals that Projectify only ever uses the
 
 I've written down the icons that we use in `docs/remove-fe-heroicons.md`.
 
-I use a fish script and loop over the icons that the frontend uses to copy
-them to `backend/projecityf/static/heroicons`.
+I use a fish script and loop over the icons that the frontend uses to copy them
+to `backend/projecityf/static/heroicons`.
 
 # 2025-01-22
 
