@@ -49,11 +49,33 @@
                 {% for task in section.task_set.all %}
                     <tr class="flex w-full flex-wrap items-center gap-1 rounded-lg border border-border p-3 lg:contents"
                         aria-labelledby="task-{{ task.uuid }}-title">
-                        <td class="block">
+                        <td class="flex flex-row items-center gap-2">
+                            <form action="{% url 'dashboard:projects:detail' section.project.uuid %}"
+                                  method="post"
+                                  hx-post="{% url 'dashboard:projects:detail' section.project.uuid %}"
+                                  hx-target="#section-{{ section.uuid }}"
+                                  hx-swap="outerHTML"
+                                  hx-include="#task-filter,#team-member-filters,#label-filters"
+                                  hx-disabled-elt="find button"
+                                  class="flex">
+                                <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
+                                <input type="hidden"
+                                       name="done"
+                                       value="{% if task.done %}false{% else %}true{% endif %}">
+                                {% csrf_token %}
+                                <button type="submit"
+                                        name="action"
+                                        value="mark_task_done"
+                                        class="size-6 flex items-center justify-center rounded border-2 transition-colors {% if task.done %}bg-primary border-primary text-primary-content{% else %}border-border hover:border-primary{% endif %} disabled:opacity-50 disabled:cursor-not-allowed"
+                                        aria-label="{% if task.done %}{% translate 'Mark task as not done' %}{% else %}{% translate 'Mark task as done' %}{% endif %}"
+                                        title="{% if task.done %}{% translate 'Mark task as not done' %}{% else %}{% translate 'Mark task as done' %}{% endif %}">
+                                    {% if task.done %}
+                                        {% icon "check" size=4 color="white" %}
+                                    {% endif %}
+                                </button>
+                            </form>
                             <a href="{% url 'dashboard:tasks:detail' task.uuid %}"
-                               class="flex flex-row items-start items-center min-w-0 gap-1 self-start sm:gap-6 lg:self-center">
-                                <span class="shrink-0 font-bold" aria-hidden="true">#{{ task.number }}</span>
-                                <span class="sr-only">{{ task.readable_number }}</span>
+                               class="flex flex-row items-start items-center min-w-0 gap-1 self-start sm:gap-6 lg:self-center {% if task.done %}line-through opacity-60{% endif %}">
                                 <span class="line-clamp-3 justify-self-start hover:text-primary lg:line-clamp-1 lg:h-6"
                                       id="task-{{ task.uuid }}-title">{{ task.title }}</span>
                             </a>

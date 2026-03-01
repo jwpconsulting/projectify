@@ -193,6 +193,15 @@ class TestProjectDetailView:
         assert task.title in response.content.decode()
         assert other_task.title not in response.content.decode()
 
+
+class TestProjectDetailViewActions:
+    """Test project detail view actions."""
+
+    @pytest.fixture
+    def resource_url(self, project: Project) -> str:
+        """Return URL to this view."""
+        return reverse("dashboard:projects:detail", args=(project.uuid,))
+
     def test_move_task_up_down(
         self,
         user_client: Client,
@@ -263,6 +272,49 @@ class TestProjectDetailView:
                 "task_uuid": str(uuid4()),
                 "direction": "up",
             },
+        )
+        assert response.status_code == 400
+
+    def test_mark_task_done(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        task: Task,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test marking a task as done and then not done."""
+        assert task.done is None
+        t_uid = str(task.uuid)
+        data = {"action": "mark_task_done", "task_uuid": t_uid, "done": "true"}
+        with django_assert_num_queries(24):
+            response = user_client.post(resource_url, data)
+            assert response.status_code == 200
+        task.refresh_from_db()
+        assert task.done is not None
+
+        data = {
+            "action": "mark_task_done",
+            "task_uuid": t_uid,
+            "done": "false",
+        }
+        with django_assert_num_queries(24):
+            response = user_client.post(resource_url, data)
+            assert response.status_code == 200
+        task.refresh_from_db()
+        assert task.done is None
+
+    def test_mark_task_done_form_validation(
+        self, user_client: Client, resource_url: str
+    ) -> None:
+        """Test form validation for mark task done action."""
+        d = {"action": "mark_task_done"}
+        response = user_client.post(
+            resource_url, {**d, "task_uuid": str(uuid4()), "done": "true"}
+        )
+        assert response.status_code == 400
+        response = user_client.post(
+            resource_url, {**d, "action": "mark_task_done", "done": "true"}
         )
         assert response.status_code == 400
 

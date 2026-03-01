@@ -21,7 +21,7 @@ dropdb projectify && \
 
 from argparse import ArgumentParser
 from datetime import timezone
-from itertools import count, groupby
+from itertools import groupby
 from random import choice, randint, sample
 from typing import Any, TypedDict
 
@@ -58,7 +58,6 @@ Altogether = TypedDict(
         "labels": list[Label],
         "projects": list[Project],
         "sections": list[Section],
-        "number": "count[int]",
     },
 )
 
@@ -157,7 +156,6 @@ class Command(BaseCommand):
                     due_date=self.fake.date_time(tzinfo=timezone.utc),
                     workspace=together["workspace"],
                     _order=_order,
-                    number=next(together["number"]),
                     assignee=choice(together["team_members"])
                     # 2 out of 3 tasks have an assignee
                     if randint(0, 2)
@@ -353,7 +351,6 @@ class Command(BaseCommand):
                 "labels": list(labels),
                 "projects": list(projects),
                 "sections": list(sections),
-                "number": count(1),
             }
             for (
                 (workspace, team_members),
@@ -372,13 +369,6 @@ class Command(BaseCommand):
         ]
 
         self.create_tasks(altogether)
-
-        # Now we just have to adjust each workspace's highest task number
-        for together in altogether:
-            together["workspace"].highest_task_number = next(
-                together["number"]
-            )
-            together["workspace"].save()
         return workspaces
 
     def create_corporate_accounts(

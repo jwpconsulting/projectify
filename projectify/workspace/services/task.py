@@ -8,6 +8,7 @@ from datetime import datetime
 from typing import Literal, Optional, Sequence, Union
 
 from django.db import transaction
+from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
@@ -151,6 +152,23 @@ def task_update_nested(
             create_sub_tasks=sub_tasks["create_sub_tasks"] or [],
             update_sub_tasks=sub_tasks["update_sub_tasks"] or [],
         )
+    return task
+
+
+@transaction.atomic
+def task_mark_done(
+    *,
+    who: User,
+    task: Task,
+    done: bool,
+) -> Task:
+    """Assign labels, assign assignee."""
+    validate_perm("workspace.update_task", who, task.workspace)
+    if done:
+        task.done = now()
+    else:
+        task.done = None
+    task.save()
     return task
 
 

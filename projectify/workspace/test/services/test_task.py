@@ -23,6 +23,7 @@ from ...services.task import (
     task_assign_labels,
     task_create,
     task_create_nested,
+    task_mark_done,
     task_move_after,
     task_update_nested,
 )
@@ -319,3 +320,19 @@ def test_moving_task_to_empty_section(
     ]
     task.refresh_from_db()
     assert task._order == 0
+
+
+def test_task_mark_done(
+    task: Task,
+    team_member: TeamMember,
+) -> None:
+    """Test marking a task as done and then not done."""
+    assert task.done is None
+
+    task_mark_done(who=team_member.user, task=task, done=True)
+    task.refresh_from_db()
+    assert task.done is not None
+
+    task_mark_done(who=team_member.user, task=task, done=False)
+    task.refresh_from_db()
+    assert task.done is None
