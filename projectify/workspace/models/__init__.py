@@ -263,8 +263,6 @@ class Task(TitleDescriptionModel, BaseModel):
     done = models.DateTimeField(null=True, blank=True)
 
     if TYPE_CHECKING:
-        # Related fields
-        subtask_set: RelatedManager["SubTask"]
         chatmessage_set: RelatedManager["ChatMessage"]
         tasklabel_set: RelatedManager["TaskLabel"]
         _order: int
