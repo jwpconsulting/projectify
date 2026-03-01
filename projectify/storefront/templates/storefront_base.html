@@ -3,7 +3,9 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="flex grow flex-col">
-        {% include "common/navigation/header/landing.html" %}
+        {% block storefront_header %}
+            {% include "common/navigation/header/landing.html" %}
+        {% endblock storefront_header %}
         <div class="flex grow flex-col justify-between">
             {% block storefront_content %}
             {% endblock storefront_content %}

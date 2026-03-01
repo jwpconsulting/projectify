@@ -1,7 +1,10 @@
-{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "storefront_base.html" %}
 {% load i18n %}
+{% block storefront_header %}
+    {% include "common/navigation/header/dashboard.html" %}
+{% endblock storefront_header %}
 {% block storefront_content %}
     <div class="flex h-full flex-col items-center bg-background p-8">
         <div class="w-full max-w-lg">
