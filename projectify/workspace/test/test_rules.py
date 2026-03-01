@@ -19,7 +19,6 @@ from ..services.chat_message import chat_message_create
 from ..services.label import label_create
 from ..services.project import project_create
 from ..services.section import section_create
-from ..services.sub_task import sub_task_create
 from ..services.task import task_create
 from ..services.team_member import team_member_change_role
 from ..services.team_member_invite import team_member_invite_create
@@ -153,7 +152,6 @@ class TestTrialRules:
             {
                 "ChatMessage": 1,
                 "Label": 1,
-                "SubTask": 1,
                 "Task": 1,
                 "TaskLabel": 1,
                 "Project": 1,
@@ -202,27 +200,6 @@ class TestTrialRules:
         )
         assert not validate_perm(
             "workspace.create_label",
-            user,
-            workspace,
-            raise_exception=False,
-        )
-
-    def test_create_sub_task(
-        self,
-        user: User,
-        team_member: TeamMember,
-        workspace: Workspace,
-        task: Task,
-    ) -> None:
-        """Assert only 1 sub task can be created."""
-        assert validate_perm("workspace.create_sub_task", user, workspace)
-        customer_cancel_subscription(customer=workspace.customer)
-        assert validate_perm("workspace.create_sub_task", user, workspace)
-        sub_task_create(
-            task=task, title="sub task", who=team_member.user, done=False
-        )
-        assert not validate_perm(
-            "workspace.create_sub_task",
             user,
             workspace,
             raise_exception=False,

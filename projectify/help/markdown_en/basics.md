@@ -44,10 +44,6 @@ assigned to any team member in your workspace. Labels and detailed information
 can be applied to tasks. For every task that is created, a unique task number
 is assigned to it for ease of reference and searching.
 
-Tasks can be further divided into sub tasks - sub tasks are great for keeping
-track of micro achievements per task. Due dates can also be set for tasks that
-need to be completed on a due date.
-
 For more information on tasks please see the [tasks help](/help/tasks).
 
 # How to use the side menu

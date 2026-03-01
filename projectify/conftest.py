@@ -51,7 +51,6 @@ from projectify.workspace.models import (
     Label,
     Project,
     Section,
-    SubTask,
     Task,
     TaskLabel,
     TeamMember,
@@ -69,7 +68,6 @@ from projectify.workspace.services.project import (
     project_create,
 )
 from projectify.workspace.services.section import section_create
-from projectify.workspace.services.sub_task import sub_task_create
 from projectify.workspace.services.task import task_create
 from projectify.workspace.services.team_member_invite import (
     team_member_invite_create,
@@ -544,7 +542,7 @@ def unrelated_label(
 
 @pytest.fixture
 def labels(workspace: Workspace, team_member: TeamMember) -> list[Label]:
-    """Create several sub tasks."""
+    """Create several labels."""
     N = 5
     return [
         label_create(
@@ -563,18 +561,6 @@ def task_label(task: Task, label: Label) -> TaskLabel:
     # TODO we will use a task_add_label service here in the future
     task.labels.add(label)
     return TaskLabel.objects.get(task=task)
-
-
-@pytest.fixture
-def sub_task(faker: Faker, task: Task, team_member: TeamMember) -> SubTask:
-    """Return subtask."""
-    return sub_task_create(
-        who=team_member.user,
-        task=task,
-        title=faker.sentence(),
-        description=faker.paragraph(),
-        done=faker.pybool(),
-    )
 
 
 @pytest.fixture

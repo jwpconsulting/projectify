@@ -650,7 +650,6 @@ class TestWorkspaceSettingsQuota:
         assert "<td>Sections" not in content
         assert "<td>Tasks" not in content
         assert "<td>Labels" not in content
-        assert "<td>Sub tasks" not in content
 
     def test_get_quota_page_no_subscription(
         self,
@@ -661,7 +660,7 @@ class TestWorkspaceSettingsQuota:
     ) -> None:
         """Test getting the quota page."""
         customer_cancel_subscription(customer=team_member.workspace.customer)
-        with django_assert_num_queries(17):
+        with django_assert_num_queries(16):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         # These quotas should be listed
@@ -674,7 +673,6 @@ class TestWorkspaceSettingsQuota:
         assert "<td>Sections" in content
         assert "<td>Tasks" in content
         assert "<td>Labels" in content
-        assert "<td>Sub tasks" in content
 
 
 @pytest.fixture(autouse=True)
@@ -728,7 +726,7 @@ class TestWorkspaceSettingsBilling:
     ) -> None:
         """Assert that an unpaid customer can't edit their billing settings."""
         data = {"action": "checkout", "seats": 5}
-        with django_assert_num_queries(21):
+        with django_assert_num_queries(20):
             response = user_client.post(resource_url, data=data)
             assert response.status_code == 302
         assert response.headers["Location"] == "https://www.example.com"
@@ -775,7 +773,7 @@ class TestWorkspaceSettingsBilling:
     ) -> None:
         """Test we can get a redirect when posting valid checkout data."""
         data = {"action": "checkout", "seats": "99"}
-        with django_assert_num_queries(21):
+        with django_assert_num_queries(20):
             response = user_client.post(resource_url, data=data)
             assert response.status_code == 302, response.content.decode()
         assert response.headers["Location"] == "https://www.example.com"
@@ -828,7 +826,7 @@ class TestWorkspaceSettingsBilling:
         team_member: TeamMember,
     ) -> None:
         """Test GET request with unpaid customer shows billing form."""
-        with django_assert_num_queries(17):
+        with django_assert_num_queries(16):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert b"Use a coupon code" in response.content
@@ -869,7 +867,7 @@ class TestWorkspaceSettingsBillingCoupon:
         active = customer_check_active_for_workspace(workspace=workspace)
         assert active == "trial"
         data = {"action": "redeem_coupon", "code": "foo"}
-        with django_assert_num_queries(22):
+        with django_assert_num_queries(21):
             res = user_client.post(resource_url, data=data)
             assert res.status_code == 400
         assert "No coupon is available for this code" in res.content.decode()
@@ -892,7 +890,7 @@ class TestWorkspaceSettingsBillingCoupon:
         active = customer_check_active_for_workspace(workspace=workspace)
         assert active == "trial"
         data = {"action": "redeem_coupon", "code": coupon.code}
-        with django_assert_num_queries(22):
+        with django_assert_num_queries(21):
             response = user_client.post(resource_url, data=data)
             assert response.status_code == 302
 

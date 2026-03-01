@@ -18,11 +18,6 @@ from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 
 from ..models import Label, Section, Task, TeamMember
-from ..services.sub_task import (
-    ValidatedData,
-    sub_task_create_many,
-    sub_task_update_many,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -94,8 +89,7 @@ def task_create_nested(
     who: User,
     section: Section,
     title: str,
-    # TODO make these two optional as well
-    sub_tasks: ValidatedData,
+    # TODO make label optional
     labels: Sequence[Label],
     description: Optional[str] = None,
     due_date: Optional[datetime] = None,
@@ -111,13 +105,6 @@ def task_create_nested(
         due_date=due_date,
     )
     task_assign_labels(task=task, labels=labels)
-
-    create_sub_tasks = sub_tasks["create_sub_tasks"] or []
-    sub_task_create_many(
-        who=who,
-        task=task,
-        create_sub_tasks=create_sub_tasks,
-    )
     return task
 
 
@@ -131,9 +118,8 @@ def task_update_nested(
     description: Optional[str] = None,
     due_date: Optional[datetime] = None,
     assignee: Optional[TeamMember] = None,
-    # Make these two optional
+    # TODO Make label optional
     labels: Sequence[Label],
-    sub_tasks: Optional[ValidatedData] = None,
 ) -> Task:
     """Assign labels, assign assignee."""
     validate_perm("workspace.update_task", who, task.workspace)
@@ -143,15 +129,6 @@ def task_update_nested(
     task.assignee = assignee
     task.save()
     task_assign_labels(task=task, labels=labels)
-    if sub_tasks:
-        sub_task_instances = list(task.subtask_set.all())
-        sub_task_update_many(
-            task=task,
-            who=who,
-            sub_tasks=sub_task_instances,
-            create_sub_tasks=sub_tasks["create_sub_tasks"] or [],
-            update_sub_tasks=sub_tasks["update_sub_tasks"] or [],
-        )
     return task
 
 

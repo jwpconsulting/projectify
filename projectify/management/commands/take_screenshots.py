@@ -179,37 +179,6 @@ class Command(BaseCommand):
             section=self.in_progress_section,
             title="Beta testing for level 6",
             description="Conduct beta testing for level 6 functionality",
-            sub_tasks={
-                "create_sub_tasks": [
-                    {
-                        "title": "Set up test environment",
-                        "done": True,
-                        "_order": 0,
-                    },
-                    {
-                        "title": "Create test scenarios",
-                        "done": True,
-                        "_order": 1,
-                    },
-                    {
-                        "title": "Execute gameplay tests",
-                        "done": False,
-                        "_order": 2,
-                    },
-                    {
-                        "title": "Test user interface",
-                        "done": False,
-                        "_order": 3,
-                    },
-                    {
-                        "title": "Performance testing",
-                        "done": False,
-                        "_order": 4,
-                    },
-                    {"title": "Document findings", "done": False, "_order": 5},
-                ],
-                "update_sub_tasks": [],
-            },
             labels=[labels["Testing"]],
             assignee=fake.random_element(elements=team_members),
         )
@@ -232,7 +201,6 @@ class Command(BaseCommand):
                 section=self.in_progress_section,
                 title=title,
                 description=description,
-                sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
                 labels=[labels[label_name]],
                 assignee=fake.random_element(elements=team_members),
             )
@@ -243,18 +211,6 @@ class Command(BaseCommand):
             section=self.coursework_section,
             title="Write essay for assignment",
             description="Complete the essay assignment for the course",
-            sub_tasks={
-                "create_sub_tasks": [
-                    {"title": "Brainstorming", "done": False, "_order": 0},
-                    {
-                        "title": "Write introduction",
-                        "done": False,
-                        "_order": 1,
-                    },
-                    {"title": "Find references", "done": False, "_order": 2},
-                ],
-                "update_sub_tasks": [],
-            },
             labels=[labels["Investigate"]],
             assignee=fake.random_element(elements=team_members),
         )
@@ -262,7 +218,6 @@ class Command(BaseCommand):
             who=self.owner,
             section=self.coursework_section,
             title="Research methodology review",
-            sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
             labels=[],
             assignee=fake.random_element(elements=team_members),
         )
@@ -271,30 +226,6 @@ class Command(BaseCommand):
             who=self.owner,
             section=self.coursework_section,
             title="Prepare presentation slides",
-            sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
-            labels=[labels["Design"]],
-            assignee=fake.random_element(elements=team_members),
-        )
-
-        # Task for sub-tasks screenshot
-        self.branding_task = task_create_nested(
-            who=self.owner,
-            section=todo_section,
-            title="Brand identity development",
-            description="Develop comprehensive brand identity for the project",
-            sub_tasks={
-                "create_sub_tasks": [
-                    {"title": "Create moodboard", "done": True, "_order": 0},
-                    {"title": "Brainstorm logo", "done": True, "_order": 1},
-                    {"title": "Finalise branding", "done": False, "_order": 2},
-                    {
-                        "title": "Draft presentation",
-                        "done": False,
-                        "_order": 3,
-                    },
-                ],
-                "update_sub_tasks": [],
-            },
             labels=[labels["Design"]],
             assignee=fake.random_element(elements=team_members),
         )
@@ -306,7 +237,6 @@ class Command(BaseCommand):
                     section=todo_section,
                     title=fake.catch_phrase(),
                     description=fake.text(max_nb_chars=100),
-                    sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
                     labels=[labels[label_name]],
                     assignee=fake.random_element(elements=team_members),
                 )
@@ -418,22 +348,6 @@ class Command(BaseCommand):
             str(output_directory / "project-management-permissions.png")
         )
 
-        # academic solutions sub tasks
-        driver.get(
-            f"{base_url}{reverse('dashboard:tasks:detail', kwargs={'task_uuid': self.essay_task.uuid})}"
-        )
-        self.remove_debug_toolbar(driver)
-        subtasks_selector = "#subtasks"
-        subtasks_element = wait.until(
-            EC.presence_of_element_located(
-                (By.CSS_SELECTOR, subtasks_selector)
-            )
-        )
-        ActionChains(driver).scroll_to_element(subtasks_element).perform()
-        subtasks_element.screenshot(
-            str(output_directory / "academic-sub-task.png")
-        )
-
         # academic solutions coursework section
         driver.get(
             f"{base_url}{reverse('dashboard:projects:detail', kwargs={'project_uuid': self.software_project.uuid})}"
@@ -453,20 +367,6 @@ class Command(BaseCommand):
         coursework_section_element.screenshot(
             str(output_directory / "academic-tasks.png")
         )
-
-        # sub-tasks screenshot for landing
-        driver.get(
-            f"{base_url}{reverse('dashboard:tasks:detail', kwargs={'task_uuid': self.branding_task.uuid})}"
-        )
-        self.remove_debug_toolbar(driver)
-        subtasks_selector = "#subtasks"
-        subtasks_element = wait.until(
-            EC.presence_of_element_located(
-                (By.CSS_SELECTOR, subtasks_selector)
-            )
-        )
-        ActionChains(driver).scroll_to_element(subtasks_element).perform()
-        subtasks_element.screenshot(str(output_directory / "sub-tasks.png"))
 
     def add_arguments(self, parser: Any) -> None:
         """Add command arguments."""

@@ -10,15 +10,7 @@ from rest_framework import exceptions
 
 from projectify.workspace.services.label import label_create
 
-from ...models import (
-    Label,
-    Project,
-    Section,
-    SubTask,
-    Task,
-    TeamMember,
-    Workspace,
-)
+from ...models import Label, Project, Section, Task, TeamMember, Workspace
 from ...services.task import (
     task_assign_labels,
     task_create,
@@ -126,7 +118,6 @@ def test_task_create_nested(
         assignee=team_member,
         due_date=None,
         labels=[label],
-        sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
     )
     assert list(task.labels.values_list("uuid", flat=True)) == [label.uuid]
     assert task.assignee == team_member
@@ -154,10 +145,8 @@ def test_task_update_nested(
     label: Label,
     team_member: TeamMember,
     other_team_member: TeamMember,
-    sub_task: SubTask,
 ) -> None:
     """Test updating a task."""
-    assert task.subtask_set.count() == 1
     task_update_nested(
         who=team_member.user,
         task=task,
@@ -165,28 +154,6 @@ def test_task_update_nested(
         description=None,
         assignee=other_team_member,
         labels=[label],
-        sub_tasks={
-            "create_sub_tasks": [
-                {
-                    "title": "Frobnice fluffballs",
-                    "done": True,
-                    "_order": 0,
-                },
-                {
-                    "title": "Frebnecize flerfbowls",
-                    "done": True,
-                    "_order": 2,
-                },
-            ],
-            "update_sub_tasks": [
-                {
-                    "uuid": sub_task.uuid,
-                    "title": "Settle Catan",
-                    "done": not sub_task.done,
-                    "_order": 1,
-                },
-            ],
-        },
     )
     task.refresh_from_db()
     assert task.assignee == other_team_member
@@ -197,32 +164,6 @@ def test_task_update_nested(
 
     assert task.assignee
     assert task.assignee.user.email == other_team_member.user.email
-
-    sub_tasks = list(task.subtask_set.all())
-    assert len(sub_tasks) == 3
-    assert sub_tasks[1].uuid == sub_task.uuid
-    assert sub_tasks[1].done == (not sub_task.done)
-
-
-def test_task_update_preserve_sub_tasks(
-    task: Task,
-    label: Label,
-    team_member: TeamMember,
-    sub_task: SubTask,
-) -> None:
-    """Test that sub tasks are preserved when left out."""
-    del sub_task
-    count = task.subtask_set.count()
-    task_update_nested(
-        who=team_member.user,
-        task=task,
-        title="Hello world",
-        description=None,
-        assignee=task.assignee,
-        labels=[label],
-    )
-    task.refresh_from_db()
-    assert task.subtask_set.count() == count
 
 
 def test_moving_task_within_section(

@@ -907,10 +907,6 @@ def workspace_settings_quota(
             "quota": workspace.quota.labels,
         },
         {
-            "label": _("Sub tasks"),
-            "quota": workspace.quota.sub_tasks,
-        },
-        {
             "label": _("Task labels"),
             "quota": workspace.quota.task_labels,
         },

@@ -42,7 +42,6 @@ from projectify.workspace.models import (
     Label,
     Project,
     Section,
-    SubTask,
     Task,
     TaskLabel,
     TeamMember,
@@ -79,11 +78,6 @@ TASK_MIN_LABEL_COUNT = 0
 TASK_MAX_LABEL_COUNT = 10
 TASK_MIN_CHAT_MESSAGE_COUNT = 0
 TASK_MAX_CHAT_MESSAGE_COUNT = 10
-
-SUB_TASKS_MIN_COUNT = 0
-SUB_TASKS_MAX_COUNT = 10
-SUB_TASK_TITLE_MIN_LENGTH = 40
-SUB_TASK_TITLE_MAX_LENGTH = 250
 
 
 class Command(BaseCommand):
@@ -191,28 +185,6 @@ class Command(BaseCommand):
             ]
         )
         self.stdout.write(f"Created {len(task_labels)} task labels")
-
-        sub_tasks = SubTask.objects.bulk_create(
-            [
-                SubTask(
-                    title=self.fake.text(
-                        randint(
-                            SUB_TASK_TITLE_MIN_LENGTH,
-                            SUB_TASK_TITLE_MAX_LENGTH,
-                        )
-                    ),
-                    description=self.fake.paragraph(),
-                    task=task,
-                    done=self.fake.pybool(),
-                    _order=_order,
-                )
-                for task in tasks
-                for _order in range(
-                    randint(SUB_TASKS_MIN_COUNT, SUB_TASKS_MAX_COUNT)
-                )
-            ]
-        )
-        self.stdout.write(f"Created {len(sub_tasks)} sub tasks")
 
         chat_messages = ChatMessage.objects.bulk_create(
             [

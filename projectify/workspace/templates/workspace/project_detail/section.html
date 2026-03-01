@@ -38,11 +38,10 @@
     </form>
     {% if not section.minimized %}
         <table aria-label="{% blocktranslate with section=section.title %}{{section}} tasks{% endblocktranslate %}"
-               class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4 lg:grid lg:grid-cols-[8fr_3fr_max-content_max-content] lg:gap-1 lg:items-center">
+               class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4 lg:grid lg:grid-cols-[8fr_3fr_max-content] lg:gap-1 lg:items-center">
             <thead class="sr-only">
                 <th class="sr-only">{% translate "Task title" %}</th>
                 <th class="sr-only">{% translate "Task labels" %}</th>
-                <th class="sr-only">{% translate "Sub task progress" %}</th>
                 <th class="sr-only">{% translate "Task actions" %}</th>
             </thead>
             <tbody class="contents">
@@ -86,18 +85,6 @@
                                     {{ label.name }}
                                 </div>
                             {% endfor %}
-                        </td>
-                        <td class="flex shrink flex-row items-center gap-0.5 lg:justify-between px-2 py-1 lg:min-w-16">
-                            {% if task.sub_task_progress is None %}
-                                <div class="opacity-20">{% icon "view-list" "primary" size=6 %}</div>
-                            {% else %}
-                                {% icon "view-list" "primary" size=6 %}
-                            {% endif %}
-                            {% if task.sub_task_progress is not None %}
-                                <div class="grow text-right font-bold text-primary">{{ task.sub_task_progress|percent }}</div>
-                            {% else %}
-                                <span class="sr-only">{% translate "No sub tasks" %}</span>
-                            {% endif %}
                         </td>
                         <td class="flex ml-auto">
                             <form action="{% url 'dashboard:projects:detail' project.uuid %}"

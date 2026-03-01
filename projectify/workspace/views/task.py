@@ -178,7 +178,6 @@ def task_create(
         assignee=form.cleaned_data.get("assignee"),
         due_date=form.cleaned_data.get("due_date"),
         labels=form.cleaned_data["labels"],
-        sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
     )
 
     match request.POST.get("action"):
@@ -374,10 +373,6 @@ def task_update_view(
         due_date=cleaned_data["due_date"],
         assignee=cleaned_data["assignee"],
         labels=cleaned_data["labels"],
-        sub_tasks={
-            "update_sub_tasks": [],
-            "create_sub_tasks": [],
-        },
     )
     return redirect(next_url)
 

@@ -305,7 +305,6 @@ def new_task(
             title=form.cleaned_data["title"],
             assignee=team_member,
             labels=[],
-            sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
         )
         return redirect(reverse("onboarding:new_label", args=[str(task.uuid)]))
     context = {**context, "form": form}

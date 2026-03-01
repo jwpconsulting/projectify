@@ -28,7 +28,6 @@ TaskDetailQuerySet: QuerySet[Task] = (
         "assignee__user",
     )
     .prefetch_related(
-        "subtask_set",
         Prefetch(
             "labels",
             queryset=labels_annotate_with_colors(Label.objects.all()),

@@ -48,7 +48,7 @@ class TestTaskCreateView:
     ) -> None:
         """Test creating a task."""
         initial_task_count = Task.objects.count()
-        with django_assert_num_queries(21):
+        with django_assert_num_queries(18):
             response = user_client.post(
                 resource_url,
                 {
@@ -98,7 +98,7 @@ class TestTaskUpdateView:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test GETting the task update page."""
-        with django_assert_num_queries(15):
+        with django_assert_num_queries(14):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert task.title in response.content.decode()
@@ -127,7 +127,7 @@ class TestTaskUpdateView:
     ) -> None:
         """Test updating a task."""
         original_title = task.title
-        with django_assert_num_queries(25):
+        with django_assert_num_queries(19):
             response = user_client.post(
                 resource_url,
                 {
