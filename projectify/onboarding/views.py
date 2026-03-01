@@ -37,10 +37,7 @@ from projectify.workspace.selectors.workspace import (
 from projectify.workspace.services.label import label_create
 from projectify.workspace.services.project import project_create
 from projectify.workspace.services.section import section_create
-from projectify.workspace.services.task import (
-    task_create_nested,
-    task_update_nested,
-)
+from projectify.workspace.services.task import task_create, task_update
 from projectify.workspace.services.workspace import workspace_create
 
 
@@ -299,13 +296,12 @@ def new_task(
 
     form = TaskForm(request.POST)
     if form.is_valid():
-        task = task_create_nested(
+        task = task_create(
             who=request.user,
             section=section,
             title=form.cleaned_data["title"],
             assignee=team_member,
             labels=[],
-            sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
         )
         return redirect(reverse("onboarding:new_label", args=[str(task.uuid)]))
     context = {**context, "form": form}
@@ -361,7 +357,7 @@ def new_label(
                     color=0,
                     who=request.user,
                 )
-                task_update_nested(
+                task_update(
                     who=request.user,
                     task=task,
                     title=task.title,

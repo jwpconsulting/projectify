@@ -14,7 +14,6 @@ from .models import (
     Label,
     Project,
     Section,
-    SubTask,
     Task,
     TaskLabel,
     TeamMember,
@@ -180,13 +179,6 @@ class SectionAdmin(admin.ModelAdmin[Section]):
         return instance.project.workspace.title
 
 
-class SubTaskInline(admin.TabularInline[SubTask]):
-    """SubTask inline admin."""
-
-    model = SubTask
-    extra = 0
-
-
 class TaskLabelInline(admin.TabularInline[TaskLabel]):
     """TaskLabel inline admin."""
 
@@ -198,7 +190,7 @@ class TaskLabelInline(admin.TabularInline[TaskLabel]):
 class TaskAdmin(admin.ModelAdmin[Task]):
     """Task Admin."""
 
-    inlines = (SubTaskInline, TaskLabelInline)
+    inlines = (TaskLabelInline,)
     list_display = (
         "title",
         "section_title",
@@ -242,44 +234,6 @@ class LabelAdmin(admin.ModelAdmin[Label]):
     def workspace_title(self, instance: Label) -> str:
         """Return the workspace's title."""
         return instance.workspace.title
-
-
-@admin.register(SubTask)
-class SubTaskAdmin(admin.ModelAdmin[SubTask]):
-    """SubTask Admin."""
-
-    list_display = (
-        "title",
-        "task_title",
-        "section_title",
-        "project_title",
-        "workspace_title",
-        "created",
-        "modified",
-    )
-    list_select_related = ("task__section__project__workspace",)
-    readonly_fields = ("uuid",)
-
-    @admin.display(description=_("Task title"))
-    def task_title(self, instance: SubTask) -> str:
-        """Return the task's title."""
-        return instance.task.title
-
-    @admin.display(description=_("Section title"))
-    def section_title(self, instance: SubTask) -> str:
-        """Return the project's title."""
-        return instance.task.section.title
-
-    @admin.display(description=_("Project title"))
-    def project_title(self, instance: SubTask) -> str:
-        """Return the project's title."""
-        return instance.task.section.project.title
-
-    @admin.display(description=_("Workspace title"))
-    def workspace_title(self, instance: SubTask) -> str:
-        """Return the workspace's title."""
-        project = instance.task.section.project
-        return project.workspace.title
 
 
 @admin.register(ChatMessage)

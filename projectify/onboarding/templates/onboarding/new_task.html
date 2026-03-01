@@ -18,7 +18,6 @@
                     {% blocktrans %}This task will be placed in a section called "{{section_title}}".{% endblocktrans %}
                 {% endif %}
             </p>
-            <p class="text-lg">{% trans "Tasks can be further divided into sub tasks and contain detailed descriptions." %}</p>
         </div>
         {{ form }}
         {% include "projectify/forms/submit.html" with text=_("Continue") %}

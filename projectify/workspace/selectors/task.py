@@ -15,7 +15,6 @@ from django.db.models import (
     Subquery,
     Value,
 )
-from django.db.models.functions import NullIf
 
 from projectify.user.models import User
 
@@ -29,7 +28,6 @@ TaskDetailQuerySet: QuerySet[Task] = (
         "assignee__user",
     )
     .prefetch_related(
-        "subtask_set",
         Prefetch(
             "labels",
             queryset=labels_annotate_with_colors(Label.objects.all()),
@@ -62,12 +60,6 @@ TaskDetailQuerySet: QuerySet[Task] = (
         ),
     )
     .annotate(
-        sub_task_progress=Count(
-            "subtask",
-            filter=Q(subtask__done=True),
-        )
-        * 1.0
-        / NullIf(Count("subtask"), 0),
         first=Q(_order=Value(0)),
         last=Q(
             _order=Subquery(

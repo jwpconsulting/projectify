@@ -36,7 +36,6 @@ actions are as follows:
 | Project                    | Description and other information about a project           |
 | Sections                   | Name, position within project                               |
 | Tasks                      | Title, description, due date, label, assignee, and position |
-| Sub tasks                  | Done state and title                                        |
 | Labels                     | Name and color                                              |
 
 # Overview
@@ -62,7 +61,6 @@ individual cell in this table is as follows:
 | Project                    | Read     | Read        | Full       | Full  |
 | Sections                   | Read     | Read        | Full       | Full  |
 | Tasks                      | Read     | Write       | Full       | Full  |
-| Sub tasks                  | Read     | Full        | Full       | Full  |
 | Labels                     | Read     | Read        | Full       | Full  |
 
 # Observer
@@ -79,7 +77,6 @@ On top of the **observer** permissions, a **contributor** team member has the
 following additional permissions in their workspace:
 
 - They can create and update tasks
-- They can create, update and delete sub tasks
 
 More importantly, they do not gain any additional delete permissions for the
 above two resources, or any other edit permissions for projects,

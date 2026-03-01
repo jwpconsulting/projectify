@@ -18,11 +18,6 @@ from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 
 from ..models import Label, Section, Task, TeamMember
-from ..services.sub_task import (
-    ValidatedData,
-    sub_task_create_many,
-    sub_task_update_many,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -45,23 +40,20 @@ def task_assign_labels(*, task: Task, labels: Sequence[Label]) -> None:
             )
         task.labels.set(intersection)
 
-    # TODO maybe it makes more sense to fire signals from serializers,
-    # not manually patch things like the following...
-    # 2023-11-28: Now that I have a lot of success refactoring into
-    # services, this should be handled in a service
 
-
-# Create
+@transaction.atomic
 def task_create(
     *,
     who: User,
     section: Section,
     title: str,
+    # TODO make label optional
+    labels: Optional[Sequence[Label]] = None,
     description: Optional[str] = None,
     due_date: Optional[datetime] = None,
     assignee: Optional[TeamMember] = None,
 ) -> Task:
-    """Add a task to this section."""
+    """Create a task. This will replace the above task_create method."""
     validate_perm(
         "workspace.create_task",
         who,
@@ -77,7 +69,7 @@ def task_create(
                 )
             }
         )
-    return Task.objects.create(
+    task = Task.objects.create(
         section=section,
         title=title,
         description=description,
@@ -85,45 +77,14 @@ def task_create(
         workspace=workspace,
         assignee=assignee,
     )
-
-
-# TODO make this the regular task_create
-@transaction.atomic
-def task_create_nested(
-    *,
-    who: User,
-    section: Section,
-    title: str,
-    # TODO make these two optional as well
-    sub_tasks: ValidatedData,
-    labels: Sequence[Label],
-    description: Optional[str] = None,
-    due_date: Optional[datetime] = None,
-    assignee: Optional[TeamMember] = None,
-) -> Task:
-    """Create a task. This will replace the above task_create method."""
-    task = task_create(
-        who=who,
-        section=section,
-        title=title,
-        description=description,
-        assignee=assignee,
-        due_date=due_date,
-    )
-    task_assign_labels(task=task, labels=labels)
-
-    create_sub_tasks = sub_tasks["create_sub_tasks"] or []
-    sub_task_create_many(
-        who=who,
-        task=task,
-        create_sub_tasks=create_sub_tasks,
-    )
+    if labels is not None:
+        task_assign_labels(task=task, labels=labels)
     return task
 
 
 # Update
 @transaction.atomic
-def task_update_nested(
+def task_update(
     *,
     who: User,
     task: Task,
@@ -131,9 +92,7 @@ def task_update_nested(
     description: Optional[str] = None,
     due_date: Optional[datetime] = None,
     assignee: Optional[TeamMember] = None,
-    # Make these two optional
-    labels: Sequence[Label],
-    sub_tasks: Optional[ValidatedData] = None,
+    labels: Optional[Sequence[Label]] = None,
 ) -> Task:
     """Assign labels, assign assignee."""
     validate_perm("workspace.update_task", who, task.workspace)
@@ -142,16 +101,8 @@ def task_update_nested(
     task.due_date = due_date
     task.assignee = assignee
     task.save()
-    task_assign_labels(task=task, labels=labels)
-    if sub_tasks:
-        sub_task_instances = list(task.subtask_set.all())
-        sub_task_update_many(
-            task=task,
-            who=who,
-            sub_tasks=sub_task_instances,
-            create_sub_tasks=sub_tasks["create_sub_tasks"] or [],
-            update_sub_tasks=sub_tasks["update_sub_tasks"] or [],
-        )
+    if labels is not None:
+        task_assign_labels(task=task, labels=labels)
     return task
 
 

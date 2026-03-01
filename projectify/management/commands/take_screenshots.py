@@ -34,7 +34,7 @@ from projectify.workspace.services.project import (
     project_create,
     project_delete,
 )
-from projectify.workspace.services.task import task_create_nested
+from projectify.workspace.services.task import task_create
 from projectify.workspace.services.team_member_invite import (
     team_member_invite_create,
 )
@@ -66,7 +66,6 @@ class Command(BaseCommand):
     owner: Optional[User] = None
     test_users: list[User] = []
     essay_task = None
-    branding_task = None
     in_progress_section = None
     coursework_section = None
     software_project = None
@@ -174,42 +173,11 @@ class Command(BaseCommand):
         )
 
         # Used in development team solutions page
-        task_create_nested(
+        task_create(
             who=self.owner,
             section=self.in_progress_section,
             title="Beta testing for level 6",
             description="Conduct beta testing for level 6 functionality",
-            sub_tasks={
-                "create_sub_tasks": [
-                    {
-                        "title": "Set up test environment",
-                        "done": True,
-                        "_order": 0,
-                    },
-                    {
-                        "title": "Create test scenarios",
-                        "done": True,
-                        "_order": 1,
-                    },
-                    {
-                        "title": "Execute gameplay tests",
-                        "done": False,
-                        "_order": 2,
-                    },
-                    {
-                        "title": "Test user interface",
-                        "done": False,
-                        "_order": 3,
-                    },
-                    {
-                        "title": "Performance testing",
-                        "done": False,
-                        "_order": 4,
-                    },
-                    {"title": "Document findings", "done": False, "_order": 5},
-                ],
-                "update_sub_tasks": [],
-            },
             labels=[labels["Testing"]],
             assignee=fake.random_element(elements=team_members),
         )
@@ -227,86 +195,47 @@ class Command(BaseCommand):
             ),
         ]
         for title, description, label_name in tasks_data:
-            task_create_nested(
+            task_create(
                 who=self.owner,
                 section=self.in_progress_section,
                 title=title,
                 description=description,
-                sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
                 labels=[labels[label_name]],
                 assignee=fake.random_element(elements=team_members),
             )
 
         # Used in academic solutions page
-        self.essay_task = task_create_nested(
+        self.essay_task = task_create(
             who=self.owner,
             section=self.coursework_section,
             title="Write essay for assignment",
             description="Complete the essay assignment for the course",
-            sub_tasks={
-                "create_sub_tasks": [
-                    {"title": "Brainstorming", "done": False, "_order": 0},
-                    {
-                        "title": "Write introduction",
-                        "done": False,
-                        "_order": 1,
-                    },
-                    {"title": "Find references", "done": False, "_order": 2},
-                ],
-                "update_sub_tasks": [],
-            },
             labels=[labels["Investigate"]],
             assignee=fake.random_element(elements=team_members),
         )
-        task_create_nested(
+        task_create(
             who=self.owner,
             section=self.coursework_section,
             title="Research methodology review",
-            sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
             labels=[],
             assignee=fake.random_element(elements=team_members),
         )
 
-        task_create_nested(
+        task_create(
             who=self.owner,
             section=self.coursework_section,
             title="Prepare presentation slides",
-            sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
-            labels=[labels["Design"]],
-            assignee=fake.random_element(elements=team_members),
-        )
-
-        # Task for sub-tasks screenshot
-        self.branding_task = task_create_nested(
-            who=self.owner,
-            section=todo_section,
-            title="Brand identity development",
-            description="Develop comprehensive brand identity for the project",
-            sub_tasks={
-                "create_sub_tasks": [
-                    {"title": "Create moodboard", "done": True, "_order": 0},
-                    {"title": "Brainstorm logo", "done": True, "_order": 1},
-                    {"title": "Finalise branding", "done": False, "_order": 2},
-                    {
-                        "title": "Draft presentation",
-                        "done": False,
-                        "_order": 3,
-                    },
-                ],
-                "update_sub_tasks": [],
-            },
             labels=[labels["Design"]],
             assignee=fake.random_element(elements=team_members),
         )
 
         for label_name in labels.keys():
             for _ in range(fake.random_int(min=20, max=30)):
-                task_create_nested(
+                task_create(
                     who=self.owner,
                     section=todo_section,
                     title=fake.catch_phrase(),
                     description=fake.text(max_nb_chars=100),
-                    sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
                     labels=[labels[label_name]],
                     assignee=fake.random_element(elements=team_members),
                 )
@@ -348,7 +277,6 @@ class Command(BaseCommand):
         assert self.in_progress_section
         assert self.coursework_section
         assert self.essay_task
-        assert self.branding_task
 
         driver.get(f"{base_url}{reverse('users:log-in')}")
         wait = WebDriverWait(driver, 2)
@@ -418,22 +346,6 @@ class Command(BaseCommand):
             str(output_directory / "project-management-permissions.png")
         )
 
-        # academic solutions sub tasks
-        driver.get(
-            f"{base_url}{reverse('dashboard:tasks:detail', kwargs={'task_uuid': self.essay_task.uuid})}"
-        )
-        self.remove_debug_toolbar(driver)
-        subtasks_selector = "#subtasks"
-        subtasks_element = wait.until(
-            EC.presence_of_element_located(
-                (By.CSS_SELECTOR, subtasks_selector)
-            )
-        )
-        ActionChains(driver).scroll_to_element(subtasks_element).perform()
-        subtasks_element.screenshot(
-            str(output_directory / "academic-sub-task.png")
-        )
-
         # academic solutions coursework section
         driver.get(
             f"{base_url}{reverse('dashboard:projects:detail', kwargs={'project_uuid': self.software_project.uuid})}"
@@ -453,20 +365,6 @@ class Command(BaseCommand):
         coursework_section_element.screenshot(
             str(output_directory / "academic-tasks.png")
         )
-
-        # sub-tasks screenshot for landing
-        driver.get(
-            f"{base_url}{reverse('dashboard:tasks:detail', kwargs={'task_uuid': self.branding_task.uuid})}"
-        )
-        self.remove_debug_toolbar(driver)
-        subtasks_selector = "#subtasks"
-        subtasks_element = wait.until(
-            EC.presence_of_element_located(
-                (By.CSS_SELECTOR, subtasks_selector)
-            )
-        )
-        ActionChains(driver).scroll_to_element(subtasks_element).perform()
-        subtasks_element.screenshot(str(output_directory / "sub-tasks.png"))
 
     def add_arguments(self, parser: Any) -> None:
         """Add command arguments."""

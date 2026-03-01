@@ -4,13 +4,12 @@
 """Task CRUD views."""
 
 import logging
-from typing import Any, Literal, Optional, Type, cast
+from typing import Any, Literal, Optional
 from uuid import UUID
 
 from django import forms
 from django.core.exceptions import BadRequest
-from django.forms.formsets import TOTAL_FORM_COUNT
-from django.http import HttpResponse, QueryDict
+from django.http import HttpResponse
 from django.http.response import Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -22,7 +21,6 @@ from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 
 from ..models import Task, Workspace
-from ..models.const import SUBTASK_PROGRESS_CLASSES
 from ..selectors.section import (
     SectionDetailQuerySet,
     section_find_for_user_and_uuid,
@@ -30,13 +28,12 @@ from ..selectors.section import (
 from ..selectors.task import TaskDetailQuerySet, task_find_by_task_uuid
 from ..selectors.team_member import team_member_find_for_workspace
 from ..selectors.workspace import workspace_find_for_user
-from ..services.sub_task import ValidatedDatum, ValidatedDatumWithUuid
 from ..services.task import (
-    task_create_nested,
+    task_create,
     task_delete,
     task_move_after,
     task_move_in_direction,
-    task_update_nested,
+    task_update,
 )
 
 logger = logging.getLogger(__name__)
@@ -132,83 +129,9 @@ class TaskCreateForm(forms.Form):
         )
 
 
-class TaskCreateSubTaskForm(forms.Form):
-    """Form for creating sub tasks as part of task creation."""
-
-    title = forms.CharField(label=_("Sub task title"))
-    done = forms.BooleanField(required=False, label=_("Done"))
-
-
-TaskCreateSubTaskForms = forms.formset_factory(TaskCreateSubTaskForm, extra=0)  # type: ignore[type-var]
-
-
-class TaskUpdateSubTaskForm(forms.Form):
-    """Form for creating sub tasks as part of task creation."""
-
-    title = forms.CharField(required=False, label=_("Sub task title"))
-    done = forms.BooleanField(required=False, label=_("Done"))
-    uuid = forms.UUIDField(required=False, widget=forms.HiddenInput)
-    delete = forms.BooleanField(
-        required=False,
-        label=_("Delete task"),
-        initial=False,
-    )
-
-
-class TaskUpdateSubTaskFormSet(forms.BaseFormSet):  # type:ignore[type-arg]
-    """Custom formset for task update sub tasks with focus mechanism."""
-
-    def __init__(
-        self,
-        focus_subtask_uuid: Optional[UUID] = None,
-        *args: Any,
-        **kwargs: Any,
-    ):
-        """Initialize formset with optional focus on specific subtask."""
-        super().__init__(*args, **kwargs)
-
-        if not focus_subtask_uuid:
-            return
-        if not self.forms:
-            return
-        for form in self.forms:
-            if form.initial and form.initial.get("uuid") == focus_subtask_uuid:
-                break
-        else:
-            logger.warning(
-                "Couldn't find sub task %s in formset", focus_subtask_uuid
-            )
-            return
-        form.fields["title"].widget.attrs["autofocus"] = True
-
-
-TaskUpdateSubTaskForms = cast(
-    Type[TaskUpdateSubTaskFormSet],
-    forms.formset_factory(
-        TaskUpdateSubTaskForm, formset=TaskUpdateSubTaskFormSet, extra=0
-    ),
-)
-
-
-@platform_view
-def task_create_sub_task_form(
-    request: AuthenticatedHttpRequest,
-    sub_tasks: int,
-) -> HttpResponse:
-    """Return a single form for a sub task."""
-    formset = TaskCreateSubTaskForms().empty_form
-    formset.prefix = f"form-{sub_tasks}"
-    new_sub_tasks = sub_tasks + 1
-    return render(
-        request,
-        "workspace/task_create/sub_task.html",
-        {"empty_formset": formset, "formset_total": new_sub_tasks},
-    )
-
-
 @platform_view
 @require_http_methods(["GET", "POST"])
-def task_create(
+def task_create_view(
     request: AuthenticatedHttpRequest, section_uuid: UUID
 ) -> HttpResponse:
     """Create a task. Render form error if unsuccessful."""
@@ -232,7 +155,6 @@ def task_create(
                 {
                     **context,
                     "form": TaskCreateForm(workspace=workspace),
-                    "formset": TaskCreateSubTaskForms(),
                 },
             )
         case "POST":
@@ -240,25 +162,15 @@ def task_create(
         case method:
             raise RuntimeError(f"Don't know how to handle method {method}")
     form = TaskCreateForm(workspace, request.POST)
-    formset = TaskCreateSubTaskForms(request.POST.dict())
-    all_valid = form.is_valid() and formset.is_valid()
-    if not formset.is_valid():
-        logger.warning("Formset validation errors: %s", formset.errors)
-    if not all_valid:
+    if not form.is_valid():
         return render(
             request,
             "workspace/task_create.html",
-            {**context, "form": form, "formset": formset},
+            {**context, "form": form},
             status=400,
         )
 
-    sub_tasks: list[ValidatedDatum] = [
-        {"title": d["title"], "done": d["done"], "_order": i}
-        for i, d in enumerate(formset.cleaned_data)
-        if d.get("title")
-    ]
-
-    task = task_create_nested(
+    task = task_create(
         who=request.user,
         section=section,
         title=form.cleaned_data["title"],
@@ -266,7 +178,6 @@ def task_create(
         assignee=form.cleaned_data.get("assignee"),
         due_date=form.cleaned_data.get("due_date"),
         labels=form.cleaned_data["labels"],
-        sub_tasks={"create_sub_tasks": sub_tasks, "update_sub_tasks": []},
     )
 
     match request.POST.get("action"):
@@ -297,21 +208,10 @@ def task_detail(
 
     workspace = task.workspace
 
-    sub_task_progress = getattr(task, "sub_task_progress", None)
-    if sub_task_progress is not None:
-        # 21 classes between 0 and 100
-        # 5 points between classes
-        progress_percent = min(100, max(round(sub_task_progress * 20) * 5, 0))
-        subtask_progress_style = SUBTASK_PROGRESS_CLASSES[progress_percent]
-    else:
-        # If task has no sub tasks, this is None
-        subtask_progress_style = None
-
     context = {
         **get_task_view_context(request, workspace),
         "task": task,
         "project": task.section.project,
-        "subtask_progress_style": subtask_progress_style,
     }
     return render(request, "workspace/task_detail.html", context)
 
@@ -384,8 +284,6 @@ class TaskUpdateForm(forms.Form):
             return
         if focus_field in self.fields:
             self.fields[focus_field].widget.attrs["autofocus"] = True
-        elif focus_field == "subtasks":
-            pass
         else:
             logger.warning(
                 "Couldn't find focus_field=%s in self.fields", focus_field
@@ -398,7 +296,6 @@ def task_update_view(
     request: AuthenticatedHttpRequest,
     task_uuid: UUID,
     focus_field: Optional[str] = None,
-    sub_task_uuid: Optional[UUID] = None,
 ) -> HttpResponse:
     """Update task. Render errors."""
     task = task_find_by_task_uuid(
@@ -420,11 +317,6 @@ def task_update_view(
         "due_date": task.due_date,
         "description": task.description,
     }
-    sub_tasks = task.subtask_set.all()
-    sub_tasks_initial = [
-        {"title": sub_task.title, "done": sub_task.done, "uuid": sub_task.uuid}
-        for sub_task in sub_tasks
-    ]
 
     # Determine what update view action should be taken
     match request.method, request.POST.get("action"):
@@ -434,45 +326,16 @@ def task_update_view(
             )
         case "POST", "update_stay":
             next_url = reverse("dashboard:tasks:detail", args=(task.uuid,))
-        case "POST", "add_sub_task":
-            post: QueryDict = request.POST.copy()
-            sub_task_count_raw: str = post.get("form-" + TOTAL_FORM_COUNT, "0")
-            try:
-                sub_task_count = int(sub_task_count_raw)
-            except ValueError as e:
-                logger.error(
-                    "Unexpected error when getting total form count",
-                    exc_info=e,
-                )
-                sub_task_count = 0
-            post["form-TOTAL_FORMS"] = str(sub_task_count + 1)
-            logger.info("Adding sub task")
-            form = TaskUpdateForm(
-                data=post, workspace=workspace, focus_field=focus_field
-            )
-            formset = TaskUpdateSubTaskForms(data=post)
-            context = {
-                **context,
-                "form": form,
-                "task": task,
-                "formset": formset,
-            }
-            return render(request, "workspace/task_update.html", context)
         case "GET", _:
             form = TaskUpdateForm(
                 initial=task_initial,
                 workspace=workspace,
                 focus_field=focus_field,
             )
-            formset = TaskUpdateSubTaskForms(
-                focus_subtask_uuid=sub_task_uuid,
-                initial=sub_tasks_initial,
-            )
             context = {
                 **context,
                 "form": form,
                 "task": task,
-                "formset": formset,
             }
             logger.warning("No action specified")
             next_url = reverse(
@@ -495,45 +358,14 @@ def task_update_view(
         focus_field=focus_field,
     )
     form.full_clean()
-    formset = TaskUpdateSubTaskForms(
-        data=request.POST,
-        initial=sub_tasks_initial,
-    )
-    formset.full_clean()
-    if not form.is_valid() or not formset.is_valid():
-        logger.warning(
-            "form.is_valid=%s, formset.is_valid()=%s",
-            form.is_valid(),
-            formset.is_valid(),
-        )
-        context = {**context, "form": form, "task": task, "formset": formset}
+    if not form.is_valid():
+        context = {**context, "form": form, "task": task}
         return render(
             request, "workspace/task_update.html", context, status=400
         )
 
     cleaned_data = form.cleaned_data
-    formset_cleaned_data = formset.cleaned_data
-    update_sub_tasks: list[ValidatedDatumWithUuid] = [
-        {
-            "title": f["title"],
-            "done": f["done"],
-            "_order": i,
-            "uuid": f["uuid"],
-        }
-        for i, f in enumerate(formset_cleaned_data)
-        if f and f["uuid"] and not f["delete"]
-    ]
-    create_sub_tasks: list[ValidatedDatum] = [
-        {
-            "title": f["title"],
-            "done": f["done"],
-            "_order": i,
-        }
-        for i, f in enumerate(formset_cleaned_data)
-        # Only include sub tasks that have a title
-        if f and not f["uuid"] and not f["delete"] and f["title"].strip()
-    ]
-    task_update_nested(
+    task_update(
         who=request.user,
         task=task,
         title=cleaned_data["title"],
@@ -541,10 +373,6 @@ def task_update_view(
         due_date=cleaned_data["due_date"],
         assignee=cleaned_data["assignee"],
         labels=cleaned_data["labels"],
-        sub_tasks={
-            "update_sub_tasks": update_sub_tasks,
-            "create_sub_tasks": create_sub_tasks,
-        },
     )
     return redirect(next_url)
 

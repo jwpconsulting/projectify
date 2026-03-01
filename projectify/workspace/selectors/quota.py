@@ -7,7 +7,6 @@ Determine trial limit quota for workspace.
 Limitations for trial plan:
 Be able to create 10 boards and up to 100 sections across all boards
 Be able to create 1000 tasks in that workspace
-Be able to create 10 * 100 sub tasks
 Be able to add one more user, therefore that workspace being limited to having
 2 team members in total.
 Be able to create 10 labels, assign them to all tasks
@@ -15,7 +14,6 @@ Be able to create 10 labels, assign them to all tasks
 Limitations for a trial workspace are
 - ChatMessage: 0 chat messages,
 - Label: 10 labels
-- SubTask: 1000 sub tasks,
 - Task: 1000 tasks,
 - TaskLabel: unlimited,
 - Project: 10,
@@ -31,20 +29,11 @@ from projectify.corporate.selectors.customer import (
 )
 from projectify.workspace.types import Quota, WorkspaceQuota
 
-from ..models import (
-    ChatMessage,
-    Label,
-    Section,
-    SubTask,
-    Task,
-    TaskLabel,
-    Workspace,
-)
+from ..models import ChatMessage, Label, Section, Task, TaskLabel, Workspace
 
 Resource = Literal[
     "ChatMessage",
     "Label",
-    "SubTask",
     "Task",
     "TaskLabel",
     "Project",
@@ -60,7 +49,6 @@ class Limitations(TypedDict):
 
     ChatMessage: Limitation
     Label: Limitation
-    SubTask: Limitation
     Task: Limitation
     TaskLabel: Limitation
     Project: Limitation
@@ -71,7 +59,6 @@ class Limitations(TypedDict):
 trial_conditions: Limitations = {
     "ChatMessage": 0,
     "Label": 10,
-    "SubTask": 1000,
     "Task": 1000,
     "TaskLabel": None,
     "Project": 10,
@@ -83,7 +70,6 @@ trial_conditions: Limitations = {
 # {
 #     "ChatMessage": None,
 #     "Label": None,
-#     "SubTask": None,
 #     "Task": None,
 #     "TaskLabel": None,
 #     "Project": None,
@@ -118,8 +104,6 @@ def get_workspace_resource_count(
             ).count()
         case "Label":
             return Label.objects.filter(workspace=workspace).count()
-        case "SubTask":
-            return SubTask.objects.filter(task__workspace=workspace).count()
         case "Task":
             return Task.objects.filter(
                 section__project__workspace=workspace
@@ -157,7 +141,6 @@ def workspace_get_all_quotas(workspace: Workspace) -> WorkspaceQuota:
         ),
         chat_messages=mk(resource="ChatMessage"),
         labels=mk(resource="Label"),
-        sub_tasks=mk(resource="SubTask"),
         tasks=mk(resource="Task"),
         task_labels=mk(resource="TaskLabel"),
         projects=mk(resource="Project"),

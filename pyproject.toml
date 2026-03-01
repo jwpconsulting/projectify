@@ -221,7 +221,6 @@ exclude = [
     "projectify/user/models.py",
     # Other issues
     "projectify/workspace/models/section.py",
-    "projectify/workspace/models/sub_task.py",
     # Vendored in
     "configurations/**/*.py",
     "rules/predicates.py",

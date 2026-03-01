@@ -12,7 +12,7 @@ can create within your workspace. Resources within your workspace are:
 
 - Team members and invitations
 - Projects and sections
-- Tasks and sub tasks
+- Tasks
 - Labels
 
 # Quotas for paid workspaces
@@ -41,7 +41,6 @@ In a trial workspace, the following quotas apply:
 - You can create up to 10 projects
 - You can create up to 100 sections
 - You can create up to 1000 tasks
-- You can create up to 1000 sub tasks
 - You can create up to 10 labels
 
 If you would like to create more items, and invite more users to your

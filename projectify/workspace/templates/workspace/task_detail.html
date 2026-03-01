@@ -78,57 +78,6 @@
                     </tr>
                 </tbody>
             </table>
-            <div class="flex flex-col gap-4">
-                <div class="flex flex-row items-center gap-4">
-                    <h4 class="text-xl font-bold">{% trans "Sub tasks" %}</h4>
-                    {% circle_anchor label=_("Edit sub tasks") icon_style="pencil" href="dashboard:tasks:update" fragment="subtasks" title=_("Edit sub tasks") size=4 task_uuid=task.uuid %}
-                </div>
-                {% if task.sub_task_progress is not None %}
-                    <div class="flex flex-row items-center gap-4">
-                        <div class="h-2 w-full overflow-hidden rounded bg-disabled">
-                            <div role="img"
-                                 title="{% blocktranslate with progress=task.sub_task_progress|percent %}Sub tasks {{ progress }} done{% endblocktranslate %}"
-                                 class="h-full bg-primary {{ subtask_progress_style }}"></div>
-                        </div>
-                        <span aria-hidden="true" class="min-w-max font-bold">{{ task.sub_task_progress|percent }}</span>
-                    </div>
-                {% endif %}
-            </div>
-            <table id="subtasks"
-                   class="grid grow items-center grid-cols-[min-content_1fr_min-content] gap-x-1 gap-y-1">
-                <thead class="contents">
-                    <tr class="contents">
-                        <th class="sr-only">{% translate "Done" %}</th>
-                        <th class="sr-only">{% translate "Sub task" %}</th>
-                        <th class="sr-only">{% translate "Edit sub task" %}</th>
-                    </tr>
-                </thead>
-                <tbody class="contents">
-                    {% for sub_task in task.subtask_set.all %}
-                        <tr class="contents">
-                            <td class="size-4 shrink-0 rounded border border-secondary-hover"
-                                role="img"
-                                aria-label="{% if sub_task.done %}{% trans 'Subtask completed' %}{% else %}{% trans 'Subtask not completed' %}{% endif %}">
-                                {% if sub_task.done %}
-                                    {% icon "check" size=4 %}
-                                {% endif %}
-                            </td>
-                            <td class="px-2 py-1 truncate">{{ sub_task.title }}</td>
-                            <td>
-                                {% circle_anchor label=_("Edit sub task") icon_style="pencil" href="dashboard:tasks:update-sub-task" title=_("Edit sub task") size=4 task_uuid=task.uuid sub_task_uuid=sub_task.uuid %}
-                            </td>
-                        </tr>
-                    {% empty %}
-                        <tr class="contents">
-                            <td class="col-span-3">
-                                <p class="text-base-content">
-                                    {% blocktrans %}This task has no sub tasks. You can add sub tasks by going to the task edit screen and clicking the <strong>Add sub task</strong> button from there.{% endblocktrans %}
-                                </p>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
         </div>
     </main>
 {% endblock dashboard_content %}
