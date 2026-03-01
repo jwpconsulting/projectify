@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2024 JWP Consulting GK
+SPDX-FileCopyrightText: 2024,2026 JWP Consulting GK
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
@@ -19,7 +19,6 @@ users who employ assistive technologies.
 - Ensure designs meet a minimum accessibility level (WCAG 2.1 level AA)
 - Compatibility with different web browsers and assistive technology
 - Include people with disabilities in our user personas
-- Conduct usability tests with people who have disabilities
 
 # Conformance status
 
@@ -71,15 +70,9 @@ We are aware that, despite our best efforts, there may be limitations to the
 accessibility of both the platform and website. Below is a description of known
 limitations. Please contact us if you discover an issue not listed below.
 
-Known limitations of the platform:
+Currently known limitations of the platform:
 
-- Tab selection not working on the calendar menu
 - Not all screen readers can read placeholder text
-
-# Evaluation report
-
-An evaluation report will be carried out by self-evaluation and a link to the
-report be published here.
 
 # Contact us
 
