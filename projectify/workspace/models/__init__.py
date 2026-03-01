@@ -62,6 +62,7 @@ class Workspace(TitleDescriptionModel, BaseModel):
         teammember_set: RelatedManager["TeamMember"]
         teammemberinvite_set: RelatedManager["TeamMemberInvite"]
         label_set: RelatedManager["Label"]
+        active_invites: Optional[RelatedManager["TeamMemberInvite"]]
 
     @transaction.atomic
     def increment_highest_task_number(self) -> int:
@@ -77,6 +78,15 @@ class Workspace(TitleDescriptionModel, BaseModel):
     def __str__(self) -> str:
         """Return title."""
         return self.title
+
+    def refresh_from_db(self, *args: Any, **kwargs: Any) -> None:
+        """
+        Clear active_invites.
+
+        This is a workaround so that invites get removed after deleting them.
+        """
+        setattr(self, "active_invites", [])
+        super().refresh_from_db(*args, **kwargs)
 
     class Meta:
         """Add constraints and triggers."""

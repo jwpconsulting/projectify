@@ -5,8 +5,9 @@
 
 import pytest
 
-from ...models import TeamMember
+from ...models import TeamMember, TeamMemberInvite
 from ...selectors.workspace import (
+    WorkspaceDetailQuerySet,
     workspace_find_by_workspace_uuid,
     workspace_find_for_user,
 )
@@ -59,3 +60,55 @@ def test_workspace_find_by_workspace_uuid(
         )
         is None
     )
+
+
+def test_queryset_prefetch_refresh(
+    team_member: TeamMember,
+    team_member_invite: TeamMemberInvite,
+) -> None:
+    """Test that redeemed invites don't show up."""
+    who = team_member.user
+    wuid = team_member.workspace.uuid
+    qs = WorkspaceDetailQuerySet
+    ws = workspace_find_by_workspace_uuid(who=who, workspace_uuid=wuid, qs=qs)
+    assert ws is not None
+    invites = ws.active_invites
+    assert invites
+    assert len(invites) == 1
+
+    team_member_invite.redeemed = True
+    team_member_invite.save()
+
+    ws = workspace_find_by_workspace_uuid(who=who, workspace_uuid=wuid, qs=qs)
+    assert ws is not None
+    invites = ws.active_invites
+    assert invites is not None
+    assert len(invites) == 0
+
+    ws.refresh_from_db()
+    invites = ws.active_invites
+    assert invites is not None
+    assert len(invites) == 0
+
+
+def test_prefetch_deleted_invite(
+    team_member: TeamMember,
+    team_member_invite: TeamMemberInvite,
+) -> None:
+    """Test that redeemed invites don't show up."""
+    who = team_member.user
+    wuid = team_member.workspace.uuid
+    qs = WorkspaceDetailQuerySet
+    ws = workspace_find_by_workspace_uuid(who=who, workspace_uuid=wuid, qs=qs)
+    assert ws is not None
+    invites = ws.active_invites
+    assert invites
+    assert len(invites) == 1
+
+    team_member_invite.delete()
+    assert TeamMemberInvite.objects.count() == 0
+
+    ws.refresh_from_db(from_queryset=qs)
+    invites = ws.active_invites
+    assert invites is not None
+    assert len(invites) == 0

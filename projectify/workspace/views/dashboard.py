@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 
 from projectify.lib.types import AuthenticatedHttpRequest
+from projectify.lib.views import platform_view
 from projectify.workspace.selectors.project import (
     project_find_by_workspace_uuid,
 )
@@ -18,6 +19,7 @@ from projectify.workspace.selectors.team_member import (
 from projectify.workspace.selectors.workspace import workspace_find_for_user
 
 
+@platform_view
 def redirect_to_dashboard(request: AuthenticatedHttpRequest) -> HttpResponse:
     """Redirect to first available workspace or workspace list."""
     # TODO it would be fun if I could refactor this into a single call

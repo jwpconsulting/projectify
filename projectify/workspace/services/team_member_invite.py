@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
 """Team member invite services."""
 
+import logging
 from typing import Optional, Union
 
 from django.db import transaction
@@ -19,6 +20,8 @@ from ..emails import TeamMemberInviteEmail
 from ..models import TeamMember, TeamMemberInvite, Workspace
 from ..models.const import TeamMemberRoles
 from ..services.workspace import workspace_add_user
+
+logger = logging.getLogger(__name__)
 
 
 # TODO these could be better suited as selectors
@@ -171,4 +174,10 @@ def team_member_invite_delete(
                 {"email": _("User with this email was never invited")}
             )
         case TeamMemberInvite() as team_member_invite:
-            team_member_invite.delete()
+            pass
+    logger.info(
+        "Removing invitation for email %s and workspace %s",
+        email,
+        workspace.uuid,
+    )
+    team_member_invite.delete()

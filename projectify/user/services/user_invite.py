@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 """User invite services."""
 
+import logging
 from typing import Optional
 
 from django.db import transaction
@@ -13,6 +14,8 @@ from projectify.user.selectors.user import user_find_by_email
 from projectify.workspace.models import TeamMemberInvite
 from projectify.workspace.models.const import TeamMemberRoles
 from projectify.workspace.services.workspace import workspace_add_user
+
+logger = logging.getLogger(__name__)
 
 
 @transaction.atomic
@@ -43,6 +46,11 @@ def user_invite_redeem(*, user_invite: UserInvite, user: User) -> None:
         redeemed=False,
     )
     for invite in qs:
+        logger.info(
+            "Redeeming invite for user %s and workspace %s",
+            user.email,
+            invite.workspace.uuid,
+        )
         workspace = invite.workspace
         workspace_add_user(
             workspace=workspace, user=user, role=TeamMemberRoles.OBSERVER

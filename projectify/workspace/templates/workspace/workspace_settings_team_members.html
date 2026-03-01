@@ -18,8 +18,7 @@
                   aria-label="{% translate "Invite team member" %}"
                   method="post"
                   action="{% url "dashboard:workspaces:team-members" workspace.uuid %}"
-                  hx-boost
-                  hx-swap="outerHTML">
+                  hx-boost>
                 {% csrf_token %}
                 {{ invite_form.email.as_field_group }}
                 {% include "projectify/forms/submit.html" with name="action" value="invite" text=_("Invite team member") %}
@@ -61,9 +60,9 @@
                             {% if can_delete_team_member %}
                                 <form hx-post="{% url 'dashboard:workspaces:team-members' workspace.uuid %}"
                                       hx-confirm="{% blocktrans with teamMember=team_member.user %}Would you like to remove '{{ teamMember }}' from this workspace? This action cannot be undone.{% endblocktrans %}"
-                                      hx-target="#settings-content"
-                                      hx-select="#settings-content"
-                                      hx-swap="outerHTML">
+                                      hx-select="#main"
+                                      hx-target="#main"
+                                      hw-swap="outerHTML">
                                     {% csrf_token %}
                                     <input type="hidden"
                                            name="{{ remove_form.team_member.html_name }}"
@@ -81,44 +80,42 @@
     </section>
     <section class="flex flex-col gap-4">
         <h2 id="team-member-invites-table-title" class="text-xl font-bold">{% trans "Team member invites" %}</h2>
-        {% with invites=workspace.teammemberinvite_set.all %}
-            {% if invites.count %}
-                <table aria-labelledby="team-member-invites-table-title"
-                       class="grid w-full grid-cols-[1fr_auto_auto] items-center gap-y-4 gap-x-2">
-                    <thead class="contents">
+        {% if workspace.active_invites %}
+            <table aria-labelledby="team-member-invites-table-title"
+                   class="grid w-full grid-cols-[1fr_auto_auto] items-center gap-y-4 gap-x-2">
+                <thead class="contents">
+                    <tr class="contents">
+                        <th class="border-b border-border text-left font-bold">{% trans "Invited email" %}</th>
+                        <th class="border-b border-border text-left font-bold">{% trans "Invited on" %}</th>
+                        <th class="border-b border-border text-left font-bold">{% trans "Action" %}</th>
+                    </tr>
+                </thead>
+                <tbody class="contents">
+                    {% for team_member_invite in workspace.active_invites %}
                         <tr class="contents">
-                            <th class="border-b border-border text-left font-bold">{% trans "Invited email" %}</th>
-                            <th class="border-b border-border text-left font-bold">{% trans "Invited on" %}</th>
-                            <th class="border-b border-border text-left font-bold">{% trans "Action" %}</th>
+                            <td class="overflow-x-auto">{{ team_member_invite.user_invite.email }}</td>
+                            <td>{{ team_member_invite.created|date:"Y-m-d" }}</td>
+                            <td>
+                                <form hx-post="{% url 'dashboard:workspaces:team-members' workspace.uuid %}"
+                                      hx-confirm="{% blocktrans with email=team_member_invite.user_invite.email %}Would you like to uninvite '{{ email }}' from this workspace? This action cannot be undone.{% endblocktrans %}"
+                                      hx-select="#main"
+                                      hx-target="#main"
+                                      hw-swap="outerHTML">
+                                    {% csrf_token %}
+                                    {{ uninvite_form }}
+                                    <input type="hidden"
+                                           name="{{ uninvite_form.email.html_name }}"
+                                           value="{{ team_member_invite.user_invite.email }}">
+                                    {% action_button text=_("Uninvite") icon="x" style="destructive" grow=True name="action" value="uninvite" %}
+                                </form>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody class="contents">
-                        {% for team_member_invite in workspace.teammemberinvite_set.all %}
-                            <tr class="contents">
-                                <td class="overflow-x-auto">{{ team_member_invite.user_invite.email }}</td>
-                                <td>{{ team_member_invite.created|date:"Y-m-d" }}</td>
-                                <td>
-                                    <form hx-post="{% url 'dashboard:workspaces:team-members' workspace.uuid %}"
-                                          hx-confirm="{% blocktrans with email=team_member_invite.user_invite.email %}Would you like to uninvite '{{ email }}' from this workspace? This action cannot be undone.{% endblocktrans %}"
-                                          hx-target="#main"
-                                          hx-select="#main"
-                                          hx-swap="outerHTML">
-                                        {% csrf_token %}
-                                        {{ uninvite_form }}
-                                        <input type="hidden"
-                                               name="{{ uninvite_form.email.html_name }}"
-                                               value="{{ team_member_invite.user_invite.email }}">
-                                        {% action_button text=_("Uninvite") icon="x" style="destructive" grow=True name="action" value="uninvite" %}
-                                    </form>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p>{% trans "You have no open invites" %}</p>
-            {% endif %}
-        {% endwith %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>{% trans "You have no open invites" %}</p>
+        {% endif %}
     </section>
     <hr>
     <section class="flex flex-col gap-2">

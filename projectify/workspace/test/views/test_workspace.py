@@ -4,6 +4,7 @@
 """Test workspace CRUD views."""
 
 from collections.abc import Iterable
+from datetime import datetime
 from typing import cast
 from unittest import mock
 from uuid import uuid4
@@ -22,9 +23,13 @@ from projectify.corporate.selectors.customer import (
 from projectify.corporate.services.stripe import customer_cancel_subscription
 from projectify.settings.base import Base
 from projectify.user.models import User
+from projectify.user.services.internal import user_create
+from projectify.workspace.services.team_member_invite import (
+    team_member_invite_create,
+)
 from pytest_types import DjangoAssertNumQueries
 
-from ...models import Label, TeamMember, Workspace
+from ...models import Label, TeamMember, TeamMemberInvite, Workspace
 from ...models.const import TeamMemberRoles
 
 pytestmark = pytest.mark.django_db
@@ -236,7 +241,7 @@ class TestWorkspaceSettingsTeamMembers:
         # Justus 2025-07-29 query count went up   32 -> 33 XXX
         # Query count went up 33 -> 34
         # Query count went up 34 -> 35 Justus 2026-02-23
-        with django_assert_num_queries(37):
+        with django_assert_num_queries(33):
             response = user_client.post(
                 resource_url, {"action": "invite", "email": "mail@bla.com"}
             )
@@ -245,14 +250,14 @@ class TestWorkspaceSettingsTeamMembers:
         assert team_member.workspace.teammemberinvite_set.count() == count + 1
 
         # can't invite a second time
-        with django_assert_num_queries(31):
+        with django_assert_num_queries(29):
             response = user_client.post(
                 resource_url, {"action": "invite", "email": "mail@bla.com"}
             )
             assert response.status_code == 400
         assert "already invited" in response.content.decode()
 
-        with django_assert_num_queries(27):
+        with django_assert_num_queries(25):
             response = user_client.post(
                 resource_url, {"action": "uninvite", "email": "mail@bla.com"}
             )
@@ -304,7 +309,7 @@ class TestWorkspaceSettingsTeamMembers:
         workspace = team_member.workspace
         initial = workspace.teammember_set.count()
         uid = str(other_team_member.uuid)
-        with django_assert_num_queries(29):
+        with django_assert_num_queries(26):
             response = user_client.post(
                 resource_url,
                 {"action": "team_member_remove", "team_member": uid},
@@ -318,6 +323,74 @@ class TestWorkspaceSettingsTeamMembers:
             resource_url, {"action": "team_member_remove", "team_member": uid}
         )
         assert response.status_code == 400
+
+    def test_redeemed_stale_invites(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        team_member_invite: TeamMemberInvite,
+        now: datetime,
+    ) -> None:
+        """
+        Assert that stale (redeemed) invites don't show up.
+
+        Test setup:
+        - User A: the user_client user, owns the workspace
+        - User B: User A invites them, they join.
+        - User C: User A invites them and uninvites them.
+        """
+        user_b_email = "foobar@localhost"
+        user_c_email = team_member_invite.user_invite.email
+        workspace = team_member.workspace
+        user_b_member_invite = team_member_invite_create(
+            workspace=workspace,
+            who=team_member.user,
+            email_or_user=user_b_email,
+        )
+        assert isinstance(user_b_member_invite, TeamMemberInvite)
+        user_c_user_invite = team_member_invite.user_invite
+
+        response = user_client.get(resource_url)
+        assert response.status_code == 200
+        assert "foobar@localhost" in response.content.decode()
+        assert "Foo Bar" not in response.content.decode()
+        assert user_c_email in response.content.decode()
+
+        assert TeamMemberInvite.objects.count() == 2
+        assert TeamMemberInvite.objects.filter(redeemed=True).count() == 0
+
+        # Redeem user_invite_b by signing up user_b
+        user_b = user_create(
+            email=user_b_email, tos_agreed=now, privacy_policy_agreed=now
+        )
+        user_b.preferred_name = "Foo Bar"
+        user_b.save()
+        assert TeamMemberInvite.objects.count() == 2
+        assert TeamMemberInvite.objects.filter(redeemed=True).count() == 1
+
+        response = user_client.get(resource_url)
+        assert response.status_code == 200
+        # Redeemed, so it won't show up, neither in
+        # members, nor invite table, since we've set a preferred name
+        assert "foobar@localhost" not in response.content.decode()
+        # User B's preferred name shows up
+        assert "Foo Bar" in response.content.decode()
+        # This should show up
+        assert user_c_email in response.content.decode()
+
+        # Uninvite user C
+        data = {"action": "uninvite", "email": user_c_user_invite.email}
+        response = user_client.post(resource_url, data=data)
+        assert response.status_code == 200
+        assert TeamMemberInvite.objects.count() == 1
+        assert TeamMemberInvite.objects.filter(redeemed=True).count() == 1
+
+        # User B's email shouldn't show up, but their preferred name should
+        assert "foobar@localhost" not in response.content.decode()
+        assert "Foo Bar" in response.content.decode()
+        # User C's invite is also gone, since we uninvite them
+        assert user_c_email not in response.content.decode()
 
 
 class TestWorkspaceSettingsTeamMemberUpdate:
