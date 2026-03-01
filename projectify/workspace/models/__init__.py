@@ -260,6 +260,7 @@ class Task(TitleDescriptionModel, BaseModel):
         "workspace.Label",
         through="workspace.TaskLabel",
     )  # type: models.ManyToManyField["Label", "TaskLabel"]
+    done = models.DateTimeField(null=True, blank=True)
 
     if TYPE_CHECKING:
         # Related fields
