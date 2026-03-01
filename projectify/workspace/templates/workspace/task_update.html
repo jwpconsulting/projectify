@@ -35,53 +35,6 @@
                         {{ form.as_table }}
                     </tbody>
                 </table>
-                <div class="flex flex-col gap-4">
-                    <div class="flex flex-row items-center justify-between">
-                        <div class="flex flex-row items-center gap-4">
-                            <h4 class="text-xl font-bold">{% translate "Sub tasks" %}</h4>
-                        </div>
-                        <div id="add-subtask" class="flex flex-row items-center gap-6">
-                            <button type="submit"
-                                    name="action"
-                                    value="add_sub_task"
-                                    class="w-full text-tertiary-content hover:text-tertiary-content-hover active:bg-tertiary-pressed active:text-tertiary-content-hover text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-transparent disabled:text-disabled-content">
-                                <div class="h-6 w-6">{% icon "plus" "primary" %}</div>
-                                {% translate "Add sub task" %}
-                            </button>
-                        </div>
-                    </div>
-                    <div id="subtasks">
-                        {% for form in formset %}
-                            <div data-formset
-                                 class="flex w-full flex-row items-center justify-between gap-2 px-2 py-1">
-                                <div class="flex grow flex-row items-center gap-2">
-                                    <label for="{{ form.done.id_for_label }}" class="sr-only">{{ form.done.label }}</label>
-                                    {{ form.done }}
-                                    <div class="grow">
-                                        <label for="{{ form.title.id_for_label }}" class="sr-only">{{ form.title.label }}</label>
-                                        <div class="flex flex-col items-start gap-2">
-                                            <div class="flex w-full flex-row items-center gap-2">{{ form.title }}</div>
-                                        </div>
-                                    </div>
-                                    {% if form.uuid.value %}
-                                        <input type="hidden"
-                                               name="{{ form.uuid.html_name }}"
-                                               value="{{ form.uuid.value }}">
-                                    {% endif %}
-                                    <div class="flex flex-row gap-2 items-center">
-                                        {{ form.delete }}
-                                        <label for="{{ form.delete.id_for_label }}">{{ form.delete.label }}</label>
-                                    </div>
-                                </div>
-                            </div>
-                        {% empty %}
-                            <p id="subtasks-empty-state" class="text-base-content">
-                                {% blocktrans %}You have not added any sub tasks yet. You can add a sub task by clicking the <strong>Add sub task</strong> button.{% endblocktrans %}
-                            </p>
-                        {% endfor %}
-                    </div>
-                </div>
-                {{ formset.management_form }}
                 {% csrf_token %}
             </div>
         </div>

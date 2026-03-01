@@ -15,7 +15,6 @@ from django.db.models import (
     Subquery,
     Value,
 )
-from django.db.models.functions import NullIf
 
 from projectify.user.models import User
 
@@ -62,12 +61,6 @@ TaskDetailQuerySet: QuerySet[Task] = (
         ),
     )
     .annotate(
-        sub_task_progress=Count(
-            "subtask",
-            filter=Q(subtask__done=True),
-        )
-        * 1.0
-        / NullIf(Count("subtask"), 0),
         first=Q(_order=Value(0)),
         last=Q(
             _order=Subquery(
