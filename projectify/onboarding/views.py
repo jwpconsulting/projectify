@@ -37,7 +37,7 @@ from projectify.workspace.selectors.workspace import (
 from projectify.workspace.services.label import label_create
 from projectify.workspace.services.project import project_create
 from projectify.workspace.services.section import section_create
-from projectify.workspace.services.task import task_create, task_update_nested
+from projectify.workspace.services.task import task_create, task_update
 from projectify.workspace.services.workspace import workspace_create
 
 
@@ -357,7 +357,7 @@ def new_label(
                     color=0,
                     who=request.user,
                 )
-                task_update_nested(
+                task_update(
                     who=request.user,
                     task=task,
                     title=task.title,

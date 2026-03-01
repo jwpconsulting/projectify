@@ -16,7 +16,7 @@ from ...services.task import (
     task_create,
     task_mark_done,
     task_move_after,
-    task_update_nested,
+    task_update,
 )
 
 pytestmark = pytest.mark.django_db
@@ -139,14 +139,14 @@ def test_add_task_due_date(
 
 
 # Update
-def test_task_update_nested(
+def test_task_update(
     task: Task,
     label: Label,
     team_member: TeamMember,
     other_team_member: TeamMember,
 ) -> None:
     """Test updating a task."""
-    task_update_nested(
+    task_update(
         who=team_member.user,
         task=task,
         title="Hello world",
@@ -163,6 +163,30 @@ def test_task_update_nested(
 
     assert task.assignee
     assert task.assignee.user.email == other_team_member.user.email
+
+    # labels stay the same if labels=None passed
+    task_update(
+        who=team_member.user,
+        task=task,
+        title="Hello world",
+        description=None,
+        assignee=other_team_member,
+        labels=None,
+    )
+    task.refresh_from_db()
+    assert list(task.labels.values_list("uuid", flat=True)) == [label.uuid]
+
+    # labels disappear if empty list passed
+    task_update(
+        who=team_member.user,
+        task=task,
+        title="Hello world",
+        description=None,
+        assignee=other_team_member,
+        labels=[],
+    )
+    task.refresh_from_db()
+    assert list(task.labels.values_list("uuid", flat=True)) == []
 
 
 def test_moving_task_within_section(

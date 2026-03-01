@@ -33,7 +33,7 @@ from ..services.task import (
     task_delete,
     task_move_after,
     task_move_in_direction,
-    task_update_nested,
+    task_update,
 )
 
 logger = logging.getLogger(__name__)
@@ -365,7 +365,7 @@ def task_update_view(
         )
 
     cleaned_data = form.cleaned_data
-    task_update_nested(
+    task_update(
         who=request.user,
         task=task,
         title=cleaned_data["title"],

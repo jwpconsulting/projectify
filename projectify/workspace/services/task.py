@@ -84,8 +84,7 @@ def task_create(
 
 # Update
 @transaction.atomic
-# TODO rename task_update
-def task_update_nested(
+def task_update(
     *,
     who: User,
     task: Task,
@@ -93,8 +92,7 @@ def task_update_nested(
     description: Optional[str] = None,
     due_date: Optional[datetime] = None,
     assignee: Optional[TeamMember] = None,
-    # TODO Make label optional
-    labels: Sequence[Label],
+    labels: Optional[Sequence[Label]] = None,
 ) -> Task:
     """Assign labels, assign assignee."""
     validate_perm("workspace.update_task", who, task.workspace)
@@ -103,7 +101,8 @@ def task_update_nested(
     task.due_date = due_date
     task.assignee = assignee
     task.save()
-    task_assign_labels(task=task, labels=labels)
+    if labels is not None:
+        task_assign_labels(task=task, labels=labels)
     return task
 
 
