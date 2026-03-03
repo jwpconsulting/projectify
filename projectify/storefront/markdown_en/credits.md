@@ -4,6 +4,13 @@ SPDX-FileCopyrightText: 2026 JWP Consulting GK
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
+Projectify is free software. Please review Projectify's [free software information](/free-software)
+to learn more.
+
+The Projectify frontend uses the following software libraries. You can also
+review Projectify's [source code](/free-software#source-code) to learn what
+other software libraries it uses.
+
 # Alpine.js
 
 ```
