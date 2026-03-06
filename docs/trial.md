@@ -75,7 +75,6 @@ limitations are as follows:
 - A trial workspace can not have any chat messages (they are not supported by
   the application right now)
 - Within a trial workspace, any label can be assigned to any task.
-- Within a trial workspace, there can be up to 1000 sub tasks.
 
 There are no limitations for reading, updating and deleting.
 

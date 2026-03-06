@@ -232,10 +232,6 @@ functions:
 
 ```python
 # DONE
-# GET: Render a form for creating `sub_tasks` sub tasks
-task_create_sub_task_form(request, sub_tasks)
-
-# DONE
 # GET:  Shows task creation form
 # POST: Creates task within section
 task_create(request, section_uuid)
