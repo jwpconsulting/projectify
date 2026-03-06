@@ -137,6 +137,12 @@ class Base(Configuration):  # type:ignore
         "pgtrigger",
         "rules.apps.AutodiscoverRulesConfig",
         "markdownify.apps.MarkdownifyConfig",
+        # Allauth
+        "allauth",
+        "allauth.account",
+        # Optional -- requires install using `django-allauth[socialaccount]`.
+        "allauth.socialaccount",
+        "allauth.socialaccount.providers.github",
     )
 
     INSTALLED_APPS_FIRST_PARTY = (
@@ -176,6 +182,7 @@ class Base(Configuration):  # type:ignore
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "projectify.lib.htmx.HtmxMiddleware",
+        "allauth.account.middleware.AccountMiddleware",
     ]
 
     ROOT_URLCONF = "projectify.urls"
@@ -211,8 +218,14 @@ class Base(Configuration):  # type:ignore
     AUTHENTICATION_BACKENDS = (
         "rules.permissions.ObjectPermissionBackend",
         "django.contrib.auth.backends.ModelBackend",
+        # `allauth` specific authentication methods, such as login by email
+        "allauth.account.auth_backends.AuthenticationBackend",
     )
     LOGIN_URL = "/user/log-in"
+
+    # Django allauth
+    # Provider specific settings
+    SOCIALACCOUNT_PROVIDERS: dict[str, Any] = {}
 
     # Internationalization
     # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -244,6 +257,7 @@ class Base(Configuration):  # type:ignore
                     "projectify.context_processors.frontend_url",
                     "django.template.context_processors.csp",
                     "django.template.context_processors.debug",
+                    # `allauth` needs this from django
                     "django.template.context_processors.request",
                     "django.contrib.auth.context_processors.auth",
                     "django.contrib.messages.context_processors.messages",
