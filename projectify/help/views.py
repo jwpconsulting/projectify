@@ -19,6 +19,7 @@ HELP_TOPICS = {
         "title": _("Basics"),
         "description": _("Your first steps towards productivity"),
         "markdown_file": Path("basics.md"),
+        # These are a bit redundant since "basics" is the key of this entry
         "href": reverse_lazy("help:topic:basics"),
     },
     "workspaces": {
