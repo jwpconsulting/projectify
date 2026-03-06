@@ -4,52 +4,48 @@ SPDX-FileCopyrightText: 2024 JWP Consulting GK
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-# URLs for prerendered pages
+# Django show_urls
 
-Useful when testing on localhost. Generate with
+Use `uv run ./manage.py show_urls` to show all URLs that Projectify recognizes:
 
 ```bash
-npm run build && find build -name '*.html' | sed \
-  -e 's/build/- http:\/\/localhost:3000/' \
-  -e 's/.html//' \
-  -e '/fallback/d' \
-  -e '/index/d'
+uv run ./manage.py show_urls | grep -v admin
 ```
 
-- http://localhost:3000/free-software
-- http://localhost:3000/accessibility
-- http://localhost:3000/help
-- http://localhost:3000/security/disclose
-- http://localhost:3000/security/general
-- http://localhost:3000/pricing
-- http://localhost:3000/solutions/development-teams
-- http://localhost:3000/solutions/remote-work
-- http://localhost:3000/solutions/research
-- http://localhost:3000/solutions/academic
-- http://localhost:3000/solutions/personal-use
-- http://localhost:3000/solutions/project-management
-- http://localhost:3000/user/requested-password-reset
-- http://localhost:3000/user/sent-email-confirmation-link
-- http://localhost:3000/user/log-out
-- http://localhost:3000/user/reset-password
-- http://localhost:3000/contact-us
-- http://localhost:3000/tos
-- http://localhost:3000/ethicalads
-- http://localhost:3000/credits
-- http://localhost:3000/privacy
-- http://localhost:3000/help/trial
-- http://localhost:3000/help/tasks
-- http://localhost:3000/help/billing
-- http://localhost:3000/help/filters
-- http://localhost:3000/help/basics
-- http://localhost:3000/help/sections
-- http://localhost:3000/help/projects
-- http://localhost:3000/help/workspaces
-- http://localhost:3000/help/team-members
-- http://localhost:3000/help/roles
-- http://localhost:3000/help/quota
-- http://localhost:3000/help/labels
-- http://localhost:3000/solutions
+```
+/	projectify.storefront.views.index	storefront:landing
+/.well-known/security.txt	django.views.generic.base.TemplateView
+/403.html	projectify.views.handler403
+/404.html	projectify.views.handler404
+/500.html	projectify.views.handler500
+[…]
+/accessibility	projectify.storefront.views.accessibility	storefront:accessibility
+/contact-us	projectify.storefront.views.contact_us	storefront:contact_us
+/corporate/stripe-webhook/	projectify.corporate.views.stripe.stripe_webhook	corporate:stripe-webhook
+/credits	projectify.storefront.views.credits	storefront:credits
+/dashboard/	projectify.workspace.views.dashboard.redirect_to_dashboard	dashboard:dashboard
+/dashboard/avatar/<uuid:team_member_uuid>.svg	projectify.workspace.views.avatar_marble.avatar_marble_view	dashboard:avatar-marble
+/dashboard/project/<uuid:project_uuid>	projectify.workspace.views.project.project_detail_view	dashboard:projects:detail
+[…]
+/download	projectify.storefront.views.download	storefront:download
+/ethicalads	projectify.storefront.views.ethicalads	storefront:ethicalads
+/free-software	projectify.storefront.views.free_software	storefront:free_software
+/healthz	projectify.views.health_check	health-check
+/help/	projectify.help.views.help_list	help:list
+/help/basics	projectify.help.views.help_detail	help:topic:basics
+[…]
+/onboarding/	django.views.generic.base.RedirectView	onboarding:welcome
+/onboarding/about-you	projectify.onboarding.views.about_you	onboarding:about_you
+[…]
+/solutions/development-teams	projectify.storefront.views.solutions_development_teams	storefront:solutions:development_teams
+/solutions/project-management	projectify.storefront.views.solutions_project_management	storefront:solutions:project_management
+/tos	projectify.storefront.views.tos	storefront:tos
+/user/confirm-email/<str:email>/<str:token>	projectify.user.views.auth.email_confirm	users:confirm-email
+/user/confirm-password-reset/<str:email>/<str:token>	projectify.user.views.auth.password_reset_confirm	users:confirm-password-reset
+/user/log-in	projectify.user.views.auth.log_in	users:log-in
+[…]
+/user/sign-up	projectify.user.views.auth.sign_up	users:sign-up
+```
 
 # Thoughts on URLs for Projectify
 
