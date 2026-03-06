@@ -3,7 +3,7 @@ title: SvelteKit Frontend removal plan
 ---
 
 <!--
-SPDX-FileCopyrightText: 2024 JWP Consulting GK
+SPDX-FileCopyrightText: 2024-2026 JWP Consulting GK
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
@@ -160,7 +160,7 @@ These are sub-steps of the implementation stage.
 ## Deployment
 
 - [x] Deploy on render.com. Test thoroughly.
-- [ ] Security audit for Projectify on render.com
+- [x] Security audit for Projectify on render.com
 
 ## Acceptance test
 
@@ -199,23 +199,24 @@ requirements:
 
 Regarding security:
 
-- [ ] Absolutely no new CSP, Clickjacking, or `iframe`-related vulnerability
-      shall be introduced.
-- [ ] Absolutely no new XSS or SQL injection vulnerability shall be introduced.
-- [ ] CSRF checking shall be increasingly strict and non-cookie based in the
-      best case.
-- [ ] The django backend, embedded in an application server, shall interface
-      with the web in a secure manner.
-- [ ] Any redirect mechanism shall not impact user privacy (especially HTTPS
-      redirects)
-- [ ] Referrer-related privacy shall improve
-- [ ] Any caching mechanisms shall not expose user information.
+- Checked:
+  - [x] Absolutely no new CSP, Clickjacking, or `iframe`-related vulnerability
+        shall be introduced.
+  - [x] Strict CSRF checking
+- Not yet checked:
+  - [ ] Absolutely no new XSS or SQL injection vulnerability shall be introduced.
+  - [ ] The django backend, embedded in an application server, shall interface
+        with the web in a secure manner.
+  - [ ] Any redirect mechanism shall not impact user privacy (especially HTTPS
+        redirects)
+  - [ ] Referrer-related privacy shall improve
+  - [ ] Any caching mechanisms shall not expose user information.
 
 Regarding the application and network architecture
 
-- [ ] The complexity of the current deployment on Render.com shall not be
+- [x] The complexity of the current deployment on Render.com shall not be
       increased.
-- [ ] All of the frontend-specific API endpoints shall be removed.
+- [x] All of the frontend-specific API endpoints shall be removed.
 
 # Description of present Projectify
 
