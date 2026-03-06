@@ -77,6 +77,9 @@ class Base(Configuration):  # type:ignore
     CSRF_USE_SESSIONS = False
     CSRF_COOKIE_SAMESITE = "Strict"
     CSRF_COOKIE_SECURE = True
+    # > Although the setting offers little practical benefit, it’s sometimes required by security auditors.
+    # https://docs.djangoproject.com/en/6.0/ref/settings/#csrf-cookie-httponly
+    CSRF_COOKIE_HTTPONLY = True
     CSRF_TRUSTED_ORIGINS: Optional[Sequence[str]]
 
     # HSTS

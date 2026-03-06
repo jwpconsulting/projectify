@@ -10,10 +10,10 @@ These are the onboarding steps:
 
 - _About you_: `/onboarding/about-you`
 - _New workspace_: `/onboarding/new-workspace`
-- _New project_: `/onboarding/new-project/[workspaceUuid]`
-- _New task_: `/onboarding/new-task/[projectUuid]`
-- _New label_: `/onboarding/new-label/[taskUuid]`
-- _Assign task (confirmation)_: `/onboarding/assign-task/[taskUuid]`
+- _New project_: `/onboarding/new-project/<uuid:workspace_uuid>`
+- _New task_: `/onboarding/new-task/<uuid:project_uuid>`
+- _New label_: `/onboarding/new-label/<uuid:task_uuid>`
+- _Assign task (confirmation)_: `/onboarding/assign-task/<uuid:task_uuid>`
 
 ## Design and implementation criteria
 

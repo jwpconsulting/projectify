@@ -13,22 +13,6 @@ to implement rate limiting. Requests we want to rate limit are:
 - Requests that send emails as a consequence
 - Log in / sign up requests
 
-Another candidate was DRF's
-[UserRateThrottle](https://www.django-rest-framework.org/api-guide/throttling/#userratethrottle).
-Django Rest Framework invites developers to rate limit the views, but less for
-security reasons. Django Rest Framework's Throttling documentation mentions
-that it is not to be used as a security measure or DDoS protection.
-
-It might also make sense to throttle services directly, not views. Any view
-that is usable even when not authenticated is suited to be throttled directly.
-Perhaps some services that are only usable when authenticated might be
-throttlable themselves. For now, we will keep throttling to views only.
-
-# TODO
-
-- [ ] Handle properly in frontend based on 429 status for ChangePassword,
-      RequestEmailAddressUpdate and InviteUserToWorkspace
-
 # Views to be rate limited
 
 Views to be rate limited in the **user** app:
@@ -105,3 +89,18 @@ def user_sign_up(
 ```
 
 Where `validate_rate` throws a `exceptions.Throttled` DRF exception.
+
+# Other libraries considered
+
+Another candidate was DRF's
+[UserRateThrottle](https://www.django-rest-framework.org/api-guide/throttling/#userratethrottle).
+Django Rest Framework invites developers to rate limit the views, but less for
+security reasons. Django Rest Framework's Throttling documentation mentions
+that it is not to be used as a security measure or DDoS protection.
+
+# Other considerations
+
+It might also make sense to throttle services directly, not views. Any view
+that is usable even when not authenticated is suited to be throttled directly.
+Perhaps some services that are only usable when authenticated might be
+throttlable themselves. For now, we will keep throttling to views only.

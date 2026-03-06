@@ -99,13 +99,6 @@ class Development(Base):
     # Media
     SERVE_MEDIA = True
 
-    STORAGES = {
-        **Base.STORAGES,
-        "default": {
-            "BACKEND": "projectify.storage.LocalhostStorage",
-        },
-    }
-
     # Stripe
     STRIPE_PUBLISHABLE_KEY = environ_get_or_warn("STRIPE_PUBLISHABLE_KEY")
     STRIPE_SECRET_KEY = environ_get_or_warn("STRIPE_SECRET_KEY")
