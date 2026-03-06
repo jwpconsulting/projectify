@@ -7,19 +7,20 @@ import logging
 from typing import Any
 
 from django.db import transaction
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 from stripe.billing_portal import Session as BillingPortalSession
 from stripe.checkout import Session
 
-from projectify.corporate.lib.stripe import stripe_client
 from projectify.lib.auth import validate_perm
 from projectify.lib.settings import get_settings
 from projectify.user.models import User
 from projectify.workspace.models import Workspace
 from projectify.workspace.selectors.quota import workspace_quota_for
 
+from ..lib.stripe import stripe_client
 from ..models import Customer
 
 logger = logging.getLogger(__name__)
@@ -42,19 +43,14 @@ def customer_create(
 def _billing_site_url(customer: Customer) -> str:
     """Return URL to customer.workspace's billing settings."""
     settings = get_settings()
-    # XXX semi-hardcoded for now
-    return (
-        f"{settings.FRONTEND_URL}/dashboard/workspace/"
-        f"{customer.workspace.uuid}/settings/billing"
-    )
+    uuid = customer.workspace.uuid
+    url = reverse("dashboard:workspaces:billing", args=(uuid,))
+    return f"{settings.FRONTEND_URL}{url}"
 
 
 @transaction.atomic
 def customer_create_stripe_checkout_session(
-    *,
-    customer: Customer,
-    who: User,
-    seats: int,
+    *, customer: Customer, who: User, seats: int
 ) -> Session:
     """Generate the URL for a checkout session."""
     workspace = customer.workspace
@@ -123,9 +119,7 @@ def customer_create_stripe_checkout_session(
 
 
 def create_billing_portal_session_for_customer(
-    *,
-    who: User,
-    customer: Customer,
+    *, who: User, customer: Customer
 ) -> BillingPortalSession:
     """Create a billing session for a user given a workspace uuid."""
     validate_perm("corporate.can_update_customer", who, customer.workspace)
