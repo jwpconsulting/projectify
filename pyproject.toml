@@ -27,6 +27,7 @@ dependencies = [
     "django-ratelimit>=4.1.0,<5",
     "django-markdownify>=0.9.5,<0.10",
     "django-browser-reload>=1.21.0",
+    "django-allauth[socialaccount]>=65.14.3",
 ]
 authors = [
     { name = "The Projectify Authors", email = "hello@projectifyapp.com" },
