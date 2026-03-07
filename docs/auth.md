@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # User account management
 
-User account models are stored in user/models.py.
+User account models are stored in `projectify/user/models.py`.
 
 ## Foreign key to User
 
@@ -25,6 +25,11 @@ class MyModel(models.Model):
 
 Prefer using `projectify.user.models.User` over Django's
 `AbstractBaseUser` or `AbstractUser` in test cases and fixtures.
+
+# django-allauth
+
+Projectify uses django-allauth. django-allauth has many features. It doesn't
+replace Projectify's existing authentication code.
 
 # Naming things in authentication
 
