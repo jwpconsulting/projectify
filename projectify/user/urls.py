@@ -25,8 +25,6 @@ from projectify.user.views.user import (
     user_profile,
 )
 
-app_name = "users"
-
 urlpatterns = (
     path("profile/", user_profile, name="profile"),
     path("profile/change-password", password_change, name="change-password"),
@@ -57,7 +55,7 @@ urlpatterns = (
         password_reset_request,
         name="request-password-reset",
     ),
-    path("sign-up", sign_up, name="sign-up"),
+    path("sign-up", sign_up, name="account_signup"),
     path(
         "sent-email-confirmation-link",
         email_confirmation_link_sent,
@@ -82,6 +80,6 @@ urlpatterns = (
     path(
         "reset-password",
         password_reset,
-        name="reset-password",
+        name="account_reset_password",
     ),
 )

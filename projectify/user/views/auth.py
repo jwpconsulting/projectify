@@ -4,6 +4,7 @@
 """User authentication views."""
 
 from typing import Any
+from allauth.account import views as allauth_views
 
 from django import forms
 from django.contrib.auth.password_validation import (
@@ -178,59 +179,10 @@ class LogInForm(forms.Form):
         )
 
 
-@require_http_methods(["GET", "POST"])
-@ratelimit(key="ip", rate="5/m", method=UNSAFE)
-def log_in(request: HttpRequest) -> HttpResponse:
-    """Log the user in."""
-    FAILED_GROUP = "projectify.user.views.auth.log_in.fail"
-    FAILED_KEY = "post:email"
-    FAILED_RATE = "4/h"
-    if request.method == "GET":
-        form = LogInForm()
-        context = {"form": form}
-        return render(request, "user/log_in.html", context=context)
+log_in = allauth_views.LoginView.as_view(
+    template_name = "user/log_in.html",
 
-    limit = get_usage(
-        request,
-        group=FAILED_GROUP,
-        key=FAILED_KEY,
-        rate=FAILED_RATE,
-        increment=False,
-    )
-
-    form = LogInForm(request.POST)
-    context = {"form": form}
-
-    if limit and limit["should_limit"]:
-        context = {"form": form}
-        form.add_error(
-            field=None, error=_("Too many log in attempts. Slow down.")
-        )
-        return render(request, "user/log_in.html", context=context, status=429)
-
-    if not form.is_valid():
-        return render(request, "user/log_in.html", context=context, status=400)
-
-    try:
-        user_log_in(
-            email=form.cleaned_data["email"],
-            password=form.cleaned_data["password"],
-            request=request,
-        )
-    except ValidationError as error:
-        populate_form_with_drf_errors(form, error)
-        context = {"form": form}
-        get_usage(
-            request,
-            group=FAILED_GROUP,
-            key=FAILED_KEY,
-            rate=FAILED_RATE,
-            increment=True,
-        )
-        return render(request, "user/log_in.html", context=context, status=400)
-
-    next = request.GET.get("next", reverse("dashboard:dashboard"))
-    return redirect(next)
+)
 
 
 class PasswordResetRequestForm(forms.Form):

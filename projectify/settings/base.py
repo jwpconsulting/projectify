@@ -223,9 +223,15 @@ class Base(Configuration):  # type:ignore
     )
     LOGIN_URL = "/user/log-in"
 
+    AUTH_USER_MODEL = "user.User"
+
     # Django allauth
     # Provider specific settings
+    ACCOUNT_USER_MODEL_USERNAME_FIELD = "email"
+    ACCOUNT_SIGNUP_METHODS = ["email"]
+    ACCOUNT_LOGIN_METHODS = ["email"]
     SOCIALACCOUNT_PROVIDERS: dict[str, Any] = {}
+    LOGIN_REDIRECT_URL = "/user/profile"
 
     # Internationalization
     # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -245,8 +251,6 @@ class Base(Configuration):  # type:ignore
     # Default primary key field type
     # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
     DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-    AUTH_USER_MODEL = "user.User"
 
     TEMPLATES: TemplatesConfig = [
         {
