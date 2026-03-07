@@ -26,7 +26,28 @@ import dj_database_url
 from configurations import Configuration  # type: ignore
 
 from .monkeypatch import patch
-from .types import LoggingConfig, StoragesConfig, TemplatesConfig
+from .types import (
+    LoggingConfig,
+    SocialAccountProvider,
+    StoragesConfig,
+    TemplatesConfig,
+)
+
+
+def environ_get_or_warn(
+    key: str, comment: Optional[str] = None
+) -> Optional[str]:
+    """Get an environment variable or warn that it is not set."""
+    value = os.environ.get(key)
+
+    if value is not None:
+        return value
+
+    warnings.warn(
+        f"{key} needed for settings was not set in environment{comment}"
+    )
+    return None
+
 
 patch()
 
@@ -185,6 +206,17 @@ class Base(Configuration):  # type:ignore
     # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
     DATABASES: dict[str, dj_database_url.DBConfig]
 
+    # Django authentication settings
+    # ==============================
+    AUTHENTICATION_BACKENDS = (
+        "rules.permissions.ObjectPermissionBackend",
+        "django.contrib.auth.backends.ModelBackend",
+        # `allauth` specific authentication methods, such as login by email
+        "allauth.account.auth_backends.AuthenticationBackend",
+    )
+    AUTH_USER_MODEL = "user.User"
+    LOGIN_URL = "/user/log-in"
+
     # Password validation
     # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
     AUTH_PASSWORD_VALIDATORS = [
@@ -206,18 +238,36 @@ class Base(Configuration):  # type:ignore
         },
     ]
 
-    # Authentication
-    AUTHENTICATION_BACKENDS = (
-        "rules.permissions.ObjectPermissionBackend",
-        "django.contrib.auth.backends.ModelBackend",
-        # `allauth` specific authentication methods, such as login by email
-        "allauth.account.auth_backends.AuthenticationBackend",
-    )
-    LOGIN_URL = "/user/log-in"
+    # Django-allauth
+    # ==============
+    ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+    ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
+    ACCOUNT_LOGIN_METHODS = {"email"}
+    LOGIN_REDIRECT_URL = "/user/profile"
+    ACCOUNT_SIGNUP_REDIRECT_URL = "/onboarding"
 
-    # Django allauth
     # Provider specific settings
-    SOCIALACCOUNT_PROVIDERS: dict[str, Any] = {}
+    # --------------------------
+    SOCIALACCOUNT_PROVIDERS: dict[str, SocialAccountProvider] = {
+        "github": {
+            "SCOPE": ["user:email"],
+            "APPS": [
+                # TODO add django configuration check for these variables
+                # TODO disable GH log in route if these env vars are not
+                # given
+                {
+                    "client_id": environ_get_or_warn(
+                        "ALLAUTH_GITHUB_CLIENT_ID",
+                        "You need to set this environment variable for logging in with GitHub.",
+                    ),
+                    "secret": environ_get_or_warn(
+                        "ALLAUTH_GITHUB_SECRET",
+                        "You need to set this environemtn variable for logging in with Github.",
+                    ),
+                }
+            ],
+        }
+    }
 
     # Internationalization
     # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -237,8 +287,6 @@ class Base(Configuration):  # type:ignore
     # Default primary key field type
     # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
     DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-    AUTH_USER_MODEL = "user.User"
 
     TEMPLATES: TemplatesConfig = [
         {
@@ -377,7 +425,7 @@ class Base(Configuration):  # type:ignore
 
     @classmethod
     def post_setup(cls) -> None:
-        """Warn if FRONTEND_URL ends on '/'."""
+        """Warn if configuration variables not set correctly."""
         # Technically, this won't catch multiple trailing slashes... but who
         # would specify a URL like that?
         if cls.FRONTEND_URL is None:

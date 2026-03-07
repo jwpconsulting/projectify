@@ -4,9 +4,7 @@
 """Development settings."""
 
 import os
-import warnings
 from collections.abc import Iterable, Sequence
-from typing import Optional
 
 try:
     from dotenv import load_dotenv
@@ -15,7 +13,7 @@ except ImportError as e:
         "dotenv was not found. Please check if dev dependencies have been installed"
     ) from e
 
-from .base import Base
+from .base import Base, environ_get_or_warn
 
 
 def add_dev_middleware(
@@ -36,17 +34,6 @@ def add_dev_middleware(
                 yield "django_browser_reload.middleware.BrowserReloadMiddleware"
         else:
             yield m
-
-
-def environ_get_or_warn(key: str) -> Optional[str]:
-    """Get an environment variable or warn that it is not set."""
-    value = os.environ.get(key)
-
-    if value is not None:
-        return value
-
-    warnings.warn(f"{key} needed for settings was not set in environment")
-    return None
 
 
 class Development(Base):

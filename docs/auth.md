@@ -31,6 +31,8 @@ Prefer using `projectify.user.models.User` over Django's
 Projectify uses django-allauth. django-allauth has many features. It doesn't
 replace Projectify's existing authentication code.
 
+- GitHub callback URL: `https://www.projectifyapp.com/user/github/login/callback/`
+
 # Naming things in authentication
 
 ## Log In

@@ -165,13 +165,9 @@ module = [
 ]
 ignore_missing_imports = true
 
-# Our own modules
 [[tool.mypy.overrides]]
-module = [
-    "projectify.premail.tasks",
-]
-disallow_untyped_decorators = false
-
+module = ["allauth.*"]
+follow_untyped_imports = true
 
 [[tool.mypy.overrides]]
 module = [
@@ -273,4 +269,7 @@ FAIL_INVALID_TEMPLATE_VARS = "True"
 DJANGO_SETTINGS_MODULE = "projectify.settings.test"
 DJANGO_CONFIGURATION = "Test"
 junit_family = "xunit1"
-filterwarnings = ["error"]
+filterwarnings = [
+    "error",
+    "ignore:ALLAUTH_GITHUB_*",
+]

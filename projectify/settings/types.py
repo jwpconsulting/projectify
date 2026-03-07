@@ -4,7 +4,7 @@
 """Types used for settings."""
 
 from collections.abc import Sequence
-from typing import Any, Mapping, TypedDict
+from typing import Any, Mapping, Optional, TypedDict
 
 
 class TemplateConfig(TypedDict):
@@ -34,5 +34,22 @@ LoggingConfig = TypedDict(
         "formatters": dict[str, Any],
         "handlers": dict[str, Any],
         "loggers": dict[str, Any],
+    },
+)
+
+SocialAccountApp = TypedDict(
+    "SocialAccountApp",
+    {
+        # Optional isn't the cleanest
+        "client_id": Optional[str],
+        "secret": Optional[str],
+    },
+)
+
+SocialAccountProvider = TypedDict(
+    "SocialAccountProvider",
+    {
+        "SCOPE": list[str],
+        "APPS": list[SocialAccountApp],
     },
 )

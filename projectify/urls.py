@@ -21,6 +21,8 @@ from django.contrib.sitemaps.views import sitemap
 from django.urls import URLPattern, URLResolver, include, path
 from django.views.generic import TemplateView
 
+from allauth.urls import build_provider_urlpatterns
+
 from projectify.help.sitemap import HelpSitemap
 from projectify.storefront.sitemap import StorefrontSitemap
 
@@ -41,6 +43,8 @@ sitemaps = {
     "help": HelpSitemap,
 }
 
+thirdparty_logins = build_provider_urlpatterns()
+
 
 urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     # TODO may I use projectify.admin.admin.urls here?
@@ -52,7 +56,11 @@ urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     ),
     # New Django frontend urls
     path("dashboard/", include("projectify.workspace.urls")),
+    # path("user/", include("allauth.urls")),
+    # path("account/", include("allauth.urls")),
+    path("user/", include(thirdparty_logins)),
     path("user/", include("projectify.user.urls")),
+    path("auth/", include("allauth.socialaccount.urls")),
     path("", include("projectify.storefront.urls")),
     path("help/", include("projectify.help.urls")),
     path("onboarding/", include("projectify.onboarding.urls")),

@@ -3,6 +3,7 @@
 {% extends "user_base.html" %}
 {% load i18n %}
 {% load projectify %}
+{% load socialaccount %}
 {% block title %}
     {% translate "Log in - Projectify" %}
 {% endblock title %}
@@ -18,6 +19,8 @@
                 {% trans "Don't have an account yet?" %}
                 {% anchor "users:sign-up" "Sign up here" %}
             </div>
+            {% provider_login_url 'github' as gh_url %}
+            {% anchor label=_("Log in with GitHub") href=gh_url %}
         </div>
     </form>
 {% endblock user_content %}
