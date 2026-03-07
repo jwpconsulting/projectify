@@ -8,22 +8,20 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 User account models are stored in user/models.py.
 
-## Foreign key to user
+## Foreign key to User
+
+There's nothing wrong with coupling!
 
 Implement a foreign key pointing at a user like so:
 
 ```python
-from django.contrib.auth.models import (
-    AbstractUser,
-)
+from projectify.user.models import User
 
 class MyModel(models.Model):
-    user = models.ForeignKey["AbstractUser"](
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-)
+    user = models.ForeignKey["User"](User, on_delete=models.CASCADE)
 ```
 
 ## Testing
 
-Prefer using User over AbstractBaseUser or AbstractUser.
+Prefer using `projectify.user.models.User` over Django's
+`AbstractBaseUser` or `AbstractUser` in test cases and fixtures.
