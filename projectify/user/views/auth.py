@@ -182,6 +182,12 @@ def log_in(request: HttpRequest) -> HttpResponse:
     FAILED_GROUP = "projectify.user.views.auth.log_in.fail"
     FAILED_KEY = "post:email"
     FAILED_RATE = "4/h"
+
+    user = request.user
+    if not user.is_anonymous:
+        # TODO show flash "You're already logged in. Want to log out? Go to log
+        # out..."
+        return redirect("users:profile")
     if request.method == "GET":
         form = LogInForm()
         context = {"form": form}
