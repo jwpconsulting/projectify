@@ -178,8 +178,10 @@ class Base(Configuration):  # type:ignore
 
     INSTALLED_APPS: Sequence[str] = (
         INSTALLED_APPS_DJANGO
-        + INSTALLED_APPS_THIRD_PARTY
+        # Install first party apps first
+        # This lets us override allauth templates
         + INSTALLED_APPS_FIRST_PARTY
+        + INSTALLED_APPS_THIRD_PARTY
     )
 
     MIDDLEWARE = [
