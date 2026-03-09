@@ -16,6 +16,14 @@ from projectify.user.models import User, UserInvite
 class UserAdmin(admin.ModelAdmin[User]):
     """User admin."""
 
+    exclude = ("password",)
+    readonly_fields = (
+        "tos_agreed",
+        "privacy_policy_agreed",
+        "preferred_name",
+        "is_superuser",
+        "last_login",
+    )
     list_filter = ("is_active", "is_staff", "is_superuser")
     list_display = (
         "__str__",
