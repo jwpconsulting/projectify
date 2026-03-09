@@ -2,6 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "user_base.html" %}
 {% load i18n %}
+{% load static %}
 {% load projectify %}
 {% load socialaccount %}
 {% block title %}
@@ -15,12 +16,20 @@
             {{ form.email.as_field_group }}
             {{ form.password.as_field_group }}
             {% include "projectify/forms/submit.html" with text="Log in" %}
+            <div class="flex justify-center items-center gap-2">
+                <img width="32"
+                     height="32"
+                     class="size-4"
+                     alt="GitHub"
+                     src="{% static "user/login_with_github.svg" %}"
+                     aria-hidden="true" />
+                {% provider_login_url 'github' as gh_url %}
+                {% anchor label=_("Log in with GitHub") href=gh_url %}
+            </div>
             <div class="text-center">
                 {% trans "Don't have an account yet?" %}
                 {% anchor "users:sign-up" "Sign up here" %}
             </div>
-            {% provider_login_url 'github' as gh_url %}
-            {% anchor label=_("Log in with GitHub") href=gh_url %}
         </div>
     </form>
 {% endblock user_content %}
