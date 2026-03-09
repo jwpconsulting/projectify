@@ -90,17 +90,9 @@ class Base(Configuration):  # type:ignore
     # CSP
     # https://docs.djangoproject.com/en/6.0/ref/settings/#secure-csp
     SECURE_CSP: dict[str, Any] = {
-        "default-src": [
-            CSP.SELF,
-            CSP.NONCE,
-        ],
-        "script-src": [
-            CSP.SELF,
-            CSP.NONCE,
-        ],
-        "font-src": [
-            CSP.SELF,
-        ],
+        "default-src": [CSP.SELF, CSP.NONCE],
+        "script-src": [CSP.SELF, CSP.NONCE],
+        "font-src": [CSP.SELF],
         "style-src": [
             CSP.SELF,
             CSP.NONCE,
