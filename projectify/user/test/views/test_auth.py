@@ -11,11 +11,11 @@ import pytest
 from faker import Faker
 
 from projectify.settings.base import Base
-from projectify.user.services.auth import user_sign_up
-from projectify.user.services.internal import user_make_token
 from pytest_types import DjangoAssertNumQueries
 
 from ...models import User
+from ...services.auth import user_sign_up
+from ...services.internal import user_make_token
 
 pytestmark = pytest.mark.django_db
 

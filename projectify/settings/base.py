@@ -241,15 +241,28 @@ class Base(Configuration):  # type:ignore
     # Django-allauth
     # ==============
     ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-    ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
+    ACCOUNT_SIGNUP_FIELDS = [
+        "email*",
+        "password1*",
+        "password2*",
+        "tos_agreed*",
+        "privacy_policy_agreed*",
+    ]
     ACCOUNT_LOGIN_METHODS = {"email"}
     LOGIN_REDIRECT_URL = "/user/profile"
     ACCOUNT_SIGNUP_REDIRECT_URL = "/onboarding"
 
-    # Provider specific settings
+    # django allauth social account settings
     # --------------------------
+    SOCIALACCOUNT_AUTO_SIGNUP = False
+    SOCIALACCOUNT_EMAIL_VERIFICATION = True
+    SOCIALACCOUNT_FORMS = {
+        "signup": "projectify.user.forms.SocialAccountSignUpForm",
+    }
+    # Provider specific settings
     SOCIALACCOUNT_PROVIDERS: dict[str, SocialAccountProvider] = {
         "github": {
+            "EMAIL_AUTHENTICATION": True,
             "SCOPE": ["user:email"],
             "APPS": [
                 # TODO add django configuration check for these variables

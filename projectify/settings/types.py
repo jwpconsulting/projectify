@@ -4,7 +4,7 @@
 """Types used for settings."""
 
 from collections.abc import Sequence
-from typing import Any, Mapping, Optional, TypedDict
+from typing import Any, Mapping, NotRequired, Optional, TypedDict
 
 
 class TemplateConfig(TypedDict):
@@ -49,6 +49,7 @@ SocialAccountApp = TypedDict(
 SocialAccountProvider = TypedDict(
     "SocialAccountProvider",
     {
+        "EMAIL_AUTHENTICATION": NotRequired[bool],
         "SCOPE": list[str],
         "APPS": list[SocialAccountApp],
     },
