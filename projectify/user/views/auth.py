@@ -11,7 +11,7 @@ from django.contrib.auth.password_validation import (
 )
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
@@ -20,6 +20,7 @@ from django_ratelimit.decorators import ratelimit
 from rest_framework.exceptions import ValidationError
 
 from projectify.lib.forms import populate_form_with_drf_errors
+from projectify.templatetags.projectify import anchor
 from projectify.user.services.auth import (
     user_confirm_email,
     user_confirm_password_reset,
@@ -169,12 +170,8 @@ class LogInForm(forms.Form):
     def __init__(self, *args: Any, **kwargs: Any):
         """Override constructor."""
         super().__init__(*args, **kwargs)
-        # Refactor the anchor tag creation and make a Django template tag
-        self.fields[
-            "password"
-        ].help_text = '<a class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base" href="{href}">{text}</a>'.format(
-            href=reverse_lazy("users:request-password-reset"),
-            text=_("Forgot password"),
+        self.fields["password"].help_text = anchor(
+            label=_("Forgot password"), href="users:request-password-reset"
         )
 
 
