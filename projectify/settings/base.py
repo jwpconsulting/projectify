@@ -213,8 +213,6 @@ class Base(Configuration):  # type:ignore
     AUTHENTICATION_BACKENDS = (
         "rules.permissions.ObjectPermissionBackend",
         "django.contrib.auth.backends.ModelBackend",
-        # `allauth` specific authentication methods, such as login by email
-        "allauth.account.auth_backends.AuthenticationBackend",
     )
     AUTH_USER_MODEL = "user.User"
     LOGIN_URL = "/user/log-in"
