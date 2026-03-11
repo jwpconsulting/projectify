@@ -273,3 +273,7 @@ filterwarnings = [
     "error",
     "ignore:ALLAUTH_GITHUB_*",
 ]
+
+[tool.djlint]
+# slot comes from allauth
+custom_blocks="slot"
