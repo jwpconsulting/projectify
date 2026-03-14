@@ -265,7 +265,11 @@ norecursedirs = [
     "result",
     ".direnv",
 ]
-FAIL_INVALID_TEMPLATE_VARS = "True"
+# Need to disable this for allauth.socialaccount tests,
+# otherwise, there's this error:
+# Failed: Undefined template variable 'redirect_field' in
+# '…/allauth/templates/socialaccount/signup.html'
+# FAIL_INVALID_TEMPLATE_VARS = "True"
 DJANGO_SETTINGS_MODULE = "projectify.settings.test"
 DJANGO_CONFIGURATION = "Test"
 junit_family = "xunit1"

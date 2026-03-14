@@ -66,6 +66,7 @@ Here's what these views do:
 - `/user/auth/login/error/`: Shows an "error" error message when connecting
   a *social account* fails.
 - `/user/auth/signup/`: Redirect to `/user/log-in`. We don't link this view.
+Indirectly accessible when signing up a *social account*.
 
 ## Edit GitHub OAuth settings
 
