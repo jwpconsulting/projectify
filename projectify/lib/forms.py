@@ -42,7 +42,11 @@ def populate_form_with_drf_errors(
         case dict():
             pass
         case _:
-            logger.warning("Can't populate form %s with errors", repr(form))
+            logger.warning(
+                "Can't populate form %s with errors of type %s",
+                repr(form),
+                type(error.detail),
+            )
             return
     for field, error_message in error.detail.items():
         # Add a non-field error to '__all__' by setting the field to None
