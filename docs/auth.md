@@ -33,6 +33,23 @@ replace Projectify's existing authentication code.
 
 - GitHub callback URL: `https://www.projectifyapp.com/user/github/login/callback/`
 
+## Edit GitHub OAuth settings
+
+1. Go to organization profile on GitHub
+2. Open **Settings**.
+3. Select **Developer settings** from the left menu
+4. Open **OAuth Apps**
+5. Press **Edit** next to the **Projectify** entry.
+
+Things you can configure here:
+
+- Create **Client secrets**: Note the `client_id` and `secret` here, and use
+  them as `ALLAUTH_GITHUB_{CLIENT_ID,SECRET}` environment variables when
+  starting the server.
+- **Homepage URL**: Set this to `https://www.projectifyapp.com`
+- **Authorization callback URL**: Set this to `https://www.projectifyapp.com/user/auth/github/login/callback/`
+
+
 # Naming things in authentication
 
 ## Log In

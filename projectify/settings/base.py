@@ -251,11 +251,13 @@ class Base(Configuration):  # type:ignore
     ACCOUNT_LOGIN_METHODS = {"email"}
     LOGIN_REDIRECT_URL = "/user/profile"
     ACCOUNT_SIGNUP_REDIRECT_URL = "/onboarding"
+    ACCOUNT_EMAIL_VERIFICATION = "none"
 
     # django allauth social account settings
     # --------------------------
+    SOCIALACCOUNT_ONLY = True
     SOCIALACCOUNT_AUTO_SIGNUP = False
-    SOCIALACCOUNT_EMAIL_VERIFICATION = True
+    SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
     SOCIALACCOUNT_FORMS = {
         "signup": "projectify.user.forms.SocialAccountSignUpForm",
     }

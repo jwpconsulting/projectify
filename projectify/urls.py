@@ -18,8 +18,8 @@ from typing import Union
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
-from django.urls import URLPattern, URLResolver, include, path
-from django.views.generic import TemplateView
+from django.urls import URLPattern, URLResolver, include, path, reverse_lazy
+from django.views.generic import RedirectView, TemplateView
 
 from allauth.urls import build_provider_urlpatterns
 
@@ -45,6 +45,19 @@ sitemaps = {
 
 thirdparty_logins = build_provider_urlpatterns()
 
+# allauth
+# can't add this to projectify.user.urls because it can't be namespaced
+# with users:. allauth expects the url names to be non-prefixed
+allauth_urls = (
+    path("user/auth/", include(thirdparty_logins)),
+    path("user/auth/", include("allauth.socialaccount.urls")),
+    path(
+        "user/auth/login/",
+        RedirectView.as_view(url=reverse_lazy("users:log-in")),
+        name="account_login",
+    ),
+)
+
 
 urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     # TODO may I use projectify.admin.admin.urls here?
@@ -56,11 +69,9 @@ urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     ),
     # New Django frontend urls
     path("dashboard/", include("projectify.workspace.urls")),
-    # path("user/", include("allauth.urls")),
-    # path("account/", include("allauth.urls")),
-    path("user/", include(thirdparty_logins)),
     path("user/", include("projectify.user.urls")),
-    path("auth/", include("allauth.socialaccount.urls")),
+    *allauth_urls,
+    # storefront, help, etc.
     path("", include("projectify.storefront.urls")),
     path("help/", include("projectify.help.urls")),
     path("onboarding/", include("projectify.onboarding.urls")),
