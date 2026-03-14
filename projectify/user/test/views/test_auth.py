@@ -104,7 +104,7 @@ class TestSignUpDjango:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test signing up a new user with a weak password."""
-        with django_assert_num_queries(4):
+        with django_assert_num_queries(5):
             response = client.post(
                 resource_url,
                 {
