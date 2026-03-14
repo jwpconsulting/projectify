@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2023 JWP Consulting GK
+# SPDX-FileCopyrightText: 2023-2026 JWP Consulting GK
 """Test user services."""
 
 import re
@@ -63,7 +63,7 @@ def test_user_set_password(user: User, mailoutbox: Mailbox) -> None:
     assert user.has_usable_password() is True
     assert user.check_password(new_password) is True
     (mail,) = mailoutbox
-    assert "password has been changed" in mail.body
+    assert "password has been set" in mail.body
 
     # can't set the password twice
     with pytest.raises(serializers.ValidationError) as exc_info:

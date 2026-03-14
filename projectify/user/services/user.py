@@ -22,6 +22,7 @@ from projectify.user.emails import (
     UserEmailAddressUpdatedEmail,
     UserEmailAddressUpdateEmail,
     UserPasswordChangedEmail,
+    UserPasswordSetEmail,
 )
 from projectify.user.models import PreviousEmailAddress, User
 from projectify.user.services.internal import Token, user_check_token
@@ -89,8 +90,7 @@ def user_set_password(
     user.set_password(new_password)
     user.save()
 
-    # TODO UserSetPasswordEmail
-    email = UserPasswordChangedEmail(receiver=user, obj=user)
+    email = UserPasswordSetEmail(receiver=user, obj=user)
     email.send()
 
     # Ensure the user stays logged in
