@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2023 JWP Consulting GK
+# SPDX-FileCopyrightText: 2023-2026 JWP Consulting GK
 """Test user services."""
 
 import re
@@ -24,6 +24,7 @@ from ...services.user import (
     user_change_password,
     user_confirm_email_address_update,
     user_request_email_address_update,
+    user_set_password,
     user_update,
 )
 
@@ -46,18 +47,64 @@ def test_user_update(
     assert "profile_picture/test" in user.profile_picture.path
 
 
-def test_user_change_password_weak_password(user: User, password: str) -> None:
-    """Test changing password with weak password."""
-    with pytest.raises(ValidationError):
-        user_change_password(
-            user=user,
-            current_password=password,
-            new_password="asd123",
-        )
+def test_user_set_password(user: User, mailoutbox: Mailbox) -> None:
+    """Test setting a password for a user without one."""
+    user.set_unusable_password()
+    user.save()
+    user.refresh_from_db()
+    assert user.has_usable_password() is False
+
+    new_password = "secure-password-123"
+    user_set_password(
+        user=user, new_password=new_password, new_password_confirm=new_password
+    )
 
     user.refresh_from_db()
-    assert user.check_password("asd123") is False
-    assert user.check_password(password) is True
+    assert user.has_usable_password() is True
+    assert user.check_password(new_password) is True
+    (mail,) = mailoutbox
+    assert "password has been set" in mail.body
+
+    # can't set the password twice
+    with pytest.raises(serializers.ValidationError) as exc_info:
+        user_set_password(user=user, new_password="another-password-456")
+    exc_info.match("already has a password")
+    user.refresh_from_db()
+    assert user.check_password(new_password) is True
+    assert user.check_password("another-password-456") is False
+
+
+def test_user_set_password_with_request(
+    user: User, user_client: Client
+) -> None:
+    """Test setting password with request object to verify session update."""
+    user.set_unusable_password()
+    user.save()
+    user.refresh_from_db()
+    assert user.has_usable_password() is False
+
+    request = cast(AuthenticatedHttpRequest, user_client.get("/").wsgi_request)
+
+    new_password = "secure-password-123"
+    user_set_password(user=user, new_password=new_password, request=request)
+
+    # Verify password was set
+    user.refresh_from_db()
+    assert user.check_password(new_password) is True
+
+    # We don't need to verify the session directly - if update_session_auth_hash
+    # didn't raise an exception, it worked correctly
+
+
+def test_user_set_password_weak_password(user: User) -> None:
+    """Test setting a weak password fails validation."""
+    user.set_unusable_password()
+    user.save()
+    user.refresh_from_db()
+    with pytest.raises(ValidationError):
+        user_set_password(user=user, new_password="weak")
+    user.refresh_from_db()
+    assert user.has_usable_password() is False
 
 
 def test_user_change_password(
@@ -87,6 +134,20 @@ def test_user_change_password(
     assert user.check_password(new_password) is True
     (mail,) = mailoutbox
     assert "password has been changed" in mail.body
+
+
+def test_user_change_password_weak_password(user: User, password: str) -> None:
+    """Test changing password with weak password."""
+    with pytest.raises(ValidationError):
+        user_change_password(
+            user=user,
+            current_password=password,
+            new_password="asd123",
+        )
+
+    user.refresh_from_db()
+    assert user.check_password("asd123") is False
+    assert user.check_password(password) is True
 
 
 def test_user_change_password_with_request(

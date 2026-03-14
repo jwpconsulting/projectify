@@ -32,11 +32,23 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
             "If update email address requested, new, unconfirmed email"
         ),
     )
-    is_staff = models.BooleanField()
-    is_superuser = models.BooleanField()
-    is_active = models.BooleanField(
-        verbose_name=_("Is active"),
+    # is_superuser comes from PermissionsMixin
+    # is_superuser = models.BooleanField()
+    # Vendor the is_staff and is_active in from AbstractUser
+    is_staff = models.BooleanField(
+        _("staff status"),
         default=False,
+        help_text=_(
+            "Designates whether the user can log into this admin site."
+        ),
+    )
+    is_active = models.BooleanField(
+        _("active"),
+        default=True,
+        help_text=_(
+            "Designates whether this user should be treated as active. "
+            "Unselect this instead of deleting accounts."
+        ),
     )
     profile_picture = models.ImageField(
         upload_to="profile_picture/",

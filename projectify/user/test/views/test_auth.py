@@ -3,6 +3,9 @@
 # SPDX-FileCopyrightText: 2024 JWP Consulting GK
 """User auth view tests."""
 
+from collections.abc import Generator
+from unittest.mock import MagicMock, patch
+
 from django.core.cache import cache
 from django.test import Client
 from django.urls import reverse
@@ -11,11 +14,11 @@ import pytest
 from faker import Faker
 
 from projectify.settings.base import Base
-from projectify.user.services.auth import user_sign_up
-from projectify.user.services.internal import user_make_token
 from pytest_types import DjangoAssertNumQueries
 
 from ...models import User
+from ...services.auth import user_sign_up
+from ...services.internal import user_make_token
 
 pytestmark = pytest.mark.django_db
 
@@ -101,7 +104,7 @@ class TestSignUpDjango:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test signing up a new user with a weak password."""
-        with django_assert_num_queries(4):
+        with django_assert_num_queries(5):
             response = client.post(
                 resource_url,
                 {
@@ -188,6 +191,69 @@ class TestSignUpDjango:
         )
         assert response.status_code == 429
         assert User.objects.count() == 0
+
+
+class TestSocialAccountSignupView:
+    """Test socialaccount_signup view."""
+
+    @pytest.fixture(autouse=True)
+    def mock_get_adapter(self) -> Generator[MagicMock, None, None]:
+        """Mock get_adapter for social account tests."""
+        mock_adapter = MagicMock()
+        mock_adapter.get_signup_form_initial_data.return_value = {
+            "email": "social@example.com"
+        }
+        with patch("projectify.user.forms.get_adapter") as mock_get_adapter:
+            mock_get_adapter.return_value = mock_adapter
+            yield mock_get_adapter
+
+    @pytest.fixture(autouse=True)
+    def mock_sociallogin_retrieval(
+        self,
+    ) -> Generator[MagicMock, None, None]:
+        """Mock the retrieval of sociallogin from session."""
+        mock_sociallogin = MagicMock(name="mock_sociallogin")
+        mock_sociallogin.user = User()
+        mock_sociallogin.get_redirect_url.return_value = "/"
+
+        mock_account = MagicMock(name="mock_account")
+        mock_account.provider = "allauth.socialaccounts.providers.github"
+        mock_account.uid = "1"
+        mock_sociallogin.account = mock_account
+        mock_sociallogin.is_existing = False
+        with patch(
+            "allauth.socialaccount.views.flows.signup.get_pending_signup"
+        ) as mock_get_pending:
+            mock_get_pending.return_value = mock_sociallogin
+            yield mock_sociallogin
+
+    def test_cannot_overwrite_email(self, client: Client) -> None:
+        """Test that user cannot overwrite email from social login."""
+        data = {
+            "email": "different@example.com",
+            "tos_agreed": True,
+            "privacy_policy_agreed": True,
+        }
+        response = client.post(reverse("socialaccount_signup"), data)
+        assert response.status_code == 200
+        assert b"email" in response.content
+        assert User.objects.count() == 0
+
+    def test_user_created_with_correct_email(self, client: Client) -> None:
+        """Test that user is created when correct email is provided."""
+        assert User.objects.count() == 0
+
+        data = {
+            "email": "social@example.com",
+            "tos_agreed": True,
+            "privacy_policy_agreed": True,
+        }
+        response = client.post(reverse("socialaccount_signup"), data)
+        assert response.status_code == 302
+        assert User.objects.count() == 1
+
+        user = User.objects.get(email="social@example.com")
+        assert user.email == "social@example.com"
 
 
 class TestEmailConfirmationLinkSent:
@@ -300,7 +366,7 @@ class TestLogInDjango:
         user: User,
     ) -> None:
         """Test logging in with wrong password."""
-        with django_assert_num_queries(5):
+        with django_assert_num_queries(6):
             response = client.post(
                 resource_url,
                 {"email": user.email, "password": "wrong_password"},

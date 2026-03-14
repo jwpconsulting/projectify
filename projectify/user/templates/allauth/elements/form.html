@@ -1,0 +1,20 @@
+{# SPDX-FileCopyrightText: 2010-2026 Raymond Penners and contributors #}
+{# SPDX-License-Identifier: MIT #}
+{% load allauth %}
+{% load i18n %}
+<form method="{{ attrs.method }}"
+      class="flex flex-col gap-4"
+      {% if attrs.action %}action="{{ attrs.action }}"{% endif %}>
+    {% if form.non_field_errors %}
+        <div class="flex flex-col gap-2">
+            <p>{% translate "You can't remove this account connection. Reason:" %}</p>
+            <ul class="list-inside list-disc">
+                {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    {% slot body %}
+    {% endslot %}
+    {% slot actions %}
+    {% endslot %}
+</form>

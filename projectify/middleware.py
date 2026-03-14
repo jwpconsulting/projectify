@@ -3,37 +3,11 @@
 # SPDX-FileCopyrightText: 2022-2024 JWP Consulting GK
 """Projectify middlewares."""
 
-import logging
-from collections.abc import Awaitable
 from typing import Callable, Optional
 
 from django.http import HttpRequest, HttpResponse
 
-from projectify.lib.settings import get_settings
-
 GetResponse = Callable[[HttpRequest], HttpResponse]
-AsyncGetResponse = Callable[[HttpRequest], Awaitable[HttpResponse]]
-
-
-settings = get_settings()
-
-
-# https://stackoverflow.com/a/47888695
-class DisableCSRFMiddleware:
-    """Dangerous CSRF disable middleware."""
-
-    get_response: GetResponse
-
-    def __init__(self, get_response: GetResponse):
-        """Init."""
-        self.get_response = get_response
-
-    def __call__(self, request: HttpRequest) -> HttpResponse:
-        """Call."""
-        # This is insane
-        setattr(request, "_dont_enforce_csrf_checks", True)
-        response = self.get_response(request)
-        return response
 
 
 def reverse_proxy(get_response: GetResponse) -> GetResponse:
@@ -76,6 +50,3 @@ def reverse_proxy(get_response: GetResponse) -> GetResponse:
         return get_response(request)
 
     return process_request
-
-
-logger = logging.getLogger(__name__)

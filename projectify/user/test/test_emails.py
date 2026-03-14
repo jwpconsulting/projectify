@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2021, 2022, 2023 JWP Consulting GK
+# SPDX-FileCopyrightText: 2021-2024, 2026 JWP Consulting GK
 """Test user emails."""
 
 import re
@@ -14,6 +14,7 @@ from ..emails import (
     UserEmailAddressUpdateEmail,
     UserEmailConfirmationEmail,
     UserPasswordResetEmail,
+    UserPasswordSetEmail,
 )
 from ..models import User
 
@@ -60,6 +61,20 @@ class TestUserPasswordResetEmail:
         assert match, m.body
         response = client.get(match.group(1))
         assert response.status_code == 200
+
+
+@pytest.mark.django_db
+class TestUserPasswordSetEmail:
+    """Test UserPasswordSetEmail."""
+
+    def test_send(self, user: User, mailoutbox: list[EmailMessage]) -> None:
+        """Test send."""
+        mail = UserPasswordSetEmail(receiver=user, obj=user)
+        mail.send()
+        assert len(mailoutbox) == 1
+        m = mailoutbox[0]
+        assert user.email in m.to
+        assert "password has been set" in m.body
 
 
 @pytest.mark.django_db

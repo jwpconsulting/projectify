@@ -14,43 +14,20 @@ pytestmark = pytest.mark.django_db
 
 
 def test_help_list_view(client: Client) -> None:
-    """Test help list view returns 200 and contains expected content."""
+    """Test help list view."""
     url = reverse("help:list")
     response = client.get(url)
-
     assert response.status_code == 200
-    content = response.content.decode()
-    assert "Basics" in content
-    assert "Workspaces" in content
+    assert "Basics" in response.content.decode()
+    assert "Workspaces" in response.content.decode()
 
 
-@pytest.mark.parametrize("page_key", HELP_TOPICS.keys())
-def test_help_detail_view_valid_pages_generic(
-    client: Client, page_key: str
-) -> None:
-    """Test help detail view for all valid pages using generic URL pattern."""
-    url = reverse(f"help:topic:{page_key}")
+@pytest.mark.parametrize("k,v", HELP_TOPICS.items())
+def test_help_detail_view(client: Client, k: str, v: dict[str, str]) -> None:
+    """Test help detail view."""
+    url = reverse(f"help:topic:{k}")
     response = client.get(url)
-
     assert response.status_code == 200
-    content = response.content.decode()
-    topic = HELP_TOPICS[page_key]
-    assert str(topic["title"]) in content
-    assert "Table of Contents" in content
-    assert 'class="toc' in content
-
-
-@pytest.mark.parametrize("page_key", HELP_TOPICS.keys())
-def test_help_detail_view_valid_pages_specific(
-    client: Client, page_key: str
-) -> None:
-    """Test help detail view for all valid pages using specific URL patterns."""
-    url = reverse(f"help:topic:{page_key}")
-    response = client.get(url)
-
-    assert response.status_code == 200
-    content = response.content.decode()
-    topic = HELP_TOPICS[page_key]
-    assert str(topic["title"]) in content
-    assert "Table of Contents" in content
-    assert 'class="toc' in content
+    assert str(v["title"]) in response.content.decode()
+    assert "Table of Contents" in response.content.decode()
+    assert 'class="toc' in response.content.decode()

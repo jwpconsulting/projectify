@@ -1,5 +1,10 @@
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load i18n %}
-<p title="{% translate "Debug information" %}"
-   class="absolute left-0 top-0 w-full bg-destructive/30 text-center font-bold">Development preview</p>
+{% load projectify %}
+<div class="absolute left-0 top-0 w-full bg-destructive/30 flex items-center justify-center gap-4">
+    <span class="font-bold">{% translate "Development preview" %}</span>
+    {% if request.user.is_staff %}
+        {% anchor label=_("Projectify Admin") href="admin:index" %}
+    {% endif %}
+</div>

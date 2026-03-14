@@ -2,7 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "base.html" %}
 {% load static %}
-{% block content %}
+{% block body %}
     {% include "common/navigation/header/dashboard.html" %}
     <main id="main"
           class="flex grow flex-col md:grid md:grid-cols-2 xl:grid-cols-3">
@@ -15,4 +15,4 @@
             {% endblock onboarding_preview %}
         </div>
     </main>
-{% endblock content %}
+{% endblock body %}

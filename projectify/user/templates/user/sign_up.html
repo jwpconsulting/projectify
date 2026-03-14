@@ -1,15 +1,22 @@
-{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "user_base.html" %}
 {% load i18n %}
+{% load static %}
+{% load socialaccount %}
 {% load projectify %}
 {% block title %}
     {% translate "Sign up - Projectify" %}
 {% endblock title %}
 {% block user_content %}
-    <form class="flex flex-col gap-12 p-3" method="post">
-        <h1 class="text-center text-4xl font-bold">{% trans "Sign up" %}</h1>
-        <h2 class="text-center">{% trans "Sign up and start a free trial" %}</h2>
+    <form class="flex flex-col gap-6 p-3"
+          method="post"
+          aria-labelledby="form-title">
+        {% csrf_token %}
+        <div class="flex flex-col gap-3">
+            <h1 class="text-center text-4xl font-bold" id="form-title">{% trans "Sign up" %}</h1>
+            <p class="text-center">{% trans "Sign up and start a free trial" %}</p>
+        </div>
         <div class="flex flex-col gap-6">
             {{ form.email.as_field_group }}
             <section class="flex flex-col gap-2">
@@ -24,19 +31,28 @@
             <label class="flex flex-row items-center gap-2"
                    for="{{ form.tos_agreed.id_for_label }}">
                 {{ form.tos_agreed }}
-                {% anchor "storefront:tos" _("I agree to the Terms of Service") external=True %}
+                {% anchor href="storefront:tos" label=form.tos_agreed.label external=True %}
             </label>
             <label class="flex flex-row items-center gap-2"
                    for="{{ form.privacy_policy_agreed.id_for_label }}">
                 {{ form.privacy_policy_agreed }}
-                {% anchor href="storefront:privacy" label=_("I agree to the Privacy Policy") external=True %}
+                {% anchor href="storefront:privacy" label=form.privacy_policy_agreed.label external=True %}
             </label>
-            {% csrf_token %}
             {% include "projectify/forms/submit.html" with text=_("Sign up") %}
-            <div class="text-center">
-                {% trans "Already have an account?" %}
-                {% anchor "users:log-in" _("Log in here") %}
-            </div>
+        </div>
+        <div class="flex justify-center items-center gap-2">
+            <img width="32"
+                 height="32"
+                 class="size-4"
+                 alt="GitHub"
+                 src="{% static "user/login_with_github.svg" %}"
+                 aria-hidden="true" />
+            {% provider_login_url 'github' as gh_url %}
+            {% anchor label=_("Log in with GitHub") href=gh_url %}
+        </div>
+        <div class="text-center">
+            {% trans "Already have an account?" %}
+            {% anchor "users:log-in" _("Log in here") %}
         </div>
     </form>
 {% endblock user_content %}

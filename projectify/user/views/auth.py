@@ -11,7 +11,7 @@ from django.contrib.auth.password_validation import (
 )
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
@@ -20,6 +20,7 @@ from django_ratelimit.decorators import ratelimit
 from rest_framework.exceptions import ValidationError
 
 from projectify.lib.forms import populate_form_with_drf_errors
+from projectify.templatetags.projectify import anchor
 from projectify.user.services.auth import (
     user_confirm_email,
     user_confirm_password_reset,
@@ -45,8 +46,10 @@ class SignUpForm(forms.Form):
 
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
-    tos_agreed = forms.BooleanField()
-    privacy_policy_agreed = forms.BooleanField()
+    tos_agreed = forms.BooleanField(label=_("I agree to the Terms of Service"))
+    privacy_policy_agreed = forms.BooleanField(
+        label=_("I agree to the Privacy Policy")
+    )
 
     email.widget.attrs.update({"placeholder": _("Enter your email")})
     password.widget.attrs.update({"placeholder": _("Enter your password")})
@@ -169,12 +172,8 @@ class LogInForm(forms.Form):
     def __init__(self, *args: Any, **kwargs: Any):
         """Override constructor."""
         super().__init__(*args, **kwargs)
-        # Refactor the anchor tag creation and make a Django template tag
-        self.fields[
-            "password"
-        ].help_text = '<a class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base" href="{href}">{text}</a>'.format(
-            href=reverse_lazy("users:request-password-reset"),
-            text=_("Forgot password"),
+        self.fields["password"].help_text = anchor(
+            label=_("Forgot password"), href="users:request-password-reset"
         )
 
 
@@ -185,6 +184,12 @@ def log_in(request: HttpRequest) -> HttpResponse:
     FAILED_GROUP = "projectify.user.views.auth.log_in.fail"
     FAILED_KEY = "post:email"
     FAILED_RATE = "4/h"
+
+    user = request.user
+    if not user.is_anonymous:
+        # TODO show flash "You're already logged in. Want to log out? Go to log
+        # out..."
+        return redirect("users:profile")
     if request.method == "GET":
         form = LogInForm()
         context = {"form": form}

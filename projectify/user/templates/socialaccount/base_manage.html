@@ -1,0 +1,20 @@
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# used by socialaccount/connections.html #}
+{% extends "storefront_base.html" %}
+{% load i18n %}
+{% block storefront_header %}
+    {% include "common/navigation/header/landing.html" %}
+{% endblock storefront_header %}
+{% block title %}
+    {% block head_title %}
+    {% endblock head_title %}
+{% endblock title %}
+{% block storefront_content %}
+    <div class="grow flex h-full flex-col items-center bg-background p-8">
+        <div class="flex flex-col gap-12 rounded-lg bg-foreground p-4">
+            {% block content %}
+            {% endblock content %}
+        </div>
+    </div>
+{% endblock storefront_content %}

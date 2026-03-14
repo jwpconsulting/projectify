@@ -89,6 +89,90 @@ class TestUserProfile:
         assert not user.profile_picture
 
 
+class TestPasswordSetDjango:
+    """Test django password_set view."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("users:set-password")
+
+    @pytest.fixture
+    def passwordless_user(self, user: User) -> User:
+        """Return the regular user fixture user without a usable password."""
+        user.set_unusable_password()
+        user.save()
+        return user
+
+    @pytest.fixture
+    def passwordless_user_client(
+        self, passwordless_user: User, user_client: Client
+    ) -> Client:
+        """Return the user client logged in as the passwordless user."""
+        user_client.force_login(passwordless_user)
+        return user_client
+
+    def test_get_form(
+        self, passwordless_user_client: Client, resource_url: str
+    ) -> None:
+        """Test that the password set form is displayed correctly on GET."""
+        assert passwordless_user_client.get(resource_url).status_code == 200
+
+    def test_redirect_if_password_exists(
+        self, user: User, user_client: Client, resource_url: str
+    ) -> None:
+        """Test that users with passwords are redirected to change password."""
+        assert user.has_usable_password()
+        assert user_client.get(resource_url).status_code == 302
+
+    def test_set_password_success(
+        self,
+        passwordless_user: User,
+        passwordless_user_client: Client,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test successfully setting a password."""
+        new_pw = "secure-password-123"
+        data = {"new_password": new_pw, "new_password_confirm": new_pw}
+        with django_assert_num_queries(18):
+            response = passwordless_user_client.post(resource_url, data)
+            assert response.status_code == 302
+        passwordless_user.refresh_from_db()
+        assert passwordless_user.has_usable_password()
+        assert passwordless_user.check_password(new_pw)
+        assert response.wsgi_request.user.is_authenticated
+
+    def test_passwords_do_not_match(
+        self,
+        passwordless_user: User,
+        passwordless_user_client: Client,
+        resource_url: str,
+    ) -> None:
+        """Test that mismatched passwords show an error."""
+        new_pw = "secure-password-123"
+        data = {"new_password": new_pw, "new_password_confirm": "a"}
+        response = passwordless_user_client.post(resource_url, data)
+        assert response.status_code == 400
+        assert b"must match" in response.content
+        passwordless_user.refresh_from_db()
+        assert not passwordless_user.has_usable_password()
+
+    def test_weak_password(
+        self,
+        passwordless_user: User,
+        passwordless_user_client: Client,
+        resource_url: str,
+    ) -> None:
+        """Test that weak passwords are rejected."""
+        data = {"new_password": "no", "new_password_confirm": "no"}
+        response = passwordless_user_client.post(resource_url, data)
+        assert response.status_code == 400
+        assert b"too common" in response.content
+        passwordless_user.refresh_from_db()
+        assert not passwordless_user.has_usable_password()
+
+
 class TestPasswordChangeDjango:
     """Test django password_change view."""
 

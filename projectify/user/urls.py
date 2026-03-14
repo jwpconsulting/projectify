@@ -22,6 +22,7 @@ from projectify.user.views.user import (
     email_address_update_confirmed,
     email_address_update_requested,
     password_change,
+    password_set,
     user_profile,
 )
 
@@ -29,6 +30,7 @@ app_name = "users"
 
 urlpatterns = (
     path("profile/", user_profile, name="profile"),
+    path("profile/set-password", password_set, name="set-password"),
     path("profile/change-password", password_change, name="change-password"),
     path(
         "profile/update-email-address/",

@@ -9,10 +9,11 @@
         <img src="{% static "polylogo.svg" %}"
              width="171"
              height="36"
-             alt="Projectify">
+             alt="Go to dashboard">
     </a>
     <div class="flex shrink-0 flex-row items-center gap-2">
         {% if user.is_authenticated %}
+            {% anchor "dashboard:dashboard" _("Go to dashboard") %}
             {% anchor "users:log-out" _("Log out") %}
             {% anchor "users:profile" _("Profile") %}
         {% else %}

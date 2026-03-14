@@ -22,6 +22,7 @@ from projectify.user.emails import (
     UserEmailAddressUpdatedEmail,
     UserEmailAddressUpdateEmail,
     UserPasswordChangedEmail,
+    UserPasswordSetEmail,
 )
 from projectify.user.models import PreviousEmailAddress, User
 from projectify.user.services.internal import Token, user_check_token
@@ -54,24 +55,73 @@ def user_update(
 
 # RPC style
 @transaction.atomic
+def user_set_password(
+    *,
+    user: User,
+    new_password: str,
+    new_password_confirm: Optional[str] = None,
+    # XXX why both AuthenticatedHttpRequest and Request?
+    request: Union[AuthenticatedHttpRequest, Request, None] = None,
+) -> None:
+    """Set a user's password if they don't have one yet."""
+    if user.has_usable_password():
+        raise serializers.ValidationError(
+            _("User already has a password set. Use password change instead.")
+        )
+
+    no_match = (
+        new_password_confirm is not None
+        and new_password != new_password_confirm
+    )
+    if no_match:
+        raise serializers.ValidationError(
+            {
+                "new_password_confirm": _(
+                    "New passwords must match. Please check again"
+                )
+            }
+        )
+
+    try:
+        validate_password(password=new_password, user=user)
+    except DjangoValidationError as e:
+        raise serializers.ValidationError({"new_password": e.messages})
+
+    user.set_password(new_password)
+    user.save()
+
+    email = UserPasswordSetEmail(receiver=user, obj=user)
+    email.send()
+
+    # Ensure the user stays logged in
+    # https://docs.djangoproject.com/en/5.0/topics/auth/default/#session-invalidation-on-password-change
+    if request is not None:
+        update_session_auth_hash(request, user)
+
+
+@transaction.atomic
 def user_change_password(
     *,
     user: User,
     current_password: str,
     new_password: str,
+    # XXX make not Optional
     new_password_confirm: Optional[str] = None,
     request: Union[AuthenticatedHttpRequest, Request, None] = None,
 ) -> None:
     """Change a user's password."""
-    if new_password_confirm is not None:
-        if new_password != new_password_confirm:
-            raise serializers.ValidationError(
-                {
-                    "new_password_confirm": _(
-                        "New passwords must match. Please check again"
-                    )
-                }
-            )
+    no_match = (
+        new_password_confirm is not None
+        and new_password != new_password_confirm
+    )
+    if no_match:
+        raise serializers.ValidationError(
+            {
+                "new_password_confirm": _(
+                    "New passwords must match. Please check again"
+                )
+            }
+        )
 
     if not user.check_password(current_password):
         raise serializers.ValidationError(
@@ -87,7 +137,7 @@ def user_change_password(
     email = UserPasswordChangedEmail(receiver=user, obj=user)
     email.send()
 
-    # Ensure we stay logged in
+    # Ensure the user stays logged in
     # https://docs.djangoproject.com/en/5.0/topics/auth/default/#session-invalidation-on-password-change
     if request is not None:
         update_session_auth_hash(request, user)

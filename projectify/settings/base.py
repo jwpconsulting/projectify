@@ -26,7 +26,28 @@ import dj_database_url
 from configurations import Configuration  # type: ignore
 
 from .monkeypatch import patch
-from .types import LoggingConfig, StoragesConfig, TemplatesConfig
+from .types import (
+    LoggingConfig,
+    SocialAccountProvider,
+    StoragesConfig,
+    TemplatesConfig,
+)
+
+
+def environ_get_or_warn(
+    key: str, comment: Optional[str] = None
+) -> Optional[str]:
+    """Get an environment variable or warn that it is not set."""
+    value = os.environ.get(key)
+
+    if value is not None:
+        return value
+
+    warnings.warn(
+        f"{key} needed for settings was not set in environment{comment}"
+    )
+    return None
+
 
 patch()
 
@@ -90,17 +111,9 @@ class Base(Configuration):  # type:ignore
     # CSP
     # https://docs.djangoproject.com/en/6.0/ref/settings/#secure-csp
     SECURE_CSP: dict[str, Any] = {
-        "default-src": [
-            CSP.SELF,
-            CSP.NONCE,
-        ],
-        "script-src": [
-            CSP.SELF,
-            CSP.NONCE,
-        ],
-        "font-src": [
-            CSP.SELF,
-        ],
+        "default-src": [CSP.SELF, CSP.NONCE],
+        "script-src": [CSP.SELF, CSP.NONCE],
+        "font-src": [CSP.SELF],
         "style-src": [
             CSP.SELF,
             CSP.NONCE,
@@ -137,6 +150,12 @@ class Base(Configuration):  # type:ignore
         "pgtrigger",
         "rules.apps.AutodiscoverRulesConfig",
         "markdownify.apps.MarkdownifyConfig",
+        # Allauth
+        "allauth",
+        "allauth.account",
+        # Optional -- requires install using `django-allauth[socialaccount]`.
+        "allauth.socialaccount",
+        "allauth.socialaccount.providers.github",
     )
 
     INSTALLED_APPS_FIRST_PARTY = (
@@ -159,8 +178,10 @@ class Base(Configuration):  # type:ignore
 
     INSTALLED_APPS: Sequence[str] = (
         INSTALLED_APPS_DJANGO
-        + INSTALLED_APPS_THIRD_PARTY
+        # Install first party apps first
+        # This lets us override allauth templates
         + INSTALLED_APPS_FIRST_PARTY
+        + INSTALLED_APPS_THIRD_PARTY
     )
 
     MIDDLEWARE = [
@@ -176,6 +197,7 @@ class Base(Configuration):  # type:ignore
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "projectify.lib.htmx.HtmxMiddleware",
+        "allauth.account.middleware.AccountMiddleware",
     ]
 
     ROOT_URLCONF = "projectify.urls"
@@ -185,6 +207,15 @@ class Base(Configuration):  # type:ignore
     # Database
     # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
     DATABASES: dict[str, dj_database_url.DBConfig]
+
+    # Django authentication settings
+    # ==============================
+    AUTHENTICATION_BACKENDS = (
+        "rules.permissions.ObjectPermissionBackend",
+        "django.contrib.auth.backends.ModelBackend",
+    )
+    AUTH_USER_MODEL = "user.User"
+    LOGIN_URL = "/user/log-in"
 
     # Password validation
     # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -207,12 +238,51 @@ class Base(Configuration):  # type:ignore
         },
     ]
 
-    # Authentication
-    AUTHENTICATION_BACKENDS = (
-        "rules.permissions.ObjectPermissionBackend",
-        "django.contrib.auth.backends.ModelBackend",
-    )
-    LOGIN_URL = "/user/log-in"
+    # Django-allauth
+    # ==============
+    ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+    ACCOUNT_SIGNUP_FIELDS = [
+        "email*",
+        "password1*",
+        "password2*",
+        "tos_agreed*",
+        "privacy_policy_agreed*",
+    ]
+    ACCOUNT_LOGIN_METHODS = {"email"}
+    LOGIN_REDIRECT_URL = "/user/profile"
+    ACCOUNT_SIGNUP_REDIRECT_URL = "/onboarding"
+    ACCOUNT_EMAIL_VERIFICATION = "none"
+
+    # django allauth social account settings
+    # --------------------------
+    SOCIALACCOUNT_ONLY = True
+    SOCIALACCOUNT_AUTO_SIGNUP = False
+    SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
+    SOCIALACCOUNT_FORMS = {
+        "signup": "projectify.user.forms.SocialAccountSignUpForm",
+    }
+    # Provider specific settings
+    SOCIALACCOUNT_PROVIDERS: dict[str, SocialAccountProvider] = {
+        "github": {
+            "EMAIL_AUTHENTICATION": True,
+            "SCOPE": ["user:email"],
+            "APPS": [
+                # TODO add django configuration check for these variables
+                # TODO disable GH log in route if these env vars are not
+                # given
+                {
+                    "client_id": environ_get_or_warn(
+                        "ALLAUTH_GITHUB_CLIENT_ID",
+                        "You need to set this environment variable for logging in with GitHub.",
+                    ),
+                    "secret": environ_get_or_warn(
+                        "ALLAUTH_GITHUB_SECRET",
+                        "You need to set this environemtn variable for logging in with Github.",
+                    ),
+                }
+            ],
+        }
+    }
 
     # Internationalization
     # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -233,8 +303,6 @@ class Base(Configuration):  # type:ignore
     # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
     DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-    AUTH_USER_MODEL = "user.User"
-
     TEMPLATES: TemplatesConfig = [
         {
             "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -244,6 +312,7 @@ class Base(Configuration):  # type:ignore
                     "projectify.context_processors.frontend_url",
                     "django.template.context_processors.csp",
                     "django.template.context_processors.debug",
+                    # `allauth` needs this from django
                     "django.template.context_processors.request",
                     "django.contrib.auth.context_processors.auth",
                     "django.contrib.messages.context_processors.messages",
@@ -371,7 +440,7 @@ class Base(Configuration):  # type:ignore
 
     @classmethod
     def post_setup(cls) -> None:
-        """Warn if FRONTEND_URL ends on '/'."""
+        """Warn if configuration variables not set correctly."""
         # Technically, this won't catch multiple trailing slashes... but who
         # would specify a URL like that?
         if cls.FRONTEND_URL is None:

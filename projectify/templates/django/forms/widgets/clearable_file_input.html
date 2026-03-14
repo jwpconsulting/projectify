@@ -4,21 +4,19 @@
 {# SPDX-FileCopyrightText: Django Software Foundation and individual contributors. #}
 {% load projectify %}
 <div class="flex flex-col w-full gap-2">
-    {% if widget.is_initial %}
-        {% if widget.value %}
-            <figure class="flex flex-col items-center gap-2">
-                <img alt="{{ widget.attrs.initial_text|default:widget.initial_text }}"
-                     height="300"
-                     width="300"
-                     class="max-h-32 object-contain"
-                     src="{{ widget.value.url }}" />
-                <figcaption>{% anchor href=widget.value.url label=widget.attrs.initial_text|default:widget.initial_text %}</figcaption>
-            </figure>
-        {% else %}
-            <p>{{ widget.attrs.cleared }}</p>
-        {% endif %}
+    {% if widget.is_initial and widget.value %}
+        <figure class="flex flex-col items-center gap-2">
+            <img alt="{{ widget.attrs.initial_text|default:widget.initial_text }}"
+                 height="300"
+                 width="300"
+                 class="max-h-32 object-contain"
+                 src="{{ widget.value.url }}" />
+            <figcaption>{% anchor href=widget.value.url label=widget.attrs.initial_text|default:widget.initial_text %}</figcaption>
+        </figure>
+    {% else %}
+        <p>{{ widget.attrs.cleared }}</p>
     {% endif %}
-    {% if not widget.required %}
+    {% if not widget.required and widget.value %}
         <label for="{{ widget.checkbox_id }}">
             <input type="checkbox"
                    name="{{ widget.checkbox_name }}"

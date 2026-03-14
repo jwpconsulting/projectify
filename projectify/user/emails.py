@@ -58,6 +58,13 @@ class UserPasswordResetEmail(TemplateEmail[User]):
 # We want to tell a user that we have reset their password
 
 
+class UserPasswordSetEmail(TemplateEmail[User]):
+    """Email that tells a user their password was set."""
+
+    model = User
+    template_prefix = "user/email/password_set"
+
+
 class UserPasswordChangedEmail(TemplateEmail[User]):
     """Email that tells a user their password changed."""
 

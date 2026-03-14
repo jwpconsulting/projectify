@@ -62,7 +62,7 @@ def anchor(
     if external:
         a_extra = mark_safe(' target="_blank"')
         extra = format_html(
-            '<span class="sr-only">{text}</span><img class="inline-block w-4 h-4" src="{src}" aria-hidden=true>',
+            '<img class="inline-block w-4 h-4" src="{src}" alt="{text}">',
             src=reverse(
                 "colored-icon",
                 kwargs={"icon": "external_links", "color": "primary"},

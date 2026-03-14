@@ -3,13 +3,9 @@
 {% extends "storefront_base.html" %}
 {% load i18n %}
 {% block storefront_content %}
-    <div class="flex grow flex-col">
-        <div class="flex grow flex-col justify-between">
-            <div class="flex grow flex-col items-center bg-background p-8 lg:p-16">
-                <div class="w-full max-w-2xl rounded-lg bg-foreground lg:w-1/2">
-                    {% block user_content %}{% endblock %}
-                </div>
-            </div>
+    <div class="flex grow flex-col items-center bg-background p-8 lg:p-16">
+        <div class="w-full max-w-2xl rounded-lg bg-foreground lg:w-1/2">
+            {% block user_content %}{% endblock %}
         </div>
     </div>
 {% endblock storefront_content %}
