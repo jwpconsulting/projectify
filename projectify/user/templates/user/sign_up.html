@@ -7,9 +7,13 @@
     {% translate "Sign up - Projectify" %}
 {% endblock title %}
 {% block user_content %}
-    <form class="flex flex-col gap-12 p-3" method="post">
-        <h1 class="text-center text-4xl font-bold">{% trans "Sign up" %}</h1>
-        <h2 class="text-center">{% trans "Sign up and start a free trial" %}</h2>
+    <form class="flex flex-col gap-6 p-3"
+          method="post"
+          aria-labelledby="form-title">
+        <div class="flex flex-col gap-3">
+            <h1 class="text-center text-4xl font-bold" id="form-title">{% trans "Sign up" %}</h1>
+            <p class="text-center">{% trans "Sign up and start a free trial" %}</p>
+        </div>
         <div class="flex flex-col gap-6">
             {{ form.email.as_field_group }}
             <section class="flex flex-col gap-2">
@@ -24,12 +28,12 @@
             <label class="flex flex-row items-center gap-2"
                    for="{{ form.tos_agreed.id_for_label }}">
                 {{ form.tos_agreed }}
-                {% anchor "storefront:tos" _("I agree to the Terms of Service") external=True %}
+                {% anchor href="storefront:tos" label=form.tos_agreed.label external=True %}
             </label>
             <label class="flex flex-row items-center gap-2"
                    for="{{ form.privacy_policy_agreed.id_for_label }}">
                 {{ form.privacy_policy_agreed }}
-                {% anchor href="storefront:privacy" label=_("I agree to the Privacy Policy") external=True %}
+                {% anchor href="storefront:privacy" label=form.privacy_policy_agreed.label external=True %}
             </label>
             {% csrf_token %}
             {% include "projectify/forms/submit.html" with text=_("Sign up") %}

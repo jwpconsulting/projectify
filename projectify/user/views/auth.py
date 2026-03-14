@@ -46,8 +46,10 @@ class SignUpForm(forms.Form):
 
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
-    tos_agreed = forms.BooleanField()
-    privacy_policy_agreed = forms.BooleanField()
+    tos_agreed = forms.BooleanField(label=_("I agree to the Terms of Service"))
+    privacy_policy_agreed = forms.BooleanField(
+        label=_("I agree to the Privacy Policy")
+    )
 
     email.widget.attrs.update({"placeholder": _("Enter your email")})
     password.widget.attrs.update({"placeholder": _("Enter your password")})
