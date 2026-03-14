@@ -14,7 +14,11 @@
         {{ field }}
         {% if field.errors or field.help_text %}
             <div class="flex w-full flex-row items-start {% if field.errors and not field.help_text %}justify-start{% elif field.errors and field.help_text %}justify-between{% else %}justify-end{% endif %} gap-1 px-1">
-                {% if field.errors %}<p class="text-error">{{ field.errors.as_text }}</p>{% endif %}
+                {% if field.errors %}
+                    <ul class="list-inside list-disc flex flex-col">
+                        {% for error in field.errors %}<li class="text-error">{{ error }}</li>{% endfor %}
+                    </ul>
+                {% endif %}
                 {% if field.help_text %}
                     <span class="prose shrink-0"
                           {% if field.auto_id %}id="{{ field.auto_id }}_helptext"{% endif %}>
