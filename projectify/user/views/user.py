@@ -27,6 +27,7 @@ from projectify.user.services.user import (
     user_change_password,
     user_confirm_email_address_update,
     user_request_email_address_update,
+    user_set_password,
     user_update,
 )
 
@@ -85,6 +86,47 @@ def user_profile(request: HttpRequest) -> HttpResponse:
     return render(request, "user/user_profile.html", context=context)
 
 
+@require_http_methods(["GET", "POST"])
+@platform_view
+def password_set(request: AuthenticatedHttpRequest) -> HttpResponse:
+    """Set password for user who doesn't have one."""
+    user = request.user
+
+    if user.has_usable_password():
+        # TODO show flash that the user already has a password
+        return redirect("users:change-password")
+
+    context: dict[str, object] = {
+        "validators": password_validators_help_texts()
+    }
+    template = "user/password_set.html"
+    match request.method:
+        case "GET":
+            form = PasswordSetForm()
+            context = {**context, "form": form}
+            return render(request, "user/password_set.html", context=context)
+        case _:  # POST
+            form = PasswordSetForm(request.POST)
+            context = {**context, "form": form}
+            if not form.is_valid():
+                status = 400
+            else:
+                data = form.cleaned_data
+                try:
+                    user_set_password(
+                        user=user,
+                        new_password=data["new_password"],
+                        new_password_confirm=data["new_password_confirm"],
+                        request=request,
+                    )
+                except ValidationError as error:
+                    populate_form_with_drf_errors(form, error)
+                    status = 400
+                else:
+                    return redirect("users:profile")
+    return render(request, template, context=context, status=status)
+
+
 class PasswordChangeForm(forms.Form):
     """Form for changing passwords."""
 
@@ -113,37 +155,55 @@ class PasswordChangeForm(forms.Form):
 @ratelimit(key="user", rate="5/h", method=UNSAFE)
 def password_change(request: AuthenticatedHttpRequest) -> HttpResponse:
     """Change user password."""
-    validators = password_validators_help_texts()
     user = request.user
 
-    if request.method == "GET":
-        form = PasswordChangeForm()
-        context = {"form": form, "validators": validators}
-        return render(request, "user/password_change.html", context=context)
-    form = PasswordChangeForm(request.POST)
+    context: dict[str, object] = {
+        "validators": password_validators_help_texts()
+    }
+    template = "user/password_change.html"
+    match request.method:
+        case "GET":
+            form = PasswordChangeForm()
+            context = {**context, "form": form}
+            status = 200
+        case _:  # POST
+            form = PasswordChangeForm(request.POST)
+            context = {**context, "form": form}
+            if not form.is_valid():
+                status = 400
+            else:
+                data = form.cleaned_data
+                try:
+                    user_change_password(
+                        user=user,
+                        current_password=data["current_password"],
+                        new_password=data["new_password"],
+                        new_password_confirm=data["new_password_confirm"],
+                        request=request,
+                    )
+                except ValidationError as error:
+                    populate_form_with_drf_errors(form, error)
+                    status = 400
+                else:
+                    return redirect("users:profile")
+    return render(request, template, context=context, status=status)
 
-    if not form.is_valid():
-        context = {"form": form, "validators": validators}
-        return render(
-            request, "user/password_change.html", context=context, status=400
-        )
 
-    data = form.cleaned_data
-    try:
-        user_change_password(
-            user=user,
-            current_password=data["current_password"],
-            new_password=data["new_password"],
-            new_password_confirm=data["new_password_confirm"],
-            request=request,
-        )
-    except ValidationError as error:
-        populate_form_with_drf_errors(form, error)
-        context = {"form": form, "validators": validators}
-        return render(
-            request, "user/password_change.html", context=context, status=400
-        )
-    return redirect("users:profile")
+class PasswordSetForm(forms.Form):
+    """Form for setting passwords for users without passwords."""
+
+    new_password = forms.CharField(
+        label=_("New password"),
+        widget=forms.PasswordInput(
+            attrs={"placeholder": _("Enter the new password")}
+        ),
+    )
+    new_password_confirm = forms.CharField(
+        label=_("Confirm password"),
+        widget=forms.PasswordInput(
+            attrs={"placeholder": _("Confirm the new password")}
+        ),
+    )
 
 
 class EmailAddressUpdateForm(forms.Form):
