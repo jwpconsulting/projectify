@@ -31,7 +31,41 @@ Prefer using `projectify.user.models.User` over Django's
 Projectify uses django-allauth. django-allauth has many features. It doesn't
 replace Projectify's existing authentication code.
 
-- GitHub callback URL: `https://www.projectifyapp.com/user/github/login/callback/`
+Integrating allauth adds the following URLs:
+
+```
+# allauth.socialaccount.views.ConnectionsView
+# socialaccount_connections
+/user/auth/
+# allauth.socialaccount.providers.oauth2.views.view
+# github_login
+/user/auth/github/login/
+# allauth.socialaccount.providers.oauth2.views.view
+# github_callback
+/user/auth/github/login/callback/
+# allauth.socialaccount.views.LoginCancelledView
+# socialaccount_login_cancelled
+/user/auth/login/cancelled/
+#allauth.socialaccount.views.LoginErrorView
+# socialaccount_login_error
+/user/auth/login/error/
+# allauth.socialaccount.views.SignupView
+# socialaccount_signup
+/user/auth/signup/
+```
+
+Here's what these views do:
+
+- `/user/auth`: Let user manage their *social account* connections. For
+  example, they can link their account to GitHub, or remove an existing GitHub
+  account connection
+- `/user/auth/github/login`: Log in with GitHub
+- `/user/auth/github/login/callback/`: GitHub redirects to this URL.
+- `/user/auth/login/cancelled/`: Shows a "cancelled" error message when
+  connecting the user cancels connecting their *social account*.
+- `/user/auth/login/error/`: Shows an "error" error message when connecting
+  a *social account* fails.
+- `/user/auth/signup/`: Redirect to `/user/log-in`. We don't link this view.
 
 ## Edit GitHub OAuth settings
 
