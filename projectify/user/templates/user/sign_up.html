@@ -1,7 +1,9 @@
-{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "user_base.html" %}
 {% load i18n %}
+{% load static %}
+{% load socialaccount %}
 {% load projectify %}
 {% block title %}
     {% translate "Sign up - Projectify" %}
@@ -10,6 +12,7 @@
     <form class="flex flex-col gap-6 p-3"
           method="post"
           aria-labelledby="form-title">
+        {% csrf_token %}
         <div class="flex flex-col gap-3">
             <h1 class="text-center text-4xl font-bold" id="form-title">{% trans "Sign up" %}</h1>
             <p class="text-center">{% trans "Sign up and start a free trial" %}</p>
@@ -35,12 +38,21 @@
                 {{ form.privacy_policy_agreed }}
                 {% anchor href="storefront:privacy" label=form.privacy_policy_agreed.label external=True %}
             </label>
-            {% csrf_token %}
             {% include "projectify/forms/submit.html" with text=_("Sign up") %}
-            <div class="text-center">
-                {% trans "Already have an account?" %}
-                {% anchor "users:log-in" _("Log in here") %}
-            </div>
+        </div>
+        <div class="flex justify-center items-center gap-2">
+            <img width="32"
+                 height="32"
+                 class="size-4"
+                 alt="GitHub"
+                 src="{% static "user/login_with_github.svg" %}"
+                 aria-hidden="true" />
+            {% provider_login_url 'github' as gh_url %}
+            {% anchor label=_("Log in with GitHub") href=gh_url %}
+        </div>
+        <div class="text-center">
+            {% trans "Already have an account?" %}
+            {% anchor "users:log-in" _("Log in here") %}
         </div>
     </form>
 {% endblock user_content %}
