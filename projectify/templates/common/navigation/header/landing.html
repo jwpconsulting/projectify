@@ -1,14 +1,16 @@
-{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load static %}
+{% load projectify %}
 {% load i18n %}
-<nav class="flex-row items-center justify-between border-b-2 border-border bg-foreground px-6 py-4 md:flex">
+<nav class="flex-row items-center justify-between border-b-2 border-border bg-foreground px-6 py-4 md:flex"
+     aria-label="{% translate "Projectify" %}">
     <div class="flex flex-row items-center gap-4">
         <a href="{% url "storefront:landing" %}" class="shrink min-w-20">
             <img src="{% static "polylogo.svg" %}"
                  width="171"
                  height="36"
-                 alt="Projectify">
+                 alt="Go to landing page">
         </a>
         <div class="flex flex-row gap-2">
             <a href="{% url "storefront:solutions:list" %}"
@@ -24,8 +26,7 @@
             <a href="{% url "dashboard:dashboard" %}"
                class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Continue to dashboard" %}</a>
         {% else %}
-            <a href="{% url "users:log-in" %}"
-               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "Log in" %}</a>
+            {% anchor href="users:log-in" label=_("Log in") %}
         {% endif %}
     </div>
 </nav>
