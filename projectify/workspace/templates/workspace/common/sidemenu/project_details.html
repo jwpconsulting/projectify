@@ -59,10 +59,10 @@
     {% endif %}
 </div>
 {% if task_filter_form %}
-    <form id="team-member-filters" {# TODO hx-boost #}
-        class="flex flex-col px-4"
-        aria-label="{% if has_team_member_filter %}{% translate "Team member filter form, selected" %}{% else %}{% translate "Team member filter form, not selected" %}{% endif %}">
-        {% csrf_token %}
+    <section id="team-member-filters"
+             class="flex flex-col px-4"
+             aria-labelledby="team-member-filter-title">
+        {# XXX this doesn't have a unique name #}
         <input type="hidden"
                name="minimized"
                value="{% if current_team_member_qs.minimized_team_member_filter %}false{% else %}true{% endif %}">
@@ -110,11 +110,11 @@
             {% endif %}
         </fieldset>
         {% include "projectify/forms/submit.html" with text=_("Filter")  form_name="task-filter" %}
-    </form>
-    <form id="label-filters" {# TODO: hx-boost #}
-        class="flex flex-col px-4"
-        aria-label="{% if has_label_filter %}{% translate "Label filter form, selected" %}{% else %}{% translate "Label filter form, not selected" %}{% endif %}">
-        {% csrf_token %}
+    </section>
+    <section id="label-filters"
+             class="flex flex-col px-4"
+             aria-labelledby="label-filter-title">
+        {# XXX this doesn't have a unique name #}
         <input type="hidden"
                name="minimized"
                value="{% if current_team_member_qs.minimized_label_filter %}false{% else %}true{% endif %}">
@@ -162,5 +162,5 @@
             {% endif %}
         </fieldset>
         {% include "projectify/forms/submit.html" with text=_("Filter")  form_name="task-filter" %}
-    </form>
+    </section>
 {% endif %}
