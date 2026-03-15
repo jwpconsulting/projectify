@@ -123,15 +123,15 @@
                                     {% csrf_token %}
                                     <p class="htmx-indicator">...</p>
                                 </form>
+                                <a aria-label="{% translate "Task menu" %}"
+                                   href="{% url "dashboard:tasks:actions" task.uuid %}"
+                                   class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background"
+                                   hx-get="{% url "dashboard:tasks:actions" task.uuid %}"
+                                   hx-target="#task-{{ task.uuid }}-menu"
+                                   hx-swap="outerHTML">{% icon "dots-horizontal" %}</a>
                             {% else %}
                                 <div class="flex flex-row items-center gap-1">{% user_avatar task.assignee %}</div>
                             {% endif %}
-                            <a aria-label="{% translate "Task menu" %}"
-                               href="{% url "dashboard:tasks:actions" task.uuid %}"
-                               class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background"
-                               hx-get="{% url "dashboard:tasks:actions" task.uuid %}"
-                               hx-target="#task-{{ task.uuid }}-menu"
-                               hx-swap="outerHTML">{% icon "dots-horizontal" %}</a>
                         </td>
                     </tr>
                     <tr id="task-{{ task.uuid }}-menu" class="hidden"></tr>
