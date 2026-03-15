@@ -1,22 +1,20 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2022-2024 JWP Consulting GK
-"""
-Workspace app rules.
-
-The order of rules follows the ordering of models.
-"""
+# SPDX-FileCopyrightText: 2022-2026 JWP Consulting GK
+"""Contains the rules for the Projectify project."""
 
 from functools import partial
 
 import rules
+from rules.predicates import is_superuser
 
 from projectify.user.models import User
-
-from .models import TeamMember, Workspace
-from .models.const import TeamMemberRoles
-from .selectors.quota import Resource, workspace_quota_for
-from .selectors.team_member import team_member_find_for_workspace
+from projectify.workspace.models import TeamMember, Workspace
+from projectify.workspace.models.const import TeamMemberRoles
+from projectify.workspace.selectors.quota import Resource, workspace_quota_for
+from projectify.workspace.selectors.team_member import (
+    team_member_find_for_workspace,
+)
 
 ROLE_EQUIVALENCE = {
     TeamMemberRoles.OWNER: {
@@ -203,3 +201,12 @@ rules.add_perm(
 rules.add_perm("workspace.read_chat_message", is_at_least_observer)
 rules.add_perm("workspace.update_chat_message", is_at_least_contributor)
 rules.add_perm("workspace.delete_chat_message", is_at_least_maintainer)
+
+
+# Customer
+rules.add_perm("corporate.can_create_customer", is_at_least_owner)
+rules.add_perm("corporate.can_read_customer", is_at_least_owner)
+rules.add_perm("corporate.can_update_customer", is_at_least_owner)
+rules.add_perm("corporate.can_delete_customer", is_at_least_owner)
+
+rules.add_perm("corporate.can_create_coupon", is_superuser)
