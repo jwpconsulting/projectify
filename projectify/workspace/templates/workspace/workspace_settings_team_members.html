@@ -69,8 +69,6 @@
                                            value="{{ team_member.uuid }}">
                                     {% action_button text=_("Remove") icon="x" style="destructive" grow=True name="action" value="team_member_remove" %}
                                 </form>
-                            {% else %}
-                                <span class="sr-only">{% translate "No action available" %}</span>
                             {% endif %}
                         </td>
                     </tr>
@@ -96,18 +94,23 @@
                             <td class="overflow-x-auto">{{ team_member_invite.user_invite.email }}</td>
                             <td>{{ team_member_invite.created|date:"Y-m-d" }}</td>
                             <td>
-                                <form hx-post="{% url 'dashboard:workspaces:team-members' workspace.uuid %}"
-                                      hx-confirm="{% blocktrans with email=team_member_invite.user_invite.email %}Would you like to uninvite '{{ email }}' from this workspace? This action cannot be undone.{% endblocktrans %}"
-                                      hx-select="#main"
-                                      hx-target="#main"
-                                      hw-swap="outerHTML">
-                                    {% csrf_token %}
-                                    {{ uninvite_form }}
-                                    <input type="hidden"
-                                           name="{{ uninvite_form.email.html_name }}"
-                                           value="{{ team_member_invite.user_invite.email }}">
-                                    {% action_button text=_("Uninvite") icon="x" style="destructive" grow=True name="action" value="uninvite" %}
-                                </form>
+                                {% has_perm 'workspace.delete_team_member_invite' user workspace as can_delete_team_member_invite %}
+                                {% if can_delete_team_member_invite %}
+                                    <form hx-post="{% url 'dashboard:workspaces:team-members' workspace.uuid %}"
+                                          hx-confirm="{% blocktrans with email=team_member_invite.user_invite.email %}Would you like to uninvite '{{ email }}' from this workspace? This action cannot be undone.{% endblocktrans %}"
+                                          hx-select="#main"
+                                          hx-target="#main"
+                                          hw-swap="outerHTML">
+                                        {% csrf_token %}
+                                        {{ uninvite_form }}
+                                        <input type="hidden"
+                                               name="{{ uninvite_form.email.html_name }}"
+                                               value="{{ team_member_invite.user_invite.email }}">
+                                        {% action_button text=_("Uninvite") icon="x" style="destructive" grow=True name="action" value="uninvite" %}
+                                    </form>
+                                {% else %}
+                                    <span class="sr-only">{% translate "No action available" %}</span>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
