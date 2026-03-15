@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 # SPDX-FileCopyrightText: 2025 JWP Consulting GK
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
@@ -7,24 +7,38 @@ set -e
 version="$(date "+%Y.%-m.%-d")"
 echo "Version: $version"
 
-PYPROJECT_TOML="pyproject.toml"
-UV_LOCK="uv.lock"
+BACKEND_PYPROJECT_TOML="pyproject.toml"
+FRONTEND_DIR="frontend"
+FRONTEND_PACKAGE_JSON="$FRONTEND_DIR/package.json"
+FRONTEND_LOCK_FILE="$FRONTEND_DIR/package-lock.json"
 
 next_cmd=$(printf 'sed -E -i -e "s/^version = ".+"$/version = \\"%s\\"/" "%s"' \
     "$version" \
-    "$PYPROJECT_TOML"
+    "$BACKEND_PYPROJECT_TOML"
 )
 printf "About to run %s\nContinue? (c-c to exit)" "$next_cmd"
 read -r _
 eval "$next_cmd"
 
-next_cmd="uv lock"
-echo "Updating lock file for $PYPROJECT_TOML"
-printf "About to run %s\nContinue? (c-c to exit)" "$next_cmd"
+tmp_package="$(mktemp)"
+next_cmd=$(printf 'jq --indent 4 ".version = \\"%s\\"" "%s" > "%s" && mv "%s" "%s"' \
+    "$version" \
+    "$FRONTEND_PACKAGE_JSON" \
+    "$tmp_package" \
+    "$tmp_package" \
+    "$FRONTEND_PACKAGE_JSON"
+)
+printf "About to update run %s\nContinue? (c-c to exit)" "$next_cmd"
 read -r _
 eval "$next_cmd"
 
-next_cmd=$(printf "git add %s %s" "$PYPROJECT_TOML" "$UV_LOCK")
+echo "Updating lock file for $FRONTEND_PACKAGE_JSON"
+prevd="$PWD"
+cd "$FRONTEND_DIR"
+npm install
+cd "$prevd"
+
+next_cmd=$(printf "git add %s %s %s" "$BACKEND_PYPROJECT_TOML" "$FRONTEND_PACKAGE_JSON" "$FRONTEND_LOCK_FILE")
 printf "about to run %s\nContinue? (c-c to exit)" "$next_cmd"
 read -r _
 eval "$next_cmd"
