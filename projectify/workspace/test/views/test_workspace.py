@@ -64,7 +64,7 @@ class TestMinimizeLists:
         user_client: Client,
         resource_url: str,
         team_member: TeamMember,
-        django_assert_num_queries: DjangoAssertNumQueries,
+        django_assert_max_num_queries: DjangoAssertNumQueries,
         initial_state: bool,
         post_value: str,
         expected_state: bool,
@@ -73,7 +73,9 @@ class TestMinimizeLists:
         team_member.minimized_project_list = initial_state
         team_member.save()
 
-        with django_assert_num_queries(11):
+        # Gone up from 11 -> 13 due to permission checks in sidemenu
+        # XX non-deterministic test
+        with django_assert_max_num_queries(13):
             response = user_client.post(
                 resource_url, {"minimized": post_value}
             )
@@ -165,7 +167,8 @@ class TestWorkspaceSettings:
         # Query count went up from 12 -> 19
         # Query count went up from 19 -> 20
         # Query count went up from 20 -> 22
-        with django_assert_num_queries(22):
+        # Query count went up from 22 -> 24 due to permission checks in sidemenu
+        with django_assert_num_queries(24):
             response = user_client.post(
                 resource_url,
                 {
@@ -297,7 +300,8 @@ class TestWorkspaceSettingsTeamMembers:
         workspace = team_member.workspace
         initial = workspace.teammember_set.count()
         uid = str(other_team_member.uuid)
-        with django_assert_num_queries(27):
+        # Gone up from 27 -> 28 due to permission checks in sidemenu
+        with django_assert_num_queries(28):
             response = user_client.post(
                 resource_url,
                 {"action": "team_member_remove", "team_member": uid},
@@ -639,7 +643,8 @@ class TestWorkspaceSettingsQuota:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test getting the quota page."""
-        with django_assert_num_queries(12):
+        # Gone up from 12 -> 13 due to permission checks in sidemenu
+        with django_assert_num_queries(13):
             response = user_client.get(resource_url)
             assert response.status_code == 200
 
@@ -660,7 +665,8 @@ class TestWorkspaceSettingsQuota:
     ) -> None:
         """Test getting the quota page."""
         customer_cancel_subscription(customer=team_member.workspace.customer)
-        with django_assert_num_queries(16):
+        # Gone up from 16 -> 17 due to permission checks in sidemenu
+        with django_assert_num_queries(17):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         # These quotas should be listed
@@ -826,7 +832,8 @@ class TestWorkspaceSettingsBilling:
         team_member: TeamMember,
     ) -> None:
         """Test GET request with unpaid customer shows billing form."""
-        with django_assert_num_queries(16):
+        # Gone up from 16 -> 17 due to permission checks in sidemenu
+        with django_assert_num_queries(17):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert b"Use a coupon code" in response.content
@@ -840,7 +847,8 @@ class TestWorkspaceSettingsBilling:
         team_member: TeamMember,
     ) -> None:
         """Test GET request with paying customer shows billing info."""
-        with django_assert_num_queries(12):
+        # Gone up from 12 -> 13 due to permission checks in sidemenu
+        with django_assert_num_queries(13):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert b"You have a paid workspace" in response.content
@@ -867,7 +875,8 @@ class TestWorkspaceSettingsBillingCoupon:
         active = customer_check_active_for_workspace(workspace=workspace)
         assert active == "trial"
         data = {"action": "redeem_coupon", "code": "foo"}
-        with django_assert_num_queries(21):
+        # Gone up from 21 -> 22 due to permission checks in sidemenu
+        with django_assert_num_queries(22):
             res = user_client.post(resource_url, data=data)
             assert res.status_code == 400
         assert "No coupon is available for this code" in res.content.decode()

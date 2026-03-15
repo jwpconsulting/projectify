@@ -2,10 +2,14 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load i18n %}
 {% load projectify %}
+{% load rules %}
 <section class="flex flex-col"
          id="section-{{ section.uuid }}"
          aria-labelledby="section-{{ section.uuid }}-header"
          title="{% blocktranslate with title=section.title project=section.project.title %}{{ title }} section in {{ project }} project{% endblocktranslate %}">
+    {% has_perm "workspace.update_section" user section.project.workspace as can_update_section %}
+    {% has_perm "workspace.create_task" user section.project.workspace as can_create_task %}
+    {% has_perm "workspace.update_task" user section.project.workspace as can_update_task %}
     <form method="post"
           hx-post="{% url 'dashboard:projects:detail' section.project.uuid %}"
           hx-target="#section-{{ section.uuid }}"
@@ -28,12 +32,16 @@
             </button>
             <div class="min-w-0 flex flex-row gap-2 items-center">
                 <h1 id="section-{{ section.uuid }}-header" class="truncate font-bold">{{ section.title }}</h1>
-                {% circle_anchor label=_("Update section") icon_style="pencil" href="dashboard:sections:update" section_uuid=section.uuid size=4 %}
+                {% if can_update_section %}
+                    {% circle_anchor label=_("Update section") icon_style="pencil" href="dashboard:sections:update" section_uuid=section.uuid size=4 %}
+                {% endif %}
             </div>
         </div>
         <div class="flex shrink-0 flex-row items-center gap-1">
             {% include "workspace/common/loading_spinner.html" %}
-            {% go_to_action href="dashboard:sections:create-task" label=_("Add task") style="secondary" icon_style="plus" section_uuid=section.uuid %}
+            {% if can_create_task %}
+                {% go_to_action href="dashboard:sections:create-task" label=_("Add task") style="secondary" icon_style="plus" section_uuid=section.uuid %}
+            {% endif %}
         </div>
     </form>
     {% if not section.minimized %}
@@ -51,30 +59,39 @@
                         aria-labelledby="task-{{ task.uuid }}-title"
                         x-data="{ menuOpen: false }">
                         <td class="flex flex-row items-center gap-2">
-                            <form action="{% url 'dashboard:projects:detail' section.project.uuid %}"
-                                  method="post"
-                                  hx-post="{% url 'dashboard:projects:detail' section.project.uuid %}"
-                                  hx-target="#section-{{ section.uuid }}"
-                                  hx-swap="outerHTML"
-                                  hx-include="#task-filter,#team-member-filters,#label-filters"
-                                  hx-disabled-elt="find button"
-                                  class="flex">
-                                <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
-                                <input type="hidden"
-                                       name="done"
-                                       value="{% if task.done %}false{% else %}true{% endif %}">
-                                {% csrf_token %}
-                                <button type="submit"
-                                        name="action"
-                                        value="mark_task_done"
-                                        class="size-6 flex items-center justify-center rounded border-2 transition-colors {% if task.done %}bg-primary border-primary text-primary-content{% else %}border-border hover:border-primary{% endif %} disabled:opacity-50 disabled:cursor-not-allowed"
-                                        aria-label="{% if task.done %}{% translate 'Mark task as not done' %}{% else %}{% translate 'Mark task as done' %}{% endif %}"
-                                        title="{% if task.done %}{% translate 'Mark task as not done' %}{% else %}{% translate 'Mark task as done' %}{% endif %}">
+                            {% if can_update_task %}
+                                <form action="{% url 'dashboard:projects:detail' section.project.uuid %}"
+                                      method="post"
+                                      hx-post="{% url 'dashboard:projects:detail' section.project.uuid %}"
+                                      hx-target="#section-{{ section.uuid }}"
+                                      hx-swap="outerHTML"
+                                      hx-include="#task-filter,#team-member-filters,#label-filters"
+                                      hx-disabled-elt="find button"
+                                      class="flex">
+                                    <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
+                                    <input type="hidden"
+                                           name="done"
+                                           value="{% if task.done %}false{% else %}true{% endif %}">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                            name="action"
+                                            value="mark_task_done"
+                                            class="size-6 flex items-center justify-center rounded border-2 transition-colors {% if task.done %}bg-primary border-primary text-primary-content{% else %}border-border hover:border-primary{% endif %} disabled:opacity-50 disabled:cursor-not-allowed"
+                                            aria-label="{% if task.done %}{% translate 'Mark task as not done' %}{% else %}{% translate 'Mark task as done' %}{% endif %}"
+                                            title="{% if task.done %}{% translate 'Mark task as not done' %}{% else %}{% translate 'Mark task as done' %}{% endif %}">
+                                        {% if task.done %}
+                                            {% icon "check" size=4 color="white" %}
+                                        {% endif %}
+                                    </button>
+                                </form>
+                            {% else %}
+                                <div class="shrink-0 size-6 flex items-center justify-center rounded border-2 {% if task.done %}bg-primary border-primary text-primary-content{% else %}border-border{% endif %}"
+                                     aria-hidden="true">
                                     {% if task.done %}
                                         {% icon "check" size=4 color="white" %}
                                     {% endif %}
-                                </button>
-                            </form>
+                                </div>
+                            {% endif %}
                             <a href="{% url 'dashboard:tasks:detail' task.uuid %}"
                                class="flex flex-row items-start items-center min-w-0 gap-1 self-start sm:gap-6 lg:self-center {% if task.done %}line-through opacity-60{% endif %}">
                                 <span class="line-clamp-3 justify-self-start hover:text-primary lg:line-clamp-1 lg:h-6"
@@ -89,22 +106,26 @@
                             {% endfor %}
                         </td>
                         <td class="flex ml-auto">
-                            <form action="{% url 'dashboard:projects:detail' project.uuid %}"
-                                  method="post"
-                                  hx-include="#task-filter,#team-member-filters,#label-filters"
-                                  hx-boost="true"
-                                  hx-target="#section-{{ section.uuid }}"
-                                  hx-swap="outerHTML"
-                                  class="flex flex-row items-center gap-1">
-                                {# TODO in AT, say "currently assigned to ..." #}
-                                {% user_avatar task.assignee %}
-                                <input type="hidden" name="action" value="move_task">
-                                <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
-                                {% circle_button label=_("Move task up") value="up" name="direction" disabled=task.first icon_style="chevron-up" %}
-                                {% circle_button label=_("Move task down") value="down" name="direction" disabled=task.last icon_style="chevron-down" %}
-                                {% csrf_token %}
-                                <p class="htmx-indicator">...</p>
-                            </form>
+                            {% if can_update_task %}
+                                <form action="{% url 'dashboard:projects:detail' project.uuid %}"
+                                      method="post"
+                                      hx-include="#task-filter,#team-member-filters,#label-filters"
+                                      hx-boost="true"
+                                      hx-target="#section-{{ section.uuid }}"
+                                      hx-swap="outerHTML"
+                                      class="flex flex-row items-center gap-1">
+                                    {# TODO in AT, say "currently assigned to ..." #}
+                                    {% user_avatar task.assignee %}
+                                    <input type="hidden" name="action" value="move_task">
+                                    <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
+                                    {% circle_button label=_("Move task up") value="up" name="direction" disabled=task.first icon_style="chevron-up" %}
+                                    {% circle_button label=_("Move task down") value="down" name="direction" disabled=task.last icon_style="chevron-down" %}
+                                    {% csrf_token %}
+                                    <p class="htmx-indicator">...</p>
+                                </form>
+                            {% else %}
+                                <div class="flex flex-row items-center gap-1">{% user_avatar task.assignee %}</div>
+                            {% endif %}
                             <a aria-label="{% translate "Task menu" %}"
                                href="{% url "dashboard:tasks:actions" task.uuid %}"
                                class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background"
@@ -121,7 +142,9 @@
                                 {% translate "No tasks found for your search." %}
                             {% else %}
                                 {% translate "No tasks in this section." %}
-                                {% anchor 'dashboard:sections:create-task' label=_("Add a task here") section_uuid=section.uuid %}
+                                {% if can_create_task %}
+                                    {% anchor 'dashboard:sections:create-task' label=_("Add a task here") section_uuid=section.uuid %}
+                                {% endif %}
                             {% endif %}
                         </td>
                     </tr>

@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 from typing import Any, ParamSpec, Union
+import warnings
 
 from .predicates import Predicate, predicate
 
@@ -11,7 +12,10 @@ P = ParamSpec("P")
 
 class RuleSet(dict[str, Predicate[P]]):
     def test_rule(self, name: str, *args: Any, **kwargs: Any) -> bool:
-        return name in self and self[name].test(*args, **kwargs)
+        if not name in self:
+            warnings.warn(f"Rule {name} is not a valid predicate")
+            return False
+        return self[name].test(*args, **kwargs)
 
     def rule_exists(self, name: str) -> bool:
         return name in self
