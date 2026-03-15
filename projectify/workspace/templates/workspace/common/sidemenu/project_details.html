@@ -2,6 +2,7 @@
 {# SPDX-FileCopyrightText: 2024-2025 JWP Consulting GK #}
 {% load i18n %}
 {% load projectify %}
+{% load rules %}
 <div id="sidemenu-project-section">
     <form hx-post="{% url 'dashboard:workspaces:minimize-project-list' workspace.uuid %}"
           hx-swap="outerHTML"
@@ -54,20 +55,18 @@
             </a>
         {% endfor %}
         {% if workspace %}
-            {% go_to_action href="dashboard:workspaces:create-project" label=_("Create new project") style="secondary" icon_style="plus" justify_left=True workspace_uuid=workspace.uuid %}
+            {% has_perm "workspace.create_project" user workspace as can_create_project %}
+            {% if can_create_project %}
+                {% go_to_action href="dashboard:workspaces:create-project" label=_("Create new project") style="secondary" icon_style="plus" justify_left=True workspace_uuid=workspace.uuid %}
+            {% endif %}
         {% endif %}
     {% endif %}
 </div>
 {% if task_filter_form %}
-    <form id="team-member-filters" {# TODO hx-boost #}
-        class="flex flex-col px-4"
-        hx-post="{% url 'dashboard:projects:detail' project.uuid %}"
-        hx-swap="outerHTML"
-        hx-target="#team-member-filters"
-        hx-select="#team-member-filters"
-        hx-include="#task-filter,#team-member-filters,#label-filters"
-        aria-label="{% if has_team_member_filter %}{% translate "Team member filter form, selected" %}{% else %}{% translate "Team member filter form, not selected" %}{% endif %}">
-        {% csrf_token %}
+    <section id="team-member-filters"
+             class="flex flex-col px-4"
+             aria-labelledby="team-member-filter-title">
+        {# XXX this doesn't have a unique name #}
         <input type="hidden"
                name="minimized"
                value="{% if current_team_member_qs.minimized_team_member_filter %}false{% else %}true{% endif %}">
@@ -75,6 +74,11 @@
                 name="action"
                 value="minimize_team_member_filter"
                 class="flex w-full flex-row items-center justify-between gap-2 py-2 text-utility hover:text-base-content"
+                hx-target="#team-member-filters"
+                hx-select="#team-member-filters"
+                hx-post="{% url 'dashboard:projects:detail' project.uuid %}"
+                hx-swap="outerHTML"
+                hx-include="#task-filter,#team-member-filters,#label-filters"
                 aria-describedby="team-member-filter-help">
             <div class="flex flex-row items-center gap-2">
                 <div class="w-4 h-4">{% icon "user" %}</div>
@@ -106,20 +110,18 @@
             <legend class="px-2 font-bold">{{ task_filter_form.filter_by_team_member.label }}</legend>
             {{ task_filter_form.filter_by_team_member }}
             {% if workspace %}
-                {% go_to_action href="dashboard:workspaces:team-members" label=_("Add more team members") style="secondary" icon_style="plus" justify_left=True workspace_uuid=workspace.uuid %}
+                {% has_perm "workspace.create_team_member" user workspace as can_create_team_member %}
+                {% if can_create_team_member %}
+                    {% go_to_action href="dashboard:workspaces:team-members" label=_("Add more team members") style="secondary" icon_style="plus" justify_left=True workspace_uuid=workspace.uuid %}
+                {% endif %}
             {% endif %}
         </fieldset>
         {% include "projectify/forms/submit.html" with text=_("Filter")  form_name="task-filter" %}
-    </form>
-    <form id="label-filters" {# TODO: hx-boost #}
-        class="flex flex-col px-4"
-        hx-post="{% url 'dashboard:projects:detail' project.uuid %}"
-        hx-swap="outerHTML"
-        hx-target="#label-filters"
-        hx-select="#label-filters"
-        hx-include="#task-filter,#team-member-filters,#label-filters"
-        aria-label="{% if has_label_filter %}{% translate "Label filter form, selected" %}{% else %}{% translate "Label filter form, not selected" %}{% endif %}">
-        {% csrf_token %}
+    </section>
+    <section id="label-filters"
+             class="flex flex-col px-4"
+             aria-labelledby="label-filter-title">
+        {# XXX this doesn't have a unique name #}
         <input type="hidden"
                name="minimized"
                value="{% if current_team_member_qs.minimized_label_filter %}false{% else %}true{% endif %}">
@@ -127,6 +129,11 @@
                 name="action"
                 value="minimize_label_filter"
                 class="flex w-full flex-row items-center justify-between gap-2 py-2 text-utility hover:text-base-content"
+                hx-post="{% url 'dashboard:projects:detail' project.uuid %}"
+                hx-swap="outerHTML"
+                hx-target="#label-filters"
+                hx-select="#label-filters"
+                hx-include="#task-filter,#team-member-filters,#label-filters"
                 aria-describedby="label-filter-help">
             <div class="flex flex-row items-center gap-2">
                 <div class="w-4 h-4">{% icon "tag" %}</div>
@@ -158,9 +165,12 @@
             <legend class="px-2 font-bold">{{ task_filter_form.filter_by_label.label }}</legend>
             {{ task_filter_form.filter_by_label }}
             {% if workspace %}
-                {% go_to_action href="dashboard:workspaces:labels" label=_("Add more labels") style="secondary" icon_style="plus" justify_left=True workspace_uuid=workspace.uuid %}
+                {% has_perm "workspace.create_label" user workspace as can_create_label %}
+                {% if can_create_label %}
+                    {% go_to_action href="dashboard:workspaces:labels" label=_("Add more labels") style="secondary" icon_style="plus" justify_left=True workspace_uuid=workspace.uuid %}
+                {% endif %}
             {% endif %}
         </fieldset>
         {% include "projectify/forms/submit.html" with text=_("Filter")  form_name="task-filter" %}
-    </form>
+    </section>
 {% endif %}

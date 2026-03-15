@@ -289,6 +289,7 @@ def user_avatar(
                 alt=_("Team member {} avatar").format(str(user)),
             )
         case _:
+            # TODO use one of our named colors instead of bg-base-200
             return mark_safe(
                 '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary bg-base-200"></div>'
             )

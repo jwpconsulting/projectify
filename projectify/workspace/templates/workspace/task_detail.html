@@ -5,6 +5,7 @@
 {% load rules %}
 {% load i18n %}
 {% block dashboard_content %}
+    {% has_perm "workspace.update_task" user task.workspace as can_update_task %}
     <main id="main" class="min-w-0 grow flex h-full flex-col p-4 pt-0">
         <div class="sticky top-0 flex flex-row flex-wrap items-center justify-between gap-x-2 gap-y-4 bg-foreground pb-8 pt-4 lg:flex-nowrap">
             <div class="flex shrink flex-row items-center gap-6">
@@ -16,7 +17,6 @@
                 {% include "workspace/task/breadcrumbs.html" with section=task.section task=task %}
             </div>
             <div class="flex items-center justify-between gap-4 sm:flex-row">
-                {% has_perm "workspace.update_task" user task.workspace as can_update_task %}
                 {% if can_update_task %}
                     {% go_to_action "dashboard:tasks:update" label=_("Edit") title=_("Edit this task") task_uuid=task.uuid %}
                 {% endif %}
@@ -30,7 +30,9 @@
                         <th scope="row" class="col-span-1 text-left font-bold">{% trans "Task title" %}</th>
                         <td class="col-span-3 flex flex-row gap-4 items-center">
                             {{ task.title }}
-                            {% circle_anchor label=_("Edit task title") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit task title") size=4 task_uuid=task.uuid focus_field="title" %}
+                            {% if can_update_task %}
+                                {% circle_anchor label=_("Edit task title") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit task title") size=4 task_uuid=task.uuid focus_field="title" %}
+                            {% endif %}
                         </td>
                     </tr>
                     <tr class="contents">
@@ -38,7 +40,9 @@
                         <td class="col-span-3 flex flex-row gap-2 items-center">
                             {% user_avatar task.assignee %}
                             <span class="truncate">{{ task.assignee|default:"No team member assigned" }}</span>
-                            {% circle_anchor label=_("Edit assignee") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit assignee") size=4 task_uuid=task.uuid focus_field="assignee" %}
+                            {% if can_update_task %}
+                                {% circle_anchor label=_("Edit assignee") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit assignee") size=4 task_uuid=task.uuid focus_field="assignee" %}
+                            {% endif %}
                         </td>
                     </tr>
                     <tr class="contents">
@@ -51,7 +55,9 @@
                                           disabled="">{{ label.name }}</span>
                                 {% endfor %}
                             </div>
-                            {% circle_anchor label=_("Edit labels") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit labels") size=4 task_uuid=task.uuid focus_field="labels" %}
+                            {% if can_update_task %}
+                                {% circle_anchor label=_("Edit labels") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit labels") size=4 task_uuid=task.uuid focus_field="labels" %}
+                            {% endif %}
                         </td>
                     </tr>
                     <tr class="contents">
@@ -62,7 +68,9 @@
                             {% else %}
                                 <p class="text-base-content">{% trans "No due date" %}</p>
                             {% endif %}
-                            {% circle_anchor label=_("Edit due date") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit due date") size=4 task_uuid=task.uuid focus_field="due_date" %}
+                            {% if can_update_task %}
+                                {% circle_anchor label=_("Edit due date") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit due date") size=4 task_uuid=task.uuid focus_field="due_date" %}
+                            {% endif %}
                         </td>
                     </tr>
                     <tr class="contents">
@@ -73,7 +81,9 @@
                             {% else %}
                                 <p class="text-base-content">{% trans "No description" %}</p>
                             {% endif %}
-                            {% circle_anchor label=_("Edit description") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit description") size=4 task_uuid=task.uuid focus_field="description" %}
+                            {% if can_update_task %}
+                                {% circle_anchor label=_("Edit description") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit description") size=4 task_uuid=task.uuid focus_field="description" %}
+                            {% endif %}
                         </td>
                     </tr>
                 </tbody>

@@ -47,7 +47,8 @@ class TestProjectDetailView:
         # Gone down from 15 -> 14
         # Gone up   from 14 -> 15
         # Gone up   from 15 -> 18
-        with django_assert_num_queries(18):
+        # Gone up   from 18 -> 24 due to permission checks in sidemenu
+        with django_assert_num_queries(24):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert project.title in response.content.decode()
@@ -97,7 +98,8 @@ class TestProjectDetailView:
         other_task.assignee = other_team_member
         other_task.save()
 
-        with django_assert_num_queries(22):
+        # Gone up from 22 -> 31 due to permission checks in template
+        with django_assert_num_queries(31):
             response = user_client.get(
                 resource_url,
                 {"filter_by_team_member": [str(team_member.uuid)]},
@@ -120,7 +122,8 @@ class TestProjectDetailView:
         task.assignee = team_member
         task.save()
 
-        with django_assert_num_queries(20):
+        # Gone up from 20 -> 29 due to permission checks in template
+        with django_assert_num_queries(29):
             response = user_client.get(
                 resource_url, {"filter_by_team_member": [""]}
             )
@@ -141,7 +144,8 @@ class TestProjectDetailView:
         """Test filtering tasks by label."""
         task.labels.add(label)
 
-        with django_assert_num_queries(22):
+        # Gone up from 22 -> 31 due to permission checks in template
+        with django_assert_num_queries(31):
             response = user_client.get(
                 resource_url, {"filter_by_label": [str(label.uuid)]}
             )
@@ -162,7 +166,8 @@ class TestProjectDetailView:
         """Test filtering for unlabeled tasks."""
         task.labels.add(label)
 
-        with django_assert_num_queries(20):
+        # Gone up from 20 -> 29 due to permission checks in template
+        with django_assert_num_queries(29):
             response = user_client.get(resource_url, {"filter_by_label": [""]})
             assert response.status_code == 200
 
@@ -184,7 +189,8 @@ class TestProjectDetailView:
         other_task.title = "Feature request"
         other_task.save()
 
-        with django_assert_num_queries(20):
+        # Gone up from 20 -> 29 due to permission checks in template
+        with django_assert_num_queries(29):
             response = user_client.get(
                 resource_url, {"task_search_query": "bug"}
             )
@@ -221,7 +227,8 @@ class TestProjectDetailViewActions:
         ]
 
         # Move task2 up (should swap positions)
-        with django_assert_num_queries(32):
+        # Gone up from 32 -> 35 due to permission checks in template
+        with django_assert_num_queries(35):
             response = user_client.post(
                 resource_url,
                 {
@@ -237,7 +244,8 @@ class TestProjectDetailViewActions:
         ]
 
         # Move task1 up (should swap back)
-        with django_assert_num_queries(32):
+        # Gone up from 32 -> 35 due to permission checks in template
+        with django_assert_num_queries(35):
             response = user_client.post(
                 resource_url,
                 {
@@ -287,7 +295,8 @@ class TestProjectDetailViewActions:
         assert task.done is None
         t_uid = str(task.uuid)
         data = {"action": "mark_task_done", "task_uuid": t_uid, "done": "true"}
-        with django_assert_num_queries(24):
+        # Gone up from 24 -> 27 due to permission checks in template
+        with django_assert_num_queries(27):
             response = user_client.post(resource_url, data)
             assert response.status_code == 200
         task.refresh_from_db()
@@ -298,7 +307,8 @@ class TestProjectDetailViewActions:
             "task_uuid": t_uid,
             "done": "false",
         }
-        with django_assert_num_queries(24):
+        # Gone up from 24 -> 27 due to permission checks in template
+        with django_assert_num_queries(27):
             response = user_client.post(resource_url, data)
             assert response.status_code == 200
         task.refresh_from_db()
@@ -406,7 +416,8 @@ class TestProjectUpdateView:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test GETting the project update page."""
-        with django_assert_num_queries(8):
+        # Gone up from 8 -> 9 due to permission checks in sidemenu
+        with django_assert_num_queries(9):
             response = user_client.get(resource_url)
             assert response.status_code == 200
             assert project.title.encode() in response.content
@@ -817,7 +828,8 @@ class TestProjectDetailMinimize:
             "dashboard:projects:detail", args=(section.project.uuid,)
         )
 
-        with django_assert_num_queries(19):
+        # Gone up from 19 -> 22 due to permission checks in template
+        with django_assert_num_queries(22):
             response = user_client.post(
                 url,
                 {
