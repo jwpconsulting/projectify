@@ -3,24 +3,51 @@
 {% extends "workspace/workspace_settings_base.html" %}
 {% load i18n %}
 {% load projectify %}
+{% load rules %}
 {% block title %}
     {% blocktrans with workspace_title=workspace.title %}{{ workspace_title }} settings - Projectify{% endblocktrans %}
 {% endblock title %}
 {% block workspace_settings_content %}
-    <form class="flex flex-col gap-6"
-          method="post"
-          enctype="multipart/form-data">
-        {% csrf_token %}
-        {# TODO format errors #}
-        {{ form.errors }}
-        {{ form }}
-        {% include "projectify/forms/submit.html" with text=_("Save") %}
-    </form>
-    <section class="flex flex-col gap-2">
-        <h2 class="font-bold">{% trans "Delete workspace" %}</h2>
-        <p>
-            {% trans "If you would like to delete this workspace, please send us an email using the link below. We have not implemented self-serve workspace deletion at this point, and would like to apologize for the inconvenience." %}
-        </p>
-        {% anchor href="mailto:hello@projectifyapp.com?subject=Workspace+deletion" label=_("Request workspace deletion (opens email client)") %}
-    </section>
+    {% has_perm "workspace.update_workspace" user workspace as can_update_workspace %}
+    {% if can_update_workspace %}
+        <form class="flex flex-col gap-6"
+              method="post"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+            {# TODO format errors #}
+            {{ form.errors }}
+            {{ form }}
+            {% include "projectify/forms/submit.html" with text=_("Save") %}
+        </form>
+        <section class="flex flex-col gap-2">
+            <h2 class="font-bold">{% trans "Delete workspace" %}</h2>
+            <p>
+                {% trans "If you would like to delete this workspace, please send us an email using the link below. We have not implemented self-serve workspace deletion at this point, and would like to apologize for the inconvenience." %}
+            </p>
+            {% anchor href="mailto:hello@projectifyapp.com?subject=Workspace+deletion" label=_("Request workspace deletion (opens email client)") %}
+        </section>
+    {% else %}
+        <section class="flex flex-col gap-4">
+            <div class="flex flex-col gap-2">
+                <h2 class="font-bold">{% trans "Workspace title" %}</h2>
+                <p>{{ workspace.title }}</p>
+            </div>
+            {% if workspace.description %}
+                <div class="flex flex-col gap-2">
+                    <h2 class="font-bold">{% trans "Workspace description" %}</h2>
+                    <p>{{ workspace.description }}</p>
+                </div>
+            {% endif %}
+            {% if workspace.picture %}
+                <div class="flex flex-col gap-2">
+                    <h2 class="font-bold">{% trans "Workspace picture" %}</h2>
+                    <img src="{{ workspace.picture.url }}"
+                         alt="{% trans "Workspace picture" %}"
+                         height="200"
+                         width="200"
+                         class="m-auto max-w-xs rounded-lg">
+                </div>
+            {% endif %}
+        </section>
+    {% endif %}
 {% endblock workspace_settings_content %}

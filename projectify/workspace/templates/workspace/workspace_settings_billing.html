@@ -3,12 +3,21 @@
 {% extends "workspace/workspace_settings_base.html" %}
 {% load i18n %}
 {% load projectify %}
+{% load rules %}
 {% block title %}
     {% blocktrans with workspace_title=workspace.title %}{{ workspace_title }} billing - Projectify{% endblocktrans %}
 {% endblock title %}
 {% block workspace_settings_content %}
+    {% has_perm "corporate.can_update_customer" user workspace as can_update_customer %}
     <section class="flex flex-col gap-12 px-4 py-6">
-        {% if workspace.customer.subscription_status == "ACTIVE" %}
+        {% if not can_update_customer %}
+            <div>
+                <p class="font-bold">{% trans "Permission required" %}</p>
+                <p>
+                    {% trans "You don't have permission to edit billing settings. Please ask the workspace owner to make changes to billing." %}
+                </p>
+            </div>
+        {% elif workspace.customer.subscription_status == "ACTIVE" %}
             <section>
                 <p class="font-bold">{% trans "Subscription status: Paid workspace" %}</p>
                 <p>
