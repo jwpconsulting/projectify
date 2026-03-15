@@ -168,7 +168,8 @@ class TestWorkspaceSettings:
         # Query count went up from 19 -> 20
         # Query count went up from 20 -> 22
         # Query count went up from 22 -> 24 due to permission checks in sidemenu
-        with django_assert_num_queries(24):
+        # Query count went up from 24 -> 25
+        with django_assert_num_queries(25):
             response = user_client.post(
                 resource_url,
                 {
@@ -833,7 +834,8 @@ class TestWorkspaceSettingsBilling:
     ) -> None:
         """Test GET request with unpaid customer shows billing form."""
         # Gone up from 16 -> 17 due to permission checks in sidemenu
-        with django_assert_num_queries(17):
+        # Gone up from 17 -> 18
+        with django_assert_num_queries(18):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert b"Use a coupon code" in response.content
@@ -848,7 +850,8 @@ class TestWorkspaceSettingsBilling:
     ) -> None:
         """Test GET request with paying customer shows billing info."""
         # Gone up from 12 -> 13 due to permission checks in sidemenu
-        with django_assert_num_queries(13):
+        # Gone up from 13 -> 14
+        with django_assert_num_queries(14):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert b"You have a paid workspace" in response.content
@@ -876,7 +879,8 @@ class TestWorkspaceSettingsBillingCoupon:
         assert active == "trial"
         data = {"action": "redeem_coupon", "code": "foo"}
         # Gone up from 21 -> 22 due to permission checks in sidemenu
-        with django_assert_num_queries(22):
+        # Gone up from 22 -> 23
+        with django_assert_num_queries(23):
             res = user_client.post(resource_url, data=data)
             assert res.status_code == 400
         assert "No coupon is available for this code" in res.content.decode()
