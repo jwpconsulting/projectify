@@ -1,6 +1,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK #}
 {% extends "storefront_base.html" %}
+{% load projectify %}
 {% block storefront_content %}
     <div class="prose">
         <h1>Test Views Index</h1>
@@ -19,24 +20,29 @@
             Test email confirmation functionality with various scenarios.
             <strong>Note:</strong> You must be logged out to access this test.
         </p>
-        <p>
-            <a href="{% url 'users-testing:email-confirm-test' %}">Go to Email Confirmation Test</a>
-        </p>
+        <form method="post" action="{% url 'users-testing:email-confirm-test' %}">
+            {% csrf_token %}
+            {% include "projectify/forms/submit.html" with text="Go to Email Confirmation Test" %}
+        </form>
         <h3>Email Address Update Confirmation Test</h3>
         <p>
             Test email address update confirmation functionality.
             <strong>Note:</strong> You must be logged in to access this test.
         </p>
-        <p>
-            <a href="{% url 'users-testing:email-update-confirm-test' %}">Go to Email Update Confirmation Test</a>
-        </p>
+        <form method="post"
+              action="{% url 'users-testing:email-update-confirm-test' %}">
+            {% csrf_token %}
+            {% include "projectify/forms/submit.html" with text="Go to Email Update Confirmation Test" %}
+        </form>
         <h3>Password Reset Confirmation Test</h3>
         <p>
             Test password reset confirmation functionality with various scenarios.
             <strong>Note:</strong> You must be logged out to access this test.
         </p>
-        <p>
-            <a href="{% url 'users-testing:confirm-password-reset-test' %}">Go to Password Reset Confirmation Test</a>
-        </p>
+        <form method="post"
+              action="{% url 'users-testing:confirm-password-reset-test' %}">
+            {% csrf_token %}
+            {% include "projectify/forms/submit.html" with text="Go to Password Reset Confirmation Test" %}
+        </form>
     </div>
 {% endblock %}
