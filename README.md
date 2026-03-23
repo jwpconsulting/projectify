@@ -142,6 +142,37 @@ this repository, run neovim inside `uv`:
 uv run nvim
 ```
 
+# uv
+
+Here's how to update a specific package. Let's say you want to update the
+PyJWT package because of a vulnerability report (CVE-2026-32597). Run
+the following `uv` command to update the PyJWT version used in Projectiy:
+
+```
+uv lock -P pyjwt
+```
+
+You should see something like the following:
+
+```
+Resolved 114 packages in 491ms
+Updated pyjwt v2.11.0 -> v2.12.1
+```
+
+Make sure to run `bin/update-requirements` afterwards. Updating PyJWT to
+version 2.12.1 results in the following diff for the `requirements.txt` file:
+
+```patch
+-pyjwt==2.11.0 \
+    --hash=sha256:35f95c1f0fbe5d5ba6e43f00271c275f7a1a4db1dab27bf708073b75318ea623 \
+    --hash=sha256:94a6bde30eb5c8e04fee991062b534071fd1439ef58d2adc9ccb823e7bcd0469
++pyjwt==2.12.1 \
+    --hash=sha256:28ca37c070cad8ba8cd9790cd940535d40274d22f80ab87f3ac6a713e6e8454c \
+    --hash=sha256:c74a7a2adf861c04d002db713dd85f84beb242228e671280bf709d765b03672b
+```
+
+
+
 # Formatting
 
 ```
