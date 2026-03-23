@@ -276,6 +276,7 @@ junit_family = "xunit1"
 filterwarnings = [
     "error",
     "ignore:ALLAUTH_GITHUB_*",
+    "ignore:ALLAUTH_GOOGLE_*",
 ]
 
 [tool.djlint]
