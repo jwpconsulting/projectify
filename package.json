@@ -6,8 +6,8 @@
     "start": "npm run dev",
     "build": "npm run build:clean && npm run build:tailwind",
     "build:clean": "rm -r projectify/static/css/dist",
-    "build:tailwind": "tailwindcss --postcss -i projectify/static_src/src/styles.css -o projectify/static/css/dist/styles.css --minify",
-    "dev": "tailwindcss --postcss -i projectify/static_src/src/styles.css -o projectify/static/css/dist/styles.css --minify --watch",
+    "build:tailwind": "tailwindcss --postcss -i projectify/static_src/src/styles.css -o projectify/static/css/dist/styles.css",
+    "dev": "tailwindcss --postcss -i projectify/static_src/src/styles.css -o projectify/static/css/dist/styles.css --watch",
     "tailwindcss": "node ./node_modules/tailwindcss/lib/cli.js"
   },
   "keywords": [],
