@@ -54,6 +54,8 @@ contents of the logged error.
 
 ## Stripe
 
+See also `docs/billing_integration.md`.
+
 - `STRIPE_PUBLISHABLE_KEY`: Stripe key that can be revealed to client. See
   [Stripe's docs](https://docs.stripe.com/keys#obtain-api-keys)
 - `STRIPE_SECRET_KEY`: Stripe key that may not be revealed.
