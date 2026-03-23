@@ -123,7 +123,11 @@ class Base(Configuration):  # type:ignore
             "'sha256-IOPJoLjlywWMOiXjm9gstcOWbflCWb+PHbhcDgSPqcg='",
         ],
         "img-src": [CSP.SELF, "res.cloudinary.com"],
-        "form-action": [CSP.SELF],
+        "form-action": [
+            CSP.SELF,
+            "https://github.com",
+            "https://accounts.google.com",
+        ],
         "connect-src": [CSP.SELF],
         "frame-ancestors": [CSP.SELF],
         "object-src": [CSP.SELF],
