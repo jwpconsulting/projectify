@@ -84,6 +84,36 @@ Things you can configure here:
 - **Homepage URL**: Set this to `https://www.projectifyapp.com`
 - **Authorization callback URL**: Set this to `https://www.projectifyapp.com/user/auth/github/login/callback/`
 
+## Edit Google OAuth settings
+
+Source: <https://docs.allauth.org/en/latest/socialaccount/providers/google.html>
+
+1. Open the Google developers console
+2. Go to **Credentials**
+3. Press **Create project** and follow the instructions to create a project.
+4. Press **Configure consent screen**. You should land on the **Branding** page
+   with the text "Google Auth Platform not configured yet".
+5. Press **Get started**.
+6. Enter an app name and select an email contact.
+7. Select **External** as the Audience.
+8. Enter an email address under **Contact Information**.
+9. Agree to the terms of service.
+10. On the next **OAuth Overview** page, press **Create OAuth client**.
+11. Select "Web application" as **Application type** and enter a OAuth 2.0
+    client name.
+12. Add the following redirect URI under **Authorized redirect URIs**:
+  `https://www.projectifyapp.com/user/auth/google/login/callback/`
+13. Press **Create**.
+
+Copy the **Client ID** and **Client secret** from the **OAuth client created**
+overlay. These are your
+`ALLAUTH_GOOGLE_CLIENT_ID` and `ALLAUTH_GOOGLE_SECRET` environment variables.
+
+Note: For local development, use the following redirect URI.
+
+```
+http://localhost:8000/user/auth/google/login/callback/
+```
 
 # Naming things in authentication
 

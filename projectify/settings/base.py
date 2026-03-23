@@ -44,7 +44,7 @@ def environ_get_or_warn(
         return value
 
     warnings.warn(
-        f"{key} needed for settings was not set in environment{comment}"
+        f"{key} needed for settings was not set in environment.\n{comment}"
     )
     return None
 
@@ -156,6 +156,7 @@ class Base(Configuration):  # type:ignore
         # Optional -- requires install using `django-allauth[socialaccount]`.
         "allauth.socialaccount",
         "allauth.socialaccount.providers.github",
+        "allauth.socialaccount.providers.google",
     )
 
     INSTALLED_APPS_FIRST_PARTY = (
@@ -263,6 +264,7 @@ class Base(Configuration):  # type:ignore
     }
     # Provider specific settings
     SOCIALACCOUNT_PROVIDERS: dict[str, SocialAccountProvider] = {
+        # See `docs/auth.md` under **Edit GitHub OAuth settings**
         "github": {
             "EMAIL_AUTHENTICATION": True,
             "SCOPE": ["user:email"],
@@ -281,7 +283,27 @@ class Base(Configuration):  # type:ignore
                     ),
                 }
             ],
-        }
+        },
+        # See `docs/auth.md` under **Edit Google OAuth settings**
+        "google": {
+            "EMAIL_AUTHENTICATION": True,
+            "SCOPE": ["email"],
+            "APPS": [
+                # TODO add django configuration check for these variables
+                # TODO disable GH log in route if these env vars are not
+                # given
+                {
+                    "client_id": environ_get_or_warn(
+                        "ALLAUTH_GOOGLE_CLIENT_ID",
+                        "You need to set this environment variable to enable log in with Google",
+                    ),
+                    "secret": environ_get_or_warn(
+                        "ALLAUTH_GOOGLE_SECRET",
+                        "You need to set this environment variable to enable log in with Google",
+                    ),
+                }
+            ],
+        },
     }
 
     # Internationalization

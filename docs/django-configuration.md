@@ -68,6 +68,15 @@ See also `docs/billing_integration.md`.
 - `MAILGUN_API_KEY`: API key for Mailgun
 - `MAILGUN_DOMAIN`: Domain used for Mailgun
 
+## OAuth
+
+See `docs/auth.md` under **django-allauth**.
+
+- `ALLAUTH_GITHUB_CLIENT_ID`: GitHub OAuth client id
+- `ALLAUTH_GITHUB_SECRET`: GitHub OAuth client secret
+- `ALLAUTH_GOOGLE_CLIENT_ID`: Google OAuth client id
+- `ALLAUTH_GOOGLE_SECRET`: Google Oauth client secret
+
 # Internals
 
 We would like to use _django configurations_ by jazzband.
