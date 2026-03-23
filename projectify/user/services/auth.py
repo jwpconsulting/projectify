@@ -217,6 +217,9 @@ def user_confirm_password_reset(
         raise serializers.ValidationError(
             {"token": _("This token is invalid")}
         )
+
+    _validate_password(email, new_password)
+
     user.set_password(new_password)
     user.save()
     logger.info("Reset password for user with email %s", email)

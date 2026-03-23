@@ -33,6 +33,7 @@ def test_index(request: HttpRequest) -> HttpResponse:
     return render(request, "user/test_index.html")
 
 
+# TODO this should require HTTP POST
 def email_confirm_test(request: HttpRequest) -> HttpResponse:
     """
     Render a test page with links to test email confirmation.
@@ -82,6 +83,7 @@ def email_confirm_test(request: HttpRequest) -> HttpResponse:
     return render(request, "user/test_email_confirm.html", context=context)
 
 
+# TODO this should require HTTP POST
 def password_reset_confirm_test(request: HttpRequest) -> HttpResponse:
     """
     Render a test page with links to password reset confirmation pages.
