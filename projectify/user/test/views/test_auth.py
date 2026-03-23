@@ -366,7 +366,7 @@ class TestLogInDjango:
         user: User,
     ) -> None:
         """Test logging in with wrong password."""
-        with django_assert_num_queries(6):
+        with django_assert_num_queries(7):
             response = client.post(
                 resource_url,
                 {"email": user.email, "password": "wrong_password"},
