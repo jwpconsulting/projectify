@@ -154,6 +154,12 @@ def handle_session_completed(session: stripe.checkout.Session) -> None:
             {"line_items.data.quantity": _("Expected value")}
         )
 
+    if session.payment_status != "paid":
+        raise RuntimeError(
+            f"Checkout session {session.id} completed, "
+            "but payment status wasn't paid"
+        )
+
     customer_activate_subscription(
         customer=customer,
         stripe_customer_id=stripe_customer_id,
