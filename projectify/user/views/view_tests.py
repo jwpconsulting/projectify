@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.http import require_http_methods
 
 from projectify.lib.settings import get_settings
 from projectify.lib.types import AuthenticatedHttpRequest
@@ -33,6 +34,7 @@ def test_index(request: HttpRequest) -> HttpResponse:
     return render(request, "user/test_index.html")
 
 
+@require_http_methods(["POST"])
 def email_confirm_test(request: HttpRequest) -> HttpResponse:
     """
     Render a test page with links to test email confirmation.
@@ -82,6 +84,7 @@ def email_confirm_test(request: HttpRequest) -> HttpResponse:
     return render(request, "user/test_email_confirm.html", context=context)
 
 
+@require_http_methods(["POST"])
 def password_reset_confirm_test(request: HttpRequest) -> HttpResponse:
     """
     Render a test page with links to password reset confirmation pages.
@@ -137,6 +140,7 @@ def password_reset_confirm_test(request: HttpRequest) -> HttpResponse:
 
 
 @login_required
+@require_http_methods(["POST"])
 def email_update_confirm_test(
     request: AuthenticatedHttpRequest,
 ) -> HttpResponse:

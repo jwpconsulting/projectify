@@ -268,6 +268,23 @@ def test_confirm_password_reset_right_email(
     assert user.check_password(new_password)
 
 
+def test_confirm_password_reset_weak_password(
+    user: User,
+    password: str,
+    reset_token: Token,
+) -> None:
+    """Test reset with weak password."""
+    with pytest.raises(ValidationError) as error:
+        user_confirm_password_reset(
+            email=user.email,
+            new_password="asd123",
+            token=reset_token,
+        )
+    assert error.match("password")
+    user.refresh_from_db()
+    assert user.check_password(password)
+
+
 def test_confirm_password_reset_reuse_token(
     user: User,
     new_password: str,

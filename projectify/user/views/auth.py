@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2024 JWP Consulting GK
+# SPDX-FileCopyrightText: 2024,2026 JWP Consulting GK
 """User authentication views."""
 
 from typing import Any
@@ -32,7 +32,6 @@ from projectify.user.services.auth import (
 from projectify.user.services.internal import Token
 
 
-# Django view
 def log_out(request: HttpRequest) -> HttpResponse:
     """Log the user out. Need to be logged in first."""
     user = request.user
@@ -309,43 +308,38 @@ def password_reset_confirm(
 ) -> HttpResponse:
     """Confirm a password reset request and set a new password."""
     token = Token(token)
-    # TODO add validators
+    validators = password_validators_help_texts()
 
-    if request.method == "GET":
-        form = PasswordResetConfirmForm()
-        context = {"form": form}
-        return render(
-            request, "user/password_reset_confirm.html", context=context
-        )
-
-    form = PasswordResetConfirmForm(request.POST)
-    if not form.is_valid():
-        context = {"form": form}
-        return render(
-            request,
-            "user/password_reset_confirm.html",
-            context=context,
-            status=400,
-        )
-
-    try:
-        user_confirm_password_reset(
-            email=email,
-            token=token,
-            new_password=form.cleaned_data["new_password"],
-            new_password_confirm=form.cleaned_data["new_password_confirm"],
-        )
-    except ValidationError as error:
-        populate_form_with_drf_errors(form, error)
-        context = {"form": form}
-        return render(
-            request,
-            "user/password_reset_confirm.html",
-            context=context,
-            status=400,
-        )
-
-    return redirect("users:reset-password")
+    match request.method:
+        case "GET":
+            form = PasswordResetConfirmForm()
+            context = {"form": form, "validators": validators}
+            status = 200
+        case _:
+            form = PasswordResetConfirmForm(request.POST)
+            context = {"form": form, "validators": validators}
+            if not form.is_valid():
+                status = 400
+            try:
+                user_confirm_password_reset(
+                    email=email,
+                    token=token,
+                    new_password=form.cleaned_data["new_password"],
+                    new_password_confirm=form.cleaned_data[
+                        "new_password_confirm"
+                    ],
+                )
+            except ValidationError as error:
+                populate_form_with_drf_errors(form, error)
+                status = 400
+            else:
+                return redirect("users:reset-password")
+    return render(
+        request,
+        "user/password_reset_confirm.html",
+        context=context,
+        status=status,
+    )
 
 
 def password_reset(request: HttpRequest) -> HttpResponse:

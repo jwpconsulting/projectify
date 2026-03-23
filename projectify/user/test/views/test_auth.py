@@ -710,3 +710,32 @@ class TestPasswordResetConfirmDjango:
 
         user.refresh_from_db()
         assert not user.check_password("evenmoresecurepassword123")
+
+    def test_confirm_password_reset_weak_password(
+        self,
+        client: Client,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        user: User,
+        password: str,
+    ) -> None:
+        """Test confirming with a weak password."""
+        token = user_make_token(user=user, kind="reset_password")
+
+        with django_assert_num_queries(4):
+            response = client.post(
+                reverse(
+                    "users:confirm-password-reset",
+                    args=(user.email, token),
+                ),
+                {
+                    "new_password": "asd123",
+                    "new_password_confirm": "asd123",
+                },
+            )
+            assert response.status_code == 400, response.content
+
+        assert b"This password is too short" in response.content
+        assert b"This password is too common" in response.content
+
+        user.refresh_from_db()
+        assert user.check_password(password)
