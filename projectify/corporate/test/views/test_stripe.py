@@ -50,6 +50,8 @@ class TestStripeWebhook:
         event = mock.MagicMock()
         event.type = "checkout.session.completed"
         event["data"]["object"].customer = "unique_stripe_id"
+        # Mark as paid
+        event["data"]["object"].payment_status = "paid"
         # ["customer_uuid"]
         event["data"]["object"].metadata.get.return_value = str(
             unpaid_customer.uuid
