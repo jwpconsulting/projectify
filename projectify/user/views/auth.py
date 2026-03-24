@@ -43,15 +43,27 @@ def log_out(request: HttpRequest) -> HttpResponse:
 class SignUpForm(forms.Form):
     """Sign up form."""
 
+    tos_agreed = forms.BooleanField()
+    privacy_policy_agreed = forms.BooleanField()
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
-    tos_agreed = forms.BooleanField(label=_("I agree to the Terms of Service"))
-    privacy_policy_agreed = forms.BooleanField(
-        label=_("I agree to the Privacy Policy")
-    )
 
     email.widget.attrs.update({"placeholder": _("Enter your email")})
     password.widget.attrs.update({"placeholder": _("Enter your password")})
+
+    def __init__(self, *args: Any, **kwargs: Any):
+        """Override and add fields."""
+        super().__init__(*args, **kwargs)
+        self.fields["tos_agreed"].label = anchor(
+            label=_("I agree to the Terms of Service"),
+            href=reverse("storefront:tos"),
+            external=True,
+        )
+        self.fields["privacy_policy_agreed"].label = anchor(
+            label=_("I agree to the Privacy Policy"),
+            href=reverse("storefront:privacy"),
+            external=True,
+        )
 
 
 # No authentication required
