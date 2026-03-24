@@ -43,6 +43,8 @@ SocialAccountApp = TypedDict(
         # Optional isn't the cleanest
         "client_id": Optional[str],
         "secret": Optional[str],
+        # For openid_connect
+        "provider_id": NotRequired[str],
     },
 )
 
@@ -50,7 +52,7 @@ SocialAccountProvider = TypedDict(
     "SocialAccountProvider",
     {
         "EMAIL_AUTHENTICATION": NotRequired[bool],
-        "SCOPE": list[str],
+        "SCOPE": NotRequired[list[str]],
         "APPS": list[SocialAccountApp],
     },
 )
