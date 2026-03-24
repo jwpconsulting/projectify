@@ -14,12 +14,12 @@
             {% endif %}
         </p>
         <h2>Scenario 1: sign up with no account on Projectify</h2>
-        <p>Test what happens when you sign up using an IdP on Projectify when you have no account on Projectify.</p>
         <p>
+            Test what happens when you sign up using an IdP on Projectify when you have no account on Projectify.
             <strong>Requirement:</strong> You must be logged out.
         </p>
         {% if user.is_authenticated %}
-            {% anchor label="Log out first" href="users:log-out" %} first.
+            {% anchor label="Log out first" href="users:log-out" %}
         {% else %}
             <form method="post">
                 {% csrf_token %}
@@ -29,12 +29,10 @@
         <h2>Scenario 2: sign up with account on Projectify</h2>
         <p>
             Here you can test what happens when you sign up on Projectify with an IdP, and you already have an account on Projectify with the same email address as your IdP account.
-        </p>
-        <p>
             <strong>Requirement:</strong> You must be logged out.
         </p>
         {% if user.is_authenticated %}
-            {% anchor label="Log out first" href="users:log-out" %} first.
+            {% anchor label="Log out first" href="users:log-out" %}
         {% else %}
             <form method="post">
                 {% csrf_token %}

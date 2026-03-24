@@ -262,6 +262,7 @@ class Base(Configuration):  # type:ignore
     # --------------------------
     SOCIALACCOUNT_ONLY = True
     SOCIALACCOUNT_AUTO_SIGNUP = False
+    SOCIALACCOUNT_EMAIL_AUTHENTICATION = False
     SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
     SOCIALACCOUNT_FORMS = {
         "signup": "projectify.user.forms.SocialAccountSignUpForm",

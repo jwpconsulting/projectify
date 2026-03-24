@@ -209,19 +209,26 @@ def socialaccount_signup_test(request: HttpRequest) -> HttpResponse:
     2. They are prompted to agree with TOS/privacy policy on Projectify
     3. They now have an account on Projectify with email A
     4. They can now log in on Projectify using IdP X
+
+    Scenario b., existing user on Projectify
+    Set up
+    1. User has account with Idp X and email A.
+    2. User has account on Projectify with email A.
+
+    Steps
+    1. User logs out on Projectify
+    2. User signs up on Projectify using IdpX
+    3. The user sees a warning telling them they've already
+    created an account on PRoejctiyf with email A.
     """
     if not settings.DEBUG_AUTH:
         return HttpResponseForbidden(
             "This page is only available in development mode"
         )
-
     if request.method == "GET":
         return render(request, "user/test_socialaccount_signup.html")
-
     if request.user.is_authenticated:
-        return HttpResponseForbidden(
-            "You must be logged out to test this scenario"
-        )
+        return HttpResponseForbidden("You must be logged out to use this page")
 
     # Synthetic apps created in
     # DefaultSocialAccountAdapter:list_apps()
@@ -241,25 +248,21 @@ def socialaccount_signup_test(request: HttpRequest) -> HttpResponse:
             )
         case "existing_user":
             test_email = f"test-existing-{secrets.token_hex(8)}@example.com"
-            user_sign_up(
+            existing_user = user_sign_up(
                 email=test_email,
                 password=secrets.token_hex(32),
                 tos_agreed=True,
                 privacy_policy_agreed=True,
             )
+            existing_user.is_active = True
+            existing_user.save()
             user = User(email=test_email)
             user.set_unusable_password()
             mock_account = SocialAccount(
                 provider=app.provider,
                 uid=secrets.token_hex(8),
-                extra_data={
-                    "email": test_email,
-                    # XXX log in needed?
-                    "login": f"testuser{secrets.token_hex(4)}",
-                },
+                extra_data={"email": test_email},
             )
-            # TODO fix
-            # MultipleObjectsReturned at /user/auth/signup/
         case _:
             return HttpResponseForbidden("Invalid scenario")
     sociallogin = SocialLogin(
