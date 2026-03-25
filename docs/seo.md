@@ -24,45 +24,6 @@ These should have 301 redirect:
 - https://projectifyapp.com/
 - http://www.projectifyapp.com/
 
-# Agents
-
-Crawlers should refrain from crawling these addresses:
-
-- <https://www.projectifyapp.com/onboarding>
-- <https://www.projectifyapp.com/onboarding/welcome>
-- <https://www.projectifyapp.com/onboarding/welcome/>
-- <https://www.projectifyapp.com/user/log-in?next=/onboarding/welcome/>
-
-See the `Disallow:` lines in `projectify/templates/robots.txt`.
-
-# Duplicate without user-selected canonical
-
-This is an error from the Google Search Console that I don't quite understand.
-It lists the following pages as affected:
-
-- <https://www.projectifyapp.com/help>
-- <https://www.projectifyapp.com/solutions/>
-
-I've made `/help` and `/solutions` the canonical URLs and added these
-redirects:
-
-- `/help/` -> `/help`, see `projectify/help/urls.py`
-- `/solutions/` -> `/solutions`, see `projectify/storefront/urls.py`
-
-# 404s
-
-I've removed a few pages so I should add a redirect for these:
-
-- <https://www.projectifyapp.com/solutions/personal-use>
-- <https://www.projectifyapp.com/help/keyboard-shortcuts>
-- <https://www.projectifyapp.com/solutions/remote-work>
-- <https://www.projectifyapp.com/solutions/research>
-- <https://www.projectifyapp.com/solutions/project-management/>
-- <https://www.projectifyapp.com/solutions/development-teams/>
-
-The solution was to add more `RedirectView` instances. See
-`projectify/storefront/urls.py` and `projectify/help/urls.py`.
-
 # Web Vitals
 
 Fix these issues for the landing page[^pagespeed]:
@@ -185,3 +146,46 @@ Django should compress assets and use webp for pictures.
 
 - Projectify should have an error page for CSRF errors.
 - The 404 page doesn't load its content correctly. Try: https://www.projectifyapp.com/not-found
+
+# Done
+
+Here's what's already done for SEO.
+
+## Agents
+
+Crawlers should refrain from crawling these addresses:
+
+- <https://www.projectifyapp.com/onboarding>
+- <https://www.projectifyapp.com/onboarding/welcome>
+- <https://www.projectifyapp.com/onboarding/welcome/>
+- <https://www.projectifyapp.com/user/log-in?next=/onboarding/welcome/>
+
+See the `Disallow:` lines in `projectify/templates/robots.txt`.
+
+## Duplicate without user-selected canonical
+
+This is an error from the Google Search Console that I don't quite understand.
+It lists the following pages as affected:
+
+- <https://www.projectifyapp.com/help>
+- <https://www.projectifyapp.com/solutions/>
+
+I've made `/help` and `/solutions` the canonical URLs and added these
+redirects:
+
+- `/help/` -> `/help`, see `projectify/help/urls.py`
+- `/solutions/` -> `/solutions`, see `projectify/storefront/urls.py`
+
+## Pages not found
+
+I've removed a few pages so I should add a redirect for these:
+
+- <https://www.projectifyapp.com/solutions/personal-use>
+- <https://www.projectifyapp.com/help/keyboard-shortcuts>
+- <https://www.projectifyapp.com/solutions/remote-work>
+- <https://www.projectifyapp.com/solutions/research>
+- <https://www.projectifyapp.com/solutions/project-management/>
+- <https://www.projectifyapp.com/solutions/development-teams/>
+
+The solution was to add more `RedirectView` instances. See
+`projectify/storefront/urls.py` and `projectify/help/urls.py`.
