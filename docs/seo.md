@@ -28,8 +28,6 @@ These should have 301 redirect:
 
 Crawlers should refrain from crawling these addresses:
 
-- https://www.projectifyapp.com/onboarding
-- https://www.projectifyapp.com/onboarding/welcome
 - https://www.projectifyapp.com/onboarding/welcome/
 - https://www.projectifyapp.com/user/log-in?next=/onboarding/welcome/
 
