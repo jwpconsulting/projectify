@@ -9,7 +9,7 @@ The `urlpatterns` list routes URLs to views. For more information please see:
 
 Several URL patterns are hidden behind a feature flag.
 
-This module also contains a 500 exception handler.
+This module also re-exports 403, 404, and 500 exception handlers
 """
 
 from collections.abc import Sequence
