@@ -1633,6 +1633,10 @@ video {
   list-style-position: inside;
 }
 
+.list-\[katakana\] {
+  list-style-type: katakana;
+}
+
 .list-disc {
   list-style-type: disc;
 }
