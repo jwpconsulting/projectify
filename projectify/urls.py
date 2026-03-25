@@ -142,5 +142,13 @@ if settings.DEBUG_AUTH:
         path("test/", include("projectify.user.testing_urls")),
     ]
 
+if settings.DEBUG:
+    from .views import csp_report
+
+    urlpatterns = [
+        *urlpatterns,
+        path("csp-report/", csp_report, name="csp-report"),
+    ]
+
 
 __all__ = ("handler404", "handler500", "handler403")

@@ -3,7 +3,9 @@
 # SPDX-FileCopyrightText: 2026 JWP Consulting GK
 """Projectify general views."""
 
+import json
 import logging
+import warnings
 from pathlib import Path
 from typing import Optional
 
@@ -13,12 +15,15 @@ from django.http import (
     Http404,
     HttpRequest,
     HttpResponse,
+    HttpResponseBadRequest,
     HttpResponseForbidden,
     JsonResponse,
 )
 from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import cache_control
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 
 from django_ratelimit.exceptions import Ratelimited
 
@@ -135,4 +140,22 @@ def handler500(request: HttpRequest) -> HttpResponse:
 def health_check(request: HttpRequest) -> HttpResponse:
     """Health check endpoint that returns 204 No Content."""
     del request
+    return HttpResponse(status=204)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def csp_report(request: HttpRequest) -> HttpResponse:
+    """
+    Handle CSP violation reports.
+
+    Use in development only.
+    """
+    try:
+        report = json.loads(request.body)
+    except json.JSONDecodeError:
+        return HttpResponseBadRequest("Invalid CSP report JSON.")
+
+    warnings.warn(f"CSP Violation: {json.dumps(report, indent=2)}")
+
     return HttpResponse(status=204)
