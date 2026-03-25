@@ -19,4 +19,8 @@ urlpatterns = (
     path("help", help_list, name="list"),
     path("help/", RedirectView.as_view(url=reverse_lazy("help:list"))),
     path("help/", include((help_page_patterns, "topic"))),
+    path(
+        "help/keyboard-shortcuts",
+        RedirectView.as_view(url=reverse_lazy("help:list")),
+    ),
 )

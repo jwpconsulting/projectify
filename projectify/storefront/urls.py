@@ -60,5 +60,22 @@ urlpatterns = [
         name="solutions-project-management",
     ),
     path("solutions/academic", solutions_academic, name="solutions-academic"),
+    # Deleted solutions
+    *(
+        path(
+            p,
+            RedirectView.as_view(
+                url=reverse_lazy("storefront:solutions-list")
+            ),
+        )
+        for p in [
+            "solutions/personal-use",
+            "solutions/remote-work",
+            "solutions/research",
+            "solutions/project-management/",
+            "solutions/development-teams/",
+            "solutions/academic/",
+        ]
+    ),
     path("", index, name="landing"),
 ]

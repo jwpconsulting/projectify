@@ -53,12 +53,15 @@ redirects:
 
 I've removed a few pages so I should add a redirect for these:
 
-- https://www.projectifyapp.com/solutions/personal-use
-- https://www.projectifyapp.com/help/keyboard-shortcuts
-- https://www.projectifyapp.com/solutions/remote-work
-- https://www.projectifyapp.com/solutions/research
-- https://www.projectifyapp.com/solutions/project-management/
-- https://www.projectifyapp.com/solutions/development-teams/
+- <https://www.projectifyapp.com/solutions/personal-use>
+- <https://www.projectifyapp.com/help/keyboard-shortcuts>
+- <https://www.projectifyapp.com/solutions/remote-work>
+- <https://www.projectifyapp.com/solutions/research>
+- <https://www.projectifyapp.com/solutions/project-management/>
+- <https://www.projectifyapp.com/solutions/development-teams/>
+
+The solution was to add more `RedirectView` instances. See
+`projectify/storefront/urls.py` and `projectify/help/urls.py`.
 
 # Web Vitals
 
