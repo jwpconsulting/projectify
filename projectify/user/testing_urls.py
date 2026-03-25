@@ -10,6 +10,7 @@ from projectify.user.views.view_tests import (
     email_confirm_test,
     email_update_confirm_test,
     password_reset_confirm_test,
+    socialaccount_signup_test,
     test_index,
 )
 
@@ -31,5 +32,10 @@ urlpatterns = [
         "confirm-password-reset-test/",
         password_reset_confirm_test,
         name="confirm-password-reset-test",
+    ),
+    path(
+        "socialaccount-signup-test/",
+        socialaccount_signup_test,
+        name="socialaccount-signup-test",
     ),
 ]

@@ -1,0 +1,43 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{% extends "storefront_base.html" %}
+{% load projectify %}
+{% block storefront_content %}
+    <div class="mx-auto prose">
+        <h1>allauth socialaccount test</h1>
+        <h2>Authentication status</h2>
+        <p>
+            {% if user.is_authenticated %}
+                You are currently <strong>logged in</strong> as {{ user.email }}.
+            {% else %}
+                You are currently <strong>logged out</strong>.
+            {% endif %}
+        </p>
+        <h2>Scenario 1: sign up with no account on Projectify</h2>
+        <p>
+            Test what happens when you sign up using an IdP on Projectify when you have no account on Projectify.
+            <strong>Requirement:</strong> You must be logged out.
+        </p>
+        {% if user.is_authenticated %}
+            {% anchor label="Log out first" href="users:log-out" %}
+        {% else %}
+            <form method="post">
+                {% csrf_token %}
+                {% include "projectify/forms/submit.html" with text="Test signing up as a new user" name="scenario" value="new_user" %}
+            </form>
+        {% endif %}
+        <h2>Scenario 2: sign up with account on Projectify</h2>
+        <p>
+            Here you can test what happens when you sign up on Projectify with an IdP, and you already have an account on Projectify with the same email address as your IdP account.
+            <strong>Requirement:</strong> You must be logged out.
+        </p>
+        {% if user.is_authenticated %}
+            {% anchor label="Log out first" href="users:log-out" %}
+        {% else %}
+            <form method="post">
+                {% csrf_token %}
+                {% include "projectify/forms/submit.html" with text="Test signing up with an existing account" name="scenario" value="existing_user" %}
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}

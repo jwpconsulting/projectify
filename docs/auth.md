@@ -182,3 +182,183 @@ But most likely, since a log out is very past tense, we would say things like
 ## Sign in
 
 To keep our terminology uniform, we prefer log in over sign in.
+
+# Allauth bug
+
+1. Create normal user account
+2. Somehow connect with GH
+3. Go to admin, delete `SocialAccount` record
+4. Log out
+5. Log in with GH
+6. password is wiped
+
+## Evidence
+
+Here's code that might be responsible for the password being wiped
+
+```python
+# https://github.com/pennersr/django-allauth/blob/cf7f55d79e421e5d5ba078e31119a799f8b149e8/allauth/socialaccount/models.py#L397
+# allauth/socialaccount/models.py#L397
+def _accept_login(self, request) -> None:
+        from allauth.socialaccount.internal.flows.email_authentication import (
+            wipe_password,
+        )
+
+        if self._did_authenticate_by_email:
+            wipe_password(request, self.user, self._did_authenticate_by_email)
+            if app_settings.EMAIL_AUTHENTICATION_AUTO_CONNECT:
+                self.connect(context.request, self.user)
+```
+
+`_login` calls `_accept_login` here:
+
+```python
+# https://github.com/pennersr/django-allauth/blob/cf7f55d79e421e5d5ba078e31119a799f8b149e8/allauth/socialaccount/internal/flows/login.py#L20
+# allauth/socialaccount/internal/flows/login.py#L20
+def _login(request, sociallogin):
+    sociallogin._accept_login(request)
+    record_authentication(request, sociallogin)
+    return perform_login(
+        request,
+        sociallogin.user,
+        email_verification=app_settings.EMAIL_VERIFICATION,
+        redirect_url=sociallogin.get_redirect_url(request),
+        signal_kwargs={"sociallogin": sociallogin},
+    )
+```
+
+`_authenticate` in the same module calls `_login` here:
+
+```python
+# https://github.com/pennersr/django-allauth/blob/cf7f55d79e421e5d5ba078e31119a799f8b149e8/allauth/socialaccount/internal/flows/login.py#L72-L82
+# allauth/socialaccount/internal/flows/login.py#L72
+def _authenticate(request, sociallogin):
+    if request.user.is_authenticated:
+        get_account_adapter(request).logout(request)
+    if sociallogin.is_existing:
+        # Login existing user
+        ret = _login(request, sociallogin)
+    else:
+        # New social user
+        ret = process_signup(request, sociallogin)
+    return ret
+```
+
+`complete_login` in same file calls `_authenticate`:
+
+```python
+def complete_login(request, sociallogin, raises=False):
+    try:
+        pre_social_login(request, sociallogin)
+        process = sociallogin.state.get("process")
+        if process == AuthProcess.REDIRECT:
+            return _redirect(request, sociallogin)
+        elif process == AuthProcess.CONNECT:
+            if raises:
+                do_connect(request, sociallogin)
+            else:
+                return connect(request, sociallogin)
+        else:
+            return _authenticate(request, sociallogin)
+    except SignupClosedException:
+        if raises:
+            raise
+        return render(
+            request,
+            f"account/signup_closed.{account_settings.TEMPLATE_EXTENSION}",
+        )
+    except ImmediateHttpResponse as e:
+        if raises:
+            raise
+        return e.response
+```
+
+`complete_social_login` in `allauth/socialaccount/helpers.py` is a thin
+wrapper for `complete_login`.
+
+Finally, the `OAuthCallbackView` calss in
+`allauth/socialaccount/providers/oauth/views.py` calls `complete_social_login`:
+
+```python
+# allauth/socialaccount/providers/oauth/views.py#L116
+class OAuthCallbackView(OAuthView):
+    def dispatch(self, request):
+        """
+        View to handle final steps of OAuth based authentication where the user
+        gets redirected back to from the service provider
+        """
+        provider = self.adapter.get_provider()
+        login_done_url = reverse(f"{self.adapter.provider_id}_callback")
+        client = self.adapter._get_client(request, login_done_url)
+        if not client.is_valid():
+            if "denied" in request.GET:
+                error = AuthError.CANCELLED
+            else:
+                error = AuthError.UNKNOWN
+            return render_authentication_error(
+                request,
+                provider,
+                error=error,
+                extra_context={
+                    "oauth_client": client,
+                    "callback_view": self,
+                },
+            )
+        app = provider.app
+        try:
+            access_token = client.get_access_token()
+            token = SocialToken(
+                token=access_token["oauth_token"],
+                # .get() -- e.g. Evernote does not feature a secret
+                token_secret=access_token.get("oauth_token_secret", ""),
+            )
+            if app.pk:
+                token.app = app
+            login = self.adapter.complete_login(
+                request, app, token, response=access_token
+            )
+            login.token = token
+            login.state = SocialLogin.unstash_state(request)
+            return complete_social_login(request, login)
+        except OAuthError as e:
+            return render_authentication_error(request, provider, exception=e)
+```
+
+Call chain (top-down)
+
+1. `OAuthCallbackView.dispatch`
+2. `complete_social_login`
+3. `complete_login`
+4. `_authenticate`
+5. `_login`
+6. `_accept_login`
+7. `wipe_password`
+
+## Config review
+
+```python
+# projectify/settings/base.py
+    ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+    ACCOUNT_SIGNUP_FIELDS = [
+        "email*",
+        "password1*",
+        "password2*",
+        "tos_agreed*",
+        "privacy_policy_agreed*",
+    ]
+    ACCOUNT_LOGIN_METHODS = {"email"}
+    LOGIN_REDIRECT_URL = "/user/profile"
+    ACCOUNT_SIGNUP_REDIRECT_URL = "/onboarding"
+    ACCOUNT_EMAIL_VERIFICATION = "none"
+
+    # django allauth social account settings
+    # --------------------------
+    SOCIALACCOUNT_ONLY = True
+    SOCIALACCOUNT_AUTO_SIGNUP = False
+    SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
+    SOCIALACCOUNT_FORMS = {
+        "signup": "projectify.user.forms.SocialAccountSignUpForm",
+    }
+```
+
+The solution may be to disable `SOCIALACCOUNT_EMAIL_AUTHENTICATION`.

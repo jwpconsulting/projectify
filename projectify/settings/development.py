@@ -48,6 +48,8 @@ class Development(Base):
         "django_browser_reload",
         "django_extensions",
         "whitenoise.runserver_nostatic",
+        # For testing allauth connection
+        "allauth.socialaccount.providers.openid_connect",
     )
 
     # Debug
@@ -130,3 +132,14 @@ class Development(Base):
                 Base.MIDDLEWARE, cls.DEBUG_TOOLBAR, cls.BROWSER_RELOAD
             )
         )
+
+        # Allauth mock app
+        cls.SOCIALACCOUNT_PROVIDERS["openid_connect"] = {
+            "APPS": [
+                {
+                    "provider_id": "local-test",
+                    "client_id": "test.id",
+                    "secret": "secret",
+                }
+            ]
+        }

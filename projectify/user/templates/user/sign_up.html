@@ -31,12 +31,12 @@
             <label class="flex flex-row items-center gap-2"
                    for="{{ form.tos_agreed.id_for_label }}">
                 {{ form.tos_agreed }}
-                {% anchor href="storefront:tos" label=form.tos_agreed.label external=True %}
+                {{ form.tos_agreed.label }}
             </label>
             <label class="flex flex-row items-center gap-2"
                    for="{{ form.privacy_policy_agreed.id_for_label }}">
                 {{ form.privacy_policy_agreed }}
-                {% anchor href="storefront:privacy" label=form.privacy_policy_agreed.label external=True %}
+                {{ form.privacy_policy_agreed.label }}
             </label>
             {% include "projectify/forms/submit.html" with text=_("Sign up") %}
         </div>
