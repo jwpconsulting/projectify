@@ -37,10 +37,10 @@ class StorefrontSitemap(sitemaps.Sitemap):
             "storefront:privacy",
             "storefront:security:general",
             "storefront:security:disclose",
-            "storefront:solutions:list",
-            "storefront:solutions:development_teams",
-            "storefront:solutions:project_management",
-            "storefront:solutions:academic",
+            "storefront:solutions-list",
+            "storefront:solutions-development-teams",
+            "storefront:solutions-project-management",
+            "storefront:solutions-academic",
         ]
 
     def location(self, item: str) -> str:  # type: ignore

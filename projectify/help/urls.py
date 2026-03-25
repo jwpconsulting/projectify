@@ -3,7 +3,8 @@
 # SPDX-FileCopyrightText: 2025 JWP Consulting GK
 """Help urlpatterns."""
 
-from django.urls import include, path
+from django.urls import include, path, reverse_lazy
+from django.views.generic import RedirectView
 
 from projectify.help.views import HELP_TOPICS, help_detail, help_list
 
@@ -15,6 +16,7 @@ help_page_patterns = tuple(
 )
 
 urlpatterns = (
-    path("", help_list, name="list"),
-    path("", include((help_page_patterns, "topic"))),
+    path("help", help_list, name="list"),
+    path("help/", RedirectView.as_view(url=reverse_lazy("help:list"))),
+    path("help/", include((help_page_patterns, "topic"))),
 )

@@ -40,9 +40,14 @@ See the `Disallow:` lines in `projectify/templates/robots.txt`.
 This is an error from the Google Search Console that I don't quite understand.
 It lists the following pages as affected:
 
+- <https://www.projectifyapp.com/help>
+- <https://www.projectifyapp.com/solutions/>
 
-- https://www.projectifyapp.com/help
-- https://www.projectifyapp.com/solutions/
+I've made `/help` and `/solutions` the canonical URLs and added these
+redirects:
+
+- `/help/` -> `/help`, see `projectify/help/urls.py`
+- `/solutions/` -> `/solutions`, see `projectify/storefront/urls.py`
 
 # 404s
 
