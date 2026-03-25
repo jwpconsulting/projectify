@@ -272,7 +272,6 @@ class Base(Configuration):  # type:ignore
     SOCIALACCOUNT_PROVIDERS: dict[str, SocialAccountProvider] = {
         # See `docs/auth.md` under **Edit GitHub OAuth settings**
         "github": {
-            "EMAIL_AUTHENTICATION": True,
             "SCOPE": ["user:email"],
             "APPS": [
                 # TODO add django configuration check for these variables
@@ -285,14 +284,13 @@ class Base(Configuration):  # type:ignore
                     ),
                     "secret": environ_get_or_warn(
                         "ALLAUTH_GITHUB_SECRET",
-                        "You need to set this environemtn variable for logging in with Github.",
+                        "You need to set this environment variable for logging in with Github.",
                     ),
                 }
             ],
         },
         # See `docs/auth.md` under **Edit Google OAuth settings**
         "google": {
-            "EMAIL_AUTHENTICATION": True,
             "SCOPE": ["email"],
             "APPS": [
                 # TODO add django configuration check for these variables
