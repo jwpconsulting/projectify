@@ -9,13 +9,12 @@ The `urlpatterns` list routes URLs to views. For more information please see:
 
 Several URL patterns are hidden behind a feature flag.
 
-This module also contains a 500 exception handler.
+This module also re-exports 403, 404, and 500 exception handlers
 """
 
 from collections.abc import Sequence
 from typing import Union
 
-from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from django.urls import URLPattern, URLResolver, include, path, reverse_lazy
@@ -110,6 +109,8 @@ if settings.PREMAIL_PREVIEW:
     )
 
 if settings.SERVE_MEDIA:
+    from django.conf.urls.static import static
+
     urlpatterns = (
         *urlpatterns,
         *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
@@ -139,6 +140,14 @@ if settings.DEBUG_AUTH:
     urlpatterns = [
         *urlpatterns,
         path("test/", include("projectify.user.testing_urls")),
+    ]
+
+if settings.DEBUG:
+    from .views import csp_report
+
+    urlpatterns = [
+        *urlpatterns,
+        path("csp-report/", csp_report, name="csp-report"),
     ]
 
 

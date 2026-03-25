@@ -143,3 +143,9 @@ class Development(Base):
                 }
             ]
         }
+
+        # Add CSP report URI for development
+        cls.SECURE_CSP = {
+            **Base.SECURE_CSP,
+            "report-uri": ["/csp-report/"],
+        }
