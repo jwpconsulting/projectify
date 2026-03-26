@@ -301,6 +301,7 @@ def picture(
     src: str,
     alt: str,
     klass: Optional[str] = None,
+    fetchpriority: Literal[None, "low", "high"] = None,
 ) -> SafeText:
     """
     Render a picture tag with an image from static files.
@@ -319,9 +320,12 @@ def picture(
     dimensions = format_html(' width="{}" height="{}"', width, height)
 
     return format_html(
-        '<picture><img src="{url}" alt="{alt}"{dimensions}{klass}></picture>',
+        '<picture><img src="{url}" alt="{alt}"{dimensions}{klass}{fetchpriority}></picture>',
         url=url,
         alt=alt,
         dimensions=dimensions,
         klass=format_html(' class="{}"', klass) if klass else "",
+        fetchpriority=format_html(' fetchpriority="{}"', fetchpriority)
+        if fetchpriority
+        else "",
     )
