@@ -155,6 +155,14 @@ jobs:
       - run:
           name: Build Tailwind CSS
           command: bin/build-tailwind-styles
+  check_images:
+    executor: python
+    working_directory: ~/projectify
+    steps:
+      - prepare_uv
+      - run:
+          name: Check if compressed imagees are up to date
+          command: bin/update-images
   tools_reuse_lint:
     executor: python
     working_directory: ~/projectify
@@ -177,4 +185,5 @@ workflows:
       - seeddb
       - collectstatic
       - tailwind_check
+      - check_images
       - tools_reuse_lint
