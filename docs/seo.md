@@ -26,13 +26,49 @@ These should have 301 redirect:
 
 # Web Vitals
 
-Fix these issues for the landing page[^pagespeed]:
+A recent web vitals pagespeed check brought up a few issues.[^pagespeed]
 
-- Render blocking requests Est savings of 170 ms
-- LCP request discovery
+## Done
+
+I've addressed these issues:
+
+> Improve image delivery Est savings of 524 KiB
+
+Projectify now converts PNG files to WebP. This cuts down landing page
+transfer size by about 50 %.
+
+> Render blocking requests Est savings of 170 ms
+>
+> Requests are blocking the page's initial render, which may delay LCP. Deferring or inlining can move these network requests out of the critical path.LCPFCPUnscored
+>
+> django/htmx.min.02440c0f5516.js 16.5 KiB 170 ms
+> dist/styles.ad5a0e6f4aaa.css 7.3 KiB 50 ms
+
+For `htmx.min.js`, I've added a `defer` property to its `<script>` tag.
+
+For `styles.css`, I don't have a good inlining-based solution at this point. I've put
+the relevant `<link rel="stylesheet">` tag before the `<script>` tags
+and it seems to somewhat solve reflow issues.
+
+I've tested with the `<head>` tag ordering with
+Firefox network throttling set to "Good 2G". When the `<link rel="stylesheet">`
+tag appears before the `<script>` tags, the layout doesn't shift around too
+much.
+
+> LCP request discovery
+>
+> Optimize LCP by making the LCP image discoverable from the HTML immediately, and avoiding lazy-loading
+>
+> lazy load not applied
+> fetchpriority=high should be applied
+> Request is discoverable in initial document
+
+The fix was to add `fetchpriority=high` property to the landing top image.
+
+**To Do**: Fix these issues:
+
 - Network dependency tree
 - Use efficient cache lifetimes Est savings of 1 KiB
-- Improve image delivery Est savings of 524 KiB
 - Image elements do not have explicit width and height
 
 [^pagespeed]: <https://pagespeed.web.dev/analysis/https-projectifyapp-com/eqgz7348lt?utm_source=search_console&form_factor=desktop&hl=en>
