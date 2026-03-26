@@ -67,7 +67,7 @@ commands:
                 - ~/.npm
                 - node_modules
 jobs:
-  backend_uv_check:
+  uv_check:
     executor: python
     working_directory: ~/projectify
     steps:
@@ -75,7 +75,7 @@ jobs:
       - run:
           name: UV check and update requirements
           command: bin/update-requirements
-  backend_lint:
+  lint:
     executor: python
     working_directory: ~/projectify
     steps:
@@ -86,7 +86,7 @@ jobs:
       - run:
           name: Run ruff
           command: uv run ruff check .
-  backend_djlint:
+  djlint:
     executor: python
     working_directory: ~/projectify
     steps:
@@ -97,7 +97,7 @@ jobs:
       - run:
           name: Run djlint --lint
           command: uv run djlint --lint .
-  backend_mypy:
+  mypy:
     executor: python
     working_directory: ~/projectify
     steps:
@@ -105,7 +105,7 @@ jobs:
       - run:
           name: Run mypy
           command: uv run mypy .
-  backend_collectstatic:
+  collectstatic:
     executor: python
     working_directory: ~/projectify
     steps:
@@ -115,7 +115,7 @@ jobs:
           command: uv run ./manage.py collectstatic --noinput
           environment:
             DJANGO_CONFIGURATION: TestCollectstatic
-  backend_tests:
+  tests:
     executor: python_and_postgres
     # TODO change to
     # working_directory: ~/projectify
@@ -136,7 +136,7 @@ jobs:
           path: test-results
       - store_artifacts:
           path: test-results
-  backend_seeddb:
+  seeddb:
     executor: python_and_postgres
     working_directory: ~/projectify
     steps:
@@ -147,7 +147,7 @@ jobs:
       - run:
           name: Seed DB
           command: uv run ./manage.py seeddb --n-users 3 --n-workspaces 1 --n-projects 1 --n-labels 1 --n-tasks 1
-  frontend_tailwind_check:
+  tailwind_check:
     executor: node
     working_directory: ~/projectify
     steps:
@@ -155,6 +155,14 @@ jobs:
       - run:
           name: Build Tailwind CSS
           command: bin/build-tailwind-styles
+  check_images:
+    executor: python
+    working_directory: ~/projectify
+    steps:
+      - prepare_uv
+      - run:
+          name: Check if compressed imagees are up to date
+          command: bin/update-images
   tools_reuse_lint:
     executor: python
     working_directory: ~/projectify
@@ -169,12 +177,13 @@ jobs:
 workflows:
   test_all:
     jobs:
-      - backend_uv_check
-      - backend_lint
-      - backend_djlint
-      - backend_mypy
-      - backend_tests
-      - backend_seeddb
-      - backend_collectstatic
-      - frontend_tailwind_check
+      - uv_check
+      - lint
+      - djlint
+      - mypy
+      - tests
+      - seeddb
+      - collectstatic
+      - tailwind_check
+      - check_images
       - tools_reuse_lint

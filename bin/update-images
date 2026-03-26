@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: 2026 JWP Consulting GK
+# Update .webp images and check if something has changed
+
+uv run ./manage.py compress_images
+
+if ! git diff --exit-code --quiet HEAD -- '*.webp'; then
+    echo ".webp files have changed"
+    echo "Please commit"
+    exit 1
+fi
+
+if git ls-files --others --exclude-standard '*.webp' | grep -q .; then
+    echo "New .webp files detected"
+    echo "Please commit"
+    exit 1
+fi

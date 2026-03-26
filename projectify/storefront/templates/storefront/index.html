@@ -1,12 +1,45 @@
-{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "storefront_base.html" %}
 {% load static %}
 {% load i18n %}
 {% load projectify %}
 {% block title %}
-    {% translate "Projectify" %}
+    {% translate "Projectify - Free Software project management app" %}
 {% endblock title %}
+{% block structured_data %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Projectify",
+      "operatingSystem": "Web",
+      "applicationCategory": "BusinessApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "8",
+        "priceCurrency": "USD"
+      },
+      "description": "Projectify is a project management app that is lightweight and respects your freedom. Sign up and manage your projects with the Projectify app.",
+      "url": "https://projectifyapp.com",
+      "screenshot": "{% static 'solutions/development-teams-tasks.png' %}",
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "JWP Consulting GK",
+      "url": "https://projectifyapp.com",
+      "logo": "{% static 'apple-touch-icon.png' %}",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "Support",
+        "url": "{% url 'storefront:contact_us' %}"
+      }
+    }
+    </script>
+{% endblock structured_data %}
 {% block storefront_content %}
     <main id="main"
           class="flex flex-col items-center gap-10 bg-foreground pb-20">
@@ -41,11 +74,7 @@
                     <div class="absolute h-0.5 w-[80px] bg-primary opacity-10 transform -skew-x-12 left-[90%] top-[70%]"></div>
                     <div class="absolute h-0.5 w-[96px] bg-primary opacity-10 transform -skew-x-12 left-[10%] top-[55%]"></div>
                     <div class="absolute h-0.5 w-[80px] bg-primary opacity-10 transform -skew-x-12 left-[90%] top-[70%]"></div>
-                    <img src="{% static "solutions/development-teams-tasks.png" %}"
-                         alt="{% trans "An illustration showing the look and feel of tasks in Projectify's user interface" %}"
-                         width="692"
-                         height="206"
-                         class="relative z-10 shadow-lg">
+                    {% picture src="solutions/development-teams-tasks.png" alt=_("An illustration showing the look and feel of tasks in Projectify's user interface") klass="relative z-10 shadow-lg" fetchpriority="high" %}
                 </div>
             </div>
         </section>
@@ -54,9 +83,9 @@
                 <h2 class="text-center text-3xl font-bold md:text-5xl">
                     {% blocktrans %}Everything you need to <span class="text-primary">stay organized</span> and <span class="text-primary">deliver faster</span>{% endblocktrans %}
                 </h2>
-                <h4 class="text-center text-2xl font-bold md:text-3xl">
+                <p class="text-center text-2xl font-bold md:text-3xl">
                     {% trans "The go-to project management tool for developers." %}
-                </h4>
+                </p>
             </section>
             <section class="flex flex-col gap-7">
                 <header class="flex flex-col gap-3">
@@ -67,33 +96,24 @@
                 </header>
                 <div class="grid grid-cols-1 gap-8 sm:grid-cols-3 text-center">
                     <div class="flex flex-col gap-3">
-                        <img src="{% static "solutions/hero-development-teams.png" %}"
-                             alt="{% trans "An illustration showing our mascot Poly working at a computer" %}"
-                             width="728"
-                             height="492">
-                        {% anchor "storefront:solutions:development_teams" label=_("Development teams") %}
+                        {% picture src="solutions/hero-development-teams.png" alt=_("An illustration showing our mascot Poly working at a computer") %}
+                        {% anchor "storefront:solutions-development-teams" label=_("Development teams") %}
                     </div>
                     <div class="flex flex-col gap-3">
-                        <img src="{% static "solutions/hero-project-management.png" %}"
-                             alt="{% trans "Two Polys in a factory pointing at machines symbolized by huge gears. The mascot on the left holds a wrench." %}"
-                             width="728"
-                             height="492">
-                        {% anchor "storefront:solutions:project_management" label=_("Project management") %}
+                        {% picture src="solutions/hero-project-management.png" alt=_("Two Polys in a factory pointing at machines symbolized by huge gears. The mascot on the left holds a wrench.") %}
+                        {% anchor "storefront:solutions-project-management" label=_("Project management") %}
                     </div>
                     <div class="flex flex-col gap-3">
-                        <img src="{% static "solutions/hero-academic.png" %}"
-                             alt="{% trans "Our mascot Poly celebrating their graduation from an educiational institution, wearing an academic dress, throwing a square academic cap into the air" %}"
-                             width="728"
-                             height="494">
-                        {% anchor "storefront:solutions:academic" label=_("Academic endeavours") %}
+                        {% picture src="solutions/hero-academic.png" alt=_("Our mascot Poly celebrating their graduation from an educiational institution, wearing an academic dress, throwing a square academic cap into the air") %}
+                        {% anchor "storefront:solutions-academic" label=_("Academic endeavours") %}
                     </div>
                 </div>
             </section>
             {% url "storefront:privacy" as pp_url %}
-            {% include "storefront/common/solutions_detail_item.html" with title=_("We never sell your data. Ever.") text=_("Our platform fully complies with GDPR regulations, amongst others, so you can rest assured that your private information stays private.") src="privacy.png" alt=_("An illustration showing our mascot Poly safekeeping your data") learnmore_url=pp_url imgPosition="right" %}
-            {% trans "Projectify is 100% Free Software" as title %}
+            {% include "storefront/common/solutions_detail_item.html" with title=_("We never sell your data. Ever.") text=_("Our platform fully complies with GDPR regulations, amongst others, so you can rest assured that your private information stays private.") src="privacy.png" alt=_("An illustration showing our mascot Poly safekeeping your data") learnmore_url=pp_url learnmore_label=_("Learn more about privacy and Projectify") imgPosition="right" %}
+            {% trans "Projectify is 100 % Free Software" as title %}
             {% url "storefront:free_software" as learnmore_url %}
-            {% include "storefront/common/solutions_detail_item.html" with title=title text=_("We respect your freedom and privacy and provide you with the source code under a Free Software license. The Projectify application is licensed under the GNU Affero General Public License (AGPL) version 3.0 or later.") src="open-source.png" alt=_("Birds freed from their gilded cages") imgPosition="left" learnmore_url=learnmore_url %}
+            {% include "storefront/common/solutions_detail_item.html" with title=title text=_("We respect your freedom and privacy and provide you with the source code under a Free Software license. The Projectify application is licensed under the GNU Affero General Public License (AGPL) version 3.0 or later.") src="open-source.png" alt=_("Birds freed from their gilded cages") imgPosition="left" learnmore_url=learnmore_url learnmore_label=_("Learn more about Free Software") %}
         </div>
     </main>
 {% endblock storefront_content %}

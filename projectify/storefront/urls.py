@@ -3,7 +3,8 @@
 # SPDX-FileCopyrightText: 2025 JWP Consulting GK
 """Storefront urlpatterns."""
 
-from django.urls import include, path
+from django.urls import include, path, reverse_lazy
+from django.views.generic import RedirectView
 
 from projectify.storefront.views import (
     accessibility,
@@ -26,21 +27,6 @@ from projectify.storefront.views import (
 
 app_name = "storefront"
 
-solution_patterns = [
-    path("", solutions_index, name="list"),
-    path(
-        "development-teams",
-        solutions_development_teams,
-        name="development_teams",
-    ),
-    path(
-        "project-management",
-        solutions_project_management,
-        name="project_management",
-    ),
-    path("academic", solutions_academic, name="academic"),
-]
-
 security_patterns = [
     path("general", security_general, name="general"),
     path("disclose", security_disclose, name="disclose"),
@@ -57,6 +43,39 @@ urlpatterns = [
     path("tos", tos, name="tos"),
     path("pricing", pricing, name="pricing"),
     path("privacy", privacy, name="privacy"),
-    path("solutions/", include((solution_patterns, "solutions"))),
+    # Solutions
+    path("solutions", solutions_index, name="solutions-list"),
+    path(
+        "solutions/",
+        RedirectView.as_view(url=reverse_lazy("storefront:solutions-list")),
+    ),
+    path(
+        "solutions/development-teams",
+        solutions_development_teams,
+        name="solutions-development-teams",
+    ),
+    path(
+        "solutions/project-management",
+        solutions_project_management,
+        name="solutions-project-management",
+    ),
+    path("solutions/academic", solutions_academic, name="solutions-academic"),
+    # Deleted solutions
+    *(
+        path(
+            p,
+            RedirectView.as_view(
+                url=reverse_lazy("storefront:solutions-list")
+            ),
+        )
+        for p in [
+            "solutions/personal-use",
+            "solutions/remote-work",
+            "solutions/research",
+            "solutions/project-management/",
+            "solutions/development-teams/",
+            "solutions/academic/",
+        ]
+    ),
     path("", index, name="landing"),
 ]

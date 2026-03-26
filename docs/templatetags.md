@@ -2,7 +2,7 @@
 title: Backend template tags guide
 ---
 <!--
-SPDX-FileCopyrightText: 2025 JWP Consulting GK
+SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
@@ -201,4 +201,22 @@ If there's not picture, it renders the following:
 ```html
 <!-- TODO update -->
 <div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary bg-base-200"></div>
+```
+
+## Picture
+
+Render a `<picture>` tag with an image from static files:
+
+```jinja
+{% load projectify %}
+{% picture src="image-of-cute-cats.png" alt="Cute cats" klass="w-8" %}
+```
+
+This renders to:
+
+```html
+<picture>
+<img src="image-of-cute-cats.png" alt="Cute cats" width="180" height="180"
+    class="w-8">
+</picture>
 ```

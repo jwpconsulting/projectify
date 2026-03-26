@@ -72,7 +72,7 @@ urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     *allauth_urls,
     # storefront, help, etc.
     path("", include("projectify.storefront.urls")),
-    path("help/", include("projectify.help.urls")),
+    path("", include("projectify.help.urls")),
     path("onboarding/", include("projectify.onboarding.urls")),
     path("manifest.json", manifest_view, name="manifest"),
     path(

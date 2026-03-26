@@ -26,5 +26,5 @@ formatter=generic
 args=(sys.stderr, )
 
 [formatter_generic]
-format=%(levelname)-s [%(module)s] ~ %(message)s
+format=%(levelname)-s [%(name)s.%(module)s] ~ %(message)s
 class=logging.Formatter

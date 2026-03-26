@@ -1,5 +1,14 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Disallow:
-# SPDX-FileCopyrightText: 2024 JWP Consulting GK
-# SPDX-License-Identifier: AGPL-3.0-or-later
+Disallow: /onboarding
+Disallow: /onboarding/*
+Disallow: /user/log-in?next=*
+Disallow: /dashboard
+Disallow: /dashboard/*
+Disallow: /corporate/*
+Disallow: /admin/*
+
+Sitemap: /sitemap.xml
+{# SPDX-FileCopyrightText: 2024 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}

@@ -3,7 +3,7 @@
 {% extends "storefront_base.html" %}
 {% load markdownify %}
 {% load i18n %}
-{% load static %}
+{% load projectify %}
 {% block title %}
     {% translate "Contact - Projectify" %}
 {% endblock title %}
@@ -14,10 +14,7 @@
         <div class="w-full p-6 max-w-4xl flex flex-row items-center justify-center gap-8">
             <div class="prose">{{ markdowntext|markdownify }}</div>
             <div class="hidden shrink basis-1/4 md:block">
-                <img src="{% static "contact-us.png" %}"
-                     alt="{% trans "An illustration of a phone booth" %}"
-                     width="818"
-                     height="1000">
+                {% picture src="contact-us.png" alt=_("An illustration of a phone booth") %}
             </div>
         </div>
     </main>

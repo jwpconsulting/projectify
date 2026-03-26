@@ -104,7 +104,8 @@ class Base(Configuration):  # type:ignore
     CSRF_TRUSTED_ORIGINS: Optional[Sequence[str]]
 
     # HSTS
-    SECURE_HSTS_SECONDS = 15768000
+    # Approximately one year
+    SECURE_HSTS_SECONDS = 60 * 60 * 24 * 365
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
 
@@ -129,9 +130,10 @@ class Base(Configuration):  # type:ignore
             "https://accounts.google.com",
         ],
         "connect-src": [CSP.SELF],
-        "frame-ancestors": [CSP.SELF],
+        "frame-ancestors": [CSP.NONE],
         "object-src": [CSP.SELF],
         "frame-src": [CSP.NONE],
+        "base-uri": [CSP.NONE],
     }
 
     # Installed applications
@@ -362,7 +364,7 @@ class Base(Configuration):  # type:ignore
         "disable_existing_loggers": False,
         "formatters": {
             "like_gunicorn": {
-                "format": "%(levelname)-s [%(module)s] ~ %(message)s",
+                "format": "%(levelname)-s [%(name)s.%(module)s] ~ %(message)s",
             },
         },
         "handlers": {
