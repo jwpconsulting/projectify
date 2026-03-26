@@ -8,6 +8,6 @@
             <h1 class="text-4xl lg:text-6xl">{% trans title %}</h1>
             <p class="max-w-md text-xl">{% trans text %}</p>
         </div>
-        <div class="w-full max-w-xs justify-self-center">{% picture src=src alt=alt %}</div>
+        <div class="w-full max-w-xs justify-self-center">{% picture src=src alt=alt fetchpriority="high" %}</div>
     </header>
 </div>

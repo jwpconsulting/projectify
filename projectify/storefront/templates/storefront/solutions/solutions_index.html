@@ -13,7 +13,7 @@
         {% include "storefront/common/solutions_header.html" with title=_("Solutions for every type of user") alt=_("An illustration showing users of different backgrounds") src="solutions/hero-solutions.png" text=_("Explore the different ways users are using Projectify to meet due dates, reach targets and be productive.") %}
         <div class="w-full p-6 max-w-4xl flex flex-col items-center gap-12 md:grid md:grid-cols-3 md:gap-8">
             <section class="flex h-full flex-col justify-between gap-4">
-                {% picture src="solutions/hero-development-teams.png" alt=_("Our mascot Poly sitting in front of a computer, developing software and looking content") klass="rounded-lg" %}
+                {% picture src="solutions/hero-development-teams.png" alt=_("Our mascot Poly sitting in front of a computer, developing software and looking content") klass="rounded-lg" fetchpriority="high" %}
                 <div class="flex h-full flex-col gap-4">
                     <h2 class="font-bold">{% trans "Development teams" %}</h2>
                     <p class="font-normal">{% trans "Monitor team progress throughout the whole software lifecyle." %}</p>
