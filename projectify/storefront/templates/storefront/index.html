@@ -77,10 +77,10 @@
                 </div>
             </section>
             {% url "storefront:privacy" as pp_url %}
-            {% include "storefront/common/solutions_detail_item.html" with title=_("We never sell your data. Ever.") text=_("Our platform fully complies with GDPR regulations, amongst others, so you can rest assured that your private information stays private.") src="privacy.png" alt=_("An illustration showing our mascot Poly safekeeping your data") learnmore_url=pp_url imgPosition="right" %}
-            {% trans "Projectify is 100% Free Software" as title %}
+            {% include "storefront/common/solutions_detail_item.html" with title=_("We never sell your data. Ever.") text=_("Our platform fully complies with GDPR regulations, amongst others, so you can rest assured that your private information stays private.") src="privacy.png" alt=_("An illustration showing our mascot Poly safekeeping your data") learnmore_url=pp_url learnmore_label=_("Learn more about privacy and Projectify") imgPosition="right" %}
+            {% trans "Projectify is 100 % Free Software" as title %}
             {% url "storefront:free_software" as learnmore_url %}
-            {% include "storefront/common/solutions_detail_item.html" with title=title text=_("We respect your freedom and privacy and provide you with the source code under a Free Software license. The Projectify application is licensed under the GNU Affero General Public License (AGPL) version 3.0 or later.") src="open-source.png" alt=_("Birds freed from their gilded cages") imgPosition="left" learnmore_url=learnmore_url %}
+            {% include "storefront/common/solutions_detail_item.html" with title=title text=_("We respect your freedom and privacy and provide you with the source code under a Free Software license. The Projectify application is licensed under the GNU Affero General Public License (AGPL) version 3.0 or later.") src="open-source.png" alt=_("Birds freed from their gilded cages") imgPosition="left" learnmore_url=learnmore_url learnmore_label=_("Learn more about Free Software") %}
         </div>
     </main>
 {% endblock storefront_content %}

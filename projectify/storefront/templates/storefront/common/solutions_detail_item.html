@@ -17,7 +17,7 @@
         <h2 class="text-xl font-bold sm:text-4xl">{% trans title %}</h2>
         <p class="text-l">{% trans text %}</p>
         {% if learnmore_url %}
-            {% anchor learnmore_url label=_("Learn more here") %}
+            {% anchor learnmore_url label=learnmore_label %}
         {% endif %}
     </div>
     {% if imgPosition == "right" %}
