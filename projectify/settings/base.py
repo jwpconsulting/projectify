@@ -129,7 +129,7 @@ class Base(Configuration):  # type:ignore
             "https://accounts.google.com",
         ],
         "connect-src": [CSP.SELF],
-        "frame-ancestors": [CSP.SELF],
+        "frame-ancestors": [CSP.NONE],
         "object-src": [CSP.SELF],
         "frame-src": [CSP.NONE],
         "base-uri": [CSP.NONE],
