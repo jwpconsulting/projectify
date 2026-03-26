@@ -1,9 +1,9 @@
 {# SPDX-FileCopyrightText: 2024-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "storefront_base.html" %}
-{% load static %}
 {% load markdownify %}
 {% load i18n %}
+{% load projectify %}
 {% block title %}
     {% translate "Accessibility statement - Projectify" %}
 {% endblock title %}
@@ -13,11 +13,7 @@
         <div class="flex w-full flex-col items-center bg-background px-12 py-6 sm:py-12">
             <header class="fw-full max-w-4xl lex w-full flex-col items-center gap-4 sm:grid sm:grid-cols-2">
                 <h1 class="text-4xl lg:text-6xl text-center font-bold sm:text-left">{% trans "Accessibility statement" %}</h1>
-                <img src="{% static "hero-accessibility.png" %}"
-                     alt="{% trans "Accessibility logo" %}"
-                     width="300"
-                     height="300"
-                     class="justify-self-center order-1 sm:order-2 max-w-20 lg:max-w-xs">
+                {% picture src="hero-accessibility.png" alt=_("Accessibility logo") klass="justify-self-center order-1 sm:order-2 max-w-20 lg:max-w-xs" %}
             </header>
         </div>
         <div class="prose w-full p-6">{{ markdowntext|markdownify }}</div>

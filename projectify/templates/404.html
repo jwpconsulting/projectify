@@ -1,7 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!-- SPDX-FileCopyrightText: 2026 JWP Consulting GK -->
 {% extends "base.html" %}
-{% load static %}
 {% load projectify %}
 {% load i18n %}
 {% block title %}
@@ -12,11 +11,7 @@
     <div class="flex grow flex-col items-center gap-12 p-20">
         <main id="main" class="flex max-w-lg flex-col gap-6">
             <h1 class="text-5xl font-bold">{% trans "Page not found" %}</h1>
-            <img src="{% static 'status404Image.png' %}"
-                 alt="{% trans "Illustration of Poly the mascot looking lost" %}"
-                 width="1064"
-                 height="830"
-                 class="max-w-sm">
+            {% picture src="status404Image.png" alt=_("Illustration of Poly the mascot looking lost") klass="max-w-sm" %}
             <p>{% trans "The page you're looking for doesn't exist. Maybe there is a typo in the URL you meant to visit?" %}</p>
             <p>
                 {% trans "If you have difficulties using the Projectify application, or would like to report a problem, please contact us:" %}

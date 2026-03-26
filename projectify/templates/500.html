@@ -1,7 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!-- SPDX-FileCopyrightText: 2026 JWP Consulting GK -->
 {% extends "base.html" %}
-{% load static %}
 {% load projectify %}
 {% load i18n %}
 {% block title %}
@@ -12,11 +11,7 @@
     <div class="flex grow flex-col items-center gap-12 p-20">
         <main id="main" class="flex max-w-lg flex-col gap-6">
             <h1 class="text-5xl font-bold">{% trans "Application error" %}</h1>
-            <img src="{% static 'status500Image.png' %}"
-                 alt="{% trans "Illustration of a broken egg" %}"
-                 width="794"
-                 height="725"
-                 class="max-w-sm">
+            {% picture src="status500Image.png" alt=_("Illustration of a broken egg") klass="max-w-sm" %}
             <p>{% trans "An error occured that the application does not know how to handle. The details are as follows:" %}</p>
             <p>{% trans "We are sorry this happened. If the same error keeps happening, please contact us:" %}</p>
             {% anchor "storefront:contact_us" _("Go to contact us page") %}

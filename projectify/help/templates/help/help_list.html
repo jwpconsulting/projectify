@@ -2,7 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "help_base.html" %}
 {% load i18n %}
-{% load static %}
+{% load projectify %}
 {% block title %}
     {% translate "Help - Projectify" %}
 {% endblock title %}
@@ -16,12 +16,7 @@
                         <p class="max-w-md text-xl">{% trans "Learn to fly through projects with speed and agility" %}</p>
                     </div>
                     <div class="w-full max-w-xs justify-self-center">
-                        <picture>
-                            <img src="{% static "hero-help.png" %}"
-                                 alt="{% trans "Our mascot poly flying into the air using a jetpack" %}"
-                                 width="977"
-                                 height="575">
-                        </picture>
+                        {% picture src="hero-help.png" alt=_("Our mascot poly flying into the air using a jetpack") %}
                     </div>
                 </header>
             </div>
