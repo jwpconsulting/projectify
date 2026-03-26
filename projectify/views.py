@@ -30,7 +30,7 @@ from django_ratelimit.exceptions import Ratelimited
 logger = logging.getLogger(__name__)
 
 
-@cache_control(max_age=3600)
+@cache_control(max_age=60 * 60 * 24)
 def colored_icon(request: HttpRequest, icon: str, color: str) -> HttpResponse:
     """Return a colored SVG icon."""
     del request
