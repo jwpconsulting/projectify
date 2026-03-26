@@ -362,7 +362,7 @@ class Base(Configuration):  # type:ignore
         "disable_existing_loggers": False,
         "formatters": {
             "like_gunicorn": {
-                "format": "%(levelname)-s [%(module)s] ~ %(message)s",
+                "format": "%(levelname)-s [%(name)s.%(module)s] ~ %(message)s",
             },
         },
         "handlers": {
