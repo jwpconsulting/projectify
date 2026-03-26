@@ -115,6 +115,24 @@ class Development(Base):
         "debug": True,
     }
 
+    # Logging with timestamps for development
+    LOGGING = {
+        **Base.LOGGING,
+        "formatters": {
+            "like_gunicorn": {
+                "format": "[%(asctime)s] %(levelname)-s [%(name)s.%(module)s] ~ %(message)s",
+                "datefmt": "%d/%b/%Y %H:%M:%S",
+            },
+        },
+        "loggers": {
+            **Base.LOGGING["loggers"],
+            "django": {
+                "handlers": ["console"],
+                "propagate": False,
+            },
+        },
+    }
+
     @classmethod
     def pre_setup(cls) -> None:
         """Load environment variables from .env."""
