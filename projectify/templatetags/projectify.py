@@ -14,6 +14,7 @@ from django.utils.html import format_html
 from django.utils.safestring import SafeText, mark_safe
 from django.utils.translation import gettext_lazy as _
 
+from projectify.lib.utils import static_image_get_with_dimensions
 from projectify.user.models import User
 from projectify.workspace.models import TeamMember
 
@@ -293,3 +294,34 @@ def user_avatar(
             return mark_safe(
                 '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary bg-base-200"></div>'
             )
+
+
+@register.simple_tag
+def picture(
+    src: str,
+    alt: str,
+    klass: Optional[str] = None,
+) -> SafeText:
+    """
+    Render a picture tag with an image from static files.
+
+    Requires alt text for accessibility.
+    Optionally accepts CSS classes.
+    Automatically detects image dimensions using PIL.
+    """
+    match static_image_get_with_dimensions(src):
+        case None:
+            logger.warning("Could not get dimensions for file '%s'", src)
+            return format_html("IMG_NOT_FOUND")
+        case url, width, height:
+            pass
+
+    dimensions = format_html(' width="{}" height="{}"', width, height)
+
+    return format_html(
+        '<picture><img src="{url}" alt="{alt}"{dimensions}{klass}></picture>',
+        url=url,
+        alt=alt,
+        dimensions=dimensions,
+        klass=format_html(' class="{}"', klass) if klass else "",
+    )
