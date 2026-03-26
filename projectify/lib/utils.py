@@ -4,6 +4,7 @@
 """Projectify utils."""
 
 import logging
+from pathlib import Path
 from typing import Optional, Tuple
 
 from django.contrib.staticfiles import finders
@@ -24,7 +25,14 @@ def static_image_get_with_dimensions(
     if cached_result is not None:
         return cached_result
 
-    file_path = finders.find(src)
+    webp_src = str(Path(src).with_suffix(".webp"))
+    final_src = webp_src
+    file_path = finders.find(webp_src)
+    if file_path is None:
+        logger.warning(".webp not found for '%s'. falling back to orig.", src)
+        file_path = finders.find(src)
+        final_src = src
+
     match file_path:
         case None:
             logger.warning("Could not find static file '%s'", src)
@@ -40,6 +48,6 @@ def static_image_get_with_dimensions(
     with Image.open(file_path) as img:
         width, height = img.size
 
-    result = static.static(src), width, height
+    result = static.static(final_src), width, height
     cache.set(cache_key, result)
     return result
