@@ -1,7 +1,7 @@
 {
-  "name": "theme",
-  "version": "3.8.0",
-  "description": "",
+  "name": "projectify-tailwind",
+  "version": "0.1",
+  "description": "Projectify tailwindcss packages and scripts",
   "scripts": {
     "start": "npm run dev",
     "build": "npm run build:clean && npm run build:tailwind",
@@ -12,14 +12,11 @@
   },
   "keywords": [],
   "author": "",
-  "license": "MIT",
+  "license": "AGPL-3.0-or-later",
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.10",
     "autoprefixer": "~10.4.19",
     "postcss": "^8.4.32",
-    "postcss-import": "^15.1.0",
-    "postcss-nested": "^6.0.1",
-    "postcss-simple-vars": "^7.0.1",
     "tailwindcss": "^3.4.0"
   }
 }
