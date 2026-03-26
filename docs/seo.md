@@ -30,7 +30,7 @@ A recent web vitals pagespeed check brought up a few issues.[^pagespeed]
 
 ## Done
 
-I've addressed these issues:
+I've addressed these Web Vitals issues:
 
 > Improve image delivery Est savings of 524 KiB
 
@@ -65,11 +65,59 @@ much.
 
 The fix was to add `fetchpriority=high` property to the landing top image.
 
-**To Do**: Fix these issues:
+> Use efficient cache lifetimes Est savings of 1 KiB
+>
+> A long cache lifetime can speed up repeat visits to your page. Learn more about caching.
+>
+> …external_links/primary.svg 1h 1 KiB
 
-- Network dependency tree
-- Use efficient cache lifetimes Est savings of 1 KiB
-- Image elements do not have explicit width and height
+The solution is to update the following line in `projectify/views.py`:
+
+```
+-@cache_control(max_age=3600)
++@cache_control(max_age=60 * 60 * 24)
+```
+
+> Image elements do not have explicit width and height
+>
+> Set an explicit width and height on image elements to reduce layout shifts
+> and improve CLS.
+
+I've resolved this by automatically retrieving width and height from images
+with the new `picture` templatetag in `projectify/templatetags/projectify.py`.
+
+## To Do
+
+The following Web Vitals issue remains:
+
+Fix the following issue or test whether adding `defer` to the HTMX
+`<script>` already solved it.
+
+> Avoid chaining critical requests by reducing the length of chains, reducing
+> the download size of resources, or deferring the download of unnecessary
+> resources to improve page load.
+>
+> Maximum critical path latency: 848 ms
+>
+> * Initial Navigation
+>   * https://www.projectifyapp.com 433 ms, 4.77 KiB
+>     * …django/htmx.min.02440c0f5516.js(www.projectifyapp.com) 848 ms, 16.50 KiB
+>     * …dist/styles.ad5a0e6f4aaa.css(www.projectifyapp.com) 823 ms, 7.31 KiB
+>
+> Preconnected origins
+>
+> preconnect hints help the browser establish a connection earlier in the page
+> load, saving time when the first request for that origin is made. The
+> following are the origins that the page preconnected to.
+>
+> no origins were preconnected
+>
+> Preconnect candidates
+>
+> Add preconnect hints to your most important origins, but try to use no more
+> than 4.
+>
+> No additional origins are good candidates for preconnecting
 
 [^pagespeed]: <https://pagespeed.web.dev/analysis/https-projectifyapp-com/eqgz7348lt?utm_source=search_console&form_factor=desktop&hl=en>
 
@@ -181,7 +229,6 @@ Django should compress assets and use webp for pictures.
 # Error pages
 
 - Projectify should have an error page for CSRF errors.
-- The 404 page doesn't load its content correctly. Try: https://www.projectifyapp.com/not-found
 
 # Done
 
@@ -225,3 +272,13 @@ I've removed a few pages so I should add a redirect for these:
 
 The solution was to add more `RedirectView` instances. See
 `projectify/storefront/urls.py` and `projectify/help/urls.py`.
+
+## 404 page
+
+The 404 page didn't load its content correctly.
+
+Example: https://www.projectifyapp.com/not-found
+
+The solution was to fix the `{% block content %}` line to say `{% block body
+%}` instead. The repository introduced this regression after adding
+django-allauth and adjusting templates to match its `{% extends %}` hierarchy.
