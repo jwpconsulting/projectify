@@ -37,6 +37,10 @@
         <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}">
         <link rel="manifest" href="{% url "manifest" %}">
         <link rel="canonical" href="{{ request.build_absolute_uri }}">
+        <link rel="sitemap"
+              type="application/xml"
+              title="Sitemap"
+              href="{% url "django.contrib.sitemaps.views.sitemap" %}">
         {% block structured_data %}
         {% endblock structured_data %}
     </head>
