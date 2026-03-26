@@ -3,16 +3,13 @@
 {% load static %}
 {% load i18n %}
 {% load projectify %}
-{# djlint:off H006 ignore image sizing #}
 <section class="flex flex-col items-center gap-6 md:grid grid-cols-2">
     {% if imgPosition == "left" %}
         <div class="w-full max-w-md justify-self-center">
             {% if learnmore_url %}
-                <a href="{{ learnmore_url }}">
-                    <img src="{% static src %}" alt="{% trans alt %}">
-                </a>
+                <a href="{{ learnmore_url }}">{% picture src=src alt=alt %}</a>
             {% else %}
-                <img src="{% static src %}" alt="{% trans alt %}">
+                {% picture src=src alt=alt %}
             {% endif %}
         </div>
     {% endif %}
@@ -26,11 +23,9 @@
     {% if imgPosition == "right" %}
         <div class="w-full max-w-md justify-self-center">
             {% if learnmore_url %}
-                <a href="{{ learnmore_url }}">
-                    <img src="{% static src %}" alt="{% trans alt %}">
-                </a>
+                <a href="{{ learnmore_url }}">{% picture src=src alt=alt %}</a>
             {% else %}
-                <img src="{% static src %}" alt="{% trans alt %}">
+                {% picture src=src alt=alt %}
             {% endif %}
         </div>
     {% endif %}
