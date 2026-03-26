@@ -9,6 +9,6 @@ Disallow: /dashboard/*
 Disallow: /corporate/*
 Disallow: /admin/*
 
-Sitemap: /sitemap.xml
+Sitemap: {{ request.build_absolute_uri }}/sitemap.xml
 {# SPDX-FileCopyrightText: 2024 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
