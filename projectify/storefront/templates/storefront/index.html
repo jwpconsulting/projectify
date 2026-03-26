@@ -17,12 +17,18 @@
       "applicationCategory": "BusinessApplication",
       "offers": {
         "@type": "Offer",
-        "price": "8",
-        "priceCurrency": "USD"
+        "price": "8.00",
+        "priceCurrency": "USD",
+        "priceSpecification": {
+          "@type": "UnitPriceSpecification",
+          "price": "8.00",
+          "priceCurrency": "USD",
+          "unitText": "per user per month"
+        }
       },
       "description": "Projectify is a project management app that is lightweight and respects your freedom. Sign up and manage your projects with the Projectify app.",
       "url": "https://projectifyapp.com",
-      "screenshot": "{% static 'solutions/development-teams-tasks.png' %}",
+      "screenshot": "https://projectifyapp.com{% static 'solutions/development-teams-tasks.png' %}"
     }
     </script>
     <script type="application/ld+json">
@@ -31,11 +37,11 @@
       "@type": "Organization",
       "name": "JWP Consulting GK",
       "url": "https://projectifyapp.com",
-      "logo": "{% static 'apple-touch-icon.png' %}",
+      "logo": "https://projectifyapp.com{% static 'apple-touch-icon.png' %}",
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "Support",
-        "url": "{% url 'storefront:contact_us' %}"
+        "url": "https://projectifyapp.com{% url 'storefront:contact_us' %}"
       }
     }
     </script>
