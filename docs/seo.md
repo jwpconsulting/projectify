@@ -191,8 +191,6 @@ Semrush identified these issues:
 
 ## Technical SEO
 
-- There are critical issues with your canonical tag that may result in search engines indexing incorrect or duplicate pages. Ensure your page includes a single canonical tag that points to a live URL to avoid confusion.
-- Your robots.txt file is missing a valid sitemap URL. Add your sitemap URL to help search engines find and crawl your website.
 - No XML sitemap found. Add a sitemap.xml or declare it in your robots.txt file.
 
 ## Off-Page SEO
@@ -216,10 +214,6 @@ to Projectify.
 - Your page is not mobile friendly. Mobile users may struggle with tiny text, missing responsive layouts, or hard-to-tap buttons. Implement a responsive viewport, increase font sizes, and enlarge/space tap targets.
 - Clicks and taps on the page feel noticeably delayed and sluggish. Defer non-critical JavaScript, move work off the main thread, and reduce third-party script impact to improve the user experience.
 - Unable to retrieve DOM Size metric. The page may be inaccessible or the API is unavailable.
-
-# Asset optimization
-
-Django should compress assets and use webp for pictures.
 
 # Error pages
 
@@ -290,3 +284,18 @@ Examples:
 - [Example `Organization`](https://schema.org/Organization#eg-0007)
 - [Example `SoftwareApplication`](https://schema.org/SoftwareApplication#4658)
 
+## Add sitemap to Robots.txt
+
+I've solved the following issue pointed out by semrush:
+
+> Your robots.txt file is missing a valid sitemap URL. Add your sitemap URL to help search engines find and crawl your website.
+
+## Canonical addresses
+
+I've solved the following issue pointed out by semrush:
+
+> There are critical issues with your canonical tag that may result in search
+> engines indexing incorrect or duplicate pages. Ensure your page includes a
+> single canonical tag that points to a live URL to avoid confusion.
+
+See also <https://stackoverflow.com/a/32867221>
