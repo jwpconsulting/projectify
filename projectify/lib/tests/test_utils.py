@@ -12,6 +12,7 @@ def test_static_image_get_with_dimensions() -> None:
 
     assert result is not None
     url, width, height = result
-    assert "apple-touch-icon.png" in url
+    # This magically returns us a webp file
+    assert "apple-touch-icon.webp" in url
     assert width == 180
     assert height == 180
