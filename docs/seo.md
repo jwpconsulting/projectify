@@ -191,8 +191,6 @@ Semrush identified these issues:
 
 ## Technical SEO
 
-- No XML sitemap found. Add a sitemap.xml or declare it in your robots.txt file.
-
 ## Off-Page SEO
 
 Semrush complained that not enough other domains are linking to
@@ -299,3 +297,10 @@ I've solved the following issue pointed out by semrush:
 > single canonical tag that points to a live URL to avoid confusion.
 
 See also <https://stackoverflow.com/a/32867221>
+
+## Sitemap not found
+
+I've solved the following issue by adding a sitemap `<link>` to the base
+template:
+
+> No XML sitemap found. Add a sitemap.xml or declare it in your robots.txt file.
