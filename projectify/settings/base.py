@@ -104,7 +104,8 @@ class Base(Configuration):  # type:ignore
     CSRF_TRUSTED_ORIGINS: Optional[Sequence[str]]
 
     # HSTS
-    SECURE_HSTS_SECONDS = 15768000
+    # Approximately one year
+    SECURE_HSTS_SECONDS = 60 * 60 * 24 * 365
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
 
