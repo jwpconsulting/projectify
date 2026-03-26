@@ -1,4 +1,4 @@
-{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "storefront_base.html" %}
 {% load static %}
@@ -7,6 +7,39 @@
 {% block title %}
     {% translate "Projectify - Free Software project management app" %}
 {% endblock title %}
+{% block structured_data %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Projectify",
+      "operatingSystem": "Web",
+      "applicationCategory": "BusinessApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "8",
+        "priceCurrency": "USD"
+      },
+      "description": "Projectify is a project management app that is lightweight and respects your freedom. Sign up and manage your projects with the Projectify app.",
+      "url": "https://projectifyapp.com",
+      "screenshot": "{% static 'solutions/development-teams-tasks.png' %}",
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "JWP Consulting GK",
+      "url": "https://projectifyapp.com",
+      "logo": "{% static 'apple-touch-icon.png' %}",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "Support",
+        "url": "{% url 'storefront:contact_us' %}"
+      }
+    }
+    </script>
+{% endblock structured_data %}
 {% block storefront_content %}
     <main id="main"
           class="flex flex-col items-center gap-10 bg-foreground pb-20">

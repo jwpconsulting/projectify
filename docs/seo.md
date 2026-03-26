@@ -11,11 +11,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 This document tracks what's left for optimizing searchability and
 discoverability in the public facing Projectify web app.
 
-# Structured Data
-
-- `SoftwareApplication` (https://developers.google.com/search/docs/appearance/structured-data/software-app)
-- `Organization` (https://developers.google.com/search/docs/appearance/structured-data/organization)
-
 # Redirects
 
 These should have 301 redirect:
@@ -282,3 +277,16 @@ Example: https://www.projectifyapp.com/not-found
 The solution was to fix the `{% block content %}` line to say `{% block body
 %}` instead. The repository introduced this regression after adding
 django-allauth and adjusting templates to match its `{% extends %}` hierarchy.
+
+## Structured Data
+
+See entries in `projectify/storefront/templates/storefront/index.html`.
+
+- `SoftwareApplication` <https://developers.google.com/search/docs/appearance/structured-data/software-app>
+- `Organization` <https://developers.google.com/search/docs/appearance/structured-data/organization>
+
+Examples:
+
+- [Example `Organization`](https://schema.org/Organization#eg-0007)
+- [Example `SoftwareApplication`](https://schema.org/SoftwareApplication#4658)
+
