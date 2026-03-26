@@ -132,6 +132,7 @@ class Base(Configuration):  # type:ignore
         "frame-ancestors": [CSP.SELF],
         "object-src": [CSP.SELF],
         "frame-src": [CSP.NONE],
+        "base-uri": [CSP.NONE],
     }
 
     # Installed applications
