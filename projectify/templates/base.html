@@ -16,6 +16,7 @@
                 Projectify
             {% endblock title %}
         </title>
+        <link rel="stylesheet" href="{% static "css/dist/styles.css" %}">
         <script defer src="{% static "htmx.min.js" %}"></script>
         <script defer src="{% static "alpine.min.js" %}"></script>
         {% comment %}
@@ -35,7 +36,6 @@
         <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
         <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}">
         <link rel="manifest" href="{% url "manifest" %}">
-        <link rel="stylesheet" href="{% static "css/dist/styles.css" %}">
     </head>
     <body class="min-h-screen w-full max-w-full bg-foreground text-base-content"
           hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
