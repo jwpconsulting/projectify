@@ -43,6 +43,10 @@
               type="application/xml"
               title="Sitemap"
               href="{% url "django.contrib.sitemaps.views.sitemap" %}">
+        <link rel="alternate"
+              type="application/rss+xml"
+              title="{% translate "Projectify Blog RSS Feed" %}"
+              href="{% url "blog:feed" %}">
         {% block structured_data %}
         {% endblock structured_data %}
     </head>

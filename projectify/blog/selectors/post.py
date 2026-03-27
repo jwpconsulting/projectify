@@ -11,10 +11,20 @@ from django.utils import timezone
 from ..models import Post
 
 
-def post_list_published() -> QuerySet[Post]:
+def post_list_published(*, with_body: bool = False) -> QuerySet[Post]:
     """Return published posts without content."""
     today = timezone.now().date()
-    return Post.objects.filter(published__lte=today).defer("body")
+    posts = Post.objects.filter(published__lte=today)
+    if with_body:
+        return posts.select_related("body")
+    else:
+        return posts.defer("body")
+
+
+def post_list_published_with_body() -> QuerySet[Post]:
+    """Return published posts with content for RSS feed."""
+    today = timezone.now().date()
+    return Post.objects.filter(published__lte=today).select_related("body")
 
 
 def post_find_by_slug(*, slug: str) -> Optional[Post]:

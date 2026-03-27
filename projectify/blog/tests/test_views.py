@@ -80,3 +80,11 @@ def test_upload_attachment_rejects_invalid_file_types(
     )
     assert response.status_code == 400, response.content
     assert b"not one of the allowed file types" in response.content
+
+
+def test_post_feed_accessible(client: Client, post: Post) -> None:
+    """Test that the RSS feed is accessible."""
+    response = client.get(reverse("blog:feed"))
+    assert response.status_code == 200
+    assert post.title in response.content.decode()
+    assert post.author in response.content.decode()
