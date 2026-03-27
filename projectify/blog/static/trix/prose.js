@@ -78,6 +78,7 @@ function patchTrixEditorWithNameSetter() {
 document.addEventListener("DOMContentLoaded", () => {
   initializeEditors();
   patchTrixEditorWithNameSetter();
+  configureToolbar();
   // https://github.com/basecamp/trix/issues/117#issuecomment-463275725
   // https://github.com/basecamp/trix/issues/680#issuecomment-735742942
   Trix.config.blockAttributes.default.tagName = "p"
@@ -101,3 +102,32 @@ document.addEventListener("DOMContentLoaded", () => {
 // Export the initializeEditors function so it can be called from other scripts
 window.djangoProse = window.djangoProse || {};
 window.djangoProse.initializeEditors = initializeEditors;
+
+// SPDX-SnippetBegin
+// SPDX-License-Identifier: MIT
+// SPDX-SnippetCopyrightText: 2022 beta.gouv.fr
+// Source:
+// https://github.com/betagouv/complements-alimentaires/blob/95b70bafdf4f4a86914711507270dc8079e42df9/data/static/extend-buttons.js
+function configureToolbar() {
+  Trix.config.blockAttributes.subHeadingh2 = { tagName: "h2" }
+  Trix.config.blockAttributes.subHeadingh3 = { tagName: "h3" }
+
+  const h2ButtonHTML =
+    '<button type="button" class="trix-button" data-trix-attribute="subHeadingh2" title="Subheading H2">H2</button>'
+  const h3ButtonHTML =
+    '<button type="button" class="trix-button" data-trix-attribute="subHeadingh3" title="Subheading H3">H3</button>'
+
+  document.addEventListener("trix-before-initialize", (event) => {
+    const { toolbarElement } = event.target
+
+    const trixTitleButton = toolbarElement.querySelector(
+      "[data-trix-attribute=heading1]",
+    )
+    trixTitleButton.insertAdjacentHTML("afterend", h2ButtonHTML)
+    trixTitleButton.remove()
+
+    const h2Button = toolbarElement.querySelector("[data-trix-attribute=subHeadingh2]")
+    h2Button.insertAdjacentHTML("afterend", h3ButtonHTML)
+  })
+}
+// SPDX-SnippetEnd
