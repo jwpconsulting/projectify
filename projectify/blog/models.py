@@ -123,3 +123,8 @@ class Post(BaseModel):
     def get_absolute_url(self) -> str:
         """Return absolute URL for this post."""
         return reverse("blog:post_detail", kwargs={"slug": self.slug})
+
+    class Meta(BaseModel.Meta):
+        """Meta options."""
+
+        ordering = ["-published"]
