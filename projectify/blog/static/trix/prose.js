@@ -15,6 +15,7 @@ function uploadAttachment(host, attachment) {
 
 function uploadFile(host, file, progressCallback, successCallback) {
   const formData = createFormData(file);
+  // TODO use fetch
   const xhr = new XMLHttpRequest();
   const csrfToken = document.querySelector("input[name=csrfmiddlewaretoken]").value;
 
