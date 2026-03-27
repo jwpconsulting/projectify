@@ -3,15 +3,12 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from collections.abc import Mapping, Sequence
-from typing import Any, Generic, Literal, Optional, TypeVar, Union
+from typing import Any, TypeVar, Union
 
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db.models import Model
 
 from .exceptions import ErrorDetail, ValidationError
-from .fields import *  # noqa: F403
-from .fields import Field, empty
-from .relations import *  # noqa: F403
 
 # Ensure we don't pass in unserialized UUIDs
 SerializerData = Union[None, str, int, "SerializerList", "SerializerDict"]
@@ -34,35 +31,6 @@ ValidatedData = Any
 
 Context = Mapping[str, Any]
 
-class BaseSerializer:
-    context: Context
-    initial_data: Optional[SerializerData]
-    parent: Optional[Serializer]
-    fields: Mapping[str, Union[BaseSerializer, Field]]
-
-    child: Optional[Serializer]
-    many: bool
-
-    def __init__(
-        self,
-        instance: Optional[object] = None,
-        data: Union[SerializerData, type[empty]] = empty,
-        read_only: bool = False,
-        many: bool = False,
-        source: Optional[str] = None,
-        context: Optional[Context] = None,
-        **kwargs: Any,
-    ) -> None: ...
-    def to_internal_value(self, data: Any) -> ValidatedData: ...
-    def to_representation(self, instance: object) -> SerializerData: ...
-    def run_validation(
-        self, data: Union[SerializerData, type[empty]] = empty
-    ) -> ValidatedData: ...
-    def update(self, instance: Any, validated_data: ValidatedData) -> Any: ...
-    def create(self, validated_data: ValidatedData) -> Any: ...
-    def save(self, **kwargs: Any) -> Any: ...
-    def is_valid(self, *_: Any, raise_exception: bool = False) -> bool: ...
-
 # Inferred by inspecting rest_framework/serializers.py:as_serializer_error
 SerializerErrorField = Union[
     tuple[ErrorDetail],
@@ -79,42 +47,4 @@ def as_serializer_error(
 T = TypeVar("T")
 M = TypeVar("M", bound=Model)
 
-class Serializer(BaseSerializer):
-    # XXX not sure if some of these actually belong in the BaseSerializer
-    data: SerializerData
-    errors: Errors
-    validated_data: ValidatedData
-
-    def get_fields(self) -> Mapping[str, Union[Serializer, Field]]: ...
-
-class ListSerializer(Generic[M], BaseSerializer):
-    child: Optional[ModelSerializer[M]]
-    many: Literal[True]
-
-    initial_data: Optional[Sequence[SerializerData]]
-    instance: Optional[Sequence[M]]
-
-    def __init__(
-        self,
-        # This will be a deepcopy of self.child, which itself can be None
-        child: Optional[ModelSerializer[M]] = None,
-        instance: Sequence[M] = [],
-        data: SerializerList = [],
-        allow_empty: bool = True,
-        max_length: Optional[int] = None,
-        min_length: Optional[int] = None,
-    ) -> None: ...
-    def run_child_validation(self, data: SerializerData) -> SerializerData: ...
-
-class ModelSerializer(Generic[M], Serializer):
-    instance: Optional[M]
-    data: ModelSerializerData
-
-    def update(self, instance: M, validated_data: ValidatedData) -> M: ...
-    def create(self, validated_data: ValidatedData) -> M: ...
-    def save(self, **kwargs: Any) -> M: ...
-
-__all__ = (
-    "Field",
-    "ValidationError",
-)
+__all__ = ("ValidationError",)
