@@ -29,7 +29,7 @@
                         <ul class="flex flex-col gap-4">
                             {% for post in recent_posts %}
                                 <li class="flex flex-col gap-1">
-                                    {% anchor href="blog:detail" label=post.title slug=post.slug %}
+                                    {% anchor href="blog:post_detail" label=post.title slug=post.slug %}
                                     <time>
                                         {{ post.published|date:"F j, Y" }}
                                     </time>
