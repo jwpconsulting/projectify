@@ -7,9 +7,6 @@
 import django.db.models.constraints
 from django.db import migrations, models
 
-import pgtrigger.compiler
-import pgtrigger.migrations
-
 
 class Migration(migrations.Migration):
     """Migration."""
@@ -23,27 +20,9 @@ class Migration(migrations.Migration):
             old_name="WorkspaceBoard",
             new_name="Project",
         ),
-        pgtrigger.migrations.RemoveTrigger(
-            model_name="task",
-            name="ensure_correct_workspace",
-        ),
         migrations.RemoveConstraint(
             model_name="section",
             name="unique_workspace_board_order",
-        ),
-        pgtrigger.migrations.AddTrigger(
-            model_name="task",
-            trigger=pgtrigger.compiler.Trigger(
-                name="ensure_correct_workspace",
-                sql=pgtrigger.compiler.UpsertTriggerSql(
-                    func='\n                      DECLARE\n                        correct_workspace_id   INTEGER;\n                      BEGIN\n                        SELECT "workspace_workspace"."id" INTO correct_workspace_id\n                        FROM "workspace_workspace"\n                        INNER JOIN "workspace_project"\n                            ON ("workspace_workspace"."id" =                             "workspace_project"."workspace_id")\n                        INNER JOIN "workspace_section"\n                            ON ("workspace_project"."id" =                                  "workspace_section"."workspace_board_id")\n                        INNER JOIN "workspace_task"\n                            ON ("workspace_section"."id" =                                 "workspace_task"."workspace_board_section_id")\n                        WHERE "workspace_task"."id" = NEW.id\n                        LIMIT 1;\n                        IF correct_workspace_id != NEW.workspace_id THEN\n                            RAISE EXCEPTION \'invalid workspace_id: workspace being                                 inserted does not match correct derived workspace.\';\n                        END IF;\n                        RETURN NEW;\n                      END;',
-                    hash="7f4e3a12688f282868f292361f145d47b3b3228f",
-                    operation="INSERT OR UPDATE",
-                    pgid="pgtrigger_ensure_correct_workspace_b7606",
-                    table="workspace_task",
-                    when="BEFORE",
-                ),
-            ),
         ),
         migrations.AddConstraint(
             model_name="section",

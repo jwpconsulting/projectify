@@ -153,7 +153,6 @@ class Base(Configuration):  # type:ignore
     INSTALLED_APPS_THIRD_PARTY = (
         "cloudinary",
         "cloudinary_storage",
-        "pgtrigger",
         "rules.apps.AutodiscoverRulesConfig",
         "markdownify.apps.MarkdownifyConfig",
         # Allauth

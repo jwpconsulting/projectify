@@ -7,9 +7,6 @@
 import django.db.models.constraints
 from django.db import migrations, models
 
-import pgtrigger.compiler
-import pgtrigger.migrations
-
 
 class Migration(migrations.Migration):
     """
@@ -32,10 +29,6 @@ class Migration(migrations.Migration):
             name="section",
             order_with_respect_to="uuid",
         ),
-        pgtrigger.migrations.RemoveTrigger(
-            model_name="task",
-            name="ensure_correct_workspace",
-        ),
         migrations.RenameField(
             model_name="section",
             old_name="workspace_board",
@@ -52,19 +45,5 @@ class Migration(migrations.Migration):
         migrations.AlterOrderWithRespectTo(
             name="section",
             order_with_respect_to="project",
-        ),
-        pgtrigger.migrations.AddTrigger(
-            model_name="task",
-            trigger=pgtrigger.compiler.Trigger(
-                name="ensure_correct_workspace",
-                sql=pgtrigger.compiler.UpsertTriggerSql(
-                    func='\n                      DECLARE\n                        correct_workspace_id   INTEGER;\n                      BEGIN\n                        SELECT "workspace_workspace"."id" INTO correct_workspace_id\n                        FROM "workspace_workspace"\n                        INNER JOIN "workspace_project"\n                            ON ("workspace_workspace"."id" =                             "workspace_project"."workspace_id")\n                        INNER JOIN "workspace_section"\n                            ON ("workspace_project"."id" =                                  "workspace_section"."project_id")\n                        INNER JOIN "workspace_task"\n                            ON ("workspace_section"."id" =                                 "workspace_task"."section_id")\n                        WHERE "workspace_task"."id" = NEW.id\n                        LIMIT 1;\n                        IF correct_workspace_id != NEW.workspace_id THEN\n                            RAISE EXCEPTION \'invalid workspace_id: workspace being                                 inserted does not match correct derived workspace.\';\n                        END IF;\n                        RETURN NEW;\n                      END;',
-                    hash="e222aefaf8d26c4b463b0ace280e50ab4d337ab5",
-                    operation="INSERT OR UPDATE",
-                    pgid="pgtrigger_ensure_correct_workspace_b7606",
-                    table="workspace_task",
-                    when="BEFORE",
-                ),
-            ),
         ),
     ]

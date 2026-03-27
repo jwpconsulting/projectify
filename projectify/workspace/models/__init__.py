@@ -75,7 +75,7 @@ class Workspace(TitleDescriptionModel, BaseModel):
         super().refresh_from_db(*args, **kwargs)
 
     class Meta:
-        """Add constraints and triggers."""
+        """Add constraints."""
 
         constraints = (
             models.CheckConstraint(

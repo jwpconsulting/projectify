@@ -79,10 +79,10 @@ class TestChatMessage:
 class TestTask:
     """Test Task."""
 
-    def test_task_workspace_pgtrigger(
+    def test_ws_assign(
         self, task: Task, unrelated_workspace: Workspace
     ) -> None:
-        """Test database trigger for wrong workspace assignment."""
+        """Test that save checks the workspace."""
         # Changed from db.InternalError, see above in test_save_no_number
         task.workspace = unrelated_workspace
         with pytest.raises(ValidationError):
