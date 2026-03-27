@@ -13,8 +13,6 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-import pgtrigger
-
 from projectify.lib.models import BaseModel, TitleDescriptionModel
 from projectify.user.models import UserInvite
 
@@ -296,37 +294,6 @@ class Task(TitleDescriptionModel, BaseModel):
                 deferrable=models.Deferrable.DEFERRED,
             ),
         ]
-
-        triggers = (
-            pgtrigger.Trigger(
-                name="ensure_correct_workspace",
-                when=pgtrigger.Before,
-                operation=pgtrigger.Insert | pgtrigger.Update,
-                func="""
-                      DECLARE
-                        correct_workspace_id   INTEGER;
-                      BEGIN
-                        SELECT "workspace_workspace"."id" INTO correct_workspace_id
-                        FROM "workspace_workspace"
-                        INNER JOIN "workspace_project"
-                            ON ("workspace_workspace"."id" = \
-                            "workspace_project"."workspace_id")
-                        INNER JOIN "workspace_section"
-                            ON ("workspace_project"."id" = \
-                                 "workspace_section"."project_id")
-                        INNER JOIN "workspace_task"
-                            ON ("workspace_section"."id" = \
-                                "workspace_task"."section_id")
-                        WHERE "workspace_task"."id" = NEW.id
-                        LIMIT 1;
-                        IF correct_workspace_id != NEW.workspace_id THEN
-                            RAISE EXCEPTION 'invalid workspace_id: workspace being \
-                                inserted does not match correct derived workspace.';
-                        END IF;
-                        RETURN NEW;
-                      END;""",
-            ),
-        )
 
 
 class SubTask(TitleDescriptionModel, BaseModel):
