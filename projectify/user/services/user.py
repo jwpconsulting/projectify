@@ -15,7 +15,6 @@ from django.db.models.fields.files import FileDescriptor
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
-from rest_framework.request import Request
 
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.user.emails import (
@@ -60,8 +59,7 @@ def user_set_password(
     user: User,
     new_password: str,
     new_password_confirm: Optional[str] = None,
-    # XXX why both AuthenticatedHttpRequest and Request?
-    request: Union[AuthenticatedHttpRequest, Request, None] = None,
+    request: Union[AuthenticatedHttpRequest, None] = None,
 ) -> None:
     """Set a user's password if they don't have one yet."""
     if user.has_usable_password():
@@ -107,7 +105,7 @@ def user_change_password(
     new_password: str,
     # XXX make not Optional
     new_password_confirm: Optional[str] = None,
-    request: Union[AuthenticatedHttpRequest, Request, None] = None,
+    request: Union[AuthenticatedHttpRequest, None] = None,
 ) -> None:
     """Change a user's password."""
     no_match = (

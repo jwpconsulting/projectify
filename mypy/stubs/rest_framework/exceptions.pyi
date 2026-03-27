@@ -28,48 +28,4 @@ class APIException(Exception):
     def get_full_details(self) -> ErrorMessage: ...
 
 class ValidationError(APIException): ...
-class ParseError(APIException): ...
-class AuthenticationFailed(APIException): ...
-class NotAuthenticated(APIException): ...
 class PermissionDenied(APIException): ...
-class NotFound(APIException): ...
-
-class MethodNotAllowed(APIException):
-    def __init__(
-        self,
-        method: object,
-        detail: Optional[ErrorMessage] = None,
-        code: Optional[Code] = None,
-    ) -> None: ...
-
-AvailableRenderers = Sequence[str]
-
-class NotAcceptable(APIException):
-    available_renders: Optional[AvailableRenderers]
-    def __init__(
-        self,
-        method: object,
-        detail: Optional[ErrorMessage] = None,
-        code: Optional[Code] = None,
-        available_renderers: Optional[AvailableRenderers] = None,
-    ) -> None: ...
-
-class UnsupportedMediaType(APIException):
-    def __init__(
-        self,
-        media_type: object,
-        detail: Optional[ErrorMessage] = None,
-        code: Optional[Code] = None,
-    ) -> None: ...
-
-class Throttled(APIException):
-    extra_detail_singular: str
-    extra_detail_plural: str
-    default_code: str
-
-    def __init__(
-        self,
-        wait: Optional[int] = None,
-        detail: Optional[ErrorMessage] = None,
-        code: Optional[Code] = None,
-    ) -> None: ...
