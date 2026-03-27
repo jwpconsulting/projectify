@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-# SPDX-FileCopyrightText: 2024 JWP Consulting GK
+# SPDX-FileCopyrightText: 2024-2026 JWP Consulting GK
 # Common
 # ======
 
@@ -24,19 +24,7 @@ projectify/staticfiles/
 **/__pycache__
 .mypy_cache/
 .coverage
-# Django Tailwind
-projectify/theme/static_src/node_modules
-
-# Supervisor
-# ==========
-supervisord.log
-supervisord.pid
-*.rdb
 *.sqlite
-
-# podman-compose containers
-# =========================
-/build/
 
 # aspell stuff
 # ============
