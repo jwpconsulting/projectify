@@ -45,7 +45,6 @@ dev = [
     "selenium>=4.40.0,<5",
 ]
 test = [
-    "django-test-migrations>=1.3,<2",
     "django-types>=0,<1",
     "mypy>=1.10,<2",
     "pytest>=8,<9",
