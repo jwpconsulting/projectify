@@ -22,6 +22,23 @@ from django.views.decorators.http import require_http_methods
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 
+from .models import Post
+
+
+def post_list(request: HttpRequest) -> HttpResponse:
+    """Display list of blog posts."""
+    posts = Post.objects.select_related("body").order_by("-published")
+    context = {"posts": posts}
+    return render(request, "blog/post_list.html", context)
+
+
+def post_detail(request: HttpRequest, slug: str) -> HttpResponse:
+    """Display a single blog post."""
+    post = get_object_or_404(Post.objects.select_related("body"), slug=slug)
+    recent = Post.objects.select_related("body").order_by("-published")[:5]
+    context = {"post": post, "recent_posts": recent}
+    return render(request, "blog/post_detail.html", context)
+
 
 # SPDX-SnippetBegin
 # SPDX-License-Identifier: MIT

@@ -1,0 +1,27 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{% extends "blog/blog_base.html" %}
+{% load i18n %}
+{% load projectify %}
+{% block title %}
+    {% translate "Blog" %}
+{% endblock %}
+{% block blog_content %}
+    <div class="flex flex-col gap-8">
+        <h1 class="text-4xl font-bold">{% translate "Blog" %}</h1>
+        {% if posts %}
+            <div class="flex flex-col gap-8">
+                {% for post in posts %}
+                    <article class="flex flex-col gap-2">
+                        <h2 class="text-2xl">{% anchor href="blog:detail" label=post.title slug=post.slug %}</h2>
+                        <time>
+                            {{ post.published|date:"F j, Y" }}
+                        </time>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>{% translate "No blog posts yet." %}</p>
+        {% endif %}
+    </div>
+{% endblock blog_content %}

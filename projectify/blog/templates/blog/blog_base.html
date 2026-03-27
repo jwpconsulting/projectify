@@ -1,0 +1,11 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{% extends "storefront_base.html" %}
+{% load i18n %}
+{% load projectify %}
+{% block storefront_content %}
+    <div class="mx-auto px-4 py-8 w-full max-w-lg">
+        {% block blog_content %}
+        {% endblock blog_content %}
+    </div>
+{% endblock storefront_content %}

@@ -92,3 +92,30 @@ class AbstractDocument(models.Model):
 
 
 # SPDX-SnippetEnd
+
+
+class PostContent(AbstractDocument):
+    """Contains the large rich-text content for a post."""
+
+    content = DocumentContentField()
+
+
+class Post(BaseModel):
+    """Blog post."""
+
+    title = models.CharField(
+        verbose_name=_("Blog post title"),
+    )
+    slug = models.SlugField(
+        verbose_name=_("Blog post slug"),
+        unique=True,
+        max_length=255,
+    )
+    body = models.OneToOneField(
+        PostContent,
+        verbose_name=_("Blog post body"),
+        on_delete=models.CASCADE,
+    )
+    published = models.DateTimeField(
+        verbose_name=_("Blog post publish date"),
+    )

@@ -173,6 +173,7 @@ class Base(Configuration):  # type:ignore
         # TODO check if this can be alphabetized
         # Replaces 'django.contrib.admin'
         "projectify.admin.apps.ProjectifyAdminConfig",
+        "projectify.blog",
         "projectify.corporate.apps.CorporateConfig",
         "projectify.premail",
         "projectify.storefront",

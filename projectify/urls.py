@@ -74,6 +74,9 @@ urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
     path("", include("projectify.storefront.urls")),
     path("", include("projectify.help.urls")),
     path("onboarding/", include("projectify.onboarding.urls")),
+    # blog
+    path("blog/", include("projectify.blog.urls")),
+    # other
     path("manifest.json", manifest_view, name="manifest"),
     path(
         "robots.txt",
