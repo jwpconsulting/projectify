@@ -27,9 +27,11 @@ from typing import Any, TypedDict
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from django.utils.text import slugify
 
 from faker import Faker
 
+from projectify.blog.models import Post, PostContent
 from projectify.corporate.models import Customer
 from projectify.corporate.types import CustomerSubscriptionStatus
 from projectify.user.models import User
@@ -79,6 +81,9 @@ TASK_MAX_LABEL_COUNT = 10
 TASK_MIN_CHAT_MESSAGE_COUNT = 0
 TASK_MAX_CHAT_MESSAGE_COUNT = 10
 
+POST_CONTENT_MIN_PARAGRAPHS = 5
+POST_CONTENT_MAX_PARAGRAPHS = 15
+
 
 class Command(BaseCommand):
     """Command."""
@@ -90,6 +95,7 @@ class Command(BaseCommand):
     n_labels: int
     n_tasks: int
     n_add_users: int
+    n_posts: int
 
     def create_users(self) -> list["User"]:
         """Create users."""
@@ -359,6 +365,46 @@ class Command(BaseCommand):
         )
         self.stdout.write(f"Created customers for {len(customers)} workspaces")
 
+    def create_blog_posts(self) -> None:
+        """Create blog posts."""
+        existing_posts = Post.objects.count()
+        self.stdout.write(f"There are already {existing_posts} blog posts")
+        remaining_posts = max(0, self.n_posts - existing_posts)
+
+        post_contents = PostContent.objects.bulk_create(
+            [
+                PostContent(
+                    content="".join(
+                        [
+                            f"<p>{self.fake.paragraph()}</p>"
+                            for _ in range(
+                                randint(
+                                    POST_CONTENT_MIN_PARAGRAPHS,
+                                    POST_CONTENT_MAX_PARAGRAPHS,
+                                )
+                            )
+                        ]
+                    )
+                )
+                for _ in range(remaining_posts)
+            ]
+        )
+        self.stdout.write(f"Created {len(post_contents)} post contents")
+
+        posts = Post.objects.bulk_create(
+            [
+                Post(
+                    title=self.fake.sentence(),
+                    author=self.fake.name(),
+                    slug=slugify(self.fake.sentence()),
+                    body=post_content,
+                    published=self.fake.date_this_decade(),
+                )
+                for post_content in post_contents
+            ]
+        )
+        self.stdout.write(f"Created {len(posts)} blog posts")
+
     def add_arguments(self, parser: ArgumentParser) -> None:
         """Add arguments."""
         parser.add_argument(
@@ -397,6 +443,12 @@ class Command(BaseCommand):
             default=40,
             help="Ensure up to N tasks are in new section",
         )
+        parser.add_argument(
+            "--n-posts",
+            type=int,
+            default=40,
+            help="Ensure N blog posts are present",
+        )
 
     @transaction.atomic
     def handle(self, *args: object, **options: Any) -> None:
@@ -408,6 +460,7 @@ class Command(BaseCommand):
         self.n_labels = options["n_labels"]
         self.n_tasks = options["n_tasks"]
         self.n_add_users = options["n_add_users"]
+        self.n_posts = options["n_posts"]
         if self.n_add_users > self.n_users:
             self.stdout.write(
                 f"You are trying to add more users to each workspace "
@@ -423,3 +476,4 @@ class Command(BaseCommand):
         self.create_corporate_accounts(
             seats=self.n_users, workspaces=workspaces
         )
+        self.create_blog_posts()
