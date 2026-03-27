@@ -29,7 +29,7 @@
                             <h2 class="text-lg font-bold">{% trans helptopic.title %}</h2>
                             <p>{% trans helptopic.description %}</p>
                             <a href="{{ helptopic.href }}"
-                               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% trans "View this section" %}</a>
+                               class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base">{% blocktrans with topic=helptopic.title %} {{ topic }} help{% endblocktrans %}</a>
                         </section>
                     {% endfor %}
                 </div>
