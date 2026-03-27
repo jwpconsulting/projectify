@@ -52,7 +52,8 @@ class TestLogOutDjango:
         assert response.context["user"].is_authenticated, response.content
 
         # Now log out
-        with django_assert_num_queries(6):
+        # went up from 6 -> 7 because we show blog posts on the landing page
+        with django_assert_num_queries(7):
             response = client.post(resource_url, follow=True)
         assert response.status_code == 200, response.content
         assert response.redirect_chain == [

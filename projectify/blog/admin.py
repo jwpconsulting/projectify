@@ -66,7 +66,7 @@ class PostAdminForm(forms.ModelForm):
         post: Post = super().save(commit=False)
         content_text = self.cleaned_data["content"]
 
-        if not post.body:
+        if not getattr(post, "body", None):
             body = PostContent.objects.create(content=content_text)
             post.body = body
         else:

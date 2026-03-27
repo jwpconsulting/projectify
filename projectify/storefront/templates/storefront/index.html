@@ -120,6 +120,23 @@
             {% trans "Projectify is 100 % Free Software" as title %}
             {% url "storefront:free_software" as learnmore_url %}
             {% include "storefront/common/solutions_detail_item.html" with title=title text=_("We respect your freedom and privacy and provide you with the source code under a Free Software license. The Projectify application is licensed under the GNU Affero General Public License (AGPL) version 3.0 or later.") src="open-source.png" alt=_("Birds freed from their gilded cages") imgPosition="left" learnmore_url=learnmore_url learnmore_label=_("Learn more about Free Software") %}
+            {% if latest_posts %}
+                <section class="flex flex-col gap-7">
+                    <header class="flex flex-col gap-3">
+                        <h2 class="text-2xl font-bold sm:text-4xl">{% trans "Recent blog posts" %}</h2>
+                        <p>{% trans "Here's where we publish product updates and other news." %}</p>
+                    </header>
+                    <ul class="flex flex-col gap-4 list-disc list-inside">
+                        {% for post in latest_posts %}
+                            <li>
+                                {% anchor href=post.get_absolute_url label=post.title %}
+                                {% blocktrans with author=post.author date=post.published %}{{ date }}{% endblocktrans %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    {% anchor label=_("View all blog posts") href="blog:post_list" %}
+                </section>
+            {% endif %}
         </div>
     </main>
 {% endblock storefront_content %}
