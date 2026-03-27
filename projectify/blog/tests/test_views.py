@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
 # SPDX-FileCopyrightText: 2022, 2026 JWP Consulting GK
-"""Blog tests."""
+"""Test blog views."""
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client
@@ -9,7 +9,7 @@ from django.urls import reverse
 
 import pytest
 
-from .models import Post
+from ..models import Post
 
 pytestmark = pytest.mark.django_db
 
@@ -36,7 +36,7 @@ def test_upload_attachment_superuser_can_upload(
     response = superuser_client.post(
         reverse("blog:upload_attachment"), {"file": uploaded_file}
     )
-    assert response.status_code == 201
+    assert response.status_code == 201, response.content
     assert "url" in response.json()
 
 
@@ -58,3 +58,19 @@ def test_upload_attachment_anonymous_user_cannot_upload(
         reverse("blog:upload_attachment"), {"file": uploaded_file}
     )
     assert response.status_code == 302
+
+
+def test_upload_attachment_rejects_invalid_file_types(
+    superuser_client: Client,
+) -> None:
+    """Test that upload rejects files not in the allowlist."""
+    invalid_file = SimpleUploadedFile(
+        "test.txt",
+        b"This is a text file",
+        content_type="text/plain",
+    )
+    response = superuser_client.post(
+        reverse("blog:upload_attachment"), {"file": invalid_file}
+    )
+    assert response.status_code == 400, response.content
+    assert b"not one of the allowed file types" in response.content

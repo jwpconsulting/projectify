@@ -7,8 +7,7 @@ from typing import Any
 
 from django import forms
 from django.contrib import admin
-from django.urls import reverse
-from django.utils.safestring import mark_safe
+from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 from projectify.blog.models import (
@@ -92,5 +91,7 @@ class PostAdmin(admin.ModelAdmin[Post]):
     @admin.display(description=_("URL"))
     def post_url(self, instance: Post) -> str:
         """Return link to blog post."""
-        url = reverse("blog:detail", kwargs={"slug": instance.slug})
-        return mark_safe(f'<a href="{url}" target="_blank">View post</a>')
+        return format_html(
+            '<a href="{url}" target="_blank">View post</a>',
+            url=instance.get_absolute_url(),
+        )

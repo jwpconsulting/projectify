@@ -10,7 +10,7 @@ from .views import post_detail, post_list, upload_attachment
 app_name = "blog"
 
 urlpatterns = [
-    path("", post_list, name="list"),
+    path("", post_list, name="post_list"),
     path("upload", upload_attachment, name="upload_attachment"),
-    path("<slug:slug>/", post_detail, name="detail"),
+    path("<slug:slug>/", post_detail, name="post_detail"),
 ]
