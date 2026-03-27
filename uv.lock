@@ -332,18 +332,6 @@ wheels = [
 ]
 
 [[package]]
-name = "django-test-migrations"
-version = "1.3.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "typing-extensions" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/66/dc/2252f7c674ea5f8a43415b7a7a5f6b5fee8752f85cbef797e227c2d24733/django_test_migrations-1.3.0.tar.gz", hash = "sha256:b42edb1af481e08c9d91c95aa9b373e76e905a931bc19c086ec00a6cb936876e", size = 19944, upload-time = "2023-04-29T15:20:30.95Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a2/61/156e4a84aef605765ae7e2d111640de526fbb48ae1b1a77ec032bc116377/django_test_migrations-1.3.0-py3-none-any.whl", hash = "sha256:b52b29475f9a1bcaa4512f2ec8fad08b5f470cf1cf522e86b7d950252fb6fbf1", size = 24690, upload-time = "2023-04-29T15:20:28.266Z" },
-]
-
-[[package]]
 name = "django-types"
 version = "0.20.0"
 source = { registry = "https://pypi.org/simple" }
@@ -675,7 +663,6 @@ dev = [
     { name = "selenium" },
 ]
 test = [
-    { name = "django-test-migrations" },
     { name = "django-types" },
     { name = "djlint" },
     { name = "mypy" },
@@ -717,7 +704,6 @@ dev = [
     { name = "selenium", specifier = ">=4.40.0,<5" },
 ]
 test = [
-    { name = "django-test-migrations", specifier = ">=1.3,<2" },
     { name = "django-types", specifier = ">=0,<1" },
     { name = "djlint", specifier = ">=1.36.1,<2" },
     { name = "mypy", specifier = ">=1.10,<2" },

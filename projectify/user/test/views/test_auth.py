@@ -153,7 +153,8 @@ class TestSignUpDjango:
             },
         )
         # The view creates no new user
-        assert User.objects.count() == 4
+        # XXX flaky
+        assert User.objects.count() == 4, User.objects.all()
         assert response.status_code == 429
 
     def test_rate_limit_per_ip_regardless_of_success(
