@@ -6,6 +6,7 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
+from projectify.blog.selectors.post import post_list_published
 from projectify.lib.settings import get_settings
 
 
@@ -53,7 +54,9 @@ def credits(request: HttpRequest) -> HttpResponse:
 
 def index(request: HttpRequest) -> HttpResponse:
     """Serve landing page."""
-    return render(request, "storefront/index.html")
+    latest_posts = post_list_published()[:3]
+    context = {"latest_posts": latest_posts}
+    return render(request, "storefront/index.html", context)
 
 
 def free_software(request: HttpRequest) -> HttpResponse:
