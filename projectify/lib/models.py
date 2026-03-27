@@ -9,10 +9,11 @@ from typing import Any
 from django.db.models import CharField, DateTimeField, Model, TextField
 from django.utils.translation import gettext_lazy as _
 
+
 # The following code was taken from django-extensions
-# Copyright (c) 2007 Michael Trier
-
-
+# SPDX-SnippetBegin
+# SPDX-License-Identifier: MIT
+# SPDX-SnippetCopyrightText: 2007 Michael Trier
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
@@ -108,6 +109,9 @@ class TitleDescriptionModel(Model):
         """Meta."""
 
         abstract = True
+
+
+# SPDX-SnippetEnd
 
 
 class BaseModel(Model):
