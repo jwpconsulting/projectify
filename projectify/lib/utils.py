@@ -69,3 +69,4 @@ def get_image_format(file: UploadedFile) -> Optional[str]:
             file.name,
             exc_info=e,
         )
+    return None
