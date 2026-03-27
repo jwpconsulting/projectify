@@ -23,4 +23,9 @@ class Migration(migrations.Migration):
             ),
             preserve_default=False,
         ),
+        migrations.AlterField(
+            model_name="post",
+            name="published",
+            field=models.DateField(verbose_name="Blog post publish date"),
+        ),
     ]
