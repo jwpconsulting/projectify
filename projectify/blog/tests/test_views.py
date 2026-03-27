@@ -28,6 +28,12 @@ def test_post_detail_displays_post(client: Client, post: Post) -> None:
     assert post.title in response.content.decode()
 
 
+def test_post_detail_not_found(client: Client) -> None:
+    """Test retrieving a non-existing post."""
+    response = client.get(reverse("blog:post_detail", args=["bla"]))
+    assert response.status_code == 404
+
+
 def test_upload_attachment_superuser_can_upload(
     superuser_client: Client,
     uploaded_file: SimpleUploadedFile,

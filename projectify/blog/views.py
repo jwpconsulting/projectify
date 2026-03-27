@@ -12,12 +12,13 @@ from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import UploadedFile
 from django.forms.utils import ErrorList
 from django.http import (
+    Http404,
     HttpRequest,
     HttpResponse,
     HttpResponseForbidden,
     JsonResponse,
 )
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
@@ -26,20 +27,22 @@ from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.utils import get_image_format
 from projectify.lib.views import platform_view
 
-from .models import Post
+from .selectors.post import post_find_by_slug, post_list_published
 
 
 def post_list(request: HttpRequest) -> HttpResponse:
     """Display list of blog posts."""
-    posts = Post.objects.select_related("body").order_by("-published")
+    posts = post_list_published()
     context = {"posts": posts}
     return render(request, "blog/post_list.html", context)
 
 
 def post_detail(request: HttpRequest, slug: str) -> HttpResponse:
     """Display a single blog post."""
-    post = get_object_or_404(Post.objects.select_related("body"), slug=slug)
-    recent = Post.objects.select_related("body").order_by("-published")[:5]
+    post = post_find_by_slug(slug=slug)
+    if not post:
+        raise Http404(_("Post with slug {slug} not found").format(slug=slug))
+    recent = post_list_published()[:5]
     context = {"post": post, "recent_posts": recent}
     return render(request, "blog/post_detail.html", context)
 
