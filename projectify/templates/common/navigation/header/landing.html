@@ -5,21 +5,21 @@
 {% load i18n %}
 <nav class="flex-row items-center justify-between border-b-2 border-border bg-foreground px-6 py-4 md:flex"
      aria-label="{% translate "Projectify" %}">
-    <div class="flex flex-row items-center gap-4">
-        <a href="{% url "storefront:landing" %}" class="shrink min-w-20">
+    <div class="flex flex-row flex-wrap gap-2">
+        <a href="{% url "storefront:landing" %}" class="shrink min-w-30">
             <img src="{% static "polylogo.svg" %}"
                  width="171"
                  height="36"
                  alt="Go to landing page">
         </a>
-        <div class="flex flex-row gap-2">
-            <a href="{% url "storefront:solutions-list" %}"
-               class="text-base-content font-bold flex flex-row items-center gap-2 rounded-lg p-2 hover:text-primary active:text-primary">{% trans "Solutions" %}</a>
-            <a href="{% url "storefront:pricing" %}"
-               class="text-base-content font-bold flex flex-row items-center gap-2 rounded-lg p-2 hover:text-primary active:text-primary">{% trans "Pricing" %}</a>
-            <a href="{% url "help:list" %}"
-               class="text-base-content font-bold flex flex-row items-center gap-2 rounded-lg p-2 hover:text-primary active:text-primary">{% trans "Help" %}</a>
-        </div>
+        <a href="{% url "storefront:solutions-list" %}"
+           class="text-base-content font-bold flex flex-row items-center gap-2 rounded-lg p-2 hover:text-primary active:text-primary">{% trans "Solutions" %}</a>
+        <a href="{% url "storefront:pricing" %}"
+           class="text-base-content font-bold flex flex-row items-center gap-2 rounded-lg p-2 hover:text-primary active:text-primary">{% trans "Pricing" %}</a>
+        <a href="{% url "help:list" %}"
+           class="text-base-content font-bold flex flex-row items-center gap-2 rounded-lg p-2 hover:text-primary active:text-primary">{% trans "Help" %}</a>
+        <a href="{% url "blog:post_list" %}"
+           class="text-base-content font-bold flex flex-row items-center gap-2 rounded-lg p-2 hover:text-primary active:text-primary">{% trans "Blog" %}</a>
     </div>
     <div class="flex shrink-0 flex-row items-center gap-2">
         {% if user.is_authenticated %}
