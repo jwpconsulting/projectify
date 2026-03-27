@@ -10,16 +10,7 @@ echo "Version: $version"
 PYPROJECT_TOML="pyproject.toml"
 UV_LOCK="uv.lock"
 
-next_cmd=$(printf 'sed -E -i -e "s/^version = ".+"$/version = \\"%s\\"/" "%s"' \
-    "$version" \
-    "$PYPROJECT_TOML"
-)
-printf "About to run %s\nContinue? (c-c to exit)" "$next_cmd"
-read -r _
-eval "$next_cmd"
-
-next_cmd="uv lock"
-echo "Updating lock file for $PYPROJECT_TOML"
+next_cmd=$(printf 'uv version "%s"' "$version")
 printf "About to run %s\nContinue? (c-c to exit)" "$next_cmd"
 read -r _
 eval "$next_cmd"
