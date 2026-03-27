@@ -124,7 +124,6 @@ function configureToolbar() {
       "[data-trix-attribute=heading1]",
     )
     trixTitleButton.insertAdjacentHTML("afterend", h2ButtonHTML)
-    trixTitleButton.remove()
 
     const h2Button = toolbarElement.querySelector("[data-trix-attribute=subHeadingh2]")
     h2Button.insertAdjacentHTML("afterend", h3ButtonHTML)
