@@ -57,8 +57,8 @@ class PostAdminForm(forms.ModelForm):
         """Sanitize content."""
         # We clean the content on top of cleaning it in
         # RichTextField.pre_save()
-        content = self.cleaned_data["content"]
-        self.cleaned_data["content"] = clean_post_text(content)
+        content: str = clean_post_text(self.cleaned_data["content"])
+        self.cleaned_data["content"] = content
         return content
 
     def save(self, commit: bool = True) -> Post:
