@@ -356,18 +356,6 @@ wheels = [
 ]
 
 [[package]]
-name = "djangorestframework"
-version = "3.15.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/2c/ce/31482eb688bdb4e271027076199e1aa8d02507e530b6d272ab8b4481557c/djangorestframework-3.15.2.tar.gz", hash = "sha256:36fe88cd2d6c6bec23dca9804bab2ba5517a8bb9d8f47ebc68981b56840107ad", size = 1067420, upload-time = "2024-06-19T07:59:32.891Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/7c/b6/fa99d8f05eff3a9310286ae84c4059b08c301ae4ab33ae32e46e8ef76491/djangorestframework-3.15.2-py3-none-any.whl", hash = "sha256:2b8871b062ba1aefc2de01f773875441a961fefbf79f5eed1e32b2f096944b20", size = 1071235, upload-time = "2024-06-19T07:59:26.106Z" },
-]
-
-[[package]]
 name = "djlint"
 version = "1.36.4"
 source = { registry = "https://pypi.org/simple" }
@@ -670,7 +658,6 @@ dependencies = [
     { name = "django-cloudinary-storage" },
     { name = "django-markdownify" },
     { name = "django-ratelimit" },
-    { name = "djangorestframework" },
     { name = "gunicorn" },
     { name = "pillow" },
     { name = "psycopg", extra = ["c"] },
@@ -713,7 +700,6 @@ requires-dist = [
     { name = "django-cloudinary-storage", specifier = "~=0.3.0" },
     { name = "django-markdownify", specifier = ">=0.9.5,<0.10" },
     { name = "django-ratelimit", specifier = ">=4.1.0,<5" },
-    { name = "djangorestframework", specifier = ">=3,<4" },
     { name = "gunicorn", specifier = ">=23,<24" },
     { name = "pillow", specifier = ">=12.1.1" },
     { name = "psycopg", extras = ["c"], specifier = ">=3.1.18,<4" },
