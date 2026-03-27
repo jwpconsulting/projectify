@@ -4,7 +4,7 @@
 
 [project]
 name = "projectify"
-version = "2026.3.15"
+version = "2026.3.27"
 description = "Projectify Backend"
 requires-python = "~=3.12.12"
 readme = "README.md"
