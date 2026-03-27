@@ -42,7 +42,7 @@ def post_detail(request: HttpRequest, slug: str) -> HttpResponse:
     post = post_find_by_slug(slug=slug)
     if not post:
         raise Http404(_("Post with slug {slug} not found").format(slug=slug))
-    recent = post_list_published()[:5]
+    recent = post_list_published(exclude=post)
     context = {"post": post, "recent_posts": recent}
     return render(request, "blog/post_detail.html", context)
 
