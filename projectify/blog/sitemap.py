@@ -25,7 +25,7 @@ class BlogSitemap(sitemaps.Sitemap):
         See names in blog/urls.py.
         """
         posts = list(Post.objects.all())
-        return ["blog:list", *posts]
+        return ["blog:post_list", *posts]
 
     def location(self, obj: Union[str, Post]) -> str:  # type: ignore[override]
         """Retrieve location for item."""
@@ -33,7 +33,7 @@ class BlogSitemap(sitemaps.Sitemap):
             case str():
                 return reverse(obj)
             case Post(slug=slug):
-                return reverse("blog:detail", kwargs={"slug": slug})
+                return reverse("blog:post_detail", kwargs={"slug": slug})
 
     def lastmod(self, obj: Union[str, Post]) -> Optional[datetime]:
         """Return last modification date for posts."""
