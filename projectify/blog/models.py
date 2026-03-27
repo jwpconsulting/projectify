@@ -103,19 +103,12 @@ class PostContent(AbstractDocument):
 class Post(BaseModel):
     """Blog post."""
 
-    title = models.CharField(
-        verbose_name=_("Blog post title"),
-    )
+    title = models.CharField(verbose_name=_("Blog post title"))
+    author = models.CharField(verbose_name=_("Blog post author"))
     slug = models.SlugField(
-        verbose_name=_("Blog post slug"),
-        unique=True,
-        max_length=255,
+        verbose_name=_("Blog post slug"), unique=True, max_length=255
     )
     body = models.OneToOneField(
-        PostContent,
-        verbose_name=_("Blog post body"),
-        on_delete=models.CASCADE,
+        PostContent, verbose_name=_("Blog post body"), on_delete=models.CASCADE
     )
-    published = models.DateTimeField(
-        verbose_name=_("Blog post publish date"),
-    )
+    published = models.DateTimeField(verbose_name=_("Blog post publish date"))
