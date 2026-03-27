@@ -3,9 +3,9 @@
 # SPDX-FileCopyrightText: 2025 JWP Consulting GK
 """Storefront urlpatterns."""
 
-from django.urls import include, path, reverse_lazy
-from django.views.generic import RedirectView
+from django.urls import include, path
 
+from projectify.lib.views import permanent_redirect
 from projectify.storefront.views import (
     accessibility,
     contact_us,
@@ -47,7 +47,7 @@ urlpatterns = [
     path("solutions", solutions_index, name="solutions-list"),
     path(
         "solutions/",
-        RedirectView.as_view(url=reverse_lazy("storefront:solutions-list")),
+        permanent_redirect("storefront:solutions-list"),
     ),
     path(
         "solutions/development-teams",
@@ -64,9 +64,7 @@ urlpatterns = [
     *(
         path(
             p,
-            RedirectView.as_view(
-                url=reverse_lazy("storefront:solutions-list")
-            ),
+            permanent_redirect("storefront:solutions-list"),
         )
         for p in [
             "solutions/personal-use",
