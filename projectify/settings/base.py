@@ -423,23 +423,29 @@ class Base(Configuration):  # type:ignore
             ],
             "WHITELIST_TAGS": [
                 "a",
-                "abbr",
-                "acronym",
-                "b",
+                # Blocks
                 "blockquote",
+                "div",
+                "p",
+                # Formatting
                 "em",
-                "i",
+                "strong",
+                "sup",
+                "br",
+                # Lists
+                "ul",
                 "li",
                 "ol",
-                "p",
-                "strong",
-                "ul",
+                # Headings
                 "h1",
                 "h2",
                 "h3",
+                # Code
                 "pre",
                 "code",
-                "sup",
+                # HTML 5 things
+                "abbr",
+                "acronym",
                 # Table things
                 "table",
                 "thead",

@@ -78,6 +78,24 @@ function patchTrixEditorWithNameSetter() {
 document.addEventListener("DOMContentLoaded", () => {
   initializeEditors();
   patchTrixEditorWithNameSetter();
+  // https://github.com/basecamp/trix/issues/117#issuecomment-463275725
+  // https://github.com/basecamp/trix/issues/680#issuecomment-735742942
+  Trix.config.blockAttributes.default.tagName = "p"
+  Trix.config.blockAttributes.default.breakOnReturn = true;
+
+  Trix.Block.prototype.breaksOnReturn = function(){
+    const attr = this.getLastAttribute();
+    // https://github.com/basecamp/trix/issues/680#issuecomment-1591104806
+    const config = Trix.config.blockAttributes[attr ? attr : "default"];
+    return config ? config.breakOnReturn : false;
+  };
+  Trix.LineBreakInsertion.prototype.shouldInsertBlockBreak = function(){
+    if(this.block.hasAttributes() && this.block.isListItem() && !this.block.isEmpty()) {
+      return this.startLocation.offset > 0
+    } else {
+      return !this.shouldBreakFormattedBlock() ? this.breaksOnReturn : false;
+    }
+  };
 });
 
 // Export the initializeEditors function so it can be called from other scripts
