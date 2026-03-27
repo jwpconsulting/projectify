@@ -323,18 +323,6 @@ wheels = [
 ]
 
 [[package]]
-name = "django-pgtrigger"
-version = "4.11.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/3a/df/86f2b83396e7989e9c026dcd06c870bcbcb475ceab1610736928b1862c76/django_pgtrigger-4.11.0.tar.gz", hash = "sha256:35843058d6fb6e0077d26e111f121852130b2e1d77e739077efbb2dae3d67f80", size = 29899, upload-time = "2023-11-26T22:28:36.304Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/69/65/bb2818f69e3c715ffc6ce808463a026473e71cef76d2467990dd60bbb453/django_pgtrigger-4.11.0-py3-none-any.whl", hash = "sha256:44bb04b240f2b09add0f62aad9d02fc0e3698e88a1b7fe9840eb7fd4786ae9e7", size = 33243, upload-time = "2023-11-26T22:28:34.453Z" },
-]
-
-[[package]]
 name = "django-ratelimit"
 version = "4.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -681,7 +669,6 @@ dependencies = [
     { name = "django-browser-reload" },
     { name = "django-cloudinary-storage" },
     { name = "django-markdownify" },
-    { name = "django-pgtrigger" },
     { name = "django-ratelimit" },
     { name = "djangorestframework" },
     { name = "gunicorn" },
@@ -725,7 +712,6 @@ requires-dist = [
     { name = "django-browser-reload", specifier = ">=1.21.0" },
     { name = "django-cloudinary-storage", specifier = "~=0.3.0" },
     { name = "django-markdownify", specifier = ">=0.9.5,<0.10" },
-    { name = "django-pgtrigger", specifier = "~=4.11.0" },
     { name = "django-ratelimit", specifier = ">=4.1.0,<5" },
     { name = "djangorestframework", specifier = ">=3,<4" },
     { name = "gunicorn", specifier = ">=23,<24" },

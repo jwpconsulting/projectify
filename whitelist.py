@@ -15,8 +15,6 @@ constraints  # unused variable (workspace/models.py:967)
 order_with_respect_to  # unused variable (workspace/models.py:966)
 ordering  # unused variable (workspace/models.py:1022)
 unique_together  # unused variable (workspace/models.py:892)
-# pg triggers
-triggers
 # Pytest
 pytestmark
 # DRF serializers

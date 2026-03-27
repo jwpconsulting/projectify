@@ -6,8 +6,6 @@
 
 from django.db import migrations
 
-import pgtrigger.migrations
-
 
 class Migration(migrations.Migration):
     """Migration."""
@@ -28,13 +26,5 @@ class Migration(migrations.Migration):
         migrations.RemoveField(
             model_name="task",
             name="number",
-        ),
-        pgtrigger.migrations.RemoveTrigger(
-            model_name="workspace",
-            name="ensure_correct_highest_task_number",
-        ),
-        pgtrigger.migrations.RemoveTrigger(
-            model_name="task",
-            name="read_only_task_number",
         ),
     ]

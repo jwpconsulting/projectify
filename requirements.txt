@@ -85,7 +85,6 @@ django==6.0.3 \
     #   django-anymail
     #   django-browser-reload
     #   django-markdownify
-    #   django-pgtrigger
     #   djangorestframework
     #   projectify
 django-allauth==65.14.3 \
@@ -107,10 +106,6 @@ django-cloudinary-storage==0.3.0 \
 django-markdownify==0.9.5 \
     --hash=sha256:2c4ae44e386c209453caf5e9ea1b74f64535985d338ad2d5ad5e7089cc94be86 \
     --hash=sha256:34c34eba4a797282a5c5bd97b13cec84d6a4c0673ad47ce1c1d000d74dd8d4ab
-    # via projectify
-django-pgtrigger==4.11.0 \
-    --hash=sha256:35843058d6fb6e0077d26e111f121852130b2e1d77e739077efbb2dae3d67f80 \
-    --hash=sha256:44bb04b240f2b09add0f62aad9d02fc0e3698e88a1b7fe9840eb7fd4786ae9e7
     # via projectify
 django-ratelimit==4.1.0 \
     --hash=sha256:555943b283045b917ad59f196829530d63be2a39adb72788d985b90c81ba808b \
