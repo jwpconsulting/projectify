@@ -655,9 +655,7 @@ def post_content(faker: Faker) -> PostContent:
 @pytest.fixture
 def post(faker: Faker, now: datetime, post_content: PostContent) -> Post:
     """Return a blog post."""
+    title = faker.sentence()
     return Post.objects.create(
-        title=faker.sentence(),
-        slug=faker.slug(),
-        body=post_content,
-        published=now,
+        title=title, slug=faker.slug(), body=post_content, published=now.date()
     )

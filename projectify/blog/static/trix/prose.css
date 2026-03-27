@@ -3,6 +3,9 @@
 .django-prose-editor-container {
   overflow: auto;
 }
+form .aligned .django-prose-editor-container trix-editor {
+    min-height: 350px;
+}
 
 form .aligned .django-prose-editor-container trix-editor ul {
   margin-left: initial;

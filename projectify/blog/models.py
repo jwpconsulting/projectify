@@ -7,6 +7,8 @@ from typing import Any
 
 from django import forms
 from django.db import models
+from django.urls import reverse
+from django.utils import safestring
 from django.utils.html import strip_tags
 from django.utils.translation import gettext_lazy as _
 
@@ -27,16 +29,21 @@ class RichTextEditor(forms.Textarea):
     class Media:
         """Use vendored in {trix,prose}.{css,js}."""
 
-        css = {
-            "all": (
-                "trix/trix.css",
-                "trix/prose.css",
-            ),
-        }
-        js = (
-            "trix/trix.js",
-            "trix/prose.js",
-        )
+        css = {"all": ("trix/trix.css", "trix/prose.css")}
+        js = ("trix/trix.js", "trix/prose.js")
+
+
+def clean_post_text(text: str) -> safestring.SafeString:
+    """Clean the text for a blog post."""
+    settings = get_settings()
+    tags = settings.MARKDOWNIFY["default"]["WHITELIST_TAGS"]
+    attrs = settings.MARKDOWNIFY["default"]["WHITELIST_ATTRS"]
+    sanitized_html: str = bleach.clean(text, tags=tags, attributes=attrs)  # type: ignore[no-untyped-call]
+    # Remember that just marking it "safe" doesn't make it safe
+    # sanitized_html is safe to mark as "safe" because `bleach.clean` has
+    # cleaned it.
+    safe_html = safestring.mark_safe(sanitized_html)
+    return safe_html
 
 
 class RichTextField(models.TextField):  # type: ignore
@@ -50,16 +57,12 @@ class RichTextField(models.TextField):  # type: ignore
 
     def pre_save(self, model_instance: Any, add: Any) -> str:
         """Pre save."""
-        settings = get_settings()
+        del add
         raw_html: str = getattr(model_instance, self.attname)
         if not raw_html:
             return raw_html
 
-        sanitized_html: str = bleach.clean(
-            raw_html,
-            tags=settings.MARKDOWNIFY["default"]["WHITELIST_TAGS"],
-            attributes=settings.MARKDOWNIFY["default"]["WHITELIST_ATTRS"],
-        )  # type: ignore[no-untyped-call]
+        sanitized_html = clean_post_text(raw_html)
         return sanitized_html
 
 
@@ -103,19 +106,25 @@ class PostContent(AbstractDocument):
 class Post(BaseModel):
     """Blog post."""
 
-    title = models.CharField(
-        verbose_name=_("Blog post title"),
-    )
+    title = models.CharField(verbose_name=_("Blog post title"))
+    author = models.CharField(verbose_name=_("Blog post author"))
     slug = models.SlugField(
-        verbose_name=_("Blog post slug"),
-        unique=True,
-        max_length=255,
+        verbose_name=_("Blog post slug"), unique=True, max_length=255
     )
     body = models.OneToOneField(
-        PostContent,
-        verbose_name=_("Blog post body"),
-        on_delete=models.CASCADE,
+        PostContent, verbose_name=_("Blog post body"), on_delete=models.CASCADE
     )
-    published = models.DateTimeField(
-        verbose_name=_("Blog post publish date"),
-    )
+    published = models.DateField(verbose_name=_("Blog post publish date"))
+
+    def __str__(self) -> str:
+        """Return string representation."""
+        return self.title
+
+    def get_absolute_url(self) -> str:
+        """Return absolute URL for this post."""
+        return reverse("blog:post_detail", kwargs={"slug": self.slug})
+
+    class Meta(BaseModel.Meta):
+        """Meta options."""
+
+        ordering = ["-published"]

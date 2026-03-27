@@ -4,11 +4,13 @@
 """Projectify utils."""
 
 import logging
+from io import BytesIO
 from pathlib import Path
 from typing import Optional, Tuple
 
 from django.contrib.staticfiles import finders
 from django.core.cache import cache
+from django.core.files.uploadedfile import UploadedFile
 from django.templatetags import static
 
 from PIL import Image
@@ -51,3 +53,20 @@ def static_image_get_with_dimensions(
     result = static.static(final_src), width, height
     cache.set(cache_key, result)
     return result
+
+
+def get_image_format(file: UploadedFile) -> Optional[str]:
+    """Detect image format using Pillow."""
+    file.seek(0)
+    image_data = BytesIO(file.read())
+    file.seek(0)
+    try:
+        with Image.open(image_data) as img:
+            return img.format
+    except Exception as e:
+        logger.warning(
+            "Couldn't detect image format for file %s",
+            file.name,
+            exc_info=e,
+        )
+    return None

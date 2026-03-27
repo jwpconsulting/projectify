@@ -17,12 +17,14 @@ from typing import Union
 
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
-from django.urls import URLPattern, URLResolver, include, path, reverse_lazy
-from django.views.generic import RedirectView, TemplateView
+from django.urls import URLPattern, URLResolver, include, path
+from django.views.generic import TemplateView
 
 from allauth.urls import build_provider_urlpatterns
 
+from projectify.blog.sitemap import BlogSitemap
 from projectify.help.sitemap import HelpSitemap
+from projectify.lib.views import permanent_redirect
 from projectify.storefront.sitemap import StorefrontSitemap
 
 from .lib.settings import get_settings
@@ -40,6 +42,7 @@ settings = get_settings()
 sitemaps = {
     "storefront": StorefrontSitemap,
     "help": HelpSitemap,
+    "blog": BlogSitemap,
 }
 
 thirdparty_logins = build_provider_urlpatterns()
@@ -52,7 +55,7 @@ allauth_urls = (
     path("user/auth/", include("allauth.socialaccount.urls")),
     path(
         "user/auth/login/",
-        RedirectView.as_view(url=reverse_lazy("users:log-in")),
+        permanent_redirect("users:log-in"),
         name="account_login",
     ),
 )

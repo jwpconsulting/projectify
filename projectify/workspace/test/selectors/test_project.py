@@ -47,11 +47,15 @@ def test_project_detail_query_set(
     task_found = section.task_set.first()
     assert task_found
     # Check whether first team member is marked as filtered
+    # XXX flaky test Justus 2026-03-27
     first_team_member, second_team_member = (
         project_first.workspace.teammember_set.all()
     )
-    assert getattr(first_team_member, "is_filtered") is True
-    assert getattr(second_team_member, "is_filtered") is False
+    first_filtered, second_filtered = (
+        getattr(first_team_member, "is_filtered"),
+        getattr(second_team_member, "is_filtered"),
+    )
+    assert (first_filtered, second_filtered) == (True, False)
 
     # When filtering by the first team member, and unassigned tasks, we should
     # get both tasks

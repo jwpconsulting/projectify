@@ -323,6 +323,12 @@ class Base(Configuration):  # type:ignore
 
     USE_TZ = True
 
+    # BLog
+    # These are the names as returned by Pillow.Image.open().format
+    BLOG_ALLOWED_FILE_TYPES = {"PNG", "JPEG"}
+    # 1 MiB
+    BLOG_ALLOWED_FILE_SIZE = 1 * 1024 * 1024
+
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/3.2/howto/static-files/
     STATIC_URL = "/static/django/"
@@ -423,23 +429,34 @@ class Base(Configuration):  # type:ignore
             ],
             "WHITELIST_TAGS": [
                 "a",
-                "abbr",
-                "acronym",
-                "b",
+                # Blocks
                 "blockquote",
+                "div",
+                "p",
+                # Formatting
                 "em",
-                "i",
+                "strong",
+                "sup",
+                "br",
+                "span",
+                # images
+                "figure",
+                "figcaption",
+                "img",
+                # Lists
+                "ul",
                 "li",
                 "ol",
-                "p",
-                "strong",
-                "ul",
+                # Headings
                 "h1",
                 "h2",
                 "h3",
+                # Code
                 "pre",
                 "code",
-                "sup",
+                # HTML 5 things
+                "abbr",
+                "acronym",
                 # Table things
                 "table",
                 "thead",
