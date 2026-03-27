@@ -3,8 +3,9 @@
 # SPDX-FileCopyrightText: 2023,2026 JWP Consulting GK
 """Test team member services."""
 
+from django.core.exceptions import PermissionDenied
+
 import pytest
-from rest_framework.exceptions import PermissionDenied
 
 from projectify.user.models import User
 

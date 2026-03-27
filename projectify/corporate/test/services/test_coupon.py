@@ -3,9 +3,10 @@
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 """Test coupon services."""
 
+from django.core.exceptions import PermissionDenied
+
 import pytest
 from rest_framework import serializers
-from rest_framework.exceptions import PermissionDenied
 
 from projectify.user.models import User
 from projectify.workspace.models import TeamMember

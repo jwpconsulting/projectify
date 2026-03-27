@@ -8,7 +8,7 @@
 import logging
 from typing import Union
 
-from rest_framework.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied
 
 from projectify.user.models import User
 from projectify.workspace.models import TeamMember, Workspace
