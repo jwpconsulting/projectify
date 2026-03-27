@@ -22,6 +22,7 @@ from django.views.generic import RedirectView, TemplateView
 
 from allauth.urls import build_provider_urlpatterns
 
+from projectify.blog.sitemap import BlogSitemap
 from projectify.help.sitemap import HelpSitemap
 from projectify.storefront.sitemap import StorefrontSitemap
 
@@ -40,6 +41,7 @@ settings = get_settings()
 sitemaps = {
     "storefront": StorefrontSitemap,
     "help": HelpSitemap,
+    "blog": BlogSitemap,
 }
 
 thirdparty_logins = build_provider_urlpatterns()
