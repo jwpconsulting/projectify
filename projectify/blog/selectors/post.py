@@ -11,10 +11,14 @@ from django.utils import timezone
 from ..models import Post
 
 
-def post_list_published(*, with_body: bool = False) -> QuerySet[Post]:
+def post_list_published(
+    *, with_body: bool = False, exclude: Optional[Post] = None
+) -> QuerySet[Post]:
     """Return published posts without content."""
     today = timezone.now().date()
     posts = Post.objects.filter(published__lte=today)
+    if exclude:
+        posts = posts.exclude(pk=exclude.pk)
     if with_body:
         return posts.select_related("body")
     else:
