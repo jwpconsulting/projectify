@@ -28,7 +28,6 @@ from django.utils import timezone
 
 import pytest
 from faker import Faker
-from rest_framework.test import APIClient
 
 from projectify.blog.models import Post, PostContent
 from projectify.corporate.models import Coupon, Customer
@@ -162,28 +161,6 @@ def user_client(client: client.Client, user: User) -> client.Client:
 def superuser_client(client: client.Client, superuser: User) -> client.Client:
     """Return logged in super user client."""
     client.force_login(superuser)
-    return client
-
-
-@pytest.fixture
-def rest_client() -> APIClient:
-    """Return a logged-out client to test DRF views."""
-    return APIClient()
-
-
-@pytest.fixture
-def rest_user_client(user: User) -> APIClient:
-    """Return a logged in client that we can use to test DRF views."""
-    client = APIClient()
-    client.force_authenticate(user)
-    return client
-
-
-@pytest.fixture
-def rest_meddling_client(meddling_user: User) -> APIClient:
-    """Return a test client to check third party logged in access."""
-    client = APIClient()
-    client.force_authenticate(meddling_user)
     return client
 
 
