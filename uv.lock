@@ -673,6 +673,7 @@ name = "projectify"
 version = "2026.3.15"
 source = { editable = "." }
 dependencies = [
+    { name = "bleach" },
     { name = "dj-database-url" },
     { name = "django" },
     { name = "django-allauth", extra = ["socialaccount"] },
@@ -716,6 +717,7 @@ test = [
 
 [package.metadata]
 requires-dist = [
+    { name = "bleach", specifier = ">=6.2.0" },
     { name = "dj-database-url", specifier = "~=2.1.0" },
     { name = "django", specifier = ">=6.0.0,<7" },
     { name = "django-allauth", extras = ["socialaccount"], specifier = ">=65.14.3" },
