@@ -1,0 +1,23 @@
+version = 1
+
+[[annotations]]
+path = [
+    "attach.svg",
+    "bold.svg",
+    "bullets.svg",
+    "code.svg",
+    "heading_1.svg",
+    "italic.svg",
+    "link.svg",
+    "nesting_level_decrease.svg",
+    "nesting_level_increase.svg",
+    "numbers.svg",
+    "quote.svg",
+    "redo.svg",
+    "remove.svg",
+    "strike.svg",
+    "trash.svg",
+    "undo.svg",
+]
+SPDX-FileCopyrightText = "37signals, LLC"
+SPDX-License-Identifier = "MIT"

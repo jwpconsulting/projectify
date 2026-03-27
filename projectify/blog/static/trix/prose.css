@@ -1,0 +1,23 @@
+/* SPDX-License-Identifier: MIT */
+/* SPDX-FileCopyrightText: 2022 LOGIC SMPC <paris@withlogic.co> */
+.django-prose-editor-container {
+  overflow: auto;
+}
+
+form .aligned .django-prose-editor-container trix-editor ul {
+  margin-left: initial;
+  padding-left: initial;
+}
+
+form .aligned .django-prose-editor-container trix-editor ol li,
+form .aligned .django-prose-editor-container trix-editor ul li {
+  list-style-position: inside;
+}
+
+form .aligned .django-prose-editor-container trix-editor ul li {
+  list-style-type: initial;
+}
+
+.django-prose-editor-container trix-toolbar .trix-button {
+  background: #fff !important;
+}
