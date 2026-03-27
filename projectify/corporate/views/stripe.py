@@ -8,6 +8,7 @@ from collections.abc import Callable, Mapping
 from typing import Any, Literal, Optional, Union
 from uuid import UUID
 
+from django.forms import ValidationError
 from django.http import (
     HttpRequest,
     HttpResponse,
@@ -18,7 +19,6 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 
 import stripe
-from rest_framework import serializers
 
 from projectify.lib.settings import get_settings
 
@@ -87,34 +87,30 @@ def _get_customer_from_metadata(session: stripe.checkout.Session) -> Customer:
     """Try to get customer from metadata."""
     metadata = session.metadata
     if metadata is None:
-        raise serializers.ValidationError({"metadata": _("Expected metadata")})
+        raise ValidationError({"metadata": [_("Expected metadata")]})
     customer_uuid_raw: Optional[str] = metadata.get("customer_uuid")
 
     if customer_uuid_raw is None:
-        raise serializers.ValidationError(
-            {"metadata": {"customer_uuid": _("Expected value")}}
-        )
+        raise ValidationError({"customer_uuid": [_("Expected value")]})
 
     # XXX
     # Looks like a job for DRF serializers
     try:
         customer_uuid = UUID(customer_uuid_raw)
     except ValueError:
-        raise serializers.ValidationError(
+        raise ValidationError(
             {
-                "metadata": {
-                    "customer_uuid": _("Not a valid UUID {}").format(
-                        customer_uuid_raw
-                    )
-                }
+                "customer_uuid": [
+                    _("Not a valid UUID {}").format(customer_uuid_raw)
+                ]
             }
         )
 
     customer = customer_find_by_uuid(customer_uuid=customer_uuid)
 
     if customer is None:
-        raise serializers.ValidationError(
-            {"metadata": {"customer_uuid": _("No customer for this uuid")}}
+        raise ValidationError(
+            {"customer_uuid": [_("No customer for this uuid")]}
         )
     return customer
 
@@ -140,18 +136,16 @@ def handle_session_completed(session: stripe.checkout.Session) -> None:
         case [item]:
             pass
         case []:
-            raise serializers.ValidationError(
-                {"items": _("Expected 1 line item")}
-            )
+            raise ValidationError({"items": [_("Expected 1 line item")]})
         case _:
-            raise serializers.ValidationError(
-                {"items": _("There are too many line items")}
+            raise ValidationError(
+                {"items": [_("There are too many line items")]}
             )
 
     seats = item.quantity
     if seats is None:
-        raise serializers.ValidationError(
-            {"line_items.data.quantity": _("Expected value")}
+        raise ValidationError(
+            {"line_items.data.quantity": [_("Expected value")]}
         )
 
     if session.payment_status != "paid":
@@ -178,8 +172,8 @@ def _get_customer_from_stripe_customer(
         stripe_customer_id=stripe_customer_id
     )
     if customer is None:
-        raise serializers.ValidationError(
-            {"customer": _("Could not find customer for this id")}
+        raise ValidationError(
+            {"customer": [_("Could not find customer for this id")]}
         )
     return customer
 
@@ -202,18 +196,16 @@ def handle_subscription_updated(subscription: stripe.Subscription) -> None:
         case [item]:
             pass
         case []:
-            raise serializers.ValidationError(
-                {"items": _("Expected 1 subscription item")}
+            raise ValidationError(
+                {"items": [_("Expected 1 subscription item")]}
             )
         case _:
-            raise serializers.ValidationError(
-                {"items": _("There are too many subscription items")}
+            raise ValidationError(
+                {"items": [_("There are too many subscription items")]}
             )
     seats = item.quantity
     if seats is None:
-        raise serializers.ValidationError(
-            {"items": {"quantity": _("Expected quantity")}}
-        )
+        raise ValidationError({"items": [_("Expected quantity")]})
 
     customer_update_seats(customer=customer, seats=seats)
 
@@ -307,7 +299,7 @@ def _handle_event(
 
     try:
         handler(event["data"]["object"])
-    except serializers.ValidationError as e:
+    except ValidationError as e:
         logger.exception("Invalid input for event %s", event_type)
         raise e
     except Exception:

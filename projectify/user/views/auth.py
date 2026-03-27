@@ -9,6 +9,7 @@ from django import forms
 from django.contrib.auth.password_validation import (
     password_validators_help_texts,
 )
+from django.forms import ValidationError
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -17,7 +18,6 @@ from django.views.decorators.http import require_http_methods
 
 from django_ratelimit.core import UNSAFE, get_usage
 from django_ratelimit.decorators import ratelimit
-from rest_framework.exceptions import ValidationError
 
 from projectify.lib.forms import populate_form_with_drf_errors
 from projectify.templatetags.projectify import anchor
@@ -145,6 +145,7 @@ def email_confirmation_link_sent(request: HttpRequest) -> HttpResponse:
     return render(request, "user/email_confirmation_link_sent.html")
 
 
+# TODO use form
 def email_confirm(
     request: HttpRequest, email: str, token: str
 ) -> HttpResponse:
@@ -155,7 +156,7 @@ def email_confirm(
         user_confirm_email(email=email, token=token)
         context = {}
     except ValidationError as e:
-        match e.detail:
+        match e.error_dict:
             case {"email": email_error}:
                 token_error = None
             case {"token": token_error}:

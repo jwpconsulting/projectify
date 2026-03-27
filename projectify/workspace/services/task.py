@@ -8,11 +8,9 @@ from datetime import datetime
 from typing import Literal, Optional, Sequence, Union
 
 from django.db import transaction
+from django.forms import ValidationError
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
-
-from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
@@ -62,11 +60,13 @@ def task_create(
     # XXX Implicit N+1 here
     workspace = section.project.workspace
     if assignee and assignee.workspace != workspace:
-        raise serializers.ValidationError(
+        raise ValidationError(
             {
-                "assignee": _(
-                    "The team member to be assigned belongs to a different workspace"
-                )
+                "assignee": [
+                    _(
+                        "The team member to be assigned belongs to a different workspace"
+                    )
+                ]
             }
         )
     task = Task.objects.create(

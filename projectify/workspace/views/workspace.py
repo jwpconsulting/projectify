@@ -11,12 +11,11 @@ from uuid import UUID
 from django import forms
 from django.core import exceptions
 from django.db.models import QuerySet
+from django.forms import ValidationError
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
-
-from rest_framework import serializers
 
 from projectify.corporate.selectors.customer import (
     customer_find_by_workspace_uuid,
@@ -270,7 +269,7 @@ def workspace_settings_general(
             who=request.user,
             picture=data["picture"],
         )
-    except serializers.ValidationError as error:
+    except ValidationError as error:
         populate_form_with_drf_errors(form, error)
         context = {**context, "form": form}
         return render(
@@ -416,7 +415,7 @@ def workspace_settings_new_label(
             color=form.cleaned_data["color"],
             who=request.user,
         )
-    except (exceptions.ValidationError, serializers.ValidationError) as error:
+    except (exceptions.ValidationError, ValidationError) as error:
         populate_form_with_drf_errors(form, error)
         return render(
             request,
@@ -513,7 +512,7 @@ def workspace_settings_edit_label(
             name=form.cleaned_data["name"],
             color=form.cleaned_data["color"],
         )
-    except (exceptions.ValidationError, serializers.ValidationError) as error:
+    except (exceptions.ValidationError, ValidationError) as error:
         populate_form_with_drf_errors(form, error)
         return render(
             request,
@@ -583,7 +582,7 @@ def workspace_settings_team_members(
                         email_or_user=invite_form.cleaned_data["email"],
                     )
                     status = 200
-                except serializers.ValidationError as e:
+                except ValidationError as e:
                     populate_form_with_drf_errors(invite_form, e)
                     status = 400
             else:
@@ -601,7 +600,7 @@ def workspace_settings_team_members(
                     who=request.user,
                     email=uninvite_form.cleaned_data["email"],
                 )
-            except serializers.ValidationError as error:
+            except ValidationError as error:
                 return HttpResponse(
                     _("Failed to uninvite team member: {error}").format(
                         error=str(error)
@@ -618,7 +617,7 @@ def workspace_settings_team_members(
             team_member = remove_member_form.cleaned_data["team_member"]
             try:
                 team_member_delete(team_member=team_member, who=request.user)
-            except serializers.ValidationError as error:
+            except ValidationError as error:
                 return HttpResponse(
                     _("Failed to remove team member: {error}").format(
                         error=str(error)
@@ -711,7 +710,7 @@ def workspace_settings_team_member_update(
                 return redirect(
                     "dashboard:workspaces:team-members", workspace.uuid
                 )
-            except serializers.ValidationError as error:
+            except ValidationError as error:
                 populate_form_with_drf_errors(form, error)
                 context = {**context, "form": form}
                 status = 400
@@ -767,7 +766,7 @@ def workspace_settings_billing_edit(
         session = create_billing_portal_session_for_customer(
             customer=customer, who=request.user
         )
-    except serializers.ValidationError:
+    except ValidationError:
         # TODO show a more meaningful error
         return HttpResponseBadRequest()
     return redirect(session.url)
@@ -839,7 +838,7 @@ def workspace_settings_billing(
                     who=request.user,
                     seats=billing_form.cleaned_data["seats"],
                 )
-            except serializers.ValidationError as e:
+            except ValidationError as e:
                 populate_form_with_drf_errors(billing_form, e)
                 context = {**context, "billing_form": billing_form}
                 return render(request, template, context=context, status=400)
@@ -855,7 +854,7 @@ def workspace_settings_billing(
                     code=coupon_form.cleaned_data["code"],
                     workspace=workspace,
                 )
-            except serializers.ValidationError as e:
+            except ValidationError as e:
                 populate_form_with_drf_errors(coupon_form, e)
                 context = {**context, "coupon_form": coupon_form}
                 return render(request, template, context=context, status=400)

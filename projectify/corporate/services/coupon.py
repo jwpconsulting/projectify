@@ -6,11 +6,10 @@
 from typing import Optional
 
 from django.db import transaction
+from django.forms import ValidationError
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
-
-from rest_framework import serializers
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
@@ -69,18 +68,18 @@ def coupon_redeem(
             .get()
         )
     except Coupon.DoesNotExist:
-        raise serializers.ValidationError(
-            {"code": _("No coupon is available for this code")}
+        raise ValidationError(
+            {"code": [_("No coupon is available for this code")]}
         )
     current_status = customer.subscription_status
     match current_status:
         case CustomerSubscriptionStatus.CUSTOM:
-            raise serializers.ValidationError(
-                _("A coupon has already been used for this workspace")
+            raise ValidationError(
+                [_("A coupon has already been used for this workspace")]
             )
         case CustomerSubscriptionStatus.ACTIVE:
-            raise serializers.ValidationError(
-                _("This workspace already has an active subscription")
+            raise ValidationError(
+                [_("This workspace already has an active subscription")]
             )
         case _:
             pass

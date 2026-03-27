@@ -6,8 +6,9 @@
 from collections.abc import Iterable
 from unittest import mock
 
+from django.forms import ValidationError
+
 import pytest
-from rest_framework import serializers
 
 from projectify.corporate.models import Customer
 from projectify.corporate.services.customer import (
@@ -58,7 +59,7 @@ class TestCustomerCreateStripeCheckoutSession:
     ) -> None:
         """Assert that a minimum amount of seats is ensured."""
         seats = unpaid_customer.workspace.users.count()
-        with pytest.raises(serializers.ValidationError):
+        with pytest.raises(ValidationError):
             customer_create_stripe_checkout_session(
                 who=team_member.user,
                 customer=unpaid_customer,

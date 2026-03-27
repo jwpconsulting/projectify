@@ -8,12 +8,11 @@ from typing import cast
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db.models.fields.files import FileDescriptor
+from django.forms import ValidationError
 from django.test.client import Client
 
 import pytest
 from faker import Faker
-from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.user.services.internal import Token, user_make_token
@@ -66,7 +65,7 @@ def test_user_set_password(user: User, mailoutbox: Mailbox) -> None:
     assert "password has been set" in mail.body
 
     # can't set the password twice
-    with pytest.raises(serializers.ValidationError) as exc_info:
+    with pytest.raises(ValidationError) as exc_info:
         user_set_password(user=user, new_password="another-password-456")
     exc_info.match("already has a password")
     user.refresh_from_db()
@@ -117,7 +116,7 @@ def test_user_change_password(
     """
     new_password = "hello-123" * 100
     # First we give in the wrong old password
-    with pytest.raises(serializers.ValidationError):
+    with pytest.raises(ValidationError):
         user_change_password(
             user=user, current_password="wrongpw123", new_password=new_password
         )
@@ -193,7 +192,7 @@ def test_user_email_update_complete(
     new_email = faker.email()
 
     # Try with wrong password
-    with pytest.raises(serializers.ValidationError):
+    with pytest.raises(ValidationError):
         user_request_email_address_update(
             user=user,
             new_email=new_email,
@@ -216,7 +215,7 @@ def test_user_email_update_complete(
     token = Token(match.group(1))
 
     # Completely invalid token
-    with pytest.raises(serializers.ValidationError):
+    with pytest.raises(ValidationError):
         user_confirm_email_address_update(
             user=user, confirmation_token=Token("wrong-token")
         )
@@ -225,7 +224,7 @@ def test_user_email_update_complete(
 
     # Wrong kind of token
     wrong_kind_token = user_make_token(user=user, kind="reset_password")
-    with pytest.raises(serializers.ValidationError):
+    with pytest.raises(ValidationError):
         user_confirm_email_address_update(
             user=user, confirmation_token=wrong_kind_token
         )
@@ -238,7 +237,7 @@ def test_user_email_update_complete(
     assert user.email == new_email
 
     # Can't do it twice
-    with pytest.raises(serializers.ValidationError):
+    with pytest.raises(ValidationError):
         user_confirm_email_address_update(user=user, confirmation_token=token)
 
     # Ensure second email is sent out

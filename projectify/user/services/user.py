@@ -12,10 +12,8 @@ from django.core.exceptions import PermissionDenied
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import transaction
 from django.db.models.fields.files import FileDescriptor
+from django.forms import ValidationError
 from django.utils.translation import gettext_lazy as _
-
-from rest_framework import serializers
-from rest_framework.request import Request
 
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.user.emails import (
@@ -60,13 +58,16 @@ def user_set_password(
     user: User,
     new_password: str,
     new_password_confirm: Optional[str] = None,
-    # XXX why both AuthenticatedHttpRequest and Request?
-    request: Union[AuthenticatedHttpRequest, Request, None] = None,
+    request: Union[AuthenticatedHttpRequest, None] = None,
 ) -> None:
     """Set a user's password if they don't have one yet."""
     if user.has_usable_password():
-        raise serializers.ValidationError(
-            _("User already has a password set. Use password change instead.")
+        raise ValidationError(
+            [
+                _(
+                    "User already has a password set. Use password change instead."
+                )
+            ]
         )
 
     no_match = (
@@ -74,18 +75,18 @@ def user_set_password(
         and new_password != new_password_confirm
     )
     if no_match:
-        raise serializers.ValidationError(
+        raise ValidationError(
             {
-                "new_password_confirm": _(
-                    "New passwords must match. Please check again"
-                )
+                "new_password_confirm": [
+                    _("New passwords must match. Please check again")
+                ]
             }
         )
 
     try:
         validate_password(password=new_password, user=user)
     except DjangoValidationError as e:
-        raise serializers.ValidationError({"new_password": e.messages})
+        raise ValidationError({"new_password": e.messages})
 
     user.set_password(new_password)
     user.save()
@@ -107,7 +108,7 @@ def user_change_password(
     new_password: str,
     # XXX make not Optional
     new_password_confirm: Optional[str] = None,
-    request: Union[AuthenticatedHttpRequest, Request, None] = None,
+    request: Union[AuthenticatedHttpRequest, None] = None,
 ) -> None:
     """Change a user's password."""
     no_match = (
@@ -115,22 +116,26 @@ def user_change_password(
         and new_password != new_password_confirm
     )
     if no_match:
-        raise serializers.ValidationError(
+        raise ValidationError(
             {
-                "new_password_confirm": _(
-                    "New passwords must match. Please check again"
-                )
+                "new_password_confirm": [
+                    _("New passwords must match. Please check again")
+                ]
             }
         )
 
     if not user.check_password(current_password):
-        raise serializers.ValidationError(
-            {"current_password": _("Incorrect password. Please check again.")}
+        raise ValidationError(
+            {
+                "current_password": [
+                    _("Incorrect password. Please check again.")
+                ]
+            }
         )
     try:
         validate_password(password=new_password, user=user)
     except DjangoValidationError as e:
-        raise serializers.ValidationError({"new_password": e.messages})
+        raise ValidationError({"new_password": e.messages})
     user.set_password(new_password)
     user.save()
 
@@ -152,9 +157,7 @@ def user_request_email_address_update(
 ) -> None:
     """Start user email change process."""
     if not user.check_password(password):
-        raise serializers.ValidationError(
-            {"password": _("Password is incorrect")}
-        )
+        raise ValidationError({"password": [_("Password is incorrect")]})
     user.unconfirmed_email = new_email
     user.save()
     UserEmailAddressUpdateEmail(receiver=user, obj=user).send()
@@ -170,14 +173,12 @@ def user_confirm_email_address_update(
     old_email = user.email
     new_email = user.unconfirmed_email
     if new_email is None:
-        raise serializers.ValidationError(
-            _("Email address update was never requested")
-        )
+        raise ValidationError([_("Email address update was never requested")])
     if not user_check_token(
         user=user, token=confirmation_token, kind="update_email_address"
     ):
-        raise serializers.ValidationError(
-            {"confirmation_token": _("Provided token is not valid")}
+        raise ValidationError(
+            {"confirmation_token": [_("Provided token is not valid")]}
         )
     user.email = new_email
     user.save()

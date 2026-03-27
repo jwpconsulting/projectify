@@ -9,13 +9,11 @@ from typing import Optional
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.password_validation import validate_password
-from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import transaction
+from django.forms import ValidationError
 from django.http import HttpRequest
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-
-from rest_framework import serializers
 
 from projectify.user.emails import (
     UserEmailConfirmationEmail,
@@ -38,13 +36,13 @@ def _concat_errors(errors: Sequence[str]) -> str:
     return " ".join(errors)
 
 
-def _validate_password(email: str, password: str) -> None:
+def _validate_password(
+    email: str, password: str, password_field: str = "password"
+) -> None:
     try:
         validate_password(password=password, user=User(email=email))
-    except DjangoValidationError as e:
-        raise serializers.ValidationError(
-            {"password": _concat_errors(e.messages)}
-        )
+    except ValidationError as e:
+        raise ValidationError({password_field: [_concat_errors(e.messages)]})
 
 
 @transaction.atomic()
@@ -58,20 +56,20 @@ def user_sign_up(
     """Sign up a user."""
     # Check if user exists
     if user_find_by_email(email=email) is not None:
-        raise serializers.ValidationError(
+        raise ValidationError(
             {
-                "email": _(
-                    "A user with this email address is already registered"
-                )
+                "email": [
+                    _("A user with this email address is already registered")
+                ]
             }
         )
     if not tos_agreed:
-        raise serializers.ValidationError(
-            {"tos_agreed": _("Must agree to terms of service")}
+        raise ValidationError(
+            {"tos_agreed": [_("Must agree to terms of service")]}
         )
     if not privacy_policy_agreed:
-        raise serializers.ValidationError(
-            {"privacy_policy_agreed": _("Must agree to privacy policy")}
+        raise ValidationError(
+            {"privacy_policy_agreed": [_("Must agree to privacy policy")]}
         )
 
     _validate_password(email, password)
@@ -99,14 +97,14 @@ def user_confirm_email(
     """Confirm a user's email, return User on success."""
     user = user_find_by_email(email=email)
     if user is None:
-        raise serializers.ValidationError(
-            {"email": _("No user could be found for this email address")}
+        raise ValidationError(
+            {"email": [_("No user could be found for this email address")]}
         )
     if not user_check_token(
         user=user, kind="confirm_email_address", token=token
     ):
-        raise serializers.ValidationError(
-            {"token": _("This email confirmation token is invalid")}
+        raise ValidationError(
+            {"token": [_("This email confirmation token is invalid")]}
         )
     user.is_active = True
     user.save()
@@ -128,26 +126,28 @@ def user_log_in(
         maybe_user = user_find_by_email(email=email)
         if maybe_user is None:
             logger.warning("Could not find a user for %s", email)
-            raise serializers.ValidationError(
-                {"email": _("No user could be found for this email address")}
+            raise ValidationError(
+                {"email": [_("No user could be found for this email address")]}
             )
         if not maybe_user.is_active:
             logger.warning(
                 "Tried to log in for inactive user with email %s", email
             )
-            raise serializers.ValidationError(
+            raise ValidationError(
                 {
-                    "email": _(
-                        "This email address has not been confirmed. "
-                        "Please check your email inbox for a confirmation email or contact our support if you need further help."
-                    )
+                    "email": [
+                        _(
+                            "This email address has not been confirmed. "
+                            "Please check your email inbox for a confirmation email or contact our support if you need further help."
+                        )
+                    ]
                 }
             )
         logger.warning(
             "User with email %s found but authentication failed", email
         )
-        raise serializers.ValidationError(
-            {"password": _("The password is incorrect. Please try again.")}
+        raise ValidationError(
+            {"password": [_("The password is incorrect. Please try again.")]}
         )
     login(request, user)
     if not isinstance(user, User):
@@ -163,7 +163,7 @@ def user_log_out(
     """Log a user out, update cookies."""
     user = request.user
     if user.is_anonymous:
-        raise serializers.ValidationError(_("There is no logged in user"))
+        raise ValidationError(_("There is no logged in user"))
     logout(request)
 
 
@@ -176,8 +176,8 @@ def user_request_password_reset(
     """Send a password reset email to a user, given their email address."""
     user = user_find_by_email(email=email)
     if user is None:
-        raise serializers.ValidationError(
-            {"email": _("No user could be found for this email")}
+        raise ValidationError(
+            {"email": [_("No user could be found for this email")]}
         )
     password_reset_email = UserPasswordResetEmail(receiver=user, obj=user)
     password_reset_email.send()
@@ -195,11 +195,11 @@ def user_confirm_password_reset(
     """Reset a user's password given a new password and a reset token."""
     if new_password_confirm is not None:
         if new_password != new_password_confirm:
-            raise serializers.ValidationError(
+            raise ValidationError(
                 {
-                    "new_password_confirm": _(
-                        "New passwords must match. Please check again"
-                    )
+                    "new_password_confirm": [
+                        _("New passwords must match. Please check again")
+                    ]
                 }
             )
 
@@ -209,16 +209,14 @@ def user_confirm_password_reset(
             "Could not find email %s when attempting to reset a password",
             email,
         )
-        raise serializers.ValidationError(
-            {"email": _("This email is not recognized")}
-        )
+        raise ValidationError(_("This email is not recognized"))
+        # TODO
+        # raise ValidationError({"email": [_("This email is not recognized")]})
     if not user_check_token(user=user, token=token, kind="reset_password"):
         logger.warning("Could not match a reset token to email %s", email)
-        raise serializers.ValidationError(
-            {"token": _("This token is invalid")}
-        )
+        raise ValidationError(_("This token is invalid"))
 
-    _validate_password(email, new_password)
+    _validate_password(email, new_password, password_field="new_password")
 
     user.set_password(new_password)
     user.save()

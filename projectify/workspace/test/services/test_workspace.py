@@ -8,10 +8,10 @@ from typing import cast
 from django import db
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db.models.fields.files import FileDescriptor
+from django.forms import ValidationError
 
 import pytest
 from faker import Faker
-from rest_framework.exceptions import ValidationError
 
 from projectify.user.models import User
 

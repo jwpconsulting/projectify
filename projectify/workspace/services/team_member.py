@@ -6,10 +6,9 @@
 from typing import Optional
 
 from django.db import transaction
+from django.forms import ValidationError
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
-
-from rest_framework import serializers
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
@@ -56,7 +55,7 @@ def team_member_delete(*, team_member: TeamMember, who: User) -> None:
     """
     validate_perm("workspace.delete_team_member", who, team_member)
     if team_member.user == who:
-        raise serializers.ValidationError(
+        raise ValidationError(
             _("You can't remove yourself from this workspace")
         )
     team_member.delete()

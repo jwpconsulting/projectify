@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.password_validation import (
     password_validators_help_texts,
 )
+from django.forms import ValidationError
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -16,7 +17,6 @@ from django.views.decorators.http import require_http_methods
 
 from django_ratelimit.core import UNSAFE
 from django_ratelimit.decorators import ratelimit
-from rest_framework.exceptions import ValidationError
 
 from projectify.lib.forms import populate_form_with_drf_errors
 from projectify.lib.types import AuthenticatedHttpRequest

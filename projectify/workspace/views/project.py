@@ -10,12 +10,11 @@ from uuid import UUID
 from django import forms
 from django.core.exceptions import BadRequest
 from django.db.models import Model, QuerySet
+from django.forms import ValidationError
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
-
-from rest_framework.exceptions import ValidationError
 
 from projectify.lib.forms import populate_form_with_drf_errors
 from projectify.lib.htmx import HttpResponseClientRefresh
