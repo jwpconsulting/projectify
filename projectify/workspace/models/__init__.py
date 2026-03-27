@@ -8,11 +8,10 @@ import uuid
 from typing import TYPE_CHECKING, Any, Callable, Optional
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-
-import pgtrigger
 
 from projectify.lib.models import BaseModel, TitleDescriptionModel
 from projectify.user.models import UserInvite
@@ -268,6 +267,18 @@ class Task(TitleDescriptionModel, BaseModel):
         _order: int
         id: int
 
+    def save(self, *args: Any, **kwargs: Any) -> None:
+        """Validate workspace == section.project.workspace."""
+        section = self.section
+        correct_workspace = section.project.workspace
+        if self.workspace.pk != correct_workspace.pk:
+            raise ValidationError(
+                _(
+                    "Task workspace must match section.project.workspace"
+                ).format()
+            )
+        return super().save(*args, **kwargs)
+
     def __str__(self) -> str:
         """Return title."""
         return self.title
@@ -283,37 +294,6 @@ class Task(TitleDescriptionModel, BaseModel):
                 deferrable=models.Deferrable.DEFERRED,
             ),
         ]
-
-        triggers = (
-            pgtrigger.Trigger(
-                name="ensure_correct_workspace",
-                when=pgtrigger.Before,
-                operation=pgtrigger.Insert | pgtrigger.Update,
-                func="""
-                      DECLARE
-                        correct_workspace_id   INTEGER;
-                      BEGIN
-                        SELECT "workspace_workspace"."id" INTO correct_workspace_id
-                        FROM "workspace_workspace"
-                        INNER JOIN "workspace_project"
-                            ON ("workspace_workspace"."id" = \
-                            "workspace_project"."workspace_id")
-                        INNER JOIN "workspace_section"
-                            ON ("workspace_project"."id" = \
-                                 "workspace_section"."project_id")
-                        INNER JOIN "workspace_task"
-                            ON ("workspace_section"."id" = \
-                                "workspace_task"."section_id")
-                        WHERE "workspace_task"."id" = NEW.id
-                        LIMIT 1;
-                        IF correct_workspace_id != NEW.workspace_id THEN
-                            RAISE EXCEPTION 'invalid workspace_id: workspace being \
-                                inserted does not match correct derived workspace.';
-                        END IF;
-                        RETURN NEW;
-                      END;""",
-            ),
-        )
 
 
 class SubTask(TitleDescriptionModel, BaseModel):

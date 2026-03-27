@@ -293,22 +293,19 @@ class TestProjectDetailViewActions:
     ) -> None:
         """Test marking a task as done and then not done."""
         assert task.done is None
-        t_uid = str(task.uuid)
-        data = {"action": "mark_task_done", "task_uuid": t_uid, "done": "true"}
+        t_id = str(task.uuid)
+        data = {"action": "mark_task_done", "task_uuid": t_id, "done": "true"}
         # Gone up from 24 -> 27 due to permission checks in template
-        with django_assert_num_queries(27):
+        # Gone up from 27 -> 29 because opf workspace save()
+        # check
+        with django_assert_num_queries(29):
             response = user_client.post(resource_url, data)
             assert response.status_code == 200
         task.refresh_from_db()
         assert task.done is not None
 
-        data = {
-            "action": "mark_task_done",
-            "task_uuid": t_uid,
-            "done": "false",
-        }
-        # Gone up from 24 -> 27 due to permission checks in template
-        with django_assert_num_queries(27):
+        data = {"action": "mark_task_done", "task_uuid": t_id, "done": "false"}
+        with django_assert_num_queries(29):
             response = user_client.post(resource_url, data)
             assert response.status_code == 200
         task.refresh_from_db()
