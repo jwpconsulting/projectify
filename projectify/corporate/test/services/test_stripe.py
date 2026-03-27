@@ -5,8 +5,9 @@
 
 from unittest import mock
 
+from django.forms import ValidationError
+
 import pytest
-from rest_framework import serializers
 
 from projectify.workspace.models import TeamMember, Workspace
 
@@ -29,7 +30,7 @@ class TestCreateBillingPortalSessionForWorkspaceUuid:
         self, team_member: TeamMember, unpaid_customer: Customer
     ) -> None:
         """Test missing customer id will throw ValueError."""
-        with pytest.raises(serializers.ValidationError) as error:
+        with pytest.raises(ValidationError) as error:
             create_billing_portal_session_for_customer(
                 customer=unpaid_customer, who=team_member.user
             )

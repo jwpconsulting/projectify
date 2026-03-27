@@ -19,6 +19,10 @@ def populate_form_with_django_errors(
     form: BaseForm, error: DjangoValidationError
 ) -> None:
     """Populate a django form with errors from a Django ValidationError."""
+    if error.error_list:
+        for error in error.error_list:
+            form.add_error(field=None, error=error)
+        return
     match error.error_dict:
         case None:
             return

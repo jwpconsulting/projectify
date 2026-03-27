@@ -12,9 +12,8 @@ from typing import Literal, Optional, Union, cast
 
 from django.db import transaction
 from django.db.models.fields.files import FileDescriptor
+from django.forms import ValidationError
 from django.utils.translation import gettext_lazy as _
-
-from rest_framework import serializers
 
 from projectify.corporate.services.customer import customer_create
 from projectify.lib.auth import validate_perm
@@ -97,17 +96,15 @@ def workspace_delete(
     """
     validate_perm("workspace.delete_workspace", who, workspace)
     if workspace.teammember_set.count() > 1:
-        raise serializers.ValidationError(
+        raise ValidationError(
             _("Can only delete workspace with one remaining team member")
         )
     if workspace.teammemberinvite_set.exists():
-        raise serializers.ValidationError(
+        raise ValidationError(
             _("Can only delete workspace with no outstanding invites")
         )
     if workspace.project_set.exists():
-        raise serializers.ValidationError(
-            _("Can only delete workspace with no projects")
-        )
+        raise ValidationError(_("Can only delete workspace with no projects"))
     count, _info = workspace.teammember_set.all().delete()
     logger.info(
         "Deleting workspace %s, after having deleted %d users",

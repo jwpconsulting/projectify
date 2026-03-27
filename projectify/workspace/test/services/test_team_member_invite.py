@@ -3,9 +3,10 @@
 # SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
 """Test TeamMemberInvite services."""
 
+from django.forms import ValidationError
+
 import pytest
 from faker import Faker
-from rest_framework import serializers
 
 from projectify.user.models import User, UserInvite
 from projectify.user.services.internal import user_create
@@ -83,7 +84,7 @@ class TestAddOrInviteTeamMember:
             workspace=workspace,
             email_or_user="hello@example.com",
         )
-        with pytest.raises(serializers.ValidationError):
+        with pytest.raises(ValidationError):
             team_member_invite_create(
                 who=team_member.user,
                 workspace=workspace,
@@ -94,7 +95,7 @@ class TestAddOrInviteTeamMember:
         self, workspace: Workspace, team_member: TeamMember
     ) -> None:
         """Test that inviting a pre-existing user won't work."""
-        with pytest.raises(serializers.ValidationError):
+        with pytest.raises(ValidationError):
             team_member_invite_create(
                 workspace=workspace,
                 who=team_member.user,
@@ -161,7 +162,7 @@ class TestAddOrInviteTeamMember:
     ) -> None:
         """Test uninviting a user that was never invited."""
         count = workspace.teammemberinvite_set.count()
-        with pytest.raises(serializers.ValidationError) as error:
+        with pytest.raises(ValidationError) as error:
             team_member_invite_delete(
                 workspace=workspace,
                 who=team_member.user,

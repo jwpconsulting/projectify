@@ -7,10 +7,10 @@ import logging
 from typing import Any
 
 from django.db import transaction
+from django.forms import ValidationError
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from rest_framework import serializers
 from stripe.billing_portal import Session as BillingPortalSession
 from stripe.checkout import Session
 
@@ -57,8 +57,8 @@ def customer_create_stripe_checkout_session(
     validate_perm("corporate.can_update_customer", who, workspace)
 
     if customer.subscription_status == "ACTIVE":
-        raise serializers.ValidationError(
-            _("This customer already activated a subscription before")
+        raise ValidationError(
+            [_("This customer already activated a subscription before")]
         )
 
     # Ensure we can't ask for too few seats
@@ -68,11 +68,13 @@ def customer_create_stripe_checkout_session(
     if quota.current is None:
         logger.warning("Customer for workspace %s has no seat quota")
     elif seats < quota.current:
-        raise serializers.ValidationError(
+        raise ValidationError(
             {
-                "seats": _(
-                    "Must request at least as many seats as current amount of team members and pending team member invites"
-                )
+                "seats": [
+                    _(
+                        "Must request at least as many seats as current amount of team members and pending team member invites"
+                    )
+                ]
             }
         )
 
@@ -126,12 +128,14 @@ def create_billing_portal_session_for_customer(
     customer_id = customer.stripe_customer_id
     # XXX we may need to validate whether the user has an active subscription
     if customer_id is None:
-        raise serializers.ValidationError(
-            _(
-                "Can not create billing portal session because no "
-                "subscription is active. If you believe this is an error, "
-                "please contact support."
-            )
+        raise ValidationError(
+            [
+                _(
+                    "Can not create billing portal session because no "
+                    "subscription is active. If you believe this is an error, "
+                    "please contact support."
+                )
+            ]
         )
     client = stripe_client()
     return client.billing_portal.sessions.create(

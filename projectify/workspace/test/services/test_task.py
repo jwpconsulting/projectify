@@ -5,8 +5,9 @@
 
 from datetime import datetime
 
+from django.forms import ValidationError
+
 import pytest
-from rest_framework import exceptions
 
 from projectify.workspace.services.label import label_create
 
@@ -93,7 +94,7 @@ def test_create_task_unrelated_teammember(
     unrelated_team_member: TeamMember,
 ) -> None:
     """Test adding tasks to a project."""
-    with pytest.raises(exceptions.ValidationError) as e:
+    with pytest.raises(ValidationError) as e:
         task_create(
             who=team_member.user,
             section=section,

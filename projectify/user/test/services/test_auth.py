@@ -5,14 +5,13 @@
 
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.sessions.middleware import SessionMiddleware
+from django.forms import ValidationError
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse
 from django.test import RequestFactory
 
 import pytest
 from faker import Faker
-from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 
 from ...models import User
 from ...services.auth import (
@@ -31,14 +30,14 @@ pytestmark = pytest.mark.django_db
 def test_user_sign_up_no_agree(faker: Faker) -> None:
     """Test signing up a new user."""
     assert User.objects.count() == 0
-    with pytest.raises(serializers.ValidationError):
+    with pytest.raises(ValidationError):
         user_sign_up(
             email=faker.email(),
             password=faker.password(),
             tos_agreed=False,
             privacy_policy_agreed=False,
         )
-    with pytest.raises(serializers.ValidationError) as error:
+    with pytest.raises(ValidationError) as error:
         user_sign_up(
             email=faker.email(),
             password=faker.password(),
@@ -46,7 +45,7 @@ def test_user_sign_up_no_agree(faker: Faker) -> None:
             privacy_policy_agreed=True,
         )
     assert error.match("terms of service")
-    with pytest.raises(serializers.ValidationError) as error:
+    with pytest.raises(ValidationError) as error:
         user_sign_up(
             email=faker.email(),
             password=faker.password(),

@@ -7,9 +7,8 @@ import logging
 from typing import Optional, Union
 
 from django.db import transaction
+from django.forms import ValidationError
 from django.utils.translation import gettext_lazy as _
-
-from rest_framework import serializers
 
 from projectify.lib.auth import validate_perm
 from projectify.premail.email import EmailAddress
@@ -105,11 +104,13 @@ def team_member_invite_create(
 
     match _try_find_team_member(workspace, email):
         case TeamMember():
-            raise serializers.ValidationError(
+            raise ValidationError(
                 {
-                    "email": _(
-                        "This user already is a team member in your workspace."
-                    ).format(email)
+                    "email": [
+                        _(
+                            "This user already is a team member in your workspace."
+                        ).format(email)
+                    ]
                 }
             )
         case User() as user:
@@ -127,11 +128,13 @@ def team_member_invite_create(
 
     match _try_find_invitation(workspace, email):
         case TeamMemberInvite():
-            raise serializers.ValidationError(
+            raise ValidationError(
                 {
-                    "email": _(
-                        "You've already invited this email address to your workspace."
-                    ).format(email)
+                    "email": [
+                        _(
+                            "You've already invited this email address to your workspace."
+                        ).format(email)
+                    ]
                 }
             )
         case UserInvite() as found:
@@ -170,8 +173,8 @@ def team_member_invite_delete(
     )
     match invite:
         case UserInvite() | None:
-            raise serializers.ValidationError(
-                {"email": _("User with this email was never invited")}
+            raise ValidationError(
+                {"email": [_("User with this email was never invited")]}
             )
         case TeamMemberInvite() as team_member_invite:
             pass
