@@ -129,7 +129,7 @@ class TestTaskUpdateView:
     ) -> None:
         """Test updating a task."""
         original_title = task.title
-        with django_assert_num_queries(19):
+        with django_assert_num_queries(20):
             response = user_client.post(
                 resource_url,
                 {

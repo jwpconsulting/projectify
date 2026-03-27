@@ -8,6 +8,7 @@ import uuid
 from typing import TYPE_CHECKING, Any, Callable, Optional
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -267,6 +268,18 @@ class Task(TitleDescriptionModel, BaseModel):
         tasklabel_set: RelatedManager["TaskLabel"]
         _order: int
         id: int
+
+    def save(self, *args: Any, **kwargs: Any) -> None:
+        """Validate workspace == section.project.workspace."""
+        section = self.section
+        correct_workspace = section.project.workspace
+        if self.workspace.pk != correct_workspace.pk:
+            raise ValidationError(
+                _(
+                    "Task workspace must match section.project.workspace"
+                ).format()
+            )
+        return super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         """Return title."""

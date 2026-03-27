@@ -3,7 +3,6 @@
 # SPDX-FileCopyrightText: 2021, 2022, 2023 JWP Consulting GK
 """Test workspace models."""
 
-from django import db
 from django.core.exceptions import ValidationError
 
 import pytest
@@ -85,6 +84,6 @@ class TestTask:
     ) -> None:
         """Test database trigger for wrong workspace assignment."""
         # Changed from db.InternalError, see above in test_save_no_number
-        with pytest.raises(db.ProgrammingError):
-            task.workspace = unrelated_workspace
+        task.workspace = unrelated_workspace
+        with pytest.raises(ValidationError):
             task.save()
