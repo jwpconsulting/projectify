@@ -63,6 +63,7 @@ class PostAdminForm(forms.ModelForm):
 
     def save(self, commit: bool = True) -> Post:
         """Save Post and associated PostContent."""
+        del commit
         post: Post = super().save(commit=False)
         content_text = self.cleaned_data["content"]
 
@@ -73,6 +74,7 @@ class PostAdminForm(forms.ModelForm):
             body = post.body
             body.content = content_text
             body.save()
+        # TODO respect commit flag
         post.save()
 
         return post
