@@ -30,6 +30,7 @@ import pytest
 from faker import Faker
 from rest_framework.test import APIClient
 
+from projectify.blog.models import Post, PostContent
 from projectify.corporate.models import Coupon, Customer
 from projectify.corporate.services.coupon import coupon_create
 from projectify.corporate.services.stripe import (
@@ -643,3 +644,20 @@ def paid_customer(
 def coupon(superuser: User) -> Coupon:
     """Create a working coupon."""
     return coupon_create(who=superuser, seats=20, prefix="i-am-a-test-coupon")
+
+
+@pytest.fixture
+def post_content(faker: Faker) -> PostContent:
+    """Return a blog post content."""
+    return PostContent.objects.create(content=faker.paragraph(nb_sentences=10))
+
+
+@pytest.fixture
+def post(faker: Faker, now: datetime, post_content: PostContent) -> Post:
+    """Return a blog post."""
+    return Post.objects.create(
+        title=faker.sentence(),
+        slug=faker.slug(),
+        body=post_content,
+        published=now,
+    )

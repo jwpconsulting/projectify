@@ -1,0 +1,43 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{% extends "storefront_base.html" %}
+{% load i18n %}
+{% load projectify %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block storefront_content %}
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid lg:grid-cols-[2fr_1fr] gap-8">
+            <article class="flex flex-col gap-8">
+                <header class="flex flex-col gap-4">
+                    <h1 class="text-4xl font-bold">{{ post.title }}</h1>
+                    <time>
+                        {{ post.published|date:"F j, Y" }}
+                    </time>
+                </header>
+                <div class="prose">{{ post.body.content|safe }}</div>
+                <footer>
+                    {% anchor href='blog:list' label=_("Back to blog") %}
+                </footer>
+            </article>
+            <aside>
+                <div class="sticky top-8 flex flex-col gap-4">
+                    <h2 class="text-2xl font-bold">{% translate "Recent Posts" %}</h2>
+                    {% if recent_posts %}
+                        <ul class="flex flex-col gap-4">
+                            {% for post in recent_posts %}
+                                <li class="flex flex-col gap-1">
+                                    {% anchor href="blog:detail" label=post.title slug=post.slug %}
+                                    <time>
+                                        {{ post.published|date:"F j, Y" }}
+                                    </time>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>{% translate "No posts yet." %}</p>
+                    {% endif %}
+                </div>
+            </aside>
+        </div>
+    </div>
+{% endblock storefront_content %}
