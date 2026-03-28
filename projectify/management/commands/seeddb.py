@@ -11,12 +11,10 @@ For workspaces that already exist, we don't touch them.
 
 For new workspaces, we add quantities of objects, as specified in the arguments
 
-Assuming your development database is called projectify, you can do a full test
-run by running
-dropdb projectify && \
-    createdb projectify && \
-    uv run ./manage.py migrate && \
-    uv run ./manage.py seeddb
+Assuming that you've configured Projectify to use SQLite, you can
+re-create the database with the following shell command:
+
+rm projectify.sqlite; uv run ./manage.py seeddb
 """
 
 from argparse import ArgumentParser
@@ -25,6 +23,7 @@ from itertools import groupby
 from random import choice, randint, sample
 from typing import Any, TypedDict
 
+from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils.text import slugify
@@ -450,9 +449,13 @@ class Command(BaseCommand):
             help="Ensure N blog posts are present",
         )
 
-    @transaction.atomic
     def handle(self, *args: object, **options: Any) -> None:
         """Handle."""
+        del args
+        self.stdout.write("Running migrations")
+        call_command("migrate")
+        self.stdout.write("Migrations complete")
+
         self.fake = Faker()
         self.n_users = options["n_users"]
         self.n_workspaces = options["n_workspaces"]
@@ -471,9 +474,11 @@ class Command(BaseCommand):
                 f"{self.n_add_users}."
             )
             self.n_users = max(self.n_users, self.n_add_users)
-        users = self.create_users()
-        workspaces = self.create_workspaces(users)
-        self.create_corporate_accounts(
-            seats=self.n_users, workspaces=workspaces
-        )
-        self.create_blog_posts()
+
+        with transaction.atomic():
+            users = self.create_users()
+            workspaces = self.create_workspaces(users)
+            self.create_corporate_accounts(
+                seats=self.n_users, workspaces=workspaces
+            )
+            self.create_blog_posts()

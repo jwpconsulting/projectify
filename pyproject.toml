@@ -51,6 +51,7 @@ dev = [
     "django-debug-toolbar>=4.3.0,<5",
     "ruff==0.6.1",
     "selenium>=4.40.0,<5",
+    "honcho>=2.0.0",
 ]
 test = [
     "django-types>=0,<1",
