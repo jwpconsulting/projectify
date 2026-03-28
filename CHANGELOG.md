@@ -1,10 +1,22 @@
 <!--
-SPDX-FileCopyrightText: 2024-2025 JWP Consulting GK
+SPDX-FileCopyrightText: 2024-2026 JWP Consulting GK
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 # Changelog
+
+## 2026.3.28
+
+### Enhancement
+
+- Remove SvelteKit
+
+## 2025.12.4
+
+### Security
+
+- Update vulnerable dependencies
 
 ## 2025.7.10
 
