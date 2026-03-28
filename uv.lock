@@ -838,9 +838,13 @@ dependencies = [
     { name = "django-ratelimit" },
     { name = "gunicorn" },
     { name = "pillow" },
-    { name = "psycopg", extra = ["c"] },
     { name = "stripe" },
     { name = "whitenoise" },
+]
+
+[package.optional-dependencies]
+postgresql = [
+    { name = "psycopg", extra = ["c"] },
 ]
 
 [package.dev-dependencies]
@@ -879,10 +883,11 @@ requires-dist = [
     { name = "django-ratelimit", specifier = ">=4.1.0,<5" },
     { name = "gunicorn", specifier = ">=23,<24" },
     { name = "pillow", specifier = ">=12.1.1" },
-    { name = "psycopg", extras = ["c"], specifier = ">=3.1.18,<4" },
+    { name = "psycopg", extras = ["c"], marker = "extra == 'postgresql'", specifier = ">=3.1.18,<4" },
     { name = "stripe", specifier = ">=8,<9" },
     { name = "whitenoise", specifier = "~=6.2.0" },
 ]
+provides-extras = ["postgresql"]
 
 [package.metadata.requires-dev]
 dev = [

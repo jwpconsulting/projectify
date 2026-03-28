@@ -87,8 +87,8 @@ Run these shell commands to accomplish the steps 1. to 5.:
 ```bash
 # Clone the repository
 git clone git@github.com:jwpconsulting/projectify.git
-# Install dependencies
-uv sync --all-groups
+# Install all dependencies, including PostgreSQL interface
+uv sync --all-groups --all-extras
 # Create your `.env` file
 cp .env.template .env
 # Edit the `.env` file using your preferred editor:

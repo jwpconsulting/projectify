@@ -19,7 +19,6 @@ dependencies = [
     "django-cloudinary-storage~=0.3.0",
     "gunicorn>=23,<24",
     "pillow>=12.1.1",
-    "psycopg[c]>=3.1.18,<4",
     "stripe>=8,<9",
     "whitenoise~=6.2.0",
     "django-ratelimit>=4.1.0,<5",
@@ -32,6 +31,11 @@ authors = [
 ]
 maintainers = [
     { name = "Justus Perlwitz", email = "justus@jwpconsulting.net" },
+]
+
+[project.optional-dependencies]
+postgresql = [
+    "psycopg[c]>=3.1.18,<4",
 ]
 
 [dependency-groups]
