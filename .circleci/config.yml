@@ -42,7 +42,7 @@ commands:
           command: pip install uv
       - run:
           name: Install dependencies
-          command: uv sync --group=test
+          command: uv sync --group=test --extra=postgresql
       # https://docs.astral.sh/uv/concepts/cache/#caching-in-continuous-integration
       - run:
           name: Prune cache

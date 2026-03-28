@@ -7,11 +7,15 @@ import os
 import warnings
 from pathlib import Path
 
+from django.utils.csp import CSP  # type: ignore
+
 from .base import Base
 
 
-class Production(Base):
-    """Production configuration."""
+# TODO make this
+# class Production(Base):
+class ProductionBase(Base):
+    """Production base configuration."""
 
     SITE_TITLE = os.getenv("SITE_TITLE", "Projectify Production")
 
@@ -21,13 +25,6 @@ class Production(Base):
 
     # TODO remove when Svelte frontend is gone
     FRONTEND_URL = os.environ["FRONTEND_URL"]
-
-    ANYMAIL = {
-        "MAILGUN_API_KEY": os.environ["MAILGUN_API_KEY"],
-        "MAILGUN_SENDER_DOMAIN": os.environ["MAILGUN_DOMAIN"],
-        "MAILGUN_API_URL": "https://api.eu.mailgun.net/v3",
-    }
-    EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
     # TODO remove FRONTEND_URL fallback
     CSRF_TRUSTED_ORIGINS = os.getenv("SECURITY_ORIGINS", FRONTEND_URL).split(
@@ -44,24 +41,14 @@ class Production(Base):
         else Base.STATIC_ROOT
     )
 
-    # Cloudinary
     STORAGES = {
         **Base.STORAGES,
-        "staticfiles": {
-            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-        },
         "default": {
             "BACKEND": Base.MEDIA_CLOUDINARY_STORAGE,
         },
     }
 
     CSRF_COOKIE_DOMAIN = os.getenv("CSRF_COOKIE_DOMAIN", None)
-
-    # Stripe
-    STRIPE_PUBLISHABLE_KEY = os.environ["STRIPE_PUBLISHABLE_KEY"]
-    STRIPE_SECRET_KEY = os.environ["STRIPE_SECRET_KEY"]
-    STRIPE_PRICE_OBJECT = os.environ["STRIPE_PRICE_OBJECT"]
-    STRIPE_ENDPOINT_SECRET = os.environ["STRIPE_ENDPOINT_SECRET"]
 
     # Logging config
     LOGGING = Base.LOGGING
@@ -91,3 +78,50 @@ class Production(Base):
             warnings.warn(
                 "No admin contacts set up. Set the ADMIN_EMAILS environment variable."
             )
+
+
+# TODO make this
+# class Hosted(Production):
+class Production(ProductionBase):
+    """Settings for Projectify hosted on www.projectifyapp.com."""
+
+    INSTALLED_APPS = (
+        *ProductionBase.INSTALLED_APPS,
+        "cloudinary",
+        "cloudinary_storage",
+    )
+    ANYMAIL = {
+        "MAILGUN_API_KEY": os.environ["MAILGUN_API_KEY"],
+        "MAILGUN_SENDER_DOMAIN": os.environ["MAILGUN_DOMAIN"],
+        "MAILGUN_API_URL": "https://api.eu.mailgun.net/v3",
+    }
+    EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+
+    # Stripe
+    STRIPE_PUBLISHABLE_KEY = os.environ["STRIPE_PUBLISHABLE_KEY"]
+    STRIPE_SECRET_KEY = os.environ["STRIPE_SECRET_KEY"]
+    STRIPE_PRICE_OBJECT = os.environ["STRIPE_PRICE_OBJECT"]
+    STRIPE_ENDPOINT_SECRET = os.environ["STRIPE_ENDPOINT_SECRET"]
+
+    # Cloudinary
+    MEDIA_CLOUDINARY_STORAGE = (
+        "cloudinary_storage.storage.MediaCloudinaryStorage"
+    )
+    STORAGES = {
+        # TODO make this
+        # **Production.STORAGES,
+        **ProductionBase.STORAGES,
+        "default": {
+            "BACKEND": MEDIA_CLOUDINARY_STORAGE,
+        },
+    }
+    SECURE_CSP = {
+        **ProductionBase.SECURE_CSP,
+        "img-src": [CSP.SELF, "res.cloudinary.com"],
+    }
+
+
+# TODO remove this and just keep the above Hosted(Production)
+# class Hosted(Production):
+class Hosted(Production):
+    """Settings for Projectify hosted on www.projectifyapp.com."""

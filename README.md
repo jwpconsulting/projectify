@@ -14,9 +14,8 @@ Official instance:
 
 # Development Requirements
 
-- Python version >= 3.12.12 (I recommend using [asdf](https://asdf-vm.com/))
+- Python version at least 3.12.12
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)
-- [PostgreSQL](https://www.postgresql.org/) >= 15.5
 - [Node.js](https://nodejs.org/en/download) >= 24.13.1
 
 [Here's how to install asdf](https://asdf-vm.com/guide/getting-started.html)
@@ -33,95 +32,41 @@ asdf install python 3.12.12
 asdf install node.js 24.13.1
 ```
 
-## Installing PostgreSQL 15
-
-Projectify uses PostgreSQL 15. Here's how to install it:
-
-- On **macOS** (using Homebrew): `brew install postgresql@15` [^brew-postgres]
-- On **Debian**: `sudo apt install postgresql-15 libpq-dev`
-- On **other systems**: See the [PostgresSQL documentation](https://www.postgresql.org/download/)
-
-[^brew-postgres]: [postgresql@15 on *brew.sh*](https://formulae.brew.sh/formula/postgresql@15#default)
-
-
-Check whether you can connect to your local PostgreSQL instance by using the
-following command:
-
-```bash
-psql
-```
-
-If you've installed PostgreSQL correctly, you should see the following prompt:
-
-```bash
-psql (15.14)
-Type "help" for help.
-
-debian=#
-```
-
-Press `Ctrl+d` to exit `psql`.
-
 # Quickstart
 
 After making sure that you've added the dependencies, follow these
-steps to start developing with Projectify:
+steps to start developing with Projectify. With these steps, SQLite works out
+of the box and no database setup is needed.
 
-1. Clone [this repository](https://github.com/jwpconsulting/projectify).
-2. Install all dependencies using the Python `uv` tool.
+1. Clone [this repository](https://github.com/jwpconsulting/projectify):
+  ```bash
+  git clone git@github.com:jwpconsulting/projectify.git
+  ```
+2. Install all Python and Node dependencies:
+  ```bash
+  uv sync --all-groups && npm ci
+  ```
 3. Create a `.env` environment file by copying the `.env.template` file.
-4. Edit the `DATABASE_URL` variable in the `.env` file and point it to your
-   local PostgreSQL 15 instance.
-5. Create a `projectify` PostgreSQL database inside your local PostgreSQL 15
-   instance using the `createdb` command.
-6. Then, inside a `uv` shell, perform the following:
-  a. Migrate the `projectify` database that you have just created.
-  b. Seed the `projectify` database with test data using the `seeddb` command.
-  c. Start the development server.
-  d. Start tailwind
-
-[^django-tailwind]: [Django-Tailwind](https://django-tailwind.readthedocs.io/en/latest/installation.html) *django-tailwind.readthedocs.io*
-
-Run these shell commands to accomplish the steps 1. to 5.:
-
-```bash
-# Clone the repository
-git clone git@github.com:jwpconsulting/projectify.git
-# Install dependencies
-uv sync --all-groups
-# Create your `.env` file
-cp .env.template .env
-# Edit the `.env` file using your preferred editor:
-vim .env
-# Inside .env, edit the DATABASE_URL, then save your changes.
-# Create the database using the PostgreSQL `createdb` command
-createdb projectify
-```
-
-Possible values for `DATABASE_URL`:
-
-- Connect via `localhost`: `DATABASE_URL=postgres://$USER@localhost/projectify`
-  where `$USER` is your username.
-- Connect to UNIX domain socket on **Debian**:
-  `DATABASE_URL=postgres://%2Fvar%2Flib%2Fpostgresql/projectify`
-- Connect to UNIX domain socket on **macOS**:
-  `DATABASE_URL=postgres://%2Ftmp/projectify`
-
-To finish with step 6., configure Projectify and run using the following commands:
-
-```bash
-# Run the Django migration command
-uv run ./manage.py migrate
-# Seed the database with test data using `seeddb`
-uv run ./manage.py seeddb
-# Start the development server
-uv run ./manage.py runserver
-# Open a new terminal and navigate to the repository again
-# Install the tailwind development tool dependencies
-npm clean-install
-# Run the tailwind development tool
-npm run dev
-```
+  ```bash
+  cp .env.template .env
+  ```
+4. Prepare the database:
+  ```bash
+  # Run the Django migration command
+  uv run ./manage.py migrate
+  # Seed the database with test data and users. Log in with
+  # user: admin@localhost
+  # password: password
+  uv run ./manage.py seeddb
+  ```
+5. Start the Django development server and Tailwind CSS:
+  ```bash
+  # Start the development server at http://localhost:8000
+  uv run ./manage.py runserver
+  # `runserver blocks`, so run the Tailwind CSS development tool
+  # in a separate terminal:
+  npm start
+  ```
 
 Once you have done all of this, go to Django administration page at
 <http://localhost:8000/admin/>. The `seeddb` command created an administrator
@@ -133,14 +78,7 @@ account with the following credentials for you:
 Log in using these credentials and you have full access to the administration
 page.
 
-## Neovim
-
-You can use Neovim with the [Pyright](https://github.com/microsoft/pyright) Language Server Protococol (LSP) server. To make sure that Neovim uses the right Pyright from
-this repository, run neovim inside `uv`:
-
-```
-uv run nvim
-```
+You're done!
 
 # uv
 
@@ -171,8 +109,6 @@ version 2.12.1 results in the following diff for the `requirements.txt` file:
     --hash=sha256:c74a7a2adf861c04d002db713dd85f84beb242228e671280bf709d765b03672b
 ```
 
-
-
 # Formatting
 
 ```
@@ -184,6 +120,15 @@ To look for files missing copyright and licencing information:
 
 ```
 uv run reuse lint
+```
+
+# Neovim
+
+You can use Neovim with the [Pyright](https://github.com/microsoft/pyright) Language Server Protococol (LSP) server. To make sure that Neovim uses the right Pyright from
+this repository, run neovim inside `uv`:
+
+```bash
+uv run nvim
 ```
 
 # Nix
@@ -205,8 +150,65 @@ about Django's translation features [here](https://docs.djangoproject.com/en/5.1
 You can update the translation files by running the following commands:
 
 ```bash
-./manage.py makemessages --ignore=bin/ -l en --ignore='gunicorn.conf.py' --ignore=manage.py
+uv run ./manage.py makemessages --ignore=bin/ -l en --ignore='gunicorn.conf.py' --ignore=manage.py
 ```
+
+# Develop with PostgreSQL
+
+Projectify also works with PostgreSQL for either deployment or local
+development.
+Projectify supports [PostgreSQL](https://www.postgresql.org/) version 15.5 or greater.
+
+Here's how to install PostgreSQL:
+
+- On **macOS** (using Homebrew): `brew install postgresql` [^brew-postgres]
+- On **Debian**: `sudo apt install postgresql libpq-dev`
+- On **other systems**: See the [PostgresSQL documentation](https://www.postgresql.org/download/)
+
+[^brew-postgres]: [postgresql on *brew.sh*](https://formulae.brew.sh/formula/postgresql@18#default)
+
+
+Check whether you can connect to your local PostgreSQL instance by using the
+following command:
+
+```bash
+psql
+```
+
+If you've installed PostgreSQL correctly, you should see the following prompt:
+
+```bash
+psql (15.14)
+Type "help" for help.
+
+debian=#
+```
+
+Press `Ctrl+d` to exit `psql`.
+
+To connect to PostgreSQL from Projectify, you need to install additional
+dependencies with `uv sync`:
+
+```bash
+# This installs the dependencies from above, as well as everything needed
+# for PostgreSQL
+uv sync --all-groups --extra postgresql
+```
+
+Then, create a database using the `createdb` PostgreSQL command:
+
+```bash
+createdb projectify
+```
+
+Make sure that you've configured the `DATABASE_URL` string in the `.env`
+file to point at your PostgreSQL `projectify` database.
+These are the values for `DATABASE_URL` when connecting to PostgreSQL:
+
+- Connect to UNIX domain socket on **Debian**:
+  `DATABASE_URL = postgres://%2Fvar%2Flib%2Fpostgresql/projectify`
+- Connect to UNIX domain socket on **macOS**:
+  `DATABASE_URL = postgres://%2Ftmp/projectify`
 
 # License
 

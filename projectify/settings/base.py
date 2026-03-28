@@ -123,7 +123,7 @@ class Base(Configuration):  # type:ignore
             # htmx
             "'sha256-IOPJoLjlywWMOiXjm9gstcOWbflCWb+PHbhcDgSPqcg='",
         ],
-        "img-src": [CSP.SELF, "res.cloudinary.com"],
+        "img-src": [CSP.SELF],
         "form-action": [
             CSP.SELF,
             "https://github.com",
@@ -151,8 +151,6 @@ class Base(Configuration):  # type:ignore
     # It's wise to reduce our dependency on third party dependencies as much as
     # we can, while avoiding to reinvent the wheel every time.
     INSTALLED_APPS_THIRD_PARTY = (
-        "cloudinary",
-        "cloudinary_storage",
         "rules.apps.AutodiscoverRulesConfig",
         "markdownify.apps.MarkdownifyConfig",
         # Allauth
@@ -214,6 +212,7 @@ class Base(Configuration):  # type:ignore
     # Database
     # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
     DATABASES: dict[str, dj_database_url.DBConfig]
+    CONN_MAX_AGE = 0
 
     # Django authentication settings
     # ==============================
@@ -390,10 +389,6 @@ class Base(Configuration):  # type:ignore
     # > Each item in the list should be a tuple of (Full name, email address). Example:
     ADMINS: list[list[str]] = []
 
-    # Cloudinary
-    MEDIA_CLOUDINARY_STORAGE = (
-        "cloudinary_storage.storage.MediaCloudinaryStorage"
-    )
     STORAGES: StoragesConfig = {
         "default": {
             "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -478,9 +473,8 @@ class Base(Configuration):  # type:ignore
     @classmethod
     def setup(cls) -> None:
         """Load database config, after environment is correctly loaded."""
-        CONN_MAX_AGE = 0
         cls.DATABASES = {
-            "default": dj_database_url.config(conn_max_age=CONN_MAX_AGE)
+            "default": dj_database_url.config(conn_max_age=cls.CONN_MAX_AGE)
         }
 
     @classmethod
