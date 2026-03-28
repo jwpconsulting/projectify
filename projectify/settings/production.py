@@ -41,13 +41,6 @@ class ProductionBase(Base):
         else Base.STATIC_ROOT
     )
 
-    STORAGES = {
-        **Base.STORAGES,
-        "default": {
-            "BACKEND": Base.MEDIA_CLOUDINARY_STORAGE,
-        },
-    }
-
     CSRF_COOKIE_DOMAIN = os.getenv("CSRF_COOKIE_DOMAIN", None)
 
     # Logging config
