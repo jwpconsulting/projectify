@@ -5,7 +5,7 @@
 [project]
 name = "projectify-app"
 version = "2026.3.27"
-description = "Projectify Backend"
+description = "Projectify is a Free Software project management app"
 requires-python = ">=3.12.12"
 readme = "README.md"
 license = "AGPL-3.0-or-later"
