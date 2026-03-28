@@ -52,28 +52,26 @@ of the box and no database setup is needed.
   ```
 4. Prepare the database:
   ```bash
-  # Run the Django migration command
-  uv run ./manage.py migrate
-  # Seed the database with test data and users. Log in with
+  # Create the Projectify database with test data and users. Log in with
   # user: admin@localhost
   # password: password
   uv run ./manage.py seeddb
   ```
-5. Start the Django development server and Tailwind CSS:
+5. Start the Django development server and Tailwind CSS with **honcho**:
   ```bash
-  # Start the development server at http://localhost:8000
-  uv run ./manage.py runserver
-  # `runserver blocks`, so run the Tailwind CSS development tool
-  # in a separate terminal:
-  npm start
+  # running `uv sync --all-groups` already installed honcho for you.
+  # Honcho runs these processes:
+  # 1. Django development server at http://localhost:8000
+  # 2. Tailwind CSS development tool
+  uv run honcho start
   ```
 
 Once you have done all of this, go to Django administration page at
 <http://localhost:8000/admin/>. The `seeddb` command created an administrator
 account with the following credentials for you:
 
-- Username: `admin@localhost`
-- Password: `password`
+- **Username**: `admin@localhost`
+- **Password**: `password`
 
 Log in using these credentials and you have full access to the administration
 page.
