@@ -6,6 +6,8 @@
 import os
 from collections.abc import Iterable, Sequence
 
+import dj_database_url
+
 try:
     from dotenv import load_dotenv
 except ImportError as e:
@@ -167,3 +169,7 @@ class Development(Base):
             **Base.SECURE_CSP,
             "report-uri": ["/csp-report/"],
         }
+        cls.DATABASES["default"] = dj_database_url.config(
+            default="sqlite:///projectify.sqlite",
+            conn_max_age=cls.CONN_MAX_AGE,
+        )

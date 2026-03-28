@@ -214,6 +214,7 @@ class Base(Configuration):  # type:ignore
     # Database
     # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
     DATABASES: dict[str, dj_database_url.DBConfig]
+    CONN_MAX_AGE = 0
 
     # Django authentication settings
     # ==============================
@@ -478,9 +479,8 @@ class Base(Configuration):  # type:ignore
     @classmethod
     def setup(cls) -> None:
         """Load database config, after environment is correctly loaded."""
-        CONN_MAX_AGE = 0
         cls.DATABASES = {
-            "default": dj_database_url.config(conn_max_age=CONN_MAX_AGE)
+            "default": dj_database_url.config(conn_max_age=cls.CONN_MAX_AGE)
         }
 
     @classmethod
