@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2024 JWP Consulting GK
+SPDX-FileCopyrightText: 2024-2026 JWP Consulting GK
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
@@ -12,27 +12,16 @@ inspect, customize and distribute according to their needs.
 Official instance:
 [https://www.projectifyapp.com](https://www.projectifyapp.com).
 
-# Development Requirements
-
-- Python version at least 3.12.12
-- [uv](https://docs.astral.sh/uv/getting-started/installation/)
-- [Node.js](https://nodejs.org/en/download) >= 24.13.1
-
-[Here's how to install asdf](https://asdf-vm.com/guide/getting-started.html)
-on your computer.
-
-## Installing Python 3.12 and Node.js 24
-
-Managing Python and Node.js versions is convenient using [asdf](https://asdf-vm.com/):
-
-```bash
-asdf plugin-add python
-asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
-asdf install python 3.12.12
-asdf install node.js 24.13.1
-```
-
 # Quickstart
+
+To run Projectify, you need the install these programs:
+
+- Python version 3.12 or greater
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
+- [Node.js](https://nodejs.org/en/download) version 24 or greater
+
+Read the [Installing Python and Node.js](#installing-python-and-nodejs)
+section to learn how to install Python and Node.js with [asdf](https://asdf-vm.com/).
 
 After making sure that you've added the dependencies, follow these
 steps to start developing with Projectify. With these steps, SQLite works out
@@ -59,10 +48,10 @@ of the box and no database setup is needed.
   ```
 5. Start the Django development server and Tailwind CSS with **honcho**:
   ```bash
-  # running `uv sync --all-groups` already installed honcho for you.
-  # Honcho runs these processes:
+  # running `uv sync --all-groups` already installed honcho.
+  # Honcho runs two programs at the same time for you:
   # 1. Django development server at http://localhost:8000
-  # 2. Tailwind CSS development tool
+  # 2. Tailwind CSS watcher to rebuild stylesheet
   uv run honcho start
   ```
 
@@ -74,9 +63,23 @@ account with the following credentials for you:
 - **Password**: `password`
 
 Log in using these credentials and you have full access to the administration
-page.
+page. Please don't use these credentials in production.
 
 You're done!
+
+## Installing Python and Node.js
+
+Managing Python and Node.js versions is convenient using [asdf](https://asdf-vm.com/):
+
+```bash
+asdf plugin-add python
+asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+asdf install python 3.12.12
+asdf install node.js 24.13.1
+```
+
+[Here's how to install asdf](https://asdf-vm.com/guide/getting-started.html)
+on your computer.
 
 # uv
 
@@ -95,8 +98,9 @@ Resolved 114 packages in 491ms
 Updated pyjwt v2.11.0 -> v2.12.1
 ```
 
-Make sure to run `bin/update-requirements` afterwards. Updating PyJWT to
-version 2.12.1 results in the following diff for the `requirements.txt` file:
+Make sure to run the `bin/update-requirements` script afterwards. This
+script updates the `requirements.txt` file in the repository.
+Updating PyJWT to version 2.12.1 results in the following diff for the `requirements.txt` file:
 
 ```patch
 -pyjwt==2.11.0 \
@@ -109,11 +113,29 @@ version 2.12.1 results in the following diff for the `requirements.txt` file:
 
 # Formatting
 
+Format the Projectify code using [ruff](https://docs.astral.sh/ruff/) and
+[djlint](https://djlint.com/) with the following command:
+
 ```
 uv run bin/format.sh
 ```
 
+# Tests
+
+Run tests with [pytest](https://docs.pytest.org/en/stable/) and other testing
+tools with the following command:
+
+```bash
+uv run bin/test.sh
+```
+
+# Production deployment
+
+Refer to [docs/django-configuration.md](docs/django-configuration.md) to learn
+more about how to configure Projectify in production.
+
 # Copyright and licencing information
+
 To look for files missing copyright and licencing information:
 
 ```
@@ -122,7 +144,8 @@ uv run reuse lint
 
 # Neovim
 
-You can use Neovim with the [Pyright](https://github.com/microsoft/pyright) Language Server Protococol (LSP) server. To make sure that Neovim uses the right Pyright from
+You can use Neovim with the [Pyright](https://github.com/microsoft/pyright)
+Language Server Protocol (LSP) server. To make sure that Neovim uses the right Pyright from
 this repository, run neovim inside `uv`:
 
 ```bash
@@ -143,7 +166,7 @@ Alternatively, configure [direnv](https://direnv.net/) and [nix-direnv](https://
 # Translations
 
 Projectify uses Django's built-in GNU gettext-based translation. Learn more
-about Django's translation features [here](https://docs.djangoproject.com/en/5.1/topics/i18n/translation/#translate-template-tag).
+about Django's [translation features here](https://docs.djangoproject.com/en/5.1/topics/i18n/translation/#translate-template-tag).
 
 You can update the translation files by running the following commands:
 
@@ -153,18 +176,17 @@ uv run ./manage.py makemessages --ignore=bin/ -l en --ignore='gunicorn.conf.py' 
 
 # Develop with PostgreSQL
 
-Projectify also works with PostgreSQL for either deployment or local
-development.
+While SQLite works well for many use cases, you may want to deploy or develop
+Projectify with PostgreSQL.
+Projectify on [www.projectifyapp.com](https://www.projectifyapp.com) uses PostgreSQL
+as its main database.
 Projectify supports [PostgreSQL](https://www.postgresql.org/) version 15.5 or greater.
 
 Here's how to install PostgreSQL:
 
-- On **macOS** (using Homebrew): `brew install postgresql` [^brew-postgres]
+- On **macOS** (using Homebrew): `brew install postgresql`
 - On **Debian**: `sudo apt install postgresql libpq-dev`
 - On **other systems**: See the [PostgresSQL documentation](https://www.postgresql.org/download/)
-
-[^brew-postgres]: [postgresql on *brew.sh*](https://formulae.brew.sh/formula/postgresql@18#default)
-
 
 Check whether you can connect to your local PostgreSQL instance by using the
 following command:
@@ -207,6 +229,16 @@ These are the values for `DATABASE_URL` when connecting to PostgreSQL:
   `DATABASE_URL = postgres://%2Fvar%2Flib%2Fpostgresql/projectify`
 - Connect to UNIX domain socket on **macOS**:
   `DATABASE_URL = postgres://%2Ftmp/projectify`
+
+This uses the `%2F` encoding as described in the [dj-database-url URL schema](https://github.com/jazzband/dj-database-url?tab=readme-ov-file#url-schema)
+documentation:
+
+> With PostgreSQL or CloudSQL, you can also use unix domain socket paths
+> with percent encoding: postgres://%2Fvar%2Flib%2Fpostgresql/dbname
+> mysql://uf07k1i6d8ia0v@%2fcloudsql%2fproject%3alocation%3ainstance/dbname
+
+[docs/postgresql.md](docs/postgresql.md) contains pointers on how to
+troubleshoot using Projectify with PostgreSQL.
 
 # License
 
