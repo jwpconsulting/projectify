@@ -2,15 +2,16 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # SPDX-FileCopyrightText: 2023-2026 JWP Consulting GK
 #
-# Update requirements.txt and exit with status 1 if it has
-# changed
+# Update requirements.txt for hosted Projectify on
+# www.projectifyapp.com
+# and exit with status 1 if it has changed
 if ! uv lock --check --quiet > /dev/null 2>&1
 then
     echo "uv lock --check failed. Please fix any issues before using this tool"
     exit 1
 fi
 
-if ! uv export --no-default-groups --no-sources --format requirements.txt --no-emit-project --extra postgresql --output-file requirements.txt > /dev/null; then
+if ! uv export --no-default-groups --no-sources --format requirements.txt --no-emit-project --extra postgresql --extra hosted --output-file requirements.txt > /dev/null; then
     echo "uv export failed."
     exit 1
 fi

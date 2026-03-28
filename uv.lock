@@ -832,8 +832,6 @@ dependencies = [
     { name = "dj-database-url" },
     { name = "django" },
     { name = "django-allauth", extra = ["socialaccount"] },
-    { name = "django-anymail" },
-    { name = "django-cloudinary-storage" },
     { name = "django-markdownify" },
     { name = "django-ratelimit" },
     { name = "gunicorn" },
@@ -843,6 +841,10 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
+hosted = [
+    { name = "django-anymail" },
+    { name = "django-cloudinary-storage" },
+]
 postgresql = [
     { name = "psycopg", extra = ["c"] },
 ]
@@ -877,8 +879,8 @@ requires-dist = [
     { name = "dj-database-url", specifier = "~=2.1.0" },
     { name = "django", specifier = ">=6.0.0,<7" },
     { name = "django-allauth", extras = ["socialaccount"], specifier = ">=65.14.3" },
-    { name = "django-anymail", extras = ["mailgun"], specifier = ">=10.3,<10.4" },
-    { name = "django-cloudinary-storage", specifier = "~=0.3.0" },
+    { name = "django-anymail", extras = ["mailgun"], marker = "extra == 'hosted'", specifier = ">=10.3,<10.4" },
+    { name = "django-cloudinary-storage", marker = "extra == 'hosted'", specifier = "~=0.3.0" },
     { name = "django-markdownify", specifier = ">=0.9.5,<0.10" },
     { name = "django-ratelimit", specifier = ">=4.1.0,<5" },
     { name = "gunicorn", specifier = ">=23,<24" },
@@ -887,7 +889,7 @@ requires-dist = [
     { name = "stripe", specifier = ">=8,<9" },
     { name = "whitenoise", specifier = "~=6.2.0" },
 ]
-provides-extras = ["postgresql"]
+provides-extras = ["postgresql", "hosted"]
 
 [package.metadata.requires-dev]
 dev = [
