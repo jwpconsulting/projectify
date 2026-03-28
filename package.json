@@ -1,17 +1,16 @@
 {
   "name": "projectify-tailwind",
-  "version": "0.1",
   "description": "Projectify tailwindcss packages and scripts",
   "scripts": {
-    "start": "npm run dev",
-    "build": "npm run build:clean && npm run build:tailwind",
-    "build:clean": "rm -r projectify/static/css/dist",
-    "build:tailwind": "tailwindcss --postcss -i projectify/static_src/src/styles.css -o projectify/static/css/dist/styles.css",
-    "dev": "tailwindcss --postcss -i projectify/static_src/src/styles.css -o projectify/static/css/dist/styles.css --watch",
-    "tailwindcss": "node ./node_modules/tailwindcss/lib/cli.js"
+    "start": "npm run tailwindcss -- --watch",
+    "build": "rm projectify/static/css/dist/styles.css && npm run tailwindcss",
+    "tailwindcss": "node ./node_modules/tailwindcss/lib/cli.js --postcss --input projectify/static_src/src/styles.css -o projectify/static/css/dist/styles.css"
   },
   "keywords": [],
-  "author": "",
+  "author": "The Projectify Authors <hello@projectifyapp.com>",
+  "maintainers": [
+    "Justus Perlwitz <justus@jwpconsulting.net>"
+  ],
   "license": "AGPL-3.0-or-later",
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.10",

@@ -3,10 +3,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 [project]
-name = "projectify"
-version = "2026.3.15"
-description = "Projectify Backend"
-requires-python = "~=3.12.12"
+name = "projectify-app"
+version = "2026.3.28"
+description = "Projectify is a Free Software project management app"
+requires-python = ">=3.12.12"
 readme = "README.md"
 license = "AGPL-3.0-or-later"
 license-files = [
