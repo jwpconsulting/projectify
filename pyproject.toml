@@ -6,7 +6,7 @@
 name = "projectify-app"
 version = "2026.3.15"
 description = "Projectify Backend"
-requires-python = "~=3.12.12"
+requires-python = ">=3.12.12"
 readme = "README.md"
 license = "AGPL-3.0-or-later"
 license-files = [
