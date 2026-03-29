@@ -837,7 +837,7 @@ wheels = [
 
 [[package]]
 name = "projectify-app"
-version = "2026.3.28"
+version = "2026.3.29"
 source = { editable = "." }
 dependencies = [
     { name = "bleach" },
@@ -853,6 +853,9 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
+demo = [
+    { name = "faker" },
+]
 hosted = [
     { name = "django-anymail" },
     { name = "django-cloudinary-storage" },
@@ -896,13 +899,14 @@ requires-dist = [
     { name = "django-cloudinary-storage", marker = "extra == 'hosted'", specifier = "~=0.3.0" },
     { name = "django-markdownify", specifier = ">=0.9.5,<0.10" },
     { name = "django-ratelimit", specifier = ">=4.1.0,<5" },
+    { name = "faker", marker = "extra == 'demo'", specifier = ">=19.13.0,<20" },
     { name = "gunicorn", specifier = ">=23,<24" },
     { name = "pillow", specifier = ">=12.1.1" },
     { name = "psycopg", extras = ["c"], marker = "extra == 'postgresql'", specifier = ">=3.1.18,<4" },
     { name = "stripe", specifier = ">=8,<9" },
     { name = "whitenoise", specifier = "~=6.2.0" },
 ]
-provides-extras = ["postgresql", "hosted"]
+provides-extras = ["demo", "postgresql", "hosted"]
 
 [package.metadata.requires-dev]
 dev = [

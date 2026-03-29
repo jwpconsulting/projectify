@@ -4,7 +4,7 @@
 
 [project]
 name = "projectify-app"
-version = "2026.3.28"
+version = "2026.3.29"
 description = "Projectify is a Free Software project management app"
 requires-python = ">=3.12.12"
 readme = "README.md"
@@ -32,7 +32,14 @@ maintainers = [
     { name = "Justus Perlwitz", email = "justus@jwpconsulting.net" },
 ]
 
+[project.scripts]
+projectify-demo = "projectify.demo:main"
+
 [project.optional-dependencies]
+# Dependencies needed to run projectify-demo
+demo = [
+    "faker>=19.13.0,<20",
+]
 postgresql = [
     "psycopg[c]>=3.1.18,<4",
 ]
