@@ -837,7 +837,7 @@ wheels = [
 
 [[package]]
 name = "projectify-app"
-version = "2026.3.28"
+version = "2026.3.29"
 source = { editable = "." }
 dependencies = [
     { name = "bleach" },
