@@ -6,6 +6,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Changelog
 
+## 2026.3.29
+
+Add `projectify-demo` demo command.
+
 ## 2026.3.28
 
 ### Enhancement

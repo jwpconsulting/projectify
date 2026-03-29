@@ -12,9 +12,26 @@ inspect, customize and distribute according to their needs.
 Official instance:
 [https://www.projectifyapp.com](https://www.projectifyapp.com).
 
-# Quickstart
+# Try it out
+![Try out a demo instance on your own computer](docs/projectify-demo.png)
 
-To run Projectify, you need the install these programs:
+Here's how you can quickly spin up a demo instance on your own computer:
+
+```bash
+python -m venv projectify
+projectify/bin/pip install projectify-app[demo]
+projectify/bin/projectify-demo
+```
+
+Open <http://localhost:8100> in your browser and press **Log in** in the
+top right. Use these demo credentials:
+
+- **Email**: `admin@localhost`
+- **Password**: `password`
+
+# Development quickstart
+
+To develop with Projectify, you need the install these programs:
 
 - Python version 3.12 or greater
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)
@@ -42,8 +59,8 @@ of the box and no database setup is needed.
 4. Prepare the database:
   ```bash
   # Create the Projectify database with test data and users. Log in with
-  # user: admin@localhost
-  # password: password
+  # Email: admin@localhost
+  # Password: password
   uv run ./manage.py seeddb
   ```
 5. Start the Django development server and Tailwind CSS with **honcho**:
@@ -59,7 +76,7 @@ Once you have done all of this, go to Django administration page at
 <http://localhost:8000/admin/>. The `seeddb` command created an administrator
 account with the following credentials for you:
 
-- **Username**: `admin@localhost`
+- **Email**: `admin@localhost`
 - **Password**: `password`
 
 Log in using these credentials and you have full access to the administration
