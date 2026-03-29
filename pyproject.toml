@@ -32,7 +32,14 @@ maintainers = [
     { name = "Justus Perlwitz", email = "justus@jwpconsulting.net" },
 ]
 
+[project.scripts]
+projectify-demo = "projectify.demo:main"
+
 [project.optional-dependencies]
+# Dependencies needed to run projectify-demo
+demo = [
+    "faker>=19.13.0,<20",
+]
 postgresql = [
     "psycopg[c]>=3.1.18,<4",
 ]

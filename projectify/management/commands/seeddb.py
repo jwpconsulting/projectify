@@ -28,7 +28,13 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils.text import slugify
 
-from faker import Faker
+try:
+    from faker import Faker
+except ImportError as e:
+    raise RuntimeError(
+        "Could not import faker.\n"
+        "Are you running seeddb in the correct environment?"
+    ) from e
 
 from projectify.blog.models import Post, PostContent
 from projectify.corporate.models import Customer
