@@ -409,7 +409,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--n-users",
             type=int,
-            default=40,
+            default=20,
             help="Ensure N users are created",
         )
         parser.add_argument(
@@ -421,7 +421,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--n-projects",
             type=int,
-            default=20,
+            default=10,
             help="Ensure N projects are added to a new workspace",
         )
         parser.add_argument(
@@ -433,13 +433,13 @@ class Command(BaseCommand):
         parser.add_argument(
             "--n-labels",
             type=int,
-            default=20,
+            default=10,
             help="Ensure N labels are added to a new workspace",
         )
         parser.add_argument(
             "--n-tasks",
             type=int,
-            default=40,
+            default=20,
             help="Ensure up to N tasks are in new section",
         )
         parser.add_argument(
