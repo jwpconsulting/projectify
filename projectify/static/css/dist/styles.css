@@ -2256,10 +2256,6 @@ video {
   font-weight: 700;
 }
 
-.font-normal {
-  font-weight: 400;
-}
-
 .font-semibold {
   font-weight: 600;
 }
@@ -2581,10 +2577,6 @@ video {
     order: 2;
   }
 
-  .sm\:order-none {
-    order: 0;
-  }
-
   .sm\:flex {
     display: flex;
   }
@@ -2601,10 +2593,6 @@ video {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .sm\:grid-cols-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
   .sm\:grid-cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
@@ -2615,10 +2603,6 @@ video {
 
   .sm\:items-center {
     align-items: center;
-  }
-
-  .sm\:gap-16 {
-    gap: 4rem;
   }
 
   .sm\:gap-6 {
@@ -2661,11 +2645,6 @@ video {
     line-height: 2.25rem;
   }
 
-  .sm\:text-4xl {
-    font-size: 2.25rem;
-    line-height: 2.5rem;
-  }
-
   .sm\:text-6xl {
     font-size: 3.75rem;
     line-height: 1;
@@ -2677,6 +2656,10 @@ video {
 }
 
 @media (min-width: 768px) {
+  .md\:order-none {
+    order: 0;
+  }
+
   .md\:block {
     display: block;
   }
@@ -2705,17 +2688,23 @@ video {
     flex-direction: row;
   }
 
-  .md\:gap-8 {
-    gap: 2rem;
-  }
-
   .md\:p-2 {
     padding: 0.5rem;
+  }
+
+  .md\:py-12 {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
   }
 
   .md\:text-3xl {
     font-size: 1.875rem;
     line-height: 2.25rem;
+  }
+
+  .md\:text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
   }
 
   .md\:text-5xl {

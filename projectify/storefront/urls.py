@@ -18,10 +18,6 @@ from projectify.storefront.views import (
     privacy,
     security_disclose,
     security_general,
-    solutions_academic,
-    solutions_development_teams,
-    solutions_index,
-    solutions_project_management,
     tos,
 )
 
@@ -43,30 +39,15 @@ urlpatterns = [
     path("tos", tos, name="tos"),
     path("pricing", pricing, name="pricing"),
     path("privacy", privacy, name="privacy"),
-    # Solutions
-    path("solutions", solutions_index, name="solutions-list"),
-    path(
-        "solutions/",
-        permanent_redirect("storefront:solutions-list"),
-    ),
-    path(
-        "solutions/development-teams",
-        solutions_development_teams,
-        name="solutions-development-teams",
-    ),
-    path(
-        "solutions/project-management",
-        solutions_project_management,
-        name="solutions-project-management",
-    ),
-    path("solutions/academic", solutions_academic, name="solutions-academic"),
-    # Deleted solutions
+    # Former solutions views
     *(
-        path(
-            p,
-            permanent_redirect("storefront:solutions-list"),
-        )
+        path(p, permanent_redirect("storefront:landing"))
         for p in [
+            "solutions",
+            "solutions/",
+            "solutions/development-teams",
+            "solutions/project-management",
+            "solutions/academic",
             "solutions/personal-use",
             "solutions/remote-work",
             "solutions/research",

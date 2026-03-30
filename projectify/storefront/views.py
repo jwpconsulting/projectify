@@ -107,26 +107,6 @@ def security_general(request: HttpRequest) -> HttpResponse:
     return render(request, "storefront/security/general.html", context)
 
 
-def solutions_index(request: HttpRequest) -> HttpResponse:
-    """Serve Solutions Index page."""
-    return render(request, "storefront/solutions/solutions_index.html")
-
-
-def solutions_development_teams(request: HttpRequest) -> HttpResponse:
-    """Serve development teams solutions page."""
-    return render(request, "storefront/solutions/development-teams.html")
-
-
-def solutions_project_management(request: HttpRequest) -> HttpResponse:
-    """Serve project management solutions page."""
-    return render(request, "storefront/solutions/project-management.html")
-
-
-def solutions_academic(request: HttpRequest) -> HttpResponse:
-    """Serve academic solutions page."""
-    return render(request, "storefront/solutions/academic.html")
-
-
 def tos(request: HttpRequest) -> HttpResponse:
     """Serve TOS page."""
     return render(request, "storefront/tos.html")
