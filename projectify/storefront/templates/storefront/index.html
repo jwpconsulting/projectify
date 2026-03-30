@@ -120,6 +120,31 @@
             {% trans "Projectify is 100 % Free Software" as title %}
             {% url "storefront:free_software" as learnmore_url %}
             {% include "storefront/common/solutions_detail_item.html" with title=title text=_("We respect your freedom and privacy and provide you with the source code under a Free Software license. The Projectify application is licensed under the GNU Affero General Public License (AGPL) version 3.0 or later.") src="open-source.png" alt=_("Birds freed from their gilded cages") imgPosition="left" learnmore_url=learnmore_url learnmore_label=_("Learn more about Free Software") %}
+            <section class="flex flex-col gap-7">
+                <header class="flex flex-col gap-3">
+                    <h2 class="text-2xl font-bold sm:text-4xl">{% trans "Run Projectify on your own computer" %}</h2>
+                    <p>{% trans "Here's how you can quickly spin up a demo instance on your own computer:" %}</p>
+                </header>
+                <div class="bg-background rounded-lg p-4 overflow-x-auto">
+                    <pre><code>python -m venv projectify
+projectify/bin/pip install projectify-app[demo]
+projectify/bin/projectify-demo</code></pre>
+                </div>
+                <div class="flex flex-col gap-3">
+                    <p>
+                        {% blocktrans %}Open <a href="http://localhost:8100" class="text-primary hover:underline">http://localhost:8100</a> in your browser and press <strong>Log in</strong> in the top right. Use these demo credentials:{% endblocktrans %}
+                    </p>
+                    <ul class="list-disc list-inside">
+                        <li>
+                            {% blocktrans %}<strong>Email</strong>: <code>admin@localhost</code>{% endblocktrans %}
+                        </li>
+                        <li>
+                            {% blocktrans %}<strong>Password</strong>: <code>password</code>{% endblocktrans %}
+                        </li>
+                    </ul>
+                    <p>{% translate "That's all you need to try Projectify." %}</p>
+                </div>
+            </section>
             {% if latest_posts %}
                 <section class="flex flex-col gap-7">
                     <header class="flex flex-col gap-3">
