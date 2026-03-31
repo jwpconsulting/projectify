@@ -15,3 +15,15 @@ class TestHealthCheck(TestCase):
         response = self.client.get(reverse("health-check"))
         assert response.status_code == 204
         assert response.content == b""
+
+
+class TestSitemap(TestCase):
+    """Test the Projectify view."""
+
+    def test_sitemap(self) -> None:
+        """Test that the sitemap works."""
+        # Not using reverse here because crawlers commonly assume
+        # sitemap.xml exists. Then, the sitemap being at sitemap.xml is part
+        # of the spec.
+        response = self.client.get("/sitemap.xml")
+        assert response.status_code == 200
