@@ -190,6 +190,69 @@
                     </section>
                 </div>
             </section>
+            <section id="pricing" class="flex flex-col gap-7">
+                <header class="flex flex-col gap-3">
+                    <h2 class="text-3xl font-bold md:text-5xl">{% trans "Pricing" %}</h2>
+                    <p class="md:text-center md:text-2xl md:font-bold">{% trans "One plan. One price. All features." %}</p>
+                </header>
+                <div class="flex flex-col gap-4">
+                    <h3 class="text-xl font-bold md:text-2xl">{% trans "What's included?" %}</h3>
+                    <ul class="list-inside list-disc">
+                        <li>{% trans "Unlimited tasks" %}</li>
+                        <li>{% trans "Unlimited projects" %}</li>
+                        <li>{% trans "Collaborate with team members" %}</li>
+                        <li>{% trans "Add multiple labels" %}</li>
+                        <li>{% trans "Role permissions" %}</li>
+                        <li>{% trans "Customize your workspace" %}</li>
+                        <li>{% trans "Archive completed projects" %}</li>
+                        <li>{% trans "Filter by label or assignee" %}</li>
+                        <li>{% trans "Accessible interface" %}</li>
+                    </ul>
+                </div>
+                <div class="flex w-full max-w-xl flex-col gap-4 rounded-xl bg-background px-4 py-6 md:items-center md:gap-8">
+                    <div class="flex flex-col gap-4">
+                        <h3 class="text-xl font-bold md:text-center">{% trans "Universal Plan" %}</h3>
+                        <strong class="text-4xl font-bold">{% blocktranslate with price="$8.00" %}{{ price }} / seat per month{% endblocktranslate %}</strong>
+                    </div>
+                    {% if user.is_authenticated %}
+                        <a href="/help/billing"
+                           class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Learn more" %}</a>
+                    {% else %}
+                        <a href="{% url 'users:sign-up' %}"
+                           class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Start a free trial" %}</a>
+                    {% endif %}
+                </div>
+                <div id="trial-mode" class="flex flex-col gap-4">
+                    <h3 class="text-xl font-bold md:text-2xl md:text-center">{% trans "Trial mode available" %}</h3>
+                    <p>
+                        {% blocktranslate %}
+                        You can use a Projectify workspace in trial mode free of
+                        charge. The trial allows you to evaluate whether the
+                        Projectify project management software suits your needs.
+                        While your workspace is in trial mode, the following
+                        limitations will apply.
+                        {% endblocktranslate %}
+                    </p>
+                    <h4 class="text-lg font-bold md:text-center">{% trans "Trial mode limitations" %}</h4>
+                    <ul class="list-inside list-disc md:self-center">
+                        <li>
+                            {% blocktranslate with team_members=2 %}A workspace can have up to <strong>{{ team_members }}</strong> team members{% endblocktranslate %}
+                        </li>
+                        <li>
+                            {% blocktranslate with projects=10 %}A workspace can hold up to <strong>{{ projects }}</strong> projects{% endblocktranslate %}
+                        </li>
+                        <li>
+                            {% blocktranslate with sections=100 %}You can create up to <strong>{{ sections }}</strong> sections{% endblocktranslate %}
+                        </li>
+                        <li>
+                            {% blocktranslate with tasks=1000 %}You can create up to <strong>{{ tasks }}</strong> tasks{% endblocktranslate %}
+                        </li>
+                        <li>
+                            {% blocktranslate with labels=10 %}You can create up to <strong>{{ labels }}</strong> labels{% endblocktranslate %}
+                        </li>
+                    </ul>
+                </div>
+            </section>
             <section class="flex flex-col items-center gap-6 md:grid grid-cols-2">
                 <div class="flex flex-col gap-6 order-last md:order-none">
                     <h2 class="text-3xl font-bold md:text-5xl">{% trans "We never sell your data. Ever." %}</h2>

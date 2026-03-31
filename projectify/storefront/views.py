@@ -71,11 +71,6 @@ def free_software(request: HttpRequest) -> HttpResponse:
     return render(request, "storefront/free_software.html", context)
 
 
-def pricing(request: HttpRequest) -> HttpResponse:
-    """Serve Pricing page."""
-    return render(request, "storefront/pricing.html")
-
-
 def privacy(request: HttpRequest) -> HttpResponse:
     """Serve Privacy page."""
     return render(request, "storefront/privacy.html")

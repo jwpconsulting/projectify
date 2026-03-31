@@ -14,7 +14,6 @@ from projectify.storefront.views import (
     ethicalads,
     free_software,
     index,
-    pricing,
     privacy,
     security_disclose,
     security_general,
@@ -37,12 +36,13 @@ urlpatterns = [
     path("credits", credits, name="credits"),
     path("security/", include((security_patterns, "security"))),
     path("tos", tos, name="tos"),
-    path("pricing", pricing, name="pricing"),
     path("privacy", privacy, name="privacy"),
-    # Former solutions views
     *(
         path(p, permanent_redirect("storefront:landing"))
         for p in [
+            # Pricing
+            "pricing"
+            # Former solutions views
             "solutions",
             "solutions/",
             "solutions/development-teams",
