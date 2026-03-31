@@ -33,14 +33,9 @@ class StorefrontSitemap(sitemaps.Sitemap):
             "storefront:free_software",
             "storefront:credits",
             "storefront:tos",
-            "storefront:pricing",
             "storefront:privacy",
             "storefront:security:general",
             "storefront:security:disclose",
-            "storefront:solutions-list",
-            "storefront:solutions-development-teams",
-            "storefront:solutions-project-management",
-            "storefront:solutions-academic",
         ]
 
     def location(self, item: str) -> str:  # type: ignore
