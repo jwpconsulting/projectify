@@ -1786,10 +1786,6 @@ video {
   gap: 1.5rem;
 }
 
-.gap-7 {
-  gap: 1.75rem;
-}
-
 .gap-8 {
   gap: 2rem;
 }
@@ -2141,11 +2137,6 @@ video {
 .py-1 {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
-}
-
-.py-10 {
-  padding-top: 2.5rem;
-  padding-bottom: 2.5rem;
 }
 
 .py-2 {
@@ -2605,20 +2596,12 @@ video {
     flex-direction: row;
   }
 
-  .sm\:items-center {
-    align-items: center;
-  }
-
   .sm\:gap-6 {
     gap: 1.5rem;
   }
 
   .sm\:gap-8 {
     gap: 2rem;
-  }
-
-  .sm\:self-center {
-    align-self: center;
   }
 
   .sm\:px-0 {
@@ -2638,24 +2621,6 @@ video {
 
   .sm\:text-left {
     text-align: left;
-  }
-
-  .sm\:text-center {
-    text-align: center;
-  }
-
-  .sm\:text-3xl {
-    font-size: 1.875rem;
-    line-height: 2.25rem;
-  }
-
-  .sm\:text-6xl {
-    font-size: 3.75rem;
-    line-height: 1;
-  }
-
-  .sm\:font-bold {
-    font-weight: 700;
   }
 }
 
@@ -2692,18 +2657,6 @@ video {
     flex-direction: row;
   }
 
-  .md\:items-center {
-    align-items: center;
-  }
-
-  .md\:gap-8 {
-    gap: 2rem;
-  }
-
-  .md\:self-center {
-    align-self: center;
-  }
-
   .md\:p-2 {
     padding: 0.5rem;
   }
@@ -2713,8 +2666,9 @@ video {
     padding-bottom: 3rem;
   }
 
-  .md\:text-center {
-    text-align: center;
+  .md\:text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
   }
 
   .md\:text-3xl {
@@ -2735,11 +2689,6 @@ video {
   .md\:text-6xl {
     font-size: 3.75rem;
     line-height: 1;
-  }
-
-  .md\:text-2xl {
-    font-size: 1.5rem;
-    line-height: 2rem;
   }
 
   .md\:font-bold {

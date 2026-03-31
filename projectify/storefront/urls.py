@@ -4,6 +4,7 @@
 """Storefront urlpatterns."""
 
 from django.urls import include, path
+from django.views.generic import RedirectView
 
 from projectify.lib.views import permanent_redirect
 from projectify.storefront.views import (
@@ -37,11 +38,10 @@ urlpatterns = [
     path("security/", include((security_patterns, "security"))),
     path("tos", tos, name="tos"),
     path("privacy", privacy, name="privacy"),
+    path("pricing", RedirectView.as_view(url="/#pricing", permanent=True)),
     *(
         path(p, permanent_redirect("storefront:landing"))
         for p in [
-            # Pricing
-            "pricing"
             # Former solutions views
             "solutions",
             "solutions/",
