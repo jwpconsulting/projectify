@@ -2585,6 +2585,10 @@ video {
     display: grid;
   }
 
+  .sm\:w-auto {
+    width: auto;
+  }
+
   .sm\:max-w-xs {
     max-width: 20rem;
   }

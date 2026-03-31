@@ -196,36 +196,34 @@
                     <h2 class="text-3xl font-bold md:text-5xl">{% trans "Pricing" %}</h2>
                     <p class="md:text-2xl md:font-bold">{% trans "One plan. One price. All features." %}</p>
                 </header>
-                <div class="w-full max-w-md justify-self-center">
-                    <div class="flex flex-col gap-6 rounded-xl bg-background p-6">
-                        <div class="flex flex-col gap-4">
-                            <h3 class="text-xl font-bold md:text-2xl">{% trans "Universal Plan" %}</h3>
-                            <p class="text-3xl font-bold">
-                                {% blocktranslate with price="$8.00" %}{{ price }} / seat per month{% endblocktranslate %}
-                            </p>
-                        </div>
-                        <div class="flex flex-col gap-3">
-                            <p class="font-bold">{% trans "What's included:" %}</p>
-                            <ul class="list-inside list-disc flex flex-col gap-2">
-                                <li>{% trans "Unlimited tasks" %}</li>
-                                <li>{% trans "Unlimited projects" %}</li>
-                                <li>{% trans "Collaborate with team members" %}</li>
-                                <li>{% trans "Add multiple labels" %}</li>
-                                <li>{% trans "Role permissions" %}</li>
-                                <li>{% trans "Customize your workspace" %}</li>
-                                <li>{% trans "Archive completed projects" %}</li>
-                                <li>{% trans "Filter by label or assignee" %}</li>
-                                <li>{% trans "Accessible interface" %}</li>
-                            </ul>
-                        </div>
-                        {% if user.is_authenticated %}
-                            <a href="/help/billing"
-                               class="bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Learn more" %}</a>
-                        {% else %}
-                            <a href="{% url 'users:sign-up' %}"
-                               class="bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Start a free trial" %}</a>
-                        {% endif %}
+                <div class="w-full sm:w-auto flex flex-col gap-6 rounded-xl bg-background p-6">
+                    <div class="flex flex-col gap-4">
+                        <h3 class="text-xl font-bold md:text-2xl">{% trans "Universal Plan" %}</h3>
+                        <p class="text-3xl font-bold">
+                            {% blocktranslate with price="$8.00" %}{{ price }} / seat per month{% endblocktranslate %}
+                        </p>
                     </div>
+                    <div class="flex flex-col gap-3">
+                        <p class="font-bold">{% trans "What's included:" %}</p>
+                        <ul class="list-inside list-disc flex flex-col gap-2">
+                            <li>{% trans "Unlimited tasks" %}</li>
+                            <li>{% trans "Unlimited projects" %}</li>
+                            <li>{% trans "Collaborate with team members" %}</li>
+                            <li>{% trans "Add multiple labels" %}</li>
+                            <li>{% trans "Role permissions" %}</li>
+                            <li>{% trans "Customize your workspace" %}</li>
+                            <li>{% trans "Archive completed projects" %}</li>
+                            <li>{% trans "Filter by label or assignee" %}</li>
+                            <li>{% trans "Accessible interface" %}</li>
+                        </ul>
+                    </div>
+                    {% if user.is_authenticated %}
+                        <a href="/help/billing"
+                           class="bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Learn more" %}</a>
+                    {% else %}
+                        <a href="{% url 'users:sign-up' %}"
+                           class="bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Start a free trial" %}</a>
+                    {% endif %}
                 </div>
                 <div class="flex flex-col gap-6 items-start order-last md:order-none">
                     <h3 class="text-xl font-bold md:text-2xl">{% trans "Trial mode available" %}</h3>
