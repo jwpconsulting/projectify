@@ -48,10 +48,10 @@
 {% endblock structured_data %}
 {% block storefront_content %}
     <main id="main"
-          class="flex flex-col items-center gap-10 bg-foreground pb-20">
-        <section class="w-full max-w-4xl px-6 py-6 sm:py-12 grid grid-cols-1 items-center gap-4 sm:grid-cols-2">
+          class="flex flex-col items-center gap-12 bg-foreground pb-20">
+        <section class="w-full max-w-4xl px-6 py-6 md:py-12 grid grid-cols-1 items-center gap-6 md:grid-cols-2">
             <div class="flex flex-col gap-12">
-                <header class="flex flex-col gap-10">
+                <header class="flex flex-col gap-8">
                     <h1 class="text-4xl font-bold md:text-6xl">{% trans "Manage projects the right way." %}</h1>
                     <p>
                         {% trans "Warp drive your way to success with software that helps you collaborate on and manage projects efficiently at speed." %}
@@ -85,7 +85,7 @@
             </div>
         </section>
         <div class="w-full p-6 max-w-4xl flex flex-col gap-16">
-            <section class="flex flex-col gap-4">
+            <section class="flex flex-col gap-6">
                 <h2 class="text-center text-3xl font-bold md:text-5xl">
                     {% blocktrans %}Everything you need to <span class="text-primary">stay organized</span> and <span class="text-primary">deliver faster</span>{% endblocktrans %}
                 </h2>
@@ -93,36 +93,198 @@
                     {% trans "The go-to project management tool for developers." %}
                 </p>
             </section>
-            <section class="flex flex-col gap-7">
-                <header class="flex flex-col gap-3">
-                    <h2 class="text-2xl font-bold sm:text-4xl">{% trans "Meeting diverse needs with practical solutions." %}</h2>
+            <section class="flex flex-col gap-8">
+                <header class="flex flex-col gap-4">
+                    <h2 class="text-3xl font-bold md:text-5xl">{% trans "Meeting diverse needs with practical solutions." %}</h2>
                     <p>
                         {% trans "From companies big and small to individuals working alone, you can use Projectify to manage all kinds of tasks." %}
                     </p>
                 </header>
-                <div class="grid grid-cols-1 gap-8 sm:grid-cols-3 text-center">
-                    <div class="flex flex-col gap-3">
+                <div class="grid grid-cols-1 gap-8 md:grid-cols-3 text-center">
+                    <a href="#development-teams" class="flex flex-col gap-4">
                         {% picture src="solutions/hero-development-teams.png" alt=_("An illustration showing our mascot Poly working at a computer") %}
-                        {% anchor "storefront:solutions-development-teams" label=_("Development teams") %}
-                    </div>
-                    <div class="flex flex-col gap-3">
+                        <span class="font-bold">{% trans "Development teams" %}</span>
+                    </a>
+                    <a href="#project-management" class="flex flex-col gap-4">
                         {% picture src="solutions/hero-project-management.png" alt=_("Two Polys in a factory pointing at machines symbolized by huge gears. The mascot on the left holds a wrench.") %}
-                        {% anchor "storefront:solutions-project-management" label=_("Project management") %}
-                    </div>
-                    <div class="flex flex-col gap-3">
+                        <span class="font-bold">{% trans "Project management" %}</span>
+                    </a>
+                    <a href="#academic-endeavours" class="flex flex-col gap-4">
                         {% picture src="solutions/hero-academic.png" alt=_("Our mascot Poly celebrating their graduation from an educiational institution, wearing an academic dress, throwing a square academic cap into the air") %}
-                        {% anchor "storefront:solutions-academic" label=_("Academic endeavours") %}
-                    </div>
+                        <span class="font-bold">{% trans "Academic endeavours" %}</span>
+                    </a>
+                </div>
+                <div id="development-teams" class="flex flex-col gap-16">
+                    <header class="flex flex-col gap-4">
+                        <h2 class="text-3xl font-bold md:text-5xl">{% trans "Development teams" %}</h2>
+                        <p>
+                            {% trans "How development teams can use Projectify to create tasks, monitor pulls requests and deploy faster." %}
+                        </p>
+                    </header>
+                    <section class="flex flex-col items-center gap-6 md:grid grid-cols-2">
+                        <div class="w-full max-w-lg justify-self-center">
+                            {% picture src="solutions/development-teams-filter.png" alt=_("A illustration showing the label context menu used in Projectify") %}
+                        </div>
+                        <div class="flex flex-col gap-6 order-last md:order-none">
+                            <h3 class="text-2xl font-bold md:text-4xl">{% trans "Organise with labels and task numbers" %}</h3>
+                            <p>
+                                {% trans "Use labels with terms like bug, enhancement or backend to categorize tasks. Filter with labels or search by task number to quickly locate what you're looking for." %}
+                            </p>
+                        </div>
+                    </section>
+                    <section class="flex flex-col items-center gap-6 md:grid grid-cols-2">
+                        <div class="flex flex-col gap-6 order-last md:order-none">
+                            <h3 class="text-2xl font-bold md:text-4xl">{% trans "Plan and execute" %}</h3>
+                            <p>{% trans "Set up and monitor features, QA tasks, bug fixes and more for multiple team members of your team." %}</p>
+                        </div>
+                        <div class="w-full max-w-lg justify-self-center">
+                            {% picture src="solutions/development-teams-tasks.png" alt=_("An illustration showing tasks in a section called 'In Progress'") %}
+                        </div>
+                    </section>
+                </div>
+                <div id="project-management" class="flex flex-col gap-16">
+                    <header class="flex flex-col gap-4">
+                        <h2 class="text-3xl font-bold md:text-5xl">{% trans "Project management" %}</h2>
+                        <p>
+                            {% trans "How project managers can use Projectify to efficiently manage tasks, projects and team members of their team." %}
+                        </p>
+                    </header>
+                    <section class="flex flex-col items-center gap-6 md:grid grid-cols-2">
+                        <div class="w-full max-w-lg justify-self-center">
+                            {% picture src="solutions/project-management-team-member.png" alt=_("An illustration showing how Projectify displays each team members assigned task count") %}
+                        </div>
+                        <div class="flex flex-col gap-6 order-last md:order-none">
+                            <h3 class="text-2xl font-bold md:text-4xl">{% trans "An ethical approach to management" %}</h3>
+                            <p>
+                                {% trans "View how many tasks a team member has assigned to them, so the workload can be divided equally. Filter by team member to see what individual colleagues are working on." %}
+                            </p>
+                        </div>
+                    </section>
+                    <section class="flex flex-col items-center gap-6 md:grid grid-cols-2">
+                        <div class="flex flex-col gap-6 order-last md:order-none">
+                            <h3 class="text-2xl font-bold md:text-4xl">{% trans "Permissions to control access" %}</h3>
+                            <p>
+                                {% trans "Make sure nothing important gets deleted. With permission roles - Owner, Maintainer, Contributor and Observer, you can be safe in knowing there won't be any accidental data loss." %}
+                            </p>
+                        </div>
+                        <div class="w-full max-w-lg justify-self-center">
+                            {% picture src="solutions/project-management-permissions.png" alt=_("An illustration of a settings screen showing team members belonging to a team member and their role within the workspace. The illustration also shows a button allowing filtering by role and another button letting a user invite new team members") %}
+                        </div>
+                    </section>
+                </div>
+                <div id="academic-endeavours" class="flex flex-col gap-16">
+                    <header class="flex flex-col gap-4">
+                        <h2 class="text-3xl font-bold md:text-5xl">{% trans "Academic endeavours" %}</h2>
+                        <p>{% trans "How students can use Projectify to plan a thesis, collaborate, or keep track of assignments." %}</p>
+                    </header>
+                    <section class="flex flex-col items-center gap-6 md:grid grid-cols-2">
+                        <div class="w-full max-w-lg justify-self-center">
+                            {% picture src="solutions/academic-tasks.png" alt=_("A screenshot showing academic tasks organized with labels and assignees") %}
+                        </div>
+                        <div class="flex flex-col gap-6 order-last md:order-none">
+                            <h3 class="text-2xl font-bold md:text-4xl">{% trans "Organize your coursework efficiently" %}</h3>
+                            <p>
+                                {% trans "Keep all your tasks organized in one place. From essay assignments to research projects, Projectify helps you  collaborate with classmates. Labels make it easy to categorize and prioritze your coursework." %}
+                            </p>
+                        </div>
+                    </section>
                 </div>
             </section>
-            {% url "storefront:privacy" as pp_url %}
-            {% include "storefront/common/solutions_detail_item.html" with title=_("We never sell your data. Ever.") text=_("Our platform fully complies with GDPR regulations, amongst others, so you can rest assured that your private information stays private.") src="privacy.png" alt=_("An illustration showing our mascot Poly safekeeping your data") learnmore_url=pp_url learnmore_label=_("Learn more about privacy and Projectify") imgPosition="right" %}
-            {% trans "Projectify is 100 % Free Software" as title %}
-            {% url "storefront:free_software" as learnmore_url %}
-            {% include "storefront/common/solutions_detail_item.html" with title=title text=_("We respect your freedom and privacy and provide you with the source code under a Free Software license. The Projectify application is licensed under the GNU Affero General Public License (AGPL) version 3.0 or later.") src="open-source.png" alt=_("Birds freed from their gilded cages") imgPosition="left" learnmore_url=learnmore_url learnmore_label=_("Learn more about Free Software") %}
-            <section class="flex flex-col gap-7">
-                <header class="flex flex-col gap-3">
-                    <h2 class="text-2xl font-bold sm:text-4xl">{% trans "Run Projectify on your own computer" %}</h2>
+            <section id="pricing"
+                     class="flex flex-col items-start gap-6 md:grid grid-cols-2">
+                <header class="flex flex-col gap-4 col-span-2">
+                    <h2 class="text-3xl font-bold md:text-5xl">{% trans "Pricing" %}</h2>
+                    <p class="md:text-2xl md:font-bold">{% trans "One plan. One price. All features." %}</p>
+                </header>
+                <div class="w-full sm:w-auto flex flex-col gap-6 rounded-xl bg-background p-6">
+                    <div class="flex flex-col gap-4">
+                        <h3 class="text-xl font-bold md:text-2xl">{% trans "Universal Plan" %}</h3>
+                        <p class="text-3xl font-bold">
+                            {% blocktranslate with price="$8.00" %}{{ price }} / seat per month{% endblocktranslate %}
+                        </p>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <p class="font-bold">{% trans "What's included:" %}</p>
+                        <ul class="list-inside list-disc flex flex-col gap-2">
+                            <li>{% trans "Unlimited tasks" %}</li>
+                            <li>{% trans "Unlimited projects" %}</li>
+                            <li>{% trans "Collaborate with team members" %}</li>
+                            <li>{% trans "Add multiple labels" %}</li>
+                            <li>{% trans "Role permissions" %}</li>
+                            <li>{% trans "Customize your workspace" %}</li>
+                            <li>{% trans "Archive completed projects" %}</li>
+                            <li>{% trans "Filter by label or assignee" %}</li>
+                            <li>{% trans "Accessible interface" %}</li>
+                        </ul>
+                    </div>
+                    {% if user.is_authenticated %}
+                        <a href="/help/billing"
+                           class="bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Learn more" %}</a>
+                    {% else %}
+                        <a href="{% url 'users:sign-up' %}"
+                           class="bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Start a free trial" %}</a>
+                    {% endif %}
+                </div>
+                <div class="flex flex-col gap-6 items-start order-last md:order-none">
+                    <h3 class="text-xl font-bold md:text-2xl">{% trans "Trial mode available" %}</h3>
+                    <p>
+                        {% blocktranslate %}
+                            You can use a Projectify workspace in trial mode free of
+                            charge. The trial allows you to evaluate whether the
+                            Projectify project management software suits your needs.
+                            While your workspace is in trial mode, the following
+                            limitations will apply:
+                            {% endblocktranslate %}
+                    </p>
+                    <ul class="list-inside list-disc flex flex-col gap-2">
+                        <li>
+                            {% blocktranslate with team_members=2 %}Your workspace can have up to <strong>{{ team_members }}</strong> team members{% endblocktranslate %}
+                        </li>
+                        <li>
+                            {% blocktranslate with projects=10 %}Your workspace can hold up to <strong>{{ projects }}</strong> projects{% endblocktranslate %}
+                        </li>
+                        <li>
+                            {% blocktranslate with sections=100 %}You can create up to <strong>{{ sections }}</strong> sections{% endblocktranslate %}
+                        </li>
+                        <li>
+                            {% blocktranslate with tasks=1000 %}You can create up to <strong>{{ tasks }}</strong> tasks{% endblocktranslate %}
+                        </li>
+                        <li>
+                            {% blocktranslate with labels=10 %}You can create up to <strong>{{ labels }}</strong> labels{% endblocktranslate %}
+                        </li>
+                    </ul>
+                </div>
+            </section>
+            <section class="flex flex-col items-center gap-6 md:grid grid-cols-2">
+                <div class="flex flex-col gap-6 order-last md:order-none">
+                    <h2 class="text-3xl font-bold md:text-5xl">{% trans "We never sell your data. Ever." %}</h2>
+                    <p>
+                        {% trans "Our platform fully complies with GDPR regulations, amongst others, so you can rest assured that your private information stays private." %}
+                    </p>
+                    {% url "storefront:privacy" as pp_url %}
+                    {% anchor pp_url label=_("Learn more about privacy and Projectify") %}
+                </div>
+                <div class="w-full max-w-lg justify-self-center">
+                    <a href="{% url 'storefront:privacy' %}">{% picture src="privacy.png" alt=_("An illustration showing our mascot Poly safekeeping your data") %}</a>
+                </div>
+            </section>
+            <section class="flex flex-col items-center gap-6 md:grid grid-cols-2">
+                <div class="w-full max-w-lg justify-self-center">
+                    {% url "storefront:free_software" as learnmore_url %}
+                    <a href="{{ learnmore_url }}">{% picture src="open-source.png" alt=_("Birds freed from their gilded cages") %}</a>
+                </div>
+                <div class="flex flex-col gap-6 order-last md:order-none">
+                    <h2 class="text-3xl font-bold md:text-5xl">{% trans "Projectify is 100 % Free Software" %}</h2>
+                    <p>
+                        {% trans "We respect your freedom and privacy and provide you with the source code under a Free Software license. The Projectify application is licensed under the GNU Affero General Public License (AGPL) version 3.0 or later." %}
+                    </p>
+                    {% url "storefront:free_software" as learnmore_url %}
+                    {% anchor learnmore_url label=_("Learn more about Free Software") %}
+                </div>
+            </section>
+            <section class="flex flex-col gap-8">
+                <header class="flex flex-col gap-4">
+                    <h2 class="text-3xl font-bold md:text-5xl">{% trans "Run Projectify on your own computer" %}</h2>
                     <p>{% trans "Here's how you can quickly spin up a demo instance on your own computer:" %}</p>
                 </header>
                 <div class="bg-background rounded-lg p-4 overflow-x-auto">
@@ -130,7 +292,7 @@
 projectify/bin/pip install projectify-app[demo]
 projectify/bin/projectify-demo</code></pre>
                 </div>
-                <div class="flex flex-col gap-3">
+                <div class="flex flex-col gap-4">
                     <p>
                         {% blocktrans %}Open <a href="http://localhost:8100" class="text-primary hover:underline">http://localhost:8100</a> in your browser and press <strong>Log in</strong> in the top right. Use these demo credentials:{% endblocktrans %}
                     </p>
@@ -146,16 +308,16 @@ projectify/bin/projectify-demo</code></pre>
                 </div>
             </section>
             {% if latest_posts %}
-                <section class="flex flex-col gap-7">
-                    <header class="flex flex-col gap-3">
-                        <h2 class="text-2xl font-bold sm:text-4xl">{% trans "Recent blog posts" %}</h2>
+                <section class="flex flex-col gap-8">
+                    <header class="flex flex-col gap-4">
+                        <h2 class="text-3xl font-bold md:text-5xl">{% trans "Recent blog posts" %}</h2>
                         <p>{% trans "Here's where we publish product updates and other news." %}</p>
                     </header>
                     <ul class="flex flex-col gap-4 list-disc list-inside">
                         {% for post in latest_posts %}
                             <li>
                                 {% anchor href=post.get_absolute_url label=post.title %}
-                                {% blocktrans with author=post.author date=post.published %}{{ date }}{% endblocktrans %}
+                                {% blocktrans with date=post.published %}{{ date }}{% endblocktrans %}
                             </li>
                         {% endfor %}
                     </ul>
