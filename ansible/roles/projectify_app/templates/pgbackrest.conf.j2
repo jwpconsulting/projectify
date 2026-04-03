@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: 2026 JWP Consulting GK
+# pgBackRest configuration, see
+# https://pgbackrest.org/user-guide.html#quickstart
+
+[projectify]
+pg1-path=/var/lib/postgresql/17/main
+
+[global]
+repo1-path=/srv/backups/pgbackrest
+# One full back up per day for 7 days, see
+# 9.1  Full Backup Retention in
+# https://pgbackrest.org/user-guide.html#quickstart/configure-archiving
+repo1-retention-full-type=time
+repo1-retention-full=7
+# 24 differential backups
+repo1-retention-diff=24

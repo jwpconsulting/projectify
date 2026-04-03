@@ -1,0 +1,15 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# SPDX-FileCopyrightText: 2026 JWP Consulting GK
+
+- name: Configure SSH Bastion
+  hosts: ssh_bastion
+  roles:
+    - system
+    - ssh_bastion
+
+- name: Configure Projectify App Server
+  hosts: projectify_app
+  roles:
+    - system
+    - projectify_app

@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2009-2026 (c) Benoît Chesneau <benoitc@gunicorn.org>
+# SPDX-FileCopyrightText: 2009-2015 (c) Paul J. Davis <paul.joseph.davis@gmail.com>
+[Unit]
+Description=gunicorn socket
+
+[Socket]
+ListenStream=/run/gunicorn.sock
+SocketUser=caddy
+SocketGroup=caddy
+SocketMode=0660
+
+[Install]
+WantedBy=sockets.target
