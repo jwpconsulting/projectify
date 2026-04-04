@@ -1,0 +1,15 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: 2026 JWP Consulting GK
+
+[Unit]
+Description=Projectify user uploaded media backup
+After=network.target
+
+[Service]
+Type=oneshot
+User=projectify
+Group=projectify
+ExecStart=/usr/bin/rsync -av --delete /var/lib/projectify/media/ /srv/backups/projectify_app_media/
+
+[Install]
+WantedBy=multi-user.target

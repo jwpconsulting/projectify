@@ -130,17 +130,41 @@
       become_user: postgres
 
 # TODO create systemd unit for pgbackrest
-- name: Create media backup directory
-  ansible.builtin.file:
-      path: "{{ item }}"
-      state: directory
-      owner: projectify
-      group: projectify
-      mode: '0750'
-  loop:
-      # Expect volume mounted at /srv/backups
-      - /srv/backups/projectify_app_media
-# TODO create systemd unit for media / rsync backup
+- name: Configure media backup rsync service
+  block:
+    - name: Create media backup directory
+      ansible.builtin.file:
+          # Expect volume mounted at /srv/backups
+          path: "/srv/backups/projectify_app_media"
+          state: directory
+          owner: projectify
+          group: projectify
+          mode: '0700'
+    - name: Copy media backup systemd service unit
+      ansible.builtin.template:
+          src: projectify-media-backup.service.j2
+          dest: /etc/systemd/system/projectify-media-backup.service
+          owner: root
+          group: root
+          mode: '0644'
+      register: media_backup_service
+    - name: Copy media backup systemd timer unit
+      ansible.builtin.template:
+          src: projectify-media-backup.timer.j2
+          dest: /etc/systemd/system/projectify-media-backup.timer
+          owner: root
+          group: root
+          mode: '0644'
+      register: media_backup_timer
+    - name: Reload systemd daemon
+      ansible.builtin.systemd:
+          daemon_reload: true
+      when: media_backup_service.changed or media_backup_timer.changed
+    - name: Enable and start media backup timer
+      ansible.builtin.systemd:
+          name: projectify-media-backup.timer
+          enabled: true
+          state: started
 
 - name: Configure Python dependencies
   become: true
