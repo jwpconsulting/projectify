@@ -1,0 +1,42 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: 2026 JWP Consulting GK
+# Shared Debian system configuration
+# 1. Update/Upgrade apt packages
+# 2. Harden OpenSSH settings
+# 3. Enable nftables
+# 4. TODO enable daily apt updates
+
+- name: Update/Upgrade apt  packages
+  block:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600
+    - name: Upgrade all packages
+      ansible.builtin.apt:
+        upgrade: dist
+
+- name: Configure SSH
+  block:
+    - name: Copy SSH hardening configuration
+      ansible.builtin.copy:
+        src: 200-harden.conf
+        dest: /etc/ssh/sshd_config.d/200-harden.conf
+        owner: root
+        group: root
+        mode: '0644'
+      register: ssh_harden_config
+
+    - name: Reload SSH if configuration changed
+      ansible.builtin.systemd:
+        name: sshd
+        state: reloaded
+      when: ssh_harden_config.changed
+
+- name: Enable nftables service
+  ansible.builtin.systemd:
+    name: nftables
+    enabled: yes
+    state: started
+
+# TODO check apt daily update is enabled

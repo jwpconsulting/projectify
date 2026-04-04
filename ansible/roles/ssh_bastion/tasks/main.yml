@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# SPDX-FileCopyrightText: 2026 JWP Consulting GK
+
+- name: Configure SSH bastion nftables
+  block:
+    - name: Install nftables configuration
+      ansible.builtin.template:
+        src: nftables.conf.j2
+        dest: /etc/nftables.conf
+        owner: root
+        group: root
+        mode: '0744'
+      register: nftables_config
+    - name: Reload nftables if configuration changed
+      ansible.builtin.systemd:
+        name: nftables
+        state: reloaded
+      when: nftables_config.changed

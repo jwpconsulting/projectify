@@ -41,6 +41,9 @@
             pkgs.openssl
             pkgs.gettext
             pkgs.stripe-cli
+
+            # Deployment
+            pkgs.ansible
           ];
         };
       }

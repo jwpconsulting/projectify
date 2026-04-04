@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2009-2026 (c) Benoît Chesneau <benoitc@gunicorn.org>
+# SPDX-FileCopyrightText: 2009-2015 (c) Paul J. Davis <paul.joseph.davis@gmail.com>
+
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+Type=notify
+NotifyAccess=main
+User=projectify
+Group=projectify
+WorkingDirectory=/var/lib/projectify/app
+# TODO add collectstatic, etc. see from render.yaml:
+# startCommand: 'python -m gunicorn --config gunicorn.conf.py --log-config gunicorn-error.log --access-logfile -'
+# TODO configure logs
+ExecStart=/var/lib/projectify/venv/bin/gunicorn
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

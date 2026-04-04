@@ -32,3 +32,7 @@ projectify/staticfiles/
 
 # Nix build
 result*
+
+# Ansible
+# =======
+ansible/inventory.*

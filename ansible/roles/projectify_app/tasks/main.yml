@@ -1,0 +1,209 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# SPDX-FileCopyrightText: 2026 JWP Consulting GK
+
+- name: "Verify that backup storage {{ backup_storage_path }} is mounted at /srv/backups"
+  ansible.builtin.command:
+      cmd: "findmnt --source '{{ backup_storage_path }}' --mountpoint /srv/backups"
+  changed_when: false
+  register: findmnt_result
+  failed_when: findmnt_result.rc != 0
+
+- name: Install dependencies for Projectify app server
+  ansible.builtin.apt:
+      name:
+          # db, postgresql
+          - postgresql
+          - postgresql-contrib
+          - pgbackrest
+          # For community.postgresql.postgresql_db
+          - python3-psycopg2
+          # venv creation for Projectify source code
+          - python3-virtualenv
+          # Compile psycopg-c, see
+          # https://www.psycopg.org/psycopg3/docs/basic/install.html#local-installation
+          - libpq-dev
+          - build-essential
+          - python3-dev
+          # Back up media
+          - rsync
+          # Rev proxy
+          - caddy
+          # Used to check out projectify repo
+          - git
+      state: present
+
+- name: Create projectify user
+  ansible.builtin.user:
+      name: projectify
+      group: projectify
+      system: true
+      shell: /bin/bash
+      home: /var/lib/projectify
+      create_home: true
+
+- name: Configure nftables for app server
+  block:
+    - name: Install nftables configuration
+      ansible.builtin.template:
+          src: nftables.conf.j2
+          dest: /etc/nftables.conf
+          owner: root
+          group: root
+          mode: '0744'
+      register: nftables_config
+    - name: Reload nftables if configuration changed
+      ansible.builtin.systemd:
+          name: nftables
+          state: reloaded
+      when: nftables_config.changed
+
+- name: Configure PostgreSQL
+  block:
+    - name: Ensure PostgreSQL is running
+      ansible.builtin.systemd:
+          name: postgresql
+          enabled: true
+          state: started
+    - name: Create projectify database user
+      community.postgresql.postgresql_user:
+          name: projectify
+          login_db: projectify
+      become: true
+      become_user: postgres
+    - name: Create projectify database
+      community.postgresql.postgresql_db:
+          name: projectify
+          owner: projectify
+      become: true
+      become_user: postgres
+
+- name: Configure pgBackRest
+  block:
+    - name: Create pgBackRest directories
+      ansible.builtin.file:
+          path: "{{ item }}"
+          state: directory
+          owner: postgres
+          group: postgres
+          mode: '0750'
+      loop:
+          # Expect volume mounted at /srv/backups
+          - /srv/backups/pgbackrest
+          - /var/log/pgbackrest
+    - name: Install pgBackRest configuration
+      ansible.builtin.template:
+          src: pgbackrest.conf.j2
+          dest: /etc/pgbackrest.conf
+          owner: postgres
+          group: postgres
+          mode: '0644'
+    - name: Create pgBackRest stanza
+      ansible.builtin.command:
+          cmd: pgbackrest --stanza=projectify stanza-create
+      args:
+          creates: /srv/backups/pgbackrest/projectify
+      become: true
+      become_user: postgres
+
+# TODO create systemd unit for pgbackrest
+- name: Create media backup directory
+  ansible.builtin.file:
+      path: "{{ item }}"
+      state: directory
+      owner: projectify
+      group: projectify
+      mode: '0750'
+  loop:
+      # Expect volume mounted at /srv/backups
+      - /srv/backups/projectify_app_media
+# TODO create systemd unit for media / rsync backup
+
+- name: Configure Python dependencies
+  become: true
+  become_user: projectify
+  block:
+    - name: Clone Projectify repository
+      # TODO we'd rather not have to rely on git for this
+      ansible.builtin.git:
+          repo: https://github.com/jwpconsulting/projectify.git
+          dest: /var/lib/projectify/app
+          version: main
+    - name: Upgrade pip in virtual environment
+      ansible.builtin.pip:
+          name: pip
+          state: latest
+          virtualenv: /var/lib/projectify/venv
+    - name: Install Python dependencies from requirements.txt
+      ansible.builtin.pip:
+          requirements: /var/lib/projectify/app/requirements.txt
+          virtualenv: /var/lib/projectify/venv
+
+- name: Configure gunicorn
+  block:
+  - name: Copy gunicorn systemd socket unit
+    ansible.builtin.template:
+        src: gunicorn.socket.j2
+        dest: /etc/systemd/system/gunicorn.socket
+        owner: root
+        group: root
+        mode: '0644'
+    register: gunicorn_socket
+  - name: Copy gunicorn systemd service unit
+    ansible.builtin.template:
+        src: gunicorn.service.j2
+        dest: /etc/systemd/system/gunicorn.service
+        owner: root
+        group: root
+        mode: '0644'
+    register: gunicorn_service
+  - name: Reload systemd daemon if gunicorn files changed
+    ansible.builtin.systemd:
+        daemon_reload: true
+    when: gunicorn_socket.changed or gunicorn_service.changed
+  - name: Enable and start gunicorn socket
+    ansible.builtin.systemd:
+        name: gunicorn.socket
+        enabled: true
+        state: started
+  - name: Enable and reload gunicorn service
+    ansible.builtin.systemd:
+        name: gunicorn.service
+        enabled: true
+        state: reloaded
+
+- name: Configure Caddy
+  block:
+  - name: Copy Caddyfile
+    ansible.builtin.template:
+        src: Caddyfile.j2
+        dest: /etc/caddy/Caddyfile
+        owner: root
+        group: root
+        mode: '0644'
+    register: caddyfile
+  - name: Reload caddy service if Caddyfile changed
+    ansible.builtin.systemd:
+        name: caddy
+        state: reloaded
+    when: caddyfile.changed
+  - name: Enable and start caddy service
+    ansible.builtin.systemd:
+        name: caddy
+        enabled: true
+        state: started
+
+# Healthchecks
+# TODO check logging into psql with projectify user
+# TODO check caddy status
+- name: Check pbBackRest configuration
+  become: true
+  become_user: postgres
+  ansible.builtin.command:
+      cmd: pgbackrest --stanza=projectify --log-level-console=info check
+
+- name: Check gunicorn health
+  become: true
+  become_user: projectify
+  ansible.builtin.command:
+      cmd: curl --unix-socket /run/gunicorn.sock http
