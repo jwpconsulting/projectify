@@ -36,6 +36,7 @@ class Hetzner(Base):
     STRIPE_SECRET_KEY=
     """
 
+    SITE_TITLE = "Projectify Production on Hetzner"
     ALLOWED_HOSTS = ["www.projectifyapp.com"]
     FRONTEND_URL = f"https://{ALLOWED_HOSTS[0]}"
 
@@ -93,12 +94,6 @@ class Hetzner(Base):
             raise RuntimeError(
                 f"Could not find the credentials TOML file at {credentials_file}"
             ) from e
-
-        if "SITE_TITLE" not in os.environ:
-            raise RuntimeError(
-                "You must specify SITE_TITLE in the environment variables"
-            )
-        cls.SITE_TITLE = os.environ["SITE_TITLE"]
 
         if "SECRET_KEY" not in credentials:
             raise RuntimeError(
