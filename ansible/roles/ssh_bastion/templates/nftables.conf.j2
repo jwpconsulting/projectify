@@ -65,8 +65,10 @@ table inet firewall {
         # Allow loopback traffic.
         oif lo accept
 
-        # Allow SSH (22/tcp) to private network (10.0.0.0/16) on enp7s0
-        oifname "enp7s0" ip daddr 10.0.0.0/16 tcp dport 22 accept
+        # Allow SSH (22/tcp) to app server at 10.0.0.3 on enp7s0
+        oifname "enp7s0" ip daddr 10.0.0.3 tcp dport 22 accept
+        # Allow Prometheus scraping (9100/tcp) to app server 10.0.0.3 on enp7s0
+        oifname "enp7s0" ip daddr 10.0.0.3 tcp dport 9100 accept
         # Drop all other traffic to private network (10.0.0.0/16) on enp7s0
         oifname "enp7s0" ip daddr 10.0.0.0/16 drop
     }

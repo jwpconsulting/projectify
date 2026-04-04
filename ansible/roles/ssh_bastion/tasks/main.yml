@@ -18,6 +18,53 @@
         state: reloaded
       when: nftables_config.changed
 
+- name: Configure Prometheus
+  block:
+    - name: Install Prometheus and Node Exporter
+      ansible.builtin.apt:
+        name:
+          - prometheus
+          - prometheus-node-exporter
+        state: present
+        update_cache: yes
+
+    - name: Configure Prometheus
+      ansible.builtin.template:
+        src: prometheus.yml.j2
+        dest: /etc/prometheus/prometheus.yml
+        owner: prometheus
+        group: prometheus
+        mode: "0644"
+      register: prometheus_config
+
+    - name: Configure Prometheus to listen on localhost only
+      ansible.builtin.copy:
+        src: prometheus-defaults
+        dest: /etc/default/prometheus
+        mode: "0644"
+
+    - name: Configure Prometheus node exporter to listen on localhost only
+      ansible.builtin.copy:
+        src: prometheus-node-exporter-defaults
+        dest: /etc/default/prometheus-node-exporter
+        mode: "0644"
+
+    - name: Enable and restart Prometheus services
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        enabled: yes
+        state: restarted
+        daemon_reload: yes
+      loop:
+        - prometheus
+        - prometheus-node-exporter
+
+    - name: Reload Prometheus if config changed
+      ansible.builtin.systemd:
+        name: prometheus
+        state: reloaded
+      when: prometheus_config.changed
+
 - name: Configure Grafana
   block:
     # See

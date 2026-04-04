@@ -31,6 +31,8 @@
           - caddy
           # Used to check out projectify repo
           - git
+          # Monitoring
+          - prometheus-node-exporter
       state: present
 
 - name: Configure projectify user
@@ -50,6 +52,22 @@
           owner: projectify
           group: projectify
           mode: '0755'
+
+- name: Configure Prometheus Node Exporter on app server
+  block:
+    - name: Configure node exporter to listen on private network
+      ansible.builtin.copy:
+        src: prometheus-node-exporter-defaults
+        dest: /etc/default/prometheus-node-exporter
+        mode: "0644"
+      register: node_exporter_config
+
+    - name: Enable and restart node exporter
+      ansible.builtin.systemd:
+        name: prometheus-node-exporter
+        enabled: yes
+        state: restarted
+      when: node_exporter_config.changed
 
 - name: Configure nftables for app server
   block:

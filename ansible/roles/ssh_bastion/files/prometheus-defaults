@@ -1,0 +1,6 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# SPDX-FileCopyrightText: 2026 JWP Consulting GK
+
+# Set the command-line arguments to pass to the server.
+ARGS="--web.listen-address=127.0.0.1:9090"
