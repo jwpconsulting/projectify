@@ -4,4 +4,4 @@
 
 # Set the command-line arguments to pass to the server.
 # Listen on enp7s0 so that SSH bastion on 10.0.0.0/16 can scrape metrics
-ARGS="--web.listen-address=10.0.0.2:9100"
+ARGS="--web.listen-address=10.0.0.3:9100"

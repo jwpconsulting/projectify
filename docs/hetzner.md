@@ -425,3 +425,49 @@ Output:
  public | workspace_workspaceuserinvite_id_seq      | sequence | postgres
 (71 rows)
 ```
+
+# Implement rolling releases
+
+Directory structure:
+
+- `/var/lib/projectify/releases`
+- `/var/lib/projectify/releases/{GIT_COMMIT_SHA}`
+- `/var/lib/projectify/releases/{GIT_COMMIT_SHA}/venv`: Python virtualenv
+- `/var/lib/projectify/releases/{GIT_COMMIT_SHA}/app`: Projectify source code
+- `/var/lib/projectify/releases/{GIT_COMMIT_SHA}/static`: Projectify static files
+
+Symbolic links:
+
+- `/var/lib/projectify/releases/current` to
+  `/var/lib/projectify/releases/{GIT_COMMIT_SHA}`
+- `/var/lib/projectify/venv` to `/var/lib/projectify/releases/current/venv`
+- `/var/lib/projectify/app` to `/var/lib/projectify/releases/current/app`
+- `/usr/share/projectify/static` to
+  `/var/lib/projectify/releases/current/static`
+
+# Monitoring
+
+Connect to Bastio
+
+ssh root@204.168.222.148 -i ~/.ssh/id_rsa_yubikey.pub -L 3000:localhost:3000
+
+Create Grafana user on SSH bastion:
+
+```bash
+read PASSWORD
+grafana-cli admin reset-admin-password $PASSWORD
+```
+
+Strong password policy documentation: <https://grafana.com/docs/grafana/next/setup-grafana/configure-access/configure-authentication/grafana/#strong-password-policy>
+
+# To Do
+
+Investigate what this means:
+
+```
+projectify-bastion dhcpcd[971]: ps_root_recvmsg: Operation not permitted
+```
+
+- Find a good way to integrate Gunicorn with Prometheus/Grafana
+- Find a good way to integrate Django with Prometheus/Grafana
+- Find a good way to integrate Caddy with Prometheus/Grafana
