@@ -55,6 +55,18 @@ class Test(Base):
         super().pre_setup()
         load_dotenv()
 
+    @classmethod
+    def setup(cls) -> None:
+        """Set up mock OAuth app credentials."""
+        super().setup()
+        cls.SOCIALACCOUNT_PROVIDERS["github"]["APPS"].append(
+            {"client_id": "TEST", "secret": "TEST"}
+        )
+
+        cls.SOCIALACCOUNT_PROVIDERS["google"]["APPS"].append(
+            {"client_id": "TEST", "secret": "TEST"}
+        )
+
 
 class TestCollectstatic(Test):
     """Settings to test static file collection needed for whitenoise."""

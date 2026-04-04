@@ -153,7 +153,17 @@ class Development(Base):
             )
         )
 
-        # Allauth mock app
+        # Add CSP report URI for development
+        cls.SECURE_CSP = {
+            **Base.SECURE_CSP,
+            "report-uri": ["/csp-report/"],
+        }
+        cls.DATABASES["default"] = dj_database_url.config(
+            default="sqlite:///projectify.sqlite",
+            conn_max_age=cls.CONN_MAX_AGE,
+        )
+
+        # Allauth mock app, GitHub OAuth, and Google OAuth settings
         cls.SOCIALACCOUNT_PROVIDERS["openid_connect"] = {
             "APPS": [
                 {
@@ -163,13 +173,28 @@ class Development(Base):
                 }
             ]
         }
+        cls.SOCIALACCOUNT_PROVIDERS["github"]["APPS"].append(
+            {
+                "client_id": environ_get_or_warn(
+                    "ALLAUTH_GITHUB_CLIENT_ID",
+                    "You need to set this environment variable for logging in with GitHub.",
+                ),
+                "secret": environ_get_or_warn(
+                    "ALLAUTH_GITHUB_SECRET",
+                    "You need to set this environment variable for logging in with Github.",
+                ),
+            }
+        )
 
-        # Add CSP report URI for development
-        cls.SECURE_CSP = {
-            **Base.SECURE_CSP,
-            "report-uri": ["/csp-report/"],
-        }
-        cls.DATABASES["default"] = dj_database_url.config(
-            default="sqlite:///projectify.sqlite",
-            conn_max_age=cls.CONN_MAX_AGE,
+        cls.SOCIALACCOUNT_PROVIDERS["google"]["APPS"].append(
+            {
+                "client_id": environ_get_or_warn(
+                    "ALLAUTH_GOOGLE_CLIENT_ID",
+                    "You need to set this environment variable to enable log in with Google",
+                ),
+                "secret": environ_get_or_warn(
+                    "ALLAUTH_GOOGLE_SECRET",
+                    "You need to set this environment variable to enable log in with Google",
+                ),
+            }
         )

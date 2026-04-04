@@ -101,7 +101,6 @@ class Base(Configuration):  # type:ignore
     # > Although the setting offers little practical benefit, it’s sometimes required by security auditors.
     # https://docs.djangoproject.com/en/6.0/ref/settings/#csrf-cookie-httponly
     CSRF_COOKIE_HTTPONLY = True
-    CSRF_TRUSTED_ORIGINS: Optional[Sequence[str]]
 
     # HSTS
     # Approximately one year
@@ -274,40 +273,17 @@ class Base(Configuration):  # type:ignore
         # See `docs/auth.md` under **Edit GitHub OAuth settings**
         "github": {
             "SCOPE": ["user:email"],
-            "APPS": [
-                # TODO add django configuration check for these variables
-                # TODO disable GH log in route if these env vars are not
-                # given
-                {
-                    "client_id": environ_get_or_warn(
-                        "ALLAUTH_GITHUB_CLIENT_ID",
-                        "You need to set this environment variable for logging in with GitHub.",
-                    ),
-                    "secret": environ_get_or_warn(
-                        "ALLAUTH_GITHUB_SECRET",
-                        "You need to set this environment variable for logging in with Github.",
-                    ),
-                }
-            ],
+            # TODO add django configuration check for these variables
+            # TODO disable GH log in route if no APPS are set
+            "APPS": [],
         },
         # See `docs/auth.md` under **Edit Google OAuth settings**
         "google": {
             "SCOPE": ["email"],
-            "APPS": [
-                # TODO add django configuration check for these variables
-                # TODO disable GH log in route if these env vars are not
-                # given
-                {
-                    "client_id": environ_get_or_warn(
-                        "ALLAUTH_GOOGLE_CLIENT_ID",
-                        "You need to set this environment variable to enable log in with Google",
-                    ),
-                    "secret": environ_get_or_warn(
-                        "ALLAUTH_GOOGLE_SECRET",
-                        "You need to set this environment variable to enable log in with Google",
-                    ),
-                }
-            ],
+            # TODO add django configuration check for these variables
+            # TODO disable GH log in route if these env vars are not
+            # given
+            "APPS": [],
         },
     }
 
@@ -361,6 +337,8 @@ class Base(Configuration):  # type:ignore
     # Where to store media
     MEDIA_ROOT = BASE_DIR / "media"
     MEDIA_URL = "/media/"
+    # This configures whether ./manage.py runserver should serve media files
+    # ONLY use this for debugging or local development
     SERVE_MEDIA = False
 
     # Logging

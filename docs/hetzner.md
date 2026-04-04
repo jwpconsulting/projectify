@@ -148,6 +148,11 @@ Application data:
 - `/var/lib/projectify/state/media`: User uploaded media
 - `/var/gunicorn.socket`: Gunicorn socket, owner is `projectify:projectify`
 
+Backup directories:
+
+- `/srv/backups/pgbackrest`: pgBackRest stores database backups here
+- `/srv/backups/projectify_app_media`: rsync stores Projectify user uploaded media files here
+
 # System requirements
 
 - Latency: The landing page shall be served within 600 ms (*load* metric),

@@ -33,14 +33,23 @@
           - git
       state: present
 
-- name: Create projectify user
-  ansible.builtin.user:
-      name: projectify
-      group: projectify
-      system: true
-      shell: /bin/bash
-      home: /var/lib/projectify
-      create_home: true
+- name: Configure projectify user
+  block:
+    - name: Create projectify user
+      ansible.builtin.user:
+          name: projectify
+          group: projectify
+          system: true
+          shell: /bin/bash
+          home: /var/lib/projectify
+          create_home: true
+    - name: Create share directory
+      ansible.builtin.file:
+          path: "/usr/share/projectify/static"
+          state: directory
+          owner: projectify
+          group: projectify
+          mode: '0755'
 
 - name: Configure nftables for app server
   block:
@@ -60,11 +69,20 @@
 
 - name: Configure PostgreSQL
   block:
-    - name: Ensure PostgreSQL is running
+    - name: Install postgresql main configuration
+      ansible.builtin.template:
+        src: postgresql.conf
+        dest: "/etc/postgresql/17/main/postgresql.conf"
+        mode: '0644'
+        owner: root
+        group: root
+      register: postgresql_conf
+    - name: Reload PostgreSQL
       ansible.builtin.systemd:
           name: postgresql
           enabled: true
-          state: started
+          state: reloaded
+      when: postgresql_conf.changed
     - name: Create projectify database user
       community.postgresql.postgresql_user:
           name: projectify
@@ -95,8 +113,8 @@
       ansible.builtin.template:
           src: pgbackrest.conf.j2
           dest: /etc/pgbackrest.conf
-          owner: postgres
-          group: postgres
+          owner: root
+          group: root
           mode: '0644'
     - name: Create pgBackRest stanza
       ansible.builtin.command:
@@ -105,19 +123,48 @@
           creates: /srv/backups/pgbackrest/projectify
       become: true
       become_user: postgres
+    - name: Check pbBackRest configuration
+      ansible.builtin.command:
+          cmd: pgbackrest --stanza=projectify --log-level-console=info check
+      become: true
+      become_user: postgres
 
 # TODO create systemd unit for pgbackrest
-- name: Create media backup directory
-  ansible.builtin.file:
-      path: "{{ item }}"
-      state: directory
-      owner: projectify
-      group: projectify
-      mode: '0750'
-  loop:
-      # Expect volume mounted at /srv/backups
-      - /srv/backups/projectify_app_media
-# TODO create systemd unit for media / rsync backup
+- name: Configure media backup rsync service
+  block:
+    - name: Create media backup directory
+      ansible.builtin.file:
+          # Expect volume mounted at /srv/backups
+          path: "/srv/backups/projectify_app_media"
+          state: directory
+          owner: projectify
+          group: projectify
+          mode: '0700'
+    - name: Copy media backup systemd service unit
+      ansible.builtin.template:
+          src: projectify-media-backup.service.j2
+          dest: /etc/systemd/system/projectify-media-backup.service
+          owner: root
+          group: root
+          mode: '0644'
+      register: media_backup_service
+    - name: Copy media backup systemd timer unit
+      ansible.builtin.template:
+          src: projectify-media-backup.timer.j2
+          dest: /etc/systemd/system/projectify-media-backup.timer
+          owner: root
+          group: root
+          mode: '0644'
+      register: media_backup_timer
+    - name: Reload systemd daemon
+      ansible.builtin.systemd:
+          daemon_reload: true
+      when: media_backup_service.changed or media_backup_timer.changed
+    - name: Enable and start media backup timer
+      ansible.builtin.systemd:
+          name: projectify-media-backup.timer
+          enabled: true
+          state: started
 
 - name: Configure Python dependencies
   become: true
@@ -138,6 +185,13 @@
       ansible.builtin.pip:
           requirements: /var/lib/projectify/app/requirements.txt
           virtualenv: /var/lib/projectify/venv
+    - name: Run collectstatic
+      ansible.builtin.command:
+          cmd: /var/lib/projectify/venv/bin/python /var/lib/projectify/app/manage.py collectstatic --noinput
+      environment:
+          DJANGO_SETTINGS_MODULE: projectify.settings.collect_static
+          DJANGO_CONFIGURATION: CollectStatic
+          STATIC_ROOT: "{{ static_root }}"
 
 - name: Configure gunicorn
   block:
@@ -149,6 +203,11 @@
         group: root
         mode: '0644'
     register: gunicorn_socket
+  - name: Verify gunicorn credentials file exists
+    ansible.builtin.stat:
+        path: "{{ credentials_file }}"
+    register: credentials_file_stat
+    failed_when: not credentials_file_stat.stat.exists
   - name: Copy gunicorn systemd service unit
     ansible.builtin.template:
         src: gunicorn.service.j2
@@ -166,11 +225,21 @@
         name: gunicorn.socket
         enabled: true
         state: started
+    when: gunicorn_socket.changed
   - name: Enable and reload gunicorn service
+    # XXX When you change th Environment variables in gunicorn.service.j2
+    # reloaing gunicorn.service doesn't point it at new variables, you need
+    # to restart it for that.
     ansible.builtin.systemd:
         name: gunicorn.service
         enabled: true
         state: reloaded
+    when: gunicorn_service.changed
+  - name: Check gunicorn health
+    ansible.builtin.command:
+        cmd: curl --unix-socket /run/gunicorn.sock www.projectifyapp.com
+    become: true
+    become_user: caddy
 
 - name: Configure Caddy
   block:
@@ -196,14 +265,3 @@
 # Healthchecks
 # TODO check logging into psql with projectify user
 # TODO check caddy status
-- name: Check pbBackRest configuration
-  become: true
-  become_user: postgres
-  ansible.builtin.command:
-      cmd: pgbackrest --stanza=projectify --log-level-console=info check
-
-- name: Check gunicorn health
-  become: true
-  become_user: projectify
-  ansible.builtin.command:
-      cmd: curl --unix-socket /run/gunicorn.sock http
