@@ -43,11 +43,11 @@
           group: projectify
           system: true
           shell: /bin/bash
-          home: /var/lib/projectify
+          home: "{{ projectify_user_home }}"
           create_home: true
-    - name: Create static directory
+    - name: Create releases root directory
       ansible.builtin.file:
-          path: "{{ static_root }}"
+          path: "{{ projectify_releases_root }}"
           state: directory
           owner: projectify
           group: projectify
@@ -220,33 +220,68 @@
           enabled: true
           state: started
 
-- name: Configure Python dependencies
-  become: true
-  become_user: projectify
+- name: Checkout and build Projectify release
   block:
-    - name: Clone Projectify repository
-      # TODO we'd rather not have to rely on git for this
+    - name: Clone Projectify repository to temporary location
       ansible.builtin.git:
           repo: https://github.com/jwpconsulting/projectify.git
-          dest: /var/lib/projectify/app
+          dest: /tmp/projectify_clone
           version: main
-    - name: Upgrade pip in virtual environment
+      register: git_clone
+    - name: Set release directory name
+      ansible.builtin.set_fact:
+          release_dir: "{{ projectify_releases_root }}/{{ ansible_date_time.date }}_{{ git_clone.after[:7] }}"
+    - name: Check if release already exists
+      ansible.builtin.stat:
+          path: "{{ release_dir }}"
+      register: release_exists
+    - name: Create release directory
+      ansible.builtin.file:
+          path: "{{ release_dir }}"
+          state: directory
+          owner: projectify
+          group: projectify
+          mode: '0755'
+      when: not release_exists.stat.exists
+    - name: Move cloned repository to release directory
+      ansible.builtin.command:
+          cmd: "mv /tmp/projectify_clone {{ release_dir }}/app"
+      when: not release_exists.stat.exists
+    - name: Create virtual environment and upgrade pip in venv
       ansible.builtin.pip:
           name: pip
           state: latest
-          virtualenv: "{{ venv_path }}"
+          virtualenv: "{{ release_dir }}/venv"
+      when: not release_exists.stat.exists
     - name: Install Python dependencies from requirements.txt
       ansible.builtin.pip:
-          requirements: /var/lib/projectify/app/requirements.txt
-          virtualenv: "{{ venv_path }}"
+          requirements: "{{ release_dir }}/app/requirements.txt"
+          virtualenv: "{{ release_dir }}/venv"
+      when: not release_exists.stat.exists
     - name: Run collectstatic
       ansible.builtin.command:
-          cmd: "{{ venv_path }}/bin/python ./manage.py collectstatic --noinput"
-          chdir: /var/lib/projectify/app
+          cmd: "{{ release_dir }}/venv/bin/python ./manage.py collectstatic --noinput"
+          chdir: "{{ release_dir }}/app"
       environment:
           DJANGO_SETTINGS_MODULE: projectify.settings.collect_static
           DJANGO_CONFIGURATION: CollectStatic
-          STATIC_ROOT: "{{ static_root }}"
+          STATIC_ROOT: "{{ release_dir }}/static"
+      when: not release_exists.stat.exists
+  become: true
+  become_user: projectify
+
+- name: Create symbolic links to current release
+  block:
+    - name: Create symbolic link for current release
+      ansible.builtin.file:
+          src: "{{ release_dir }}"
+          dest: "{{ projectify_current_release }}"
+          state: link
+          owner: projectify
+          group: projectify
+          force: yes
+  become: true
+  become_user: projectify
 
 - name: Configure gunicorn
   block:
@@ -290,6 +325,12 @@
         enabled: true
         state: reloaded
     when: gunicorn_service.changed
+  - name: Restart gunicorn to use new release
+    ansible.builtin.systemd:
+       name: gunicorn.service
+       state: restarted
+    become: true
+    when: not release_exists.stat.exists
   - name: Check gunicorn health
     ansible.builtin.command:
         cmd: curl --unix-socket /run/gunicorn.sock www.projectifyapp.com
