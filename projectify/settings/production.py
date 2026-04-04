@@ -26,11 +26,6 @@ class ProductionBase(Base):
     # TODO remove when Svelte frontend is gone
     FRONTEND_URL = os.environ["FRONTEND_URL"]
 
-    # TODO remove FRONTEND_URL fallback
-    CSRF_TRUSTED_ORIGINS = os.getenv("SECURITY_ORIGINS", FRONTEND_URL).split(
-        ","
-    )
-
     # Static files
     # We allow overriding this value in case the static files come prebuilt,
     # for example in a container, and an exact path is contained in
@@ -40,8 +35,6 @@ class ProductionBase(Base):
         if "STATIC_ROOT" in os.environ
         else Base.STATIC_ROOT
     )
-
-    CSRF_COOKIE_DOMAIN = os.getenv("CSRF_COOKIE_DOMAIN", None)
 
     # Logging config
     LOGGING = Base.LOGGING

@@ -203,11 +203,11 @@
         group: root
         mode: '0644'
     register: gunicorn_socket
-  - name: Verify gunicorn environment file configuration.env exists
+  - name: Verify gunicorn credentials file exists
     ansible.builtin.stat:
-        path: /var/lib/projectify/configuration.env
-    register: config_env_stat
-    failed_when: not config_env_stat.stat.exists
+        path: "{{ credentials_file }}"
+    register: credentials_file_stat
+    failed_when: not credentials_file_stat.stat.exists
   - name: Copy gunicorn systemd service unit
     ansible.builtin.template:
         src: gunicorn.service.j2

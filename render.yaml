@@ -65,5 +65,3 @@ projects:
                     sync: false
                   - key: MAILGUN_DOMAIN
                     sync: false
-                  - key: CSRF_COOKIE_DOMAIN
-                    sync: false

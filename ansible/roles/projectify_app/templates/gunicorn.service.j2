@@ -20,9 +20,7 @@ Environment="DATABASE_URL=postgres://%%2Frun%%2Fpostgresql/projectify"
 Environment="ALLOWED_HOSTS=www.projectifyapp.com"
 Environment="STATIC_ROOT={{ static_root }}"
 # TODO use LoadCredential for secrets
-EnvironmentFile=/var/lib/projectify/configuration.env
-# TODO add collectstatic, etc. see from render.yaml:
-# startCommand: 'python -m gunicorn --config gunicorn.conf.py --log-config gunicorn-error.log --access-logfile -'
+Environment="CREDENTIALS_FILE={{ credentials_file }}"
 # TODO configure logs
 ExecStart=/var/lib/projectify/venv/bin/gunicorn
 ExecReload=/bin/kill -s HUP $MAINPID

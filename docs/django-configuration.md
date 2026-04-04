@@ -17,11 +17,11 @@ ensure that the Projectify backend will launch correctly.
 
 ## General
 
-- `DJANGO_SETTINGS_MODULE`: Usually set to `projectify.settings.production`
-- `DJANGO_CONFIGURATION`: Usually set to `Production`
+- `DJANGO_SETTINGS_MODULE`: For Hetzner deployment, use
+  `projectify.settings.hetzner`
+- `DJANGO_CONFIGURATION`: For Hetzner deployment, use `Hetzner`
 - `SECRET_KEY`: Used for session cookie generation
-- `SITE_TITLE` (**optional**): Title of site, defaults to
-  `Projectify Production`
+- `SITE_TITLE`: Title of site (Note: This used to be optional)
 
 ## Error reporting
 
@@ -35,16 +35,11 @@ contents of the logged error.
 
 ## Networking
 
-- `PORT`: Used for gunicorn to determine which port to bind to
+- `PORT`: Used for gunicorn to determine which port to bind to, OR,
+- `SOCKET`: Used for gunicorn to determine which UNIX socket to bind to.
 - `ALLOWED_HOSTS`: Which host names to permit in HTTP Host header. Comma
   separated values.
 - `FRONTEND_URL`: URL for where Projectify frontend is served.
-- `SECURITY_ORIGINS` (**optional**): Allowed URLs for
-  [CORS](https://pypi.org/project/django-cors-headers/)/[CSRF](https://docs.djangoproject.com/en/5.0/ref/settings/#csrf-trusted-origins).
-  Defaults to `ALLOWED_HOSTS`.
-- `CSRF_COOKIE_DOMAIN` (**optional**): Domain for CSRF cookie. Defaults to
-  None. See
-  [Django documentation](https://docs.djangoproject.com/en/5.0/ref/settings/#std-setting-CSRF_COOKIE_DOMAIN);
 
 ## Database
 
