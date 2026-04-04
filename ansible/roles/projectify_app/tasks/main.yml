@@ -65,6 +65,11 @@
           name: postgresql
           enabled: true
           state: started
+    - name: Install postgresql main configuration
+      ansible.builtin.file:
+        src: postgresql.conf
+        dest: "/etc/postgresql/17/main/postgresql.conf"
+        mode: '0644'
     - name: Create projectify database user
       community.postgresql.postgresql_user:
           name: projectify

@@ -13,6 +13,7 @@ NotifyAccess=main
 User=projectify
 Group=projectify
 WorkingDirectory=/var/lib/projectify/app
+Environment=SOCKET=/run/gunicorn.sock
 # TODO add collectstatic, etc. see from render.yaml:
 # startCommand: 'python -m gunicorn --config gunicorn.conf.py --log-config gunicorn-error.log --access-logfile -'
 # TODO configure logs
