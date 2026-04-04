@@ -3,8 +3,8 @@
 # SPDX-FileCopyrightText: 2026 JWP Consulting GK
 
 www.projectifyapp.com {
-# Serve static files directly
-	handle /static/django/* {
+	# Serve static files directly
+	handle_path /static/django/* {
 		root * {{ static_root }}
 		file_server
 	}
@@ -16,7 +16,7 @@ www.projectifyapp.com {
 	# TODO add forwarded for headers
 	}
 	# TODO Enable compression, but only for static files
-	# TODO enable logging
+	log
 }
 
 projectifyapp.com {
