@@ -60,16 +60,18 @@
 
 - name: Configure PostgreSQL
   block:
-    - name: Ensure PostgreSQL is running
-      ansible.builtin.systemd:
-          name: postgresql
-          enabled: true
-          state: started
     - name: Install postgresql main configuration
-      ansible.builtin.file:
+      ansible.builtin.template:
         src: postgresql.conf
         dest: "/etc/postgresql/17/main/postgresql.conf"
         mode: '0644'
+        owner: root
+        group: root
+    - name: Reload PostgreSQL
+      ansible.builtin.systemd:
+          name: postgresql
+          enabled: true
+          state: reloaded
     - name: Create projectify database user
       community.postgresql.postgresql_user:
           name: projectify
@@ -100,14 +102,19 @@
       ansible.builtin.template:
           src: pgbackrest.conf.j2
           dest: /etc/pgbackrest.conf
-          owner: postgres
-          group: postgres
+          owner: root
+          group: root
           mode: '0644'
     - name: Create pgBackRest stanza
       ansible.builtin.command:
           cmd: pgbackrest --stanza=projectify stanza-create
       args:
           creates: /srv/backups/pgbackrest/projectify
+      become: true
+      become_user: postgres
+    - name: Check pbBackRest configuration
+      ansible.builtin.command:
+          cmd: pgbackrest --stanza=projectify --log-level-console=info check
       become: true
       become_user: postgres
 
@@ -201,11 +208,6 @@
 # Healthchecks
 # TODO check logging into psql with projectify user
 # TODO check caddy status
-- name: Check pbBackRest configuration
-  become: true
-  become_user: postgres
-  ansible.builtin.command:
-      cmd: pgbackrest --stanza=projectify --log-level-console=info check
 
 - name: Check gunicorn health
   become: true
