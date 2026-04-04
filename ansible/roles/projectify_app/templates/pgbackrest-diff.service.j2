@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: 2026 JWP Consulting GK
+
+[Unit]
+Description=pgBackRest differential backup
+After=postgresql.service
+Requires=postgresql.service
+
+[Service]
+Type=oneshot
+User=postgres
+Group=postgres
+ExecStart=/usr/bin/pgbackrest --type=diff --stanza=projectify backup
+
+[Install]
+WantedBy=multi-user.target

@@ -18,6 +18,9 @@ indent_size = 2
 [*.nix]
 indent_size = 2
 
+[Caddyfile.j2]
+indent_style = tab
+
 [.git/COMMIT_EDITMSG]
 max_line_length = 72
 

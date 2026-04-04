@@ -47,8 +47,11 @@ table inet firewall {
         # Allow HTTP & HTTPS (80,443/tcp) on eth0
         iifname "eth0" tcp dport { 80, 443 } accept
 
-        # Allow SSH from private network (10.0.0.0/16) on enp7s0
-        iifname "enp7s0" ip saddr 10.0.0.0/16 tcp dport 22 accept
+        # Allow SSH from SSH bastion 10.0.0.2 on enp7s0
+        iifname "enp7s0" ip saddr 10.0.0.2 tcp dport 22 accept
+
+        # Allow Prometheus scraping from SSH bastion 10.0.0.2 on enp7s0
+        iifname "enp7s0" ip saddr 10.0.0.2 tcp dport 9100 accept
 
         # Uncomment to enable logging of denied inbound traffic
         log prefix "[nftables] Inbound Denied: " counter drop

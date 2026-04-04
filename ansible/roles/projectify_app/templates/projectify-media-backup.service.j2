@@ -9,7 +9,7 @@ After=network.target
 Type=oneshot
 User=projectify
 Group=projectify
-ExecStart=/usr/bin/rsync -av --delete /var/lib/projectify/media/ /srv/backups/projectify_app_media/
+ExecStart=/usr/bin/rsync -av --delete {{ media_root }}/ {{ media_backup_dest }}/
 
 [Install]
 WantedBy=multi-user.target

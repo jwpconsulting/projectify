@@ -1,0 +1,24 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# SPDX-FileCopyrightText: 2026 JWP Consulting GK
+
+# Prometheus configuration file
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  # Prometheus server metrics
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # System metrics from SSH bastion
+  - job_name: "node-bastion"
+    static_configs:
+      - targets: ["localhost:9100"]
+
+  # System metrics from app servers
+  - job_name: "node-app-servers"
+    static_configs:
+      - targets: ["10.0.0.3:9100"]

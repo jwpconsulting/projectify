@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: 2026 JWP Consulting GK
+
+[Unit]
+Description=pgBackRest differential backup timer
+Requires=pgbackrest-diff.service
+
+[Timer]
+OnCalendar=hourly
+Persistent=true
+
+[Install]
+WantedBy=timers.target

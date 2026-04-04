@@ -15,4 +15,9 @@
     - projectify_app
   vars:
     static_root: /usr/share/projectify/static
-    credentials_file: /var/lib/projectify/configuration.env
+    media_root: /var/lib/projectify/state/media
+    # Expect volume mounted at /srv/backups
+    media_backup_dest: /srv/backups/projectify_app_media
+    pgbackrest_dest: /srv/backups/pgbackrest
+    credentials_file: /var/lib/projectify/credentials.toml
+    venv_path: /var/lib/projectify/venv

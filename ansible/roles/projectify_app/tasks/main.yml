@@ -31,6 +31,8 @@
           - caddy
           # Used to check out projectify repo
           - git
+          # Monitoring
+          - prometheus-node-exporter
       state: present
 
 - name: Configure projectify user
@@ -43,13 +45,29 @@
           shell: /bin/bash
           home: /var/lib/projectify
           create_home: true
-    - name: Create share directory
+    - name: Create static directory
       ansible.builtin.file:
-          path: "/usr/share/projectify/static"
+          path: "{{ static_root }}"
           state: directory
           owner: projectify
           group: projectify
           mode: '0755'
+
+- name: Configure Prometheus Node Exporter on app server
+  block:
+    - name: Configure node exporter to listen on private network
+      ansible.builtin.copy:
+        src: prometheus-node-exporter-defaults
+        dest: /etc/default/prometheus-node-exporter
+        mode: "0644"
+      register: node_exporter_config
+
+    - name: Enable and restart node exporter
+      ansible.builtin.systemd:
+        name: prometheus-node-exporter
+        enabled: yes
+        state: restarted
+      when: node_exporter_config.changed
 
 - name: Configure nftables for app server
   block:
@@ -95,6 +113,11 @@
           owner: projectify
       become: true
       become_user: postgres
+    - name: Check whether projectify user can log into projectify database
+      ansible.builtin.command:
+          cmd: psql -U projectify -d projectify -c "SELECT 1"
+      become: true
+      become_user: projectify
 
 - name: Configure pgBackRest
   block:
@@ -107,7 +130,7 @@
           mode: '0750'
       loop:
           # Expect volume mounted at /srv/backups
-          - /srv/backups/pgbackrest
+          - "{{ pgbackrest_dest }}"
           - /var/log/pgbackrest
     - name: Install pgBackRest configuration
       ansible.builtin.template:
@@ -120,7 +143,7 @@
       ansible.builtin.command:
           cmd: pgbackrest --stanza=projectify stanza-create
       args:
-          creates: /srv/backups/pgbackrest/projectify
+        creates: "{{ pgbackrest_dest }}/projectify"
       become: true
       become_user: postgres
     - name: Check pbBackRest configuration
@@ -129,17 +152,48 @@
       become: true
       become_user: postgres
 
-# TODO create systemd unit for pgbackrest
+- name: Configure pgBackRest backup services
+  block:
+    - name: Copy pgBackRest backup systemd units
+      ansible.builtin.template:
+          src: "{{ item }}.j2"
+          dest: "/etc/systemd/system/{{ item  }}"
+          owner: root
+          group: root
+          mode: '0644'
+      loop:
+          - pgbackrest-full.service
+          - pgbackrest-full.timer
+          - pgbackrest-diff.service
+          - pgbackrest-diff.timer
+      register: pgbackrest_units
+    - name: Reload systemd daemon
+      ansible.builtin.systemd:
+          daemon_reload: true
+      when: pgbackrest_units.changed
+    - name: Enable and start pgBackRest full backup timer
+      ansible.builtin.systemd:
+          name: pgbackrest-full.timer
+          enabled: true
+          state: started
+    - name: Enable and start pgBackRest differential backup timer
+      ansible.builtin.systemd:
+          name: pgbackrest-diff.timer
+          enabled: true
+          state: started
+
 - name: Configure media backup rsync service
   block:
-    - name: Create media backup directory
+    - name: Create media and media backup directory
       ansible.builtin.file:
-          # Expect volume mounted at /srv/backups
-          path: "/srv/backups/projectify_app_media"
+          path: "{{ item }}"
           state: directory
           owner: projectify
           group: projectify
           mode: '0700'
+      loop:
+        - "{{ media_root }}"
+        - "{{ media_backup_dest }}"
     - name: Copy media backup systemd service unit
       ansible.builtin.template:
           src: projectify-media-backup.service.j2
@@ -180,14 +234,15 @@
       ansible.builtin.pip:
           name: pip
           state: latest
-          virtualenv: /var/lib/projectify/venv
+          virtualenv: "{{ venv_path }}"
     - name: Install Python dependencies from requirements.txt
       ansible.builtin.pip:
           requirements: /var/lib/projectify/app/requirements.txt
-          virtualenv: /var/lib/projectify/venv
+          virtualenv: "{{ venv_path }}"
     - name: Run collectstatic
       ansible.builtin.command:
-          cmd: /var/lib/projectify/venv/bin/python /var/lib/projectify/app/manage.py collectstatic --noinput
+          cmd: "{{ venv_path }}/bin/python ./manage.py collectstatic --noinput"
+          chdir: /var/lib/projectify/app
       environment:
           DJANGO_SETTINGS_MODULE: projectify.settings.collect_static
           DJANGO_CONFIGURATION: CollectStatic
@@ -203,7 +258,7 @@
         group: root
         mode: '0644'
     register: gunicorn_socket
-  - name: Verify gunicorn credentials file exists
+  - name: "Verify gunicorn credentials file {{ credentials_file }} exists"
     ansible.builtin.stat:
         path: "{{ credentials_file }}"
     register: credentials_file_stat
@@ -261,7 +316,6 @@
         name: caddy
         enabled: true
         state: started
-
-# Healthchecks
-# TODO check logging into psql with projectify user
-# TODO check caddy status
+  - name: Check caddy health
+    ansible.builtin.command:
+        cmd: curl --resolve www.projectifyapp.com:80:127.0.0.1 http://www.projectifyapp.com -svk

@@ -148,6 +148,11 @@ Application data:
 - `/var/lib/projectify/state/media`: User uploaded media
 - `/var/gunicorn.socket`: Gunicorn socket, owner is `projectify:projectify`
 
+## Backups
+
+- Rsync media backup runs hourly
+- pgBackRest backup runs a full backup daily, and a differential backup hourly
+
 Backup directories:
 
 - `/srv/backups/pgbackrest`: pgBackRest stores database backups here
@@ -265,3 +270,204 @@ Configure SSH bastion with Ansible:
 ```bash
 ansible-playbook -i ansible/inventory.yml -l projectify_app ansible/playbook.yml
 ```
+
+# Migration procedure
+
+1. Take Render.com instance down / maintenance mode
+2. Create database backup with pg_dump
+3. Upload database backup to new Hetzner instance
+4. Restore database backup with pg_restore
+5. Update DNS record to point at `www.projectifyapp`.
+
+## Upload database backup
+
+```bash
+rsync \
+    -e 'ssh -i KEY -o ProxyCommand="ssh -i KEY -W %h:%p root@PUBLIC_IP"' \
+    ARCHIVE.dir.tar.gz \
+    root@10.0.0.3:/var/lib/projectify/
+```
+
+## Restore database backup
+
+Reference: <https://render.com/docs/postgresql-backups#restoring-from-a-backup-file>
+
+```bash
+cd /var/lib/projectify/db_dumps
+tar -zxvf 2026-04-04T08_14Z.dir.tar.gz
+# List contents
+ls -la
+ls 2026-04-04T08:14Z
+```
+
+Output:
+
+```
+./
+./2026-04-04T08:14Z/
+./2026-04-04T08:14Z/projectify_postgres_production/
+./2026-04-04T08:14Z/projectify_postgres_production/…
+…
+total 268
+drwxr-sr-x 3       1000       1000   4096 Apr  4 08:15 .
+drwx------ 9 projectify projectify   4096 Apr  4 08:19 ..
+drwxr-sr-x 3       1000       1000   4096 Apr  4 08:15 2026-04-04T08:14Z
+-rw-r--r-- 1 root       root       256500 Apr  4 08:17 2026-04-04T08_14Z.dir.tar.gz
+
+drwxr-sr-x 3 1000 1000 4096 Apr  4 08:15 .
+drwxr-sr-x 3 1000 1000 4096 Apr  4 08:15 ..
+drwx--S--- 2 1000 1000 4096 Apr  4 08:15 projectify_postgres_production
+```
+
+Restore:
+
+```bash
+sudo chown postgres:postgres 2026-04-04T08:14Z/projectify_postgres_production
+sudo -u postgres pg_restore \
+    --dbname=projectify \
+    --verbose \
+    --clean \
+    --if-exists --no-owner --no-privileges \
+    --format=directory \
+    2026-04-04T08:14Z/projectify_postgres_production
+```
+
+Output:
+
+```
+pg_restore: connecting to database for restore
+…
+pg_restore: creating FK CONSTRAINT "public.workspace_teammember workspace_workspaceuser_user_id_…_fk_user_user_id"
+```
+
+Check schema:
+
+```
+sudo -u projectify psql -c "\d"
+```
+
+Output:
+
+```
+                            List of relations
+ Schema |                   Name                    |   Type   |  Owner
+--------+-------------------------------------------+----------+----------
+ public | account_emailaddress                      | table    | postgres
+ public | account_emailaddress_id_seq               | sequence | postgres
+ public | account_emailconfirmation                 | table    | postgres
+ public | account_emailconfirmation_id_seq          | sequence | postgres
+ public | auth_group                                | table    | postgres
+ public | auth_group_id_seq                         | sequence | postgres
+ public | auth_group_permissions                    | table    | postgres
+ public | auth_group_permissions_id_seq             | sequence | postgres
+ public | auth_permission                           | table    | postgres
+ public | auth_permission_id_seq                    | sequence | postgres
+ public | blog_post                                 | table    | postgres
+ public | blog_post_id_seq                          | sequence | postgres
+ public | blog_postcontent                          | table    | postgres
+ public | blog_postcontent_id_seq                   | sequence | postgres
+ public | corporate_coupon                          | table    | postgres
+ public | corporate_coupon_id_seq                   | sequence | postgres
+ public | corporate_customer                        | table    | postgres
+ public | corporate_customer_id_seq                 | sequence | postgres
+ public | django_admin_log                          | table    | postgres
+ public | django_admin_log_id_seq                   | sequence | postgres
+ public | django_celery_results_chordcounter        | table    | postgres
+ public | django_celery_results_chordcounter_id_seq | sequence | postgres
+ public | django_celery_results_groupresult         | table    | postgres
+ public | django_celery_results_groupresult_id_seq  | sequence | postgres
+ public | django_celery_results_taskresult          | table    | postgres
+ public | django_celery_results_taskresult_id_seq   | sequence | postgres
+ public | django_content_type                       | table    | postgres
+ public | django_content_type_id_seq                | sequence | postgres
+ public | django_migrations                         | table    | postgres
+ public | django_migrations_id_seq                  | sequence | postgres
+ public | django_session                            | table    | postgres
+ public | pg_stat_statements                        | view     | postgres
+ public | pg_stat_statements_info                   | view     | postgres
+ public | socialaccount_socialaccount               | table    | postgres
+ public | socialaccount_socialaccount_id_seq        | sequence | postgres
+ public | socialaccount_socialapp                   | table    | postgres
+ public | socialaccount_socialapp_id_seq            | sequence | postgres
+ public | socialaccount_socialtoken                 | table    | postgres
+ public | socialaccount_socialtoken_id_seq          | sequence | postgres
+ public | user_previousemailaddress                 | table    | postgres
+ public | user_previousemailaddress_id_seq          | sequence | postgres
+ public | user_user                                 | table    | postgres
+ public | user_user_groups                          | table    | postgres
+ public | user_user_groups_id_seq                   | sequence | postgres
+ public | user_user_id_seq                          | sequence | postgres
+ public | user_user_user_permissions                | table    | postgres
+ public | user_user_user_permissions_id_seq         | sequence | postgres
+ public | user_userinvite                           | table    | postgres
+ public | user_userinvite_id_seq                    | sequence | postgres
+ public | workspace_chatmessage                     | table    | postgres
+ public | workspace_chatmessage_id_seq              | sequence | postgres
+ public | workspace_label                           | table    | postgres
+ public | workspace_label_id_seq                    | sequence | postgres
+ public | workspace_project                         | table    | postgres
+ public | workspace_section                         | table    | postgres
+ public | workspace_section_minimized_by            | table    | postgres
+ public | workspace_section_minimized_by_id_seq     | sequence | postgres
+ public | workspace_subtask                         | table    | postgres
+ public | workspace_subtask_id_seq                  | sequence | postgres
+ public | workspace_task                            | table    | postgres
+ public | workspace_task_id_seq                     | sequence | postgres
+ public | workspace_tasklabel                       | table    | postgres
+ public | workspace_tasklabel_id_seq                | sequence | postgres
+ public | workspace_teammember                      | table    | postgres
+ public | workspace_teammemberinvite                | table    | postgres
+ public | workspace_workspace                       | table    | postgres
+ public | workspace_workspace_id_seq                | sequence | postgres
+ public | workspace_workspaceboard_id_seq           | sequence | postgres
+ public | workspace_workspaceboardsection_id_seq    | sequence | postgres
+ public | workspace_workspaceuser_id_seq            | sequence | postgres
+ public | workspace_workspaceuserinvite_id_seq      | sequence | postgres
+(71 rows)
+```
+
+# Implement rolling releases
+
+Directory structure:
+
+- `/var/lib/projectify/releases`
+- `/var/lib/projectify/releases/{GIT_COMMIT_SHA}`
+- `/var/lib/projectify/releases/{GIT_COMMIT_SHA}/venv`: Python virtualenv
+- `/var/lib/projectify/releases/{GIT_COMMIT_SHA}/app`: Projectify source code
+- `/var/lib/projectify/releases/{GIT_COMMIT_SHA}/static`: Projectify static files
+
+Symbolic links:
+
+- `/var/lib/projectify/releases/current` to
+  `/var/lib/projectify/releases/{GIT_COMMIT_SHA}`
+- `/var/lib/projectify/venv` to `/var/lib/projectify/releases/current/venv`
+- `/var/lib/projectify/app` to `/var/lib/projectify/releases/current/app`
+- `/usr/share/projectify/static` to
+  `/var/lib/projectify/releases/current/static`
+
+# Monitoring
+
+Connect to Bastio
+
+ssh root@204.168.222.148 -i ~/.ssh/id_rsa_yubikey.pub -L 3000:localhost:3000
+
+Create Grafana user on SSH bastion:
+
+```bash
+read PASSWORD
+grafana-cli admin reset-admin-password $PASSWORD
+```
+
+Strong password policy documentation: <https://grafana.com/docs/grafana/next/setup-grafana/configure-access/configure-authentication/grafana/#strong-password-policy>
+
+# To Do
+
+Investigate what this means:
+
+```
+projectify-bastion dhcpcd[971]: ps_root_recvmsg: Operation not permitted
+```
+
+- Find a good way to integrate Gunicorn with Prometheus/Grafana
+- Find a good way to integrate Django with Prometheus/Grafana
+- Find a good way to integrate Caddy with Prometheus/Grafana
