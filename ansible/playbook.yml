@@ -13,3 +13,5 @@
   roles:
     - system
     - projectify_app
+  vars:
+    static_root: /usr/share/projectify/static
