@@ -17,3 +17,71 @@
         name: nftables
         state: reloaded
       when: nftables_config.changed
+
+- name: Configure Grafana
+  block:
+    # See
+    # https://grafana.com/docs/grafana/latest/setup-grafana/installation/debian/
+    - name: Install required packages for Grafana
+      ansible.builtin.apt:
+        name:
+          - apt-transport-https
+          - wget
+          - gnupg
+        state: present
+        update_cache: yes
+
+    - name: Create keyrings directory
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: "0755"
+
+    - name: Download Grafana GPG key
+      ansible.builtin.get_url:
+        url: https://apt.grafana.com/gpg-full.key
+        dest: /etc/apt/keyrings/grafana.asc
+        mode: "0644"
+
+    - name: Add Grafana repository
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/etc/apt/keyrings/grafana.asc] https://apt.grafana.com stable main"
+        state: present
+        filename: grafana
+
+    - name: Install Grafana
+      ansible.builtin.apt:
+        name: grafana
+        state: present
+        update_cache: yes
+
+    - name: Ensure Grafana directory exists
+      ansible.builtin.file:
+        path: /usr/share/grafana
+        state: directory
+        owner: grafana
+        group: grafana
+        mode: "0755"
+
+    - name: Configure Grafana
+      ansible.builtin.template:
+        src: grafana.ini.j2
+        dest: /etc/grafana/grafana.ini
+        owner: grafana
+        group: grafana
+        mode: "0640"
+
+    - name: Configure Grafana datasource
+      ansible.builtin.template:
+        src: datasource.yml.j2
+        dest: /etc/grafana/provisioning/datasources/prometheus.yml
+        owner: grafana
+        group: grafana
+        mode: "0644"
+
+    - name: Enable and restart Grafana service
+      ansible.builtin.systemd:
+        name: grafana-server
+        enabled: yes
+        state: restarted
+        daemon_reload: yes
