@@ -3,23 +3,22 @@
 # SPDX-FileCopyrightText: 2026 JWP Consulting GK
 
 www.projectifyapp.com {
-    # Serve static files directly
-    handle /static/* {
-        # TODO
-        root * /var/run/
-        file_server
-    }
+# Serve static files directly
+	handle /static/django/* {
+		root * {{ static_root }}
+		file_server
+	}
+	# Media files TODO
+		# handle /media/* {
+	# }
+	# Reverse proxy to Django/gunicorn via Unix socket
+	reverse_proxy unix//run/gunicorn.sock {
+	# TODO add forwarded for headers
+	}
+	# TODO Enable compression, but only for static files
+	# TODO enable logging
+}
 
-    # Media files TODO
-    # handle /media/* {
-    # }
-
-    # Reverse proxy to Django/gunicorn via Unix socket
-    reverse_proxy unix//run/gunicorn.sock {
-        # TODO add forwarded for headers
-    }
-
-    # TODO Enable compression, but only for static files
-
-    # TODO enable logging
+projectifyapp.com {
+	redir https://www.projectifyapp.com{uri}
 }

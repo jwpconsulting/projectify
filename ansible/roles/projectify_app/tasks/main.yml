@@ -95,6 +95,11 @@
           owner: projectify
       become: true
       become_user: postgres
+    - name: Check whether projectify user can log into projectify database
+      ansible.builtin.command:
+          cmd: psql -U projectify -d projectify -c "SELECT 1"
+      become: true
+      become_user: projectify
 
 - name: Configure pgBackRest
   block:
@@ -129,7 +134,36 @@
       become: true
       become_user: postgres
 
-# TODO create systemd unit for pgbackrest
+- name: Configure pgBackRest backup services
+  block:
+    - name: Copy pgBackRest backup systemd units
+      ansible.builtin.template:
+          src: "{{ item }}.j2"
+          dest: "/etc/systemd/system/{{ item  }}"
+          owner: root
+          group: root
+          mode: '0644'
+      loop:
+          - pgbackrest-full.service
+          - pgbackrest-full.timer
+          - pgbackrest-diff.service
+          - pgbackrest-diff.timer
+      register: pgbackrest_units
+    - name: Reload systemd daemon
+      ansible.builtin.systemd:
+          daemon_reload: true
+      when: pgbackrest_units.changed
+    - name: Enable and start pgBackRest full backup timer
+      ansible.builtin.systemd:
+          name: pgbackrest-full.timer
+          enabled: true
+          state: started
+    - name: Enable and start pgBackRest differential backup timer
+      ansible.builtin.systemd:
+          name: pgbackrest-diff.timer
+          enabled: true
+          state: started
+
 - name: Configure media backup rsync service
   block:
     - name: Create media and media backup directory
@@ -267,6 +301,3 @@
   - name: Check caddy health
     ansible.builtin.command:
         cmd: curl --resolve www.projectifyapp.com:80:127.0.0.1 http://www.projectifyapp.com -svk
-
-# Healthchecks
-# TODO check logging into psql with projectify user
