@@ -22,6 +22,7 @@ ensure that the Projectify backend will launch correctly.
 - `DJANGO_SETTINGS_MODULE`: For Hetzner deployment, use
   `projectify.settings.hetzner`
 - `DJANGO_CONFIGURATION`: For Hetzner deployment, use `Hetzner`
+- `ALLOWED_HOST`: Allowed host name
 
 ## Networking
 
