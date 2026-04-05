@@ -284,6 +284,7 @@ filterwarnings = [
     "error",
     "ignore:ALLAUTH_GITHUB_*",
     "ignore:ALLAUTH_GOOGLE_*",
+    "ignore:STRIPE_*",
 ]
 
 [tool.djlint]
