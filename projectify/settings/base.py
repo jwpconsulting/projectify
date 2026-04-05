@@ -172,6 +172,7 @@ class Base(Configuration):  # type:ignore
         "projectify.blog",
         "projectify.corporate.apps.CorporateConfig",
         "projectify.premail",
+        "projectify.stats",
         "projectify.storefront",
         "projectify.help",
         "projectify.onboarding",
@@ -201,6 +202,7 @@ class Base(Configuration):  # type:ignore
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "projectify.lib.htmx.HtmxMiddleware",
         "allauth.account.middleware.AccountMiddleware",
+        "projectify.stats.middleware.count_stats",
     ]
 
     ROOT_URLCONF = "projectify.urls"
