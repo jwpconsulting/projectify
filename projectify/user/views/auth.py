@@ -56,7 +56,7 @@ class SignUpForm(forms.Form):
         """Override and add fields."""
         super().__init__(*args, **kwargs)
         self.fields["privacy_policy_agreed"].label = format_html(
-            _("I agree to the {privacy_policy_anchor}"),
+            _("<span>I agree to the {privacy_policy_anchor}</span>"),
             privacy_policy_anchor=anchor(
                 label=_("Privacy Policy"),
                 href=reverse("storefront:privacy"),
@@ -64,7 +64,7 @@ class SignUpForm(forms.Form):
             ),
         )
         self.fields["tos_agreed"].label = format_html(
-            _("I agree to the {tos_anchor}"),
+            _("<span>I agree to the {tos_anchor}</span>"),
             tos_anchor=anchor(
                 label=_("Terms of Service"),
                 href=reverse("storefront:tos"),
