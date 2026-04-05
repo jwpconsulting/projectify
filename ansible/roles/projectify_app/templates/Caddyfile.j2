@@ -13,7 +13,11 @@
 	# }
 	# Reverse proxy to Django/gunicorn via Unix socket
 	reverse_proxy unix//run/gunicorn.sock {
-	# TODO add forwarded for headers
+		# TODO add forwarded for headers
+		health_uri /healthz
+		health_headers {
+			Host {{ hostname }}
+		}
 	}
 	# TODO Enable compression, but only for static files
 	log
