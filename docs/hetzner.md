@@ -79,7 +79,7 @@ Firewall:
 Connect to Grafana using SSH forwarding, like this:
 
 ```bash
-ssh -L 80:localhost:80 -N user@BLA
+ssh -L 3000:localhost:3000 -N user@BLA
 ```
 
 # Projectify app server
@@ -472,6 +472,10 @@ projectify-bastion dhcpcd[971]: ps_root_recvmsg: Operation not permitted
 - Find a good way to integrate Caddy with Prometheus/Grafana
 - Add Grafana alerting
 - Remove whitenoise, use serve-static on projectify-demo
+- Make better use of Gunicorn SIGHUP or https://gunicorn.org/signals/#upgrading-to-a-new-binary-on-the-fly
+- Queue requests in Caddy when restarting Gunicorn
+- Fix caching
+- Shallow git clone
 
 # Done
 

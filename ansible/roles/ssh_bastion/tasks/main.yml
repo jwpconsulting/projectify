@@ -93,13 +93,26 @@
         name: grafana
         state: present
         update_cache: yes
-    - name: Ensure Grafana directory exists
+    - name: Ensure Grafana directories exists
       ansible.builtin.file:
-        path: /usr/share/grafana
+        path: "{{ item.path }}"
         state: directory
-        owner: grafana
-        group: grafana
+        owner: "{{ item.owner }}"
+        group: "{{ item.group }}"
         mode: "0700"
+      loop:
+        - owner: grafana
+          group: grafana
+          path: /usr/share/grafana
+        - owner: root
+          group: root
+          path: /etc/grafana
+        - owner: root
+          group: root
+          path: /etc/grafana/provisioning
+        - owner: root
+          group: root
+          path: /etc/grafana/provisioning/datasources
     - name: Configure Grafana
       ansible.builtin.template:
         src: grafana.ini.j2
