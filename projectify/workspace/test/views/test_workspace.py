@@ -41,6 +41,39 @@ class MockSession:
     url = "https://www.example.com"
 
 
+class TestWorkspacePictureView:
+    """Test workspace_picture_view function."""
+
+    def test_authorized_access(
+        self,
+        user_client: Client,
+        team_member: TeamMember,
+        uploaded_file: File,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test that authorized team members can access workspace picture."""
+        workspace = team_member.workspace
+        workspace.picture = cast(FileDescriptor, uploaded_file)
+        workspace.save()
+        url = reverse("dashboard:workspaces:picture", args=(workspace.uuid,))
+        with django_assert_num_queries(3):
+            assert user_client.get(url).status_code == 200
+
+    def test_unauthorized_access(
+        self,
+        user_client: Client,
+        unrelated_workspace: Workspace,
+        uploaded_file: File,
+    ) -> None:
+        """Test that non-team members cannot access workspace picture."""
+        unrelated_workspace.picture = cast(FileDescriptor, uploaded_file)
+        unrelated_workspace.save()
+        url = reverse(
+            "dashboard:workspaces:picture", args=(unrelated_workspace.uuid,)
+        )
+        assert user_client.get(url).status_code == 404
+
+
 class TestMinimizeLists:
     """Test minimizing various lists."""
 

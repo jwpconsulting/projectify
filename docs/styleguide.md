@@ -97,6 +97,9 @@ user: User = request.user
 - All models should inherit from `projectify/lib/models.py:BaseModel`
 - Prefer thin models over fat models.
 - Put functions that interact with models in a corresponding services.
+- Put the model `Model` for app `APP_NAME` in
+  `projectify/APP_NAME/models.py:Model`
+
 
 Example:
 

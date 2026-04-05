@@ -24,12 +24,16 @@ from projectify.user.views.user import (
     password_change,
     password_set,
     user_profile,
+    user_profile_picture,
 )
 
 app_name = "users"
 
 urlpatterns = (
     path("profile/", user_profile, name="profile"),
+    path(
+        "profile/current-picture", user_profile_picture, name="profile-picture"
+    ),
     path("profile/set-password", password_set, name="set-password"),
     path("profile/change-password", password_change, name="change-password"),
     path(

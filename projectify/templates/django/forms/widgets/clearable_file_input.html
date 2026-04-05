@@ -10,8 +10,8 @@
                  height="300"
                  width="300"
                  class="max-h-32 object-contain"
-                 src="{{ widget.value.url }}" />
-            <figcaption>{% anchor href=widget.value.url label=widget.attrs.initial_text|default:widget.initial_text %}</figcaption>
+                 src="{{ widget.attrs.url }}" />
+            <figcaption>{% anchor href=widget.attrs.url label=widget.attrs.initial_text|default:widget.initial_text %}</figcaption>
         </figure>
     {% else %}
         <p>{{ widget.attrs.cleared }}</p>
@@ -23,7 +23,7 @@
                    id="{{ widget.checkbox_id }}"
                    {% if widget.attrs.disabled %}disabled{% endif %}
                    {% if widget.attrs.checked %}checked{% endif %}>
-            <strong>{{ widget.attrs.clear_checkbox_label|default:widget.clear_checkbox_label }}</strong>
+            {{ widget.attrs.clear_checkbox_label|default:widget.clear_checkbox_label }}
         </label>
     {% endif %}
     <div class="flex flex-col">

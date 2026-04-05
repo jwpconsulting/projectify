@@ -114,13 +114,6 @@ if settings.PREMAIL_PREVIEW:
         path("premail/", include("projectify.premail.urls")),
     )
 
-if settings.SERVE_MEDIA:
-    from django.conf.urls.static import static
-
-    urlpatterns = (
-        *urlpatterns,
-        *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
-    )
 
 if settings.DEBUG_TOOLBAR:
     urlpatterns = (

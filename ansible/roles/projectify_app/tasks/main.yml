@@ -267,11 +267,6 @@
           DJANGO_CONFIGURATION: CollectStatic
           STATIC_ROOT: "{{ release_dir }}/static"
       when: not release_exists.stat.exists
-  become: true
-  become_user: projectify
-
-- name: Create symbolic links to current release
-  block:
     - name: Create symbolic link for current release
       ansible.builtin.file:
           src: "{{ release_dir }}"
@@ -282,81 +277,87 @@
           force: yes
   become: true
   become_user: projectify
+  tags:
+    - gunicorn
 
 - name: Configure gunicorn
   block:
-  - name: Copy gunicorn systemd socket unit
-    ansible.builtin.template:
-        src: gunicorn.socket.j2
-        dest: /etc/systemd/system/gunicorn.socket
-        owner: root
-        group: root
-        mode: '0644'
-    register: gunicorn_socket
-  - name: "Verify gunicorn credentials file {{ credentials_file }} exists"
-    ansible.builtin.stat:
-        path: "{{ credentials_file }}"
-    register: credentials_file_stat
-    failed_when: not credentials_file_stat.stat.exists
-  - name: Copy gunicorn systemd service unit
-    ansible.builtin.template:
-        src: gunicorn.service.j2
-        dest: /etc/systemd/system/gunicorn.service
-        owner: root
-        group: root
-        mode: '0644'
-    register: gunicorn_service
-  - name: Reload systemd daemon if gunicorn files changed
-    ansible.builtin.systemd:
-        daemon_reload: true
-    when: gunicorn_socket.changed or gunicorn_service.changed
-  - name: Enable and start gunicorn socket
-    ansible.builtin.systemd:
-        name: gunicorn.socket
-        enabled: true
-        state: started
-    when: gunicorn_socket.changed
-  - name: Enable and reload gunicorn service
-    # XXX When you change th Environment variables in gunicorn.service.j2
-    # reloaing gunicorn.service doesn't point it at new variables, you need
-    # to restart it for that.
-    ansible.builtin.systemd:
-        name: gunicorn.service
-        enabled: true
-        state: reloaded
-    when: gunicorn_service.changed
-  - name: Restart gunicorn to use new release
-    ansible.builtin.systemd:
-       name: gunicorn.service
-       state: restarted
-    become: true
-    when: not release_exists.stat.exists
-  - name: Check gunicorn health
-    ansible.builtin.command:
-        cmd: curl --unix-socket /run/gunicorn.sock www.projectifyapp.com
-    become: true
-    become_user: caddy
+    - name: Create gunicorn config directory
+      ansible.builtin.file:
+          path: "{{ gunicorn_config_file | ansible.builtin.dirname }}"
+          state: directory
+          owner: root
+          group: root
+          mode: '0755'
+    - name: Copy gunicorn configuration files
+      ansible.builtin.template:
+          src: "{{ item.src }}"
+          dest: "{{ item.dest}}"
+          owner: root
+          group: root
+          mode: '0644'
+      loop:
+          - src: gunicorn.socket.j2
+            dest: /etc/systemd/system/gunicorn.socket
+          - src: gunicorn.service.j2
+            dest: /etc/systemd/system/gunicorn.service
+          - src: gunicorn.conf.py.j2
+            dest: "{{ gunicorn_config_file }}"
+          - src: gunicorn-error.log.j2
+            dest: "{{ gunicorn_log_config_file }}"
+      register: gunicorn_config_files
+    - name: "Verify gunicorn credentials file {{ credentials_file }} exists"
+      ansible.builtin.stat:
+          path: "{{ credentials_file }}"
+      register: credentials_file_stat
+      failed_when: not credentials_file_stat.stat.exists
+    - name: Reload systemd daemon if gunicorn files changed
+      ansible.builtin.systemd:
+          daemon_reload: true
+      when: gunicorn_config_files.changed
+    - name: Enable and start gunicorn socket
+      ansible.builtin.systemd:
+          name: gunicorn.socket
+          enabled: true
+          state: started
+      when: gunicorn_config_files.changed
+    - name: Enable and reload gunicorn service
+      # XXX When you change th Environment variables in gunicorn.service.j2
+      # reloaing gunicorn.service doesn't point it at new variables, you need
+      # to restart it for that.
+      ansible.builtin.systemd:
+          name: gunicorn.service
+          enabled: true
+          state: reloaded
+      when: gunicorn_config_files.changed or not release_exists.stat.exists
+    - name: Check gunicorn health
+      ansible.builtin.command:
+          cmd: curl --unix-socket /run/gunicorn.sock {{ hostname }}
+      become: true
+      become_user: caddy
+  tags:
+      - gunicorn
 
 - name: Configure Caddy
   block:
-  - name: Copy Caddyfile
-    ansible.builtin.template:
-        src: Caddyfile.j2
-        dest: /etc/caddy/Caddyfile
-        owner: root
-        group: root
-        mode: '0644'
-    register: caddyfile
-  - name: Reload caddy service if Caddyfile changed
-    ansible.builtin.systemd:
-        name: caddy
-        state: reloaded
-    when: caddyfile.changed
-  - name: Enable and start caddy service
-    ansible.builtin.systemd:
-        name: caddy
-        enabled: true
-        state: started
-  - name: Check caddy health
-    ansible.builtin.command:
-        cmd: curl --resolve www.projectifyapp.com:80:127.0.0.1 http://www.projectifyapp.com -svk
+    - name: Copy Caddyfile
+      ansible.builtin.template:
+          src: Caddyfile.j2
+          dest: /etc/caddy/Caddyfile
+          owner: root
+          group: root
+          mode: '0644'
+      register: caddyfile
+    - name: Reload caddy service if Caddyfile changed
+      ansible.builtin.systemd:
+          name: caddy
+          state: reloaded
+      when: caddyfile.changed
+    - name: Enable and start caddy service
+      ansible.builtin.systemd:
+          name: caddy
+          enabled: true
+          state: started
+    - name: Check caddy health
+      ansible.builtin.command:
+          cmd: curl https://{{ hostname }}

@@ -1,0 +1,30 @@
+#!/usr/bin/env python3
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# SPDX-FileCopyrightText: 2023, 2026 JWP Consulting GK
+"""Configuration for Gunicorn to use with Projectify application."""
+
+wsgi_app = "projectify.wsgi"
+
+# Refer to
+# https://docs.gunicorn.org/en/stable/configure.html#configuration-file
+SOCKET = "/run/gunicorn.sock"
+
+# TODO understand how many workers to configure
+
+# TODO understand if syslog only is sufficient
+syslog = True
+# TODO configure logs
+logconfig = "{{ gunicorn_log_config_file }}"
+# XXX access log missing in syslog
+
+raw_env = [
+    "DJANGO_SETTINGS_MODULE=projectify.settings.hetzner",
+    "DJANGO_CONFIGURATION=Hetzner",
+    # TODO hard-code in Hetzner class
+    "DATABASE_URL=postgres://%2Frun%2Fpostgresql/projectify",
+    "STATIC_ROOT={{ static_root }}",
+    "MEDIA_ROOT={{ media_root }}",
+    # TODO use LoadCredential in systemd for secrets
+    "CREDENTIALS_FILE={{ credentials_file }}",
+]

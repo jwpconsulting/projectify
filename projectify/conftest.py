@@ -19,9 +19,13 @@ they are allowed to see.
 
 import base64
 import random
+import tempfile
+from collections.abc import Generator
 from datetime import datetime
 from datetime import timezone as dt_timezone
+from pathlib import Path
 
+from django.core.files.base import File
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import client
 from django.utils import timezone
@@ -36,6 +40,7 @@ from projectify.corporate.services.stripe import (
     customer_activate_subscription,
     customer_cancel_subscription,
 )
+from projectify.settings.base import Base
 from projectify.user import models as user_models
 from projectify.user.models import User, UserInvite
 from projectify.user.services.internal import (
@@ -175,9 +180,31 @@ def png_image() -> bytes:
 
 
 @pytest.fixture
-def uploaded_file(png_image: bytes) -> SimpleUploadedFile:
-    """Return an UploadFile instance of the above png file."""
-    return SimpleUploadedFile("test.png", png_image)
+def temp_media_root(settings: Base) -> Generator[str, None, None]:
+    """Create a temporary directory for MEDIA_ROOT."""
+    with tempfile.TemporaryDirectory() as temp_dir:
+        settings.SENDFILE_ROOT = settings.MEDIA_ROOT = Path(temp_dir)
+        yield temp_dir
+
+
+@pytest.fixture
+def uploaded_file(
+    png_image: bytes, temp_media_root: str
+) -> Generator[File, None, None]:
+    """Return an UploadFile instance for the png_image fixture."""
+    del temp_media_root
+    with SimpleUploadedFile("uploaded_file.png", png_image) as file:
+        yield file
+
+
+@pytest.fixture
+def other_uploaded_file(
+    png_image: bytes, temp_media_root: str
+) -> Generator[File, None, None]:
+    """Return another UploadFile instance for the png_image fixture."""
+    del temp_media_root
+    with SimpleUploadedFile("other_uploaded_file.png", png_image) as file:
+        yield file
 
 
 @pytest.fixture(scope="session", autouse=True)

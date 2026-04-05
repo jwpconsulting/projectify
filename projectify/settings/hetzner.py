@@ -20,7 +20,8 @@ class Hetzner(Base):
     """
 
     SITE_TITLE = "Projectify Production on Hetzner"
-    ALLOWED_HOSTS = ["www.projectifyapp.com"]
+    # TODO remove default value
+    ALLOWED_HOSTS = [os.getenv("ALLOWED_HOST", "www.projectifyapp.com")]
     FRONTEND_URL = f"https://{ALLOWED_HOSTS[0]}"
 
     # Use file system to store media files

@@ -89,6 +89,33 @@ class TestUserProfile:
         assert not user.profile_picture
 
 
+class TestUserProfilePicture:
+    """Test user_profile_picture view."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("users:profile-picture")
+
+    def test_authorized_access(
+        self,
+        user: User,
+        user_client: Client,
+        uploaded_file: File,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test that authenticated users can access their profile picture."""
+        user.profile_picture = cast(FileDescriptor, uploaded_file)
+        user.save()
+        with django_assert_num_queries(2):
+            assert user_client.get(resource_url).status_code == 200
+
+    def test_no_picture(self, user_client: Client, resource_url: str) -> None:
+        """Test that 404 is returned when user has no profile picture."""
+        assert user_client.get(resource_url).status_code == 404
+
+
 class TestPasswordSetDjango:
     """Test django password_set view."""
 

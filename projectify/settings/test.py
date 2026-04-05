@@ -37,6 +37,9 @@ class Test(Base):
 
     FRONTEND_URL = "https://example.com"
 
+    # django_sendfile2 settings
+    SENDFILE_BACKEND = "django_sendfile.backends.simple"
+
     # Middleware
     MIDDLEWARE = clean_middleware(Base.MIDDLEWARE)
 

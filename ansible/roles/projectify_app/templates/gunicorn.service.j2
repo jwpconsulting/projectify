@@ -13,17 +13,7 @@ NotifyAccess=main
 User=projectify
 Group=projectify
 WorkingDirectory={{ app_root }}
-Environment="SOCKET=/run/gunicorn.sock"
-Environment="DJANGO_SETTINGS_MODULE=projectify.settings.hetzner"
-Environment="DJANGO_CONFIGURATION=Hetzner"
-# TODO hard-code in Hetzner class
-Environment="DATABASE_URL=postgres://%%2Frun%%2Fpostgresql/projectify"
-Environment="STATIC_ROOT={{ static_root }}"
-Environment="MEDIA_ROOT={{ media_root }}"
-# TODO use LoadCredential for secrets
-Environment="CREDENTIALS_FILE={{ credentials_file }}"
-# TODO configure logs
-ExecStart={{ venv_path }}/bin/python -m gunicorn
+ExecStart={{ venv_path }}/bin/python -m gunicorn --config {{ gunicorn_config_file }}
 ExecReload=/bin/kill -s HUP $MAINPID
 KillMode=mixed
 TimeoutStopSec=5
