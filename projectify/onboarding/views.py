@@ -50,7 +50,9 @@ class PreferredNameForm(forms.ModelForm):
     """Update User's preferred name."""
 
     preferred_name = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": _("Your preferred name")})
+        widget=forms.TextInput(attrs={"placeholder": _("Your preferred name")}),
+        # Let the user keep their name empty
+        required=False,
     )
 
     class Meta:
