@@ -22,9 +22,7 @@
             <section class="flex flex-col gap-2">
                 {{ form.password.as_field_group }}
                 <details class="cursor-pointer">
-                    <summary class="font-bold">
-                        {% trans "Rules for choosing a safe password:" %}
-                    </summary>
+                    <summary class="font-bold">{% trans "Rules for choosing a safe password:" %}</summary>
                     <ul class="flex list-inside list-disc flex-col gap-0.5 pt-2">
                         {% for rule in validators %}<li>{{ rule }}</li>{% endfor %}
                     </ul>
