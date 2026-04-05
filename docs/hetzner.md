@@ -79,7 +79,7 @@ Firewall:
 Connect to Grafana using SSH forwarding, like this:
 
 ```bash
-ssh -L 80:localhost:80 -N user@BLA
+ssh -L 3000:localhost:3000 -N user@BLA
 ```
 
 # Projectify app server
@@ -139,10 +139,10 @@ Create users:
 
 Application data:
 
-- `/usr/share/projectify/static`: Projectify static files
+- `/usr/share/projectify/release/current/static`: Projectify static files
+- `/usr/share/projectify/releases/current/venv`: Python virtual environmeny
+- `/usr/share/projectify/releases/current/app`: Projectify repository (no git clone)
 - `/var/lib/projectify`: `projectify` user home directory
-- `/var/lib/projectify/venv`: Python virtual environmeny
-- `/var/lib/projectify/app`: Projectify repository (no git clone)
 - `/var/lib/projectify/state`: `projectify` user application state (but not
   PostgreSQL)
 - `/var/lib/projectify/state/media`: User uploaded media
@@ -430,20 +430,19 @@ Output:
 
 Directory structure:
 
-- `/var/lib/projectify/releases`
-- `/var/lib/projectify/releases/{GIT_COMMIT_SHA}`
-- `/var/lib/projectify/releases/{GIT_COMMIT_SHA}/venv`: Python virtualenv
-- `/var/lib/projectify/releases/{GIT_COMMIT_SHA}/app`: Projectify source code
-- `/var/lib/projectify/releases/{GIT_COMMIT_SHA}/static`: Projectify static files
+- `/usr/share/projectify/releases`
+- `/usr/share/projectify/releases/{DATE_GIT_COMMIT_SHA}`
+- `/usr/share/projectify/releases/{DATE_GIT_COMMIT_SHA}/venv`: Python virtualenv
+- `/usr/share/projectify/releases/{DATE_GIT_COMMIT_SHA}/app`: Projectify source code
+- `/usr/share/projectify/releases/{DATE_GIT_COMMIT_SHA}/static`: Projectify static files
 
 Symbolic links:
 
-- `/var/lib/projectify/releases/current` to
-  `/var/lib/projectify/releases/{GIT_COMMIT_SHA}`
-- `/var/lib/projectify/venv` to `/var/lib/projectify/releases/current/venv`
-- `/var/lib/projectify/app` to `/var/lib/projectify/releases/current/app`
-- `/usr/share/projectify/static` to
-  `/var/lib/projectify/releases/current/static`
+- `/usr/share/projectify/releases/current` to
+  `/usr/share/projectify/releases/{DATE_GIT_COMMIT_SHA}`
+- `/var/lib/projectify/venv` to `/usr/share/projectify/releases/current/venv`
+- `/var/lib/projectify/app` to `/usr/share/projectify/releases/current/app`
+- `/usr/share/projectify/static` to `/usr/share/projectify/releases/current/static`
 
 # Monitoring
 
@@ -471,3 +470,13 @@ projectify-bastion dhcpcd[971]: ps_root_recvmsg: Operation not permitted
 - Find a good way to integrate Gunicorn with Prometheus/Grafana
 - Find a good way to integrate Django with Prometheus/Grafana
 - Find a good way to integrate Caddy with Prometheus/Grafana
+- Add Grafana alerting
+- Remove whitenoise, use serve-static on projectify-demo
+- Make better use of Gunicorn SIGHUP or https://gunicorn.org/signals/#upgrading-to-a-new-binary-on-the-fly
+- Queue requests in Caddy when restarting Gunicorn
+- Fix caching
+- Shallow git clone
+
+# Done
+
+- Implement rolling releases

@@ -14,10 +14,14 @@
     - system
     - projectify_app
   vars:
-    static_root: /usr/share/projectify/static
-    media_root: /var/lib/projectify/state/media
+    projectify_releases_root: /usr/share/projectify/releases
+    projectify_current_release: "{{ projectify_releases_root }}/current"
+    app_root: "{{ projectify_current_release }}/app"
+    static_root: "{{ projectify_current_release }}/static"
+    venv_path: "{{ projectify_current_release }}/venv"
+    projectify_user_home: /var/lib/projectify
+    media_root: "{{ projectify_user_home }}/state/media"
     # Expect volume mounted at /srv/backups
     media_backup_dest: /srv/backups/projectify_app_media
     pgbackrest_dest: /srv/backups/pgbackrest
-    credentials_file: /var/lib/projectify/credentials.toml
-    venv_path: /var/lib/projectify/venv
+    credentials_file: "{{ projectify_user_home }}/credentials.toml"

@@ -12,7 +12,7 @@ Type=notify
 NotifyAccess=main
 User=projectify
 Group=projectify
-WorkingDirectory=/var/lib/projectify/app
+WorkingDirectory={{ app_root }}
 Environment="SOCKET=/run/gunicorn.sock"
 # TODO remove SITE_TITLE var
 Environment="SITE_TITLE=Projectify Production on Hetzner"
@@ -25,11 +25,19 @@ Environment="MEDIA_ROOT={{ media_root }}"
 # TODO use LoadCredential for secrets
 Environment="CREDENTIALS_FILE={{ credentials_file }}"
 # TODO configure logs
-ExecStart=/var/lib/projectify/venv/bin/gunicorn
+ExecStart={{ venv_path }}/bin/python -m gunicorn
 ExecReload=/bin/kill -s HUP $MAINPID
 KillMode=mixed
 TimeoutStopSec=5
 PrivateTmp=true
+
+# TODO add hardening
+# Should not change files in /usr/share/projectify
+# OK to access /var/lib/projectify/state/media
+# Acceptable network stuff:
+# - access unix socket (psql)
+# - access/create unix socket (for caddy rev proxy)
+# - make TCP requests to the outside world
 
 [Install]
 WantedBy=multi-user.target

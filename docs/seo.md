@@ -11,6 +11,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 This document tracks what's left for optimizing searchability and
 discoverability in the public facing Projectify web app.
 
+# CSS tweaks
+
+Split up tailwind css between landing/help and dashboard. Try inlining
+landing tailwind css
+
 # Redirects
 
 These should have 301 redirect:
