@@ -16,26 +16,7 @@
             {{ form.email.as_field_group }}
             {{ form.password.as_field_group }}
             {% include "projectify/forms/submit.html" with text="Log in" %}
-            <div class="flex justify-center items-center gap-2">
-                <img width="32"
-                     height="32"
-                     class="size-4"
-                     alt="GitHub"
-                     src="{% static "user/login_with_github.svg" %}"
-                     aria-hidden="true" />
-                {% provider_login_url 'github' as gh_url %}
-                {% anchor label=_("Log in with GitHub") href=gh_url %}
-            </div>
-            <div class="flex justify-center items-center gap-2">
-                <img width="32"
-                     height="32"
-                     class="size-4"
-                     alt="Google"
-                     src="{% static "user/login_with_google.svg" %}"
-                     aria-hidden="true" />
-                {% provider_login_url 'google' as google_url %}
-                {% anchor label=_("Log in with Google") href=google_url %}
-            </div>
+            {% include "user/_oauth_buttons.html" %}
             <div class="text-center">
                 {% trans "Don't have an account yet?" %}
                 {% anchor "users:sign-up" "Sign up here" %}

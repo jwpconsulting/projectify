@@ -1,0 +1,26 @@
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% load i18n %}
+{% load static %}
+{% load socialaccount %}
+{% load projectify %}
+<div class="flex justify-center items-center gap-2">
+    <img width="32"
+         height="32"
+         class="size-4"
+         alt="GitHub"
+         src="{% static "user/login_with_github.svg" %}"
+         aria-hidden="true" />
+    {% provider_login_url 'github' as gh_url %}
+    {% anchor label=_("Log in with GitHub") href=gh_url %}
+</div>
+<div class="flex justify-center items-center gap-2">
+    <img width="32"
+         height="32"
+         class="size-4"
+         alt="Google"
+         src="{% static "user/login_with_google.svg" %}"
+         aria-hidden="true" />
+    {% provider_login_url 'google' as google_url %}
+    {% anchor label=_("Log in with Google") href=google_url %}
+</div>
