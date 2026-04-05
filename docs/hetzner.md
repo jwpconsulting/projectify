@@ -472,13 +472,13 @@ projectify-bastion dhcpcd[971]: ps_root_recvmsg: Operation not permitted
 - Find a good way to integrate Caddy with Prometheus/Grafana
 - Add Grafana alerting
 - Make better use of Gunicorn SIGHUP or https://gunicorn.org/signals/#upgrading-to-a-new-binary-on-the-fly
-- Queue requests in Caddy when restarting Gunicorn
-- Fix caching
-- Shallow git clone
 - Monitor failing pgBackRest backups
 - Monitor failing media backups
 
 # Done
 
+- Shallow git clone
+- Fix caching
 - Implement rolling releases
 - Remove whitenoise, use serve-static on projectify-demo
+- Queue requests in Caddy when restarting Gunicorn

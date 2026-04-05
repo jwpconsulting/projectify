@@ -12,6 +12,7 @@ Type=notify
 NotifyAccess=main
 User=projectify
 Group=projectify
+SupplementaryGroups=caddy
 WorkingDirectory={{ app_root }}
 ExecStart={{ venv_path }}/bin/python -m gunicorn --config {{ gunicorn_config_file }}
 ExecReload=/bin/kill -s HUP $MAINPID
@@ -21,7 +22,7 @@ PrivateTmp=true
 
 # TODO add hardening
 # Should not change files in /usr/share/projectify
-# OK to access /var/lib/projectify/state/media
+# OK to access {{ media_root }}
 # Acceptable network stuff:
 # - access unix socket (psql)
 # - access/create unix socket (for caddy rev proxy)
