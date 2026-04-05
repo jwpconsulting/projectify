@@ -333,7 +333,7 @@
     when: not release_exists.stat.exists
   - name: Check gunicorn health
     ansible.builtin.command:
-        cmd: curl --unix-socket /run/gunicorn.sock www.projectifyapp.com
+        cmd: curl --unix-socket /run/gunicorn.sock {{ hostname }}
     become: true
     become_user: caddy
 
@@ -359,4 +359,4 @@
         state: started
   - name: Check caddy health
     ansible.builtin.command:
-        cmd: curl --resolve www.projectifyapp.com:80:127.0.0.1 http://www.projectifyapp.com -svk
+        cmd: curl https://{{ hostname }}

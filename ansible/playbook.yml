@@ -25,3 +25,4 @@
     media_backup_dest: /srv/backups/projectify_app_media
     pgbackrest_dest: /srv/backups/pgbackrest
     credentials_file: "{{ projectify_user_home }}/credentials.toml"
+    hostname: www.projectifyapp.com

@@ -2,7 +2,7 @@
 #
 # SPDX-FileCopyrightText: 2026 JWP Consulting GK
 
-www.projectifyapp.com {
+{{ hostname }} {
 	# Serve static files directly
 	handle_path /static/django/* {
 		root * {{ static_root }}
@@ -20,5 +20,5 @@ www.projectifyapp.com {
 }
 
 projectifyapp.com {
-	redir https://www.projectifyapp.com{uri}
+	redir https://{{ hostname }}{uri}
 }
