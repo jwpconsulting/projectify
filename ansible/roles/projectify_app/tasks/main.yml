@@ -281,6 +281,17 @@
           DJANGO_CONFIGURATION: CollectStatic
           STATIC_ROOT: "{{ release_dir }}/static"
       when: not release_exists.stat.exists
+    - name: Run database migrations
+      ansible.builtin.command:
+          cmd: "{{ release_dir }}/venv/bin/python ./manage.py migrate --noinput"
+          chdir: "{{ release_dir }}/app"
+      environment:
+          DJANGO_SETTINGS_MODULE: projectify.settings.hetzner
+          DJANGO_CONFIGURATION: Hetzner
+          MEDIA_ROOT: "{{ media_root }}"
+          DATABASE_URL: "{{ database_url }}"
+          CREDENTIALS_FILE: "{{ credentials_file }}"
+      when: not release_exists.stat.exists
     - name: Create symbolic link for current release
       ansible.builtin.file:
           src: "{{ release_dir }}"

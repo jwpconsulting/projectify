@@ -29,3 +29,4 @@
     hostname: www.projectifyapp.com
     gunicorn_config_file: /etc/gunicorn/gunicorn.conf.py
     gunicorn_log_config_file: /etc/gunicorn/gunicorn-error.log
+    database_url: "postgres://%2Frun%2Fpostgresql/projectify"
