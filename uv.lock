@@ -838,7 +838,6 @@ dependencies = [
     { name = "gunicorn" },
     { name = "pillow" },
     { name = "stripe" },
-    { name = "whitenoise" },
 ]
 
 [package.optional-dependencies]
@@ -892,7 +891,6 @@ requires-dist = [
     { name = "pillow", specifier = ">=12.1.1" },
     { name = "psycopg", extras = ["c"], marker = "extra == 'postgresql'", specifier = ">=3.1.18,<4" },
     { name = "stripe", specifier = ">=8,<9" },
-    { name = "whitenoise", specifier = "~=6.2.0" },
 ]
 provides-extras = ["demo", "postgresql", "hosted"]
 
@@ -1478,15 +1476,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/2c/41/aa4bf9664e4cda14c3b39865b12251e8e7d239f4cd0e3cc1b6c2ccde25c1/websocket_client-1.9.0.tar.gz", hash = "sha256:9e813624b6eb619999a97dc7958469217c3176312b3a16a4bd1bc7e08a46ec98", size = 70576, upload-time = "2025-10-07T21:16:36.495Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/34/db/b10e48aa8fff7407e67470363eac595018441cf32d5e1001567a7aeba5d2/websocket_client-1.9.0-py3-none-any.whl", hash = "sha256:af248a825037ef591efbf6ed20cc5faa03d3b47b9e5a2230a529eeee1c1fc3ef", size = 82616, upload-time = "2025-10-07T21:16:34.951Z" },
-]
-
-[[package]]
-name = "whitenoise"
-version = "6.2.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/87/94/2a3a0186e268e90e6ab859d6d15892de0fb189e46bc3e22ecbd0912bc5d5/whitenoise-6.2.0.tar.gz", hash = "sha256:8fa943c6d4cd9e27673b70c21a07b0aa120873901e099cd46cab40f7cc96d567", size = 18412, upload-time = "2022-06-05T15:29:24.592Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a7/e4/9cbdc2c564add81428cd9fca531f2adeb618dca2f64fe7f52f77e5a5627f/whitenoise-6.2.0-py3-none-any.whl", hash = "sha256:8e9c600a5c18bd17655ef668ad55b5edf6c24ce9bdca5bf607649ca4b1e8e2c2", size = 19909, upload-time = "2022-06-05T15:29:23.388Z" },
 ]
 
 [[package]]

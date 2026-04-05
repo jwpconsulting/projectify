@@ -49,7 +49,6 @@ class Development(Base):
         *Base.INSTALLED_APPS,
         "django_browser_reload",
         "django_extensions",
-        "whitenoise.runserver_nostatic",
         # For testing allauth connection
         "allauth.socialaccount.providers.openid_connect",
     )

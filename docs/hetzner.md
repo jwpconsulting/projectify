@@ -471,7 +471,6 @@ projectify-bastion dhcpcd[971]: ps_root_recvmsg: Operation not permitted
 - Find a good way to integrate Django with Prometheus/Grafana
 - Find a good way to integrate Caddy with Prometheus/Grafana
 - Add Grafana alerting
-- Remove whitenoise, use serve-static on projectify-demo
 - Make better use of Gunicorn SIGHUP or https://gunicorn.org/signals/#upgrading-to-a-new-binary-on-the-fly
 - Queue requests in Caddy when restarting Gunicorn
 - Fix caching
@@ -482,3 +481,4 @@ projectify-bastion dhcpcd[971]: ps_root_recvmsg: Operation not permitted
 # Done
 
 - Implement rolling releases
+- Remove whitenoise, use serve-static on projectify-demo

@@ -13,20 +13,6 @@ except ImportError as e:
 from .base import Base
 
 
-def clean_middleware(middleware: list[str]) -> list[str]:
-    """
-    Remove whitenoise from middleware list.
-
-    Whitenoise needs you to create the staticfiles directory,
-    which isn't too relevant for testing.
-    """
-    return [
-        m
-        for m in middleware
-        if m not in ["whitenoise.middleware.WhiteNoiseMiddleware"]
-    ]
-
-
 class Test(Base):
     """Test configuration."""
 
@@ -39,9 +25,6 @@ class Test(Base):
 
     # django_sendfile2 settings
     SENDFILE_BACKEND = "django_sendfile.backends.simple"
-
-    # Middleware
-    MIDDLEWARE = clean_middleware(Base.MIDDLEWARE)
 
     # Email
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
@@ -69,14 +52,3 @@ class Test(Base):
         cls.SOCIALACCOUNT_PROVIDERS["google"]["APPS"].append(
             {"client_id": "TEST", "secret": "TEST"}
         )
-
-
-class TestCollectstatic(Test):
-    """Settings to test static file collection needed for whitenoise."""
-
-    STORAGES = {
-        **Base.STORAGES,
-        "staticfiles": {
-            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-        },
-    }
