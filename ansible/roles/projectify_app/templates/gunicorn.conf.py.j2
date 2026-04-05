@@ -17,6 +17,7 @@ syslog = True
 # TODO configure logs
 logconfig = "{{ gunicorn_log_config_file }}"
 # XXX access log missing in syslog
+accesslog = "-"
 
 raw_env = [
     "DJANGO_SETTINGS_MODULE=projectify.settings.hetzner",
