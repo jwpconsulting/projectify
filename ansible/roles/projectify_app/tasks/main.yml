@@ -143,7 +143,7 @@
       ansible.builtin.command:
           cmd: pgbackrest --stanza=projectify stanza-create
       args:
-        creates: "{{ pgbackrest_dest }}/projectify"
+        creates: "{{ pgbackrest_dest }}/backup/projectify"
       become: true
       become_user: postgres
     - name: Check pbBackRest configuration

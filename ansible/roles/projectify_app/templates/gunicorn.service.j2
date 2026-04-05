@@ -14,8 +14,6 @@ User=projectify
 Group=projectify
 WorkingDirectory={{ app_root }}
 Environment="SOCKET=/run/gunicorn.sock"
-# TODO remove SITE_TITLE var
-Environment="SITE_TITLE=Projectify Production on Hetzner"
 Environment="DJANGO_SETTINGS_MODULE=projectify.settings.hetzner"
 Environment="DJANGO_CONFIGURATION=Hetzner"
 # TODO hard-code in Hetzner class

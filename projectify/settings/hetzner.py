@@ -16,24 +16,7 @@ class Hetzner(Base):
     """
     Configuration for Hetzner deployment.
 
-    Requires you to create a TOML file with the following keys:
-    ADMIN_EMAIL=
-    ADMIN_NAME=
-
-    SECRET_KEY=
-
-    ALLAUTH_GITHUB_CLIENT_ID=
-    ALLAUTH_GITHUB_SECRET=
-    ALLAUTH_GOOGLE_CLIENT_ID=
-    ALLAUTH_GOOGLE_SECRET=
-
-    MAILGUN_API_KEY=
-    MAILGUN_DOMAIN=
-
-    STRIPE_ENDPOINT_SECRET=
-    STRIPE_PRICE_OBJECT=
-    STRIPE_PUBLISHABLE_KEY=
-    STRIPE_SECRET_KEY=
+    See `docs/django-configuration.md` for details.
     """
 
     SITE_TITLE = "Projectify Production on Hetzner"

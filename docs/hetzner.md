@@ -476,6 +476,8 @@ projectify-bastion dhcpcd[971]: ps_root_recvmsg: Operation not permitted
 - Queue requests in Caddy when restarting Gunicorn
 - Fix caching
 - Shallow git clone
+- Monitor failing pgBackRest backups
+- Monitor failing media backups
 
 # Done
 
