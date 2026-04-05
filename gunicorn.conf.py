@@ -13,7 +13,7 @@ wsgi_app = "projectify.wsgi"
 if "PORT" in os.environ:
     bind = f"0.0.0.0:{os.environ['PORT']}"
 elif "SOCKET" in os.environ:
-    bind = f"unix:{os.environ["SOCKET"]}"
+    bind = f"unix:{os.environ['SOCKET']}"
 else:
     raise ValueError("Must specify PORT or SOCKET environment variable")
 
