@@ -30,9 +30,11 @@
         </div>
         {{ form }}
         {% include "projectify/forms/submit.html" with text=_("Continue") %}
-        {% include "onboarding/common/step_counter.html" with step=1 step_count=5 %}
     </form>
 {% endblock onboarding_content %}
+{% block onboarding_stepcounter %}
+    {% include "onboarding/common/step_counter.html" with step=1 step_count=5 %}
+{% endblock onboarding_stepcounter %}
 {% block onboarding_preview %}
     <div class="py-2 ring-4 gap-2 flex flex-col ring-border bg-foreground"
          inert>

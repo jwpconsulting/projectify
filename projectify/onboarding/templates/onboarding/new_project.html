@@ -1,4 +1,4 @@
-{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "onboarding_base.html" %}
 {% load i18n %}
@@ -25,9 +25,17 @@
         </div>
         {{ form }}
         {% include "projectify/forms/submit.html" with text=_("Continue") %}
-        {% include "onboarding/common/step_counter.html" with step=2 step_count=5 %}
     </form>
 {% endblock onboarding_content %}
+{% block onboarding_skip %}
+    <form method="post" class="flex shrink grow flex-col gap-16">
+        {% csrf_token %}
+        {% action_button text=_("Skip onboarding") style="secondary" name="action" value="skip" %}
+    </form>
+{% endblock onboarding_skip %}
+{% block onboarding_stepcounter %}
+    {% include "onboarding/common/step_counter.html" with step=2 step_count=5 %}
+{% endblock onboarding_stepcounter %}
 {% block onboarding_preview %}
     <div class="py-2 ring-4 gap-2 flex flex-col ring-border bg-foreground"
          inert>

@@ -17,9 +17,17 @@
         </div>
         {{ form }}
         {% include "projectify/forms/submit.html" with text=_("Continue") %}
-        {% include "onboarding/common/step_counter.html" with step=4 step_count="5" %}
     </form>
 {% endblock onboarding_content %}
+{% block onboarding_skip %}
+    <form method="post" class="flex shrink grow flex-col gap-16">
+        {% csrf_token %}
+        {% action_button text=_("Skip onboarding") style="secondary" name="action" value="skip" %}
+    </form>
+{% endblock onboarding_skip %}
+{% block onboarding_stepcounter %}
+    {% include "onboarding/common/step_counter.html" with step=4 step_count="5" %}
+{% endblock onboarding_stepcounter %}
 {% block onboarding_preview %}
     <div class="ring-4 max-w-full flex flex-row ring-border bg-foreground py-2"
          inert>
