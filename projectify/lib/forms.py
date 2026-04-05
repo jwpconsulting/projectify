@@ -7,7 +7,7 @@
 import logging
 
 from django.core.exceptions import ValidationError
-from django.forms import BaseForm
+from django.forms import BaseForm, Textarea
 
 logger = logging.getLogger(__name__)
 
@@ -24,3 +24,21 @@ def populate_form_with_drf_errors(
             for error in errors:
                 form.add_error(k, error)
     return
+
+
+# SPDX-SnippetBegin
+# SPDX-License-Identifier: MIT
+# SPDX-SnippetCopyrightText: 2022 LOGIC SMPC <paris@withlogic.co>
+class RichTextEditor(Textarea):
+    """Rich text editor widget for prose's RichTextField."""
+
+    template_name = "prose/forms/widgets/editor.html"
+
+    class Media:
+        """Use vendored in {trix,prose}.{css,js}."""
+
+        css = {"all": ("trix/trix.css", "trix/prose.css")}
+        js = ("trix/trix.js", "trix/prose.js")
+
+
+# SPDX-SnippetEnd

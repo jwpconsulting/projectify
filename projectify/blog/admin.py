@@ -10,12 +10,9 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from projectify.blog.models import (
-    Post,
-    PostContent,
-    RichTextEditor,
-    clean_post_text,
-)
+from projectify.blog.models import Post, PostContent
+from projectify.lib.forms import RichTextEditor
+from projectify.lib.models import clean_rich_text
 
 
 class PostAdminForm(forms.ModelForm):
@@ -56,7 +53,7 @@ class PostAdminForm(forms.ModelForm):
         """Sanitize content."""
         # We clean the content on top of cleaning it in
         # RichTextField.pre_save()
-        content: str = clean_post_text(self.cleaned_data["content"])
+        content: str = clean_rich_text(self.cleaned_data["content"])
         self.cleaned_data["content"] = content
         return content
 

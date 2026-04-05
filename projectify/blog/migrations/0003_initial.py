@@ -7,7 +7,6 @@
 import django.db.models.deletion
 from django.db import migrations, models
 
-import projectify.blog.models
 import projectify.lib.models
 
 
@@ -33,7 +32,7 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("content", projectify.blog.models.DocumentContentField()),
+                ("content", projectify.lib.models.DocumentContentField()),
             ],
             options={
                 "abstract": False,
