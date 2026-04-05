@@ -356,6 +356,18 @@ wheels = [
 ]
 
 [[package]]
+name = "django-sendfile2"
+version = "0.7.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6b/8d/18b884f5316329c914b6851f21fd1d88752627ab8da7dd0f0970cf2b58db/django_sendfile2-0.7.2.tar.gz", hash = "sha256:d0939d52217d314b110d0b7b15ace5063d96aeb4980b7e0f94c020c2e25646f8", size = 27488, upload-time = "2025-04-06T14:09:42.806Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/13/ba/0eb6a4e5c989a16d65e05eb850ada2407fdc566874ebd35bda3438010028/django_sendfile2-0.7.2-py3-none-any.whl", hash = "sha256:d1b364c2e0b32de996bb8df30889681c723a7cae13c837c0256dd25f87074530", size = 11305, upload-time = "2025-04-06T14:09:41.643Z" },
+]
+
+[[package]]
 name = "django-types"
 version = "0.20.0"
 source = { registry = "https://pypi.org/simple" }
@@ -822,6 +834,7 @@ dependencies = [
     { name = "django-allauth", extra = ["socialaccount"] },
     { name = "django-markdownify" },
     { name = "django-ratelimit" },
+    { name = "django-sendfile2" },
     { name = "gunicorn" },
     { name = "pillow" },
     { name = "stripe" },
@@ -873,6 +886,7 @@ requires-dist = [
     { name = "django-anymail", extras = ["mailgun"], marker = "extra == 'hosted'", specifier = ">=10.3,<10.4" },
     { name = "django-markdownify", specifier = ">=0.9.5,<0.10" },
     { name = "django-ratelimit", specifier = ">=4.1.0,<5" },
+    { name = "django-sendfile2", specifier = ">=0.7.2" },
     { name = "faker", marker = "extra == 'demo'", specifier = ">=19.13.0,<20" },
     { name = "gunicorn", specifier = ">=23,<24" },
     { name = "pillow", specifier = ">=12.1.1" },

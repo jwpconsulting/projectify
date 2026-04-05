@@ -15,8 +15,10 @@ license-files = [
 dependencies = [
     "dj-database-url~=2.1.0",
     "django>=6.0.0,<7",
+    # TODO make this a "hosted" only dependency
     "gunicorn>=23,<24",
     "pillow>=12.1.1",
+    #  TODO remove and rely on Caddy
     "whitenoise~=6.2.0",
     "django-ratelimit>=4.1.0,<5",
     "django-markdownify>=0.9.5,<0.10",
@@ -24,6 +26,7 @@ dependencies = [
     "bleach>=6.2.0",
     # TODO make this a "hosted" only dependency
     "stripe>=8,<9",
+    "django-sendfile2>=0.7.2",
 ]
 authors = [
     { name = "The Projectify Authors", email = "hello@projectifyapp.com" },
@@ -45,6 +48,7 @@ postgresql = [
 ]
 # Dependencies used on projectifyapp.com
 hosted = [
+# TODO remove and use plain smtp
     "django-anymail[mailgun]>=10.3,<10.4",
 ]
 
