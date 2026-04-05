@@ -31,8 +31,10 @@ from projectify.workspace.views.task import (
     task_move_to_section,
     task_update_view,
 )
+from projectify.workspace.views.team_member import team_member_picture
 from projectify.workspace.views.workspace import (
     workspace_minimize_project_list,
+    workspace_picture_view,
     workspace_settings_billing,
     workspace_settings_billing_edit,
     workspace_settings_edit_label,
@@ -66,6 +68,11 @@ workspace_patterns = (
         "<uuid:workspace_uuid>/minimize-project-list",
         workspace_minimize_project_list,
         name="minimize-project-list",
+    ),
+    path(
+        "<uuid:workspace_uuid>/picture",
+        workspace_picture_view,
+        name="picture",
     ),
     # Settings
     path(
@@ -180,6 +187,11 @@ task_patterns = (
         name="move-to-section",
     ),
 )
+team_member_patterns = (
+    path(
+        "<uuid:team_member_uuid>/picture", team_member_picture, name="picture"
+    ),
+)
 urlpatterns = (
     path("", redirect_to_dashboard, name="dashboard"),
     # Avatar
@@ -208,4 +220,6 @@ urlpatterns = (
         "task/",
         include((task_patterns, "tasks")),
     ),
+    # Team member
+    path("team-member/", include((team_member_patterns, "team-members"))),
 )

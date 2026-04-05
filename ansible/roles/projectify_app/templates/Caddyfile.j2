@@ -18,6 +18,14 @@
 		health_headers {
 			Host {{ hostname }}
 		}
+
+		@sendfile header X-Sendfile *
+		handle_response @sendfile {
+			root * {{ media_root }}
+			rewrite {rp.header.X-Sendfile}
+			method GET
+			file_server
+		}
 	}
 	# TODO Enable compression, but only for static files
 	log

@@ -3,13 +3,16 @@
 # SPDX-FileCopyrightText: 2022-2024 JWP Consulting GK
 """User app user model views."""
 
+from typing import Any
+
 from django import forms
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.password_validation import (
     password_validators_help_texts,
 )
+from django.core.exceptions import BadRequest
 from django.forms import ValidationError
-from django.http import HttpRequest, HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -17,6 +20,7 @@ from django.views.decorators.http import require_http_methods
 
 from django_ratelimit.core import UNSAFE
 from django_ratelimit.decorators import ratelimit
+from django_sendfile import sendfile
 
 from projectify.lib.forms import populate_form_with_drf_errors
 from projectify.lib.types import AuthenticatedHttpRequest
@@ -36,6 +40,17 @@ from projectify.user.services.user import (
 
 class UserProfileForm(forms.ModelForm):
     """Form for user profile update."""
+
+    def __init__(self, *args: Any, **kwargs: Any):
+        """Set user picture URL in attrs."""
+        super().__init__(*args, **kwargs)
+        if (
+            self.instance
+            and self.instance.pk
+            and self.instance.profile_picture
+        ):
+            picture_url = reverse("users:profile-picture")
+            self.fields["profile_picture"].widget.attrs["url"] = picture_url
 
     class Meta:
         """Form meta."""
@@ -59,31 +74,40 @@ class UserProfileForm(forms.ModelForm):
 
 
 @require_http_methods(["GET", "POST"])
-@login_required
-def user_profile(request: HttpRequest) -> HttpResponse:
+@platform_view
+def user_profile(request: AuthenticatedHttpRequest) -> HttpResponse:
     """Show user profile."""
     user = request.user
-    assert isinstance(user, User)
-    if request.method == "POST":
-        form = UserProfileForm(
-            data=request.POST, instance=user, files=request.FILES
-        )
-        if form.is_valid():
-            user_update(
-                who=user,
-                user=user,
-                preferred_name=form.cleaned_data["preferred_name"],
-                profile_picture=form.cleaned_data["profile_picture"],
+    match request.method:
+        case "POST":
+            form = UserProfileForm(
+                data=request.POST, instance=user, files=request.FILES
             )
-            return redirect(reverse("users:profile"))
-        raise ValueError()
-    else:
-        form = UserProfileForm(instance=user)
-    context = {
-        "user": user,
-        "form": form,
-    }
+            if form.is_valid():
+                user_update(
+                    who=user,
+                    user=user,
+                    preferred_name=form.cleaned_data["preferred_name"],
+                    profile_picture=form.cleaned_data["profile_picture"],
+                )
+                return redirect(reverse("users:profile"))
+        case "GET":
+            form = UserProfileForm(instance=user)
+        case _:
+            # XXX should never be hit because of require_http_methods
+            raise BadRequest()
+    context = {"user": user, "form": form}
     return render(request, "user/user_profile.html", context=context)
+
+
+@require_http_methods(["GET"])
+@platform_view
+def user_profile_picture(request: AuthenticatedHttpRequest) -> HttpResponse:
+    """Return picture for current user."""
+    user = request.user
+    if not user.profile_picture:
+        raise Http404(_("No picture available"))
+    return sendfile(request, user.profile_picture.path)
 
 
 @require_http_methods(["GET", "POST"])

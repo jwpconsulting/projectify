@@ -339,7 +339,8 @@ class Base(Configuration):  # type:ignore
     MEDIA_URL = "/media/"
     # This configures whether ./manage.py runserver should serve media files
     # ONLY use this for debugging or local development
-    SERVE_MEDIA = False
+    SENDFILE_BACKEND: str
+    SENDFILE_ROOT: Path
 
     # Logging
     LOGGING: LoggingConfig = {
@@ -454,6 +455,7 @@ class Base(Configuration):  # type:ignore
         cls.DATABASES = {
             "default": dj_database_url.config(conn_max_age=cls.CONN_MAX_AGE)
         }
+        cls.SENDFILE_ROOT = cls.MEDIA_ROOT
 
     @classmethod
     def post_setup(cls) -> None:

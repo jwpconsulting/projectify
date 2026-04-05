@@ -20,12 +20,16 @@ rm projectify.sqlite; uv run ./manage.py seeddb
 from argparse import ArgumentParser
 from datetime import timezone
 from itertools import groupby
+from pathlib import Path
 from random import choice, randint, sample
-from typing import Any, TypedDict
+from typing import Any, TypedDict, cast
 
+from django.contrib.auth.hashers import make_password
+from django.core.files import File
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from django.db.models.fields.files import FileDescriptor
 from django.utils.text import slugify
 
 try:
@@ -89,6 +93,13 @@ TASK_MAX_CHAT_MESSAGE_COUNT = 10
 POST_CONTENT_MIN_PARAGRAPHS = 5
 POST_CONTENT_MAX_PARAGRAPHS = 15
 
+USER_AVATARS = [
+    Path("projectify/test/test-images/cat1.jpg"),
+    Path("projectify/test/test-images/cat2.jpg"),
+    Path("projectify/test/test-images/cat3.jpg"),
+    Path("projectify/test/test-images/cat4.jpg"),
+]
+
 
 class Command(BaseCommand):
     """Command."""
@@ -106,7 +117,7 @@ class Command(BaseCommand):
         """Create users."""
         existing_users = User.objects.count()
         if existing_users == 0:
-            user_create_superuser(
+            superuser = user_create_superuser(
                 email="admin@localhost",
                 password="password",
             )
@@ -118,6 +129,9 @@ class Command(BaseCommand):
             guest.is_active = True
             guest.save()
             self.stdout.write("Created and manually activated normal user")
+        else:
+            superuser = User.objects.get(email="admin@localhost")
+            guest = User.objects.get(email="guest@localhost")
         remaining_users = self.n_users - User.objects.count()
         new_users = User.objects.bulk_create(
             [
@@ -126,11 +140,35 @@ class Command(BaseCommand):
                     preferred_name=self.fake.name() if randint(0, 1) else None,
                     is_staff=False,
                     is_superuser=False,
+                    password=make_password(None),
                 )
                 for _ in range(remaining_users)
             ]
         )
         self.stdout.write(f"Created {len(new_users)} new users")
+
+        # Assign random profile pictures
+        users_with_pictures = 0
+        add_pictures_to: list[User] = [
+            superuser,
+            guest,
+            *(
+                self.fake.random_elements(new_users, unique=True)
+                if new_users
+                else []
+            ),
+        ]
+        for user in add_pictures_to:
+            path = self.fake.random_element(USER_AVATARS)
+            with path.open("rb") as fd:
+                file = cast(FileDescriptor, File(fd, name=str(path)))
+                user.profile_picture = file
+                user.save()
+            users_with_pictures += 1
+        self.stdout.write(
+            f"Assigned profile pictures to {users_with_pictures} users"
+        )
+
         return list(User.objects.all())
 
     def create_tasks(self, altogether: list[Altogether]) -> None:
@@ -242,6 +280,13 @@ class Command(BaseCommand):
             ]
         )
         self.stdout.write(f"Created {len(workspaces)} new workspaces")
+        for workspace in workspaces:
+            path = self.fake.random_element(USER_AVATARS)
+            with path.open("rb") as fd:
+                file = cast(FileDescriptor, File(fd, name=str(path)))
+                workspace.picture = file
+                workspace.save()
+        self.stdout.write("Added pictures to workspaces")
 
         workspaces_team_members = TeamMember.objects.bulk_create(
             [

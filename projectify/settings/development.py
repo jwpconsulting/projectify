@@ -88,7 +88,7 @@ class Development(Base):
     SERVER_EMAIL = "hello@projectifyapp.com"
 
     # Media
-    SERVE_MEDIA = True
+    SENDFILE_BACKEND = "django_sendfile.backends.simple"
 
     # Stripe
     STRIPE_PUBLISHABLE_KEY = environ_get_or_warn("STRIPE_PUBLISHABLE_KEY")

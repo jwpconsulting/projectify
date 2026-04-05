@@ -14,8 +14,11 @@ from django.db.models import QuerySet
 from django.forms import ValidationError
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
+
+from django_sendfile import sendfile
 
 from projectify.corporate.selectors.customer import (
     customer_find_by_workspace_uuid,
@@ -143,6 +146,23 @@ def workspace_view(
     return redirect("onboarding:new_project", workspace_uuid=workspace_uuid)
 
 
+@require_http_methods(["GET"])
+@platform_view
+def workspace_picture_view(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Show workspace picture to authorized team member."""
+    workspace = workspace_find_by_workspace_uuid(
+        workspace_uuid=workspace_uuid, who=request.user
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+    if not workspace.picture:
+        raise Http404(_("No picture available"))
+    picture_path = workspace.picture.path
+    return sendfile(request, picture_path)
+
+
 class MinimizeProjectListForm(forms.Form):
     """Form for minimizingand expanding the project list."""
 
@@ -206,6 +226,16 @@ def workspace_minimize_project_list(
 class WorkspaceSettingsForm(forms.ModelForm):
     """Django form for workspace settings."""
 
+    def __init__(self, *args: Any, **kwargs: Any):
+        """Set picture URL in attrs."""
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk and self.instance.picture:
+            instance: Workspace = self.instance
+            picture_url = reverse(
+                "dashboard:workspaces:picture", args=(instance.uuid,)
+            )
+            self.fields["picture"].widget.attrs["url"] = picture_url
+
     class Meta:
         """Meta."""
 
@@ -217,7 +247,7 @@ class WorkspaceSettingsForm(forms.ModelForm):
         widgets = {
             "picture": forms.ClearableFileInput(
                 attrs={
-                    "initial_text": _("No picture uploaded"),
+                    "initial_text": _("Your workspace picture"),
                     "clear_checkbox_label": _("Remove workspace picture"),
                     "cleared": _("You haven't uploaded a workspace picture"),
                 }

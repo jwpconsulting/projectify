@@ -38,6 +38,7 @@ def user_update(
     who: User,
     user: User,
     preferred_name: Optional[str],
+    # TODO use File instead of FileDescriptor
     profile_picture: Optional[FileDescriptor],
 ) -> User:
     """Update a user."""

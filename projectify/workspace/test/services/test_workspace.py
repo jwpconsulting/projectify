@@ -102,7 +102,7 @@ def test_workspace_update(
     updated_workspace.refresh_from_db()
     assert updated_workspace.title == new_title
     assert updated_workspace.description == new_description
-    assert "picture/test" in updated_workspace.picture.path
+    assert "uploaded_file.png" in updated_workspace.picture.path
 
 
 def test_add_user(
