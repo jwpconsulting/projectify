@@ -7,7 +7,7 @@
 pg1-path=/var/lib/postgresql/17/main
 
 [global]
-repo1-path=/srv/backups/pgbackrest
+repo1-path={{ pgbackrest_dest }}
 # One full back up per day for 7 days, see
 # 9.1  Full Backup Retention in
 # https://pgbackrest.org/user-guide.html#quickstart/configure-archiving
