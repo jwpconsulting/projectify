@@ -8,7 +8,6 @@ from uuid import UUID
 
 from django import forms
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ValidationError as DjangoValidationError
 from django.forms import ValidationError
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
@@ -19,7 +18,13 @@ from django.views.decorators.http import require_http_methods
 from projectify.lib.forms import populate_form_with_drf_errors
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.user.models import User
-from projectify.workspace.models import Label, Project, Task, Workspace
+from projectify.workspace.models import (
+    Label,
+    Project,
+    Task,
+    TeamMember,
+    Workspace,
+)
 from projectify.workspace.selectors.project import (
     ProjectDetailQuerySet,
     project_find_by_project_uuid,
@@ -40,6 +45,57 @@ from projectify.workspace.services.task import task_create, task_update
 from projectify.workspace.services.workspace import workspace_create
 
 
+def create_sample_project(
+    *, who: User, workspace: Workspace, team_member: TeamMember
+) -> Project:
+    """Create a sample project with sections and tasks for onboarding."""
+    project = project_create(
+        who=who, workspace=workspace, title=_("Sample Project")
+    )
+    create_sample_sections(
+        who=who, project=project, team_member=team_member, workspace=workspace
+    )
+    return project
+
+
+def create_sample_sections(
+    *,
+    who: User,
+    project: Project,
+    team_member: TeamMember,
+    workspace: Workspace,
+) -> None:
+    """Create sample sections and tasks for onboarding."""
+    learn_label_qs = workspace.label_set.filter(name=_("Learn"))
+    if learn_label_qs.exists():
+        learn_label = learn_label_qs.first()
+    else:
+        learn_label = label_create(
+            workspace=workspace,
+            name=_("Learn"),
+            color=0,
+            who=who,
+        )
+    assert learn_label
+    section_create(who=who, title=_("To Do"), project=project)
+    section_about = section_create(
+        who=who, title=_("About Projectify"), project=project
+    )
+    task_create(
+        who=who,
+        section=section_about,
+        title=_("Learn how to use Projectify"),
+        assignee=team_member,
+        labels=[learn_label],
+    )
+    task_create(
+        who=who,
+        section=section_about,
+        title=_("Invite my team members"),
+        assignee=team_member,
+    )
+
+
 @login_required
 def welcome(request: AuthenticatedHttpRequest) -> HttpResponse:
     """Serve onboarding welcome page."""
@@ -50,7 +106,11 @@ class PreferredNameForm(forms.ModelForm):
     """Update User's preferred name."""
 
     preferred_name = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": _("Your preferred name")})
+        widget=forms.TextInput(
+            attrs={"placeholder": _("Your preferred name")}
+        ),
+        # Let the user keep their name empty
+        required=False,
     )
 
     class Meta:
@@ -125,9 +185,7 @@ def new_workspace(request: AuthenticatedHttpRequest) -> HttpResponse:
         form = WorkspaceForm(request.POST)
         if form.is_valid():
             workspace = workspace_create(
-                title=form.cleaned_data["title"],
-                description=None,
-                owner=request.user,
+                title=form.cleaned_data["title"], owner=request.user
             )
             return redirect(
                 reverse("onboarding:new_project", args=[str(workspace.uuid)])
@@ -177,6 +235,7 @@ def new_project(
     newly created project.
     On error: Show project creation form with errors.
     """
+    # XXX This may already contain a current team_member reference
     workspace = workspace_find_by_workspace_uuid(
         workspace_uuid=workspace_uuid,
         who=request.user,
@@ -185,21 +244,36 @@ def new_project(
     if workspace is None:
         raise Http404(_("Workspace not found"))
 
-    if request.method == "POST":
-        form = ProjectForm(request.POST)
-        if form.is_valid():
-            project = project_create(
-                who=request.user,
-                workspace=workspace,
-                title=form.cleaned_data["title"],
+    match request.method, request.POST.get("action"):
+        case "POST", "skip":
+            team_member = team_member_find_for_workspace(
+                user=request.user, workspace=workspace
             )
-            return redirect(
-                reverse("onboarding:new_task", args=[str(project.uuid)])
+            if not team_member:
+                raise RuntimeError(
+                    f"No team_member found for current user in workspace {workspace.uuid}"
+                )
+            project = create_sample_project(
+                who=request.user, workspace=workspace, team_member=team_member
             )
-        status = 400
-    else:
-        form = ProjectForm()
-        status = 200
+            return redirect(project.get_absolute_url())
+        case "POST", _:
+            form = ProjectForm(request.POST)
+            if form.is_valid():
+                project = project_create(
+                    who=request.user,
+                    workspace=workspace,
+                    title=form.cleaned_data["title"],
+                )
+                return redirect(
+                    reverse("onboarding:new_task", args=[str(project.uuid)])
+                )
+            status = 400
+        case "GET", _:
+            form = ProjectForm()
+            status = 200
+        case method, _:
+            raise ValueError(f"Unexpected method {method}")
 
     context = {
         "form": form,
@@ -256,7 +330,7 @@ def new_task(
         raise Http404(_("Project not found"))
 
     section = project.section_set.first()
-    section_title = _("To do")
+    section_title = _("To Do")
     if section:
         section_title = section.title
     context: dict[str, Any] = {
@@ -266,25 +340,6 @@ def new_task(
         "section_title": section_title,
     }
 
-    match request.method:
-        case "GET":
-            return render(
-                request,
-                "onboarding/new_task.html",
-                {**context, "form": TaskForm()},
-            )
-        case "POST":
-            pass
-        case method:
-            raise ValueError(f"Should not have hit method {method}")
-
-    if section is None:
-        section = section_create(
-            who=request.user,
-            title=section_title,
-            description=None,
-            project=project,
-        )
     team_member = team_member_find_for_workspace(
         user=request.user, workspace=project.workspace
     )
@@ -293,18 +348,44 @@ def new_task(
             f"No team_member found for current user in workspace {project.workspace.uuid}"
         )
 
-    form = TaskForm(request.POST)
-    if form.is_valid():
-        task = task_create(
-            who=request.user,
-            section=section,
-            title=form.cleaned_data["title"],
-            assignee=team_member,
-            labels=[],
-        )
-        return redirect(reverse("onboarding:new_label", args=[str(task.uuid)]))
-    context = {**context, "form": form}
-    return render(request, "onboarding/new_task.html", context, status=400)
+    match request.method, request.POST.get("action"):
+        case "GET", _:
+            status = 200
+            context = {**context, "form": TaskForm()}
+        case "POST", "skip":
+            if section is None:
+                workspace = project.workspace
+                create_sample_sections(
+                    who=request.user,
+                    project=project,
+                    team_member=team_member,
+                    workspace=workspace,
+                )
+            return redirect(project.get_absolute_url())
+        case "POST", _:
+            if section is None:
+                section = section_create(
+                    who=request.user, title=section_title, project=project
+                )
+
+            form = TaskForm(request.POST)
+            if form.is_valid():
+                task = task_create(
+                    who=request.user,
+                    section=section,
+                    title=form.cleaned_data["title"],
+                    assignee=team_member,
+                )
+                return redirect(
+                    reverse("onboarding:new_label", args=[str(task.uuid)])
+                )
+            status = 400
+            context = {**context, "form": form}
+        case method, _:
+            raise ValueError(f"Unexpected method {method}")
+    return render(
+        request, "onboarding/new_task.html", status=status, context=context
+    )
 
 
 class LabelForm(forms.ModelForm):
@@ -346,33 +427,41 @@ def new_label(
     if task is None:
         raise Http404(_("Task not found"))
 
-    if request.method == "POST":
-        form = LabelForm(request.POST)
-        if form.is_valid():
-            try:
-                label = label_create(
-                    workspace=task.section.project.workspace,
-                    name=form.cleaned_data["name"],
-                    color=0,
-                    who=request.user,
-                )
-                task_update(
-                    who=request.user,
-                    task=task,
-                    title=task.title,
-                    labels=[label],
-                    assignee=task.assignee,
-                )
+    match request.method, request.POST.get("action"):
+        case "GET", _:
+            form = LabelForm()
+            status = 200
+        case "POST", "skip":
+            return redirect(task.section.project.get_absolute_url())
+        case "POST", _:
+            form = LabelForm(request.POST)
+            if form.is_valid():
+                try:
+                    label = label_create(
+                        workspace=task.section.project.workspace,
+                        name=form.cleaned_data["name"],
+                        color=0,
+                        who=request.user,
+                    )
+                    task_update(
+                        who=request.user,
+                        task=task,
+                        title=task.title,
+                        labels=[label],
+                        assignee=task.assignee,
+                    )
 
-                return redirect(
-                    reverse("onboarding:assign_task", args=[str(task.uuid)])
-                )
-            except (ValidationError, DjangoValidationError) as e:
-                populate_form_with_drf_errors(form, e)
-        status = 400
-    else:
-        form = LabelForm()
-        status = 200
+                    return redirect(
+                        reverse(
+                            "onboarding:assign_task", args=[str(task.uuid)]
+                        )
+                    )
+                except ValidationError as e:
+                    populate_form_with_drf_errors(form, e)
+            status = 400
+        case method, _:
+            raise ValueError(f"Unexpected method {method}")
+
     context = {"form": form, "task": task}
     return render(request, "onboarding/new_label.html", context, status=status)
 

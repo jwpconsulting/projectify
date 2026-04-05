@@ -10,7 +10,7 @@
     <form method="post" class="flex shrink grow flex-col gap-16">
         {% csrf_token %}
         <div class="flex flex-col gap-4">
-            <h1 class="min-w-fit max-w-lg text-4xl font-bold">{% trans "What is a task you’d like to complete?" %}</h1>
+            <h1 class="min-w-fit max-w-lg text-4xl font-bold">{% trans "What is a task you'd like to complete?" %}</h1>
             <p class="text-lg">
                 {% if section %}
                     {% blocktrans %}It looks like you already have a section called "{{section}}". We will now create a task and place it into that section.{% endblocktrans %}
@@ -21,9 +21,17 @@
         </div>
         {{ form }}
         {% include "projectify/forms/submit.html" with text=_("Continue") %}
-        {% include "onboarding/common/step_counter.html" with step=3 step_count=5 %}
     </form>
 {% endblock onboarding_content %}
+{% block onboarding_skip %}
+    <form method="post" class="flex shrink grow flex-col gap-16">
+        {% csrf_token %}
+        {% action_button text=_("Skip onboarding") style="secondary" name="action" value="skip" %}
+    </form>
+{% endblock onboarding_skip %}
+{% block onboarding_stepcounter %}
+    {% include "onboarding/common/step_counter.html" with step=3 step_count=5 %}
+{% endblock onboarding_stepcounter %}
 {% block onboarding_preview %}
     <div class="ring-4 max-w-full flex flex-row ring-border bg-foreground py-2"
          inert>
