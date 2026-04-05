@@ -227,6 +227,7 @@
           repo: https://github.com/jwpconsulting/projectify.git
           dest: /tmp/projectify_clone
           version: main
+          depth: 1
       register: git_clone
     - name: Set release directory name
       ansible.builtin.set_fact:
