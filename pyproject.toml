@@ -16,7 +16,7 @@ dependencies = [
     "dj-database-url~=2.1.0",
     "django>=6.0.0,<7",
     # TODO make this a "hosted" only dependency
-    "gunicorn>=23,<24",
+    "gunicorn>=25",
     "pillow>=12.1.1",
     "django-ratelimit>=4.1.0,<5",
     "django-markdownify>=0.9.5,<0.10",

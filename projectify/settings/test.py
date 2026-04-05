@@ -18,6 +18,10 @@ class Test(Base):
 
     SITE_TITLE = "Projectify Pytest"
 
+    MIDDLEWARE = [
+        a for a in Base.MIDDLEWARE if "stats.middleware.count_stats" not in a
+    ]
+
     # TODO populate me
     SECRET_KEY = "test"
 

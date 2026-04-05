@@ -26,6 +26,7 @@ from projectify.blog.sitemap import BlogSitemap
 from projectify.help.sitemap import HelpSitemap
 from projectify.lib.views import permanent_redirect
 from projectify.storefront.sitemap import StorefrontSitemap
+from projectify.user.sitemap import UserSitemap
 
 from .lib.settings import get_settings
 from .views import (
@@ -43,6 +44,7 @@ sitemaps = {
     "storefront": StorefrontSitemap,
     "help": HelpSitemap,
     "blog": BlogSitemap,
+    "user": UserSitemap,
 }
 
 thirdparty_logins = build_provider_urlpatterns()
