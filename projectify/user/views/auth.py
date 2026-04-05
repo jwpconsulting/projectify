@@ -13,6 +13,7 @@ from django.forms import ValidationError
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
@@ -54,15 +55,21 @@ class SignUpForm(forms.Form):
     def __init__(self, *args: Any, **kwargs: Any):
         """Override and add fields."""
         super().__init__(*args, **kwargs)
-        self.fields["tos_agreed"].label = anchor(
-            label=_("I agree to the Terms of Service"),
-            href=reverse("storefront:tos"),
-            external=True,
+        self.fields["privacy_policy_agreed"].label = format_html(
+            _("I agree to the {privacy_policy_anchor}"),
+            privacy_policy_anchor=anchor(
+                label=_("Privacy Policy"),
+                href=reverse("storefront:privacy"),
+                external=True,
+            ),
         )
-        self.fields["privacy_policy_agreed"].label = anchor(
-            label=_("I agree to the Privacy Policy"),
-            href=reverse("storefront:privacy"),
-            external=True,
+        self.fields["tos_agreed"].label = format_html(
+            _("I agree to the {tos_anchor}"),
+            tos_anchor=anchor(
+                label=_("Terms of Service"),
+                href=reverse("storefront:tos"),
+                external=True,
+            ),
         )
 
 

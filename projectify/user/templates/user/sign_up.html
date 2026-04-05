@@ -21,12 +21,12 @@
             {{ form.email.as_field_group }}
             <section class="flex flex-col gap-2">
                 {{ form.password.as_field_group }}
-                <header class="font-bold">
-                    {% trans "Rules for choosing a safe password:" %}
-                </header>
-                <ul class="flex list-inside list-disc flex-col gap-0.5">
-                    {% for rule in validators %}<li>{{ rule }}</li>{% endfor %}
-                </ul>
+                <details class="cursor-pointer">
+                    <summary class="font-bold">{% trans "Rules for choosing a safe password:" %}</summary>
+                    <ul class="flex list-inside list-disc flex-col gap-0.5 pt-2">
+                        {% for rule in validators %}<li>{{ rule }}</li>{% endfor %}
+                    </ul>
+                </details>
             </section>
             <label class="flex flex-row items-center gap-2"
                    for="{{ form.tos_agreed.id_for_label }}">
@@ -40,16 +40,7 @@
             </label>
             {% include "projectify/forms/submit.html" with text=_("Sign up") %}
         </div>
-        <div class="flex justify-center items-center gap-2">
-            <img width="32"
-                 height="32"
-                 class="size-4"
-                 alt="GitHub"
-                 src="{% static "user/login_with_github.svg" %}"
-                 aria-hidden="true" />
-            {% provider_login_url 'github' as gh_url %}
-            {% anchor label=_("Log in with GitHub") href=gh_url %}
-        </div>
+        {% include "user/_oauth_buttons.html" %}
         <div class="text-center">
             {% trans "Already have an account?" %}
             {% anchor "users:log-in" _("Log in here") %}

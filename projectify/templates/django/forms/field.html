@@ -20,7 +20,7 @@
                     </ul>
                 {% endif %}
                 {% if field.help_text %}
-                    <span class="prose shrink-0"
+                    <span class="shrink-0"
                           {% if field.auto_id %}id="{{ field.auto_id }}_helptext"{% endif %}>
                         {{ field.help_text|safe }}
                     </span>
