@@ -34,17 +34,21 @@ class Hetzner(Base):
             "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
         },
     }
-    # Caddy serves these media files:
-    MEDIA_ROOT = Path(os.environ["MEDIA_ROOT"])
+
     # Static files
     # We allow overriding this value in case the static files come prebuilt,
     # for example in a container, and an exact path is contained in
     # the STATIC_ROOT environment variable
+    # TODO make this non-optional and print error
     STATIC_ROOT = (
         Path(os.environ["STATIC_ROOT"])
         if "STATIC_ROOT" in os.environ
         else Base.STATIC_ROOT
     )
+
+    # TODO print friendly error when MEDIA_ROOT not found
+    MEDIA_ROOT = Path(os.environ["MEDIA_ROOT"])
+    SENDFILE_BACKEND = "django_sendfile.backends.xsendfile"
 
     # Logging config
     LOGGING = Base.LOGGING

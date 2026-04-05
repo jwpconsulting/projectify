@@ -338,7 +338,7 @@ class Base(Configuration):  # type:ignore
     MEDIA_URL = "/media/"
     # This configures whether ./manage.py runserver should serve media files
     # ONLY use this for debugging or local development
-    SENDFILE_BACKEND: str
+    SENDFILE_BACKEND: Optional[str] = None
     SENDFILE_ROOT: Path
 
     # Logging
@@ -468,3 +468,6 @@ class Base(Configuration):  # type:ignore
         elif cls.FRONTEND_URL.endswith("/"):
             warnings.warn("Please ensure FRONTEND_URL does not end on a '/'")
             cls.FRONTEND_URL = cls.FRONTEND_URL[:-1]
+
+        if cls.SENDFILE_BACKEND is None:
+            warnings.warn("Must specify SENDFILE_BACKEND")
