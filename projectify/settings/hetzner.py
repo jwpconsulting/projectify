@@ -31,7 +31,7 @@ class Hetzner(Base):
         },
         # Caddy serves static files
         "staticfiles": {
-            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+            "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
         },
     }
     # Caddy serves these media files:

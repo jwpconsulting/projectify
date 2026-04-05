@@ -6,7 +6,9 @@
 	# Serve static files directly
 	handle_path /static/django/* {
 		root * {{ static_root }}
+		# TODO precompress static
 		file_server
+		header Cache-Control max-age=31536000
 	}
 	# Media files TODO
 		# handle /media/* {

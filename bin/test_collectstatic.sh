@@ -5,7 +5,7 @@
 # Test collecting static
 # Run within uv shell, nix shell, or similar
 set -e
-export DJANGO_SETTINGS_MODULE=projectify.settings.test
-export DJANGO_CONFIGURATION=TestCollectstatic
-export TEST_STATICFILES_STORAGE=
+export DJANGO_SETTINGS_MODULE=projectify.settings.collect_static
+export DJANGO_CONFIGURATION=CollectStatic
+export STATIC_ROOT=$(mktemp -d)
 ./manage.py collectstatic --noinput
