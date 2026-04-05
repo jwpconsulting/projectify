@@ -46,7 +46,6 @@ postgresql = [
 # Dependencies used on projectifyapp.com
 hosted = [
     "django-anymail[mailgun]>=10.3,<10.4",
-    "django-cloudinary-storage~=0.3.0",
 ]
 
 [dependency-groups]
@@ -172,12 +171,6 @@ exclude = [
 
 # Library imports
 [[tool.mypy.overrides]]
-module = [
-    "cloudinary.*",
-]
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
 module = ["allauth.*", "bleach"]
 follow_untyped_imports = true
 
@@ -206,8 +199,6 @@ exclude = [
     "projectify/workspace/views/project.py",
     # This one is sort of covered by mypy
     "projectify/settings/monkeypatch.py",
-    # TODO cloudinary stub
-    "projectify/utils.py",
     # TODO django rules stub
     "projectify/*/rules.py",
     # TODO write typings

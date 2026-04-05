@@ -7,8 +7,6 @@ import os
 import warnings
 from pathlib import Path
 
-from django.utils.csp import CSP  # type: ignore
-
 from .base import Base
 
 
@@ -71,11 +69,6 @@ class ProductionBase(Base):
 class Production(ProductionBase):
     """Settings for Projectify hosted on www.projectifyapp.com."""
 
-    INSTALLED_APPS = (
-        *ProductionBase.INSTALLED_APPS,
-        "cloudinary",
-        "cloudinary_storage",
-    )
     ANYMAIL = {
         "MAILGUN_API_KEY": os.environ["MAILGUN_API_KEY"],
         "MAILGUN_SENDER_DOMAIN": os.environ["MAILGUN_DOMAIN"],
@@ -88,23 +81,6 @@ class Production(ProductionBase):
     STRIPE_SECRET_KEY = os.environ["STRIPE_SECRET_KEY"]
     STRIPE_PRICE_OBJECT = os.environ["STRIPE_PRICE_OBJECT"]
     STRIPE_ENDPOINT_SECRET = os.environ["STRIPE_ENDPOINT_SECRET"]
-
-    # Cloudinary
-    MEDIA_CLOUDINARY_STORAGE = (
-        "cloudinary_storage.storage.MediaCloudinaryStorage"
-    )
-    STORAGES = {
-        # TODO make this
-        # **Production.STORAGES,
-        **ProductionBase.STORAGES,
-        "default": {
-            "BACKEND": MEDIA_CLOUDINARY_STORAGE,
-        },
-    }
-    SECURE_CSP = {
-        **ProductionBase.SECURE_CSP,
-        "img-src": [CSP.SELF, "res.cloudinary.com"],
-    }
 
 
 # TODO remove this and just keep the above Hosted(Production)

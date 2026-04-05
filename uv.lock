@@ -143,17 +143,6 @@ wheels = [
 ]
 
 [[package]]
-name = "cloudinary"
-version = "1.40.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "certifi" },
-    { name = "six" },
-    { name = "urllib3" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/9d/9d/e59116cf145fb56a899de700447851976d225a3b9f0676b56129c9bc3e3a/cloudinary-1.40.0.tar.gz", hash = "sha256:fe1a5309734814b481de637ab3041e8699995387df965ec0f2d8f767db7067a2", size = 177203, upload-time = "2024-04-18T20:26:04.187Z" }
-
-[[package]]
 name = "colorama"
 version = "0.4.6"
 source = { registry = "https://pypi.org/simple" }
@@ -316,19 +305,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/79/ef/ab407c1a2f14e13c75a6419a2d124954aa0364f62580ad95a3d31dc6c73d/django_browser_reload-1.21.0.tar.gz", hash = "sha256:3335ad3d107eb657f623d1a8e680dfbcab8a83ae1f94df1895e069dddf5604ba", size = 15800, upload-time = "2025-09-22T17:00:35.199Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/46/61/1b4a8c589652859995bcab87682286443eb9fdf2d7fd584975b9ffc1db33/django_browser_reload-1.21.0-py3-none-any.whl", hash = "sha256:0b2a86ab460774fa9bb142a121c70e75a72f18109f51a4f6de409cd633d3a70d", size = 12852, upload-time = "2025-09-22T17:00:33.479Z" },
-]
-
-[[package]]
-name = "django-cloudinary-storage"
-version = "0.3.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "cloudinary" },
-    { name = "requests" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/72/da/6072905410b869566d3cb9f6706803d0a9d2052d90e0b8ed783031acdb6d/django-cloudinary-storage-0.3.0.tar.gz", hash = "sha256:debd403a5f225c9d35c4af508ff4abc7fdc262129464134b60b2feeb2c44d3e1", size = 21669, upload-time = "2020-08-23T22:19:57.854Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/fe/e2/e52f63ddafa0985e2af70197c4d3e18963d0ea854083fc23705b88014891/django_cloudinary_storage-0.3.0-py3-none-any.whl", hash = "sha256:95c855c7334141b2a485ea7eb5716de87bb6ce0d848e205debb3a3ab7bbbd49a", size = 18866, upload-time = "2020-08-23T22:19:55.767Z" },
 ]
 
 [[package]]
@@ -858,7 +834,6 @@ demo = [
 ]
 hosted = [
     { name = "django-anymail" },
-    { name = "django-cloudinary-storage" },
 ]
 postgresql = [
     { name = "psycopg", extra = ["c"] },
@@ -896,7 +871,6 @@ requires-dist = [
     { name = "django", specifier = ">=6.0.0,<7" },
     { name = "django-allauth", extras = ["socialaccount"], specifier = ">=65.14.3" },
     { name = "django-anymail", extras = ["mailgun"], marker = "extra == 'hosted'", specifier = ">=10.3,<10.4" },
-    { name = "django-cloudinary-storage", marker = "extra == 'hosted'", specifier = "~=0.3.0" },
     { name = "django-markdownify", specifier = ">=0.9.5,<0.10" },
     { name = "django-ratelimit", specifier = ">=4.1.0,<5" },
     { name = "faker", marker = "extra == 'demo'", specifier = ">=19.13.0,<20" },
