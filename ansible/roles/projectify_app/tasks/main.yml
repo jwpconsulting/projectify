@@ -303,6 +303,8 @@
             dest: /etc/systemd/system/gunicorn.service
           - src: gunicorn.conf.py.j2
             dest: "{{ gunicorn_config_file }}"
+          - src: gunicorn-error.log.j2
+            dest: "{{ gunicorn_log_config_file }}"
       register: gunicorn_config_files
     - name: "Verify gunicorn credentials file {{ credentials_file }} exists"
       ansible.builtin.stat:

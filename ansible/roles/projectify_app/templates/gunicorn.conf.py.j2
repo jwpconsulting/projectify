@@ -15,7 +15,8 @@ SOCKET = "/run/gunicorn.sock"
 # TODO understand if syslog only is sufficient
 syslog = True
 # TODO configure logs
-logconfig = "gunicorn-error.log"
+logconfig = "{{ gunicorn_log_config_file }}"
+# XXX access log missing in syslog
 
 raw_env = [
     "DJANGO_SETTINGS_MODULE=projectify.settings.hetzner",
