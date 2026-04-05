@@ -23,6 +23,8 @@ ensure that the Projectify backend will launch correctly.
   `projectify.settings.hetzner`
 - `DJANGO_CONFIGURATION`: For Hetzner deployment, use `Hetzner`
 - `ALLOWED_HOST`: Allowed host name
+- `STATIC_ROOT`: Where to store static files
+- `MEDIA_ROOT`: Where to store user uploaded files
 
 ## Networking
 
