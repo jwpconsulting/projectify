@@ -12,6 +12,8 @@ of the backend's usage of _django configurations_ is included.
 
 # Production Environment Variables
 
+See `projectify/settings/hetzner.py` as well.
+
 The following variables need to be provided in the process environment to
 ensure that the Projectify backend will launch correctly.
 
@@ -20,8 +22,27 @@ ensure that the Projectify backend will launch correctly.
 - `DJANGO_SETTINGS_MODULE`: For Hetzner deployment, use
   `projectify.settings.hetzner`
 - `DJANGO_CONFIGURATION`: For Hetzner deployment, use `Hetzner`
+
+## Networking
+
+- `PORT`: Used for gunicorn to determine which port to bind to, OR,
+- `SOCKET`: Used for gunicorn to determine which UNIX socket to bind to.
+- `FRONTEND_URL`: URL for where Projectify frontend is served.
+
+## Database
+
+- `DATABASE_URL`:
+  [dj-database-url](https://github.com/jazzband/dj-database-url) compatible
+  database url
+
+# Credentials
+
+Provide the following values as variables in a credentials file. Pass
+the file path as the `CREDENTIALS_PATH` environment variable.
+
+## General
+
 - `SECRET_KEY`: Used for session cookie generation
-- `SITE_TITLE`: Title of site (Note: This used to be optional)
 
 ## Error reporting
 
@@ -33,20 +54,6 @@ contents of the logged error.
 - `ADMIN_EMAIL`: Administrator email address. The backend prints a warning if
   this isn't set.
 
-## Networking
-
-- `PORT`: Used for gunicorn to determine which port to bind to, OR,
-- `SOCKET`: Used for gunicorn to determine which UNIX socket to bind to.
-- `ALLOWED_HOSTS`: Which host names to permit in HTTP Host header. Comma
-  separated values.
-- `FRONTEND_URL`: URL for where Projectify frontend is served.
-
-## Database
-
-- `DATABASE_URL`:
-  [dj-database-url](https://github.com/jazzband/dj-database-url) compatible
-  database url
-
 ## Stripe
 
 See also `docs/billing_integration.md`.
@@ -54,9 +61,9 @@ See also `docs/billing_integration.md`.
 - `STRIPE_PUBLISHABLE_KEY`: Stripe key that can be revealed to client. See
   [Stripe's docs](https://docs.stripe.com/keys#obtain-api-keys)
 - `STRIPE_SECRET_KEY`: Stripe key that may not be revealed.
-- `STRIPE_PRICE_OBJECT`: Price object we use for Stripe billing
 - `STRIPE_ENDPOINT_SECRET`: Key used by stripe for signing their requests when
   calling our [webhook](https://docs.stripe.com/webhooks#events-overview).
+- `STRIPE_PRICE_OBJECT`: Price object we use for Stripe billing
 
 ## Mailgun
 
@@ -71,3 +78,27 @@ See `docs/auth.md` under **django-allauth**.
 - `ALLAUTH_GITHUB_SECRET`: GitHub OAuth client secret
 - `ALLAUTH_GOOGLE_CLIENT_ID`: Google OAuth client id
 - `ALLAUTH_GOOGLE_SECRET`: Google Oauth client secret
+
+## Sample credentials file
+
+Use the following file as a template credentials TOML file:
+
+```toml
+SECRET_KEY = "..."
+
+ADMIN_EMAIL = "user@localhost"
+ADMIN_NAME = "..."
+
+STRIPE_PUBLISHABLE_KEY = "pk_test_XXX"
+STRIPE_SECRET_KEY = "sk_test_XXX"
+STRIPE_ENDPOINT_SECRET = "whsec_XXX"
+STRIPE_PRICE_OBJECT = "price_XXX"
+
+MAILGUN_API_KEY = "..."
+MAILGUN_DOMAIN = "..."
+
+ALLAUTH_GITHUB_CLIENT_ID = "..."
+ALLAUTH_GITHUB_SECRET = "..."
+ALLAUTH_GOOGLE_CLIENT_ID = "XXX.apps.googleusercontent.com"
+ALLAUTH_GOOGLE_SECRET = "GOCSPX-XXX"
+```
