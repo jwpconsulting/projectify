@@ -20,11 +20,14 @@
 		health_headers {
 			Host {{ hostname }}
 		}
+		# This is useful when restarting gunicorn
+		lb_try_duration 5s
 
 		@sendfile header X-Sendfile *
 		handle_response @sendfile {
 			root * {{ media_root }}
 			rewrite {rp.header.X-Sendfile}
+			uri strip_prefix {{ media_root }}
 			method GET
 			file_server
 		}

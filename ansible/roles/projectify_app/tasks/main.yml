@@ -184,16 +184,27 @@
 
 - name: Configure media backup rsync service
   block:
-    - name: Create media and media backup directory
+    - name: Create state root directory
       ansible.builtin.file:
-          path: "{{ item }}"
+          path: "{{ state_root }}"
+          state: directory
+          owner: projectify
+          group: caddy
+          mode: '0750'
+    - name: Create media directory
+      ansible.builtin.file:
+          path: "{{ media_root }}"
+          state: directory
+          owner: projectify
+          group: caddy
+          mode: '0750'
+    - name: Create media backup directory
+      ansible.builtin.file:
+          path: "{{ media_backup_dest }}"
           state: directory
           owner: projectify
           group: projectify
           mode: '0700'
-      loop:
-        - "{{ media_root }}"
-        - "{{ media_backup_dest }}"
     - name: Copy media backup systemd service unit
       ansible.builtin.template:
           src: projectify-media-backup.service.j2
@@ -219,6 +230,8 @@
           name: projectify-media-backup.timer
           enabled: true
           state: started
+  tags:
+    - media
 
 - name: Checkout and build Projectify release
   block:
@@ -323,14 +336,18 @@
           state: started
       when: gunicorn_config_files.changed
     - name: Enable and reload gunicorn service
-      # XXX When you change th Environment variables in gunicorn.service.j2
-      # reloaing gunicorn.service doesn't point it at new variables, you need
-      # to restart it for that.
       ansible.builtin.systemd:
           name: gunicorn.service
           enabled: true
           state: reloaded
-      when: gunicorn_config_files.changed or not release_exists.stat.exists
+      when: gunicorn_config_files.changed
+    - name: Restart gunicorn service after app release
+      ansible.builtin.systemd:
+          name: gunicorn.service
+          enabled: true
+          state: restarted
+      # Run only when creating new release
+      when: not release_exists.stat.exists
     - name: Check gunicorn health
       ansible.builtin.command:
           cmd: curl --unix-socket /run/gunicorn.sock {{ hostname }}
@@ -362,3 +379,5 @@
     - name: Check caddy health
       ansible.builtin.command:
           cmd: curl https://{{ hostname }}
+  tags:
+    - caddy

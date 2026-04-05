@@ -20,7 +20,8 @@
     static_root: "{{ projectify_current_release }}/static"
     venv_path: "{{ projectify_current_release }}/venv"
     projectify_user_home: /var/lib/projectify
-    media_root: "{{ projectify_user_home }}/state/media"
+    state_root: /var/lib/projectify-state
+    media_root: "{{ state_root }}/media"
     # Expect volume mounted at /srv/backups
     media_backup_dest: /srv/backups/projectify_app_media
     pgbackrest_dest: /srv/backups/pgbackrest
