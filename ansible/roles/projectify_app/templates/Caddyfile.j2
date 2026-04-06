@@ -3,6 +3,10 @@
 # SPDX-FileCopyrightText: 2026 JWP Consulting GK
 
 {{ hostname }} {
+	# Prevent large uploads from passing through, especially to Django
+	request_body {
+		max_size 10MB
+	}
 	# Serve static files directly
 	handle_path /static/django/* {
 		root * {{ static_root }}
