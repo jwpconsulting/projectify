@@ -5,7 +5,7 @@
 
 import logging
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 from uuid import uuid4
 
 from django import forms
@@ -26,9 +26,9 @@ from django.views.decorators.http import require_http_methods
 
 from django_sendfile import sendfile
 
+from projectify.lib.forms import SafeImageField
 from projectify.lib.settings import get_settings
 from projectify.lib.types import AuthenticatedHttpRequest
-from projectify.lib.utils import get_image_format
 from projectify.lib.views import platform_view
 
 from .selectors.post import post_find_by_slug, post_list_published
@@ -81,33 +81,14 @@ def serve_picture(request: HttpRequest, name: str) -> HttpResponse:
 class UploadAttachmentForm(forms.Form):
     """Form for uploading blog post attachments."""
 
-    file = forms.FileField()
-
-    def clean_file(self) -> UploadedFile:
-        """Validate file size and type."""
-        file: UploadedFile = self.cleaned_data["file"]
+    def __init__(self, *args: Any, **kwargs: Any):
+        """Initialize form with SafeImageField configured from settings."""
+        super().__init__(*args, **kwargs)
         settings = get_settings()
-
-        size = file.size
-        max_size = settings.BLOG_ALLOWED_FILE_SIZE
-        if size > max_size:
-            raise forms.ValidationError(
-                _("Files too large: {size} KiB. Max: {max_size} KiB").format(
-                    size=size // 1024, max_size=max_size // 1024
-                )
-            )
-
-        # Use Pillow to detect actual image format
-        image_format = get_image_format(file)
-        allowed = settings.BLOG_ALLOWED_FILE_TYPES
-        if image_format not in allowed:
-            raise forms.ValidationError(
-                _(
-                    "{image_format} is not one of the allowed file types: {allowed}"
-                ).format(image_format=image_format, allowed=allowed)
-            )
-
-        return file
+        self.fields["file"] = SafeImageField(
+            allowed_file_types=settings.BLOG_ALLOWED_FILE_TYPES,
+            allowed_file_size=settings.BLOG_ALLOWED_FILE_SIZE,
+        )
 
 
 @platform_view

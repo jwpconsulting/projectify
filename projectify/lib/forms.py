@@ -5,10 +5,16 @@
 """Form utilities."""
 
 import logging
+from collections.abc import Container
+from io import BytesIO
 from typing import Any, Optional
 
 from django.core.exceptions import ValidationError
-from django.forms import BaseForm, Textarea
+from django.core.files.uploadedfile import UploadedFile
+from django.forms import BaseForm, FileField, Textarea
+from django.utils.translation import gettext_lazy as _
+
+from PIL import Image
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +28,23 @@ def populate_form_with_errors(form: BaseForm, error: ValidationError) -> None:
         for k, errors in error.error_dict.items():
             for error in errors:
                 form.add_error(k, error)
+
+
+def get_image_format(file: UploadedFile) -> Optional[str]:
+    """Detect image format using Pillow."""
+    file.seek(0)
+    image_data = BytesIO(file.read())
+    file.seek(0)
+    try:
+        with Image.open(image_data) as img:
+            return img.format
+    except Exception as e:
+        logger.warning(
+            "Couldn't detect image format for file %s",
+            file.name,
+            exc_info=e,
+        )
+    return None
 
 
 # SPDX-SnippetBegin
@@ -58,6 +81,46 @@ class RichTextEditor(Textarea):
 
         css = {"all": ("trix/trix.css", "trix/prose.css")}
         js = ("trix/trix.js", "trix/prose.js")
+
+
+# TODO Consider using ImageField
+class SafeImageField(FileField):
+    """Image field that validates file size and type."""
+
+    def __init__(
+        self,
+        *,
+        allowed_file_types: Container[str],
+        allowed_file_size: int,
+        **kwargs: Any,
+    ):
+        """Initialize with required allowed_file_types and allowed_file_size."""
+        super().__init__(**kwargs)
+        self.allowed_file_types = allowed_file_types
+        self.allowed_file_size = allowed_file_size
+
+    def clean(self, data: Any, initial: Any = None) -> UploadedFile:
+        """Validate file size and type."""
+        file: UploadedFile = super().clean(data, initial)
+        size = file.size
+        if size > self.allowed_file_size:
+            raise ValidationError(
+                _("Files too large: {size} KiB. Max: {max_size} KiB").format(
+                    size=size // 1024, max_size=self.allowed_file_size // 1024
+                )
+            )
+        # Use Pillow to detect actual image format
+        image_format = get_image_format(file)
+        if image_format not in self.allowed_file_types:
+            raise ValidationError(
+                _(
+                    "{image_format} is not one of the allowed file types: {allowed}"
+                ).format(
+                    image_format=image_format, allowed=self.allowed_file_types
+                )
+            )
+
+        return file
 
 
 # SPDX-SnippetEnd
