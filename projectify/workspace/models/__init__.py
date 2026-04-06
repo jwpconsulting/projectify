@@ -16,6 +16,7 @@ from django.utils.translation import gettext_lazy as _
 from projectify.lib.models import (
     BaseModel,
     GetOrder,
+    RichTextField,
     SetOrder,
     TitleDescriptionModel,
 )
@@ -240,6 +241,8 @@ class Section(TitleDescriptionModel, BaseModel):
 class Task(TitleDescriptionModel, BaseModel):
     """Task, belongs to section."""
 
+    # Override description and make it a rich text field
+    description = RichTextField(_("description"), blank=True, null=True)
     workspace = models.ForeignKey["Workspace"](
         "workspace.Workspace",
         on_delete=models.CASCADE,
