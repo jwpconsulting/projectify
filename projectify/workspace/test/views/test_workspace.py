@@ -29,8 +29,8 @@ from projectify.workspace.services.team_member_invite import (
 )
 from pytest_types import DjangoAssertNumQueries
 
+from ...const import TeamMemberRoles
 from ...models import Label, TeamMember, TeamMemberInvite, Workspace
-from ...models.const import TeamMemberRoles
 
 pytestmark = pytest.mark.django_db
 

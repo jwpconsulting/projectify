@@ -15,9 +15,9 @@ from projectify.premail.email import EmailAddress
 from projectify.user.models import User, UserInvite
 from projectify.user.services.user_invite import user_invite_create
 
+from ..const import TeamMemberRoles
 from ..emails import TeamMemberInviteEmail
 from ..models import TeamMember, TeamMemberInvite, Workspace
-from ..models.const import TeamMemberRoles
 from ..services.workspace import workspace_add_user
 
 logger = logging.getLogger(__name__)

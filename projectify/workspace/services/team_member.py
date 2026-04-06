@@ -13,8 +13,8 @@ from django.utils.translation import gettext_lazy as _
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 
+from ..const import TeamMemberRoles
 from ..models import Project, TeamMember
-from ..models.const import TeamMemberRoles
 
 
 @transaction.atomic

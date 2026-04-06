@@ -9,6 +9,7 @@ from faker import Faker
 from projectify.corporate.services.stripe import customer_cancel_subscription
 from projectify.user.models import User
 from projectify.user.services.internal import user_create
+from projectify.workspace.const import TeamMemberRoles
 from projectify.workspace.models import (
     Project,
     Section,
@@ -16,7 +17,6 @@ from projectify.workspace.models import (
     TeamMember,
     Workspace,
 )
-from projectify.workspace.models.const import TeamMemberRoles
 from projectify.workspace.services.chat_message import chat_message_create
 from projectify.workspace.services.label import label_create
 from projectify.workspace.services.project import project_create

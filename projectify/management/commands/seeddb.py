@@ -48,6 +48,7 @@ from projectify.user.services.internal import (
     user_create,
     user_create_superuser,
 )
+from projectify.workspace.const import TeamMemberRoles
 from projectify.workspace.models import (
     ChatMessage,
     Label,
@@ -58,7 +59,6 @@ from projectify.workspace.models import (
     TeamMember,
     Workspace,
 )
-from projectify.workspace.models.const import TeamMemberRoles
 
 Altogether = TypedDict(
     "Altogether",

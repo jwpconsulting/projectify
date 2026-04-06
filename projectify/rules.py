@@ -9,8 +9,8 @@ import rules
 from rules.predicates import is_superuser
 
 from projectify.user.models import User
+from projectify.workspace.const import TeamMemberRoles
 from projectify.workspace.models import TeamMember, Workspace
-from projectify.workspace.models.const import TeamMemberRoles
 from projectify.workspace.selectors.quota import Resource, workspace_quota_for
 from projectify.workspace.selectors.team_member import (
     team_member_find_for_workspace,
