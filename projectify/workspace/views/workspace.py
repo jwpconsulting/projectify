@@ -163,10 +163,12 @@ def workspace_picture_view(
     return sendfile(request, picture_path)
 
 
+# TODO use the form in
+# projectify/workspace/templates/workspace/common/sidemenu/project_details.html
 class MinimizeProjectListForm(forms.Form):
     """Form for minimizingand expanding the project list."""
 
-    minimized = forms.BooleanField(required=False)
+    project_list_minimized = forms.BooleanField(required=False)
 
     def __init__(self, workspace: Workspace, *args: Any, **kwargs: Any):
         """Create current project field."""
@@ -206,7 +208,7 @@ def workspace_minimize_project_list(
 
     team_member_minimize_project_list(
         team_member=current_team_member_qs,
-        minimized=form.cleaned_data["minimized"],
+        minimized=form.cleaned_data["project_list_minimized"],
     )
 
     context = {

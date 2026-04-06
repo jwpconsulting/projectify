@@ -293,13 +293,14 @@ def _project_detail_view_actions(
         case "POST", "minimize_team_member_filter":
             team_member_minimize_team_member_filter(
                 team_member=team_member,
-                minimized=request.POST.get("minimized") == "true",
+                minimized=request.POST.get("team_member_filter_minimized")
+                == "true",
             )
             template = "workspace/common/sidemenu/project_details.html"
         case "POST", "minimize_label_filter":
             team_member_minimize_label_filter(
                 team_member=team_member,
-                minimized=request.POST.get("minimized") == "true",
+                minimized=request.POST.get("label_filter_minimized") == "true",
             )
             template = "workspace/common/sidemenu/project_details.html"
         case _:

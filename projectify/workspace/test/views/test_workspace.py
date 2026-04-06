@@ -110,7 +110,7 @@ class TestMinimizeLists:
         # XX non-deterministic test
         with django_assert_max_num_queries(13):
             response = user_client.post(
-                resource_url, {"minimized": post_value}
+                resource_url, {"project_list_minimized": post_value}
             )
             assert response.status_code == 200
 
