@@ -18,7 +18,12 @@ scrape_configs:
     static_configs:
       - targets: ["localhost:9100"]
 
-  # System metrics from app servers
+  # System metrics from app server
   - job_name: "node-app-servers"
     static_configs:
       - targets: ["10.0.0.3:9100"]
+
+  # Caddy metrics from app server
+  - job_name: "caddy-app-servers"
+    static_configs:
+      - targets: ["10.0.0.3:2019"]

@@ -1,8 +1,15 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
 # SPDX-FileCopyrightText: 2026 JWP Consulting GK
+{
+	servers {
+		metrics
+	}
+}
 
 {{ hostname }} {
+	bind {{ public_ipv4 }} {{ public_ipv6 }}
+
 	# Prevent large uploads from passing through, especially to Django
 	request_body {
 		max_size 10MB
@@ -15,7 +22,7 @@
 		header Cache-Control max-age=31536000
 	}
 	# Media files TODO
-		# handle /media/* {
+	# handle /media/* {
 	# }
 	# Reverse proxy to Django/gunicorn via Unix socket
 	reverse_proxy unix//run/gunicorn.sock {
@@ -41,5 +48,21 @@
 }
 
 projectifyapp.com {
+	bind {{ public_ipv4 }} {{ public_ipv6 }}
+
 	redir https://{{ hostname }}{uri}
+}
+
+# Reverse proxy for metrics
+http://{{ ansible_host }}:2019 {
+	bind {{ ansible_host }}
+	@metrics_get {
+		method GET
+		path /metrics
+	}
+	handle @metrics_get {
+		reverse_proxy http://localhost:2019 {
+			header_up Host localhost:2019
+		}
+	}
 }

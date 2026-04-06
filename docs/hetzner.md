@@ -87,7 +87,7 @@ ssh -L 3000:localhost:3000 -N user@BLA
 Hetzner configuration
 
 - VPS name: `projectify-app-server`
-- Specs:
+- Specs (General Purpose, CCX13):
   - 2 vCPUs
   - 8 GB Ram
   - 80 GB Disk Local
@@ -224,6 +224,8 @@ all:
       backup_storage_path '/dev/disk/by-id/scsi-0HC_Volume_XXX'
       ansible_ssh_extra_args: "-o ControlMaster=auto -o ControlPersist=60s"
       ansible_ssh_pipelining: true
+      public_ipv4: "XXX.XXX.XXX.XXX"
+      public_ipv6: "XXXX:XXXX:XXXX:XXXX::1"
 ```
 
 If you use identity files, you may have to use ssh args like this:
@@ -482,3 +484,65 @@ projectify-bastion dhcpcd[971]: ps_root_recvmsg: Operation not permitted
 - Implement rolling releases
 - Remove whitenoise, use serve-static on projectify-demo
 - Queue requests in Caddy when restarting Gunicorn
+
+# Appendix
+
+## Procinfo on app server
+
+```
+processor	: 0
+vendor_id	: AuthenticAMD
+cpu family	: 25
+model		: 1
+model name	: AMD EPYC-Milan Processor
+stepping	: 1
+microcode	: 0x1000065
+cpu MHz		: 2196.932
+cache size	: 512 KB
+physical id	: 0
+siblings	: 2
+core id		: 0
+cpu cores	: 1
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: …
+bugs		: sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass srso ibpb_no_ret tsa
+bogomips	: 4393.86
+TLB size	: 1024 4K pages
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 40 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: AuthenticAMD
+cpu family	: 25
+model		: 1
+model name	: AMD EPYC-Milan Processor
+stepping	: 1
+microcode	: 0x1000065
+cpu MHz		: 2196.932
+cache size	: 512 KB
+physical id	: 0
+siblings	: 2
+core id		: 0
+cpu cores	: 1
+apicid		: 1
+initial apicid	: 1
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: …
+bugs		: sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass srso ibpb_no_ret tsa
+bogomips	: 4393.86
+TLB size	: 1024 4K pages
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 40 bits physical, 48 bits virtual
+power management:
+```
