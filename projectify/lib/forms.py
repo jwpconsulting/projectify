@@ -12,9 +12,7 @@ from django.forms import BaseForm, Textarea
 logger = logging.getLogger(__name__)
 
 
-def populate_form_with_drf_errors(
-    form: BaseForm, error: ValidationError
-) -> None:
+def populate_form_with_errors(form: BaseForm, error: ValidationError) -> None:
     """Populate a Django form with errors from a Django ValidationError."""
     if hasattr(error, "error_list") and error.error_list:
         for error in error.error_list:
@@ -23,7 +21,6 @@ def populate_form_with_drf_errors(
         for k, errors in error.error_dict.items():
             for error in errors:
                 form.add_error(k, error)
-    return
 
 
 # SPDX-SnippetBegin

@@ -16,7 +16,7 @@ from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
-from projectify.lib.forms import populate_form_with_drf_errors
+from projectify.lib.forms import populate_form_with_errors
 from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
@@ -481,7 +481,7 @@ def project_create_view(
         )
         return redirect("dashboard:projects:detail", project_uuid=project.uuid)
     except ValidationError as error:
-        populate_form_with_drf_errors(form, error)
+        populate_form_with_errors(form, error)
         context = {
             **get_project_view_context(request, workspace),
             "form": form,
@@ -560,7 +560,7 @@ def project_update_view(
             workspace_uuid=project.workspace.uuid,
         )
     except ValidationError as error:
-        populate_form_with_drf_errors(form, error)
+        populate_form_with_errors(form, error)
         context = {"form": form, **context}
         return render(
             request, "workspace/project_update.html", context, status=400

@@ -15,7 +15,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
-from projectify.lib.forms import populate_form_with_drf_errors
+from projectify.lib.forms import populate_form_with_errors
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.user.models import User
 from projectify.workspace.models import (
@@ -457,7 +457,7 @@ def new_label(
                         )
                     )
                 except ValidationError as e:
-                    populate_form_with_drf_errors(form, e)
+                    populate_form_with_errors(form, e)
             status = 400
         case method, _:
             raise ValueError(f"Unexpected method {method}")

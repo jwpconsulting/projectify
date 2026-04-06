@@ -28,7 +28,7 @@ from projectify.corporate.services.customer import (
     create_billing_portal_session_for_customer,
     customer_create_stripe_checkout_session,
 )
-from projectify.lib.forms import populate_form_with_drf_errors
+from projectify.lib.forms import populate_form_with_errors
 from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
@@ -302,7 +302,7 @@ def workspace_settings_general(
             picture=data["picture"],
         )
     except ValidationError as error:
-        populate_form_with_drf_errors(form, error)
+        populate_form_with_errors(form, error)
         context = {**context, "form": form}
         return render(
             request,
@@ -448,7 +448,7 @@ def workspace_settings_new_label(
             who=request.user,
         )
     except (exceptions.ValidationError, ValidationError) as error:
-        populate_form_with_drf_errors(form, error)
+        populate_form_with_errors(form, error)
         return render(
             request,
             "workspace/workspace_settings_create_label.html",
@@ -545,7 +545,7 @@ def workspace_settings_edit_label(
             color=form.cleaned_data["color"],
         )
     except (exceptions.ValidationError, ValidationError) as error:
-        populate_form_with_drf_errors(form, error)
+        populate_form_with_errors(form, error)
         return render(
             request,
             "workspace/workspace_settings_edit_label.html",
@@ -615,7 +615,7 @@ def workspace_settings_team_members(
                     )
                     status = 200
                 except ValidationError as e:
-                    populate_form_with_drf_errors(invite_form, e)
+                    populate_form_with_errors(invite_form, e)
                     status = 400
             else:
                 status = 400
@@ -743,7 +743,7 @@ def workspace_settings_team_member_update(
                     "dashboard:workspaces:team-members", workspace.uuid
                 )
             except ValidationError as error:
-                populate_form_with_drf_errors(form, error)
+                populate_form_with_errors(form, error)
                 context = {**context, "form": form}
                 status = 400
         case _:
@@ -871,7 +871,7 @@ def workspace_settings_billing(
                     seats=billing_form.cleaned_data["seats"],
                 )
             except ValidationError as e:
-                populate_form_with_drf_errors(billing_form, e)
+                populate_form_with_errors(billing_form, e)
                 context = {**context, "billing_form": billing_form}
                 return render(request, template, context=context, status=400)
             return redirect(session.url)
@@ -887,7 +887,7 @@ def workspace_settings_billing(
                     workspace=workspace,
                 )
             except ValidationError as e:
-                populate_form_with_drf_errors(coupon_form, e)
+                populate_form_with_errors(coupon_form, e)
                 context = {**context, "coupon_form": coupon_form}
                 return render(request, template, context=context, status=400)
             return redirect("dashboard:workspaces:billing", workspace.uuid)

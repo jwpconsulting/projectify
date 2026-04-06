@@ -22,7 +22,7 @@ from django_ratelimit.core import UNSAFE
 from django_ratelimit.decorators import ratelimit
 from django_sendfile import sendfile
 
-from projectify.lib.forms import populate_form_with_drf_errors
+from projectify.lib.forms import populate_form_with_errors
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 from projectify.user.models import User
@@ -144,7 +144,7 @@ def password_set(request: AuthenticatedHttpRequest) -> HttpResponse:
                         request=request,
                     )
                 except ValidationError as error:
-                    populate_form_with_drf_errors(form, error)
+                    populate_form_with_errors(form, error)
                     status = 400
                 else:
                     return redirect("users:profile")
@@ -206,7 +206,7 @@ def password_change(request: AuthenticatedHttpRequest) -> HttpResponse:
                         request=request,
                     )
                 except ValidationError as error:
-                    populate_form_with_drf_errors(form, error)
+                    populate_form_with_errors(form, error)
                     status = 400
                 else:
                     return redirect("users:profile")
@@ -281,7 +281,7 @@ def email_address_update(request: AuthenticatedHttpRequest) -> HttpResponse:
             new_email=data["new_email"],
         )
     except ValidationError as error:
-        populate_form_with_drf_errors(form, error)
+        populate_form_with_errors(form, error)
         context = {"form": form}
         return render(
             request,
