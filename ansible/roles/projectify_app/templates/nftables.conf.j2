@@ -53,6 +53,9 @@ table inet firewall {
         # Allow Prometheus scraping from SSH bastion 10.0.0.2 on enp7s0
         iifname "enp7s0" ip saddr 10.0.0.2 tcp dport 9100 accept
 
+        # Allow Prometheus scraping Caddy metrics SSH bastion 10.0.0.2 on enp7s0
+        iifname "enp7s0" ip saddr 10.0.0.2 tcp dport 2019 accept
+
         # Uncomment to enable logging of denied inbound traffic
         log prefix "[nftables] Inbound Denied: " counter drop
     }

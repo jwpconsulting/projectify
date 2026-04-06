@@ -47,3 +47,15 @@ projectifyapp.com {
 
 	redir https://{{ hostname }}{uri}
 }
+
+# Reverse proxy for metrics
+http://{{ ansible_host }}:2019 {
+	bind {{ ansible_host }}
+	@metrics_get {
+		method GET
+		path /metrics
+	}
+	handle @metrics_get {
+		reverse_proxy http://localhost:2019
+	}
+}
