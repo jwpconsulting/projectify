@@ -320,6 +320,23 @@ class Base(Configuration):  # type:ignore
     STATIC_URL = "/static/django/"
     STATIC_ROOT = BASE_DIR / "staticfiles"
 
+    # Where to store media
+    MEDIA_ROOT = BASE_DIR / "media"
+    MEDIA_URL = "/media/"
+    # This configures whether ./manage.py runserver should serve media files
+    # ONLY use this for debugging or local development
+    SENDFILE_BACKEND: Optional[str] = None
+    SENDFILE_ROOT: Path
+
+    STORAGES: StoragesConfig = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
+
     # Default primary key field type
     # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
     DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -346,14 +363,6 @@ class Base(Configuration):  # type:ignore
     # Email
     DEFAULT_FROM_EMAIL = '"Projectify" <hello@projectifyapp.com>'
 
-    # Where to store media
-    MEDIA_ROOT = BASE_DIR / "media"
-    MEDIA_URL = "/media/"
-    # This configures whether ./manage.py runserver should serve media files
-    # ONLY use this for debugging or local development
-    SENDFILE_BACKEND: Optional[str] = None
-    SENDFILE_ROOT: Path
-
     # Logging
     LOGGING: LoggingConfig = {
         "version": 1,
@@ -379,15 +388,6 @@ class Base(Configuration):  # type:ignore
     # https://docs.djangoproject.com/en/5.2/ref/settings/#std-setting-ADMINS
     # > Each item in the list should be a tuple of (Full name, email address). Example:
     ADMINS: list[list[str]] = []
-
-    STORAGES: StoragesConfig = {
-        "default": {
-            "BACKEND": "django.core.files.storage.FileSystemStorage",
-        },
-        "staticfiles": {
-            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-        },
-    }
 
     # Stripe
     STRIPE_SECRET_KEY: Optional[str] = None
