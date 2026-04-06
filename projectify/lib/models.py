@@ -5,7 +5,7 @@
 
 import datetime
 from collections.abc import Iterable, Sequence
-from typing import Any, Callable
+from typing import Any, Callable, Optional
 
 from django import forms
 from django.db.models import CharField, DateTimeField, Model, TextField
@@ -173,7 +173,7 @@ class RichTextField(TextField):  # type: ignore
         field: forms.Field = super().formfield(**kwargs)
         return field
 
-    def pre_save(self, model_instance: Any, add: Any) -> str:
+    def pre_save(self, model_instance: Model, add: bool) -> str:
         """Pre save."""
         del add
         raw_html: str = getattr(model_instance, self.attname)
@@ -181,6 +181,15 @@ class RichTextField(TextField):  # type: ignore
             return raw_html
 
         sanitized_html = clean_rich_text(raw_html)
+        return sanitized_html
+
+    def from_db_value(
+        self, value: Optional[str], expression: object, connection: object
+    ) -> Optional[safestring.SafeString]:
+        """Return sanitized value."""
+        if value is None:
+            return value
+        sanitized_html = clean_rich_text(value)
         return sanitized_html
 
 
