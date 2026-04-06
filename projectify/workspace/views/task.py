@@ -16,6 +16,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods, require_POST
 
+from projectify.lib.forms import RichTextEditor
 from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
@@ -89,8 +90,9 @@ class TaskCreateForm(forms.Form):
     description = forms.CharField(
         required=False,
         label=_("Description"),
-        widget=forms.Textarea(
-            attrs={"placeholder": _("Enter a description for your task")}
+        widget=RichTextEditor(
+            heading_blocks=False,
+            attrs={"placeholder": _("Enter a description for your task")},
         ),
     )
 
@@ -235,8 +237,9 @@ class TaskUpdateForm(forms.Form):
     description = forms.CharField(
         required=False,
         label=_("Description"),
-        widget=forms.Textarea(
-            attrs={"placeholder": _("Enter a description for your task")}
+        widget=RichTextEditor(
+            heading_blocks=False,
+            attrs={"placeholder": _("Enter a description for your task")},
         ),
     )
 

@@ -6,6 +6,10 @@
 {% block title %}
     {% translate "Editing task - Projectify" %}
 {% endblock title %}
+{% block extrahead %}
+    <meta name="trix-csp-nonce" content="{{ csp_nonce }}">
+    {{ form.media }}
+{% endblock extrahead %}
 {% block dashboard_content %}
     <form id="main"
           action="{% url 'dashboard:tasks:update' task.uuid %}"
