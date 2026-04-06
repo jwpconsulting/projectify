@@ -293,6 +293,7 @@
           DJANGO_SETTINGS_MODULE: projectify.settings.hetzner
           DJANGO_CONFIGURATION: Hetzner
           MEDIA_ROOT: "{{ media_root }}"
+          STATIC_ROOT: "{{ release_dir }}/static"
           DATABASE_URL: "{{ database_url }}"
           CREDENTIALS_FILE: "{{ credentials_file }}"
       when: not release_exists.stat.exists
