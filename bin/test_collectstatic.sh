@@ -9,3 +9,5 @@ export DJANGO_SETTINGS_MODULE=projectify.settings.collect_static
 export DJANGO_CONFIGURATION=CollectStatic
 export STATIC_ROOT=$(mktemp -d)
 ./manage.py collectstatic --noinput
+
+ls -la "$STATIC_ROOT"
