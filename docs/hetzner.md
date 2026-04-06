@@ -224,6 +224,8 @@ all:
       backup_storage_path '/dev/disk/by-id/scsi-0HC_Volume_XXX'
       ansible_ssh_extra_args: "-o ControlMaster=auto -o ControlPersist=60s"
       ansible_ssh_pipelining: true
+      public_ipv4: "XXX.XXX.XXX.XXX"
+      public_ipv6: "XXXX:XXXX:XXXX:XXXX::1"
 ```
 
 If you use identity files, you may have to use ssh args like this:

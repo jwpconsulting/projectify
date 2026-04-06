@@ -3,6 +3,8 @@
 # SPDX-FileCopyrightText: 2026 JWP Consulting GK
 
 {{ hostname }} {
+	bind {{ public_ipv4 }} {{ public_ipv6 }}
+
 	# Prevent large uploads from passing through, especially to Django
 	request_body {
 		max_size 10MB
@@ -41,5 +43,7 @@
 }
 
 projectifyapp.com {
+	bind {{ public_ipv4 }} {{ public_ipv6 }}
+
 	redir https://{{ hostname }}{uri}
 }
