@@ -21,6 +21,7 @@ from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 
+from ..const import TASK_EDITOR_MIN_HEIGHT_CLASS
 from ..models import Task, Workspace
 from ..selectors.section import (
     SectionDetailQuerySet,
@@ -92,7 +93,10 @@ class TaskCreateForm(forms.Form):
         label=_("Description"),
         widget=RichTextEditor(
             heading_blocks=False,
-            attrs={"placeholder": _("Enter a description for your task")},
+            attrs={
+                "placeholder": _("Enter a description for your task"),
+                "class": TASK_EDITOR_MIN_HEIGHT_CLASS,
+            },
         ),
     )
 
@@ -239,7 +243,11 @@ class TaskUpdateForm(forms.Form):
         label=_("Description"),
         widget=RichTextEditor(
             heading_blocks=False,
-            attrs={"placeholder": _("Enter a description for your task")},
+            attrs={
+                "expand": True,
+                "placeholder": _("Enter a description for your task"),
+                "class": TASK_EDITOR_MIN_HEIGHT_CLASS,
+            },
         ),
     )
 

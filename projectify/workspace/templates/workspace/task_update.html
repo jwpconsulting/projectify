@@ -32,7 +32,7 @@
                     {% include "projectify/forms/submit.html" with name="action" value="update_stay" text=_("Update task and stay") %}
                 </div>
             </div>
-            <table class="flex w-full max-w-xl flex-col gap-x-2 gap-y-4 sm:grid sm:grid-cols-[auto_1fr]">
+            <table class="max-w-full container flex flex-col gap-x-2 gap-y-4 sm:grid sm:grid-cols-[auto_1fr]">
                 <tbody class="contents">
                     {{ form.as_table }}
                 </tbody>

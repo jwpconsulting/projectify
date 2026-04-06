@@ -24,3 +24,17 @@ form .aligned .django-prose-editor-container trix-editor ul li {
 .django-prose-editor-container trix-toolbar .trix-button {
   background: #fff !important;
 }
+
+.django-prose-editor-container .trix-button-row {
+    flex-wrap: wrap;
+    justify-content: start;
+    gap: 0 4px;
+}
+
+.django-prose-editor-container .trix-button-row .trix-button-group-spacer {
+    display: none;
+}
+
+.django-prose-editor-container .trix-button-row .trix-button-group:not(:first-child) {
+    margin-left: 0;
+}

@@ -246,6 +246,8 @@ chainability. Selectors should generally not be chained.
 - The app uses Django templates (not Jinja2).
 - The app uses HTMX and only sometimes alpine.js
 - Refer to `docs/templatetags.md` for guidance what template tags to use.
+- To style templates, Projectify uses [Tailwind version 3](https://v3.tailwindcss.com/). Refer to the tailwind
+configuration at `tailwind.config.js`.
 
 # Testing
 

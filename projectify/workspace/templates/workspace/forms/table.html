@@ -17,7 +17,7 @@
         <th scope="row" class="text-left font-bold">
             {% if field.label %}{{ field.label_tag }}{% endif %}
         </th>
-        <td class="min-w-0 max-h-80 overflow-y-auto">
+        <td class="min-w-0{% if not field.field.widget.attrs.expand %} max-w-xl max-h-80{% endif %} overflow-y-auto">
             {% if errors %}<div class="text-destructive">{{ errors }}</div>{% endif %}
             {{ field }}
             {% if field.help_text %}

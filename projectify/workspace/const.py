@@ -84,3 +84,5 @@ SUBTASK_PROGRESS_CLASSES = {
     95: "w-[95%]",
     100: "w-[100%]",
 }
+
+TASK_EDITOR_MIN_HEIGHT_CLASS = "min-h-[300px]"
