@@ -80,7 +80,7 @@ def test_upload_attachment_rejects_invalid_file_types(
     url = reverse("blog:upload_attachment")
     response = superuser_client.post(url, {"file": invalid_file})
     assert response.status_code == 400, response.content
-    assert b"not one of the allowed file types" in response.content
+    assert b"Upload must be one of the" in response.content
 
 
 def test_post_feed_accessible(client: Client, post: Post) -> None:

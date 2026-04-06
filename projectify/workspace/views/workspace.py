@@ -28,8 +28,9 @@ from projectify.corporate.services.customer import (
     create_billing_portal_session_for_customer,
     customer_create_stripe_checkout_session,
 )
-from projectify.lib.forms import populate_form_with_errors
+from projectify.lib.forms import SafeImageField, populate_form_with_errors
 from projectify.lib.htmx import HttpResponseClientRefresh
+from projectify.lib.settings import get_settings
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 
@@ -229,8 +230,22 @@ class WorkspaceSettingsForm(forms.ModelForm):
     """Django form for workspace settings."""
 
     def __init__(self, *args: Any, **kwargs: Any):
-        """Set picture URL in attrs."""
+        """Set picture URL in attrs and configure SafeImageField."""
         super().__init__(*args, **kwargs)
+        settings = get_settings()
+        self.fields["picture"] = SafeImageField(
+            allowed_file_types=settings.WORKSPACE_PICTURE_FILE_TYPES,
+            allowed_file_size=settings.WORKSPACE_PICTURE_FILE_SIZE,
+            required=False,
+            label=_("Workspace picture"),
+            widget=forms.ClearableFileInput(
+                attrs={
+                    "initial_text": _("Your workspace picture"),
+                    "clear_checkbox_label": _("Remove workspace picture"),
+                    "cleared": _("You haven't uploaded a workspace picture"),
+                }
+            ),
+        )
         if self.instance and self.instance.pk and self.instance.picture:
             instance: Workspace = self.instance
             picture_url = reverse(
@@ -243,18 +258,7 @@ class WorkspaceSettingsForm(forms.ModelForm):
 
         fields = "picture", "title", "description"
         model = Workspace
-        labels = {
-            "picture": _("Workspace picture"),
-        }
-        widgets = {
-            "picture": forms.ClearableFileInput(
-                attrs={
-                    "initial_text": _("Your workspace picture"),
-                    "clear_checkbox_label": _("Remove workspace picture"),
-                    "cleared": _("You haven't uploaded a workspace picture"),
-                }
-            ),
-        }
+        labels = {"picture": _("Workspace picture")}
 
 
 @require_http_methods(["GET", "POST"])

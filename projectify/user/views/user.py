@@ -22,7 +22,8 @@ from django_ratelimit.core import UNSAFE
 from django_ratelimit.decorators import ratelimit
 from django_sendfile import sendfile
 
-from projectify.lib.forms import populate_form_with_errors
+from projectify.lib.forms import SafeImageField, populate_form_with_errors
+from projectify.lib.settings import get_settings
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 from projectify.user.models import User
@@ -42,8 +43,23 @@ class UserProfileForm(forms.ModelForm):
     """Form for user profile update."""
 
     def __init__(self, *args: Any, **kwargs: Any):
-        """Set user picture URL in attrs."""
+        """Set user picture URL in attrs and configure SafeImageField."""
         super().__init__(*args, **kwargs)
+        settings = get_settings()
+        self.fields["profile_picture"] = SafeImageField(
+            allowed_file_types=settings.USER_PROFILE_PICTURE_FILE_TYPES,
+            allowed_file_size=settings.USER_PROFILE_PICTURE_FILE_SIZE,
+            required=False,
+            label=_("Profile picture"),
+            # https://docs.djangoproject.com/en/5.2/ref/forms/widgets/#clearablefileinput
+            widget=forms.ClearableFileInput(
+                attrs={
+                    "initial_text": _("Your current profile picture"),
+                    "clear_checkbox_label": _("Remove profile picture"),
+                    "cleared": _("You haven't uploaded a profile picture"),
+                }
+            ),
+        )
         if (
             self.instance
             and self.instance.pk
@@ -59,14 +75,6 @@ class UserProfileForm(forms.ModelForm):
         fields = ("profile_picture", "preferred_name")
         labels = {"profile_picture": _("Profile picture")}
         widgets = {
-            # https://docs.djangoproject.com/en/5.2/ref/forms/widgets/#clearablefileinput
-            "profile_picture": forms.ClearableFileInput(
-                attrs={
-                    "initial_text": _("Your current profile picture"),
-                    "clear_checkbox_label": _("Remove profile picture"),
-                    "cleared": _("You haven't uploaded a profile picture"),
-                }
-            ),
             "preferred_name": forms.TextInput(
                 attrs={"placeholder": _("Enter your preferred name")}
             ),

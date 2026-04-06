@@ -5,9 +5,8 @@
 """Form utilities."""
 
 import logging
-from collections.abc import Container
 from io import BytesIO
-from typing import Any, Optional
+from typing import Any, Collection, Optional, Union
 
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import UploadedFile
@@ -90,7 +89,7 @@ class SafeImageField(FileField):
     def __init__(
         self,
         *,
-        allowed_file_types: Container[str],
+        allowed_file_types: Collection[str],
         allowed_file_size: int,
         **kwargs: Any,
     ):
@@ -99,25 +98,39 @@ class SafeImageField(FileField):
         self.allowed_file_types = allowed_file_types
         self.allowed_file_size = allowed_file_size
 
-    def clean(self, data: Any, initial: Any = None) -> UploadedFile:
+    def clean(
+        self, data: Any, initial: Any = None
+    ) -> Union[UploadedFile, bool]:
         """Validate file size and type."""
-        file: UploadedFile = super().clean(data, initial)
+        result: Union[UploadedFile, bool] = super().clean(data, initial)
+        match result:
+            case bool():
+                return result
+            case UploadedFile() as file:
+                pass
         size = file.size
         if size > self.allowed_file_size:
             raise ValidationError(
-                _("Files too large: {size} KiB. Max: {max_size} KiB").format(
+                _(
+                    "Uploaded file is too large: {size} KiB. Max: {max_size} KiB"
+                ).format(
                     size=size // 1024, max_size=self.allowed_file_size // 1024
                 )
             )
         # Use Pillow to detect actual image format
         image_format = get_image_format(file)
+        allowed = _(", ").join(list(self.allowed_file_types))
+        if image_format is None:
+            raise ValidationError(
+                _(
+                    "Upload must be one of the allowed file types: {allowed}"
+                ).format(allowed=allowed)
+            )
         if image_format not in self.allowed_file_types:
             raise ValidationError(
                 _(
                     "{image_format} is not one of the allowed file types: {allowed}"
-                ).format(
-                    image_format=image_format, allowed=self.allowed_file_types
-                )
+                ).format(image_format=image_format, allowed=allowed)
             )
 
         return file
