@@ -5,6 +5,7 @@
 """Form utilities."""
 
 import logging
+from typing import Any
 
 from django.core.exceptions import ValidationError
 from django.forms import BaseForm, Textarea
@@ -30,6 +31,17 @@ class RichTextEditor(Textarea):
     """Rich text editor widget for prose's RichTextField."""
 
     template_name = "prose/forms/widgets/editor.html"
+
+    def __init__(self, attrs: Any = None, heading_blocks: bool = True):
+        """Initialize the widget with optional heading_blocks attribute."""
+        super().__init__(attrs)
+        self.heading_blocks = heading_blocks
+
+    def get_context(self, name: str, value: str, attrs: Any):
+        """Add heading_blocks to the context."""
+        context = super().get_context(name, value, attrs)
+        context["widget"]["heading_blocks"] = self.heading_blocks
+        return context
 
     class Media:
         """Use vendored in {trix,prose}.{css,js}."""

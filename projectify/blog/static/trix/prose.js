@@ -78,7 +78,7 @@ function patchTrixEditorWithNameSetter() {
 document.addEventListener("DOMContentLoaded", () => {
   initializeEditors();
   patchTrixEditorWithNameSetter();
-  configureToolbar();
+  document.addEventListener("trix-before-initialize", configureToolbar);
   // https://github.com/basecamp/trix/issues/117#issuecomment-463275725
   // https://github.com/basecamp/trix/issues/680#issuecomment-735742942
   Trix.config.blockAttributes.default.tagName = "p"
@@ -108,25 +108,33 @@ window.djangoProse.initializeEditors = initializeEditors;
 // SPDX-SnippetCopyrightText: 2022 beta.gouv.fr
 // Source:
 // https://github.com/betagouv/complements-alimentaires/blob/95b70bafdf4f4a86914711507270dc8079e42df9/data/static/extend-buttons.js
-function configureToolbar() {
+function createHeadingButton(attribute, title, text) {
+  const button = document.createElement("button")
+  button.type = "button"
+  button.className = "trix-button"
+  button.setAttribute("data-trix-attribute", attribute)
+  button.title = title
+  button.textContent = text
+  return button
+}
+
+function configureToolbar(event) {
+  const { toolbarElement } = event.target
+
+  if (event.target.dataset.headingBlocks !== "True") {
+    return
+  }
+
   Trix.config.blockAttributes.subHeadingh2 = { tagName: "h2" }
   Trix.config.blockAttributes.subHeadingh3 = { tagName: "h3" }
 
-  const h2ButtonHTML =
-    '<button type="button" class="trix-button" data-trix-attribute="subHeadingh2" title="Subheading H2">H2</button>'
-  const h3ButtonHTML =
-    '<button type="button" class="trix-button" data-trix-attribute="subHeadingh3" title="Subheading H3">H3</button>'
+  const trixTitleButton = toolbarElement.querySelector(
+    "[data-trix-attribute=heading1]",
+  )
+  const h2Button = createHeadingButton("subHeadingh2", "Subheading H2", "H2")
+  trixTitleButton.insertAdjacentElement("afterend", h2Button)
 
-  document.addEventListener("trix-before-initialize", (event) => {
-    const { toolbarElement } = event.target
-
-    const trixTitleButton = toolbarElement.querySelector(
-      "[data-trix-attribute=heading1]",
-    )
-    trixTitleButton.insertAdjacentHTML("afterend", h2ButtonHTML)
-
-    const h2Button = toolbarElement.querySelector("[data-trix-attribute=subHeadingh2]")
-    h2Button.insertAdjacentHTML("afterend", h3ButtonHTML)
-  })
+  const h3Button = createHeadingButton("subHeadingh3", "Subheading H3", "H3")
+  h2Button.insertAdjacentElement("afterend", h3Button)
 }
 // SPDX-SnippetEnd
