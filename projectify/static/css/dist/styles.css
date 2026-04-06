@@ -1419,6 +1419,10 @@ video {
   max-height: 10rem;
 }
 
+.max-h-80 {
+  max-height: 20rem;
+}
+
 .min-h-0 {
   min-height: 0px;
 }
@@ -2603,6 +2607,10 @@ video {
 
   .sm\:grid-cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .sm\:grid-cols-\[auto_1fr\] {
+    grid-template-columns: auto 1fr;
   }
 
   .sm\:flex-row {

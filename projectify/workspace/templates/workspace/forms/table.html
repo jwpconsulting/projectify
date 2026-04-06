@@ -14,10 +14,10 @@
 {% endif %}
 {% for field, errors in fields %}
     <tr class="contents">
-        <th scope="row" class="col-span-1 text-left font-bold">
+        <th scope="row" class="text-left font-bold">
             {% if field.label %}{{ field.label_tag }}{% endif %}
         </th>
-        <td class="col-span-3">
+        <td class="min-w-0 max-h-80 overflow-y-auto">
             {% if errors %}<div class="text-destructive">{{ errors }}</div>{% endif %}
             {{ field }}
             {% if field.help_text %}
