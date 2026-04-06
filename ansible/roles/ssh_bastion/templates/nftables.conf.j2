@@ -69,6 +69,8 @@ table inet firewall {
         oifname "enp7s0" ip daddr 10.0.0.3 tcp dport 22 accept
         # Allow Prometheus scraping (9100/tcp) to app server 10.0.0.3 on enp7s0
         oifname "enp7s0" ip daddr 10.0.0.3 tcp dport 9100 accept
+        # Allow Prometheus to scrape Caddy (2019/tcp) on app server 10.0.0.3 on enp7s0
+        oifname "enp7s0" ip daddr 10.0.0.3 tcp dport 2019 accept
         # Drop all other traffic to private network (10.0.0.0/16) on enp7s0
         oifname "enp7s0" ip daddr 10.0.0.0/16 drop
     }
