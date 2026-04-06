@@ -733,13 +733,11 @@ class TestProjectDetailMinimize:
         team_member.minimized_team_member_filter = initial_state
         team_member.save()
 
-        response = user_client.post(
-            resource_url,
-            {
-                "action": "minimize_team_member_filter",
-                "minimized": post_value,
-            },
-        )
+        data = {
+            "action": "minimize_team_member_filter",
+            "team_member_filter_minimized": post_value,
+        }
+        response = user_client.post(resource_url, data)
         assert response.status_code == 200
 
         team_member.refresh_from_db()
@@ -765,10 +763,11 @@ class TestProjectDetailMinimize:
         team_member.minimized_label_filter = initial_state
         team_member.save()
 
-        response = user_client.post(
-            resource_url,
-            {"action": "minimize_label_filter", "minimized": post_value},
-        )
+        data = {
+            "action": "minimize_label_filter",
+            "label_filter_minimized": post_value,
+        }
+        response = user_client.post(resource_url, data)
         assert response.status_code == 200
 
         team_member.refresh_from_db()

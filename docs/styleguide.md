@@ -39,6 +39,21 @@ of a parent class.
   This project will switch to the newer `a | b` syntax at some
   point, but it's good to keep it consistent for now.
 
+## Dictionaries
+
+Prefer updating values in dictionaries by replacing the whole dictionary.
+Example:
+
+```python
+# Avoid
+d = {"a": 1, "b": 2}
+d["b"] = 3
+d["new_value"] = 4
+# Bettter
+d = {"a": 1, "b": 2}
+d = {**d, "b": 3, "new_value": 4}
+```
+
 # Imports
 
 Prefer relative imports within an app. Here's an example from
@@ -80,6 +95,21 @@ When raising exceptions in Python code, use the following pattern:
 ```python
 from django.utils.translation import gettext_lazy as _
 raise Exception(_("Woah, weird value: {value}").format(value=1))
+```
+
+## URLs
+
+Write named URLs like so:
+
+```
+workspace:workspaces:create-project
+^         ^          ^     ^
+|         |          |     hyphen
+app name  |          |
+          Workspace model
+                     |
+                     |
+                     action
 ```
 
 
@@ -216,6 +246,8 @@ chainability. Selectors should generally not be chained.
 - The app uses Django templates (not Jinja2).
 - The app uses HTMX and only sometimes alpine.js
 - Refer to `docs/templatetags.md` for guidance what template tags to use.
+- To style templates, Projectify uses [Tailwind version 3](https://v3.tailwindcss.com/). Refer to the tailwind
+configuration at `tailwind.config.js`.
 
 # Testing
 

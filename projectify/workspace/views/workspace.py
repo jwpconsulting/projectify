@@ -28,13 +28,14 @@ from projectify.corporate.services.customer import (
     create_billing_portal_session_for_customer,
     customer_create_stripe_checkout_session,
 )
-from projectify.lib.forms import populate_form_with_drf_errors
+from projectify.lib.forms import SafeImageField, populate_form_with_errors
 from projectify.lib.htmx import HttpResponseClientRefresh
+from projectify.lib.settings import get_settings
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 
+from ..const import COLOR_MAP
 from ..models import Label, TeamMember, Workspace
-from ..models.const import COLOR_MAP
 from ..selectors.labels import (
     LabelDetailQuerySet,
     label_find_by_label_uuid,
@@ -163,10 +164,12 @@ def workspace_picture_view(
     return sendfile(request, picture_path)
 
 
+# TODO use the form in
+# projectify/workspace/templates/workspace/common/sidemenu/project_details.html
 class MinimizeProjectListForm(forms.Form):
     """Form for minimizingand expanding the project list."""
 
-    minimized = forms.BooleanField(required=False)
+    project_list_minimized = forms.BooleanField(required=False)
 
     def __init__(self, workspace: Workspace, *args: Any, **kwargs: Any):
         """Create current project field."""
@@ -206,7 +209,7 @@ def workspace_minimize_project_list(
 
     team_member_minimize_project_list(
         team_member=current_team_member_qs,
-        minimized=form.cleaned_data["minimized"],
+        minimized=form.cleaned_data["project_list_minimized"],
     )
 
     context = {
@@ -227,8 +230,22 @@ class WorkspaceSettingsForm(forms.ModelForm):
     """Django form for workspace settings."""
 
     def __init__(self, *args: Any, **kwargs: Any):
-        """Set picture URL in attrs."""
+        """Set picture URL in attrs and configure SafeImageField."""
         super().__init__(*args, **kwargs)
+        settings = get_settings()
+        self.fields["picture"] = SafeImageField(
+            allowed_file_types=settings.WORKSPACE_PICTURE_FILE_TYPES,
+            allowed_file_size=settings.WORKSPACE_PICTURE_FILE_SIZE,
+            required=False,
+            label=_("Workspace picture"),
+            widget=forms.ClearableFileInput(
+                attrs={
+                    "initial_text": _("Your workspace picture"),
+                    "clear_checkbox_label": _("Remove workspace picture"),
+                    "cleared": _("You haven't uploaded a workspace picture"),
+                }
+            ),
+        )
         if self.instance and self.instance.pk and self.instance.picture:
             instance: Workspace = self.instance
             picture_url = reverse(
@@ -241,18 +258,7 @@ class WorkspaceSettingsForm(forms.ModelForm):
 
         fields = "picture", "title", "description"
         model = Workspace
-        labels = {
-            "picture": _("Workspace picture"),
-        }
-        widgets = {
-            "picture": forms.ClearableFileInput(
-                attrs={
-                    "initial_text": _("Your workspace picture"),
-                    "clear_checkbox_label": _("Remove workspace picture"),
-                    "cleared": _("You haven't uploaded a workspace picture"),
-                }
-            ),
-        }
+        labels = {"picture": _("Workspace picture")}
 
 
 @require_http_methods(["GET", "POST"])
@@ -300,7 +306,7 @@ def workspace_settings_general(
             picture=data["picture"],
         )
     except ValidationError as error:
-        populate_form_with_drf_errors(form, error)
+        populate_form_with_errors(form, error)
         context = {**context, "form": form}
         return render(
             request,
@@ -446,7 +452,7 @@ def workspace_settings_new_label(
             who=request.user,
         )
     except (exceptions.ValidationError, ValidationError) as error:
-        populate_form_with_drf_errors(form, error)
+        populate_form_with_errors(form, error)
         return render(
             request,
             "workspace/workspace_settings_create_label.html",
@@ -543,7 +549,7 @@ def workspace_settings_edit_label(
             color=form.cleaned_data["color"],
         )
     except (exceptions.ValidationError, ValidationError) as error:
-        populate_form_with_drf_errors(form, error)
+        populate_form_with_errors(form, error)
         return render(
             request,
             "workspace/workspace_settings_edit_label.html",
@@ -613,7 +619,7 @@ def workspace_settings_team_members(
                     )
                     status = 200
                 except ValidationError as e:
-                    populate_form_with_drf_errors(invite_form, e)
+                    populate_form_with_errors(invite_form, e)
                     status = 400
             else:
                 status = 400
@@ -741,7 +747,7 @@ def workspace_settings_team_member_update(
                     "dashboard:workspaces:team-members", workspace.uuid
                 )
             except ValidationError as error:
-                populate_form_with_drf_errors(form, error)
+                populate_form_with_errors(form, error)
                 context = {**context, "form": form}
                 status = 400
         case _:
@@ -869,7 +875,7 @@ def workspace_settings_billing(
                     seats=billing_form.cleaned_data["seats"],
                 )
             except ValidationError as e:
-                populate_form_with_drf_errors(billing_form, e)
+                populate_form_with_errors(billing_form, e)
                 context = {**context, "billing_form": billing_form}
                 return render(request, template, context=context, status=400)
             return redirect(session.url)
@@ -885,7 +891,7 @@ def workspace_settings_billing(
                     workspace=workspace,
                 )
             except ValidationError as e:
-                populate_form_with_drf_errors(coupon_form, e)
+                populate_form_with_errors(coupon_form, e)
                 context = {**context, "coupon_form": coupon_form}
                 return render(request, template, context=context, status=400)
             return redirect("dashboard:workspaces:billing", workspace.uuid)

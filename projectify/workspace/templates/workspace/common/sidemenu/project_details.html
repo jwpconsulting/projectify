@@ -8,8 +8,9 @@
           hx-swap="outerHTML"
           hx-target="#sidemenu-project-section">
         {% csrf_token %}
+        {# TODO use MinimizeProjectListForm #}
         <input type="hidden"
-               name="minimized"
+               name="project_list_minimized"
                value="{% if current_team_member_qs.minimized_project_list %}false{% else %}true{% endif %}">
         {% if project %}<input type="hidden" name="current_project" value="{{ project.uuid }}">{% endif %}
         <button type="submit"
@@ -41,7 +42,7 @@
     </span>
     {% if not current_team_member_qs.minimized_project_list %}
         {% for project_item in projects %}
-            <a class="flex flex-row items-center gap-2 px-4 py-1 hover:bg-base-200"
+            <a class="flex flex-row items-center gap-2 px-4 py-1 hover:bg-secondary-hover"
                aria-label="{% blocktranslate with project=project_item.title %}{{ project }} project{%endblocktranslate %}"
                href="{% url "dashboard:projects:detail" project_item.uuid %}">
                 <div class="shrink-0 rounded-md p-1{% if project_item == project %} bg-primary-focus{% endif %}">
@@ -66,9 +67,8 @@
     <section id="team-member-filters"
              class="flex flex-col px-4"
              aria-labelledby="team-member-filter-title">
-        {# XXX this doesn't have a unique name #}
         <input type="hidden"
-               name="minimized"
+               name="team_member_filter_minimized"
                value="{% if current_team_member_qs.minimized_team_member_filter %}false{% else %}true{% endif %}">
         <button type="submit"
                 name="action"
@@ -121,9 +121,8 @@
     <section id="label-filters"
              class="flex flex-col px-4"
              aria-labelledby="label-filter-title">
-        {# XXX this doesn't have a unique name #}
         <input type="hidden"
-               name="minimized"
+               name="label_filter_minimized"
                value="{% if current_team_member_qs.minimized_label_filter %}false{% else %}true{% endif %}">
         <button type="submit"
                 name="action"
@@ -161,7 +160,7 @@
                 {% trans "Activate to hide filter label list" %}
             {% endif %}
         </span>
-        <fieldset class="flex flex-col overflow-y-auto overflow-x-hidden w-full max-w-full min-w-0 pb-4{% if current_team_member_qs.minimized_label_filter %} hidden{% endif %}">
+        <fieldset class="w-full max-w-full{% if current_team_member_qs.minimized_label_filter %} hidden{% endif %}">
             <legend class="px-2 font-bold">{{ task_filter_form.filter_by_label.label }}</legend>
             {{ task_filter_form.filter_by_label }}
             {% if workspace %}

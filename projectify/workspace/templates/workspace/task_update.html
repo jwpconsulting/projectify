@@ -6,6 +6,10 @@
 {% block title %}
     {% translate "Editing task - Projectify" %}
 {% endblock title %}
+{% block extrahead %}
+    <meta name="trix-csp-nonce" content="{{ csp_nonce }}">
+    {{ form.media }}
+{% endblock extrahead %}
 {% block dashboard_content %}
     <form id="main"
           action="{% url 'dashboard:tasks:update' task.uuid %}"
@@ -28,14 +32,12 @@
                     {% include "projectify/forms/submit.html" with name="action" value="update_stay" text=_("Update task and stay") %}
                 </div>
             </div>
-            <div class="flex flex-col gap-8">
-                <table class="flex w-full max-w-xl flex-col gap-y-4 sm:grid sm:grid-cols-4">
-                    <tbody class="contents">
-                        {{ form.as_table }}
-                    </tbody>
-                </table>
-                {% csrf_token %}
-            </div>
+            <table class="max-w-full container flex flex-col gap-x-2 gap-y-4 sm:grid sm:grid-cols-[auto_1fr]">
+                <tbody class="contents">
+                    {{ form.as_table }}
+                </tbody>
+            </table>
+            {% csrf_token %}
         </div>
     </form>
 {% endblock dashboard_content %}

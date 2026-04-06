@@ -16,7 +16,7 @@ from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
-from projectify.lib.forms import populate_form_with_drf_errors
+from projectify.lib.forms import populate_form_with_errors
 from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
@@ -293,13 +293,14 @@ def _project_detail_view_actions(
         case "POST", "minimize_team_member_filter":
             team_member_minimize_team_member_filter(
                 team_member=team_member,
-                minimized=request.POST.get("minimized") == "true",
+                minimized=request.POST.get("team_member_filter_minimized")
+                == "true",
             )
             template = "workspace/common/sidemenu/project_details.html"
         case "POST", "minimize_label_filter":
             team_member_minimize_label_filter(
                 team_member=team_member,
-                minimized=request.POST.get("minimized") == "true",
+                minimized=request.POST.get("label_filter_minimized") == "true",
             )
             template = "workspace/common/sidemenu/project_details.html"
         case _:
@@ -480,7 +481,7 @@ def project_create_view(
         )
         return redirect("dashboard:projects:detail", project_uuid=project.uuid)
     except ValidationError as error:
-        populate_form_with_drf_errors(form, error)
+        populate_form_with_errors(form, error)
         context = {
             **get_project_view_context(request, workspace),
             "form": form,
@@ -559,7 +560,7 @@ def project_update_view(
             workspace_uuid=project.workspace.uuid,
         )
     except ValidationError as error:
-        populate_form_with_drf_errors(form, error)
+        populate_form_with_errors(form, error)
         context = {"form": form, **context}
         return render(
             request, "workspace/project_update.html", context, status=400

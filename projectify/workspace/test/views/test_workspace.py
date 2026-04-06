@@ -29,8 +29,8 @@ from projectify.workspace.services.team_member_invite import (
 )
 from pytest_types import DjangoAssertNumQueries
 
+from ...const import TeamMemberRoles
 from ...models import Label, TeamMember, TeamMemberInvite, Workspace
-from ...models.const import TeamMemberRoles
 
 pytestmark = pytest.mark.django_db
 
@@ -110,7 +110,7 @@ class TestMinimizeLists:
         # XX non-deterministic test
         with django_assert_max_num_queries(13):
             response = user_client.post(
-                resource_url, {"minimized": post_value}
+                resource_url, {"project_list_minimized": post_value}
             )
             assert response.status_code == 200
 

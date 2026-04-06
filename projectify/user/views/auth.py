@@ -20,7 +20,7 @@ from django.views.decorators.http import require_http_methods
 from django_ratelimit.core import UNSAFE, get_usage
 from django_ratelimit.decorators import ratelimit
 
-from projectify.lib.forms import populate_form_with_drf_errors
+from projectify.lib.forms import populate_form_with_errors
 from projectify.templatetags.projectify import anchor
 from projectify.user.services.auth import (
     user_confirm_email,
@@ -56,7 +56,7 @@ class SignUpForm(forms.Form):
         """Override and add fields."""
         super().__init__(*args, **kwargs)
         self.fields["privacy_policy_agreed"].label = format_html(
-            _("I agree to the {privacy_policy_anchor}"),
+            _("<span>I agree to the {privacy_policy_anchor}</span>"),
             privacy_policy_anchor=anchor(
                 label=_("Privacy Policy"),
                 href=reverse("storefront:privacy"),
@@ -64,7 +64,7 @@ class SignUpForm(forms.Form):
             ),
         )
         self.fields["tos_agreed"].label = format_html(
-            _("I agree to the {tos_anchor}"),
+            _("<span>I agree to the {tos_anchor}</span>"),
             tos_anchor=anchor(
                 label=_("Terms of Service"),
                 href=reverse("storefront:tos"),
@@ -123,7 +123,7 @@ def sign_up(request: HttpRequest) -> HttpResponse:
             privacy_policy_agreed=data["privacy_policy_agreed"],
         )
     except ValidationError as error:
-        populate_form_with_drf_errors(form, error)
+        populate_form_with_errors(form, error)
         context = {"form": form, "validators": validators}
         return render(
             request, "user/sign_up.html", context=context, status=400
@@ -242,7 +242,7 @@ def log_in(request: HttpRequest) -> HttpResponse:
             request=request,
         )
     except ValidationError as error:
-        populate_form_with_drf_errors(form, error)
+        populate_form_with_errors(form, error)
         context = {"form": form}
         get_usage(
             request,
@@ -289,7 +289,7 @@ def password_reset_request(request: HttpRequest) -> HttpResponse:
     try:
         user_request_password_reset(email=form.cleaned_data["email"])
     except ValidationError as error:
-        populate_form_with_drf_errors(form, error)
+        populate_form_with_errors(form, error)
         context = {"form": form}
         return render(
             request,
@@ -350,7 +350,7 @@ def password_reset_confirm(
                     ],
                 )
             except ValidationError as error:
-                populate_form_with_drf_errors(form, error)
+                populate_form_with_errors(form, error)
                 status = 400
             else:
                 return redirect("users:reset-password")

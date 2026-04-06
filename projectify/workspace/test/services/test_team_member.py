@@ -9,8 +9,8 @@ import pytest
 
 from projectify.user.models import User
 
+from ...const import TeamMemberRoles
 from ...models import Project, TeamMember
-from ...models.const import TeamMemberRoles
 from ...services.team_member import (
     team_member_change_role,
     team_member_delete,

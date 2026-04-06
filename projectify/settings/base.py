@@ -298,11 +298,22 @@ class Base(Configuration):  # type:ignore
 
     USE_TZ = True
 
-    # BLog
+    # Picture asset restrictions
+    # ==========================
+    # Blog
+    # ----
     # These are the names as returned by Pillow.Image.open().format
     BLOG_ALLOWED_FILE_TYPES = {"PNG", "JPEG"}
     # 1 MiB
     BLOG_ALLOWED_FILE_SIZE = 1 * 1024 * 1024
+    # User pictures
+    USER_PROFILE_PICTURE_FILE_TYPES = {"PNG", "JPEG"}
+    # 1 MiB
+    USER_PROFILE_PICTURE_FILE_SIZE = 1 * 1024 * 1024
+    # Workspace pictures
+    WORKSPACE_PICTURE_FILE_TYPES = {"PNG", "JPEG"}
+    # 1 MiB
+    WORKSPACE_PICTURE_FILE_SIZE = 1 * 1024 * 1024
 
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/3.2/howto/static-files/
