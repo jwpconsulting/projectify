@@ -97,6 +97,21 @@ from django.utils.translation import gettext_lazy as _
 raise Exception(_("Woah, weird value: {value}").format(value=1))
 ```
 
+## URLs
+
+Write named URLs like so:
+
+```
+workspace:workspaces:create-project
+^         ^          ^     ^
+|         |          |     hyphen
+app name  |          |
+          Workspace model
+                     |
+                     |
+                     action
+```
+
 
 ## Authentication
 

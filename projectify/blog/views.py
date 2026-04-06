@@ -3,7 +3,8 @@
 # SPDX-FileCopyrightText: 2026 JWP Consulting GK
 """Blog views."""
 
-from datetime import datetime
+import logging
+from pathlib import Path
 from typing import Optional
 from uuid import uuid4
 
@@ -19,8 +20,11 @@ from django.http import (
     JsonResponse,
 )
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
+
+from django_sendfile import sendfile
 
 from projectify.lib.settings import get_settings
 from projectify.lib.types import AuthenticatedHttpRequest
@@ -28,6 +32,8 @@ from projectify.lib.utils import get_image_format
 from projectify.lib.views import platform_view
 
 from .selectors.post import post_find_by_slug, post_list_published
+
+logger = logging.getLogger(__name__)
 
 
 def post_list(request: HttpRequest) -> HttpResponse:
@@ -45,6 +51,26 @@ def post_detail(request: HttpRequest, slug: str) -> HttpResponse:
     recent = post_list_published(exclude=post)[:5]
     context = {"post": post, "recent_posts": recent}
     return render(request, "blog/post_detail.html", context)
+
+
+def sanitize_blog_picture_path(picture_name: str) -> Optional[str]:
+    """Sanitize a path reference to a blog picture upload."""
+    if "/" in picture_name:
+        return None
+    # As if that wasn't enough, let's imagine we're on Michælsoft Binbows
+    if "\\" in picture_name:
+        return None
+    return str(Path("blog") / picture_name)
+
+
+def serve_picture(request: HttpRequest, name: str) -> HttpResponse:
+    """Serve a blog picture using sendfile."""
+    full_path = sanitize_blog_picture_path(name)
+    if full_path is None or not default_storage.exists(str(full_path)):
+        logger.warning("Picture with name %s not found at %s", name, full_path)
+        raise Http404(_("Picture {name} not found").format(name=name))
+    file_path = default_storage.path(str(full_path))
+    return sendfile(request, file_path)
 
 
 # SPDX-SnippetBegin
@@ -99,17 +125,15 @@ def upload_attachment(request: AuthenticatedHttpRequest) -> HttpResponse:
         )
         return JsonResponse({"error": error_message}, status=400)
 
-    attachment = form.cleaned_data["file"]
-    attachment_dir = datetime.now().strftime("%Y/%m/%d")
-    attachment_id = uuid4()
-    attachment_extension = attachment.name.split(".")[-1]
-    key = f"{attachment_dir}/{attachment_id}.{attachment_extension}"
-    path = f"prose/{key}"
-    default_storage.save(path, attachment)
-    payload = {
-        "url": default_storage.url(path),
-    }
-    return JsonResponse(payload, status=201)
+    attachment: UploadedFile = form.cleaned_data["file"]
+    attachment_name = Path(attachment.name)
+    upload_name = (
+        f"{uuid4()}.{attachment_name.name[:8]}{attachment_name.suffix}"
+    )
+    upload_path = Path("blog") / upload_name
+    default_storage.save(str(upload_path), attachment)
+    url = reverse("blog:serve_picture", args=(upload_name,))
+    return JsonResponse({"url": url}, status=201)
 
 
 # SPDX-SnippetEnd
