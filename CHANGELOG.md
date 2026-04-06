@@ -6,6 +6,24 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Changelog
 
+## 2026.4.7
+
+### Enhancement
+
+- Add rich text editor to task description
+- Users can now skip onboarding
+- Fold solutions pages and pricing page into landing page
+
+### Internal
+
+- Add daily page statistics counter app in `projectify/stats`
+- Migrate from Render.com to Hetzner
+- Remove Cloudinary dependency
+- Remove Whitenoise
+- Use `django-minify-compress-staticfiles` to compress static assets
+- Integrate `django_sendfile` and serve media file directly
+- Refactor and improve `RichTextField` sanitization
+
 ## 2026.3.29
 
 Add `projectify-demo` demo command.
