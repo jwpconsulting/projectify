@@ -5,7 +5,7 @@
 """Form utilities."""
 
 import logging
-from typing import Any
+from typing import Any, Optional
 
 from django.core.exceptions import ValidationError
 from django.forms import BaseForm, Textarea
@@ -32,15 +32,25 @@ class RichTextEditor(Textarea):
 
     template_name = "prose/forms/widgets/editor.html"
 
-    def __init__(self, attrs: Any = None, heading_blocks: bool = True):
-        """Initialize the widget with optional heading_blocks attribute."""
+    def __init__(
+        self,
+        attrs: Any = None,
+        heading_blocks: bool = True,
+        upload_url: Optional[str] = None,
+    ):
+        """Initialize the widget with optional heading_blocks and upload_url attributes."""
         super().__init__(attrs)
         self.heading_blocks = heading_blocks
+        self.upload_url = upload_url
 
-    def get_context(self, name: str, value: str, attrs: Any):
-        """Add heading_blocks to the context."""
+    def get_context(self, name: str, value: str, attrs: Any) -> dict[str, Any]:
+        """Add heading_blocks and upload_url to the context."""
         context = super().get_context(name, value, attrs)
-        context["widget"]["heading_blocks"] = self.heading_blocks
+        context["widget"] = {
+            **context["widget"],
+            "heading_blocks": self.heading_blocks,
+            "upload_url": self.upload_url,
+        }
         return context
 
     class Media:

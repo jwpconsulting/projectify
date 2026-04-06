@@ -6,5 +6,7 @@
            type="hidden"
            name="content"
            {% if widget.value %}value="{{ widget.value }}"{% endif %} />
-    <trix-editor input="{{ widget.attrs.id }}" class="django-prose-editor trix-content prose" data-heading-blocks="{{ widget.heading_blocks }}" data-upload-attachment-url="{% url 'blog:upload_attachment' %}"></trix-editor>
+    <trix-editor input="{{ widget.attrs.id }}" class="django-prose-editor trix-content prose" data-heading-blocks="{{ widget.heading_blocks }}"
+    {% if widget.upload_url %}data-upload-attachment-url="{{ widget.upload_url }}"{% endif %}
+    ></trix-editor>
 </div>

@@ -53,9 +53,16 @@ function initializeEditors() {
   const editors = document.querySelectorAll(".django-prose-editor:not(.initialized)");
 
   editors.forEach((editor) => {
-    editor.addEventListener("trix-attachment-add", function (event) {
-      uploadAttachment(editor.dataset.uploadAttachmentUrl, event.attachment);
-    });
+    const uploadUrl = editor.dataset.uploadAttachmentUrl;
+    if (uploadUrl) {
+      editor.addEventListener("trix-attachment-add", function (event) {
+        uploadAttachment(uploadUrl, event.attachment);
+      });
+    } else {
+      editor.addEventListener("trix-file-accept", function (event) {
+        event.preventDefault();
+      });
+    }
     editor.classList.add("initialized");
   });
 }
@@ -121,20 +128,25 @@ function createHeadingButton(attribute, title, text) {
 function configureToolbar(event) {
   const { toolbarElement } = event.target
 
-  if (event.target.dataset.headingBlocks !== "True") {
-    return
+  if (event.target.dataset.headingBlocks === "True") {
+    Trix.config.blockAttributes.subHeadingh2 = { tagName: "h2" }
+    Trix.config.blockAttributes.subHeadingh3 = { tagName: "h3" }
+
+    const trixTitleButton = toolbarElement.querySelector(
+      "[data-trix-attribute=heading1]",
+    )
+    const h2Button = createHeadingButton("subHeadingh2", "Subheading H2", "H2")
+    trixTitleButton.insertAdjacentElement("afterend", h2Button)
+
+    const h3Button = createHeadingButton("subHeadingh3", "Subheading H3", "H3")
+    h2Button.insertAdjacentElement("afterend", h3Button)
   }
 
-  Trix.config.blockAttributes.subHeadingh2 = { tagName: "h2" }
-  Trix.config.blockAttributes.subHeadingh3 = { tagName: "h3" }
-
-  const trixTitleButton = toolbarElement.querySelector(
-    "[data-trix-attribute=heading1]",
-  )
-  const h2Button = createHeadingButton("subHeadingh2", "Subheading H2", "H2")
-  trixTitleButton.insertAdjacentElement("afterend", h2Button)
-
-  const h3Button = createHeadingButton("subHeadingh3", "Subheading H3", "H3")
-  h2Button.insertAdjacentElement("afterend", h3Button)
+  if (!event.target.dataset.uploadAttachmentUrl) {
+    const fileToolsGroup = toolbarElement.querySelector(".trix-button-group--file-tools")
+    if (fileToolsGroup) {
+      fileToolsGroup.remove()
+    }
+  }
 }
 // SPDX-SnippetEnd

@@ -7,6 +7,7 @@ from typing import Any
 
 from django import forms
 from django.contrib import admin
+from django.urls import reverse_lazy
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
@@ -19,7 +20,10 @@ class PostAdminForm(forms.ModelForm):
     """Custom form for Post admin that includes PostContent field."""
 
     content = forms.CharField(
-        widget=RichTextEditor, help_text=_("Blog post content")
+        widget=RichTextEditor(
+            upload_url=reverse_lazy("blog:upload_attachment")
+        ),
+        help_text=_("Blog post content"),
     )
 
     published = forms.DateField(

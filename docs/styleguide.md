@@ -39,6 +39,21 @@ of a parent class.
   This project will switch to the newer `a | b` syntax at some
   point, but it's good to keep it consistent for now.
 
+## Dictionaries
+
+Prefer updating values in dictionaries by replacing the whole dictionary.
+Example:
+
+```python
+# Avoid
+d = {"a": 1, "b": 2}
+d["b"] = 3
+d["new_value"] = 4
+# Bettter
+d = {"a": 1, "b": 2}
+d = {**d, "b": 3, "new_value": 4}
+```
+
 # Imports
 
 Prefer relative imports within an app. Here's an example from
