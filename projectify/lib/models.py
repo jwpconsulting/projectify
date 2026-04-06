@@ -4,7 +4,8 @@
 """Projectify base models."""
 
 import datetime
-from typing import Any
+from collections.abc import Iterable, Sequence
+from typing import Any, Callable
 
 from django import forms
 from django.db.models import CharField, DateTimeField, Model, TextField
@@ -16,6 +17,11 @@ import bleach
 
 from projectify.lib.forms import RichTextEditor
 from projectify.lib.settings import get_settings
+
+Pks = list[str]
+
+GetOrder = Callable[[], Iterable[int]]
+SetOrder = Callable[[Sequence[int]], None]
 
 
 # The following code was taken from django-extensions

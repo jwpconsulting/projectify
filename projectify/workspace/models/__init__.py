@@ -13,12 +13,16 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from projectify.lib.models import BaseModel, TitleDescriptionModel
+from projectify.lib.models import (
+    BaseModel,
+    GetOrder,
+    SetOrder,
+    TitleDescriptionModel,
+)
 from projectify.user.models import UserInvite
 
 from ..types import WorkspaceQuota
 from .const import TeamMemberRoles
-from .types import GetOrder, SetOrder
 
 if TYPE_CHECKING:
     from django.db.models.fields.related import RelatedField  # noqa: F401
