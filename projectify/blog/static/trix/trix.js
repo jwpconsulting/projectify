@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: MIT
-// SPDX-FileCopyrightText: 37signals, LLC
+/*! SPDX-License-Identifier: MIT
+    SPDX-FileCopyrightText: 37signals, LLC */
 /*
 Trix 2.1.3
 Copyright © 2024 37signals, LLC

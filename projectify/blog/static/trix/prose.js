@@ -1,5 +1,5 @@
-/* SPDX-License-Identifier: MIT */
-/* SPDX-FileCopyrightText: 2022 LOGIC SMPC <paris@withlogic.co> */
+/*! SPDX-License-Identifier: MIT
+    SPDX-FileCopyrightText: 2022 LOGIC SMPC <paris@withlogic.co> */
 // This code goes in /static/prose/editor.js or similar
 function uploadAttachment(host, attachment) {
   uploadFile(host, attachment.file, setProgress, setAttributes);
