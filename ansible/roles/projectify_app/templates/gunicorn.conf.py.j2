@@ -11,6 +11,7 @@ wsgi_app = "projectify.wsgi"
 SOCKET = "/run/gunicorn.sock"
 
 # TODO understand how many workers to configure
+workers = int("{{ gunicorn_n_workers }}")
 
 # TODO understand if syslog only is sufficient
 syslog = True
