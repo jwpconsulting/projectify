@@ -187,6 +187,7 @@ class RichTextField(TextField):  # type: ignore
         self, value: Optional[str], expression: object, connection: object
     ) -> Optional[safestring.SafeString]:
         """Return sanitized value."""
+        del expression, connection
         if value is None:
             return value
         sanitized_html = clean_rich_text(value)
