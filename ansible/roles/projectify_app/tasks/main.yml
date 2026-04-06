@@ -27,12 +27,15 @@
           - python3-dev
           # Back up media
           - rsync
-          # Rev proxy
-          - caddy
           # Used to check out projectify repo
           - git
           # Monitoring
           - prometheus-node-exporter
+          # Prerequisites for adding Caddy repository
+          - debian-keyring
+          - debian-archive-keyring
+          - apt-transport-https
+          - curl
       state: present
 
 - name: Configure projectify user
@@ -245,6 +248,7 @@
     - name: Set release directory name
       ansible.builtin.set_fact:
           release_dir: "{{ projectify_releases_root }}/{{ ansible_date_time.date }}_{{ git_clone.after[:7] }}"
+    # TODO remove failed build
     - name: Check if release already exists
       ansible.builtin.stat:
           path: "{{ release_dir }}"
@@ -289,6 +293,7 @@
           DJANGO_SETTINGS_MODULE: projectify.settings.hetzner
           DJANGO_CONFIGURATION: Hetzner
           MEDIA_ROOT: "{{ media_root }}"
+          STATIC_ROOT: "{{ release_dir }}/static"
           DATABASE_URL: "{{ database_url }}"
           CREDENTIALS_FILE: "{{ credentials_file }}"
       when: not release_exists.stat.exists
@@ -366,6 +371,34 @@
       become_user: caddy
   tags:
       - gunicorn
+
+- name: Configure Caddy repository
+  block:
+    - name: Add Caddy GPG key
+      ansible.builtin.shell:
+          cmd: curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+          creates: /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+    - name: Set permissions on Caddy GPG key
+      ansible.builtin.file:
+          path: /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+          mode: '0644'
+    - name: Add Caddy repository
+      ansible.builtin.shell:
+          cmd: curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list
+          creates: /etc/apt/sources.list.d/caddy-stable.list
+    - name: Set permissions on Caddy repository file
+      ansible.builtin.file:
+          path: /etc/apt/sources.list.d/caddy-stable.list
+          mode: '0644'
+    - name: Install Caddy
+      ansible.builtin.apt:
+          name: caddy
+          state: present
+    - name: Update apt cache
+      ansible.builtin.apt:
+          update_cache: yes
+  tags:
+    - caddy
 
 - name: Configure Caddy
   block:
