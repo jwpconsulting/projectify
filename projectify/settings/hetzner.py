@@ -9,6 +9,8 @@ import warnings
 from pathlib import Path
 from typing import Any
 
+from projectify.settings.collect_static import CollectStatic
+
 from .base import Base
 
 
@@ -24,17 +26,6 @@ class Hetzner(Base):
     ALLOWED_HOSTS = [os.getenv("ALLOWED_HOST", "www.projectifyapp.com")]
     FRONTEND_URL = f"https://{ALLOWED_HOSTS[0]}"
 
-    # Use file system to store media files
-    STORAGES = {
-        "default": {
-            "BACKEND": "django.core.files.storage.FileSystemStorage",
-        },
-        # Caddy serves static files
-        "staticfiles": {
-            "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
-        },
-    }
-
     # Static files
     # We allow overriding this value in case the static files come prebuilt,
     # for example in a container, and an exact path is contained in
@@ -45,6 +36,8 @@ class Hetzner(Base):
         if "STATIC_ROOT" in os.environ
         else Base.STATIC_ROOT
     )
+
+    STORAGES = CollectStatic.STORAGES
 
     # TODO print friendly error when MEDIA_ROOT not found
     MEDIA_ROOT = Path(os.environ["MEDIA_ROOT"])

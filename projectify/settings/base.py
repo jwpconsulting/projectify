@@ -336,6 +336,9 @@ class Base(Configuration):  # type:ignore
             "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
         },
     }
+    # https://github.com/openwisp/django-minify-compress-staticfiles?tab=readme-ov-file#settings
+    # Allow compressing minified files
+    MINICOMPRESS_EXCLUDE_PATTERNS = ["*.gz", "*.br", "*.zip"]
 
     # Default primary key field type
     # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
