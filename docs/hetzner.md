@@ -546,3 +546,17 @@ cache_alignment	: 64
 address sizes	: 40 bits physical, 48 bits virtual
 power management:
 ```
+
+## Run manage.py shell on a VPS
+
+```bash
+cd /usr/share/projectify/releases/current/app
+sudo -u projectify \
+    DJANGO_SETTINGS_MODULE=projectify.settings.hetzner \
+    DJANGO_CONFIGURATION=Hetzner \
+    STATIC_ROOT=$PWD/../static \
+    MEDIA_ROOT=/var/lib/projectify/state/media \
+    DATABASE_URL=postgresql://projectify@localhost/projectify \
+    CREDENTIALS_FILE=/var/lib/projectify/credentials.toml \
+    ../venv/bin/python ./manage.py shell
+```
