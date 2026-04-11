@@ -183,19 +183,9 @@ class Hetzner(Base):
             cls.EMAIL_HOST_USER = credentials["EMAIL_HOST_USER"]
             # On Lettermint, this is your API token
             cls.EMAIL_HOST_PASSWORD = credentials["EMAIL_HOST_PASSWORD"]
-        elif (
-            "MAILGUN_API_KEY" in credentials
-            and "MAILGUN_DOMAIN" in credentials
-        ):
-            cls.EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
-            cls.ANYMAIL = {
-                "MAILGUN_API_KEY": credentials["MAILGUN_API_KEY"],
-                "MAILGUN_SENDER_DOMAIN": credentials["MAILGUN_DOMAIN"],
-                "MAILGUN_API_URL": "https://api.eu.mailgun.net/v3",
-            }
         else:
             raise RuntimeError(
-                f"You must specify either a MAILGUN or SMTP configuration in {credentials_file}"
+                f"You must specify the SMTP configuration in {credentials_file}"
             )
         if "DEFAULT_FROM_EMAIL" in credentials:
             cls.DEFAULT_FROM_EMAIL = credentials["DEFAULT_FROM_EMAIL"]

@@ -319,20 +319,6 @@ socialaccount = [
 ]
 
 [[package]]
-name = "django-anymail"
-version = "10.3"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django" },
-    { name = "requests" },
-    { name = "urllib3" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/65/c2/245b8cc872effc9871453ab0d0bd494213b0c85a1cc37606c578dc8fca6f/django_anymail-10.3.tar.gz", hash = "sha256:35d8ec20b06000af3c1638492e32f416fd1a584f0a572cded03f1bc570169ed0", size = 93634, upload-time = "2024-03-12T19:00:30.281Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/99/c4/f7c1a76fac497459b8b323d5545a1838f38ee3ff37b3344dea244071d1d5/django_anymail-10.3-py3-none-any.whl", hash = "sha256:1e72f059e96930d3675d35fe4c61f82b138ae4a7fcb0337be39dcb4823f94a4f", size = 133451, upload-time = "2024-03-12T19:00:28.447Z" },
-]
-
-[[package]]
 name = "django-browser-reload"
 version = "1.21.0"
 source = { registry = "https://pypi.org/simple" }
@@ -897,9 +883,6 @@ dependencies = [
 demo = [
     { name = "faker" },
 ]
-hosted = [
-    { name = "django-anymail" },
-]
 postgresql = [
     { name = "psycopg", extra = ["c"] },
 ]
@@ -935,7 +918,6 @@ requires-dist = [
     { name = "dj-database-url", specifier = "~=2.1.0" },
     { name = "django", specifier = ">=6.0.0,<7" },
     { name = "django-allauth", extras = ["socialaccount"], specifier = ">=65.14.3" },
-    { name = "django-anymail", extras = ["mailgun"], marker = "extra == 'hosted'", specifier = ">=10.3,<10.4" },
     { name = "django-markdownify", specifier = ">=0.9.5,<0.10" },
     { name = "django-minify-compress-staticfiles", specifier = ">=1.1" },
     { name = "django-ratelimit", specifier = ">=4.1.0,<5" },
