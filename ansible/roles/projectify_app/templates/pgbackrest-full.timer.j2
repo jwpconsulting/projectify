@@ -8,6 +8,7 @@ Requires=pgbackrest-full.service
 [Timer]
 OnCalendar=daily
 Persistent=true
+RandomizedDelaySec=30s
 
 [Install]
 WantedBy=timers.target

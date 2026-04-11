@@ -6,8 +6,13 @@ Description=pgBackRest differential backup timer
 Requires=pgbackrest-diff.service
 
 [Timer]
-OnCalendar=hourly
+# Run on the 30th minute every hour, see
+# https://man.archlinux.org/man/systemd.time.7.en
+OnCalendar=*-*-* *:30:00
 Persistent=true
+# Start with random delay
+# https://man.archlinux.org/man/systemd.timer.5#:~:text=209%2E-,RandomizedDelaySec
+RandomizedDelaySec=30s
 
 [Install]
 WantedBy=timers.target
