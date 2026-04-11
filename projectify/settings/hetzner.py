@@ -176,6 +176,9 @@ class Hetzner(Base):
                     f"EMAIL_PORT must be an integer, received {email_port} ({type(email_port)})"
                 )
             cls.EMAIL_PORT = email_port
+            # Conditionally set explicit/implicit TLS settings
+            cls.EMAIL_USE_TLS = email_port == 587
+            cls.EMAIL_USE_SSL = email_port == 465
             # If you're using Lettermint, the user is lettermint
             cls.EMAIL_HOST_USER = credentials["EMAIL_HOST_USER"]
             # On Lettermint, this is your API token
