@@ -157,17 +157,12 @@ django==6.0.4 \
     # via
     #   dj-database-url
     #   django-allauth
-    #   django-anymail
     #   django-markdownify
     #   django-sendfile2
     #   projectify-app
 django-allauth==65.14.3 \
     --hash=sha256:1d8e1127bdffceb8001bdd9bafbf97661f81e92f4b7bd4f6e799167b0311286d \
     --hash=sha256:548eef76ab85f6e48f46f98437abf22acf0e834f73e9915fb6cc3f31a0dcdf4d
-    # via projectify-app
-django-anymail==10.3 \
-    --hash=sha256:1e72f059e96930d3675d35fe4c61f82b138ae4a7fcb0337be39dcb4823f94a4f \
-    --hash=sha256:35d8ec20b06000af3c1638492e32f416fd1a584f0a572cded03f1bc570169ed0
     # via projectify-app
 django-markdownify==0.9.5 \
     --hash=sha256:2c4ae44e386c209453caf5e9ea1b74f64535985d338ad2d5ad5e7089cc94be86 \
@@ -322,7 +317,6 @@ requests==2.33.0 \
     --hash=sha256:c7ebc5e8b0f21837386ad0e1c8fe8b829fa5f544d8df3b2253bff14ef29d7652
     # via
     #   django-allauth
-    #   django-anymail
     #   stripe
 rjsmin==1.2.5 \
     --hash=sha256:1e2943259be7beafdcb0847c2a901f223bf9044bdfa8105e1be1ad67d6c47795 \
@@ -385,9 +379,7 @@ tzdata==2023.3 ; sys_platform == 'win32' \
 urllib3==2.6.3 \
     --hash=sha256:1b62b6884944a57dbe321509ab94fd4d3b307075e0c2eae991ac71ee15ad38ed \
     --hash=sha256:bf272323e553dfb2e87d9bfd225ca7b0f467b919d7bbd355436d3fd37cb0acd4
-    # via
-    #   django-anymail
-    #   requests
+    # via requests
 webencodings==0.5.1 \
     --hash=sha256:a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78 \
     --hash=sha256:b36a1c245f2d304965eb4e0a82848379241dc04b865afcc4aab16748587e1923

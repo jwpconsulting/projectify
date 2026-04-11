@@ -47,8 +47,6 @@ postgresql = [
 ]
 # Dependencies used on projectifyapp.com
 hosted = [
-# TODO remove and use plain smtp
-    "django-anymail[mailgun]>=10.3,<10.4",
 ]
 
 [dependency-groups]
