@@ -17,14 +17,15 @@ Secure Product checklist v2.0](https://mvsp.dev/mvsp.en/v2.0-20221012/). JWP
 invites you to [share your feedback](/contact-us). For security related
 inquiries, please refer to the [security disclosure policy](/security/disclose).
 
-# Version History
+# Version history
 
 | Date           | Changes                                           | Author                                |
 | -------------- | ------------------------------------------------- | ------------------------------------- |
+| **2026-04-11** | Edited to reflect Hetzner migration | Justus W. Perlwitz, JWP Consulting GK |
 | **2026-02-20** | Adjusted content based on Django frontend rewrite | Justus W. Perlwitz, JWP Consulting GK |
 | **2024-03-29** | Created page                                      | Justus W. Perlwitz, JWP Consulting GK |
 
-# Business Controls
+# Business controls
 
 JWP offers a point of contact for Projectify-related vulnerability reports on
 Projectify's [security disclosure policy page](/security/disclose).
@@ -152,25 +153,24 @@ in transit and in storage.
 Projectify uses TLS for the following connections:
 
 - When your browser connects to Projectify
-- Django backend to Render Key Value [^render-key-value]
-- Django backend to Render Postgres[^render-postgres]
-- Sending mails with Mailgun
+- Sending mails with Mailgun, see [Transactional mailing](#transactional-mailing)
 
-[^render-key-value]: [Render Key Value](https://render.com/docs/key-value) _render.com/docs_
-[^render-postgres]: [Render Postgres](https://render.com/docs/postgresql) _render.com/docs_
-[^cloudinary-encryption-at-rest]: [Digital Asset Library: The Ultimate Guide - Role of a Digital Asset Library in Data Security](https://cloudinary.com/guides/digital-asset-management/digital-asset-library#:~:text=Additionally%2C%20Cloudinary%20supports%20encryption%20at%20rest%20and%20in%20transit%2C%20ensuring%20your%20files%20are%20protected%20from%20external%20threats%2E) _cloudinary.com_
+### Database
 
-Render's upstream provides use encryption at rest. [^render-security]
+Projectify's database server does not encrypt its data at rest.
+Hetzner encrypts managed server backups at rest.[^confidentiality]
 
 ### Asset storage
 
-For asset storage, we have **not** verified whether Projectify uses Cloudinary
-(Cloudinary Inc.) APIs exclusively over an encrypted connection.
-Cloudinary encrypts its data at rest. [^cloudinary-encryption-at-rest]
+Projectify stores media files on the same server that the backend and
+PostgreSQL database server run on.
 
-[^render-security]: [Security and Trust](https://render.com/security) _render.com/security_
+This data is not encrypted at rest.[^confidentiality]
 
-### Transactional Mailing
+[^confidentiality]: See "Encryption of Data (at rest)" and "Encryption
+of Backups (at rest)" at <https://docs.hetzner.com/general/security-and-identify/technical-and-organizational-measures#confidentiality>
+
+### Transactional mailing
 
 Projectify uses the transactional mailing service Mailgun
 (Sinch America, Inc.) to send you emails. Mailgun encrypts user data at rest [^mailgun-hipaa].
@@ -192,14 +192,8 @@ some user data flows from Projectify to various backend services. See the
 following diagram:
 
 ```
-                    .------------.
-        .-----------+ Cloudinary |
-        |           .---+--------.
-        |               |         .-----------------.
-        |               |  +------+ Render Postgres |
-        |               |  |      .-----------------.
-.-------+------.    .---+--+--.   .------------------.
-| Your Browser +----+ Backend +---+ Render Key Value |
+.--------------.    .---------.   .------------------.
+| Your Browser +----+ Backend +---+ Hetzner backups  |
 .--------------.    .---+-----.   .------------------.
                         |
                         |         .---------.
@@ -267,16 +261,17 @@ Administrative access to Projectify's admin site at
 A list of all subprocessors is available in the [GDPR section of the privacy
 policy](/privacy) under **Article 6 (Cross-Border Data Transfer)**.
 
-## Backup and Disaster Recovery
+## Backup and disaster recovery
 
-Render Postgres has continuous rollbacks enabled spanning 7 days.
-[^render-backups]
+Projectify's PostgreSQL database creates hourly differential and
+daily full backups of your data.
 
-[^render-backups]: [Render Postgres Recovery and Backups](https://render.com/docs/postgresql-backups) _render.com/docs_
+Projectify creates hourly backups of user generated media files.
 
-Assets stored with Cloudinary are **not** backed up.
+Hetzner creates daily backups of all VPS storage drives used for Projectify.
 
-**No** steps have been taken to maintain and test disaster recovery plans.
+The Projectify system logs any backup failures. There are no alerts for failing
+backups.
 
 **No** steps have been taken to periodically test backup restoration.
 
