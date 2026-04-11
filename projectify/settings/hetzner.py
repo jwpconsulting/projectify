@@ -170,7 +170,12 @@ class Hetzner(Base):
             cls.EMAIL_HOST = credentials["EMAIL_HOST"]
             # Force implicit TLS, see also
             # https://lettermint.co/docs/guides/send-email-with-smtp#available-ports
-            cls.EMAIL_PORT = 465
+            email_port = credentials.get("EMAIL_PORT", 465)
+            if not isinstance(email_port, int):
+                raise RuntimeError(
+                    f"EMAIL_PORT must be an integer, received {email_port} ({type(email_port)})"
+                )
+            cls.EMAIL_PORT = email_port
             # If you're using Lettermint, the user is lettermint
             cls.EMAIL_HOST_USER = credentials["EMAIL_HOST_USER"]
             # On Lettermint, this is your API token
