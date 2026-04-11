@@ -6,6 +6,29 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Changelog
 
+## Unreleased
+
+### Enhancement
+
+- Update general security information to reflect the Hetzner migration
+- Update privacy policy and limit the extent of collected information (that
+  Projectify never collected to begin with)
+- Update list of data processers to reflect that www.projectifyapp.com uses
+  Hetzner and Mailgun
+
+### Internal
+
+- Switch from mailgun specific email configuration to generic SMTP-based email
+  specification
+- Allow changing the default sender email address with the `DEFAULT_FROM_EMAIL`
+  credentials variable. See `docs/django-configuration.md`
+- Fix pgbackrest timers in the Ansible systemd configurationjuk
+
+### Security
+
+- Update Django
+- Update cryptography
+
 ## 2026.4.7
 
 ### Enhancement
