@@ -197,6 +197,8 @@ class Hetzner(Base):
             raise RuntimeError(
                 f"You must specify either a MAILGUN or SMTP configuration in {credentials_file}"
             )
+        if "DEFAULT_FROM_EMAIL" in credentials:
+            cls.DEFAULT_FROM_EMAIL = credentials["DEFAULT_FROM_EMAIL"]
 
     @classmethod
     def post_setup(cls) -> None:

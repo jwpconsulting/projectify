@@ -70,6 +70,10 @@ See also `docs/billing_integration.md`.
 
 ## Emails
 
+Set the email from address with the following credential value:
+
+- `DEFAULT_FROM_EMAIL` (optional): default is `"Projectify" <hello@projectifyapp.com>`
+
 If you use Mailgun, set the following credentials:
 
 - `MAILGUN_API_KEY`: API key for Mailgun

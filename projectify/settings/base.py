@@ -364,7 +364,7 @@ class Base(Configuration):  # type:ignore
     FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
     # Email
-    DEFAULT_FROM_EMAIL = '"Projectify" <hello@projectifyapp.com>'
+    DEFAULT_FROM_EMAIL: str = '"Projectify" <hello@projectifyapp.com>'
     # Prefix for admin emails, see
     # https://docs.djangoproject.com/en/6.0/ref/settings/#email-subject-prefix
     EMAIL_SUBJECT_PREFIX = "[Projectify-Admin] "
