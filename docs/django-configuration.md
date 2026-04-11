@@ -68,10 +68,32 @@ See also `docs/billing_integration.md`.
   calling our [webhook](https://docs.stripe.com/webhooks#events-overview).
 - `STRIPE_PRICE_OBJECT`: Price object we use for Stripe billing
 
-## Mailgun
+## Emails
+
+If you use Mailgun, set the following credentials:
 
 - `MAILGUN_API_KEY`: API key for Mailgun
 - `MAILGUN_DOMAIN`: Domain used for Mailgun
+
+If you use an SMTP server with implicit TLS (port 465), set these credentials:
+
+- `EMAIL_HOST`: The hostname of the SMTP server to connect to.
+- `EMAIL_HOST_USER`: The username to authenticate as when connecting to the
+  SMTP server at `EMAIL_HOST`.
+- `EMAIL_PASSWORD`: The password to authenticate with when connecting to the
+  SMTP server at `EMAIL_HOST`.
+
+If you use Lettermint, make sure to active the **Enable SMTP** setting
+in the **Settings** tab for your Lettermint project. You can reach the
+project settings by going the **Projects** page from the left navigation
+bar. Then,
+
+1. create an **API token** and use it as the `EMAIL_PASSWORD` for
+Projectify.
+2. Use `smpt.lettermint.co` as `EMAIL_HOST`.
+3. Use `lettermint` as `EMAIL_HOST_USER`.
+
+The SMTP settings currently expect you to use port 465 (implicit TLS).
 
 ## OAuth
 
@@ -99,6 +121,10 @@ STRIPE_PRICE_OBJECT = "price_XXX"
 
 MAILGUN_API_KEY = "..."
 MAILGUN_DOMAIN = "..."
+# Or
+EMAIL_HOST = "smtp...."
+EMAIL_HOST_USER = ""
+EMAIL_PASSWORD = ""
 
 ALLAUTH_GITHUB_CLIENT_ID = "..."
 ALLAUTH_GITHUB_SECRET = "..."
