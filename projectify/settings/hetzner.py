@@ -163,7 +163,7 @@ class Hetzner(Base):
         if (
             "EMAIL_HOST" in credentials
             and "EMAIL_HOST_USER" in credentials
-            and "EMAIL_PASSWORD" in credentials
+            and "EMAIL_HOST_PASSWORD" in credentials
         ):
             cls.EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
             # If you're using Lettermint, this is smtp.lettermint.co
@@ -179,7 +179,7 @@ class Hetzner(Base):
             # If you're using Lettermint, the user is lettermint
             cls.EMAIL_HOST_USER = credentials["EMAIL_HOST_USER"]
             # On Lettermint, this is your API token
-            cls.EMAIL_PASSWORD = credentials["EMAIL_PASSWORD"]
+            cls.EMAIL_HOST_PASSWORD = credentials["EMAIL_HOST_PASSWORD"]
         elif (
             "MAILGUN_API_KEY" in credentials
             and "MAILGUN_DOMAIN" in credentials
