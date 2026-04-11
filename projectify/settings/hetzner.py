@@ -51,7 +51,6 @@ class Hetzner(Base):
     }
 
     # Emails
-    EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
     @classmethod
     def setup(cls) -> None:
@@ -162,17 +161,34 @@ class Hetzner(Base):
     ) -> None:
         """Load mailgun configuration."""
         if (
-            "MAILGUN_API_KEY" not in credentials
-            or "MAILGUN_DOMAIN" not in credentials
+            "EMAIL_HOST" in credentials
+            and "EMAIL_HOST_USER" in credentials
+            and "EMAIL_PASSWORD" in credentials
         ):
+            cls.EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+            # If you're using Lettermint, this is smtp.lettermint.co
+            cls.EMAIL_HOST = credentials["EMAIL_HOST"]
+            # Force implicit TLS, see also
+            # https://lettermint.co/docs/guides/send-email-with-smtp#available-ports
+            cls.EMAIL_PORT = 465
+            # If you're using Lettermint, the user is lettermint
+            cls.EMAIL_HOST_USER = credentials["EMAIL_HOST_USER"]
+            # On Lettermint, this is your API token
+            cls.EMAIL_PASSWORD = credentials["EMAIL_PASSWORD"]
+        elif (
+            "MAILGUN_API_KEY" in credentials
+            and "MAILGUN_DOMAIN" in credentials
+        ):
+            cls.EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+            cls.ANYMAIL = {
+                "MAILGUN_API_KEY": credentials["MAILGUN_API_KEY"],
+                "MAILGUN_SENDER_DOMAIN": credentials["MAILGUN_DOMAIN"],
+                "MAILGUN_API_URL": "https://api.eu.mailgun.net/v3",
+            }
+        else:
             raise RuntimeError(
-                f"You must specify MAILGUN_API_KEY and MAILGUN_DOMAIN in {credentials_file}"
+                f"You must specify either a MAILGUN or SMTP configuration in {credentials_file}"
             )
-        cls.ANYMAIL = {
-            "MAILGUN_API_KEY": credentials["MAILGUN_API_KEY"],
-            "MAILGUN_SENDER_DOMAIN": credentials["MAILGUN_DOMAIN"],
-            "MAILGUN_API_URL": "https://api.eu.mailgun.net/v3",
-        }
 
     @classmethod
     def post_setup(cls) -> None:

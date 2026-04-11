@@ -365,6 +365,9 @@ class Base(Configuration):  # type:ignore
 
     # Email
     DEFAULT_FROM_EMAIL = '"Projectify" <hello@projectifyapp.com>'
+    # Prefix for admin emails, see
+    # https://docs.djangoproject.com/en/6.0/ref/settings/#email-subject-prefix
+    EMAIL_SUBJECT_PREFIX = "[Projectify-Admin] "
 
     # Logging
     LOGGING: LoggingConfig = {
