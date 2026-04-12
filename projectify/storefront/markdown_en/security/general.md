@@ -269,12 +269,14 @@ daily full backups of your data.
 
 Projectify creates hourly backups of user generated media files.
 
-Hetzner creates daily backups of all VPS storage drives used for Projectify.
+Hetzner creates daily backups[^hetzner-backups] of all VPS storage drives used for Projectify.
 
 The Projectify system logs any backup failures. There are no alerts for failing
 backups.
 
 **No** steps have been taken to periodically test backup restoration.
+
+[^hetzner-backups]: [Overview - Backups/Snapshots](https://docs.hetzner.com/cloud/servers/backups-snapshots/overview#backupssnapshots) on *docs.hetzner.com*
 
 # Inquiries
 
