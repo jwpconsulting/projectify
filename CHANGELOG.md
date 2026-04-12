@@ -10,11 +10,18 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ### Enhancement
 
-- Update general security information to reflect the Hetzner migration
+- Update general security information to reflect the Hetzner and Lettermint
+  migration
 - Update privacy policy and limit the extent of collected information (that
   Projectify never collected to begin with)
 - Update list of data processers to reflect that www.projectifyapp.com uses
-  Hetzner and Mailgun
+  Hetzner and Lettermint
+- Add convenient links to blog post editor on administration page for staff
+  users.
+
+### Fixed
+
+- Fix blog existing posts not rendering correctly in Trix editor.
 
 ### Internal
 
