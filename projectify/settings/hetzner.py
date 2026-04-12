@@ -159,7 +159,7 @@ class Hetzner(Base):
     def setup_email(
         cls, credentials_file: Path, credentials: dict[str, Any]
     ) -> None:
-        """Load mailgun configuration."""
+        """Load SMTP mail configuration."""
         if (
             "EMAIL_HOST" in credentials
             and "EMAIL_HOST_USER" in credentials

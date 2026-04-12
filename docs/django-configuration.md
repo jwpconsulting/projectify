@@ -74,14 +74,11 @@ Set the email from address with the following credential value:
 
 - `DEFAULT_FROM_EMAIL` (optional): default is `"Projectify" <hello@projectifyapp.com>`
 
-If you use Mailgun, set the following credentials:
-
-- `MAILGUN_API_KEY`: API key for Mailgun
-- `MAILGUN_DOMAIN`: Domain used for Mailgun
-
 If you use an SMTP server with implicit TLS (port 465), set these credentials:
 
 - `EMAIL_HOST`: The hostname of the SMTP server to connect to.
+- `EMAIL_PORT` (optional): Projectify assumes it can reach your mail server at
+  port 465 by default if you don't set this value.
 - `EMAIL_HOST_USER`: The username to authenticate as when connecting to the
   SMTP server at `EMAIL_HOST`.
 - `EMAIL_HOST_PASSWORD`: The password to authenticate with when connecting to the
@@ -97,7 +94,8 @@ Projectify.
 2. Use `smpt.lettermint.co` as `EMAIL_HOST`.
 3. Use `lettermint` as `EMAIL_HOST_USER`.
 
-The SMTP settings currently expect you to use port 465 (implicit TLS).
+If you want to use explicil TLS and you can reach your SMTP server at port 587,
+set `EMAIL_PORT` to `587`.
 
 ## OAuth
 
@@ -123,12 +121,11 @@ STRIPE_SECRET_KEY = "sk_test_XXX"
 STRIPE_ENDPOINT_SECRET = "whsec_XXX"
 STRIPE_PRICE_OBJECT = "price_XXX"
 
-MAILGUN_API_KEY = "..."
-MAILGUN_DOMAIN = "..."
-# Or
 EMAIL_HOST = "smtp...."
 EMAIL_HOST_USER = ""
 EMAIL_HOST_PASSWORD = ""
+# Optional:
+EMAIL_HOST_PORT
 
 ALLAUTH_GITHUB_CLIENT_ID = "..."
 ALLAUTH_GITHUB_SECRET = "..."

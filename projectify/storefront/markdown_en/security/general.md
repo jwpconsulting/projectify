@@ -153,7 +153,7 @@ in transit and in storage.
 Projectify uses TLS for the following connections:
 
 - When your browser connects to Projectify
-- Sending mails with Mailgun, see [Transactional mailing](#transactional-mailing)
+- Sending mails with Lettermint, see [Transactional mailing](#transactional-mailing)
 
 ### Database
 
@@ -172,10 +172,11 @@ of Backups (at rest)" at <https://docs.hetzner.com/general/security-and-identify
 
 ### Transactional mailing
 
-Projectify uses the transactional mailing service Mailgun
-(Sinch America, Inc.) to send you emails. Mailgun encrypts user data at rest [^mailgun-hipaa].
+Projectify uses the transactional mailing service Lettermint
+to send you emails. Lettermint's Trust Center does not mention whether they
+store emails encrypted at rest. [lettermint-trust-center].
 
-[^mailgun-hipaa]: [How does Mailgun keep your emails protected?](https://www.mailgun.com/blog/product/mailgun-email-protection/) *www.mailgun.com/blog*
+[^lettermint-trust-center]: [Lettermint Trust Center](https://trust.lettermint.co/) *trust.lettermint.co*
 
 # Application implementation controls
 
@@ -196,9 +197,9 @@ following diagram:
 | Your Browser +----+ Backend +---+ Hetzner backups  |
 .--------------.    .---+-----.   .------------------.
                         |
-                        |         .---------.
-                        .---------+ Mailgun |
-                                  .---------.
+                        |         .------------.
+                        .---------+ Lettermint |
+                                  .------------.
 ```
 
 ## Vulnerability prevention and security libraries
@@ -268,12 +269,14 @@ daily full backups of your data.
 
 Projectify creates hourly backups of user generated media files.
 
-Hetzner creates daily backups of all VPS storage drives used for Projectify.
+Hetzner creates daily backups[^hetzner-backups] of all VPS storage drives used for Projectify.
 
 The Projectify system logs any backup failures. There are no alerts for failing
 backups.
 
 **No** steps have been taken to periodically test backup restoration.
+
+[^hetzner-backups]: [Overview - Backups/Snapshots](https://docs.hetzner.com/cloud/servers/backups-snapshots/overview#backupssnapshots) on *docs.hetzner.com*
 
 # Inquiries
 
