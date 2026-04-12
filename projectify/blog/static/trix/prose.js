@@ -1,52 +1,23 @@
 /*! SPDX-License-Identifier: MIT
     SPDX-FileCopyrightText: 2022 LOGIC SMPC <paris@withlogic.co> */
 // This code goes in /static/prose/editor.js or similar
-function uploadAttachment(host, attachment) {
-  uploadFile(host, attachment.file, setProgress, setAttributes);
-
-  function setProgress(progress) {
-    attachment.setUploadProgress(progress);
-  }
-
-  function setAttributes(attributes) {
-    attachment.setAttributes(attributes);
-  }
-}
-
-function uploadFile(host, file, progressCallback, successCallback) {
-  const formData = createFormData(file);
-  // TODO use fetch
-  const xhr = new XMLHttpRequest();
+async function uploadFile(host, attachment) {
   const csrfToken = document.querySelector("input[name=csrfmiddlewaretoken]").value;
 
+  const { file } = attachment;
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("Content-Type", file.type);
   formData.append("csrfmiddlewaretoken", csrfToken);
 
-  xhr.open("POST", host, true);
-
-  xhr.upload.addEventListener("progress", function (event) {
-    const progress = (event.loaded / event.total) * 100;
-    progressCallback(progress);
-  });
-
-  xhr.addEventListener("load", function (event) {
-    if (xhr.status == 201) {
-      const data = JSON.parse(xhr.response);
-      const attributes = {
-        url: data.url,
-        href: `${data.url}?content-disposition=attachment`,
-      };
-      successCallback(attributes);
-    }
-  });
-
-  xhr.send(formData);
-}
-
-function createFormData(file) {
-  const data = new FormData();
-  data.append("file", file);
-  data.append("Content-Type", file.type);
-  return data;
+  // This used to support progress updating before
+  const response = await fetch(host, {method: "POST", body: formData});
+  if (response.status !== 201) {
+    throw new Error(`Bad response ${response.status}`);
+  }
+  const data = await response.json();
+  const result = { url: data.url, href: data.url };
+  attachment.setAttributes(result);
 }
 
 function initializeEditors() {
@@ -55,9 +26,9 @@ function initializeEditors() {
   editors.forEach((editor) => {
     const uploadUrl = editor.dataset.uploadAttachmentUrl;
     if (uploadUrl) {
-      editor.addEventListener("trix-attachment-add", function (event) {
-        uploadAttachment(uploadUrl, event.attachment);
-      });
+      editor.addEventListener("trix-attachment-add", (event) =>
+        uploadFile(uploadUrl, event.attachment)
+      );
     } else {
       editor.addEventListener("trix-file-accept", function (event) {
         event.preventDefault();

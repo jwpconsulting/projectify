@@ -15,6 +15,9 @@
                     <p>
                         {% anchor href=post.get_absolute_url label=post.title %}
                         {% blocktrans with author=post.author date=post.published %}{{ date }}{% endblocktrans %}
+                        {% if request.user.is_staff %}
+                            {% anchor href="admin:blog_post_change" object_id=post.pk label="(Edit)" %}
+                        {% endif %}
                     </p>
                 {% endfor %}
             </div>

@@ -18,6 +18,9 @@
             </header>
             <div class="prose">{{ post.body.content }}</div>
             <footer>
+                {% if request.user.is_staff %}
+                    {% anchor href="admin:blog_post_change" object_id=post.pk label="Edit this post" %}
+                {% endif %}
                 {% anchor href="blog:post_list" label=_("All blog posts") %}
             </footer>
         </article>
