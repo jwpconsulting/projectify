@@ -7,8 +7,138 @@
 {% block title %}
     {% blocktrans with title=project.title %}{{ title }} - Projectify{% endblocktrans %}
 {% endblock title %}
+{% partialdef quick_add_task %}
+    <form hx-post="{% url 'dashboard:projects:detail' section.project.uuid %}"
+          hx-target="#section-{{ section.uuid }}"
+          hx-swap="outerHTML"
+          hx-include="#task-filter,#team-member-filters,#label-filters"
+          hx-disabled-elt="find button"
+          class="flex flex-row gap-2 items-center">
+        {% csrf_token %}
+        <input type="hidden" name="section" value="{{ section.uuid }}">
+        {{ quick_add_task.title }}
+        <div class="shrink">
+            {% include "projectify/forms/submit.html" with name="action" value="quick_add_task" text=_("Add task") %}
+        </div>
+        {% include "workspace/common/loading_spinner.html" %}
+    </form>
+{% endpartialdef quick_add_task %}
+{% partialdef section_contents %}
+    {% has_perm "workspace.create_task" user project.workspace as can_create_task %}
+    {% has_perm "workspace.update_task" user project.workspace as can_update_task %}
+    <table aria-label="{% blocktranslate with section=section.title %}{{section}} tasks{% endblocktranslate %}"
+           class="flex flex-col gap-2 lg:grid lg:grid-cols-[8fr_3fr_max-content] lg:gap-1 lg:items-center">
+        <thead class="sr-only">
+            <th class="sr-only">{% translate "Task title" %}</th>
+            <th class="sr-only">{% translate "Task labels" %}</th>
+            <th class="sr-only">{% translate "Task actions" %}</th>
+        </thead>
+        <tbody class="contents">
+            {% for task in section.task_set.all %}
+                <tr class="flex w-full flex-wrap items-center gap-1 rounded-lg border border-border p-3 lg:contents"
+                    id="task-{{ task.uuid }}-row"
+                    aria-labelledby="task-{{ task.uuid }}-title"
+                    x-data="{ menuOpen: false }">
+                    <td class="flex flex-row items-center gap-2">
+                        {% if can_update_task %}
+                            <form action="{% url 'dashboard:projects:detail' section.project.uuid %}"
+                                  method="post"
+                                  hx-post="{% url 'dashboard:projects:detail' section.project.uuid %}"
+                                  hx-target="#section-{{ section.uuid }}"
+                                  hx-swap="outerHTML"
+                                  hx-include="#task-filter,#team-member-filters,#label-filters"
+                                  hx-disabled-elt="find button"
+                                  class="flex">
+                                <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
+                                <input type="hidden"
+                                       name="done"
+                                       value="{% if task.done %}false{% else %}true{% endif %}">
+                                {% csrf_token %}
+                                <button type="submit"
+                                        name="action"
+                                        value="mark_task_done"
+                                        class="size-6 flex items-center justify-center rounded border-2 transition-colors {% if task.done %}bg-primary border-primary text-primary-content{% else %}border-border hover:border-primary{% endif %} disabled:opacity-50 disabled:cursor-not-allowed"
+                                        aria-label="{% if task.done %}{% translate 'Mark task as not done' %}{% else %}{% translate 'Mark task as done' %}{% endif %}"
+                                        title="{% if task.done %}{% translate 'Mark task as not done' %}{% else %}{% translate 'Mark task as done' %}{% endif %}">
+                                    {% if task.done %}
+                                        {% icon "check" size=4 color="white" %}
+                                    {% endif %}
+                                </button>
+                            </form>
+                        {% else %}
+                            <div class="shrink-0 size-6 flex items-center justify-center rounded border-2 {% if task.done %}bg-primary border-primary text-primary-content{% else %}border-border{% endif %}"
+                                 aria-hidden="true">
+                                {% if task.done %}
+                                    {% icon "check" size=4 color="white" %}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                        <a href="{% url 'dashboard:tasks:detail' task.uuid %}"
+                           class="flex flex-row items-start items-center min-w-0 gap-1 self-start sm:gap-6 lg:self-center {% if task.done %}line-through opacity-60{% endif %}">
+                            <span class="line-clamp-3 justify-self-start hover:text-primary lg:line-clamp-1 lg:h-6"
+                                  id="task-{{ task.uuid }}-title">{{ task.title }}</span>
+                        </a>
+                    </td>
+                    <td class="flex w-full flex-row items-center justify-start gap-1 self-start overflow-x-auto">
+                        {% for label in task.labels.all %}
+                            <div class="max-w-xs shrink-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-full px-3 py-1 font-bold {{ label.bg_class }} {{ label.text_class }}">
+                                {{ label.name }}
+                            </div>
+                        {% endfor %}
+                    </td>
+                    <td class="flex ml-auto">
+                        {% if can_update_task %}
+                            <form action="{% url 'dashboard:projects:detail' project.uuid %}"
+                                  method="post"
+                                  hx-include="#task-filter,#team-member-filters,#label-filters"
+                                  hx-boost="true"
+                                  hx-target="#section-{{ section.uuid }}"
+                                  hx-swap="outerHTML"
+                                  class="flex flex-row items-center gap-1">
+                                {# TODO in AT, say "currently assigned to ..." #}
+                                {% user_avatar task.assignee %}
+                                <input type="hidden" name="action" value="move_task">
+                                <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
+                                {% circle_button label=_("Move task up") value="up" name="direction" disabled=task.first icon_style="chevron-up" %}
+                                {% circle_button label=_("Move task down") value="down" name="direction" disabled=task.last icon_style="chevron-down" %}
+                                {% csrf_token %}
+                                <p class="htmx-indicator">...</p>
+                            </form>
+                            <a aria-label="{% translate "Task menu" %}"
+                               href="{% url "dashboard:tasks:actions" task.uuid %}"
+                               class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background"
+                               hx-get="{% url "dashboard:tasks:actions" task.uuid %}"
+                               hx-target="#task-{{ task.uuid }}-menu"
+                               hx-swap="outerHTML">{% icon "dots-horizontal" %}</a>
+                        {% else %}
+                            <div class="flex flex-row items-center gap-1">{% user_avatar task.assignee %}</div>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr id="task-{{ task.uuid }}-menu" class="hidden"></tr>
+            {% empty %}
+                <tr class="contents">
+                    <td class="lg:col-span-3">
+                        {% if section.has_tasks %}
+                            {% translate "No tasks found for your search." %}
+                        {% else %}
+                            {% translate "No tasks in this section." %}
+                            {% if can_create_task %}
+                                {% anchor 'dashboard:sections:create-task' label=_("Add a task here") section_uuid=section.uuid %}
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if can_create_task %}
+        {% partial quick_add_task %}
+    {% endif %}
+{% endpartialdef section_contents %}
 {% partialdef section %}
-    <section class="flex flex-col"
+    {% has_perm "workspace.update_section" user project.workspace as can_update_section %}
+    <section class="flex flex-col bg-foreground rounded-b-2xl px-4 pb-4 gap-2"
              id="section-{{ section.uuid }}"
              aria-labelledby="section-{{ section.uuid }}-header"
              title="{% blocktranslate with title=section.title project=section.project.title %}{{ title }} section in {{ project }} project{% endblocktranslate %}">
@@ -19,7 +149,7 @@
               hx-include="#task-filter,#team-member-filters,#label-filters"
               aria-label="{% translate "Section actions" %}"
               title="{% blocktranslate with title=section.title %}Actions for {{title}} section{% endblocktranslate %}"
-              class="sticky top-0 flex w-full flex-row items-center justify-between bg-foreground px-4 py-2 gap-3">
+              class="sticky top-0 flex w-full flex-row items-center justify-between bg-foreground py-2 gap-3">
             <input type="hidden" name="action" value="minimize_section">
             <input type="hidden" name="section" value="{{ section.uuid }}">
             <input type="hidden"
@@ -47,120 +177,12 @@
             </div>
         </form>
         {% if not section.minimized %}
-            <table aria-label="{% blocktranslate with section=section.title %}{{section}} tasks{% endblocktranslate %}"
-                   class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4 lg:grid lg:grid-cols-[8fr_3fr_max-content] lg:gap-1 lg:items-center">
-                <thead class="sr-only">
-                    <th class="sr-only">{% translate "Task title" %}</th>
-                    <th class="sr-only">{% translate "Task labels" %}</th>
-                    <th class="sr-only">{% translate "Task actions" %}</th>
-                </thead>
-                <tbody class="contents">
-                    {% for task in section.task_set.all %}
-                        <tr class="flex w-full flex-wrap items-center gap-1 rounded-lg border border-border p-3 lg:contents"
-                            id="task-{{ task.uuid }}-row"
-                            aria-labelledby="task-{{ task.uuid }}-title"
-                            x-data="{ menuOpen: false }">
-                            <td class="flex flex-row items-center gap-2">
-                                {% if can_update_task %}
-                                    <form action="{% url 'dashboard:projects:detail' section.project.uuid %}"
-                                          method="post"
-                                          hx-post="{% url 'dashboard:projects:detail' section.project.uuid %}"
-                                          hx-target="#section-{{ section.uuid }}"
-                                          hx-swap="outerHTML"
-                                          hx-include="#task-filter,#team-member-filters,#label-filters"
-                                          hx-disabled-elt="find button"
-                                          class="flex">
-                                        <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
-                                        <input type="hidden"
-                                               name="done"
-                                               value="{% if task.done %}false{% else %}true{% endif %}">
-                                        {% csrf_token %}
-                                        <button type="submit"
-                                                name="action"
-                                                value="mark_task_done"
-                                                class="size-6 flex items-center justify-center rounded border-2 transition-colors {% if task.done %}bg-primary border-primary text-primary-content{% else %}border-border hover:border-primary{% endif %} disabled:opacity-50 disabled:cursor-not-allowed"
-                                                aria-label="{% if task.done %}{% translate 'Mark task as not done' %}{% else %}{% translate 'Mark task as done' %}{% endif %}"
-                                                title="{% if task.done %}{% translate 'Mark task as not done' %}{% else %}{% translate 'Mark task as done' %}{% endif %}">
-                                            {% if task.done %}
-                                                {% icon "check" size=4 color="white" %}
-                                            {% endif %}
-                                        </button>
-                                    </form>
-                                {% else %}
-                                    <div class="shrink-0 size-6 flex items-center justify-center rounded border-2 {% if task.done %}bg-primary border-primary text-primary-content{% else %}border-border{% endif %}"
-                                         aria-hidden="true">
-                                        {% if task.done %}
-                                            {% icon "check" size=4 color="white" %}
-                                        {% endif %}
-                                    </div>
-                                {% endif %}
-                                <a href="{% url 'dashboard:tasks:detail' task.uuid %}"
-                                   class="flex flex-row items-start items-center min-w-0 gap-1 self-start sm:gap-6 lg:self-center {% if task.done %}line-through opacity-60{% endif %}">
-                                    <span class="line-clamp-3 justify-self-start hover:text-primary lg:line-clamp-1 lg:h-6"
-                                          id="task-{{ task.uuid }}-title">{{ task.title }}</span>
-                                </a>
-                            </td>
-                            <td class="flex w-full flex-row items-center justify-start gap-1 self-start overflow-x-auto">
-                                {% for label in task.labels.all %}
-                                    <div class="max-w-xs shrink-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-full px-3 py-1 font-bold {{ label.bg_class }} {{ label.text_class }}">
-                                        {{ label.name }}
-                                    </div>
-                                {% endfor %}
-                            </td>
-                            <td class="flex ml-auto">
-                                {% if can_update_task %}
-                                    <form action="{% url 'dashboard:projects:detail' project.uuid %}"
-                                          method="post"
-                                          hx-include="#task-filter,#team-member-filters,#label-filters"
-                                          hx-boost="true"
-                                          hx-target="#section-{{ section.uuid }}"
-                                          hx-swap="outerHTML"
-                                          class="flex flex-row items-center gap-1">
-                                        {# TODO in AT, say "currently assigned to ..." #}
-                                        {% user_avatar task.assignee %}
-                                        <input type="hidden" name="action" value="move_task">
-                                        <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
-                                        {% circle_button label=_("Move task up") value="up" name="direction" disabled=task.first icon_style="chevron-up" %}
-                                        {% circle_button label=_("Move task down") value="down" name="direction" disabled=task.last icon_style="chevron-down" %}
-                                        {% csrf_token %}
-                                        <p class="htmx-indicator">...</p>
-                                    </form>
-                                    <a aria-label="{% translate "Task menu" %}"
-                                       href="{% url "dashboard:tasks:actions" task.uuid %}"
-                                       class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background"
-                                       hx-get="{% url "dashboard:tasks:actions" task.uuid %}"
-                                       hx-target="#task-{{ task.uuid }}-menu"
-                                       hx-swap="outerHTML">{% icon "dots-horizontal" %}</a>
-                                {% else %}
-                                    <div class="flex flex-row items-center gap-1">{% user_avatar task.assignee %}</div>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        <tr id="task-{{ task.uuid }}-menu" class="hidden"></tr>
-                    {% empty %}
-                        <tr class="contents">
-                            <td class="lg:col-span-3">
-                                {% if section.has_tasks %}
-                                    {% translate "No tasks found for your search." %}
-                                {% else %}
-                                    {% translate "No tasks in this section." %}
-                                    {% if can_create_task %}
-                                        {% anchor 'dashboard:sections:create-task' label=_("Add a task here") section_uuid=section.uuid %}
-                                    {% endif %}
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            {% partial section_contents %}
         {% endif %}
     </section>
 {% endpartialdef section %}
 {% block dashboard_content %}
     {% has_perm "workspace.create_section" user project.workspace as can_create_section %}
-    {% has_perm "workspace.update_section" user project.workspace as can_update_section %}
-    {% has_perm "workspace.create_task" user project.workspace as can_create_task %}
-    {% has_perm "workspace.update_task" user project.workspace as can_update_task %}
     <main id="main"
           title="{% blocktranslate with title=project.title ws=project.workspace.title %}{{ title }} project in {{ ws }} workspace {% endblocktranslate %}"
           class="min-w-0 grow flex flex-col items-center gap-4 bg-background py-4">

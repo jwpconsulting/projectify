@@ -208,6 +208,174 @@ class TestProjectDetailViewActions:
         """Return URL to this view."""
         return reverse("dashboard:projects:detail", args=(project.uuid,))
 
+    def test_quick_add_task_success(
+        self,
+        user_client: Client,
+        resource_url: str,
+        section: Section,
+        team_member: TeamMember,
+    ) -> None:
+        """Test successfully creating a task via quick add."""
+        initial_count = Task.objects.count()
+        s_uid = str(section.uuid)
+        data = {"action": "quick_add_task", "section": s_uid, "title": "title"}
+        assert user_client.post(resource_url, data).status_code == 200
+        assert Task.objects.count() == initial_count + 1
+
+        # Test form validation
+        data = {"action": "quick_add_task", "section": s_uid}
+        assert user_client.post(resource_url, data).status_code == 400
+        assert Task.objects.count() == initial_count + 1
+
+    @pytest.mark.parametrize(
+        "initial_state,post_value,expected_state",
+        [
+            (False, "true", True),
+            (True, "false", False),
+        ],
+    )
+    def test_toggle_team_member_filter(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        initial_state: bool,
+        post_value: str,
+        expected_state: bool,
+    ) -> None:
+        """Test toggling the team member filter minimized state."""
+        team_member.minimized_team_member_filter = initial_state
+        team_member.save()
+
+        data = {
+            "action": "minimize_team_member_filter",
+            "team_member_filter_minimized": post_value,
+        }
+        response = user_client.post(resource_url, data)
+        assert response.status_code == 200
+
+        team_member.refresh_from_db()
+        assert team_member.minimized_team_member_filter is expected_state
+
+    @pytest.mark.parametrize(
+        "initial_state,post_value,expected_state",
+        [
+            (False, "true", True),
+            (True, "false", False),
+        ],
+    )
+    def test_toggle_label_filter(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        initial_state: bool,
+        post_value: str,
+        expected_state: bool,
+    ) -> None:
+        """Test toggling the label filter minimized state."""
+        team_member.minimized_label_filter = initial_state
+        team_member.save()
+
+        data = {
+            "action": "minimize_label_filter",
+            "label_filter_minimized": post_value,
+        }
+        response = user_client.post(resource_url, data)
+        assert response.status_code == 200
+
+        team_member.refresh_from_db()
+        assert team_member.minimized_label_filter is expected_state
+
+    def test_minimize_preserves_get_parameters(
+        self,
+        user_client: Client,
+        team_member: TeamMember,
+        resource_url: str,
+    ) -> None:
+        """Test that GET parameters are preserved after minimize action."""
+        response = user_client.post(
+            resource_url,
+            {
+                "action": "minimize_team_member_filter",
+                "filter_by_team_member": team_member.uuid,
+                "minimized": "true",
+            },
+        )
+        assert response.status_code == 200
+        pattern = rf'<input[^>]*name="filter_by_team_member"[^>]*value="{team_member.uuid}"[^>]*checked[^>]*>'
+        assert re.search(
+            pattern, response.content.decode()
+        ), "Team member filter checkbox should be checked"
+
+    @pytest.mark.parametrize(
+        "initial_state,form_value,expected_final_state, query_count",
+        [
+            # query count up from   19 -> 22 due to permission checks in tmplt
+            # query count down from 22 -> 20
+            (False, "true", True, 20),  # minimize section
+            (True, "false", False, 22),  # expand section
+        ],
+    )
+    def test_section_minimize_toggle(
+        self,
+        user_client: Client,
+        team_member: TeamMember,
+        section: Section,
+        initial_state: bool,
+        form_value: str,
+        expected_final_state: bool,
+        query_count: int,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test minimizing and expanding a section."""
+        if initial_state:
+            section.minimized_by.add(team_member.user)
+
+        assert (
+            section.minimized_by.filter(pk=team_member.user.pk).exists()
+            == initial_state
+        )
+
+        url = reverse(
+            "dashboard:projects:detail", args=(section.project.uuid,)
+        )
+
+        with django_assert_num_queries(query_count):
+            response = user_client.post(
+                url,
+                {
+                    "action": "minimize_section",
+                    "section": str(section.uuid),
+                    "minimized": form_value,
+                },
+            )
+            assert response.status_code == 200
+
+        section.refresh_from_db()
+        assert (
+            section.minimized_by.filter(pk=team_member.user.pk).exists()
+            == expected_final_state
+        )
+
+    def test_minimize_section_not_found(
+        self,
+        user_client: Client,
+        team_member: TeamMember,
+        project: Project,
+    ) -> None:
+        """Test minimize view with non-existent section."""
+        url = reverse("dashboard:projects:detail", args=(project.uuid,))
+        response = user_client.post(
+            url,
+            {
+                "action": "minimize_section",
+                "section": str(uuid4()),
+                "minimized": "true",
+            },
+        )
+        assert response.status_code == 400
+
     def test_move_task_up_down(
         self,
         user_client: Client,
@@ -700,162 +868,3 @@ class TestProjectDeleteView:
         )
         response = user_client.post(url)
         assert response.status_code == 404
-
-
-class TestProjectDetailMinimize:
-    """Test minimize functionality in project detail view."""
-
-    @pytest.fixture
-    def resource_url(self, project: Project) -> str:
-        """Return URL to project detail view."""
-        return reverse(
-            "dashboard:projects:detail",
-            args=(project.uuid,),
-        )
-
-    @pytest.mark.parametrize(
-        "initial_state,post_value,expected_state",
-        [
-            (False, "true", True),
-            (True, "false", False),
-        ],
-    )
-    def test_toggle_team_member_filter(
-        self,
-        user_client: Client,
-        resource_url: str,
-        team_member: TeamMember,
-        initial_state: bool,
-        post_value: str,
-        expected_state: bool,
-    ) -> None:
-        """Test toggling the team member filter minimized state."""
-        team_member.minimized_team_member_filter = initial_state
-        team_member.save()
-
-        data = {
-            "action": "minimize_team_member_filter",
-            "team_member_filter_minimized": post_value,
-        }
-        response = user_client.post(resource_url, data)
-        assert response.status_code == 200
-
-        team_member.refresh_from_db()
-        assert team_member.minimized_team_member_filter is expected_state
-
-    @pytest.mark.parametrize(
-        "initial_state,post_value,expected_state",
-        [
-            (False, "true", True),
-            (True, "false", False),
-        ],
-    )
-    def test_toggle_label_filter(
-        self,
-        user_client: Client,
-        resource_url: str,
-        team_member: TeamMember,
-        initial_state: bool,
-        post_value: str,
-        expected_state: bool,
-    ) -> None:
-        """Test toggling the label filter minimized state."""
-        team_member.minimized_label_filter = initial_state
-        team_member.save()
-
-        data = {
-            "action": "minimize_label_filter",
-            "label_filter_minimized": post_value,
-        }
-        response = user_client.post(resource_url, data)
-        assert response.status_code == 200
-
-        team_member.refresh_from_db()
-        assert team_member.minimized_label_filter is expected_state
-
-    def test_minimize_preserves_get_parameters(
-        self,
-        user_client: Client,
-        team_member: TeamMember,
-        resource_url: str,
-    ) -> None:
-        """Test that GET parameters are preserved after minimize action."""
-        response = user_client.post(
-            resource_url,
-            {
-                "action": "minimize_team_member_filter",
-                "filter_by_team_member": team_member.uuid,
-                "minimized": "true",
-            },
-        )
-        assert response.status_code == 200
-        pattern = rf'<input[^>]*name="filter_by_team_member"[^>]*value="{team_member.uuid}"[^>]*checked[^>]*>'
-        assert re.search(
-            pattern, response.content.decode()
-        ), "Team member filter checkbox should be checked"
-
-    @pytest.mark.parametrize(
-        "initial_state,form_value,expected_final_state",
-        [
-            (False, "true", True),  # minimize section
-            (True, "false", False),  # expand section
-        ],
-    )
-    def test_section_minimize_toggle(
-        self,
-        user_client: Client,
-        team_member: TeamMember,
-        section: Section,
-        initial_state: bool,
-        form_value: str,
-        expected_final_state: bool,
-        django_assert_num_queries: DjangoAssertNumQueries,
-    ) -> None:
-        """Test minimizing and expanding a section."""
-        if initial_state:
-            section.minimized_by.add(team_member.user)
-
-        assert (
-            section.minimized_by.filter(pk=team_member.user.pk).exists()
-            == initial_state
-        )
-
-        url = reverse(
-            "dashboard:projects:detail", args=(section.project.uuid,)
-        )
-
-        # Gone up from 19 -> 22 due to permission checks in template
-        with django_assert_num_queries(22):
-            response = user_client.post(
-                url,
-                {
-                    "action": "minimize_section",
-                    "section": str(section.uuid),
-                    "minimized": form_value,
-                },
-            )
-            assert response.status_code == 200
-
-        section.refresh_from_db()
-        assert (
-            section.minimized_by.filter(pk=team_member.user.pk).exists()
-            == expected_final_state
-        )
-
-    def test_minimize_section_not_found(
-        self,
-        user_client: Client,
-        team_member: TeamMember,
-        project: Project,
-    ) -> None:
-        """Test minimize view with non-existent section."""
-        url = reverse("dashboard:projects:detail", args=(project.uuid,))
-        response = user_client.post(
-            url,
-            {
-                "action": "minimize_section",
-                "section": str(uuid4()),
-                "minimized": "true",
-            },
-        )
-        assert response.status_code == 400

@@ -40,7 +40,7 @@ from ..services.project import (
     project_update,
 )
 from ..services.section import section_minimize
-from ..services.task import task_mark_done, task_move_in_direction
+from ..services.task import task_create, task_mark_done, task_move_in_direction
 from ..services.team_member import (
     team_member_minimize_label_filter,
     team_member_minimize_team_member_filter,
@@ -181,6 +181,21 @@ class ProjectFilterForm(forms.Form):
         return data
 
 
+class TaskQuickAddForm(forms.Form):
+    """Form for adding tasks with just a title."""
+
+    title = forms.CharField(label=_("Task title"), required=True)
+
+    def __init__(self, project: Project, *args: Any, **kwargs: Any) -> None:
+        """Initialize form with section choices from project."""
+        super().__init__(*args, **kwargs)
+        self.fields["section"] = forms.ModelChoiceField(
+            queryset=project.section_set.all(),
+            to_field_name="uuid",
+            widget=forms.HiddenInput(),
+        )
+
+
 class SectionMinimizeForm(forms.Form):
     """Form for handling section minimize actions."""
 
@@ -245,6 +260,19 @@ def _project_detail_view_actions(
     enrich_section: Optional[Section] = None
     context: dict[str, Any] = {}
     match request.method, request.POST.get("action"):
+        case "POST", "quick_add_task":
+            form = TaskQuickAddForm(project=project, data=request.POST)
+            if not form.is_valid():
+                raise BadRequest(
+                    _(
+                        "Task quick create form not valid. Errors={errors}"
+                    ).format(errors=form.errors)
+                )
+            section: Section = form.cleaned_data["section"]
+            enrich_section = section
+            title = form.cleaned_data["title"]
+            task_create(who=request.user, section=section, title=title)
+            template = "workspace/project_detail.html#section"
         case "POST", "minimize_section":
             section_minimize_form = SectionMinimizeForm(
                 project=project, data=request.POST
@@ -263,7 +291,7 @@ def _project_detail_view_actions(
                 minimized=minimized,
             )
 
-            template = "workspace/project_detail/section.html"
+            template = "workspace/project_detail.html#section"
         case "POST", "move_task":
             task_move_form = TaskMoveForm(project=project, data=request.POST)
             if not task_move_form.is_valid():
@@ -275,7 +303,7 @@ def _project_detail_view_actions(
                 task=task,
                 direction=task_move_form.cleaned_data["direction"],
             )
-            template = "workspace/project_detail/section.html"
+            template = "workspace/project_detail.html#section"
         case "POST", "mark_task_done":
             task_mark_done_form = TaskMarkDoneForm(
                 project=project, data=request.POST
@@ -289,7 +317,7 @@ def _project_detail_view_actions(
                 task=task,
                 done=task_mark_done_form.cleaned_data["done"],
             )
-            template = "workspace/project_detail/section.html"
+            template = "workspace/project_detail.html#section"
         case "POST", "minimize_team_member_filter":
             team_member_minimize_team_member_filter(
                 team_member=team_member,
@@ -303,6 +331,10 @@ def _project_detail_view_actions(
                 minimized=request.POST.get("label_filter_minimized") == "true",
             )
             template = "workspace/common/sidemenu/project_details.html"
+        case "POST", action:
+            raise BadRequest(
+                _("Unrecognized action '{action}'").format(action=action)
+            )
         case _:
             pass
 
@@ -382,7 +414,10 @@ def project_detail_view(
         if enrich_section
         else None
     )
-    context = {**context, "section": section}
+    context = {
+        **context,
+        "section": section,
+    }
 
     # Mark this project as most recently visited
     team_member_visit_project(team_member=team_member, project=project)
@@ -410,6 +445,7 @@ def project_detail_view(
         "has_team_member_filter": filter_by_team_member is not None
         or filter_by_unassigned,
         "has_label_filter": filter_by_label is not None or filter_by_unlabeled,
+        "quick_add_task": TaskQuickAddForm(project=project),
     }
     return render(request, template, context)
 

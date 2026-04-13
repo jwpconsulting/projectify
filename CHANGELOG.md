@@ -8,6 +8,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## Unrelease
 
+### Enhancement
+
+- Add quick add task field at the bottom of each seciton
+
 ### Internal
 
 - Update `bin/prepare-release` script to commit the changelog in `CHANGELOG.md`
