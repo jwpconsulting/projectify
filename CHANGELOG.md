@@ -6,6 +6,17 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Changelog
 
+## Unrelease
+
+### Internal
+
+- Update `bin/prepare-release` script to commit the changelog in `CHANGELOG.md`
+  as well.
+
+### Documentation
+
+- Add release preparation guide in `docs/release.md`.
+
 ## 2026.4.13
 
 ### Enhancement
