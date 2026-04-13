@@ -259,6 +259,28 @@ def log_in_first(request: AuthenticatedHttpRequest) -> HttpResponse: ...
 - To style templates, Projectify uses [Tailwind version 3](https://v3.tailwindcss.com/). Refer to the tailwind
 configuration at `tailwind.config.js`.
 
+## Template includes
+
+### Submit button
+
+Here's the standard submit button for Projectify:
+
+```jinja
+{% load i18n %}
+{% include "projectify/forms/submit.html" with text=_("Submit form") %}
+{# Custom form name and value #}
+{% include "projectify/forms/submit.html" with name="action" value="update" text=_("Update task") %}
+{# Bind to different form #}
+{% include "projectify/forms/submit.html" with form_name="other-form-name" text=_("Update task") %}
+```
+
+Parameters:
+
+- `name`: Form name
+- `value`: Value to submit
+- `form_name`: Specify HTML form to bind to
+- `text`: Show this text inside the button
+
 ## Template tags
 
 This is a guide for using the template tags in the Projectify Django app.
