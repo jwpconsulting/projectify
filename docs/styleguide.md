@@ -241,6 +241,16 @@ chainability. Selectors should generally not be chained.
 - Prefer function-based views over class based views.
 - Django views must return HTTP status `400` for validation errors.
 
+### Platform view
+
+Use the `platform_view` decorator from `projectify/lib/views.py` for
+view functions that require users to log in. Example:
+
+```python
+@platform_view
+def log_in_first(request: AuthenticatedHttpRequest) -> HttpResponse: ...
+```
+
 ## Templates
 
 - The app uses Django templates (not Jinja2).
