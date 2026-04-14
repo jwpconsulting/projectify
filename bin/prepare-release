@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# SPDX-FileCopyrightText: 2025 JWP Consulting GK
+# SPDX-FileCopyrightText: 20252-2026 JWP Consulting GK
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
-# Prepare a new version to be release
+# Prepare a new version to be released
 set -e
 version="$(date "+%Y.%-m.%-d")"
 echo "Version: $version"
@@ -15,7 +15,7 @@ printf "About to run %s\nContinue? (c-c to exit)" "$next_cmd"
 read -r _
 eval "$next_cmd"
 
-next_cmd=$(printf "git add %s %s" "$PYPROJECT_TOML" "$UV_LOCK")
+next_cmd=$(printf "git add %s %s" "$PYPROJECT_TOML" "$UV_LOCK" "CHANGELOG.md")
 printf "about to run %s\nContinue? (c-c to exit)" "$next_cmd"
 read -r _
 eval "$next_cmd"

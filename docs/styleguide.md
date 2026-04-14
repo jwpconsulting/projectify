@@ -241,13 +241,261 @@ chainability. Selectors should generally not be chained.
 - Prefer function-based views over class based views.
 - Django views must return HTTP status `400` for validation errors.
 
+### Platform view
+
+Use the `platform_view` decorator from `projectify/lib/views.py` for
+view functions that require users to log in. Example:
+
+```python
+@platform_view
+def log_in_first(request: AuthenticatedHttpRequest) -> HttpResponse: ...
+```
+
 ## Templates
 
 - The app uses Django templates (not Jinja2).
 - The app uses HTMX and only sometimes alpine.js
-- Refer to `docs/templatetags.md` for guidance what template tags to use.
+- Refer to the **Template tags** section for guidance on what template tags to use.
 - To style templates, Projectify uses [Tailwind version 3](https://v3.tailwindcss.com/). Refer to the tailwind
 configuration at `tailwind.config.js`.
+
+## Template includes
+
+### Submit button
+
+Here's the standard submit button for Projectify:
+
+```jinja
+{% load i18n %}
+{% include "projectify/forms/submit.html" with text=_("Submit form") %}
+{# Custom form name and value #}
+{% include "projectify/forms/submit.html" with name="action" value="update" text=_("Update task") %}
+{# Bind to different form #}
+{% include "projectify/forms/submit.html" with form_name="other-form-name" text=_("Update task") %}
+```
+
+Parameters:
+
+- `name`: Form name
+- `value`: Value to submit
+- `form_name`: Specify HTML form to bind to
+- `text`: Show this text inside the button
+
+## Template tags
+
+This is a guide for using the template tags in the Projectify Django app.
+
+### Permissions
+
+Use the `has_perm` template tags from django rules like so:
+
+```jinja
+{% load rules %}
+{% has_perm "workspace.create_team_member" user workspace as can_create_team_member %}
+{% if can_create_team_member %}
+  ...
+{% endif %}
+```
+
+Here's how the project settings menu makes the project update link read-only:
+
+```jinja
+{# projectify/workspace/templates/workspace/workspace_settings_projects.html #}
+{% has_perm "workspace.update_project" user workspace as can_update_project %}
+{% if can_update_project %}
+    <a href="{% url 'dashboard:projects:update' project_uuid=project.uuid %}"
+       class="flex items-center gap-1 text-primary truncate">
+        <span class="truncate">{{ project }}</span>
+        <div class="w-4 h-4 shrink-0">{% icon "pencil" %}</div>
+    </a>
+{% else %}
+    <span class="truncate">{{ project }}</span>
+{% endif %}
+```
+
+See `projectify/rules.py` for all rules.
+
+### Custom template tags
+
+You can find the source code for the template tags in
+`projectify/templatetags/projectify.py`
+
+#### Percent
+
+Formats a value as a percentage. Example:
+
+```jinja
+{% load projectify %}
+{% percentage 100 %}
+```
+
+Renders to
+
+```html
+TODO
+```
+
+#### Anchor
+
+Create an anchor with Tailwind styling. Usage:
+
+```html
+{% load projectify %}
+{% anchor href="/" label=_("Learn more") external=True %}
+```
+
+This renders to the following. The styling is subject to change.
+
+```html
+<!-- TODO update -->
+<a href="/"
+   class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
+   target="_blank"
+  >Learn more<
+  span class="sr-only">(Opens in new tab)</span>
+  <svg ...></svg>
+</a>
+```
+
+You can also remove `external=True`, or instead set `external=False`:
+
+```jinja2
+{% load projectify %}
+{% anchor href="/" label=_("Learn more") %}
+```
+
+This renders to the following:
+
+```html
+<!-- TODO update -->
+<a href="/"
+   class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"
+   target="_blank"
+  >Learn more</a>
+```
+
+You can also use the `anchor` template tag with a view name like so:
+
+```jinja
+{% load projectify %}
+{% anchor href='dashboard:projects:update' label=_("Update") project_uuid=project.uuid %}
+```
+
+#### Circle button
+
+Render a circular form `<button>`.
+
+Example:
+
+```jinja2
+{% load projectify %}
+{% circle_button TODO %}
+```
+
+#### Circle anchor
+
+Render a circular icon with an anchor tag.
+
+Available sizes:
+
+- `4`
+- `6`
+
+Example:
+
+```jinja2
+{% load projectify %}
+{% circle_anchor TODO %}
+```
+
+#### Action button
+
+Render a form action button. Available colors:
+
+- `secondary`
+- `destructive`
+
+Example:
+
+```jinja2
+{% load projectify %}
+{% circle_anchor TODO %}
+```
+
+#### Go to action
+
+Render a call to action anchor tag. Available colors:
+
+- `primary`
+- `secondary`
+- `destructive`
+
+Example:
+
+```jinja2
+{% load projectify %}
+TODO
+```
+
+#### Icon
+
+Render a heroicon. Available colors:
+
+- `primary`
+- `secondary`
+- `destructive`
+
+Sizes:
+
+- `4`
+- `6`
+
+Example:
+
+```jinja2
+TODO
+```
+
+#### User avatar
+
+Render a user avatar using the `user_avatar` template tag:
+
+```jinja
+{% load projectify %}
+{% user_avatar user %}
+```
+
+If the user has a picture set, it renders to the following:
+
+```html
+<!-- TODO update -->
+<div class="..."><img src="..." alt="user's preferred name"></div>
+```
+
+If there's not picture, it renders the following:
+
+```html
+<!-- TODO update -->
+<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary bg-base-200"></div>
+```
+
+#### Picture
+
+Render a `<picture>` tag with an image from static files:
+
+```jinja
+{% load projectify %}
+{% picture src="image-of-cute-cats.png" alt="Cute cats" klass="w-8" %}
+```
+
+This renders to:
+
+```html
+<picture>
+<img src="image-of-cute-cats.png" alt="Cute cats" width="180" height="180"
+    class="w-8">
+</picture>
+```
 
 # Testing
 
