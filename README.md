@@ -12,6 +12,8 @@ inspect, customize and distribute according to their needs.
 Official instance:
 [https://www.projectifyapp.com](https://www.projectifyapp.com).
 
+PyPI package: [projectify-app](https://pypi.org/project/projectify-app/)
+
 # Try it out
 ![Try out a demo instance on your own computer](docs/projectify-demo.png)
 
