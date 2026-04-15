@@ -16,7 +16,7 @@ def post_list_published(
 ) -> QuerySet[Post]:
     """Return published posts without content."""
     today = timezone.now().date()
-    posts = Post.objects.filter(published__lte=today)
+    posts = Post.objects.filter(published__lte=today, draft=False)
     if exclude:
         posts = posts.exclude(pk=exclude.pk)
     if with_body:
@@ -28,14 +28,16 @@ def post_list_published(
 def post_list_published_with_body() -> QuerySet[Post]:
     """Return published posts with content for RSS feed."""
     today = timezone.now().date()
-    return Post.objects.filter(published__lte=today).select_related("body")
+    return Post.objects.filter(
+        published__lte=today, draft=False
+    ).select_related("body")
 
 
 def post_find_by_slug(*, slug: str) -> Optional[Post]:
     """Find a post by slug."""
     today = timezone.now().date()
     return (
-        Post.objects.filter(slug=slug, published__lte=today)
+        Post.objects.filter(slug=slug, published__lte=today, draft=False)
         .select_related("body")
         .first()
     )
