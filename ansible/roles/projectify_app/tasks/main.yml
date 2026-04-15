@@ -248,11 +248,16 @@
     - name: Set release directory name
       ansible.builtin.set_fact:
           release_dir: "{{ projectify_releases_root }}/{{ ansible_date_time.date }}_{{ git_clone.after[:7] }}"
-    # TODO remove failed build
     - name: Check if release already exists
       ansible.builtin.stat:
           path: "{{ release_dir }}"
       register: release_exists
+    - name: Skip remaining release steps if release already exists
+      ansible.builtin.meta: end_play
+      when: release_exists.stat.exists
+    - name: Mark release as new
+      ansible.builtin.set_fact:
+          new_release: true
     - name: Create release directory
       ansible.builtin.file:
           path: "{{ release_dir }}"
@@ -260,22 +265,18 @@
           owner: projectify
           group: projectify
           mode: '0755'
-      when: not release_exists.stat.exists
     - name: Move cloned repository to release directory
       ansible.builtin.command:
           cmd: "mv /tmp/projectify_clone {{ release_dir }}/app"
-      when: not release_exists.stat.exists
     - name: Create virtual environment and upgrade pip in venv
       ansible.builtin.pip:
           name: pip
           state: latest
           virtualenv: "{{ release_dir }}/venv"
-      when: not release_exists.stat.exists
     - name: Install Python dependencies from requirements.txt
       ansible.builtin.pip:
           requirements: "{{ release_dir }}/app/requirements.txt"
           virtualenv: "{{ release_dir }}/venv"
-      when: not release_exists.stat.exists
     - name: Run collectstatic
       ansible.builtin.command:
           cmd: "{{ release_dir }}/venv/bin/python ./manage.py collectstatic --noinput"
@@ -284,7 +285,6 @@
           DJANGO_SETTINGS_MODULE: projectify.settings.collect_static
           DJANGO_CONFIGURATION: CollectStatic
           STATIC_ROOT: "{{ release_dir }}/static"
-      when: not release_exists.stat.exists
     - name: Run database migrations
       ansible.builtin.command:
           cmd: "{{ release_dir }}/venv/bin/python ./manage.py migrate --noinput"
@@ -296,7 +296,6 @@
           STATIC_ROOT: "{{ release_dir }}/static"
           DATABASE_URL: "{{ database_url }}"
           CREDENTIALS_FILE: "{{ credentials_file }}"
-      when: not release_exists.stat.exists
     - name: Create symbolic link for current release
       ansible.builtin.file:
           src: "{{ release_dir }}"
@@ -305,6 +304,14 @@
           owner: projectify
           group: projectify
           force: yes
+  rescue:
+    - name: Remove failed release directory
+      ansible.builtin.file:
+          path: "{{ release_dir }}"
+          state: absent
+    - name: Fail after cleaning up failed release
+      ansible.builtin.fail:
+          msg: "Release build failed. Removed incomplete release directory {{ release_dir }}."
   become: true
   become_user: projectify
   tags:
@@ -362,8 +369,7 @@
           name: gunicorn.service
           enabled: true
           state: restarted
-      # Run only when creating new release
-      when: not release_exists.stat.exists
+      when: new_release | default(false)
     - name: Check gunicorn health
       ansible.builtin.command:
           cmd: curl --unix-socket /run/gunicorn.sock {{ hostname }}
