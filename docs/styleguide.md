@@ -67,6 +67,45 @@ from ...services.internal import Token
 from projectify.user.services.internal import Token
 ```
 
+# JavaScript
+
+This project uses vanilla scripts in some templates. This project also
+relies on HTMX.
+
+Style conventions for writing JavaScript:
+
+- Write strings with `"` quotes instead of `'`.
+- Use four spaces of indentation (see `.editorconfig`, too)
+- Try to return early in functions.
+
+Prefer template strings. Example:
+
+```javascript
+// Avoid
+'task-' + taskUuid + '-menu'
+// Better
+`task-${taskUuid}-menu`
+```
+
+When you're looking for elements inside the DOM with `getElementById`
+and this element is *definitely* supposed to be there, throw an error.
+Example:
+
+```javascript
+// BAD
+table = section.querySelector("table");
+// There'll be no useful output for developers when the table is missing
+if (table) {
+  doThingWithTable(table);
+}
+// GOOD
+table = section.querySelector("table");
+if (table === undefined) {
+    throw new Error("Couldn't find table within this section");
+}
+doThingWithTable(table);
+```
+
 # Django
 
 Projectify uses Django.
@@ -255,6 +294,10 @@ def log_in_first(request: AuthenticatedHttpRequest) -> HttpResponse: ...
 
 - The app uses Django templates (not Jinja2).
 - The app uses HTMX, see `docs/frontend-scripting.md` for more.
+- You can't use unsafe inline JavaScript or CSS. Use a `<script>` tag intead.
+- You can't use HTMX's `hx-on` because that requires inline unsafe JavaScript.
+- You can't use HTML `onclick` and similar event properties because that
+  requires unsafe inline JavaScript.
 - Refer to the **Template tags** section for guidance on what template tags to use.
 - To style templates, Projectify uses [Tailwind version 3](https://v3.tailwindcss.com/). Refer to the tailwind
 configuration at `tailwind.config.js`.
