@@ -184,7 +184,10 @@ class ProjectFilterForm(forms.Form):
 class TaskQuickAddForm(forms.Form):
     """Form for adding tasks with just a title."""
 
-    title = forms.CharField(label=_("Task title"), required=True)
+    title = forms.CharField(
+        label=_("Task title"),
+        widget=forms.TextInput(attrs={"placeholder": _("Add a task")}),
+    )
 
     def __init__(self, project: Project, *args: Any, **kwargs: Any) -> None:
         """Initialize form with section choices from project."""

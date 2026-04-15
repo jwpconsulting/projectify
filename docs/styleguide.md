@@ -280,6 +280,11 @@ chainability. Selectors should generally not be chained.
 - Prefer function-based views over class based views.
 - Django views must return HTTP status `400` for validation errors.
 
+## Forms
+
+- If a form field is required, don't specify `required=True`. Form fields
+are `required=True` by default.
+
 ### Platform view
 
 Use the `platform_view` decorator from `projectify/lib/views.py` for
