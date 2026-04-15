@@ -8,7 +8,12 @@
     <div class="grid lg:grid-cols-[2fr_1fr] gap-8">
         <article class="min-w-0 flex flex-col gap-8">
             <header class="flex flex-col gap-4">
-                <h1 class="text-4xl font-bold">{{ post.title }}</h1>
+                <h1 class="text-4xl font-bold">
+                    {{ post.title }}
+                    {% if post.draft %}
+                        {% translate "DRAFT" %}
+                    {% endif %}
+                </h1>
                 <div class="flex flex-col gap-1">
                     <p>{% translate "By" %} {{ post.author }}</p>
                     <time>

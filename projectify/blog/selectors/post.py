@@ -8,7 +8,20 @@ from typing import Optional
 from django.db.models import QuerySet
 from django.utils import timezone
 
+from projectify.user.models import User
+
 from ..models import Post
+
+
+def post_find_draft_by_slug(*, slug: str, who: User) -> Optional[Post]:
+    """Find a draft post by slug. Only accessible to staff users."""
+    if not who.is_staff:
+        return None
+    return (
+        Post.objects.filter(slug=slug, draft=True)
+        .select_related("body")
+        .first()
+    )
 
 
 def post_list_published(
