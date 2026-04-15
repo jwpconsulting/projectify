@@ -55,6 +55,15 @@ class Workspace(TitleDescriptionModel, BaseModel):
     # Since it involves additional queries, it is None by default
     quota: Optional[WorkspaceQuota] = None
 
+    # Map User primary keys to team member roles
+    # This might contain stale roles but only if this object isn't recreated
+    role_cache: dict[int, TeamMemberRoles]
+
+    def __init__(self, *args: Any, **kwargs: Any):
+        """Create role cache."""
+        super().__init__(*args, **kwargs)
+        self.role_cache = {}
+
     if TYPE_CHECKING:
         # Related fields
         customer: RelatedField[None, "Customer"]
@@ -72,11 +81,12 @@ class Workspace(TitleDescriptionModel, BaseModel):
 
     def refresh_from_db(self, *args: Any, **kwargs: Any) -> None:
         """
-        Clear active_invites.
+        Clear active_invites and role_cache.
 
         This is a workaround so that invites get removed after deleting them.
         """
         setattr(self, "active_invites", [])
+        self.role_cache = {}
         super().refresh_from_db(*args, **kwargs)
 
     class Meta:
@@ -426,6 +436,7 @@ class TeamMember(BaseModel):
         # Related
         user_invite: RelatedField[None, "UserInvite"]
         task_set: RelatedManager["Task"]
+        workspace_id: int
 
     def __str__(self) -> str:
         """Return title."""

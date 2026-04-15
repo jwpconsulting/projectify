@@ -71,7 +71,7 @@ def team_member_visit_project(
     *, team_member: TeamMember, project: Project
 ) -> None:
     """Mark a workspace and project as recently visited."""
-    assert team_member.workspace == project.workspace
+    assert team_member.workspace_id == project.workspace.pk
     team_member.last_visited_project = project
     team_member.last_visited_workspace = now()
     team_member.save()

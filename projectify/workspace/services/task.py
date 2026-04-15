@@ -107,18 +107,10 @@ def task_update(
 
 
 @transaction.atomic
-def task_mark_done(
-    *,
-    who: User,
-    task: Task,
-    done: bool,
-) -> Task:
+def task_mark_done(*, who: User, task: Task, done: bool) -> Task:
     """Assign labels, assign assignee."""
     validate_perm("workspace.update_task", who, task.workspace)
-    if done:
-        task.done = now()
-    else:
-        task.done = None
+    task.done = now() if done else None
     task.save()
     return task
 

@@ -34,7 +34,7 @@ class TestTaskCreateView:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test GETting the task creation page."""
-        # Gone up from 11 -> 13 due to permission checks in sidemenu
+        # Gone up   from 11 -> 13 due to permission checks in sidemenu
         with django_assert_num_queries(13):
             response = user_client.get(resource_url)
             assert response.status_code == 200
@@ -99,7 +99,7 @@ class TestTaskUpdateView:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test GETting the task update page."""
-        # Gone up from 14 -> 16 due to permission checks in sidemenu
+        # Gone up   from 14 -> 16 due to permission checks in sidemenu
         with django_assert_num_queries(16):
             response = user_client.get(resource_url)
             assert response.status_code == 200

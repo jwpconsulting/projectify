@@ -79,6 +79,7 @@ class TestPredicates:
             who=user,
             role=TeamMemberRoles.CONTRIBUTOR,
         )
+        workspace.refresh_from_db()
         assert rules.is_at_least_contributor(observer.user, workspace)
 
     def test_is_at_least_contributor_unrelated_workspace(
@@ -104,6 +105,7 @@ class TestPredicates:
             who=user,
             role=TeamMemberRoles.MAINTAINER,
         )
+        workspace.refresh_from_db()
         assert rules.is_at_least_maintainer(observer.user, workspace)
 
     def test_is_at_least_maintainer_unrelated_workspace(
@@ -129,6 +131,7 @@ class TestPredicates:
             who=user,
             role=TeamMemberRoles.OWNER,
         )
+        workspace.refresh_from_db()
         assert rules.is_at_least_owner(observer.user, workspace)
 
     def test_is_at_least_owner_unrelated_workspace(
