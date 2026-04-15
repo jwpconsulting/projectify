@@ -15,7 +15,7 @@ printf "About to run %s\nContinue? (c-c to exit)" "$next_cmd"
 read -r _
 eval "$next_cmd"
 
-next_cmd=$(printf "git add %s %s" "$PYPROJECT_TOML" "$UV_LOCK" "CHANGELOG.md")
+next_cmd=$(printf "git add %s %s %s" "$PYPROJECT_TOML" "$UV_LOCK" "CHANGELOG.md")
 printf "about to run %s\nContinue? (c-c to exit)" "$next_cmd"
 read -r _
 eval "$next_cmd"
