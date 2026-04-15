@@ -2409,18 +2409,6 @@ video {
   transition-duration: 200ms;
 }
 
-.htmx-indicator {
-  opacity: 0;
-  visibility: hidden;
-}
-
-.htmx-request .htmx-indicator,
-.htmx-request.htmx-indicator {
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 200ms ease-in;
-}
-
 @keyframes ripple {
   0% {
     opacity: 1;
