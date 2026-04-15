@@ -10,12 +10,32 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ### Enhancement
 
-- Add quick add task field at the bottom of each seciton
+- Add quick add task field at the bottom of each section
+- Show tasks in project dashboard on large screens
+- Improve query count by caching permission validations
+- Speed up section minimizing
+- Speed up task action menu hiding
 
 ### Internal
 
 - Update `bin/prepare-release` script to commit the changelog in `CHANGELOG.md`
   as well.
+- Show draft blog posts
+- Clean up unused tailwind colors
+- Vendor in newer version of HTMX and create build script
+- Refactor project and task detail templates to make use of Django template partials
+- Remove alpine.js
+
+### Documentation
+
+- Improve styleguide at `docs/styleguide.md`.
+- Document how to rebuild HTMX in `docs/frontend-scripting.md`.
+
+### Security
+
+- Update Pillow and Pytest
+- Narrow down CSP configuration and configure HTMX correctly to support
+`{{ csp_nonce }}`
 
 ### Documentation
 

@@ -4,7 +4,7 @@
 
 [project]
 name = "projectify-app"
-version = "2026.4.13"
+version = "2026.4.15"
 description = "Projectify is a Free Software project management app"
 keywords = [
     "project management",
