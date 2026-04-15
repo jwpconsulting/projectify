@@ -169,7 +169,7 @@
                 </form>
                 <a aria-label="{% translate "Task menu" %}"
                    href="{% url "dashboard:tasks:actions" task.uuid %}"
-                   class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background"
+                   class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled"
                    hx-get="{% url "dashboard:tasks:actions" task.uuid %}"
                    hx-target="#task-{{ task.uuid }}-menu"
                    hx-swap="outerHTML">{% icon "dots-horizontal" %}</a>

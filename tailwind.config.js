@@ -45,7 +45,6 @@ const colors = {
     "destructive-pressed": "#7F1D1D", // new
     "destructive-pressed-secondary": "#FCA5A5", // renamed to destructive-secondary-pressed (in missingColors)
     "destructive-secondary": "#FEE2E2", // renamed to destructive-secondary-hover (in missingColors)
-    "disabled-background": "#E2E8F0", // renamed to disabled (in missingColors)
     "disabled-text": "#475569", // new, but not found in Colors spreadsheet
     "display": "#FFFFFF", // new, but not found in Colors spreadsheet
     "error": "#EF4444", // keep

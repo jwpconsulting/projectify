@@ -10,7 +10,7 @@
             {% if request.htmx %}
                 <button type="button"
                         id="close-task-detail-button"
-                        class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background"
+                        class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled"
                         aria-label="{% trans 'Close task details' %}">{% icon "x" %}</button>
             {% else %}
                 {% circle_anchor label=_("Go back to project") icon_style="x" href="dashboard:projects:detail" project_uuid=task.section.project.uuid %}
