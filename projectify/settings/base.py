@@ -114,14 +114,7 @@ class Base(Configuration):  # type:ignore
         "default-src": [CSP.SELF, CSP.NONCE],
         "script-src": [CSP.SELF, CSP.NONCE],
         "font-src": [CSP.SELF],
-        "style-src": [
-            CSP.SELF,
-            CSP.NONCE,
-            # htmx
-            "'sha256-bsV5JivYxvGywDAZ22EZJKBFip65Ng9xoJVLbBg7bdo='",
-            # htmx
-            "'sha256-IOPJoLjlywWMOiXjm9gstcOWbflCWb+PHbhcDgSPqcg='",
-        ],
+        "style-src": [CSP.SELF, CSP.NONCE],
         "img-src": [CSP.SELF],
         "form-action": [
             CSP.SELF,
