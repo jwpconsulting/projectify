@@ -36,6 +36,14 @@ def test_post_detail_not_found(client: Client) -> None:
     assert response.status_code == 404
 
 
+def test_post_detail_redirect(client: Client, post: Post) -> None:
+    """Test that slug without trailing slash redirects permanently."""
+    url = reverse("blog:post_detail", args=[post.slug])
+    response = client.get(f"{url}/")
+    assert response.status_code == 301
+    assert response["Location"] == url
+
+
 def test_uploading_attachments(
     superuser_client: Client, uploaded_file: UploadedFile, png_image: bytes
 ) -> None:

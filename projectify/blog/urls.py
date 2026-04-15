@@ -4,6 +4,7 @@
 """Blog URLs."""
 
 from django.urls import path
+from django.views.generic import RedirectView
 
 from .feeds import LatestPostsFeed
 from .views import post_detail, post_list, serve_picture, upload_attachment
@@ -14,6 +15,10 @@ urlpatterns = [
     path("", post_list, name="post_list"),
     path("upload", upload_attachment, name="upload_attachment"),
     path("serve-picture/<str:name>", serve_picture, name="serve_picture"),
-    path("<slug:slug>/", post_detail, name="post_detail"),
+    path("<slug:slug>", post_detail, name="post_detail"),
+    path(
+        "<slug:slug>/",
+        RedirectView.as_view(pattern_name="blog:post_detail", permanent=True),
+    ),
     path("feed.xml", LatestPostsFeed(), name="feed"),
 ]
