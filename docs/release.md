@@ -34,10 +34,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
      `2026-4-13` with the hyphenated release tag.
   4. **Content**: Write the release post header and copy the release notes
      below that.
-7. Create a new **PyPI release**:
-    1. Run `uv build` to build a new build archive in `dist/`.
-    2. Run `uv publish --token (uv auth token upload.pypi.org)` to upload all
-       releases in `dist/`.
+7. Create a new **PyPI release**: Run `uv build` to build a new build archive in `dist/`.
+   and run `uv publish --token $(uv auth token upload.pypi.org)` to upload all
+   releases in `dist/`:
+   ```bash
+   uv build && uv publish --token $(uv auth token upload.pypi.org)
+   ```
 
 Example GitHub release: <https://github.com/jwpconsulting/projectify/releases/tag/2026.4.13>
 
