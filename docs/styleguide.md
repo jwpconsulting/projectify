@@ -519,7 +519,7 @@ If there's not picture, it renders the following:
 
 ```html
 <!-- TODO update -->
-<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary bg-base-200"></div>
+<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary bg-background"></div>
 ```
 
 #### Picture
