@@ -7,6 +7,39 @@
 {% block title %}
     {% blocktrans with title=project.title %}{{ title }} - Projectify{% endblocktrans %}
 {% endblock title %}
+{% block extrahead %}
+    {{ block.super }}
+    <script nonce="{{ csp_nonce }}">
+        function cleansection(e) {
+            const formData = e.detail.requestConfig.formData;
+            const action = formData.get("action");
+            if (action !== "minimize_section") {
+                return;
+            }
+            const minimized = formData.get("minimized");
+            if (minimized !== "true") {
+                return;
+            }
+            section = e.target.closest("section");
+            if (!section) {
+                throw new Error("Couldn't find section for this form");
+            }
+            table = section.querySelector("table");
+            if (table === undefined) {
+                throw new Error("Couldn't find table within this section");
+            }
+            quickAddForm = table.nextElementSibling;
+
+            table.remove();
+            if (!quickAddForm) {
+                console.debug("No quick add form sibling for this table");
+            } else {
+                quickAddForm.remove();
+            }
+        }
+        document.addEventListener('htmx:beforeRequest', cleansection);
+    </script>
+{% endblock extrahead %}
 {% partialdef quick_add_task %}
     <form hx-post="{% url 'dashboard:projects:detail' section.project.uuid %}"
           hx-target="#section-{{ section.uuid }}"
