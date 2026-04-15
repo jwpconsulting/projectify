@@ -2726,6 +2726,22 @@ video {
 }
 
 @media (min-width: 1024px) {
+  .lg\:fixed {
+    position: fixed;
+  }
+
+  .lg\:bottom-20 {
+    bottom: 5rem;
+  }
+
+  .lg\:right-0 {
+    right: 0px;
+  }
+
+  .lg\:top-20 {
+    top: 5rem;
+  }
+
   .lg\:col-span-3 {
     grid-column: span 3 / span 3;
   }
@@ -2735,6 +2751,10 @@ video {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
+  }
+
+  .lg\:block {
+    display: block;
   }
 
   .lg\:grid {
@@ -2751,6 +2771,14 @@ video {
 
   .lg\:w-1\/2 {
     width: 50%;
+  }
+
+  .lg\:w-1\/3 {
+    width: 33.333333%;
+  }
+
+  .lg\:max-w-2xl {
+    max-width: 42rem;
   }
 
   .lg\:max-w-xs {
@@ -2788,6 +2816,10 @@ video {
   .lg\:text-6xl {
     font-size: 3.75rem;
     line-height: 1;
+  }
+
+  .lg\:empty\:hidden:empty {
+    display: none;
   }
 }
 

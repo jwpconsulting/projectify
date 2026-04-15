@@ -219,7 +219,13 @@ def task_detail(
         "task": task,
         "project": task.section.project,
     }
-    return render(request, "workspace/task_detail.html", context)
+
+    # If HTMX request, return just the panel content
+    if request.htmx:
+        template = "workspace/task_detail.html#task_inline"
+    else:
+        template = "workspace/task_detail.html"
+    return render(request, template, context)
 
 
 class TaskUpdateForm(forms.Form):
