@@ -42,19 +42,26 @@
 {% endpartialdef task_actions_internal %}
 {# inlined from projectify/workspace/templates/workspace/task_actions_dropdown.html #}
 {% partialdef tr_dropdown %}
-    <tr id="task-{{ task.uuid }}-menu"
-        class="contents"
-        x-data="{ open: true }"
-        x-show="open">
+    <tr id="task-{{ task.uuid }}-menu" class="contents">
         <td class="lg:col-span-3 rounded-lg border border-border p-3">
             <div class="flex items-center justify-between">
                 <span class="htmx-indicator">{% translate "Saving..." %}</span>
                 <button aria-label="{% translate "Close task menu" %}"
-                        x-on:click="open = false">{% icon "x" size=4 %}</button>
+                        id="close-task-menu-{{ task.uuid }}">{% icon "x" size=4 %}</button>
             </div>
             {% partial task_actions_internal %}
         </td>
     </tr>
+    <script nonce="{{ csp_nonce }}">
+        function closeTaskMenu(event) {
+            const tr = event.target.closest("tr");
+            if (!tr) {
+                throw new Error("No tr found");
+            }
+            tr.classList.add("hidden");
+        }
+        document.getElementById("close-task-menu-{{ task.uuid }}").addEventListener("click", closeTaskMenu);
+    </script>
 {% endpartialdef tr_dropdown %}
 {% block form_content %}
     <div class="min-w-0 grow flex flex-col gap-4">
