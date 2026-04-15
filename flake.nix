@@ -40,37 +40,19 @@
               cp src/htmx.js $out/htmx.js
             '';
           };
-          htmx-safe-nonce = pkgs.stdenv.mkDerivation rec {
-            pname = "htmx-safe-nonce";
-            version = src.rev;
-            src = pkgs.fetchFromGitHub {
-              owner = "MichaelWest22";
-              repo = "htmx-extensions";
-              rev = "main";
-              sha256 = "sha256-Ae8f/L6i9YuVQUHWnrAnBITZa9STzm3lr9L0c6DY8GY=";
-            };
-            installPhase = ''
-              mkdir $out
-              cp src/safe-nonce/safe-nonce.js $out/safe-nonce.js
-            '';
-          };
 
           # cp $(nix build .#htmx-js --print-out-paths --no-link)/htmx.js projectify/static/htmx.js
           htmx-bundle = pkgs.stdenv.mkDerivation {
             pname = "htmx-bundle";
             version = htmx-js.version;
             dontUnpack = true;
-            buildInputs = [ htmx-js htmx-safe-nonce ];
+            buildInputs = [ htmx-js ];
             installPhase = ''
               mkdir $out
               echo "\
               /*! SPDX-License-Identifier: 0BSD
                   SPDX-FileCopyrightText: NONE */" > $out/htmx.js
               cat ${htmx-js}/htmx.js  >> $out/htmx.js
-              echo "\
-              /*! SPDX-License-Identifier: 0BSD
-                  SPDX-FileCopyrightText: 2023, Alexander Petros */" >> $out/htmx.js
-              cat ${htmx-safe-nonce}/safe-nonce.js >> $out/htmx.js
             '';
           };
         };
