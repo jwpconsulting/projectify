@@ -17,7 +17,10 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods, require_POST
 
 from projectify.lib.forms import RichTextEditor
-from projectify.lib.htmx import HttpResponseClientRefresh
+from projectify.lib.htmx import (
+    HttpResponseClientRedirect,
+    HttpResponseClientRefresh,
+)
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 
@@ -497,5 +500,9 @@ def task_delete_view(
 ) -> HttpResponse:
     """Delete task."""
     task = get_object(request, task_uuid)
+    project = task.section.project
     task_delete(who=request.user, task=task)
-    return HttpResponseClientRefresh()
+    if request.htmx.current_url and "/task/" in request.htmx.current_url:
+        return HttpResponseClientRedirect(project.get_absolute_url())
+    else:
+        return HttpResponseClientRefresh()
