@@ -19,7 +19,7 @@
         <link rel="stylesheet" href="{% static "css/dist/styles.css" %}">
         <script defer src="{% static "htmx.js" %}"></script>
         <meta name="htmx-config"
-              content='{ "inlineScriptNonce":"{{ csp_nonce }}", "inlineStyleNonce":"{{ csp_nonce }}" }'>
+              content='{ "inlineScriptNonce":"{{ csp_nonce }}", "inlineStyleNonce":"{{ csp_nonce }}", "allowEval": false }'>
         <script defer src="{% static "alpine.min.js" %}"></script>
         {% block extrahead %}
         {% endblock extrahead %}
