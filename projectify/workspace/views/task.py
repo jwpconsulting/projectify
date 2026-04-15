@@ -480,9 +480,10 @@ def task_actions(
     }
 
     if request.htmx:
-        return render(request, "workspace/task_actions_dropdown.html", context)
-
-    return render(request, "workspace/task_actions.html", context)
+        template = "workspace/task_actions.html#tr_dropdown"
+    else:
+        template = "workspace/task_actions.html"
+    return render(request, template, context)
 
 
 def task_delete_view(
