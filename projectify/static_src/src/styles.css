@@ -1,5 +1,5 @@
 /*! SPDX-License-Identifier: AGPL-3.0-or-later
-    SPDX-FileCopyrightText: 2023 JWP Consulting GK */
+    SPDX-FileCopyrightText: 2023,2026 JWP Consulting GK */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,4 +13,21 @@
     opacity: 1;
     visibility: visible;
     transition: opacity 200ms ease-in;
+}
+
+@keyframes ripple {
+    0% {
+        opacity: 1;
+        r: 0px;
+    }
+    100% {
+        opacity: 0;
+        r: 45px;
+    }
+}
+.animate-ripple {
+    animation: ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+.animation-delay-1000 {
+    animation-delay: 1s;
 }
