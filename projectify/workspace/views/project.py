@@ -370,8 +370,8 @@ def project_detail_view(
     filter_by_unassigned: bool = False
     task_search_query: Optional[str] = None
     if len(querydict):
-        labels = project.workspace.label_set.all()
         team_members = project.workspace.teammember_set.all()
+        labels = project.workspace.label_set.all()
 
         task_filter_form = ProjectFilterForm(
             team_members=team_members, labels=labels, data=querydict
