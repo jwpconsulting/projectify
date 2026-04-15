@@ -254,7 +254,7 @@ def log_in_first(request: AuthenticatedHttpRequest) -> HttpResponse: ...
 ## Templates
 
 - The app uses Django templates (not Jinja2).
-- The app uses HTMX and only sometimes alpine.js
+- The app uses HTMX, see `docs/frontend-scripting.md` for more.
 - Refer to the **Template tags** section for guidance on what template tags to use.
 - To style templates, Projectify uses [Tailwind version 3](https://v3.tailwindcss.com/). Refer to the tailwind
 configuration at `tailwind.config.js`.
