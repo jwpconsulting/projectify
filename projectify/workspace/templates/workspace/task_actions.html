@@ -37,13 +37,13 @@
     </form>
     <form hx-post="{% url 'dashboard:tasks:delete' task.uuid %}"
           hx-confirm="{% blocktrans with title=task.title %}Are you sure you want to delete the following task: {{ title }}{% endblocktrans %}">
-        {% action_button text=_("Delete task") icon="trash" style="destructive" %}
+        {% action_button justify_left=True text=_("Delete task") icon="trash" style="destructive" %}
     </form>
 {% endpartialdef task_actions_internal %}
 {# inlined from projectify/workspace/templates/workspace/task_actions_dropdown.html #}
 {% partialdef tr_dropdown %}
     <tr id="task-{{ task.uuid }}-menu" class="contents">
-        <td class="lg:col-span-3 rounded-lg border border-border p-3">
+        <td class="lg:col-span-3 rounded-lg border border-border p-3 ml-10">
             <div class="flex items-center justify-between">
                 <span class="htmx-indicator">{% translate "Saving..." %}</span>
                 <button aria-label="{% translate "Close task menu" %}"

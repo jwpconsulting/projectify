@@ -1296,6 +1296,10 @@ video {
   margin-bottom: 2rem;
 }
 
+.ml-10 {
+  margin-left: 2.5rem;
+}
+
 .ml-auto {
   margin-left: auto;
 }
