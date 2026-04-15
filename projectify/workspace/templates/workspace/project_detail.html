@@ -73,9 +73,28 @@
             window.location.href = e.detail.requestConfig.path;
         }
 
+        function toggleTaskMenu(event) {
+            const anchor = event.target.closest('[data-task-menu-toggle]');
+            if (!anchor) {
+                return;
+            }
+            const taskUuid = anchor.dataset.taskMenuToggle;
+            const menu = document.getElementById(`task-${taskUuid}-menu`);
+            if (!menu) {
+                throw new Error(`Couldn't find task menu for task ${taskUuid}`);
+            }
+            if (menu.classList.contains('hidden')) {
+                return;
+            }
+            event.preventDefault();
+            menu.classList.add('hidden');
+            menu.textContent = '';
+        }
+
         document.addEventListener('htmx:beforeRequest', cleansection);
         document.addEventListener('htmx:afterSwap', attachCloseButtonListener);
         document.addEventListener('htmx:beforeRequest', checkScreenSize);
+        document.addEventListener('htmx:beforeRequest', toggleTaskMenu);
     </script>
 {% endblock extrahead %}
 {% partialdef quick_add_task %}
@@ -172,7 +191,8 @@
                    class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled"
                    hx-get="{% url "dashboard:tasks:actions" task.uuid %}"
                    hx-target="#task-{{ task.uuid }}-menu"
-                   hx-swap="outerHTML">{% icon "dots-horizontal" %}</a>
+                   hx-swap="outerHTML"
+                   data-task-menu-toggle="{{ task.uuid }}">{% icon "dots-horizontal" %}</a>
             {% else %}
                 <div class="flex flex-row items-center gap-1">{% user_avatar task.assignee %}</div>
             {% endif %}
