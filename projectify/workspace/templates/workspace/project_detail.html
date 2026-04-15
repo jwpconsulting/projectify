@@ -7,6 +7,96 @@
 {% block title %}
     {% blocktrans with title=project.title %}{{ title }} - Projectify{% endblocktrans %}
 {% endblock title %}
+{% block extrahead %}
+    {{ block.super }}
+    <script nonce="{{ csp_nonce }}">
+        function cleansection(e) {
+            const formData = e.detail.requestConfig.formData;
+            const action = formData.get("action");
+            if (action !== "minimize_section") {
+                return;
+            }
+            const minimized = formData.get("minimized");
+            if (minimized !== "true") {
+                return;
+            }
+            section = e.target.closest("section");
+            if (!section) {
+                throw new Error("Couldn't find section for this form");
+            }
+            table = section.querySelector("table");
+            if (table === undefined) {
+                throw new Error("Couldn't find table within this section");
+            }
+            quickAddForm = table.nextElementSibling;
+
+            table.remove();
+            if (!quickAddForm) {
+                console.debug("No quick add form sibling for this table");
+            } else {
+                quickAddForm.remove();
+            }
+        }
+
+        function hideTaskDetailPanel() {
+            const panel = document.getElementById('task-detail-panel');
+            if (!panel) {
+                throw new Error("Couldn't find task-detail-panel");
+            }
+            panel.textContent = '';
+        }
+
+        function attachCloseButtonListener(e) {
+            if (e.detail.target.id !== 'task-detail-panel') {
+                return;
+            }
+            const closeButton = document.getElementById('close-task-detail-button');
+            if (!closeButton) {
+                throw new Error("Couldn't find close-task-detail-button");
+            }
+            closeButton.addEventListener('click', hideTaskDetailPanel);
+        }
+
+        function checkScreenSize(e) {
+            // Check if this is a request to load task details
+            const target = e.detail.target;
+            if (!target || target.id !== 'task-detail-panel') {
+                return;
+            }
+            // lg breakpoint in tailwind is 1024
+            // https://v3.tailwindcss.com/docs/responsive-design
+            if (window.innerWidth >= 1024) {
+                return;
+            }
+            // cancel and navigate to task instead
+            e.preventDefault();
+            window.location.href = e.detail.requestConfig.path;
+        }
+
+        function toggleTaskMenu(event) {
+            const anchor = event.target.closest('[data-task-menu-toggle]');
+            if (!anchor) {
+                return;
+            }
+            const taskUuid = anchor.dataset.taskMenuToggle;
+            const menu = document.getElementById(`task-${taskUuid}-menu`);
+            if (!menu) {
+                throw new Error(`Couldn't find task menu for task ${taskUuid}`);
+            }
+            if (menu.classList.contains('hidden')) {
+                return;
+            }
+            event.preventDefault();
+            menu.classList.add('hidden');
+            menu.textContent = '';
+        }
+
+        document.addEventListener('htmx:beforeRequest', cleansection);
+        document.addEventListener('htmx:afterSwap', attachCloseButtonListener);
+        document.addEventListener('htmx:beforeRequest', checkScreenSize);
+        document.addEventListener('htmx:beforeRequest', toggleTaskMenu);
+    </script>
+{% endblock extrahead %}
 {% partialdef quick_add_task %}
     <form hx-post="{% url 'dashboard:projects:detail' section.project.uuid %}"
           hx-target="#section-{{ section.uuid }}"
@@ -23,6 +113,93 @@
         {% include "workspace/common/loading_spinner.html" %}
     </form>
 {% endpartialdef quick_add_task %}
+{% partialdef taskrow %}
+    <tr class="flex w-full flex-wrap items-center gap-1 rounded-lg border border-border p-3 lg:contents"
+        id="task-{{ task.uuid }}-row"
+        aria-labelledby="task-{{ task.uuid }}-title"
+        x-data="{ menuOpen: false }">
+        <td class="flex flex-row items-center gap-2">
+            {% if can_update_task %}
+                <form action="{% url 'dashboard:projects:detail' section.project.uuid %}"
+                      method="post"
+                      hx-post="{% url 'dashboard:projects:detail' section.project.uuid %}"
+                      hx-target="#section-{{ section.uuid }}"
+                      hx-swap="outerHTML"
+                      hx-include="#task-filter,#team-member-filters,#label-filters"
+                      hx-disabled-elt="find button"
+                      class="flex">
+                    <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
+                    <input type="hidden"
+                           name="done"
+                           value="{% if task.done %}false{% else %}true{% endif %}">
+                    {% csrf_token %}
+                    <button type="submit"
+                            name="action"
+                            value="mark_task_done"
+                            class="size-6 flex items-center justify-center rounded border-2 transition-colors {% if task.done %}bg-primary border-primary text-primary-content{% else %}border-border hover:border-primary{% endif %} disabled:opacity-50 disabled:cursor-not-allowed"
+                            aria-label="{% if task.done %}{% translate 'Mark task as not done' %}{% else %}{% translate 'Mark task as done' %}{% endif %}"
+                            title="{% if task.done %}{% translate 'Mark task as not done' %}{% else %}{% translate 'Mark task as done' %}{% endif %}">
+                        {% if task.done %}
+                            {% icon "check" size=4 color="white" %}
+                        {% endif %}
+                    </button>
+                </form>
+            {% else %}
+                <div class="shrink-0 size-6 flex items-center justify-center rounded border-2 {% if task.done %}bg-primary border-primary text-primary-content{% else %}border-border{% endif %}"
+                     aria-hidden="true">
+                    {% if task.done %}
+                        {% icon "check" size=4 color="white" %}
+                    {% endif %}
+                </div>
+            {% endif %}
+            <a href="{% url 'dashboard:tasks:detail' task.uuid %}"
+               hx-get="{% url 'dashboard:tasks:detail' task.uuid %}"
+               hx-target="#task-detail-panel"
+               hx-swap="innerHTML"
+               class="flex flex-row items-start items-center min-w-0 gap-1 self-start sm:gap-6 lg:self-center {% if task.done %}line-through opacity-60{% endif %}">
+                <span class="line-clamp-3 justify-self-start hover:text-primary lg:line-clamp-1 lg:h-6"
+                      id="task-{{ task.uuid }}-title">{{ task.title }}</span>
+            </a>
+        </td>
+        <td class="flex w-full flex-row items-center justify-start gap-1 self-start overflow-x-auto">
+            {% for label in task.labels.all %}
+                <div class="max-w-xs shrink-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-full px-3 py-1 font-bold {{ label.bg_class }} {{ label.text_class }}">
+                    {{ label.name }}
+                </div>
+            {% endfor %}
+        </td>
+        <td class="flex ml-auto">
+            {% if can_update_task %}
+                <form action="{% url 'dashboard:projects:detail' project.uuid %}"
+                      method="post"
+                      hx-include="#task-filter,#team-member-filters,#label-filters"
+                      hx-boost="true"
+                      hx-target="#section-{{ section.uuid }}"
+                      hx-swap="outerHTML"
+                      class="flex flex-row items-center gap-1">
+                    {# TODO in AT, say "currently assigned to ..." #}
+                    {% user_avatar task.assignee %}
+                    <input type="hidden" name="action" value="move_task">
+                    <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
+                    {% circle_button label=_("Move task up") value="up" name="direction" disabled=task.first icon_style="chevron-up" %}
+                    {% circle_button label=_("Move task down") value="down" name="direction" disabled=task.last icon_style="chevron-down" %}
+                    {% csrf_token %}
+                    <p class="htmx-indicator">...</p>
+                </form>
+                <a aria-label="{% translate "Task menu" %}"
+                   href="{% url "dashboard:tasks:actions" task.uuid %}"
+                   class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled"
+                   hx-get="{% url "dashboard:tasks:actions" task.uuid %}"
+                   hx-target="#task-{{ task.uuid }}-menu"
+                   hx-swap="outerHTML"
+                   data-task-menu-toggle="{{ task.uuid }}">{% icon "dots-horizontal" %}</a>
+            {% else %}
+                <div class="flex flex-row items-center gap-1">{% user_avatar task.assignee %}</div>
+            {% endif %}
+        </td>
+    </tr>
+    <tr id="task-{{ task.uuid }}-menu" class="hidden"></tr>
+{% endpartialdef taskrow %}
 {% partialdef section_contents %}
     {% has_perm "workspace.create_task" user project.workspace as can_create_task %}
     {% has_perm "workspace.update_task" user project.workspace as can_update_task %}
@@ -35,87 +212,7 @@
         </thead>
         <tbody class="contents">
             {% for task in section.task_set.all %}
-                <tr class="flex w-full flex-wrap items-center gap-1 rounded-lg border border-border p-3 lg:contents"
-                    id="task-{{ task.uuid }}-row"
-                    aria-labelledby="task-{{ task.uuid }}-title"
-                    x-data="{ menuOpen: false }">
-                    <td class="flex flex-row items-center gap-2">
-                        {% if can_update_task %}
-                            <form action="{% url 'dashboard:projects:detail' section.project.uuid %}"
-                                  method="post"
-                                  hx-post="{% url 'dashboard:projects:detail' section.project.uuid %}"
-                                  hx-target="#section-{{ section.uuid }}"
-                                  hx-swap="outerHTML"
-                                  hx-include="#task-filter,#team-member-filters,#label-filters"
-                                  hx-disabled-elt="find button"
-                                  class="flex">
-                                <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
-                                <input type="hidden"
-                                       name="done"
-                                       value="{% if task.done %}false{% else %}true{% endif %}">
-                                {% csrf_token %}
-                                <button type="submit"
-                                        name="action"
-                                        value="mark_task_done"
-                                        class="size-6 flex items-center justify-center rounded border-2 transition-colors {% if task.done %}bg-primary border-primary text-primary-content{% else %}border-border hover:border-primary{% endif %} disabled:opacity-50 disabled:cursor-not-allowed"
-                                        aria-label="{% if task.done %}{% translate 'Mark task as not done' %}{% else %}{% translate 'Mark task as done' %}{% endif %}"
-                                        title="{% if task.done %}{% translate 'Mark task as not done' %}{% else %}{% translate 'Mark task as done' %}{% endif %}">
-                                    {% if task.done %}
-                                        {% icon "check" size=4 color="white" %}
-                                    {% endif %}
-                                </button>
-                            </form>
-                        {% else %}
-                            <div class="shrink-0 size-6 flex items-center justify-center rounded border-2 {% if task.done %}bg-primary border-primary text-primary-content{% else %}border-border{% endif %}"
-                                 aria-hidden="true">
-                                {% if task.done %}
-                                    {% icon "check" size=4 color="white" %}
-                                {% endif %}
-                            </div>
-                        {% endif %}
-                        <a href="{% url 'dashboard:tasks:detail' task.uuid %}"
-                           class="flex flex-row items-start items-center min-w-0 gap-1 self-start sm:gap-6 lg:self-center {% if task.done %}line-through opacity-60{% endif %}">
-                            <span class="line-clamp-3 justify-self-start hover:text-primary lg:line-clamp-1 lg:h-6"
-                                  id="task-{{ task.uuid }}-title">{{ task.title }}</span>
-                        </a>
-                    </td>
-                    <td class="flex w-full flex-row items-center justify-start gap-1 self-start overflow-x-auto">
-                        {% for label in task.labels.all %}
-                            <div class="max-w-xs shrink-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-full px-3 py-1 font-bold {{ label.bg_class }} {{ label.text_class }}">
-                                {{ label.name }}
-                            </div>
-                        {% endfor %}
-                    </td>
-                    <td class="flex ml-auto">
-                        {% if can_update_task %}
-                            <form action="{% url 'dashboard:projects:detail' project.uuid %}"
-                                  method="post"
-                                  hx-include="#task-filter,#team-member-filters,#label-filters"
-                                  hx-boost="true"
-                                  hx-target="#section-{{ section.uuid }}"
-                                  hx-swap="outerHTML"
-                                  class="flex flex-row items-center gap-1">
-                                {# TODO in AT, say "currently assigned to ..." #}
-                                {% user_avatar task.assignee %}
-                                <input type="hidden" name="action" value="move_task">
-                                <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
-                                {% circle_button label=_("Move task up") value="up" name="direction" disabled=task.first icon_style="chevron-up" %}
-                                {% circle_button label=_("Move task down") value="down" name="direction" disabled=task.last icon_style="chevron-down" %}
-                                {% csrf_token %}
-                                <p class="htmx-indicator">...</p>
-                            </form>
-                            <a aria-label="{% translate "Task menu" %}"
-                               href="{% url "dashboard:tasks:actions" task.uuid %}"
-                               class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background"
-                               hx-get="{% url "dashboard:tasks:actions" task.uuid %}"
-                               hx-target="#task-{{ task.uuid }}-menu"
-                               hx-swap="outerHTML">{% icon "dots-horizontal" %}</a>
-                        {% else %}
-                            <div class="flex flex-row items-center gap-1">{% user_avatar task.assignee %}</div>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr id="task-{{ task.uuid }}-menu" class="hidden"></tr>
+                {% partial taskrow %}
             {% empty %}
                 <tr class="contents">
                     <td class="lg:col-span-3">
@@ -162,12 +259,10 @@
                         aria-label="{% if section.minimized %}{% translate 'Expand section' %}{% else %}{% translate 'Minimize section' %}{% endif %}">
                     {% icon "chevron-down" %}
                 </button>
-                <div class="min-w-0 flex flex-row gap-2 items-center">
-                    <h1 id="section-{{ section.uuid }}-header" class="truncate font-bold">{{ section.title }}</h1>
-                    {% if can_update_section %}
-                        {% circle_anchor label=_("Update section") icon_style="pencil" href="dashboard:sections:update" section_uuid=section.uuid size=4 %}
-                    {% endif %}
-                </div>
+                <h1 id="section-{{ section.uuid }}-header" class="truncate font-bold">{{ section.title }}</h1>
+                {% if can_update_section %}
+                    {% circle_anchor label=_("Update section") icon_style="pencil" href="dashboard:sections:update" section_uuid=section.uuid size=4 %}
+                {% endif %}
             </div>
             <div class="flex shrink-0 flex-row items-center gap-1">
                 {% include "workspace/common/loading_spinner.html" %}
@@ -223,4 +318,8 @@
             {% endif %}
         </div>
     </main>
+    {# djlint:off #}
+    <aside id="task-detail-panel"
+           class="hidden lg:block lg:empty:hidden lg:fixed lg:top-20 lg:right-0 lg:bottom-20 lg:w-1/3 lg:max-w-2xl overflow-y-auto bg-foreground border border-border"></aside>
+    {# djlint:on #}
 {% endblock dashboard_content %}

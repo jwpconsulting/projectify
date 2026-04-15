@@ -9,6 +9,7 @@ from typing import Any, Optional
 from uuid import uuid4
 
 from django import forms
+from django.contrib.admin.views.decorators import staff_member_required
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import UploadedFile
 from django.forms.utils import ErrorList
@@ -31,7 +32,11 @@ from projectify.lib.settings import get_settings
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 
-from .selectors.post import post_find_by_slug, post_list_published
+from .selectors.post import (
+    post_find_by_slug,
+    post_find_draft_by_slug,
+    post_list_published,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -48,6 +53,22 @@ def post_detail(request: HttpRequest, slug: str) -> HttpResponse:
     post = post_find_by_slug(slug=slug)
     if not post:
         raise Http404(_("Post with slug {slug} not found").format(slug=slug))
+    recent = post_list_published(exclude=post)[:5]
+    context = {"post": post, "recent_posts": recent}
+    return render(request, "blog/post_detail.html", context)
+
+
+@staff_member_required
+@platform_view
+def post_draft_preview(
+    request: AuthenticatedHttpRequest, slug: str
+) -> HttpResponse:
+    """Preview a draft blog post. Staff only."""
+    post = post_find_draft_by_slug(slug=slug, who=request.user)
+    if post is None:
+        raise Http404(
+            _("Draft post with slug {slug} not found").format(slug=slug)
+        )
     recent = post_list_published(exclude=post)[:5]
     context = {"post": post, "recent_posts": recent}
     return render(request, "blog/post_detail.html", context)

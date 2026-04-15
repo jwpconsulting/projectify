@@ -69,7 +69,7 @@ class TestSectionUpdateView:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test getting the section update form."""
-        # Gone up from 7 -> 9 due to permission checks in sidemenu
+        # Gone up   from 7 -> 9 due to permission checks in sidemenu
         with django_assert_num_queries(9):
             response = user_client.get(resource_url)
             assert response.status_code == 200
@@ -140,7 +140,8 @@ class TestSectionUpdateView:
         original_order = section._order
 
         # TODO optimize
-        with django_assert_num_queries(17):
+        # Gone down from 17 -> 16
+        with django_assert_num_queries(16):
             response = user_client.post(resource_url, {"action": "move_down"})
             assert response.status_code == 302
 

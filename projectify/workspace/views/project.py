@@ -184,7 +184,10 @@ class ProjectFilterForm(forms.Form):
 class TaskQuickAddForm(forms.Form):
     """Form for adding tasks with just a title."""
 
-    title = forms.CharField(label=_("Task title"), required=True)
+    title = forms.CharField(
+        label=_("Task title"),
+        widget=forms.TextInput(attrs={"placeholder": _("Add a task")}),
+    )
 
     def __init__(self, project: Project, *args: Any, **kwargs: Any) -> None:
         """Initialize form with section choices from project."""
@@ -367,8 +370,8 @@ def project_detail_view(
     filter_by_unassigned: bool = False
     task_search_query: Optional[str] = None
     if len(querydict):
-        labels = project.workspace.label_set.all()
         team_members = project.workspace.teammember_set.all()
+        labels = project.workspace.label_set.all()
 
         task_filter_form = ProjectFilterForm(
             team_members=team_members, labels=labels, data=querydict

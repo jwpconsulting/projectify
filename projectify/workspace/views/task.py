@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
+# SPDX-FileCopyrightText: 2023-2026 JWP Consulting GK
 """Task CRUD views."""
 
 import logging
@@ -17,7 +17,10 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods, require_POST
 
 from projectify.lib.forms import RichTextEditor
-from projectify.lib.htmx import HttpResponseClientRefresh
+from projectify.lib.htmx import (
+    HttpResponseClientRedirect,
+    HttpResponseClientRefresh,
+)
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 
@@ -219,7 +222,13 @@ def task_detail(
         "task": task,
         "project": task.section.project,
     }
-    return render(request, "workspace/task_detail.html", context)
+
+    # If HTMX request, return just the panel content
+    if request.htmx:
+        template = "workspace/task_detail.html#task_inline"
+    else:
+        template = "workspace/task_detail.html"
+    return render(request, template, context)
 
 
 class TaskUpdateForm(forms.Form):
@@ -480,9 +489,10 @@ def task_actions(
     }
 
     if request.htmx:
-        return render(request, "workspace/task_actions_dropdown.html", context)
-
-    return render(request, "workspace/task_actions.html", context)
+        template = "workspace/task_actions.html#tr_dropdown"
+    else:
+        template = "workspace/task_actions.html"
+    return render(request, template, context)
 
 
 def task_delete_view(
@@ -490,5 +500,9 @@ def task_delete_view(
 ) -> HttpResponse:
     """Delete task."""
     task = get_object(request, task_uuid)
+    project = task.section.project
     task_delete(who=request.user, task=task)
-    return HttpResponseClientRefresh()
+    if request.htmx.current_url and "/task/" in request.htmx.current_url:
+        return HttpResponseClientRedirect(project.get_absolute_url())
+    else:
+        return HttpResponseClientRefresh()

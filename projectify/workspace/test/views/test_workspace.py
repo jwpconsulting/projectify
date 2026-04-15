@@ -197,12 +197,13 @@ class TestWorkspaceSettings:
         workspace.picture = cast(FileDescriptor, None)
         workspace.save()
         assert not workspace.picture
-        # Query count went up from 12 -> 19
-        # Query count went up from 19 -> 20
-        # Query count went up from 20 -> 22
-        # Query count went up from 22 -> 24 due to permission checks in sidemenu
-        # Query count went up from 24 -> 25
-        with django_assert_num_queries(25):
+        # Query count went up   from 12 -> 19
+        # Query count went up   from 19 -> 20
+        # Query count went up   from 20 -> 22
+        # Query count went up   from 22 -> 24 due to permission checks in sidemenu
+        # Query count went up   from 24 -> 25
+        # Query count went down from 25 -> 24
+        with django_assert_num_queries(24):
             response = user_client.post(
                 resource_url,
                 {
@@ -334,12 +335,10 @@ class TestWorkspaceSettingsTeamMembers:
         workspace = team_member.workspace
         initial = workspace.teammember_set.count()
         uid = str(other_team_member.uuid)
-        # Gone up from 27 -> 28 due to permission checks in sidemenu
-        with django_assert_num_queries(28):
-            response = user_client.post(
-                resource_url,
-                {"action": "team_member_remove", "team_member": uid},
-            )
+        data = {"action": "team_member_remove", "team_member": uid}
+        # Gone down from 28 -> 25
+        with django_assert_num_queries(25):
+            response = user_client.post(resource_url, data)
         assert response.status_code == 200
         assert workspace.teammember_set.count() == initial - 1
         assert str(other_team_member) not in response.content.decode()
@@ -867,8 +866,7 @@ class TestWorkspaceSettingsBilling:
     ) -> None:
         """Test GET request with unpaid customer shows billing form."""
         # Gone up from 16 -> 17 due to permission checks in sidemenu
-        # Gone up from 17 -> 18
-        with django_assert_num_queries(18):
+        with django_assert_num_queries(17):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert b"Use a coupon code" in response.content
@@ -883,8 +881,7 @@ class TestWorkspaceSettingsBilling:
     ) -> None:
         """Test GET request with paying customer shows billing info."""
         # Gone up from 12 -> 13 due to permission checks in sidemenu
-        # Gone up from 13 -> 14
-        with django_assert_num_queries(14):
+        with django_assert_num_queries(13):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert b"You have a paid workspace" in response.content
@@ -912,8 +909,9 @@ class TestWorkspaceSettingsBillingCoupon:
         assert active == "trial"
         data = {"action": "redeem_coupon", "code": "foo"}
         # Gone up from 21 -> 22 due to permission checks in sidemenu
-        # Gone up from 22 -> 23
-        with django_assert_num_queries(23):
+        # Gone up   from 22 -> 23
+        # Gone down from 23 -> 21
+        with django_assert_num_queries(21):
             res = user_client.post(resource_url, data=data)
             assert res.status_code == 400
         assert "No coupon is available for this code" in res.content.decode()

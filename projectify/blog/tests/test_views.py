@@ -32,8 +32,41 @@ def test_post_detail_displays_post(client: Client, post: Post) -> None:
 
 def test_post_detail_not_found(client: Client) -> None:
     """Test retrieving a non-existing post."""
-    response = client.get(reverse("blog:post_detail", args=["bla"]))
-    assert response.status_code == 404
+    url = reverse("blog:post_detail", args=["bla"])
+    assert client.get(url).status_code == 404
+
+
+def test_post_draft_preview_staff_can_view(
+    superuser_client: Client, post: Post
+) -> None:
+    """Test that staff can preview a draft post."""
+    post.draft = True
+    post.save()
+    url = reverse("blog:post_draft_preview", args=[post.slug])
+    response = superuser_client.get(url)
+    assert response.status_code == 200
+    assert post.title in response.content.decode()
+
+
+def test_post_draft_others_cant_view(
+    user_client: Client, client: Client, post: Post
+) -> None:
+    """Test that other users cannot preview draft posts."""
+    post.draft = True
+    post.save()
+    url = reverse("blog:post_draft_preview", args=[post.slug])
+    response = user_client.get(url)
+    assert response.status_code == 302
+    response = client.get(url)
+    assert response.status_code == 302
+
+
+def test_post_detail_redirect(client: Client, post: Post) -> None:
+    """Test that slug without trailing slash redirects permanently."""
+    url = reverse("blog:post_detail", args=[post.slug])
+    response = client.get(f"{url}/")
+    assert response.status_code == 301
+    assert response["Location"] == url
 
 
 def test_uploading_attachments(
@@ -57,8 +90,7 @@ def test_upload_attachment_regular_user_cannot_upload(
 ) -> None:
     """Test that regular users cannot upload files."""
     url = reverse("blog:upload_attachment")
-    response = user_client.post(url, {"file": uploaded_file})
-    assert response.status_code == 403
+    assert user_client.post(url, {"file": uploaded_file}).status_code == 403
 
 
 def test_upload_attachment_anonymous_user_cannot_upload(
@@ -66,8 +98,7 @@ def test_upload_attachment_anonymous_user_cannot_upload(
 ) -> None:
     """Test that anonymous users cannot upload files."""
     url = reverse("blog:upload_attachment")
-    response = client.post(url, {"file": uploaded_file})
-    assert response.status_code == 302
+    assert client.post(url, {"file": uploaded_file}).status_code == 302
 
 
 def test_upload_attachment_rejects_invalid_file_types(

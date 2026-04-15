@@ -50,7 +50,7 @@
                             {% if can_update_team_member_role %}
                                 <a href="{% url 'dashboard:workspaces:team-member-update' workspace.uuid team_member.uuid %}"
                                    aria-label="{% trans 'Edit role' %}"
-                                   class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:opacity-20">
+                                   class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled disabled:bg-transparent disabled:opacity-20">
                                     {% icon "pencil" size=4 %}
                                 </a>
                             {% endif %}

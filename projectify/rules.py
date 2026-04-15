@@ -4,6 +4,7 @@
 """Contains the rules for the Projectify project."""
 
 from functools import partial
+from typing import Optional
 
 import rules
 from rules.predicates import is_superuser
@@ -45,17 +46,21 @@ ROLE_EQUIVALENCE = {
 
 
 def check_permissions_for(
-    role: TeamMemberRoles, user: User, workspace: Workspace
+    role: TeamMemberRoles, user: User, workspace: Optional[Workspace]
 ) -> bool:
     """Check whether a user has required role for target."""
-    team_member = team_member_find_for_workspace(
-        workspace=workspace, user=user
-    )
-    if team_member is None:
+    if workspace is None:
         return False
-    # XXX add caching
-    # Remember for a user what their role is for a workspace
-    team_member_role: TeamMemberRoles = TeamMemberRoles[team_member.role]
+    if user.pk in workspace.role_cache:
+        team_member_role = workspace.role_cache[user.pk]
+    else:
+        team_member = team_member_find_for_workspace(
+            workspace=workspace, user=user
+        )
+        if team_member is None:
+            return False
+        team_member_role = TeamMemberRoles[team_member.role]
+        workspace.role_cache[user.pk] = team_member_role
     return ROLE_EQUIVALENCE[team_member_role][role]
 
 

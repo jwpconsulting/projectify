@@ -100,7 +100,7 @@ def circle_button(
     return format_html(
         '<button name="{name}"{value}{disabled} type="submit" hx-swap="outerHTML" '
         'aria-label="{label}"'
-        ' class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background disabled:bg-transparent disabled:opacity-20">{icon}</button>',
+        ' class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled disabled:bg-transparent disabled:opacity-20">{icon}</button>',
         name=name,
         disabled=" disabled" if disabled else "",
         value=format_html(' value="{}"', value) if value else "",
@@ -126,7 +126,7 @@ def circle_anchor(
         raise ValueError("Empty href supplied")
     url = reverse(href, args=args, kwargs=kwargs)
     return format_html(
-        '<a href="{url}" aria-label="{label}"{title} class="inline-block shrink-0 size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled-background">{icon}</a>',
+        '<a href="{url}" aria-label="{label}"{title} class="inline-block shrink-0 size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled">{icon}</a>',
         url=f"{url}#{fragment}" if fragment else url,
         label=label,
         title=format_html(' title="{title}"', title=title)
@@ -292,9 +292,8 @@ def user_avatar(
                 alt=_("Team member {} avatar").format(str(user)),
             )
         case _:
-            # TODO use one of our named colors instead of bg-base-200
             return mark_safe(
-                '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary bg-base-200"></div>'
+                '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary bg-background"></div>'
             )
 
 

@@ -45,7 +45,7 @@
             <a class="flex flex-row items-center gap-2 px-4 py-1 hover:bg-secondary-hover"
                aria-label="{% blocktranslate with project=project_item.title %}{{ project }} project{%endblocktranslate %}"
                href="{% url "dashboard:projects:detail" project_item.uuid %}">
-                <div class="shrink-0 rounded-md p-1{% if project_item == project %} bg-primary-focus{% endif %}">
+                <div class="shrink-0 rounded-md p-1{% if project_item == project %} bg-primary-hover{% endif %}">
                     {% if project_item == project %}
                         {% icon "folder" "white" size=4 %}
                     {% else %}

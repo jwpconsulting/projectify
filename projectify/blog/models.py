@@ -31,6 +31,9 @@ class Post(BaseModel):
         PostContent, verbose_name=_("Blog post body"), on_delete=models.CASCADE
     )
     published = models.DateField(verbose_name=_("Blog post publish date"))
+    draft = models.BooleanField(
+        verbose_name=_("Blog post draft status"), default=False
+    )
 
     def __str__(self) -> str:
         """Return string representation."""

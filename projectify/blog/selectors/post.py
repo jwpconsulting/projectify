@@ -8,7 +8,20 @@ from typing import Optional
 from django.db.models import QuerySet
 from django.utils import timezone
 
+from projectify.user.models import User
+
 from ..models import Post
+
+
+def post_find_draft_by_slug(*, slug: str, who: User) -> Optional[Post]:
+    """Find a draft post by slug. Only accessible to staff users."""
+    if not who.is_staff:
+        return None
+    return (
+        Post.objects.filter(slug=slug, draft=True)
+        .select_related("body")
+        .first()
+    )
 
 
 def post_list_published(
@@ -16,7 +29,7 @@ def post_list_published(
 ) -> QuerySet[Post]:
     """Return published posts without content."""
     today = timezone.now().date()
-    posts = Post.objects.filter(published__lte=today)
+    posts = Post.objects.filter(published__lte=today, draft=False)
     if exclude:
         posts = posts.exclude(pk=exclude.pk)
     if with_body:
@@ -28,14 +41,16 @@ def post_list_published(
 def post_list_published_with_body() -> QuerySet[Post]:
     """Return published posts with content for RSS feed."""
     today = timezone.now().date()
-    return Post.objects.filter(published__lte=today).select_related("body")
+    return Post.objects.filter(
+        published__lte=today, draft=False
+    ).select_related("body")
 
 
 def post_find_by_slug(*, slug: str) -> Optional[Post]:
     """Find a post by slug."""
     today = timezone.now().date()
     return (
-        Post.objects.filter(slug=slug, published__lte=today)
+        Post.objects.filter(slug=slug, published__lte=today, draft=False)
         .select_related("body")
         .first()
     )

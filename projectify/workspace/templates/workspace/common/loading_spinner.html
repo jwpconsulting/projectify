@@ -6,21 +6,3 @@
         <circle cx="0" cy="0" stroke="currentColor" stroke-width="5" opacity="1" class="rounded-full animate-ripple animation-delay-1000" />
     </svg>
 </div>
-<style nonce="{{ csp_nonce }}">
-    @keyframes ripple {
-        0% {
-            opacity: 1;
-            r: 0px;
-        }
-        100% {
-            opacity: 0;
-            r: 45px;
-        }
-    }
-    .animate-ripple {
-        animation: ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-    }
-    .animation-delay-1000 {
-        animation-delay: 1s;
-    }
-</style>

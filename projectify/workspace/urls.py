@@ -201,25 +201,13 @@ urlpatterns = (
         name="avatar-marble",
     ),
     # Workspace
-    path(
-        "workspace/",
-        include((workspace_patterns, "workspaces")),
-    ),
+    path("workspace/", include((workspace_patterns, "workspaces"))),
     # Project
-    path(
-        "project/",
-        include((project_patterns, "projects")),
-    ),
+    path("project/", include((project_patterns, "projects"))),
     # Section
-    path(
-        "section/",
-        include((section_patterns, "sections")),
-    ),
+    path("section/", include((section_patterns, "sections"))),
     # Task
-    path(
-        "task/",
-        include((task_patterns, "tasks")),
-    ),
+    path("task/", include((task_patterns, "tasks"))),
     # Team member
     path("team-member/", include((team_member_patterns, "team-members"))),
 )

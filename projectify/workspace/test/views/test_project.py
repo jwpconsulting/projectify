@@ -48,7 +48,9 @@ class TestProjectDetailView:
         # Gone up   from 14 -> 15
         # Gone up   from 15 -> 18
         # Gone up   from 18 -> 24 due to permission checks in sidemenu
-        with django_assert_num_queries(24):
+        # Gone down from 24 -> 23
+        # Gone down from 23 -> 20
+        with django_assert_num_queries(20):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert project.title in response.content.decode()
@@ -98,8 +100,10 @@ class TestProjectDetailView:
         other_task.assignee = other_team_member
         other_task.save()
 
-        # Gone up from 22 -> 31 due to permission checks in template
-        with django_assert_num_queries(31):
+        # Gone up   from 22 -> 31 due to permission checks in template
+        # Gone down from 31 -> 30
+        # Gone down from 30 -> 24
+        with django_assert_num_queries(24):
             response = user_client.get(
                 resource_url,
                 {"filter_by_team_member": [str(team_member.uuid)]},
@@ -122,8 +126,10 @@ class TestProjectDetailView:
         task.assignee = team_member
         task.save()
 
-        # Gone up from 20 -> 29 due to permission checks in template
-        with django_assert_num_queries(29):
+        # Gone up   from 20 -> 29 due to permission checks in template
+        # Gone down from 29 -> 28
+        # Gone down from 28 -> 22
+        with django_assert_num_queries(22):
             response = user_client.get(
                 resource_url, {"filter_by_team_member": [""]}
             )
@@ -144,8 +150,10 @@ class TestProjectDetailView:
         """Test filtering tasks by label."""
         task.labels.add(label)
 
-        # Gone up from 22 -> 31 due to permission checks in template
-        with django_assert_num_queries(31):
+        # Gone up   from 22 -> 31 due to permission checks in template
+        # Gone down from 31 -> 30
+        # Gone down from 30 -> 24
+        with django_assert_num_queries(24):
             response = user_client.get(
                 resource_url, {"filter_by_label": [str(label.uuid)]}
             )
@@ -166,8 +174,10 @@ class TestProjectDetailView:
         """Test filtering for unlabeled tasks."""
         task.labels.add(label)
 
-        # Gone up from 20 -> 29 due to permission checks in template
-        with django_assert_num_queries(29):
+        # Gone up   from 20 -> 29 due to permission checks in template
+        # Gone down from 29 -> 28
+        # Gone down from 28 -> 22
+        with django_assert_num_queries(22):
             response = user_client.get(resource_url, {"filter_by_label": [""]})
             assert response.status_code == 200
 
@@ -189,8 +199,10 @@ class TestProjectDetailView:
         other_task.title = "Feature request"
         other_task.save()
 
-        # Gone up from 20 -> 29 due to permission checks in template
-        with django_assert_num_queries(29):
+        # Gone up   from 20 -> 29 due to permission checks in template
+        # Gone down from 29 -> 28
+        # Gone down from 28 -> 22
+        with django_assert_num_queries(22):
             response = user_client.get(
                 resource_url, {"task_search_query": "bug"}
             )
@@ -312,9 +324,10 @@ class TestProjectDetailViewActions:
         "initial_state,form_value,expected_final_state, query_count",
         [
             # query count up from   19 -> 22 due to permission checks in tmplt
-            # query count down from 22 -> 20
-            (False, "true", True, 20),  # minimize section
-            (True, "false", False, 22),  # expand section
+            # query count down from 22 -> 19
+            (False, "true", True, 19),  # minimize section
+            # query count down from 22 -> 19
+            (True, "false", False, 19),  # expand section
         ],
     )
     def test_section_minimize_toggle(
@@ -341,15 +354,14 @@ class TestProjectDetailViewActions:
             "dashboard:projects:detail", args=(section.project.uuid,)
         )
 
+        uid = str(section.uuid)
+        data = {
+            "action": "minimize_section",
+            "section": uid,
+            "minimized": form_value,
+        }
         with django_assert_num_queries(query_count):
-            response = user_client.post(
-                url,
-                {
-                    "action": "minimize_section",
-                    "section": str(section.uuid),
-                    "minimized": form_value,
-                },
-            )
+            response = user_client.post(url, data)
             assert response.status_code == 200
 
         section.refresh_from_db()
@@ -359,21 +371,16 @@ class TestProjectDetailViewActions:
         )
 
     def test_minimize_section_not_found(
-        self,
-        user_client: Client,
-        team_member: TeamMember,
-        project: Project,
+        self, user_client: Client, team_member: TeamMember, project: Project
     ) -> None:
         """Test minimize view with non-existent section."""
         url = reverse("dashboard:projects:detail", args=(project.uuid,))
-        response = user_client.post(
-            url,
-            {
-                "action": "minimize_section",
-                "section": str(uuid4()),
-                "minimized": "true",
-            },
-        )
+        data = {
+            "action": "minimize_section",
+            "section": str(uuid4()),
+            "minimized": "true",
+        }
+        response = user_client.post(url, data)
         assert response.status_code == 400
 
     def test_move_task_up_down(
@@ -395,8 +402,10 @@ class TestProjectDetailViewActions:
         ]
 
         # Move task2 up (should swap positions)
-        # Gone up from 32 -> 35 due to permission checks in template
-        with django_assert_num_queries(35):
+        # Gone up   from 32 -> 35 due to permission checks in template
+        # Gone down from 35 -> 34
+        # Gone down from 34 -> 31
+        with django_assert_num_queries(31):
             response = user_client.post(
                 resource_url,
                 {
@@ -412,8 +421,10 @@ class TestProjectDetailViewActions:
         ]
 
         # Move task1 up (should swap back)
-        # Gone up from 32 -> 35 due to permission checks in template
-        with django_assert_num_queries(35):
+        # Gone up   from 32 -> 35 due to permission checks in template
+        # Gone down from 35 -> 34
+        # Gone down from 34 -> 31
+        with django_assert_num_queries(31):
             response = user_client.post(
                 resource_url,
                 {
@@ -464,16 +475,18 @@ class TestProjectDetailViewActions:
         t_id = str(task.uuid)
         data = {"action": "mark_task_done", "task_uuid": t_id, "done": "true"}
         # Gone up from 24 -> 27 due to permission checks in template
-        # Gone up from 27 -> 29 because opf workspace save()
+        # Gone up from 27 -> 29 because of workspace save()
         # check
-        with django_assert_num_queries(29):
+        # Gone down from 29 -> 28
+        # Gone down from 28 -> 26
+        with django_assert_num_queries(26):
             response = user_client.post(resource_url, data)
             assert response.status_code == 200
         task.refresh_from_db()
         assert task.done is not None
 
         data = {"action": "mark_task_done", "task_uuid": t_id, "done": "false"}
-        with django_assert_num_queries(29):
+        with django_assert_num_queries(26):
             response = user_client.post(resource_url, data)
             assert response.status_code == 200
         task.refresh_from_db()
@@ -520,10 +533,9 @@ class TestProjectCreateView:
     ) -> None:
         """Test successfully creating a project."""
         initial_project_count = Project.objects.count()
+        data = {"title": "New Test Project"}
         with django_assert_num_queries(6):
-            response = user_client.post(
-                resource_url, {"title": "New Test Project"}
-            )
+            response = user_client.post(resource_url, data)
             assert response.status_code == 302
 
         assert Project.objects.count() == initial_project_count + 1
@@ -536,8 +548,7 @@ class TestProjectCreateView:
     ) -> None:
         """Test form validation with invalid data."""
         initial_project_count = Project.objects.count()
-        response = user_client.post(resource_url, {})
-        assert response.status_code == 400
+        assert user_client.post(resource_url, {}).status_code == 400
         assert Project.objects.count() == initial_project_count
 
     def test_workspace_not_found(
@@ -547,8 +558,7 @@ class TestProjectCreateView:
     ) -> None:
         """Test accessing project creation for non-existent workspace."""
         url = reverse("dashboard:workspaces:create-project", args=(uuid4(),))
-        response = user_client.get(url)
-        assert response.status_code == 404
+        assert user_client.get(url).status_code == 404
 
     def test_unauthorized_workspace_access(
         self,
@@ -556,12 +566,9 @@ class TestProjectCreateView:
         unrelated_workspace: Workspace,
     ) -> None:
         """Test that users can't create projects in other workspaces."""
-        url = reverse(
-            "dashboard:workspaces:create-project",
-            args=(unrelated_workspace.uuid,),
-        )
-        response = user_client.get(url)
-        assert response.status_code == 404
+        uid = unrelated_workspace.uuid
+        url = reverse("dashboard:workspaces:create-project", args=(uid,))
+        assert user_client.get(url).status_code == 404
 
 
 class TestProjectUpdateView:
@@ -581,7 +588,7 @@ class TestProjectUpdateView:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test GETting the project update page."""
-        # Gone up from 8 -> 9 due to permission checks in sidemenu
+        # Gone up   from 8 -> 9 due to permission checks in sidemenu
         with django_assert_num_queries(9):
             response = user_client.get(resource_url)
             assert response.status_code == 200
@@ -739,11 +746,9 @@ class TestProjectRecoverView:
     ) -> None:
         """Test successfully recovering an archived project via HTMX."""
         assert archived_project.archived
-
         with django_assert_num_queries(6):
             response = user_client.post(resource_url)
             assert response.status_code == 200
-
         archived_project.refresh_from_db()
         assert not archived_project.archived
 

@@ -85,14 +85,20 @@ class PostAdmin(admin.ModelAdmin[Post]):
     """Blog post admin."""
 
     form = PostAdminForm
-    list_filter = ("title",)
-    list_display = ("title", "published", "post_url")
+    list_filter = ("title", "draft")
+    list_display = ("title", "published", "draft", "post_url")
     exclude = ("body",)
 
     @admin.display(description=_("URL"))
     def post_url(self, instance: Post) -> str:
         """Return link to blog post."""
+        if instance.draft:
+            label = _("Preview draft")
+            slg = instance.slug
+            url = reverse_lazy("blog:post_draft_preview", kwargs={"slug": slg})
+        else:
+            label = _("View post")
+            url = instance.get_absolute_url()
         return format_html(
-            '<a href="{url}" target="_blank">View post</a>',
-            url=instance.get_absolute_url(),
+            '<a href="{url}" target="_blank">{label}</a>', url=url, label=label
         )
