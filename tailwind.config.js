@@ -99,11 +99,9 @@ const config = {
     mode: "jit",
     // ../../ is the projectify directory
     content: [
-        // Apps
-        "projectify/*/templates/**/*.html",
+        // Apps and shared templates
+        "projectify/**/templates/**/*.html",
         "projectify/**/const.py",
-        // Shared templates
-        "projectify/templates/**/*.html",
         // Heroicons
         "projectify/templates/heroicons/*.svg",
         // Templatetags
@@ -112,15 +110,23 @@ const config = {
     theme: {
         extend: {
             borderRadius: {
+                // TODO Check if still needed
                 "llg": "10px",
+                // TODO Check if still needed
                 "1.5xl": "14px",
+                // TODO Check if still needed
                 "2.5xl": "20px",
             },
             boxShadow: {
+                // TODO Check if still needed
                 "card": "0px 0px 4px 0px #1E202940",
+                // TODO Check if still needed
                 "sm": "0 1px 2px rgba(0, 0, 0, 0.15)",
+                // TODO Check if still needed
                 "lg": "0 2px 8px rgba(0, 0, 0, 0.25)",
+                // TODO Check if still needed
                 "xl": "0 4px 16px rgba(0, 0, 0, 0.15)",
+                // TODO Check if still needed
                 "context-menu": "1px 4px 8px rgba(0, 0, 0, 0.25)",
             },
             colors: colors,
