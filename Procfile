@@ -1,4 +1,4 @@
 # SPDX-FileCopyrightText: 2026 JWP Consulting GK
 # SPDX-License-Identifier: AGPL-3.0-or-later
 web: ./manage.py runserver
-tailwind: npm start
+tailwind: npm install && npm start
