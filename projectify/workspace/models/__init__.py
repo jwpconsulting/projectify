@@ -301,31 +301,6 @@ class Task(TitleDescriptionModel, BaseModel):
         ]
 
 
-class SubTask(TitleDescriptionModel, BaseModel):
-    """SubTask, belongs to Task."""
-
-    task = models.ForeignKey[Task](Task, on_delete=models.CASCADE)
-    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
-    done = models.BooleanField(
-        default=False, help_text=_("Designate whether this sub task is done")
-    )
-
-    # Ordering related
-    _order: int
-
-    class Meta:
-        """Meta."""
-
-        order_with_respect_to = "task"
-        constraints = [
-            models.UniqueConstraint(
-                fields=["task", "_order"],
-                name="unique_sub_task_order",
-                deferrable=models.Deferrable.DEFERRED,
-            )
-        ]
-
-
 class TeamMemberInvite(BaseModel):
     """UserInvites belonging to this workspace."""
 
@@ -458,7 +433,6 @@ __all__ = (
     "Label",
     "Project",
     "Section",
-    "SubTask",
     "Task",
     "TaskLabel",
     "TeamMember",
