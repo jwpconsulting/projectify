@@ -11,6 +11,7 @@ except ImportError as e:
     ) from e
 
 import dj_database_url
+
 from .base import Base
 
 
@@ -59,6 +60,6 @@ class Test(Base):
         )
 
         cls.DATABASES["default"] = dj_database_url.config(
-            default="sqlite:///projectify.sqlite",
+            default="sqlite:///:memory:",
             conn_max_age=cls.CONN_MAX_AGE,
         )
