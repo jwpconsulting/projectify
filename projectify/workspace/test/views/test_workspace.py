@@ -21,7 +21,6 @@ from projectify.corporate.selectors.customer import (
     customer_check_active_for_workspace,
 )
 from projectify.corporate.services.stripe import customer_cancel_subscription
-from projectify.settings.base import Base
 from projectify.user.models import User
 from projectify.user.services.internal import user_create
 from projectify.workspace.services.team_member_invite import (
@@ -712,19 +711,6 @@ class TestWorkspaceSettingsQuota:
         assert "<td>Sections" in content
         assert "<td>Tasks" in content
         assert "<td>Labels" in content
-
-
-@pytest.fixture(autouse=True)
-def patch_stripe_settings(
-    settings: Base,
-    stripe_price_object: str,
-    stripe_secret_key: str,
-    stripe_endpoint_secret: str,
-) -> None:
-    """Patch stripe settings."""
-    settings.STRIPE_SECRET_KEY = stripe_secret_key
-    settings.STRIPE_ENDPOINT_SECRET = stripe_endpoint_secret
-    settings.STRIPE_PRICE_OBJECT = stripe_price_object
 
 
 class TestWorkspaceSettingsBilling:

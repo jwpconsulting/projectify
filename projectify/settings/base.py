@@ -30,6 +30,7 @@ from .types import (
     LoggingConfig,
     SocialAccountProvider,
     StoragesConfig,
+    StripeConfig,
     TemplatesConfig,
 )
 
@@ -389,9 +390,7 @@ class Base(Configuration):  # type:ignore
     ADMINS: list[list[str]] = []
 
     # Stripe
-    STRIPE_SECRET_KEY: Optional[str] = None
-    STRIPE_ENDPOINT_SECRET: Optional[str] = None
-    STRIPE_PRICE_OBJECT: Optional[str] = None
+    STRIPE_CONFIG: Optional[StripeConfig] = None
 
     # django-ratelimit
     RATELIMIT_ENABLE = True
