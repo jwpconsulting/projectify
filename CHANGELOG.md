@@ -24,6 +24,11 @@ features:
 - Test Projectify compabilitity with Python 3.14
 - Make all workspace app models readonly in the Projectify Django admin.
 - Remove trailing "magic" commas with Ruff. This makes the code base shorter.
+- Fix inconsistencies in shell scripts (Thanks shellcheck!)
+
+### Security
+
+- Forbid `<object>` tags by setting the `object-src` CSP to `none`.
 
 ## 2026.4.15
 
