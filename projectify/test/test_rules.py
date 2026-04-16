@@ -7,6 +7,7 @@ import pytest
 from faker import Faker
 
 from projectify.corporate.services.stripe import customer_cancel_subscription
+from projectify.settings.base import Base
 from projectify.user.models import User
 from projectify.user.services.internal import user_create
 from projectify.workspace.const import TeamMemberRoles
@@ -47,19 +48,14 @@ def observer(workspace: Workspace, faker: Faker) -> TeamMember:
 class TestPredicates:
     """Test predicates."""
 
-    def test_is_at_least_observer(
-        self,
-        workspace: Workspace,
-        observer: TeamMember,
-    ) -> None:
+    def test_is_at_least_observer(self, observer: TeamMember) -> None:
         """Test is_at_least_observer."""
+        workspace = observer.workspace
         # In the beginning the user is owner
         assert rules.is_at_least_observer(observer.user, workspace)
 
     def test_is_at_least_observer_unrelated_workspace(
-        self,
-        observer: TeamMember,
-        unrelated_workspace: Workspace,
+        self, observer: TeamMember, unrelated_workspace: Workspace
     ) -> None:
         """Test is_at_least_observer with other workspace."""
         assert not rules.is_at_least_observer(
@@ -67,12 +63,10 @@ class TestPredicates:
         )
 
     def test_is_at_least_contributor(
-        self,
-        workspace: Workspace,
-        observer: TeamMember,
-        user: User,
+        self, observer: TeamMember, user: User
     ) -> None:
         """Test is_at_least_contributor."""
+        workspace = observer.workspace
         assert not rules.is_at_least_contributor(observer.user, workspace)
         team_member_change_role(
             team_member=observer,
@@ -83,9 +77,7 @@ class TestPredicates:
         assert rules.is_at_least_contributor(observer.user, workspace)
 
     def test_is_at_least_contributor_unrelated_workspace(
-        self,
-        unrelated_workspace: Workspace,
-        observer: TeamMember,
+        self, unrelated_workspace: Workspace, observer: TeamMember
     ) -> None:
         """Test is_at_least_contributor with other workspace."""
         assert not rules.is_at_least_contributor(
@@ -93,12 +85,10 @@ class TestPredicates:
         )
 
     def test_is_at_least_maintainer(
-        self,
-        workspace: Workspace,
-        observer: TeamMember,
-        user: User,
+        self, observer: TeamMember, user: User
     ) -> None:
         """Test is_at_least_maintainer."""
+        workspace = observer.workspace
         assert not rules.is_at_least_maintainer(observer.user, workspace)
         team_member_change_role(
             team_member=observer,
@@ -109,22 +99,16 @@ class TestPredicates:
         assert rules.is_at_least_maintainer(observer.user, workspace)
 
     def test_is_at_least_maintainer_unrelated_workspace(
-        self,
-        unrelated_workspace: Workspace,
-        observer: TeamMember,
+        self, unrelated_workspace: Workspace, observer: TeamMember
     ) -> None:
         """Test is_at_least_maintainer with other workspace."""
         assert not rules.is_at_least_maintainer(
             observer.user, unrelated_workspace
         )
 
-    def test_is_at_least_owner(
-        self,
-        workspace: Workspace,
-        observer: TeamMember,
-        user: User,
-    ) -> None:
+    def test_is_at_least_owner(self, observer: TeamMember, user: User) -> None:
         """Test is_at_least_owner."""
+        workspace = observer.workspace
         assert not rules.is_at_least_owner(observer.user, workspace)
         team_member_change_role(
             team_member=observer,
@@ -135,9 +119,7 @@ class TestPredicates:
         assert rules.is_at_least_owner(observer.user, workspace)
 
     def test_is_at_least_owner_unrelated_workspace(
-        self,
-        observer: TeamMember,
-        unrelated_workspace: Workspace,
+        self, observer: TeamMember, unrelated_workspace: Workspace
     ) -> None:
         """Test is_at_least_owner with other workspace."""
         assert not rules.is_at_least_owner(observer.user, unrelated_workspace)
@@ -173,19 +155,14 @@ class TestTrialRules:
         )
 
     def test_create_chat_message(
-        self,
-        task: Task,
-        user: User,
-        team_member: TeamMember,
-        workspace: Workspace,
+        self, task: Task, team_member: TeamMember, workspace: Workspace
     ) -> None:
         """Assert 1 chat messages can not be created."""
+        user = team_member.user
         assert validate_perm("workspace.create_chat_message", user, workspace)
         customer_cancel_subscription(customer=workspace.customer)
         assert validate_perm("workspace.create_chat_message", user, workspace)
-        chat_message_create(
-            who=team_member.user, task=task, text="hello world"
-        )
+        chat_message_create(who=user, task=task, text="hello")
         assert not validate_perm(
             "workspace.create_chat_message",
             user,
@@ -193,22 +170,39 @@ class TestTrialRules:
             raise_exception=False,
         )
 
-    def test_create_label(
-        self,
-        user: User,
-        team_member: TeamMember,
-        workspace: Workspace,
+    def test_no_billing_integration(
+        self, settings: Base, task: Task, team_member: TeamMember
     ) -> None:
+        """Assert that with no biling, the 1 message limit becomes inactive."""
+        user = team_member.user
+        workspace = team_member.workspace
+        assert validate_perm("workspace.create_chat_message", user, workspace)
+        customer_cancel_subscription(customer=workspace.customer)
+        assert validate_perm("workspace.create_chat_message", user, workspace)
+        chat_message_create(who=user, task=task, text="hello")
+        assert not validate_perm(
+            "workspace.create_chat_message",
+            user,
+            workspace,
+            raise_exception=False,
+        )
+        settings.STRIPE_CONFIG = None
+        assert validate_perm(
+            "workspace.create_chat_message",
+            user,
+            workspace,
+            raise_exception=False,
+        )
+        chat_message_create(who=user, task=task, text="hello")
+
+    def test_create_label(self, team_member: TeamMember) -> None:
         """Assert only 1 labels can be created."""
+        user = team_member.user
+        workspace = team_member.workspace
         assert validate_perm("workspace.create_label", user, workspace)
         customer_cancel_subscription(customer=workspace.customer)
         assert validate_perm("workspace.create_label", user, workspace)
-        label_create(
-            workspace=workspace,
-            name="label",
-            color=0,
-            who=team_member.user,
-        )
+        label_create(workspace=workspace, name="label", color=0, who=user)
         assert not validate_perm(
             "workspace.create_label",
             user,
@@ -217,21 +211,14 @@ class TestTrialRules:
         )
 
     def test_create_task(
-        self,
-        user: User,
-        team_member: TeamMember,
-        section: Section,
-        workspace: Workspace,
+        self, team_member: TeamMember, section: Section, workspace: Workspace
     ) -> None:
         """Assert only 1 task can be created."""
+        user = team_member.user
         assert validate_perm("workspace.create_task", user, workspace)
         customer_cancel_subscription(customer=workspace.customer)
         assert validate_perm("workspace.create_task", user, workspace)
-        task_create(
-            section=section,
-            title="task title",
-            who=team_member.user,
-        )
+        task_create(section=section, title="task title", who=user)
         assert not validate_perm(
             "workspace.create_task",
             user,
@@ -239,21 +226,14 @@ class TestTrialRules:
             raise_exception=False,
         )
 
-    def test_create_project(
-        self,
-        user: User,
-        team_member: TeamMember,
-        workspace: Workspace,
-    ) -> None:
+    def test_create_project(self, team_member: TeamMember) -> None:
         """Assert only 1 project can be created."""
+        user = team_member.user
+        workspace = team_member.workspace
         assert validate_perm("workspace.create_project", user, workspace)
         customer_cancel_subscription(customer=workspace.customer)
         assert validate_perm("workspace.create_project", user, workspace)
-        project_create(
-            workspace=workspace,
-            title="project",
-            who=team_member.user,
-        )
+        project_create(workspace=workspace, title="project", who=user)
         assert not validate_perm(
             "workspace.create_project",
             user,
@@ -262,29 +242,14 @@ class TestTrialRules:
         )
 
     def test_create_section(
-        self,
-        user: User,
-        team_member: TeamMember,
-        project: Project,
-        workspace: Workspace,
+        self, team_member: TeamMember, project: Project, workspace: Workspace
     ) -> None:
         """Assert only 100 sections can be created."""
-        assert validate_perm(
-            "workspace.create_section",
-            user,
-            workspace,
-        )
+        user = team_member.user
+        assert validate_perm("workspace.create_section", user, workspace)
         customer_cancel_subscription(customer=workspace.customer)
-        assert validate_perm(
-            "workspace.create_section",
-            user,
-            workspace,
-        )
-        section_create(
-            project=project,
-            title="section",
-            who=team_member.user,
-        )
+        assert validate_perm("workspace.create_section", user, workspace)
+        section_create(project=project, title="section", who=user)
         assert not validate_perm(
             "workspace.create_section",
             user,
@@ -293,14 +258,11 @@ class TestTrialRules:
         )
 
     def test_team_member_and_invite_limit(
-        self,
-        user: User,
-        team_member: TeamMember,
-        workspace: Workspace,
-        faker: Faker,
-        unrelated_user: User,
+        self, team_member: TeamMember, faker: Faker, unrelated_user: User
     ) -> None:
         """Assert only one more team member can be invited or added."""
+        user = team_member.user
+        workspace = team_member.workspace
         count = workspace.users.count()
         assert count == 1
         # Test both permissons
@@ -331,9 +293,7 @@ class TestTrialRules:
         assert validate_perm("workspace.update_team_member", user, workspace)
 
         invite = team_member_invite_create(
-            workspace=workspace,
-            email_or_user=faker.email(),
-            who=team_member.user,
+            workspace=workspace, email_or_user=faker.email(), who=user
         )
         assert workspace.users.count() == count
         assert not validate_perm(
@@ -355,9 +315,7 @@ class TestTrialRules:
             "workspace.create_team_member_invite", user, workspace
         )
         new_team_member = team_member_invite_create(
-            workspace=workspace,
-            who=team_member.user,
-            email_or_user=unrelated_user,
+            workspace=workspace, who=user, email_or_user=unrelated_user
         )
         assert isinstance(new_team_member, TeamMember)
         assert workspace.users.count() == count + 1
