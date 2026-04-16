@@ -10,9 +10,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0054_rename_deadline_task_due_date"),
-    ]
+    dependencies = [("workspace", "0054_rename_deadline_task_due_date")]
 
     operations = [
         migrations.RenameField(

@@ -14,14 +14,11 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0011_chatmessage"),
-    ]
+    dependencies = [("workspace", "0011_chatmessage")]
 
     operations = [
         migrations.AlterModelOptions(
-            name="chatmessage",
-            options={"ordering": ("created",)},
+            name="chatmessage", options={"ordering": ("created",)}
         ),
         migrations.AddField(
             model_name="subtask",

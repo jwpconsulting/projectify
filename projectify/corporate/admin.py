@@ -24,10 +24,7 @@ class CustomerAdmin(admin.ModelAdmin[models.Customer]):
     list_display = ("workspace_title", "seats", "subscription_status")
     list_filter = ("subscription_status",)
     list_select_related = ("workspace",)
-    readonly_fields = (
-        "uuid",
-        "stripe_customer_id",
-    )
+    readonly_fields = ("uuid", "stripe_customer_id")
 
     @admin.display(description=_("Workspace title"))
     def workspace_title(self, instance: models.Customer) -> str:
@@ -84,7 +81,5 @@ class CouponAdmin(admin.ModelAdmin[Coupon]):
             raise ValueError("Expected user to be User")
         data = form.cleaned_data
         coupon_create(
-            who=user,
-            seats=data["seats"],
-            prefix=data["code_prefix"],
+            who=user, seats=data["seats"], prefix=data["code_prefix"]
         )

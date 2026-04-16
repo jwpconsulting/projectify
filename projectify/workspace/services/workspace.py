@@ -27,10 +27,7 @@ logger = logging.getLogger(__name__)
 
 # Create
 def workspace_create(
-    *,
-    title: str,
-    description: Optional[str] = None,
-    owner: User,
+    *, title: str, description: Optional[str] = None, owner: User
 ) -> Workspace:
     """Create a workspace."""
     # TODO validate that user can only create 1 unpaid workspace
@@ -58,11 +55,7 @@ def workspace_update(
     who: User,
 ) -> Workspace:
     """Update a workspace."""
-    validate_perm(
-        "workspace.update_workspace",
-        who,
-        workspace,
-    )
+    validate_perm("workspace.update_workspace", who, workspace)
     workspace.title = title
     workspace.description = description
     match picture:
@@ -78,11 +71,7 @@ def workspace_update(
 
 # Delete
 @transaction.atomic
-def workspace_delete(
-    *,
-    who: User,
-    workspace: Workspace,
-) -> None:
+def workspace_delete(*, who: User, workspace: Workspace) -> None:
     """
     Delete a workspace.
 
@@ -117,10 +106,7 @@ def workspace_delete(
 # TODO looks like this is a private method only to be used to create the
 # initial user, or when adding users through invitations
 def workspace_add_user(
-    *,
-    workspace: Workspace,
-    user: User,
-    role: TeamMemberRoles,
+    *, workspace: Workspace, user: User, role: TeamMemberRoles
 ) -> TeamMember:
     """Add user to workspace. Return new team member."""
     team_member = workspace.teammember_set.create(user=user, role=role)

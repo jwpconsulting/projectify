@@ -10,21 +10,14 @@ from django.db import migrations
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0073_alter_teammember_options_and_more"),
-    ]
+    dependencies = [("workspace", "0073_alter_teammember_options_and_more")]
 
     operations = [
         migrations.RemoveConstraint(
-            model_name="task",
-            name="unique_task_number",
+            model_name="task", name="unique_task_number"
         ),
         migrations.RemoveField(
-            model_name="workspace",
-            name="highest_task_number",
+            model_name="workspace", name="highest_task_number"
         ),
-        migrations.RemoveField(
-            model_name="task",
-            name="number",
-        ),
+        migrations.RemoveField(model_name="task", name="number"),
     ]

@@ -13,9 +13,7 @@ import projectify.lib.models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0050_alter_workspaceuser_role"),
-    ]
+    dependencies = [("workspace", "0050_alter_workspaceuser_role")]
 
     operations = [
         migrations.AddField(

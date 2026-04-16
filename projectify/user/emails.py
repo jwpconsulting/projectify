@@ -119,7 +119,4 @@ class UserEmailAddressUpdatedEmail(TemplateEmail[User]):
 
     def get_context(self) -> Context:
         """Add reset password token."""
-        return {
-            **super().get_context(),
-            "new_email": self.obj.email,
-        }
+        return {**super().get_context(), "new_email": self.obj.email}

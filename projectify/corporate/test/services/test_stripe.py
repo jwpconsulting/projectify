@@ -38,9 +38,7 @@ class TestCreateBillingPortalSessionForWorkspaceUuid:
 
 
 def test_subscription_activation(
-    unpaid_customer: Customer,
-    workspace: Workspace,
-    stripe_customer_id: str,
+    unpaid_customer: Customer, workspace: Workspace, stripe_customer_id: str
 ) -> None:
     """Test activating subscription."""
     assert customer_check_active_for_workspace(workspace=workspace) == "trial"

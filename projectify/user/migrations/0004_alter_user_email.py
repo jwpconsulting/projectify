@@ -10,9 +10,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("user", "0003_auto_20210924_0753"),
-    ]
+    dependencies = [("user", "0003_auto_20210924_0753")]
 
     operations = [
         migrations.AlterField(
@@ -21,5 +19,5 @@ class Migration(migrations.Migration):
             field=models.EmailField(
                 max_length=254, unique=True, verbose_name="Email"
             ),
-        ),
+        )
     ]

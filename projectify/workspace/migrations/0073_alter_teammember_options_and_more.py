@@ -10,17 +10,13 @@ from django.db import migrations
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0072_alter_label_unique_together_and_more"),
-    ]
+    dependencies = [("workspace", "0072_alter_label_unique_together_and_more")]
 
     operations = [
         migrations.AlterModelOptions(
-            name="teammember",
-            options={"ordering": ("created",)},
+            name="teammember", options={"ordering": ("created",)}
         ),
         migrations.AlterModelOptions(
-            name="teammemberinvite",
-            options={"ordering": ("created",)},
+            name="teammemberinvite", options={"ordering": ("created",)}
         ),
     ]

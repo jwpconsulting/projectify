@@ -85,9 +85,5 @@ urlpatterns = (
         password_reset_requested,
         name="requested-password-reset",
     ),
-    path(
-        "reset-password",
-        password_reset,
-        name="reset-password",
-    ),
+    path("reset-password", password_reset, name="reset-password"),
 )

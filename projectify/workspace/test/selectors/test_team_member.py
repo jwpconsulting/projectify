@@ -22,9 +22,7 @@ pytestmark = pytest.mark.django_db
 
 
 def test_team_member_find_for_workspace(
-    workspace: Workspace,
-    user: User,
-    team_member: TeamMember,
+    workspace: Workspace, user: User, team_member: TeamMember
 ) -> None:
     """Test get_by_workspace_and_user."""
     assert (

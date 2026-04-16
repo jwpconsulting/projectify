@@ -10,9 +10,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Add two datetime fields."""
 
-    dependencies = [
-        ("user", "0009_userinvite_redeemed"),
-    ]
+    dependencies = [("user", "0009_userinvite_redeemed")]
 
     operations = [
         migrations.AddField(

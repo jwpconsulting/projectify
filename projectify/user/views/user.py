@@ -77,7 +77,7 @@ class UserProfileForm(forms.ModelForm):
         widgets = {
             "preferred_name": forms.TextInput(
                 attrs={"placeholder": _("Enter your preferred name")}
-            ),
+            )
         }
 
 
@@ -284,9 +284,7 @@ def email_address_update(request: AuthenticatedHttpRequest) -> HttpResponse:
     data = form.cleaned_data
     try:
         user_request_email_address_update(
-            user=user,
-            password=data["password"],
-            new_email=data["new_email"],
+            user=user, password=data["password"], new_email=data["new_email"]
         )
     except ValidationError as error:
         populate_form_with_errors(form, error)
@@ -308,8 +306,7 @@ def email_address_update_confirm(
     user = request.user
     try:
         user_confirm_email_address_update(
-            user=user,
-            confirmation_token=Token(token),
+            user=user, confirmation_token=Token(token)
         )
     except ValidationError as error:
         context = {"error": str(error)}

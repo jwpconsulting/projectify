@@ -10,9 +10,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0014_auto_20220208_0509"),
-    ]
+    dependencies = [("workspace", "0014_auto_20220208_0509")]
 
     operations = [
         migrations.AddField(
@@ -23,5 +21,5 @@ class Migration(migrations.Migration):
                 help_text="Archival timestamp of this workspace board.",
                 null=True,
             ),
-        ),
+        )
     ]

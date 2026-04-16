@@ -17,9 +17,7 @@ def test_add_chat_message(
     """Test adding a chat message."""
     assert task.chatmessage_set.count() == 0
     chat_message = chat_message_create(
-        who=team_member.user,
-        task=task,
-        text=faker.paragraph(),
+        who=team_member.user, task=task, text=faker.paragraph()
     )
     assert task.chatmessage_set.count() == 1
     assert chat_message.author == team_member

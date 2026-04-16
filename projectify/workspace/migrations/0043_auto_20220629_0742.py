@@ -11,8 +11,6 @@ from django.db import migrations
 class Migration(migrations.Migration):
     """Migrations."""
 
-    dependencies = [
-        ("workspace", "0042_task_assignee_workspace_user"),
-    ]
+    dependencies = [("workspace", "0042_task_assignee_workspace_user")]
 
     operations = []

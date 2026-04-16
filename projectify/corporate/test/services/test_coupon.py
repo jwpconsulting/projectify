@@ -41,9 +41,7 @@ class TestCouponRedeem:
     """Test redeeming coupons."""
 
     def test_invalid_code(
-        self,
-        team_member: TeamMember,
-        unpaid_customer: Customer,
+        self, team_member: TeamMember, unpaid_customer: Customer
     ) -> None:
         """Make sure nothing bad happens with an invalid code."""
         assert (
@@ -81,9 +79,7 @@ class TestCouponRedeem:
             == "trial"
         )
         coupon_redeem(
-            who=user,
-            code=coupon.code,
-            workspace=team_member.workspace,
+            who=user, code=coupon.code, workspace=team_member.workspace
         )
         assert (
             customer_check_active_for_workspace(
@@ -93,11 +89,7 @@ class TestCouponRedeem:
         )
         workspace = workspace_create(title="other workspace", owner=user)
         with pytest.raises(ValidationError) as error:
-            coupon_redeem(
-                who=user,
-                code="i-do-not-exist",
-                workspace=workspace,
-            )
+            coupon_redeem(who=user, code="i-do-not-exist", workspace=workspace)
         assert error.match("No coupon is available")
         assert (
             customer_check_active_for_workspace(
@@ -120,19 +112,13 @@ class TestCouponRedeem:
         assert (
             customer_check_active_for_workspace(workspace=workspace) == "trial"
         )
-        coupon_redeem(
-            who=user,
-            code=coupon.code,
-            workspace=workspace,
-        )
+        coupon_redeem(who=user, code=coupon.code, workspace=workspace)
         assert (
             customer_check_active_for_workspace(workspace=workspace) == "full"
         )
         with pytest.raises(ValidationError) as error:
             coupon_redeem(
-                who=user,
-                code=other_coupon.code,
-                workspace=workspace,
+                who=user, code=other_coupon.code, workspace=workspace
             )
         assert error.match("already been used for this workspace")
         assert (
@@ -140,17 +126,12 @@ class TestCouponRedeem:
         )
 
     def test_redeem_paid(
-        self,
-        team_member: TeamMember,
-        coupon: Coupon,
-        paid_customer: Customer,
+        self, team_member: TeamMember, coupon: Coupon, paid_customer: Customer
     ) -> None:
         """Ensure we can't redeem for an already paid workspace."""
         workspace = paid_customer.workspace
         with pytest.raises(ValidationError) as error:
             coupon_redeem(
-                who=team_member.user,
-                code=coupon.code,
-                workspace=workspace,
+                who=team_member.user, code=coupon.code, workspace=workspace
             )
         assert error.match("already has an active subscription")

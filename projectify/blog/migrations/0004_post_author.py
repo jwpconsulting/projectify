@@ -10,9 +10,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("blog", "0003_initial"),
-    ]
+    dependencies = [("blog", "0003_initial")]
 
     operations = [
         migrations.AddField(

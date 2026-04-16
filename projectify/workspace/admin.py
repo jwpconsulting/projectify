@@ -64,12 +64,7 @@ class WorkspaceAdmin(ReadOnlyAdmin[Workspace], admin.ModelAdmin[Workspace]):
     """Workspace Admin."""
 
     inlines = (TeamMemberInline, ProjectInline)
-    list_display = (
-        "title",
-        "description",
-        "created",
-        "modified",
-    )
+    list_display = ("title", "description", "created", "modified")
     readonly_fields = ("uuid",)
     search_fields = ("title",)
     search_help_text = _("You can search by workspace title")
@@ -83,10 +78,7 @@ class TeamMemberInviteAdmin(
 
     list_display = ("workspace_title", "redeemed", "redeemed_when")
     list_select_related = ("workspace",)
-    list_filter = (
-        "redeemed",
-        "redeemed_when",
-    )
+    list_filter = ("redeemed", "redeemed_when")
 
     @admin.display(description=_("Workspace title"))
     def workspace_title(self, instance: TeamMemberInvite) -> str:
@@ -106,15 +98,8 @@ class TeamMemberAdmin(ReadOnlyAdmin[TeamMember], admin.ModelAdmin[TeamMember]):
         "role",
     )
     list_filter = ("role",)
-    list_select_related = (
-        "workspace",
-        "user",
-    )
-    search_fields = (
-        "workspace__title",
-        "user__email",
-        "user__preferred_name",
-    )
+    list_select_related = ("workspace", "user")
+    search_fields = ("workspace__title", "user__email", "user__preferred_name")
     search_help_text = _(
         "You can seach by workspace title, user email and preferred name"
     )
@@ -142,19 +127,10 @@ class ProjectAdmin(ReadOnlyAdmin[Project], admin.ModelAdmin[Project]):
     """Project Admin."""
 
     inlines = (SectionInline,)
-    list_display = (
-        "title",
-        "workspace_title",
-        "created",
-        "modified",
-    )
+    list_display = ("title", "workspace_title", "created", "modified")
     list_select_related = ("workspace",)
     readonly_fields = ("uuid",)
-    search_fields = (
-        "title",
-        "workspace__title",
-        "uuid",
-    )
+    search_fields = ("title", "workspace__title", "uuid")
 
     @admin.display(description=_("Workspace title"))
     def workspace_title(self, instance: Project) -> str:
@@ -239,11 +215,7 @@ class TaskAdmin(ReadOnlyAdmin[Task], admin.ModelAdmin[Task]):
 class LabelAdmin(ReadOnlyAdmin[Label], admin.ModelAdmin[Label]):
     """Label admin."""
 
-    list_display = (
-        "name",
-        "color",
-        "workspace_title",
-    )
+    list_display = ("name", "color", "workspace_title")
     list_select_related = ("workspace",)
     readonly_fields = ("uuid",)
 

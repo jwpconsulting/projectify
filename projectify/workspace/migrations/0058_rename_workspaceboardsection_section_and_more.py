@@ -10,13 +10,10 @@ from django.db import migrations
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0057_workspaceuserinvite_redeemed_when"),
-    ]
+    dependencies = [("workspace", "0057_workspaceuserinvite_redeemed_when")]
 
     operations = [
         migrations.RenameModel(
-            old_name="WorkspaceBoardSection",
-            new_name="Section",
-        ),
+            old_name="WorkspaceBoardSection", new_name="Section"
+        )
     ]

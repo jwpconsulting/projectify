@@ -10,9 +10,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0022_label_tasklabel_task_labels"),
-    ]
+    dependencies = [("workspace", "0022_label_tasklabel_task_labels")]
 
     operations = [
         migrations.AlterField(
@@ -21,5 +19,5 @@ class Migration(migrations.Migration):
             field=models.PositiveBigIntegerField(
                 default=0, help_text="Color index"
             ),
-        ),
+        )
     ]

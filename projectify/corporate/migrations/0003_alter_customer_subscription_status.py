@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         (
             "corporate",
             "0002_customer_seats_customer_stripe_customer_id_and_more",
-        ),
+        )
     ]
 
     operations = [
@@ -30,5 +30,5 @@ class Migration(migrations.Migration):
                 default="UNP",
                 max_length=3,
             ),
-        ),
+        )
     ]

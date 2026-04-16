@@ -11,12 +11,11 @@ class Migration(migrations.Migration):
     """Migration."""
 
     dependencies = [
-        ("workspace", "0055_rename_deadline_workspaceboard_due_date_and_more"),
+        ("workspace", "0055_rename_deadline_workspaceboard_due_date_and_more")
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name="label",
-            options={"ordering": ("-modified",)},
-        ),
+            name="label", options={"ordering": ("-modified",)}
+        )
     ]

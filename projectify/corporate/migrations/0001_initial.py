@@ -13,9 +13,7 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        ("workspace", "0029"),
-    ]
+    dependencies = [("workspace", "0029")]
 
     operations = [
         migrations.CreateModel(
@@ -38,5 +36,5 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-        ),
+        )
     ]

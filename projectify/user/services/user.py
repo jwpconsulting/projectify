@@ -151,10 +151,7 @@ def user_change_password(
 
 @transaction.atomic
 def user_request_email_address_update(
-    *,
-    user: User,
-    new_email: str,
-    password: str,
+    *, user: User, new_email: str, password: str
 ) -> None:
     """Start user email change process."""
     if not user.check_password(password):
@@ -166,9 +163,7 @@ def user_request_email_address_update(
 
 @transaction.atomic
 def user_confirm_email_address_update(
-    *,
-    user: User,
-    confirmation_token: Token,
+    *, user: User, confirmation_token: Token
 ) -> None:
     """Finalize user email change process."""
     old_email = user.email

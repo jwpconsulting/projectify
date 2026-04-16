@@ -13,14 +13,11 @@ import projectify.lib.models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("corporate", "0006_coupon"),
-    ]
+    dependencies = [("corporate", "0006_coupon")]
 
     operations = [
         migrations.AlterModelOptions(
-            name="customer",
-            options={"get_latest_by": "modified"},
+            name="customer", options={"get_latest_by": "modified"}
         ),
         migrations.AddField(
             model_name="customer",

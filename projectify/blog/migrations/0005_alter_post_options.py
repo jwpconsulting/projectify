@@ -10,13 +10,11 @@ from django.db import migrations
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("blog", "0004_post_author"),
-    ]
+    dependencies = [("blog", "0004_post_author")]
 
     operations = [
         migrations.AlterModelOptions(
             name="post",
             options={"get_latest_by": "modified", "ordering": ["-published"]},
-        ),
+        )
     ]

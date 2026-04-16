@@ -14,13 +14,12 @@ class Migration(migrations.Migration):
     """Migration."""
 
     dependencies = [
-        ("user", "0010_user_privacy_policy_agreed_user_tos_agreed"),
+        ("user", "0010_user_privacy_policy_agreed_user_tos_agreed")
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name="user",
-            options={"get_latest_by": "modified"},
+            name="user", options={"get_latest_by": "modified"}
         ),
         migrations.AddField(
             model_name="user",

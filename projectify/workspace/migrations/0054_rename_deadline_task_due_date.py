@@ -10,15 +10,11 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0053_task_read_only_task_number_and_more"),
-    ]
+    dependencies = [("workspace", "0053_task_read_only_task_number_and_more")]
 
     operations = [
         migrations.RenameField(
-            model_name="task",
-            old_name="deadline",
-            new_name="due_date",
+            model_name="task", old_name="deadline", new_name="due_date"
         ),
         migrations.AlterField(
             model_name="task",

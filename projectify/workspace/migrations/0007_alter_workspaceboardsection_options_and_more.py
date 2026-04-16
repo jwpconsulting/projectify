@@ -10,9 +10,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0006_workspaceboardsection"),
-    ]
+    dependencies = [("workspace", "0006_workspaceboardsection")]
 
     operations = [
         migrations.AlterModelOptions(

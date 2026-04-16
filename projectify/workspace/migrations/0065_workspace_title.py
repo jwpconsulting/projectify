@@ -27,5 +27,5 @@ class Migration(migrations.Migration):
                 name="title",
                 violation_error_message="Workspace title can only contain '.' or ':' if followed by whitespace or if located at the end.",
             ),
-        ),
+        )
     ]

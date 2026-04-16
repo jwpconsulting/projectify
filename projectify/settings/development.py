@@ -108,10 +108,7 @@ class Development(Base):
 
     # Enable template debugging
     TEMPLATES = Base.TEMPLATES
-    TEMPLATES[0]["OPTIONS"] = {
-        **TEMPLATES[0]["OPTIONS"],
-        "debug": True,
-    }
+    TEMPLATES[0]["OPTIONS"] = {**TEMPLATES[0]["OPTIONS"], "debug": True}
 
     # Logging with timestamps for development
     LOGGING = {
@@ -120,14 +117,11 @@ class Development(Base):
             "like_gunicorn": {
                 "format": "[%(asctime)s] %(levelname)-s [%(name)s.%(module)s] ~ %(message)s",
                 "datefmt": "%d/%b/%Y %H:%M:%S",
-            },
+            }
         },
         "loggers": {
             **Base.LOGGING["loggers"],
-            "django": {
-                "handlers": ["console"],
-                "propagate": False,
-            },
+            "django": {"handlers": ["console"], "propagate": False},
         },
     }
 
@@ -150,10 +144,7 @@ class Development(Base):
         )
 
         # Add CSP report URI for development
-        cls.SECURE_CSP = {
-            **Base.SECURE_CSP,
-            "report-uri": ["/csp-report/"],
-        }
+        cls.SECURE_CSP = {**Base.SECURE_CSP, "report-uri": ["/csp-report/"]}
         cls.DATABASES["default"] = dj_database_url.config(
             default="sqlite:///projectify.sqlite",
             conn_max_age=cls.CONN_MAX_AGE,

@@ -13,9 +13,7 @@ import projectify.lib.models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("corporate", "0005_alter_customer_subscription_status"),
-    ]
+    dependencies = [("corporate", "0005_alter_customer_subscription_status")]
 
     operations = [
         migrations.CreateModel(
@@ -65,9 +63,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={
-                "get_latest_by": "modified",
-                "abstract": False,
-            },
-        ),
+            options={"get_latest_by": "modified", "abstract": False},
+        )
     ]

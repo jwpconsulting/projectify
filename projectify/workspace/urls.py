@@ -59,11 +59,7 @@ logger = logging.getLogger(__name__)
 app_name = "dashboard"
 workspace_patterns: UrlPatterns = (
     # HTML
-    path(
-        "<uuid:workspace_uuid>",
-        workspace_view,
-        name="detail",
-    ),
+    path("<uuid:workspace_uuid>", workspace_view, name="detail"),
     # Project related views:
     path(
         "<uuid:workspace_uuid>/create-project",
@@ -76,9 +72,7 @@ workspace_patterns: UrlPatterns = (
         name="minimize-project-list",
     ),
     path(
-        "<uuid:workspace_uuid>/picture",
-        workspace_picture_view,
-        name="picture",
+        "<uuid:workspace_uuid>/picture", workspace_picture_view, name="picture"
     ),
     # Settings
     path(
@@ -92,9 +86,7 @@ workspace_patterns: UrlPatterns = (
         name="projects",
     ),
     path(
-        "<uuid:workspace_uuid>/labels",
-        workspace_settings_label,
-        name="labels",
+        "<uuid:workspace_uuid>/labels", workspace_settings_label, name="labels"
     ),
     path(
         "<uuid:workspace_uuid>/labels/create",
@@ -142,31 +134,11 @@ else:
         ),
     )
 project_patterns = (
-    path(
-        "<uuid:project_uuid>",
-        project_detail_view,
-        name="detail",
-    ),
-    path(
-        "<uuid:project_uuid>/update",
-        project_update_view,
-        name="update",
-    ),
-    path(
-        "<uuid:project_uuid>/archive",
-        project_archive_view,
-        name="archive",
-    ),
-    path(
-        "<uuid:project_uuid>/delete",
-        project_delete_view,
-        name="delete",
-    ),
-    path(
-        "<uuid:project_uuid>/recover",
-        project_recover_view,
-        name="recover",
-    ),
+    path("<uuid:project_uuid>", project_detail_view, name="detail"),
+    path("<uuid:project_uuid>/update", project_update_view, name="update"),
+    path("<uuid:project_uuid>/archive", project_archive_view, name="archive"),
+    path("<uuid:project_uuid>/delete", project_delete_view, name="delete"),
+    path("<uuid:project_uuid>/recover", project_recover_view, name="recover"),
     # Create section
     path(
         "<uuid:project_uuid>/create-section",

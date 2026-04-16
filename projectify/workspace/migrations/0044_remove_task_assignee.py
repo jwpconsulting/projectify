@@ -10,13 +10,6 @@ from django.db import migrations
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0043_auto_20220629_0742"),
-    ]
+    dependencies = [("workspace", "0043_auto_20220629_0742")]
 
-    operations = [
-        migrations.RemoveField(
-            model_name="task",
-            name="assignee",
-        ),
-    ]
+    operations = [migrations.RemoveField(model_name="task", name="assignee")]

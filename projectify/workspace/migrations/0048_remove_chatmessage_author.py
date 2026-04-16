@@ -11,12 +11,9 @@ class Migration(migrations.Migration):
     """Migration."""
 
     dependencies = [
-        ("workspace", "0047_populate_chatmessage_author_workspace_user"),
+        ("workspace", "0047_populate_chatmessage_author_workspace_user")
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name="chatmessage",
-            name="author",
-        ),
+        migrations.RemoveField(model_name="chatmessage", name="author")
     ]

@@ -360,10 +360,7 @@ def workspace_settings_general(
             context=context,
             status=400,
         )
-    return redirect(
-        "dashboard:workspaces:settings",
-        workspace.uuid,
-    )
+    return redirect("dashboard:workspaces:settings", workspace.uuid)
 
 
 @require_http_methods(["GET"])
@@ -383,15 +380,11 @@ def workspace_settings_projects(
         request=request, workspace=workspace, active_tab="projects"
     )
     archived_projects = project_find_by_workspace_uuid(
-        workspace_uuid=workspace_uuid,
-        who=request.user,
-        archived=True,
+        workspace_uuid=workspace_uuid, who=request.user, archived=True
     )
     context["archived_projects"] = archived_projects
     return render(
-        request,
-        "workspace/workspace_settings_projects.html",
-        context=context,
+        request, "workspace/workspace_settings_projects.html", context=context
     )
 
 
@@ -404,10 +397,7 @@ def workspace_settings_label(
     workspace = workspace_find_by_workspace_uuid(
         who=request.user,
         workspace_uuid=workspace_uuid,
-        qs=workspace_build_detail_query_set(
-            who=None,
-            annotate_labels=True,
-        ),
+        qs=workspace_build_detail_query_set(who=None, annotate_labels=True),
     )
     if workspace is None:
         raise Http404(_("Workspace not found"))
@@ -543,9 +533,7 @@ def workspace_settings_edit_label(
 ) -> HttpResponse:
     """Show edit view for specific label."""
     label = label_find_by_label_uuid(
-        who=request.user,
-        label_uuid=label_uuid,
-        qs=LabelDetailQuerySet,
+        who=request.user, label_uuid=label_uuid, qs=LabelDetailQuerySet
     )
     if label is None:
         raise Http404(f"Couldn't find label with UUID {label_uuid}")
@@ -905,9 +893,7 @@ def workspace_settings_billing(
             return render(request, template, context=context)
         case "POST", _, "ACTIVE":
             return HttpResponseBadRequest(
-                _(
-                    "You've already activated a subscription for this workspace"
-                ),
+                _("You've already activated a subscription for this workspace")
             )
         case "POST", "checkout", _:
             billing_form = WorkspaceBillingForm(request.POST)
@@ -971,26 +957,11 @@ def workspace_settings_quota(
             "label": _("Team members and invites"),
             "quota": workspace.quota.team_members_and_invites,
         },
-        {
-            "label": _("Projects"),
-            "quota": workspace.quota.projects,
-        },
-        {
-            "label": _("Sections"),
-            "quota": workspace.quota.sections,
-        },
-        {
-            "label": _("Tasks"),
-            "quota": workspace.quota.tasks,
-        },
-        {
-            "label": _("Labels"),
-            "quota": workspace.quota.labels,
-        },
-        {
-            "label": _("Task labels"),
-            "quota": workspace.quota.task_labels,
-        },
+        {"label": _("Projects"), "quota": workspace.quota.projects},
+        {"label": _("Sections"), "quota": workspace.quota.sections},
+        {"label": _("Tasks"), "quota": workspace.quota.tasks},
+        {"label": _("Labels"), "quota": workspace.quota.labels},
+        {"label": _("Task labels"), "quota": workspace.quota.task_labels},
     ]
     quota_rows = [q for q in quota_rows if q["quota"].limit is not None]
 

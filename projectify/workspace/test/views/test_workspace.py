@@ -86,10 +86,7 @@ class TestMinimizeLists:
 
     @pytest.mark.parametrize(
         "initial_state,post_value,expected_state",
-        [
-            (False, "true", True),
-            (True, "false", False),
-        ],
+        [(False, "true", True), (True, "false", False)],
     )
     def test_toggle_project_list(
         self,
@@ -117,19 +114,14 @@ class TestMinimizeLists:
         assert team_member.minimized_project_list is expected_state
 
     def test_get_method_not_allowed(
-        self,
-        user_client: Client,
-        resource_url: str,
-        team_member: TeamMember,
+        self, user_client: Client, resource_url: str, team_member: TeamMember
     ) -> None:
         """Test that GET requests are not allowed."""
         response = user_client.get(resource_url)
         assert response.status_code == 405
 
     def test_workspace_not_found(
-        self,
-        user_client: Client,
-        team_member: TeamMember,
+        self, user_client: Client, team_member: TeamMember
     ) -> None:
         """Test minimizing project list for non-existent workspace."""
         url = reverse(
@@ -139,19 +131,14 @@ class TestMinimizeLists:
         assert response.status_code == 404
 
     def test_invalid_form(
-        self,
-        user_client: Client,
-        resource_url: str,
-        team_member: TeamMember,
+        self, user_client: Client, resource_url: str, team_member: TeamMember
     ) -> None:
         """Test form validation with invalid data."""
         response = user_client.post(resource_url, {})
         assert response.status_code == 200
 
     def test_unauthorized_workspace_access(
-        self,
-        user_client: Client,
-        unrelated_workspace: Workspace,
+        self, user_client: Client, unrelated_workspace: Workspace
     ) -> None:
         """Test that users can't minimize project list for other workspaces."""
         url = reverse(
@@ -263,10 +250,7 @@ class TestWorkspaceSettingsTeamMembers:
         )
 
     def test_invite_then_uninvite(
-        self,
-        user_client: Client,
-        resource_url: str,
-        team_member: TeamMember,
+        self, user_client: Client, resource_url: str, team_member: TeamMember
     ) -> None:
         """Test inviting and uninviting a new user."""
         count = team_member.workspace.teammemberinvite_set.count()
@@ -634,8 +618,7 @@ class TestWorkspaceSettingsEditLabel:
     ) -> None:
         """Test editing a missing label."""
         url = reverse(
-            "dashboard:workspaces:edit-label",
-            args=(workspace.uuid, uuid4()),
+            "dashboard:workspaces:edit-label", args=(workspace.uuid, uuid4())
         )
         assert user_client.get(url).status_code == 404
 
@@ -731,9 +714,7 @@ class TestWorkspaceSettingsBilling:
             yield m
 
     @pytest.fixture(autouse=True)
-    def mock_stripe_checkout(
-        self,
-    ) -> Iterable[mock.MagicMock]:
+    def mock_stripe_checkout(self) -> Iterable[mock.MagicMock]:
         """Mock stripe checkout session creation."""
         with mock.patch(
             "stripe.checkout._session_service.SessionService.create"

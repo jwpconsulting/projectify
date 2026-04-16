@@ -32,10 +32,7 @@ class UserAdmin(admin.ModelAdmin[User]):
         "is_superuser",
         "last_login",
     )
-    search_fields = (
-        "email",
-        "preferred_name",
-    )
+    search_fields = ("email", "preferred_name")
     search_help_text = _("You can search by email and preferred name")
 
 
@@ -44,10 +41,7 @@ class UserInviteAdmin(admin.ModelAdmin[UserInvite]):
     """User invite admin."""
 
     list_filter = ("redeemed",)
-    list_display = (
-        "email",
-        "redeemed",
-    )
+    list_display = ("email", "redeemed")
 
     def has_change_permission(
         self, request: HttpRequest, obj: Optional[UserInvite] = None

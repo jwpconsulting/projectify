@@ -46,9 +46,7 @@ class Workspace(TitleDescriptionModel, BaseModel):
     )  # type: models.ManyToManyField[User, "TeamMember"]
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     picture = models.ImageField(
-        upload_to="workspace_picture/",
-        blank=True,
-        null=True,
+        upload_to="workspace_picture/", blank=True, null=True
     )
 
     # Optional annotation to show trial limits
@@ -120,12 +118,9 @@ class Label(BaseModel):
     6 -> red
     7 -> green
     """
-    color = models.PositiveBigIntegerField(
-        help_text=_("Color index"),
-    )
+    color = models.PositiveBigIntegerField(help_text=_("Color index"))
     workspace = models.ForeignKey["Workspace"](
-        "Workspace",
-        on_delete=models.CASCADE,
+        "Workspace", on_delete=models.CASCADE
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 
@@ -166,8 +161,7 @@ class Project(TitleDescriptionModel, BaseModel):
     """Project."""
 
     workspace = models.ForeignKey["Workspace"](
-        Workspace,
-        on_delete=models.PROTECT,
+        Workspace, on_delete=models.PROTECT
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     archived = models.DateTimeField(
@@ -176,9 +170,7 @@ class Project(TitleDescriptionModel, BaseModel):
         help_text=_("Archival timestamp of this workspace board."),
     )
     due_date = models.DateTimeField(
-        null=True,
-        blank=True,
-        help_text=_("Due date for this workspace board"),
+        null=True, blank=True, help_text=_("Due date for this workspace board")
     )
 
     if TYPE_CHECKING:
@@ -254,8 +246,7 @@ class Task(TitleDescriptionModel, BaseModel):
     # Override description and make it a rich text field
     description = RichTextField(_("description"), blank=True, null=True)
     workspace = models.ForeignKey["Workspace"](
-        "workspace.Workspace",
-        on_delete=models.CASCADE,
+        "workspace.Workspace", on_delete=models.CASCADE
     )
 
     section = models.ForeignKey["Section"]("Section", on_delete=models.CASCADE)
@@ -268,13 +259,10 @@ class Task(TitleDescriptionModel, BaseModel):
         help_text=_("Team member this task is assigned to."),
     )
     due_date = models.DateTimeField(
-        null=True,
-        blank=True,
-        help_text=_("Due date for this task"),
+        null=True, blank=True, help_text=_("Due date for this task")
     )
     labels = models.ManyToManyField(
-        "workspace.Label",
-        through="workspace.TaskLabel",
+        "workspace.Label", through="workspace.TaskLabel"
     )  # type: models.ManyToManyField["Label", "TaskLabel"]
     done = models.DateTimeField(null=True, blank=True)
 
@@ -309,21 +297,17 @@ class Task(TitleDescriptionModel, BaseModel):
                 fields=["section", "_order"],
                 name="unique_task_order",
                 deferrable=models.Deferrable.DEFERRED,
-            ),
+            )
         ]
 
 
 class SubTask(TitleDescriptionModel, BaseModel):
     """SubTask, belongs to Task."""
 
-    task = models.ForeignKey[Task](
-        Task,
-        on_delete=models.CASCADE,
-    )
+    task = models.ForeignKey[Task](Task, on_delete=models.CASCADE)
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     done = models.BooleanField(
-        default=False,
-        help_text=_("Designate whether this sub task is done"),
+        default=False, help_text=_("Designate whether this sub task is done")
     )
 
     # Ordering related
@@ -346,17 +330,14 @@ class TeamMemberInvite(BaseModel):
     """UserInvites belonging to this workspace."""
 
     user_invite = models.ForeignKey[UserInvite](
-        "user.UserInvite",
-        on_delete=models.CASCADE,
+        "user.UserInvite", on_delete=models.CASCADE
     )
     workspace = models.ForeignKey["Workspace"](
-        "Workspace",
-        on_delete=models.CASCADE,
+        "Workspace", on_delete=models.CASCADE
     )
     # TODO use redeemed_when only
     redeemed = models.BooleanField(
-        default=False,
-        help_text=_("Has this invite been redeemed?"),
+        default=False, help_text=_("Has this invite been redeemed?")
     )
     redeemed_when = models.DateTimeField(
         blank=True,
@@ -377,8 +358,7 @@ class TeamMember(BaseModel):
     """Workspace to user mapping."""
 
     workspace = models.ForeignKey["Workspace"](
-        Workspace,
-        on_delete=models.PROTECT,
+        Workspace, on_delete=models.PROTECT
     )
     user = models.ForeignKey["User"](
         # This defo depends on the User in user/ app
@@ -391,11 +371,7 @@ class TeamMember(BaseModel):
         choices=TeamMemberRoles.choices,
         default=TeamMemberRoles.OBSERVER,
     )
-    job_title = models.CharField(
-        max_length=255,
-        null=True,
-        blank=True,
-    )
+    job_title = models.CharField(max_length=255, null=True, blank=True)
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     last_visited_project = models.ForeignKey(
         Project,
@@ -452,14 +428,8 @@ class TeamMember(BaseModel):
 class TaskLabel(BaseModel):
     """A label to task assignment."""
 
-    task = models.ForeignKey["Task"](
-        Task,
-        on_delete=models.CASCADE,
-    )
-    label = models.ForeignKey["Label"](
-        Label,
-        on_delete=models.CASCADE,
-    )
+    task = models.ForeignKey["Task"](Task, on_delete=models.CASCADE)
+    label = models.ForeignKey["Label"](Label, on_delete=models.CASCADE)
 
     class Meta:
         """Meta."""
@@ -470,17 +440,11 @@ class TaskLabel(BaseModel):
 class ChatMessage(BaseModel):
     """ChatMessage, belongs to Task."""
 
-    task = models.ForeignKey["Task"](
-        Task,
-        on_delete=models.CASCADE,
-    )
+    task = models.ForeignKey["Task"](Task, on_delete=models.CASCADE)
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     text = models.TextField()
     author = models.ForeignKey["TeamMember"](
-        TeamMember,
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
+        TeamMember, on_delete=models.SET_NULL, blank=True, null=True
     )
 
     class Meta:

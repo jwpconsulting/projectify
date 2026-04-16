@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     """Migration."""
 
     dependencies = [
-        ("user", "0016_remove_user_preferred_name_user_preferred_name"),
+        ("user", "0016_remove_user_preferred_name_user_preferred_name")
     ]
 
     operations = [

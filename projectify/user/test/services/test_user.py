@@ -139,9 +139,7 @@ def test_user_change_password_weak_password(user: User, password: str) -> None:
     """Test changing password with weak password."""
     with pytest.raises(ValidationError):
         user_change_password(
-            user=user,
-            current_password=password,
-            new_password="asd123",
+            user=user, current_password=password, new_password="asd123"
         )
 
     user.refresh_from_db()
@@ -174,10 +172,7 @@ def test_user_change_password_with_request(
 
 
 def test_user_email_update_complete(
-    user: User,
-    password: str,
-    faker: Faker,
-    mailoutbox: Mailbox,
+    user: User, password: str, faker: Faker, mailoutbox: Mailbox
 ) -> None:
     """
     Test requesting for user's email address to be updated.
@@ -194,17 +189,13 @@ def test_user_email_update_complete(
     # Try with wrong password
     with pytest.raises(ValidationError):
         user_request_email_address_update(
-            user=user,
-            new_email=new_email,
-            password="blabla",
+            user=user, new_email=new_email, password="blabla"
         )
     assert len(mailoutbox) == 0
 
     # Request with correct password
     user_request_email_address_update(
-        user=user,
-        new_email=new_email,
-        password=password,
+        user=user, new_email=new_email, password=password
     )
 
     # Assert we get an email

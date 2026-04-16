@@ -21,10 +21,7 @@ from projectify.lib.models import BaseModel
 class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     """User class."""
 
-    email = models.EmailField(
-        verbose_name=_("Email"),
-        unique=True,
-    )
+    email = models.EmailField(verbose_name=_("Email"), unique=True)
     unconfirmed_email = models.EmailField(
         null=True,
         blank=True,
@@ -51,15 +48,9 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         ),
     )
     profile_picture = models.ImageField(
-        upload_to="profile_picture/",
-        blank=True,
-        null=True,
+        upload_to="profile_picture/", blank=True, null=True
     )
-    preferred_name = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-    )
+    preferred_name = models.CharField(max_length=255, blank=True, null=True)
     tos_agreed = models.DateTimeField(
         verbose_name=_("Terms of service agreed"),
         help_text=_("Date and time user has agreed to terms of service"),
@@ -113,9 +104,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
 class UserInvite(BaseModel):
     """User invite model."""
 
-    email = models.EmailField(
-        verbose_name=_("Email"),
-    )
+    email = models.EmailField(verbose_name=_("Email"))
     user = models.ForeignKey[User](
         settings.AUTH_USER_MODEL,
         null=True,
@@ -124,8 +113,7 @@ class UserInvite(BaseModel):
         help_text=_("Matched user"),
     )
     redeemed = models.BooleanField(
-        default=False,
-        help_text=_("Has this invite been redeemed?"),
+        default=False, help_text=_("Has this invite been redeemed?")
     )
     # TODO add redeemed_when
 

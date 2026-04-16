@@ -123,9 +123,7 @@ def session_request(
 
 
 def test_user_log_in(
-    user: User,
-    password: str,
-    session_request: HttpRequest,
+    user: User, password: str, session_request: HttpRequest
 ) -> None:
     """Test logging in."""
     assert "_auth_user_id" not in session_request.session.keys()
@@ -134,26 +132,21 @@ def test_user_log_in(
 
 
 def test_user_log_in_wrong_password(
-    user: User,
-    session_request: HttpRequest,
+    user: User, session_request: HttpRequest
 ) -> None:
     """Test logging in with wrong password."""
     # First with active user
     assert "_auth_user_id" not in session_request.session.keys()
     with pytest.raises(ValidationError) as error:
         user_log_in(
-            email=user.email,
-            password="wrongpassword",
-            request=session_request,
+            email=user.email, password="wrongpassword", request=session_request
         )
     assert "password is incorrect" in error.exconly()
     assert "_auth_user_id" not in session_request.session.keys()
 
 
 def test_user_log_in_inactive(
-    inactive_user: User,
-    password: str,
-    session_request: HttpRequest,
+    inactive_user: User, password: str, session_request: HttpRequest
 ) -> None:
     """Test logging in as an inactive user."""
     # First with active user
@@ -180,9 +173,7 @@ def test_user_log_out(
     assert "_auth_user_id" not in session_request.session.keys()
 
 
-def test_user_log_out_not_logged_in(
-    session_request: HttpRequest,
-) -> None:
+def test_user_log_out_not_logged_in(session_request: HttpRequest) -> None:
     """Test logging when not logged in."""
     assert "_auth_user_id" not in session_request.session.keys()
     with pytest.raises(ValidationError) as error:
@@ -243,9 +234,7 @@ def test_confirm_password_reset_wrong_email(
     """Test reset with right token, wrong email."""
     with pytest.raises(ValidationError) as error:
         user_confirm_password_reset(
-            email=faker.email(),
-            new_password=new_password,
-            token=reset_token,
+            email=faker.email(), new_password=new_password, token=reset_token
         )
     assert error.match("email is not recognized")
     user.refresh_from_db()
@@ -253,31 +242,23 @@ def test_confirm_password_reset_wrong_email(
 
 
 def test_confirm_password_reset_right_email(
-    user: User,
-    new_password: str,
-    reset_token: Token,
+    user: User, new_password: str, reset_token: Token
 ) -> None:
     """Test reset with right token, right email."""
     user_confirm_password_reset(
-        email=user.email,
-        new_password=new_password,
-        token=reset_token,
+        email=user.email, new_password=new_password, token=reset_token
     )
     user.refresh_from_db()
     assert user.check_password(new_password)
 
 
 def test_confirm_password_reset_weak_password(
-    user: User,
-    password: str,
-    reset_token: Token,
+    user: User, password: str, reset_token: Token
 ) -> None:
     """Test reset with weak password."""
     with pytest.raises(ValidationError) as error:
         user_confirm_password_reset(
-            email=user.email,
-            new_password="asd123",
-            token=reset_token,
+            email=user.email, new_password="asd123", token=reset_token
         )
     assert error.match("password")
     user.refresh_from_db()
@@ -285,24 +266,17 @@ def test_confirm_password_reset_weak_password(
 
 
 def test_confirm_password_reset_reuse_token(
-    user: User,
-    new_password: str,
-    faker: Faker,
-    reset_token: Token,
+    user: User, new_password: str, faker: Faker, reset_token: Token
 ) -> None:
     """Test reset when reusing old token."""
     user_confirm_password_reset(
-        email=user.email,
-        new_password=new_password,
-        token=reset_token,
+        email=user.email, new_password=new_password, token=reset_token
     )
     # Then reuse old token, right email
     new_new_password = faker.password()
     with pytest.raises(ValidationError) as error:
         user_confirm_password_reset(
-            email=user.email,
-            new_password=new_new_password,
-            token=reset_token,
+            email=user.email, new_password=new_new_password, token=reset_token
         )
     assert error.match("token is invalid")
     user.refresh_from_db()

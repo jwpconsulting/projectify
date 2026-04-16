@@ -11,9 +11,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0028"),
-    ]
+    dependencies = [("workspace", "0028")]
 
     operations = [
         migrations.AddConstraint(

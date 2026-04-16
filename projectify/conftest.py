@@ -223,9 +223,7 @@ def now() -> datetime:
 def workspace(faker: Faker, user: User) -> Workspace:
     """Return workspace."""
     workspace = workspace_create(
-        title=faker.company(),
-        description=faker.paragraph(),
-        owner=user,
+        title=faker.company(), description=faker.paragraph(), owner=user
     )
     customer = workspace.customer
     # XXX use same fixture as in corporate/test/conftest.py
@@ -271,9 +269,7 @@ def unrelated_workspace(faker: Faker, unrelated_user: User) -> Workspace:
     customer = workspace.customer
     # XXX use same fixture as in corporate/test/conftest.py
     customer_activate_subscription(
-        customer=customer,
-        stripe_customer_id="stripe_",
-        seats=10,
+        customer=customer, stripe_customer_id="stripe_", seats=10
     )
     # TODO right now our tests depend on the workspace being paid for
     # We should also be able to test most actions here for a workspace that
@@ -312,9 +308,7 @@ def team_member(workspace: Workspace, user: User) -> TeamMember:
 def other_team_member(workspace: Workspace, other_user: User) -> TeamMember:
     """Return team member for other_user."""
     team_member = workspace_add_user(
-        workspace=workspace,
-        user=other_user,
-        role=TeamMemberRoles.OWNER,
+        workspace=workspace, user=other_user, role=TeamMemberRoles.OWNER
     )
     assert team_member
     return team_member
@@ -334,9 +328,7 @@ def unrelated_team_member(
 
 @pytest.fixture
 def project(
-    other_team_member: TeamMember,
-    faker: Faker,
-    workspace: Workspace,
+    other_team_member: TeamMember, faker: Faker, workspace: Workspace
 ) -> Project:
     """Return project."""
     return project_create(
@@ -397,9 +389,7 @@ def unrelated_project(
 
 @pytest.fixture
 def archived_project(
-    workspace: Workspace,
-    other_team_member: TeamMember,
-    faker: Faker,
+    workspace: Workspace, other_team_member: TeamMember, faker: Faker
 ) -> Project:
     """Return archived project."""
     project = project_create(
@@ -408,11 +398,7 @@ def archived_project(
         description=faker.paragraph(),
         workspace=workspace,
     )
-    project_archive(
-        who=other_team_member.user,
-        project=project,
-        archived=True,
-    )
+    project_archive(who=other_team_member.user, project=project, archived=True)
     return project
 
 
@@ -427,45 +413,33 @@ def section(
 ) -> Section:
     """Return section."""
     return section_create(
-        who=other_team_member.user,
-        project=project,
-        title=faker.sentence(),
+        who=other_team_member.user, project=project, title=faker.sentence()
     )
 
 
 @pytest.fixture
 def other_section(
-    project: Project,
-    team_member: TeamMember,
-    faker: Faker,
+    project: Project, team_member: TeamMember, faker: Faker
 ) -> Section:
     """Create another section."""
     return section_create(
-        who=team_member.user,
-        project=project,
-        title=faker.sentence(),
+        who=team_member.user, project=project, title=faker.sentence()
     )
 
 
 @pytest.fixture
 def other_other_section(
-    project: Project,
-    team_member: TeamMember,
-    faker: Faker,
+    project: Project, team_member: TeamMember, faker: Faker
 ) -> Section:
     """Create yet another section."""
     return section_create(
-        who=team_member.user,
-        project=project,
-        title=faker.sentence(),
+        who=team_member.user, project=project, title=faker.sentence()
     )
 
 
 @pytest.fixture
 def unrelated_section(
-    unrelated_project: Project,
-    unrelated_team_member: TeamMember,
-    faker: Faker,
+    unrelated_project: Project, unrelated_team_member: TeamMember, faker: Faker
 ) -> Section:
     """Return unrelated section."""
     return section_create(
@@ -476,11 +450,7 @@ def unrelated_section(
 
 
 @pytest.fixture
-def task(
-    section: Section,
-    team_member: TeamMember,
-    faker: Faker,
-) -> Task:
+def task(section: Section, team_member: TeamMember, faker: Faker) -> Task:
     """Return task."""
     return task_create(
         who=team_member.user,
@@ -498,16 +468,13 @@ def other_task(task: Task, section: Section, team_member: TeamMember) -> Task:
     # Make sure that this is created AFTER `task`
     del task
     return task_create(
-        who=team_member.user,
-        section=section,
-        title="I am the other task",
+        who=team_member.user, section=section, title="I am the other task"
     )
 
 
 @pytest.fixture
 def unrelated_task(
-    unrelated_section: Section,
-    unrelated_team_member: TeamMember,
+    unrelated_section: Section, unrelated_team_member: TeamMember
 ) -> Task:
     """Return another task belonging to the same section."""
     return task_create(
@@ -570,9 +537,7 @@ def task_label(task: Task, label: Label) -> TaskLabel:
 
 @pytest.fixture
 def chat_message(
-    task: Task,
-    team_member: TeamMember,
-    faker: Faker,
+    task: Task, team_member: TeamMember, faker: Faker
 ) -> ChatMessage:
     """Return ChatMessage instance."""
     return chat_message_create(

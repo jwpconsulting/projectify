@@ -233,10 +233,7 @@ class TestPasswordChangeDjango:
         assert user.check_password("hello-world123")
 
     def test_with_incorrect_password(
-        self,
-        user: User,
-        user_client: Client,
-        resource_url: str,
+        self, user: User, user_client: Client, resource_url: str
     ) -> None:
         """Test changing password with an incorrect current password."""
         response = user_client.post(
@@ -256,11 +253,7 @@ class TestPasswordChangeDjango:
         assert not user.check_password("new-password123")
 
     def test_with_weak_new_password(
-        self,
-        user: User,
-        password: str,
-        user_client: Client,
-        resource_url: str,
+        self, user: User, password: str, user_client: Client, resource_url: str
     ) -> None:
         """Test changing password with a weak new password."""
         response = user_client.post(
@@ -361,10 +354,7 @@ class TestEmailAddressUpdateDjango:
         assert user.unconfirmed_email == new_email
 
     def test_with_incorrect_password(
-        self,
-        user: User,
-        user_client: Client,
-        resource_url: str,
+        self, user: User, user_client: Client, resource_url: str
     ) -> None:
         """Test submitting the form with an incorrect password."""
         old_email = user.email
@@ -372,10 +362,7 @@ class TestEmailAddressUpdateDjango:
 
         response = user_client.post(
             resource_url,
-            {
-                "new_email": new_email,
-                "password": "wrong-password",
-            },
+            {"new_email": new_email, "password": "wrong-password"},
         )
 
         # Should return to the form with an error
@@ -410,28 +397,19 @@ class TestEmailAddressUpdateDjango:
 
         # The 6th request should be rate limited
         response = user_client.post(
-            resource_url,
-            {"new_email": faker.email(), "password": password},
+            resource_url, {"new_email": faker.email(), "password": password}
         )
         assert response.status_code == 429
         assert user.unconfirmed_email is None
 
     def test_with_invalid_email(
-        self,
-        user: User,
-        password: str,
-        user_client: Client,
-        resource_url: str,
+        self, user: User, password: str, user_client: Client, resource_url: str
     ) -> None:
         """Test submitting the form with an invalid email."""
         old_email = user.email
 
         response = user_client.post(
-            resource_url,
-            {
-                "new_email": "not-an-email",
-                "password": password,
-            },
+            resource_url, {"new_email": "not-an-email", "password": password}
         )
 
         # Should return to the form with an error
@@ -480,8 +458,7 @@ class TestEmailAddressUpdateConfirm:
         user.save()
 
         resource_url = reverse(
-            "users:confirm-email-address-update",
-            args=("invalid-token-123",),
+            "users:confirm-email-address-update", args=("invalid-token-123",)
         )
 
         response = user_client.get(resource_url)

@@ -34,10 +34,7 @@ def test_section_create(project: Project, team_member: TeamMember) -> None:
         description="world",
     )
     assert project.section_set.count() == 2
-    assert list(project.section_set.all()) == [
-        section,
-        section2,
-    ]
+    assert list(project.section_set.all()) == [section, section2]
 
 
 def test_delete_non_empty_section(
@@ -49,10 +46,7 @@ def test_delete_non_empty_section(
     """Assert we can delete a non-empty section."""
     count = Section.objects.count()
     task_count = Task.objects.count()
-    section_delete(
-        section=section,
-        who=team_member.user,
-    )
+    section_delete(section=section, who=team_member.user)
     assert Section.objects.count() == count - 1
     assert Task.objects.count() == task_count - 1
 
@@ -70,31 +64,19 @@ def test_moving_section(
         other_section,
         other_other_section,
     ]
-    section_move(
-        section=section,
-        order=0,
-        who=team_member.user,
-    )
+    section_move(section=section, order=0, who=team_member.user)
     assert list(project.section_set.all()) == [
         section,
         other_section,
         other_other_section,
     ]
-    section_move(
-        section=section,
-        order=2,
-        who=team_member.user,
-    )
+    section_move(section=section, order=2, who=team_member.user)
     assert list(project.section_set.all()) == [
         other_section,
         other_other_section,
         section,
     ]
-    section_move(
-        section=section,
-        order=1,
-        who=team_member.user,
-    )
+    section_move(section=section, order=1, who=team_member.user)
     assert list(project.section_set.all()) == [
         other_section,
         section,
@@ -103,22 +85,12 @@ def test_moving_section(
 
 
 def test_moving_empty_section(
-    project: Project,
-    section: Section,
-    team_member: TeamMember,
+    project: Project, section: Section, team_member: TeamMember
 ) -> None:
     """Test moving when there are no other sections."""
-    assert list(project.section_set.all()) == [
-        section,
-    ]
-    section_move(
-        section=section,
-        order=1,
-        who=team_member.user,
-    )
-    assert list(project.section_set.all()) == [
-        section,
-    ]
+    assert list(project.section_set.all()) == [section]
+    section_move(section=section, order=1, who=team_member.user)
+    assert list(project.section_set.all()) == [section]
     assert section._order == 0
 
 
@@ -137,9 +109,7 @@ def test_section_move_in_direction_up(
     ]
 
     section_move_in_direction(
-        section=other_section,
-        direction="up",
-        who=team_member.user,
+        section=other_section, direction="up", who=team_member.user
     )
     assert list(project.section_set.all()) == [
         other_section,
@@ -163,9 +133,7 @@ def test_section_move_in_direction_down(
     ]
 
     section_move_in_direction(
-        section=section,
-        direction="down",
-        who=team_member.user,
+        section=section, direction="down", who=team_member.user
     )
     assert list(project.section_set.all()) == [
         other_section,
@@ -181,20 +149,12 @@ def test_section_move_in_direction_up_at_top(
     team_member: TeamMember,
 ) -> None:
     """Test moving a section up when it's already at the top."""
-    assert list(project.section_set.all()) == [
-        section,
-        other_section,
-    ]
+    assert list(project.section_set.all()) == [section, other_section]
 
     section_move_in_direction(
-        section=section,
-        direction="up",
-        who=team_member.user,
+        section=section, direction="up", who=team_member.user
     )
-    assert list(project.section_set.all()) == [
-        section,
-        other_section,
-    ]
+    assert list(project.section_set.all()) == [section, other_section]
 
 
 def test_section_move_in_direction_down_at_bottom(
@@ -204,39 +164,25 @@ def test_section_move_in_direction_down_at_bottom(
     team_member: TeamMember,
 ) -> None:
     """Test moving a section down when it's already at the bottom."""
-    assert list(project.section_set.all()) == [
-        section,
-        other_section,
-    ]
+    assert list(project.section_set.all()) == [section, other_section]
 
     section_move_in_direction(
-        section=other_section,
-        direction="down",
-        who=team_member.user,
+        section=other_section, direction="down", who=team_member.user
     )
-    assert list(project.section_set.all()) == [
-        section,
-        other_section,
-    ]
+    assert list(project.section_set.all()) == [section, other_section]
 
 
 def test_section_move_in_direction_single_section(
-    project: Project,
-    section: Section,
-    team_member: TeamMember,
+    project: Project, section: Section, team_member: TeamMember
 ) -> None:
     """Test moving when there's only one section."""
     assert list(project.section_set.all()) == [section]
     section_move_in_direction(
-        section=section,
-        direction="up",
-        who=team_member.user,
+        section=section, direction="up", who=team_member.user
     )
     assert list(project.section_set.all()) == [section]
     section_move_in_direction(
-        section=section,
-        direction="down",
-        who=team_member.user,
+        section=section, direction="down", who=team_member.user
     )
     assert list(project.section_set.all()) == [section]
 

@@ -20,10 +20,6 @@ def add_workspace_to_task(apps: Apps, schema_editor: object) -> None:
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0034_task_number_task_workspace_and_more"),
-    ]
+    dependencies = [("workspace", "0034_task_number_task_workspace_and_more")]
 
-    operations = [
-        migrations.RunPython(add_workspace_to_task),
-    ]
+    operations = [migrations.RunPython(add_workspace_to_task)]

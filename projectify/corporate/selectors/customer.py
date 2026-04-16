@@ -40,15 +40,12 @@ def customer_find_by_stripe_customer_id(
 
 
 def customer_find_by_workspace_uuid(
-    *,
-    workspace_uuid: UUID,
-    who: User,
+    *, workspace_uuid: UUID, who: User
 ) -> Optional[Customer]:
     """Find a customer given a workspace uuid."""
     try:
         customer = Customer.objects.select_related("workspace").get(
-            workspace__uuid=workspace_uuid,
-            workspace__users=who,
+            workspace__uuid=workspace_uuid, workspace__users=who
         )
     except Customer.DoesNotExist:
         logger.error("No customer found for uuid %s. Why?", workspace_uuid)

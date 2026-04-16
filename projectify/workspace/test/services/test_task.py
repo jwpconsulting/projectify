@@ -42,11 +42,7 @@ def test_set_labels(
     assert list(task.labels.values_list("id", flat=True)) == [b.id, a.id]
     task_assign_labels(task=task, labels=[c, d, e])
     assert task.labels.count() == 3
-    assert list(task.labels.values_list("id", flat=True)) == [
-        e.id,
-        d.id,
-        c.id,
-    ]
+    assert list(task.labels.values_list("id", flat=True)) == [e.id, d.id, c.id]
     task_assign_labels(task=task, labels=[])
     assert task.labels.count() == 0
     assert list(task.labels.values_list("id", flat=True)) == []
@@ -64,17 +60,12 @@ def test_set_labels(
 
 # Create
 def test_create_task(
-    section: Section,
-    team_member: TeamMember,
-    other_team_member: TeamMember,
+    section: Section, team_member: TeamMember, other_team_member: TeamMember
 ) -> None:
     """Test adding tasks to a project."""
     count = section.task_set.count()
     task = task_create(
-        who=team_member.user,
-        section=section,
-        title="foo",
-        description="bar",
+        who=team_member.user, section=section, title="foo", description="bar"
     )
     assert section.task_set.count() == count + 1
     task2 = task_create(
@@ -105,9 +96,7 @@ def test_create_task_unrelated_teammember(
 
 
 def test_task_create_nested(
-    label: Label,
-    team_member: TeamMember,
-    section: Section,
+    label: Label, team_member: TeamMember, section: Section
 ) -> None:
     """Test task_create_nested."""
     task = task_create(
@@ -124,9 +113,7 @@ def test_task_create_nested(
 
 
 def test_add_task_due_date(
-    section: Section,
-    team_member: TeamMember,
-    now: datetime,
+    section: Section, team_member: TeamMember, now: datetime
 ) -> None:
     """Test adding a task with a due date."""
     task = task_create(
@@ -191,38 +178,17 @@ def test_task_update(
 
 
 def test_moving_task_within_section(
-    section: Section,
-    task: Task,
-    team_member: TeamMember,
+    section: Section, task: Task, team_member: TeamMember
 ) -> None:
     """Test moving a task around within the same section."""
     other_task = task_create(
-        who=team_member.user,
-        title="don't care",
-        section=section,
+        who=team_member.user, title="don't care", section=section
     )
-    assert list(section.task_set.all()) == [
-        task,
-        other_task,
-    ]
-    task_move_after(
-        who=team_member.user,
-        task=task,
-        after=other_task,
-    )
-    assert list(section.task_set.all()) == [
-        other_task,
-        task,
-    ]
-    task_move_after(
-        who=team_member.user,
-        task=task,
-        after=section,
-    )
-    assert list(section.task_set.all()) == [
-        task,
-        other_task,
-    ]
+    assert list(section.task_set.all()) == [task, other_task]
+    task_move_after(who=team_member.user, task=task, after=other_task)
+    assert list(section.task_set.all()) == [other_task, task]
+    task_move_after(who=team_member.user, task=task, after=section)
+    assert list(section.task_set.all()) == [task, other_task]
 
 
 def test_moving_task_to_other_section(
@@ -235,31 +201,15 @@ def test_moving_task_to_other_section(
 ) -> None:
     """Test moving a task around to another section."""
     other_task = task_create(
-        who=team_member.user,
-        title="don't care",
-        section=section,
+        who=team_member.user, title="don't care", section=section
     )
-    assert list(section.task_set.all()) == [
-        task,
-        other_task,
-    ]
+    assert list(section.task_set.all()) == [task, other_task]
     other_section_task = task_create(
-        who=team_member.user,
-        title="don't care",
-        section=other_section,
+        who=team_member.user, title="don't care", section=other_section
     )
-    assert list(other_section.task_set.all()) == [
-        other_section_task,
-    ]
-    task_move_after(
-        who=team_member.user,
-        task=task,
-        after=other_section,
-    )
-    assert list(other_section.task_set.all()) == [
-        task,
-        other_section_task,
-    ]
+    assert list(other_section.task_set.all()) == [other_section_task]
+    task_move_after(who=team_member.user, task=task, after=other_section)
+    assert list(other_section.task_set.all()) == [task, other_section_task]
 
 
 def test_moving_task_to_empty_section(
@@ -275,22 +225,13 @@ def test_moving_task_to_empty_section(
 
     We also see what happens when the id is set too high.
     """
-    task_move_after(
-        who=team_member.user,
-        task=task,
-        after=other_section,
-    )
-    assert list(other_section.task_set.all()) == [
-        task,
-    ]
+    task_move_after(who=team_member.user, task=task, after=other_section)
+    assert list(other_section.task_set.all()) == [task]
     task.refresh_from_db()
     assert task._order == 0
 
 
-def test_task_mark_done(
-    task: Task,
-    team_member: TeamMember,
-) -> None:
+def test_task_mark_done(task: Task, team_member: TeamMember) -> None:
     """Test marking a task as done and then not done."""
     assert task.done is None
 

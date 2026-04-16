@@ -155,9 +155,7 @@ def handle_session_completed(session: stripe.checkout.Session) -> None:
         )
 
     customer_activate_subscription(
-        customer=customer,
-        stripe_customer_id=stripe_customer_id,
-        seats=seats,
+        customer=customer, stripe_customer_id=stripe_customer_id, seats=seats
     )
 
 
@@ -189,7 +187,7 @@ def handle_subscription_updated(subscription: stripe.Subscription) -> None:
 
     client = stripe_client()
     items = client.subscription_items.list(
-        params={"subscription": subscription.id},
+        params={"subscription": subscription.id}
     ).data
 
     match items:
@@ -271,9 +269,7 @@ def _construct_event(
 
     try:
         return client.construct_event(
-            payload=payload,
-            sig_header=sig_header,
-            secret=endpoint_secret,
+            payload=payload, sig_header=sig_header, secret=endpoint_secret
         )
     except ValueError:
         # Invalid payload

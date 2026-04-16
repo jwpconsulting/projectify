@@ -71,10 +71,7 @@ def _try_find_invitation(
 
 @transaction.atomic
 def team_member_invite_create(
-    *,
-    workspace: Workspace,
-    email_or_user: Union[User, str],
-    who: User,
+    *, workspace: Workspace, email_or_user: Union[User, str], who: User
 ) -> Union[TeamMember, TeamMemberInvite]:
     """
     Add or invite a new team member. Accept either email or user instance.
@@ -95,9 +92,7 @@ def team_member_invite_create(
     match email_or_user:
         case User() as user:
             return workspace_add_user(
-                workspace=workspace,
-                user=user,
-                role=TeamMemberRoles.OBSERVER,
+                workspace=workspace, user=user, role=TeamMemberRoles.OBSERVER
             )
         case email:
             pass
@@ -115,9 +110,7 @@ def team_member_invite_create(
             )
         case User() as user:
             return workspace_add_user(
-                workspace=workspace,
-                user=user,
-                role=TeamMemberRoles.OBSERVER,
+                workspace=workspace, user=user, role=TeamMemberRoles.OBSERVER
             )
         case None:
             pass
@@ -152,9 +145,7 @@ def team_member_invite_create(
     )
 
     email_to_send = TeamMemberInviteEmail(
-        receiver=EmailAddress(email),
-        obj=team_member_invite,
-        who=who,
+        receiver=EmailAddress(email), obj=team_member_invite, who=who
     )
     email_to_send.send()
 
@@ -167,10 +158,7 @@ def team_member_invite_delete(
 ) -> None:
     """Remove a users invitation."""
     validate_perm("workspace.delete_team_member_invite", who, workspace)
-    invite = _try_find_invitation(
-        workspace=workspace,
-        email=email,
-    )
+    invite = _try_find_invitation(workspace=workspace, email=email)
     match invite:
         case UserInvite() | None:
             raise ValidationError(

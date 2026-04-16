@@ -9,9 +9,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Run the migration."""
 
-    dependencies = [
-        ("workspace", "0069_userpreferences"),
-    ]
+    dependencies = [("workspace", "0069_userpreferences")]
 
     operations = [
         migrations.AddField(
@@ -21,5 +19,5 @@ class Migration(migrations.Migration):
                 default=False,
                 help_text="Whether this team member has minimized the project list in this workspace",
             ),
-        ),
+        )
     ]

@@ -12,9 +12,7 @@ import projectify.lib.models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0076_auto_20260327_1212"),
-    ]
+    dependencies = [("workspace", "0076_auto_20260327_1212")]
 
     operations = [
         migrations.AlterField(
@@ -23,5 +21,5 @@ class Migration(migrations.Migration):
             field=projectify.lib.models.RichTextField(
                 blank=True, null=True, verbose_name="description"
             ),
-        ),
+        )
     ]

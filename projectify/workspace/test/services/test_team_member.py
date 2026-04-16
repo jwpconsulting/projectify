@@ -30,9 +30,7 @@ def test_team_member_update(team_member: TeamMember) -> None:
     """Test updating a team member."""
     # First, we update ourselves
     team_member_update(
-        who=team_member.user,
-        team_member=team_member,
-        job_title="bla",
+        who=team_member.user, team_member=team_member, job_title="bla"
     )
 
 
@@ -61,8 +59,7 @@ def test_team_member_change_role(
 
 
 def test_team_member_delete(
-    team_member: TeamMember,
-    unrelated_user: User,
+    team_member: TeamMember, unrelated_user: User
 ) -> None:
     """Test deleting a team member after adding them."""
     count = team_member.workspace.users.count()

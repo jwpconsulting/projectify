@@ -14,9 +14,7 @@ import projectify.lib.models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("user", "0007_user_full_name"),
-    ]
+    dependencies = [("user", "0007_user_full_name")]
 
     operations = [
         migrations.CreateModel(
@@ -58,9 +56,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={
-                "get_latest_by": "modified",
-                "abstract": False,
-            },
-        ),
+            options={"get_latest_by": "modified", "abstract": False},
+        )
     ]

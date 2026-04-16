@@ -9,9 +9,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Run the migration."""
 
-    dependencies = [
-        ("workspace", "0070_teammember_minimized_project_list"),
-    ]
+    dependencies = [("workspace", "0070_teammember_minimized_project_list")]
 
     operations = [
         migrations.AddField(

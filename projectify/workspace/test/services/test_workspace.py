@@ -31,10 +31,7 @@ from ...services.workspace import (
 pytestmark = pytest.mark.django_db
 
 
-def test_workspace_delete(
-    workspace: Workspace,
-    user: User,
-) -> None:
+def test_workspace_delete(workspace: Workspace, user: User) -> None:
     """Test that a freshly created workspace from a fixture can be deleted."""
     count = Workspace.objects.count()
     workspace_delete(workspace=workspace, who=user)
@@ -53,9 +50,7 @@ def test_workspace_delete_dependencies(
 
     invite_email = faker.email()
     team_member_invite_create(
-        who=user,
-        workspace=workspace,
-        email_or_user=invite_email,
+        who=user, workspace=workspace, email_or_user=invite_email
     )
 
     with pytest.raises(ValidationError) as error:
@@ -105,10 +100,7 @@ def test_workspace_update(
     assert "uploaded_file.png" in updated_workspace.picture.path
 
 
-def test_add_user(
-    workspace: Workspace,
-    other_user: User,
-) -> None:
+def test_add_user(workspace: Workspace, other_user: User) -> None:
     """Test that adding a user twice won't work."""
     count = workspace.users.count()
     workspace_add_user(

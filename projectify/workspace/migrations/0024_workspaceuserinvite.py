@@ -58,8 +58,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={
-                "unique_together": {("user_invite", "workspace")},
-            },
-        ),
+            options={"unique_together": {("user_invite", "workspace")}},
+        )
     ]

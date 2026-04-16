@@ -11,9 +11,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0041_alter_chatmessage_author"),
-    ]
+    dependencies = [("workspace", "0041_alter_chatmessage_author")]
 
     operations = [
         migrations.AddField(
@@ -26,5 +24,5 @@ class Migration(migrations.Migration):
                 on_delete=django.db.models.deletion.SET_NULL,
                 to="workspace.workspaceuser",
             ),
-        ),
+        )
     ]

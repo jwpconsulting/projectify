@@ -35,14 +35,8 @@ from projectify.workspace.services.section import (
 class SectionCreateForm(forms.Form):
     """Form for updating section."""
 
-    title = forms.CharField(
-        max_length=255,
-        widget=forms.TextInput(),
-    )
-    description = forms.CharField(
-        required=False,
-        widget=forms.Textarea(),
-    )
+    title = forms.CharField(max_length=255, widget=forms.TextInput())
+    description = forms.CharField(required=False, widget=forms.Textarea())
 
 
 @platform_view
@@ -99,14 +93,8 @@ def section_detail(
 class SectionUpdateForm(forms.Form):
     """Form for updating section."""
 
-    title = forms.CharField(
-        max_length=255,
-        widget=forms.TextInput(),
-    )
-    description = forms.CharField(
-        required=False,
-        widget=forms.Textarea(),
-    )
+    title = forms.CharField(max_length=255, widget=forms.TextInput())
+    description = forms.CharField(required=False, widget=forms.Textarea())
 
 
 @platform_view

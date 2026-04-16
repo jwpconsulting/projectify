@@ -10,33 +10,20 @@ from django.db import migrations
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0026_alter_workspaceuser_user"),
-    ]
+    dependencies = [("workspace", "0026_alter_workspaceuser_user")]
 
     operations = [
-        migrations.AlterModelOptions(
-            name="task",
-            options={},
-        ),
-        migrations.AlterModelOptions(
-            name="workspaceboardsection",
-            options={},
-        ),
+        migrations.AlterModelOptions(name="task", options={}),
+        migrations.AlterModelOptions(name="workspaceboardsection", options={}),
         migrations.AlterOrderWithRespectTo(
-            name="task",
-            order_with_respect_to="workspace_board_section",
+            name="task", order_with_respect_to="workspace_board_section"
         ),
         migrations.AlterOrderWithRespectTo(
             name="workspaceboardsection",
             order_with_respect_to="workspace_board",
         ),
+        migrations.RemoveField(model_name="task", name="order"),
         migrations.RemoveField(
-            model_name="task",
-            name="order",
-        ),
-        migrations.RemoveField(
-            model_name="workspaceboardsection",
-            name="order",
+            model_name="workspaceboardsection", name="order"
         ),
     ]

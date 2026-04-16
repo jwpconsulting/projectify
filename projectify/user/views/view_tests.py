@@ -126,8 +126,7 @@ def password_reset_confirm_test(request: HttpRequest) -> HttpResponse:
     )
 
     invalid_email_url = reverse(
-        "users:confirm-password-reset",
-        args=(invalid_email, valid_token),
+        "users:confirm-password-reset", args=(invalid_email, valid_token)
     )
 
     context = {

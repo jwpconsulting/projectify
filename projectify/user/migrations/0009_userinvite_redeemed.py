@@ -10,9 +10,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("user", "0008_userinvite"),
-    ]
+    dependencies = [("user", "0008_userinvite")]
 
     operations = [
         migrations.AddField(
@@ -21,5 +19,5 @@ class Migration(migrations.Migration):
             field=models.BooleanField(
                 default=False, help_text="Has this invite been redeemed?"
             ),
-        ),
+        )
     ]

@@ -118,14 +118,10 @@ class Command(BaseCommand):
         existing_users = User.objects.count()
         if existing_users == 0:
             superuser = user_create_superuser(
-                email="admin@localhost",
-                password="password",
+                email="admin@localhost", password="password"
             )
             self.stdout.write("Created superuser")
-            guest = user_create(
-                email="guest@localhost",
-                password="password",
-            )
+            guest = user_create(email="guest@localhost", password="password")
             guest.is_active = True
             guest.save()
             self.stdout.write("Created and manually activated normal user")
@@ -190,7 +186,7 @@ class Command(BaseCommand):
             [
                 Task(
                     title=self.fake.text(
-                        randint(TASK_TITLE_MIN_LENGTH, TASK_TITLE_MAX_LENGTH),
+                        randint(TASK_TITLE_MIN_LENGTH, TASK_TITLE_MAX_LENGTH)
                     ),
                     description=self.fake.paragraph(
                         TASK_DESCRIPTION_SENTENCES
@@ -217,10 +213,7 @@ class Command(BaseCommand):
         )
         task_labels = TaskLabel.objects.bulk_create(
             [
-                TaskLabel(
-                    task=task,
-                    label=label,
-                )
+                TaskLabel(task=task, label=label)
                 for together, task in something
                 for label in sample(
                     # Make sure we don't go over the amount of labels we have
@@ -254,10 +247,7 @@ class Command(BaseCommand):
         self.stdout.write(f"Created {len(chat_messages)} chat messages")
         self.stdout.write(f"Populated {len(tasks)} tasks")
 
-    def create_workspaces(
-        self,
-        users: list[User],
-    ) -> list[Workspace]:
+    def create_workspaces(self, users: list[User]) -> list[Workspace]:
         """Create workspaces."""
         existing_workspaces = Workspace.objects.count()
         self.stdout.write(
@@ -323,8 +313,7 @@ class Command(BaseCommand):
                 Project(
                     title=self.fake.text(
                         randint(
-                            PROJECT_TITLE_MIN_LENGTH,
-                            PROJECT_TITLE_MAX_LENGTH,
+                            PROJECT_TITLE_MIN_LENGTH, PROJECT_TITLE_MAX_LENGTH
                         )
                     ),
                     description=self.fake.paragraph(),
@@ -347,15 +336,11 @@ class Command(BaseCommand):
                 for _order, title in enumerate(
                     self.fake.text(
                         randint(
-                            SECTION_TITLE_MIN_LENGTH,
-                            SECTION_TITLE_MAX_LENGTH,
+                            SECTION_TITLE_MIN_LENGTH, SECTION_TITLE_MAX_LENGTH
                         )
                     )
                     for _ in range(
-                        randint(
-                            PROJECT_MIN_SECTIONS,
-                            PROJECT_MAX_SECTIONS,
-                        )
+                        randint(PROJECT_MIN_SECTIONS, PROJECT_MAX_SECTIONS)
                     )
                 )
             ]
@@ -390,8 +375,7 @@ class Command(BaseCommand):
                 groupby(workspaces_labels, key=lambda label: label.workspace),
                 groupby(workspaces_projects, key=lambda b: b.workspace),
                 groupby(
-                    workspaces_sections,
-                    key=lambda b: b.project.workspace,
+                    workspaces_sections, key=lambda b: b.project.workspace
                 ),
             )
         ]

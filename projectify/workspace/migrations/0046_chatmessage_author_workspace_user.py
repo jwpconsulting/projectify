@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     """Migration."""
 
     dependencies = [
-        ("workspace", "0045_rename_assignee_workspace_user_task_assignee"),
+        ("workspace", "0045_rename_assignee_workspace_user_task_assignee")
     ]
 
     operations = [
@@ -25,5 +25,5 @@ class Migration(migrations.Migration):
                 on_delete=django.db.models.deletion.SET_NULL,
                 to="workspace.workspaceuser",
             ),
-        ),
+        )
     ]

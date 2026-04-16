@@ -10,9 +10,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0015_workspaceboard_archived"),
-    ]
+    dependencies = [("workspace", "0015_workspaceboard_archived")]
 
     operations = [
         migrations.AddField(
@@ -21,5 +19,5 @@ class Migration(migrations.Migration):
             field=models.DateTimeField(
                 blank=True, help_text="Task's deadline", null=True
             ),
-        ),
+        )
     ]

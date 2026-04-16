@@ -40,9 +40,7 @@ class TestAddOrInviteTeamMember:
         assert len(mailoutbox) == 1
 
     def test_invite_then_up(
-        self,
-        workspace: Workspace,
-        team_member: TeamMember,
+        self, workspace: Workspace, team_member: TeamMember
     ) -> None:
         """Test inviting with a sign up."""
         count = workspace.users.count()
@@ -56,9 +54,7 @@ class TestAddOrInviteTeamMember:
         assert workspace.users.count() == count + 1
 
     def test_signs_up_twice(
-        self,
-        workspace: Workspace,
-        team_member: TeamMember,
+        self, workspace: Workspace, team_member: TeamMember
     ) -> None:
         """Test what happens if a user signs up twice."""
         count = workspace.users.count()
@@ -136,9 +132,7 @@ class TestAddOrInviteTeamMember:
         assert workspace.teammemberinvite_set.count() == count
 
     def test_after_uninvite(
-        self,
-        workspace: Workspace,
-        team_member: TeamMember,
+        self, workspace: Workspace, team_member: TeamMember
     ) -> None:
         """Test what happens when a user is uninvited."""
         count = workspace.users.count()
@@ -172,10 +166,7 @@ class TestAddOrInviteTeamMember:
         assert workspace.teammemberinvite_set.count() == count
 
     def test_invite_redeem_delete_invite_redeem(
-        self,
-        workspace: Workspace,
-        team_member: TeamMember,
-        faker: Faker,
+        self, workspace: Workspace, team_member: TeamMember, faker: Faker
     ) -> None:
         """Test entire life cycle and make sure redeemed invites are not redeemed twice."""
         email = faker.email()

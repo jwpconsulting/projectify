@@ -15,22 +15,17 @@ import projectify.lib.models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0003_workspaceboard"),
-    ]
+    dependencies = [("workspace", "0003_workspaceboard")]
 
     operations = [
         migrations.AlterModelOptions(
-            name="workspace",
-            options={"get_latest_by": "modified"},
+            name="workspace", options={"get_latest_by": "modified"}
         ),
         migrations.AlterModelOptions(
-            name="workspaceboard",
-            options={"get_latest_by": "modified"},
+            name="workspaceboard", options={"get_latest_by": "modified"}
         ),
         migrations.AlterModelOptions(
-            name="workspaceuser",
-            options={"get_latest_by": "modified"},
+            name="workspaceuser", options={"get_latest_by": "modified"}
         ),
         migrations.AddField(
             model_name="workspace",

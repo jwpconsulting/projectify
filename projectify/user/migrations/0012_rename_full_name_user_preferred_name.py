@@ -11,13 +11,11 @@ class Migration(migrations.Migration):
     """Migration."""
 
     dependencies = [
-        ("user", "0011_alter_user_options_user_created_user_modified"),
+        ("user", "0011_alter_user_options_user_created_user_modified")
     ]
 
     operations = [
         migrations.RenameField(
-            model_name="user",
-            old_name="full_name",
-            new_name="preferred_name",
-        ),
+            model_name="user", old_name="full_name", new_name="preferred_name"
+        )
     ]

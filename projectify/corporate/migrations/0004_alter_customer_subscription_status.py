@@ -10,9 +10,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("corporate", "0003_alter_customer_subscription_status"),
-    ]
+    dependencies = [("corporate", "0003_alter_customer_subscription_status")]
 
     operations = [
         migrations.AlterField(
@@ -27,5 +25,5 @@ class Migration(migrations.Migration):
                 default="UNPAID",
                 max_length=9,
             ),
-        ),
+        )
     ]

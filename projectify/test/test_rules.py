@@ -38,9 +38,7 @@ def observer(workspace: Workspace, faker: Faker) -> TeamMember:
     """Return an observer team member."""
     user = user_create(email=faker.email())
     return workspace_add_user(
-        workspace=workspace,
-        user=user,
-        role=TeamMemberRoles.OBSERVER,
+        workspace=workspace, user=user, role=TeamMemberRoles.OBSERVER
     )
 
 
@@ -69,9 +67,7 @@ class TestPredicates:
         workspace = observer.workspace
         assert not rules.is_at_least_contributor(observer.user, workspace)
         team_member_change_role(
-            team_member=observer,
-            who=user,
-            role=TeamMemberRoles.CONTRIBUTOR,
+            team_member=observer, who=user, role=TeamMemberRoles.CONTRIBUTOR
         )
         workspace.refresh_from_db()
         assert rules.is_at_least_contributor(observer.user, workspace)
@@ -91,9 +87,7 @@ class TestPredicates:
         workspace = observer.workspace
         assert not rules.is_at_least_maintainer(observer.user, workspace)
         team_member_change_role(
-            team_member=observer,
-            who=user,
-            role=TeamMemberRoles.MAINTAINER,
+            team_member=observer, who=user, role=TeamMemberRoles.MAINTAINER
         )
         workspace.refresh_from_db()
         assert rules.is_at_least_maintainer(observer.user, workspace)
@@ -111,9 +105,7 @@ class TestPredicates:
         workspace = observer.workspace
         assert not rules.is_at_least_owner(observer.user, workspace)
         team_member_change_role(
-            team_member=observer,
-            who=user,
-            role=TeamMemberRoles.OWNER,
+            team_member=observer, who=user, role=TeamMemberRoles.OWNER
         )
         workspace.refresh_from_db()
         assert rules.is_at_least_owner(observer.user, workspace)
@@ -204,10 +196,7 @@ class TestTrialRules:
         assert validate_perm("workspace.create_label", user, workspace)
         label_create(workspace=workspace, name="label", color=0, who=user)
         assert not validate_perm(
-            "workspace.create_label",
-            user,
-            workspace,
-            raise_exception=False,
+            "workspace.create_label", user, workspace, raise_exception=False
         )
 
     def test_create_task(
@@ -220,10 +209,7 @@ class TestTrialRules:
         assert validate_perm("workspace.create_task", user, workspace)
         task_create(section=section, title="task title", who=user)
         assert not validate_perm(
-            "workspace.create_task",
-            user,
-            workspace,
-            raise_exception=False,
+            "workspace.create_task", user, workspace, raise_exception=False
         )
 
     def test_create_project(self, team_member: TeamMember) -> None:
@@ -235,10 +221,7 @@ class TestTrialRules:
         assert validate_perm("workspace.create_project", user, workspace)
         project_create(workspace=workspace, title="project", who=user)
         assert not validate_perm(
-            "workspace.create_project",
-            user,
-            workspace,
-            raise_exception=False,
+            "workspace.create_project", user, workspace, raise_exception=False
         )
 
     def test_create_section(
@@ -251,10 +234,7 @@ class TestTrialRules:
         assert validate_perm("workspace.create_section", user, workspace)
         section_create(project=project, title="section", who=user)
         assert not validate_perm(
-            "workspace.create_section",
-            user,
-            workspace,
-            raise_exception=False,
+            "workspace.create_section", user, workspace, raise_exception=False
         )
 
     def test_team_member_and_invite_limit(

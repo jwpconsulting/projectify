@@ -51,8 +51,8 @@ class Migration(migrations.Migration):
                         name="unique_name_date",
                         deferrable=models.Deferrable.DEFERRED,
                     )
-                ],
+                ]
             },
             bases=(models.Model,),
-        ),
+        )
     ]

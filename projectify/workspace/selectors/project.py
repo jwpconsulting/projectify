@@ -43,7 +43,7 @@ def project_detail_query_set(
     )
     label_qs = labels_annotate_with_colors(
         Label.objects.all().annotate(
-            task_count=Count("tasklabel", filter=project_not_archived),
+            task_count=Count("tasklabel", filter=project_not_archived)
         )
     )
     task_label_prefetch_qs = labels_annotate_with_colors(Label.objects.all())
@@ -133,7 +133,7 @@ def project_detail_query_set(
         )
 
     section_qs = Section.objects.all().annotate(
-        has_tasks=Exists(Task.objects.filter(section_id=OuterRef("pk"))),
+        has_tasks=Exists(Task.objects.filter(section_id=OuterRef("pk")))
     )
     # If caller provides a user, filter out tasks for hidden sections,
     # and mark these sections as minimized

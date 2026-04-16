@@ -10,14 +10,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0044_remove_task_assignee"),
-    ]
+    dependencies = [("workspace", "0044_remove_task_assignee")]
 
     operations = [
         migrations.RenameField(
             model_name="task",
             old_name="assignee_workspace_user",
             new_name="assignee",
-        ),
+        )
     ]

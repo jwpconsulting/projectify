@@ -10,8 +10,6 @@ from django.db import migrations
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0031_alter_subtask_options_and_more"),
-    ]
+    dependencies = [("workspace", "0031_alter_subtask_options_and_more")]
 
     operations = []

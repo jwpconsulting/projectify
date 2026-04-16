@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             "workspace",
             "0005_alter_workspace_options_alter_"
             "workspaceboard_options_and_more",
-        ),
+        )
     ]
 
     operations = [
@@ -64,8 +64,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={
-                "abstract": False,
-            },
-        ),
+            options={"abstract": False},
+        )
     ]

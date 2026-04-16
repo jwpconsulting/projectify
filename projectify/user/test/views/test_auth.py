@@ -112,11 +112,7 @@ class TestSignUpDjango:
         assert User.objects.count() == 0
 
     def test_rate_limit(
-        self,
-        client: Client,
-        resource_url: str,
-        faker: Faker,
-        settings: Base,
+        self, client: Client, resource_url: str, faker: Faker, settings: Base
     ) -> None:
         """Test signing up a new user."""
         settings.RATELIMIT_ENABLE = True
@@ -144,11 +140,7 @@ class TestSignUpDjango:
         assert response.status_code == 429
 
     def test_rate_limit_per_ip_regardless_of_success(
-        self,
-        client: Client,
-        resource_url: str,
-        faker: Faker,
-        settings: Base,
+        self, client: Client, resource_url: str, faker: Faker, settings: Base
     ) -> None:
         """Test rate limiting by IP address (10/h regardless of success)."""
         cache.clear()
@@ -192,9 +184,7 @@ class TestSocialAccountSignupView:
             yield mock_get_adapter
 
     @pytest.fixture(autouse=True)
-    def mock_sociallogin_retrieval(
-        self,
-    ) -> Generator[MagicMock, None, None]:
+    def mock_sociallogin_retrieval(self) -> Generator[MagicMock, None, None]:
         """Mock the retrieval of sociallogin from session."""
         mock_sociallogin = MagicMock(name="mock_sociallogin")
         mock_sociallogin.user = User()
@@ -263,9 +253,7 @@ class TestConfirmEmailDjango:
     """Test confirm_email Django view."""
 
     def test_confirm_email(
-        self,
-        client: Client,
-        django_assert_num_queries: DjangoAssertNumQueries,
+        self, client: Client, django_assert_num_queries: DjangoAssertNumQueries
     ) -> None:
         """Test confirming a new user's email address."""
         user = user_sign_up(
@@ -284,9 +272,7 @@ class TestConfirmEmailDjango:
         assert user.is_active
 
     def test_confirm_email_invalid_token(
-        self,
-        client: Client,
-        django_assert_num_queries: DjangoAssertNumQueries,
+        self, client: Client, django_assert_num_queries: DjangoAssertNumQueries
     ) -> None:
         """Test confirming with an invalid token."""
         user = user_sign_up(
@@ -343,11 +329,7 @@ class TestLogInDjango:
         assert response.context["user"].is_authenticated is False
 
     def test_log_in_with_next(
-        self,
-        client: Client,
-        resource_url: str,
-        user: User,
-        password: str,
+        self, client: Client, resource_url: str, user: User, password: str
     ) -> None:
         """Test logging in with a next parameter."""
         dashboard_url = reverse("dashboard:dashboard")

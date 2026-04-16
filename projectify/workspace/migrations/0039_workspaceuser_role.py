@@ -10,9 +10,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0038_alter_task_workspace"),
-    ]
+    dependencies = [("workspace", "0038_alter_task_workspace")]
 
     operations = [
         migrations.AddField(
@@ -28,5 +26,5 @@ class Migration(migrations.Migration):
                 default="OBSE",
                 max_length=4,
             ),
-        ),
+        )
     ]

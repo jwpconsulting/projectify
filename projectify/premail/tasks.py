@@ -9,9 +9,4 @@ from django.core import mail
 
 def send_mail(subject: str, body: str, to_email: str) -> None:
     """Send an email."""
-    mail.send_mail(
-        subject,
-        body,
-        settings.DEFAULT_FROM_EMAIL,
-        [to_email],
-    )
+    mail.send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, [to_email])
