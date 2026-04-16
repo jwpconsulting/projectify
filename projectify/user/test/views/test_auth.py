@@ -81,7 +81,7 @@ class TestSignUpDjango:
     ) -> None:
         """Test signing up a new user."""
         assert User.objects.count() == 0
-        with django_assert_num_queries(12):
+        with django_assert_num_queries(11):
             response = client.post(
                 resource_url,
                 {
@@ -352,11 +352,9 @@ class TestLogInDjango:
         password: str,
     ) -> None:
         """Test logging in a user."""
-        with django_assert_num_queries(16):
-            response = client.post(
-                resource_url,
-                {"email": user.email, "password": password},
-            )
+        data = {"email": user.email, "password": password}
+        with django_assert_num_queries(15):
+            response = client.post(resource_url, data)
         assert response.status_code == 302, response.content
         assert "sessionid" in response.cookies
 
