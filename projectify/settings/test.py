@@ -10,6 +10,7 @@ except ImportError as e:
         "dotenv was not found. Please check if dev dependencies have been installed"
     ) from e
 
+import dj_database_url
 from .base import Base
 
 
@@ -55,4 +56,9 @@ class Test(Base):
 
         cls.SOCIALACCOUNT_PROVIDERS["google"]["APPS"].append(
             {"client_id": "TEST", "secret": "TEST"}
+        )
+
+        cls.DATABASES["default"] = dj_database_url.config(
+            default="sqlite:///projectify.sqlite",
+            conn_max_age=cls.CONN_MAX_AGE,
         )
