@@ -14,23 +14,9 @@ from projectify.corporate.models import Customer
 from projectify.corporate.services.customer import (
     customer_create_stripe_checkout_session,
 )
-from projectify.settings.base import Base
 from projectify.workspace.models import TeamMember
 
 pytestmark = pytest.mark.django_db
-
-
-@pytest.fixture(autouse=True)
-def patch_stripe_settings(
-    settings: Base,
-    stripe_price_object: str,
-    stripe_secret_key: str,
-    stripe_endpoint_secret: str,
-) -> None:
-    """Patch stripe settings."""
-    settings.STRIPE_SECRET_KEY = stripe_secret_key
-    settings.STRIPE_ENDPOINT_SECRET = stripe_endpoint_secret
-    settings.STRIPE_PRICE_OBJECT = stripe_price_object
 
 
 # TODO DRY this, duplicated from corporate/test/views/test_customer.py

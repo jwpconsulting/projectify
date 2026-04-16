@@ -42,15 +42,11 @@ class TestLogOutDjango:
     ) -> None:
         """Test logging out a user."""
         # First log in
-        response = client.post(
-            reverse("users:log-in"),
-            {"email": user.email, "password": password},
-            follow=True,
-        )
+        data = {"email": user.email, "password": password}
+        response = client.post(reverse("users:log-in"), data, follow=True)
         assert response.status_code == 200, response.content
         assert "user" in response.context, response.context
         assert response.context["user"].is_authenticated, response.content
-
         # Now log out
         # went up from 6 -> 7 because we show blog posts on the landing page
         with django_assert_num_queries(7):
@@ -81,17 +77,14 @@ class TestSignUpDjango:
     ) -> None:
         """Test signing up a new user."""
         assert User.objects.count() == 0
+        data = {
+            "email": "hello@localhost",
+            "password": faker.password(),
+            "tos_agreed": True,
+            "privacy_policy_agreed": True,
+        }
         with django_assert_num_queries(11):
-            response = client.post(
-                resource_url,
-                {
-                    "email": "hello@localhost",
-                    "password": faker.password(),
-                    "tos_agreed": True,
-                    "privacy_policy_agreed": True,
-                },
-                follow=True,
-            )
+            response = client.post(resource_url, data, follow=True)
         assert response.status_code == 200, response.content
         assert User.objects.count() == 1
         assert response.redirect_chain == [
@@ -105,18 +98,15 @@ class TestSignUpDjango:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test signing up a new user with a weak password."""
-        with django_assert_num_queries(6):
-            response = client.post(
-                resource_url,
-                {
-                    "email": "password@localhost",
-                    "password": "password",
-                    "tos_agreed": True,
-                    "privacy_policy_agreed": True,
-                },
-            )
+        data = {
+            "email": "password@localhost",
+            "password": "password",
+            "tos_agreed": True,
+            "privacy_policy_agreed": True,
+        }
+        with django_assert_num_queries(5):
+            response = client.post(resource_url, data)
             assert response.status_code == 400
-
         assert b"The password is too similar to the Email" in response.content
         assert b"This password is too common" in response.content
         assert User.objects.count() == 0
@@ -131,27 +121,23 @@ class TestSignUpDjango:
         """Test signing up a new user."""
         settings.RATELIMIT_ENABLE = True
         for i in range(4):
-            response = client.post(
-                resource_url,
-                {
-                    "email": faker.email(),
-                    "password": faker.password(),
-                    "tos_agreed": True,
-                    "privacy_policy_agreed": True,
-                },
-            )
-            assert response.status_code == 302  # Redirect status
-            assert User.objects.count() == i + 1
-        # The 5th request should be rate limited
-        response = client.post(
-            resource_url,
-            {
+            data = {
                 "email": faker.email(),
                 "password": faker.password(),
                 "tos_agreed": True,
                 "privacy_policy_agreed": True,
-            },
-        )
+            }
+            response = client.post(resource_url, data)
+            assert response.status_code == 302  # Redirect status
+            assert User.objects.count() == i + 1
+        # The 5th request should be rate limited
+        data = {
+            "email": faker.email(),
+            "password": faker.password(),
+            "tos_agreed": True,
+            "privacy_policy_agreed": True,
+        }
+        response = client.post(resource_url, data)
         # The view creates no new user
         # XXX flaky
         assert User.objects.count() == 4, User.objects.all()
@@ -169,28 +155,24 @@ class TestSignUpDjango:
         settings.RATELIMIT_ENABLE = True
 
         # Make 10 requests with invalid data (should all fail but count towards limit)
+        data = {
+            "email": "invalid-email",  # Invalid email format
+            "password": faker.password(),
+            "tos_agreed": True,
+            "privacy_policy_agreed": True,
+        }
         for i in range(10):
-            response = client.post(
-                resource_url,
-                {
-                    "email": "invalid-email",  # Invalid email format
-                    "password": faker.password(),
-                    "tos_agreed": True,
-                    "privacy_policy_agreed": True,
-                },
-            )
+            response = client.post(resource_url, data)
             assert response.status_code == 400, f"Attempt {i}"
 
         # The 11th request should be rate limited
-        response = client.post(
-            resource_url,
-            {
-                "email": faker.email(),
-                "password": faker.password(),
-                "tos_agreed": True,
-                "privacy_policy_agreed": True,
-            },
-        )
+        data = {
+            "email": faker.email(),
+            "password": faker.password(),
+            "tos_agreed": True,
+            "privacy_policy_agreed": True,
+        }
+        response = client.post(resource_url, data)
         assert response.status_code == 429
         assert User.objects.count() == 0
 
@@ -244,7 +226,6 @@ class TestSocialAccountSignupView:
     def test_user_created_with_correct_email(self, client: Client) -> None:
         """Test that user is created when correct email is provided."""
         assert User.objects.count() == 0
-
         data = {
             "email": "social@example.com",
             "tos_agreed": True,
@@ -253,7 +234,6 @@ class TestSocialAccountSignupView:
         response = client.post(reverse("socialaccount_signup"), data)
         assert response.status_code == 302
         assert User.objects.count() == 1
-
         user = User.objects.get(email="social@example.com")
         assert user.email == "social@example.com"
 
@@ -295,14 +275,9 @@ class TestConfirmEmailDjango:
             privacy_policy_agreed=True,
         )
         token = user_make_token(user=user, kind="confirm_email_address")
+        url = reverse("users:confirm-email", args=("hello@world.com", token))
         with django_assert_num_queries(8):
-            response = client.get(
-                reverse(
-                    "users:confirm-email",
-                    args=("hello@world.com", token),
-                ),
-                follow=True,
-            )
+            response = client.get(url, follow=True)
         assert response.status_code == 200, response.content
 
         user.refresh_from_db()
@@ -320,17 +295,11 @@ class TestConfirmEmailDjango:
             tos_agreed=True,
             privacy_policy_agreed=True,
         )
+        url = reverse("users:confirm-email", args=("hello@world.com", "inv"))
         with django_assert_num_queries(4):
-            response = client.get(
-                reverse(
-                    "users:confirm-email",
-                    args=("hello@world.com", "invalid_token"),
-                ),
-                follow=True,
-            )
+            response = client.get(url, follow=True)
         assert response.status_code == 200, response.content
         assert b"could not be confirmed" in response.content
-
         user.refresh_from_db()
         assert not user.is_active
 
@@ -352,11 +321,9 @@ class TestLogInDjango:
         password: str,
     ) -> None:
         """Test logging in a user."""
+        data = {"email": user.email, "password": password}
         with django_assert_num_queries(15):
-            response = client.post(
-                resource_url,
-                {"email": user.email, "password": password},
-            )
+            response = client.post(resource_url, data)
         assert response.status_code == 302, response.content
         assert "sessionid" in response.cookies
 
@@ -368,11 +335,9 @@ class TestLogInDjango:
         user: User,
     ) -> None:
         """Test logging in with wrong password."""
-        with django_assert_num_queries(7):
-            response = client.post(
-                resource_url,
-                {"email": user.email, "password": "wrong_password"},
-            )
+        data = {"email": user.email, "password": "wrong_password"}
+        with django_assert_num_queries(6):
+            response = client.post(resource_url, data)
         assert response.status_code == 400, response.content
         assert "user" in response.context
         assert response.context["user"].is_authenticated is False
@@ -386,11 +351,9 @@ class TestLogInDjango:
     ) -> None:
         """Test logging in with a next parameter."""
         dashboard_url = reverse("dashboard:dashboard")
-        response = client.post(
-            f"{resource_url}?next={dashboard_url}",
-            {"email": user.email, "password": password},
-            follow=True,
-        )
+        url = f"{resource_url}?next={dashboard_url}"
+        data = {"email": user.email, "password": password}
+        response = client.post(url, data, follow=True)
         assert response.status_code == 200, response.content
         # There may be more than one element in this chain
         assert response.redirect_chain[0] == (dashboard_url, 302)
@@ -468,12 +431,9 @@ class TestPasswordResetRequestDjango:
         user: User,
     ) -> None:
         """Test POST request to password reset request page."""
+        data = {"email": user.email}
         with django_assert_num_queries(3):
-            response = client.post(
-                resource_url,
-                {"email": user.email},
-                follow=True,
-            )
+            response = client.post(resource_url, data, follow=True)
             assert response.status_code == 200, response.content
         assert response.redirect_chain == [
             (reverse("users:requested-password-reset"), 302)
@@ -486,11 +446,9 @@ class TestPasswordResetRequestDjango:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test POST request with invalid email."""
+        data = {"email": "invalid-email"}
         with django_assert_num_queries(0):
-            response = client.post(
-                resource_url,
-                {"email": "invalid-email"},
-            )
+            response = client.post(resource_url, data)
         assert response.status_code == 400, response.content
 
     def test_post_password_reset_request_nonexistent_email(
@@ -501,12 +459,9 @@ class TestPasswordResetRequestDjango:
         faker: Faker,
     ) -> None:
         """Test POST request with email that doesn't exist in the system."""
-        nonexistent_email = faker.email()
+        data = {"email": faker.email()}
         with django_assert_num_queries(4):
-            response = client.post(
-                resource_url,
-                {"email": nonexistent_email},
-            )
+            response = client.post(resource_url, data)
         assert response.status_code == 400, response.content
 
     def test_password_reset_request_rate_limit_by_email(
@@ -547,16 +502,10 @@ class TestPasswordResetRequestDjango:
         ]
 
         for i, user in enumerate(first_users):
-            response = client.post(
-                resource_url,
-                {"email": user.email},
-            )
+            response = client.post(resource_url, {"email": user.email})
             assert response.status_code == 302, f"Attempt {i}"
 
-        response = client.post(
-            resource_url,
-            {"email": last_user.email},
-        )
+        response = client.post(resource_url, {"email": last_user.email})
         assert response.status_code == 429
 
 
@@ -596,19 +545,12 @@ class TestPasswordResetConfirmDjango:
     ) -> None:
         """Test confirming the password reset for a user."""
         token = user_make_token(user=user, kind="reset_password")
+        new_pw = "evenmoresecurepassword123"
+        data = {"new_password": new_pw, "new_password_confirm": new_pw}
+        url = reverse("users:confirm-password-reset", args=(user.email, token))
         with django_assert_num_queries(8):
-            response = client.post(
-                reverse(
-                    "users:confirm-password-reset",
-                    args=(user.email, token),
-                ),
-                {
-                    "new_password": "evenmoresecurepassword123",
-                    "new_password_confirm": "evenmoresecurepassword123",
-                },
-            )
+            response = client.post(url, data)
             assert response.status_code == 302, response.content
-
         user.refresh_from_db()
         assert user.check_password("evenmoresecurepassword123")
 
@@ -620,16 +562,10 @@ class TestPasswordResetConfirmDjango:
     ) -> None:
         """Test GET request to password reset confirm page."""
         token = user_make_token(user=user, kind="reset_password")
-
+        url = reverse("users:confirm-password-reset", args=(user.email, token))
         with django_assert_num_queries(0):
-            response = client.get(
-                reverse(
-                    "users:confirm-password-reset",
-                    args=(user.email, token),
-                ),
-            )
+            response = client.get(url)
             assert response.status_code == 200, response.content
-
         assert b"Reset your password" in response.content
 
     def test_confirm_password_reset_passwords_dont_match(
@@ -640,20 +576,11 @@ class TestPasswordResetConfirmDjango:
     ) -> None:
         """Test confirming with mismatched passwords."""
         token = user_make_token(user=user, kind="reset_password")
-
+        url = reverse("users:confirm-password-reset", args=(user.email, token))
+        data = {"new_password": "123", "new_password_confirm": "456"}
         with django_assert_num_queries(3):
-            response = client.post(
-                reverse(
-                    "users:confirm-password-reset",
-                    args=(user.email, token),
-                ),
-                {
-                    "new_password": "password123",
-                    "new_password_confirm": "differentpassword123",
-                },
-            )
+            response = client.post(url, data)
             assert response.status_code == 400, response.content
-
         assert b"New passwords must match" in response.content
 
         user.refresh_from_db()
@@ -667,21 +594,13 @@ class TestPasswordResetConfirmDjango:
         user: User,
     ) -> None:
         """Test confirming with an invalid token."""
+        url = reverse("users:confirm-password-reset", args=(user.email, "inv"))
+        new_pw = "evenmoresecurepassword123"
+        data = {"new_password": new_pw, "new_password_confirm": new_pw}
         with django_assert_num_queries(4):
-            response = client.post(
-                reverse(
-                    "users:confirm-password-reset",
-                    args=(user.email, "invalid_token"),
-                ),
-                {
-                    "new_password": "evenmoresecurepassword123",
-                    "new_password_confirm": "evenmoresecurepassword123",
-                },
-            )
+            response = client.post(url, data)
             assert response.status_code == 400, response.content
-
         assert b"This token is invalid" in response.content
-
         user.refresh_from_db()
         assert not user.check_password("evenmoresecurepassword123")
 
@@ -694,22 +613,14 @@ class TestPasswordResetConfirmDjango:
     ) -> None:
         """Test confirming with the wrong email address."""
         token = user_make_token(user=user, kind="reset_password")
-        wrong_email = faker.email()
-
+        wrong_mail = faker.email()
+        url = reverse("users:confirm-password-reset", args=(wrong_mail, token))
+        new_pw = "evenmoresecurepassword123"
+        data = {"new_password": new_pw, "new_password_confirm": new_pw}
         with django_assert_num_queries(4):
-            response = client.post(
-                reverse(
-                    "users:confirm-password-reset",
-                    args=(wrong_email, token),
-                ),
-                {
-                    "new_password": "evenmoresecurepassword123",
-                    "new_password_confirm": "evenmoresecurepassword123",
-                },
-            )
+            response = client.post(url, data)
             assert response.status_code == 400, response.content
         assert b"email is not recognized" in response.content
-
         user.refresh_from_db()
         assert not user.check_password("evenmoresecurepassword123")
 
@@ -722,22 +633,12 @@ class TestPasswordResetConfirmDjango:
     ) -> None:
         """Test confirming with a weak password."""
         token = user_make_token(user=user, kind="reset_password")
-
+        url = reverse("users:confirm-password-reset", args=(user.email, token))
+        data = {"new_password": "asd123", "new_password_confirm": "asd123"}
         with django_assert_num_queries(4):
-            response = client.post(
-                reverse(
-                    "users:confirm-password-reset",
-                    args=(user.email, token),
-                ),
-                {
-                    "new_password": "asd123",
-                    "new_password_confirm": "asd123",
-                },
-            )
+            response = client.post(url, data)
             assert response.status_code == 400, response.content
-
         assert b"This password is too short" in response.content
         assert b"This password is too common" in response.content
-
         user.refresh_from_db()
         assert user.check_password(password)

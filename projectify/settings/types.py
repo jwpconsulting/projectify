@@ -1,9 +1,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2023 JWP Consulting GK
+# SPDX-FileCopyrightText: 2023-2024,2026 JWP Consulting GK
 """Types used for settings."""
 
 from collections.abc import Sequence
+from dataclasses import dataclass
 from typing import Any, Mapping, NotRequired, Optional, TypedDict
 
 
@@ -56,3 +57,15 @@ SocialAccountProvider = TypedDict(
         "APPS": list[SocialAccountApp],
     },
 )
+
+
+@dataclass
+class StripeConfig:
+    """Hold configuration needed to use Stripe."""
+
+    # XXX it doesn't look like Projectify is using the publishable key
+    # TODO consider removing the STRIPE_PUBLISHABLE_KEY
+    STRIPE_PUBLISHABLE_KEY: str
+    STRIPE_SECRET_KEY: str
+    STRIPE_ENDPOINT_SECRET: str
+    STRIPE_PRICE_OBJECT: str

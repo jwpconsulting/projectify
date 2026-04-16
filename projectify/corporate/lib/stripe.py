@@ -10,8 +10,7 @@ from projectify.lib.settings import get_settings
 
 def stripe_client() -> StripeClient:
     """Return StripeClient from CorporateConfig."""
-    settings = get_settings()
-    secret_key = settings.STRIPE_SECRET_KEY
-    if secret_key is None:
-        raise ValueError("STRIPE_SECRET_KEY is not defined")
-    return StripeClient(secret_key)
+    config = get_settings().STRIPE_CONFIG
+    if config is None:
+        raise ValueError("You need to activate the Stripe integration.")
+    return StripeClient(config.STRIPE_SECRET_KEY)

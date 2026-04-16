@@ -11,21 +11,11 @@ from django.urls import reverse
 import pytest
 
 from projectify.corporate.types import CustomerSubscriptionStatus
-from projectify.settings.base import Base
 from pytest_types import DjangoAssertNumQueries
 
 from ...models import Customer
 
 pytestmark = pytest.mark.django_db
-
-
-@pytest.fixture(autouse=True)
-def patch_stripe_settings(
-    settings: Base, stripe_secret_key: str, stripe_endpoint_secret: str
-) -> None:
-    """Patch stripe settings."""
-    settings.STRIPE_SECRET_KEY = stripe_secret_key
-    settings.STRIPE_ENDPOINT_SECRET = stripe_endpoint_secret
 
 
 class TestStripeWebhook:

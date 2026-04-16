@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2024,2026 JWP Consulting GK
 """User authentication views."""
 
+import logging
 from typing import Any
 
 from django import forms
@@ -17,6 +18,8 @@ from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
+from allauth.socialaccount.adapter import get_adapter
+from allauth.socialaccount.providers.base.provider import Provider
 from django_ratelimit.core import UNSAFE, get_usage
 from django_ratelimit.decorators import ratelimit
 
@@ -31,6 +34,47 @@ from projectify.user.services.auth import (
     user_sign_up,
 )
 from projectify.user.services.internal import Token
+
+logger = logging.getLogger(__name__)
+
+
+def allauth_provider_info(request: HttpRequest) -> list[dict[str, str]]:
+    """Format allauth socialaccount providers for log in and sign up."""
+    result = []
+    # Copied from get_providers in
+    # allauth.socialaccount.templatetags.socialaccount
+    adapter = get_adapter()  # type: ignore[no-untyped-call]
+    providers: list[Provider] = adapter.list_providers(request)
+    for provider in providers:
+        logger.info(
+            "Provider: %s, slug: %s", type(provider), provider.get_slug()
+        )
+        if provider.app is None:
+            continue
+        # The original get_providers also checked the following:
+        # if provider.uses_apps or provider.app.settings.get("hidden")
+        # For Projectify's providers-GitHub, Google, and openid_connect for testing
+        # this means that they won't show up
+        slug = provider.get_slug()
+        match slug:
+            case "github":
+                label = _("Log in with GitHub")
+                alt = _("GitHub")
+                icon = "user/login_with_github.svg"
+            case "google":
+                label = _("Log in with Google")
+                alt = _("Google")
+                icon = "user/login_with_google.svg"
+            case "openid_connect":
+                label = _("Dummy log in")
+                alt = _("Dummy log in")
+                icon = "heroicons/user.svg"
+            case other:
+                logger.warning("Unrecognized auth provider %s", other)
+                continue
+        href = provider.get_login_url(request)
+        result.append({"label": label, "alt": alt, "icon": icon, "href": href})
+    return result
 
 
 def log_out(request: HttpRequest) -> HttpResponse:
@@ -78,73 +122,85 @@ class SignUpForm(forms.Form):
 @ratelimit(key="ip", rate="10/h", method=UNSAFE)
 def sign_up(request: HttpRequest) -> HttpResponse:
     """Sign the user up."""
-    validators = password_validators_help_texts()
-
-    if request.method == "GET":
-        form = SignUpForm()
-        context = {"form": form, "validators": validators}
-        return render(request, "user/sign_up.html", context=context)
-
-    # XXX
-    # Originally, I wanted 4/h but there's a weird off-by-one issue here
-    # See the comment below as well.
-    limit = get_usage(
-        request,
-        group="projectify.user.views.auth.sign_up",
-        key="ip",
-        rate="3/h",
-        increment=False,
-    )
-
-    form = SignUpForm(request.POST)
-
-    # Rate limit and show appropraite error message
-    if limit and limit["should_limit"]:
-        context = {"form": form, "validators": validators}
-        form.add_error(
-            field=None, error=_("Too many sign up attempts. Slow down.")
-        )
-        return render(
-            request, "user/sign_up.html", context=context, status=429
-        )
-
-    if not form.is_valid():
-        context = {"form": form, "validators": validators}
-        return render(
-            request, "user/sign_up.html", context=context, status=400
-        )
-    data = form.cleaned_data
-
-    try:
-        user_sign_up(
-            email=data["email"],
-            password=data["password"],
-            tos_agreed=data["tos_agreed"],
-            privacy_policy_agreed=data["privacy_policy_agreed"],
-        )
-    except ValidationError as error:
-        populate_form_with_errors(form, error)
-        context = {"form": form, "validators": validators}
-        return render(
-            request, "user/sign_up.html", context=context, status=400
-        )
-
-    # Increment limit only on success
-    # When you log the output here using print(limit), it prints the following:
-    # {'count': 1, 'limit': 4, 'should_limit': False, 'time_left': 1800}
-    # {'count': 2, 'limit': 4, 'should_limit': False, 'time_left': 1799}
-    # {'count': 3, 'limit': 4, 'should_limit': False, 'time_left': 1799}
-    # {'count': 4, 'limit': 4, 'should_limit': False, 'time_left': 1799}
-    # {'count': 5, 'limit': 4, 'should_limit': True, 'time_left': 1799}
-    # My expectation is that it limits when count == limit == 4, but it doesn't
-    limit = get_usage(
-        request,
-        group="projectify.user.views.auth.sign_up",
-        key="ip",
-        rate="3/h",
-        increment=True,
-    )
-    return redirect("users:sent-email-confirmation-link")
+    match request.method:
+        case "GET":
+            form = SignUpForm()
+            status = 200
+        case "POST":
+            # Originally, I wanted 4/h but there's a weird off-by-one issue here
+            # See the comment below as well.
+            # Solution:
+            # ratelimit doesn't check based on a windowed rate count, but
+            # how many times within a fixed window (e.g., hour 1, hour 2, etc.)
+            # some action is performed
+            # When your rate limit is 5 and hit this view 4 times
+            # at the end of hour
+            # 1, and hit it once the beginning of hour 2,
+            # it would count the one hit of hour 2 as a separate windowed hit,
+            # even though you've hit this view 5 times within one hour.
+            #
+            #      5 hits
+            #      .------.
+            #      v      v
+            #  |   xxxx | x      |
+            #  | hour 1 | hour 2 |
+            #
+            # This counts as 4 hits, and then 1 hit!
+            # Justus 2026-04-16
+            limit = get_usage(
+                request,
+                group="projectify.user.views.auth.sign_up",
+                key="ip",
+                rate="3/h",
+                increment=False,
+            )
+            form = SignUpForm(request.POST)
+            # Rate limit and show appropriate error message
+            if limit and limit["should_limit"]:
+                form.add_error(
+                    field=None,
+                    error=_("Too many sign up attempts. Slow down."),
+                )
+                status = 429
+            elif form.is_valid():
+                data = form.cleaned_data
+                try:
+                    user_sign_up(
+                        email=data["email"],
+                        password=data["password"],
+                        tos_agreed=data["tos_agreed"],
+                        privacy_policy_agreed=data["privacy_policy_agreed"],
+                    )
+                except ValidationError as error:
+                    populate_form_with_errors(form, error)
+                    status = 400
+                else:
+                    # Increment limit only on success
+                    # When you log the output here using print(limit), it prints the following:
+                    # {'count': 1, 'limit': 4, 'should_limit': False, 'time_left': 1800}
+                    # {'count': 2, 'limit': 4, 'should_limit': False, 'time_left': 1799}
+                    # {'count': 3, 'limit': 4, 'should_limit': False, 'time_left': 1799}
+                    # {'count': 4, 'limit': 4, 'should_limit': False, 'time_left': 1799}
+                    # {'count': 5, 'limit': 4, 'should_limit': True, 'time_left': 1799}
+                    # My expectation is that it limits when count == limit == 4, but it doesn't
+                    limit = get_usage(
+                        request,
+                        group="projectify.user.views.auth.sign_up",
+                        key="ip",
+                        rate="3/h",
+                        increment=True,
+                    )
+                    return redirect("users:sent-email-confirmation-link")
+            else:
+                status = 400
+        case other:
+            raise RuntimeError(f"Bad method {other}")
+    context = {
+        "validators": password_validators_help_texts(),
+        "allauth_providers": allauth_provider_info(request),
+        "form": form,
+    }
+    return render(request, "user/sign_up.html", context=context, status=status)
 
 
 def email_confirmation_link_sent(request: HttpRequest) -> HttpResponse:
@@ -173,10 +229,7 @@ def email_confirm(
                     "Don't know how to handle ValidationError of type "
                     f"{type(e)}"
                 ) from e
-        context = {
-            "email_error": email_error,
-            "token_error": token_error,
-        }
+        context = {"email_error": email_error, "token_error": token_error}
     return render(request, "user/email_confirm.html", context=context)
 
 
@@ -209,52 +262,56 @@ def log_in(request: HttpRequest) -> HttpResponse:
         # TODO show flash "You're already logged in. Want to log out? Go to log
         # out..."
         return redirect("users:profile")
-    if request.method == "GET":
-        form = LogInForm()
-        context = {"form": form}
-        return render(request, "user/log_in.html", context=context)
 
-    limit = get_usage(
-        request,
-        group=FAILED_GROUP,
-        key=FAILED_KEY,
-        rate=FAILED_RATE,
-        increment=False,
-    )
-
-    form = LogInForm(request.POST)
-    context = {"form": form}
-
-    if limit and limit["should_limit"]:
-        context = {"form": form}
-        form.add_error(
-            field=None, error=_("Too many log in attempts. Slow down.")
-        )
-        return render(request, "user/log_in.html", context=context, status=429)
-
-    if not form.is_valid():
-        return render(request, "user/log_in.html", context=context, status=400)
-
-    try:
-        user_log_in(
-            email=form.cleaned_data["email"],
-            password=form.cleaned_data["password"],
-            request=request,
-        )
-    except ValidationError as error:
-        populate_form_with_errors(form, error)
-        context = {"form": form}
-        get_usage(
-            request,
-            group=FAILED_GROUP,
-            key=FAILED_KEY,
-            rate=FAILED_RATE,
-            increment=True,
-        )
-        return render(request, "user/log_in.html", context=context, status=400)
-
-    next = request.GET.get("next", reverse("dashboard:dashboard"))
-    return redirect(next)
+    match request.method:
+        case "GET":
+            form = LogInForm()
+            status = 200
+        case "POST":
+            limit = get_usage(
+                request,
+                group=FAILED_GROUP,
+                key=FAILED_KEY,
+                rate=FAILED_RATE,
+                increment=False,
+            )
+            form = LogInForm(request.POST)
+            if limit and limit["should_limit"]:
+                form.add_error(
+                    field=None, error=_("Too many log in attempts. Slow down.")
+                )
+                status = 429
+            elif form.is_valid():
+                try:
+                    user_log_in(
+                        email=form.cleaned_data["email"],
+                        password=form.cleaned_data["password"],
+                        request=request,
+                    )
+                except ValidationError as error:
+                    populate_form_with_errors(form, error)
+                    get_usage(
+                        request,
+                        group=FAILED_GROUP,
+                        key=FAILED_KEY,
+                        rate=FAILED_RATE,
+                        increment=True,
+                    )
+                else:
+                    next = request.GET.get(
+                        "next", reverse("dashboard:dashboard")
+                    )
+                    return redirect(next)
+                status = 400
+            else:
+                status = 400
+        case other:
+            raise RuntimeError(f"Bad method {other}")
+    context = {
+        "allauth_providers": allauth_provider_info(request),
+        "form": form,
+    }
+    return render(request, "user/log_in.html", context=context, status=status)
 
 
 class PasswordResetRequestForm(forms.Form):
@@ -269,36 +326,30 @@ class PasswordResetRequestForm(forms.Form):
 @ratelimit(key="ip", rate="5/h")
 def password_reset_request(request: HttpRequest) -> HttpResponse:
     """Request a password reset."""
-    if request.method == "GET":
-        form = PasswordResetRequestForm()
-        context = {"form": form}
-        return render(
-            request, "user/password_reset_request.html", context=context
-        )
-
-    form = PasswordResetRequestForm(request.POST)
-    if not form.is_valid():
-        context = {"form": form}
-        return render(
-            request,
-            "user/password_reset_request.html",
-            context=context,
-            status=400,
-        )
-
-    try:
-        user_request_password_reset(email=form.cleaned_data["email"])
-    except ValidationError as error:
-        populate_form_with_errors(form, error)
-        context = {"form": form}
-        return render(
-            request,
-            "user/password_reset_request.html",
-            context=context,
-            status=400,
-        )
-
-    return redirect("users:requested-password-reset")
+    match request.method:
+        case "GET":
+            form = PasswordResetRequestForm()
+            status = 200
+        case "POST":
+            form = PasswordResetRequestForm(request.POST)
+            if form.is_valid():
+                try:
+                    user_request_password_reset(
+                        email=form.cleaned_data["email"]
+                    )
+                except ValidationError as error:
+                    populate_form_with_errors(form, error)
+                else:
+                    return redirect("users:requested-password-reset")
+            status = 400
+        case other:
+            raise RuntimeError(f"Called with method {other}")
+    return render(
+        request,
+        "user/password_reset_request.html",
+        context={"form": form},
+        status=status,
+    )
 
 
 def password_reset_requested(request: HttpRequest) -> HttpResponse:
@@ -328,36 +379,31 @@ def password_reset_confirm(
 ) -> HttpResponse:
     """Confirm a password reset request and set a new password."""
     token = Token(token)
-    validators = password_validators_help_texts()
-
     match request.method:
         case "GET":
             form = PasswordResetConfirmForm()
-            context = {"form": form, "validators": validators}
             status = 200
         case _:
             form = PasswordResetConfirmForm(request.POST)
-            context = {"form": form, "validators": validators}
-            if not form.is_valid():
-                status = 400
-            try:
-                user_confirm_password_reset(
-                    email=email,
-                    token=token,
-                    new_password=form.cleaned_data["new_password"],
-                    new_password_confirm=form.cleaned_data[
-                        "new_password_confirm"
-                    ],
-                )
-            except ValidationError as error:
-                populate_form_with_errors(form, error)
-                status = 400
-            else:
-                return redirect("users:reset-password")
+            if form.is_valid():
+                try:
+                    user_confirm_password_reset(
+                        email=email,
+                        token=token,
+                        new_password=form.cleaned_data["new_password"],
+                        new_password_confirm=form.cleaned_data[
+                            "new_password_confirm"
+                        ],
+                    )
+                except ValidationError as error:
+                    populate_form_with_errors(form, error)
+                else:
+                    return redirect("users:reset-password")
+            status = 400
     return render(
         request,
         "user/password_reset_confirm.html",
-        context=context,
+        context={"validators": password_validators_help_texts(), "form": form},
         status=status,
     )
 

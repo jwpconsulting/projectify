@@ -30,6 +30,7 @@ from .types import (
     LoggingConfig,
     SocialAccountProvider,
     StoragesConfig,
+    StripeConfig,
     TemplatesConfig,
 )
 
@@ -61,6 +62,8 @@ class Base(Configuration):  # type:ignore
 
     See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
     """
+
+    SECRET_KEY: str
 
     # Build paths inside the project like this: BASE_DIR / 'subdir'.
     BASE_DIR = Path(__file__).resolve().parent.parent
@@ -389,9 +392,7 @@ class Base(Configuration):  # type:ignore
     ADMINS: list[list[str]] = []
 
     # Stripe
-    STRIPE_SECRET_KEY: Optional[str] = None
-    STRIPE_ENDPOINT_SECRET: Optional[str] = None
-    STRIPE_PRICE_OBJECT: Optional[str] = None
+    STRIPE_CONFIG: Optional[StripeConfig] = None
 
     # django-ratelimit
     RATELIMIT_ENABLE = True

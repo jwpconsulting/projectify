@@ -12,6 +12,7 @@ from typing import Any
 from projectify.settings.collect_static import CollectStatic
 
 from .base import Base
+from .types import StripeConfig
 
 
 class Hetzner(Base):
@@ -116,10 +117,12 @@ class Hetzner(Base):
                 f"You must specify the STRIPE_ENDPOINT_SECRET in {credentials_file}"
             )
 
-        cls.STRIPE_PUBLISHABLE_KEY = credentials["STRIPE_PUBLISHABLE_KEY"]
-        cls.STRIPE_SECRET_KEY = credentials["STRIPE_SECRET_KEY"]
-        cls.STRIPE_PRICE_OBJECT = credentials["STRIPE_PRICE_OBJECT"]
-        cls.STRIPE_ENDPOINT_SECRET = credentials["STRIPE_ENDPOINT_SECRET"]
+        cls.STRIPE_CONFIG = StripeConfig(
+            STRIPE_PUBLISHABLE_KEY=credentials["STRIPE_PUBLISHABLE_KEY"],
+            STRIPE_SECRET_KEY=credentials["STRIPE_SECRET_KEY"],
+            STRIPE_PRICE_OBJECT=credentials["STRIPE_PRICE_OBJECT"],
+            STRIPE_ENDPOINT_SECRET=credentials["STRIPE_ENDPOINT_SECRET"],
+        )
 
     @classmethod
     def setup_allauth(

@@ -78,9 +78,11 @@ def customer_create_stripe_checkout_session(
             }
         )
 
-    settings = get_settings()
-    if settings.STRIPE_PRICE_OBJECT is None:
-        raise ValueError("Expected STRIPE_PRICE_OBJECT")
+    settings = get_settings().STRIPE_CONFIG
+    if settings is None:
+        raise ValueError(
+            "You need to configure Stripe to create Stripe checkout sessions."
+        )
 
     # XXX
     # Stripe types have invariance problems here

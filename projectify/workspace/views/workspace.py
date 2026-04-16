@@ -5,7 +5,7 @@
 
 import logging
 from dataclasses import dataclass
-from typing import Any, TypedDict
+from typing import Any, Literal, TypedDict
 from uuid import UUID
 
 from django import forms
@@ -97,9 +97,55 @@ def create_color_choices() -> dict[Any, ColorInfo]:
 def _get_workspace_settings_context(
     request: AuthenticatedHttpRequest,
     workspace: Workspace,
-    active_tab: str,
+    active_tab: Literal[
+        "general", "projects", "labels", "team-members", "billing", "quota"
+    ],
 ) -> dict[str, object]:
     """Get shared context for workspace settings views."""
+    rev_args = (workspace.uuid,)
+    tabs = [
+        {
+            "href": reverse("dashboard:workspaces:settings", args=rev_args),
+            "label": _("General"),
+            "active": active_tab == "general",
+        },
+        {
+            "href": reverse("dashboard:workspaces:projects", args=rev_args),
+            "label": _("Projects"),
+            "active": active_tab == "projects",
+        },
+        {
+            "href": reverse("dashboard:workspaces:labels", args=rev_args),
+            "label": _("Labels"),
+            "active": active_tab == "labels",
+        },
+        {
+            "href": reverse(
+                "dashboard:workspaces:team-members", args=rev_args
+            ),
+            "label": _("Team"),
+            "active": active_tab == "team-members",
+        },
+    ]
+    if get_settings().STRIPE_CONFIG is None:
+        logger.info(
+            "Stripe integration is disabled. Hiding billing and quota config from settings tab"
+        )
+    else:
+        tabs = [
+            *tabs,
+            {
+                "href": reverse("dashboard:workspaces:billing", args=rev_args),
+                "label": _("Billing"),
+                "active": active_tab == "billing",
+            },
+            {
+                "href": reverse("dashboard:workspaces:quota", args=rev_args),
+                "label": _("Quota"),
+                "active": active_tab == "quota",
+            },
+        ]
+
     return {
         "workspace": workspace,
         "projects": workspace.project_set.all(),
@@ -107,7 +153,7 @@ def _get_workspace_settings_context(
         "current_team_member_qs": team_member_find_for_workspace(
             user=request.user, workspace=workspace
         ),
-        "active_tab": active_tab,
+        "tabs": tabs,
     }
 
 
@@ -672,7 +718,7 @@ def workspace_settings_team_members(
 
     context = {
         **_get_workspace_settings_context(
-            request=request, workspace=workspace, active_tab="team"
+            request=request, workspace=workspace, active_tab="team-members"
         ),
         "invite_form": InviteTeamMemberForm(),
         "remove_form": RemoveTeamMemberForm(workspace=workspace),
@@ -723,7 +769,7 @@ def workspace_settings_team_member_update(
 
     context = {
         **_get_workspace_settings_context(
-            request=request, workspace=workspace, active_tab="team"
+            request=request, workspace=workspace, active_tab="team-members"
         ),
         "team_member": team_member,
     }

@@ -262,10 +262,10 @@ def _construct_event(
     payload: bytes, sig_header: str
 ) -> Union[stripe.Event, Literal["invalid_payload", "invalid_signature"]]:
     """Construct an event, and maybe return errors."""
-    settings = get_settings()
-    endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
-    if endpoint_secret is None:
-        raise ValueError("Expected STRIPE_ENDPOINT_SECRET")
+    config = get_settings().STRIPE_CONFIG
+    if config is None:
+        raise ValueError("Expected Stripe configuration to be present")
+    endpoint_secret = config.STRIPE_ENDPOINT_SECRET
 
     client = stripe_client()
 

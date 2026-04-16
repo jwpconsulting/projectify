@@ -3,12 +3,20 @@
 # SPDX-FileCopyrightText: 2021, 2022, 2023 JWP Consulting GK
 """Test settings."""
 
+import secrets
+
+from faker import Faker
+
+from projectify.settings.types import StripeConfig
+
 try:
     from dotenv import load_dotenv
 except ImportError as e:
     raise RuntimeError(
         "dotenv was not found. Please check if dev dependencies have been installed"
     ) from e
+
+import dj_database_url
 
 from .base import Base
 
@@ -22,8 +30,7 @@ class Test(Base):
         a for a in Base.MIDDLEWARE if "stats.middleware.count_stats" not in a
     ]
 
-    # TODO populate me
-    SECRET_KEY = "test"
+    SECRET_KEY = secrets.token_hex(32)
 
     FRONTEND_URL = "https://example.com"
 
@@ -55,4 +62,25 @@ class Test(Base):
 
         cls.SOCIALACCOUNT_PROVIDERS["google"]["APPS"].append(
             {"client_id": "TEST", "secret": "TEST"}
+        )
+
+        cls.DATABASES["default"] = dj_database_url.config(
+            default="sqlite:///:memory:",
+            conn_max_age=cls.CONN_MAX_AGE,
+        )
+
+        faker = Faker()
+        cls.STRIPE_CONFIG = StripeConfig(
+            STRIPE_PUBLISHABLE_KEY=faker.hexify(
+                "pk_test_^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+            ),
+            STRIPE_SECRET_KEY=faker.hexify(
+                "sk_test_^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+            ),
+            STRIPE_ENDPOINT_SECRET=faker.hexify(
+                "price_^^^^^^^^^^^^^^^^^^^^^^^^"
+            ),
+            STRIPE_PRICE_OBJECT=faker.hexify(
+                "whsec_^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+            ),
         )

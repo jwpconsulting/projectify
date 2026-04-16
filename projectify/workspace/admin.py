@@ -1,11 +1,12 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2021, 2022, 2023 JWP Consulting GK
+# SPDX-FileCopyrightText: 2021-2024,2026 JWP Consulting GK
 """Workspace admin."""
 
-from typing import Optional
+from typing import Optional, TypeVar
 
 from django.contrib import admin
+from django.db.models import Model
 from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
@@ -20,6 +21,28 @@ from .models import (
     TeamMemberInvite,
     Workspace,
 )
+
+M = TypeVar("M", bound=Model)
+
+
+class ReadOnlyAdmin[M]:
+    """Admin Mixin that forbids anyone from making changes to this model."""
+
+    def has_add_permission(
+        self, request: HttpRequest, obj: Optional[M] = None
+    ) -> bool:
+        """Forbid anyone from adding objects."""
+        del request
+        del obj
+        return False
+
+    def has_change_permission(
+        self, request: HttpRequest, obj: Optional[M] = None
+    ) -> bool:
+        """Forbid anyone from changing objects."""
+        del request
+        del obj
+        return False
 
 
 class TeamMemberInline(admin.TabularInline[TeamMember]):
@@ -37,7 +60,7 @@ class ProjectInline(admin.TabularInline[Project]):
 
 
 @admin.register(Workspace)
-class WorkspaceAdmin(admin.ModelAdmin[Workspace]):
+class WorkspaceAdmin(ReadOnlyAdmin[Workspace], admin.ModelAdmin[Workspace]):
     """Workspace Admin."""
 
     inlines = (TeamMemberInline, ProjectInline)
@@ -53,7 +76,9 @@ class WorkspaceAdmin(admin.ModelAdmin[Workspace]):
 
 
 @admin.register(TeamMemberInvite)
-class TeamMemberInviteAdmin(admin.ModelAdmin[TeamMemberInvite]):
+class TeamMemberInviteAdmin(
+    ReadOnlyAdmin[TeamMemberInvite], admin.ModelAdmin[TeamMemberInvite]
+):
     """Team member invite admin."""
 
     list_display = ("workspace_title", "redeemed", "redeemed_when")
@@ -68,17 +93,9 @@ class TeamMemberInviteAdmin(admin.ModelAdmin[TeamMemberInvite]):
         """Return the workspace's title."""
         return instance.workspace.title
 
-    def has_change_permission(
-        self, request: HttpRequest, obj: Optional[TeamMemberInvite] = None
-    ) -> bool:
-        """Forbid anyone from changing this."""
-        del request
-        del obj
-        return False
-
 
 @admin.register(TeamMember)
-class TeamMemberAdmin(admin.ModelAdmin[TeamMember]):
+class TeamMemberAdmin(ReadOnlyAdmin[TeamMember], admin.ModelAdmin[TeamMember]):
     """TeamMember Admin."""
 
     list_display = (
@@ -121,7 +138,7 @@ class SectionInline(admin.TabularInline[Section]):
 
 
 @admin.register(Project)
-class ProjectAdmin(admin.ModelAdmin[Project]):
+class ProjectAdmin(ReadOnlyAdmin[Project], admin.ModelAdmin[Project]):
     """Project Admin."""
 
     inlines = (SectionInline,)
@@ -154,7 +171,7 @@ class TaskInline(admin.TabularInline[Task]):
 
 
 @admin.register(Section)
-class SectionAdmin(admin.ModelAdmin[Section]):
+class SectionAdmin(ReadOnlyAdmin[Section], admin.ModelAdmin[Section]):
     """Section Admin."""
 
     inlines = (TaskInline,)
@@ -187,7 +204,7 @@ class TaskLabelInline(admin.TabularInline[TaskLabel]):
 
 
 @admin.register(Task)
-class TaskAdmin(admin.ModelAdmin[Task]):
+class TaskAdmin(ReadOnlyAdmin[Task], admin.ModelAdmin[Task]):
     """Task Admin."""
 
     inlines = (TaskLabelInline,)
@@ -219,7 +236,7 @@ class TaskAdmin(admin.ModelAdmin[Task]):
 
 
 @admin.register(Label)
-class LabelAdmin(admin.ModelAdmin[Label]):
+class LabelAdmin(ReadOnlyAdmin[Label], admin.ModelAdmin[Label]):
     """Label admin."""
 
     list_display = (
@@ -237,7 +254,9 @@ class LabelAdmin(admin.ModelAdmin[Label]):
 
 
 @admin.register(ChatMessage)
-class ChatMessageAdmin(admin.ModelAdmin[ChatMessage]):
+class ChatMessageAdmin(
+    ReadOnlyAdmin[ChatMessage], admin.ModelAdmin[ChatMessage]
+):
     """ChatMessage admin."""
 
     list_display = (

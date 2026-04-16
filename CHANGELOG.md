@@ -6,6 +6,20 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Changelog
 
+## Unreleased
+
+### Internal
+
+- Make it easier to run Projectify locally by feature-gating the following
+features:
+  - Log in with GitHub
+  - Log in with Google
+  - Stripe billing including the billing and quota pages in the workspace
+    settings. This also disables quota checking.
+- Update vulture and regex package
+- Test Projectify compabilitity with Python 3.14
+- Make all workspace app models readonly in the Projectify Django admin.
+
 ## 2026.4.15
 
 ### Enhancement

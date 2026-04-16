@@ -1,12 +1,15 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2021-2024 JWP Consulting GK
+# SPDX-FileCopyrightText: 2021-2026 JWP Consulting GK
 """Development settings."""
 
 import os
+import warnings
 from collections.abc import Iterable, Sequence
 
 import dj_database_url
+
+from .types import StripeConfig
 
 try:
     from dotenv import load_dotenv
@@ -15,7 +18,7 @@ except ImportError as e:
         "dotenv was not found. Please check if dev dependencies have been installed"
     ) from e
 
-from .base import Base, environ_get_or_warn
+from .base import Base
 
 
 def add_dev_middleware(
@@ -88,12 +91,6 @@ class Development(Base):
 
     # Media
     SENDFILE_BACKEND = "django_sendfile.backends.simple"
-
-    # Stripe
-    STRIPE_PUBLISHABLE_KEY = environ_get_or_warn("STRIPE_PUBLISHABLE_KEY")
-    STRIPE_SECRET_KEY = environ_get_or_warn("STRIPE_SECRET_KEY")
-    STRIPE_PRICE_OBJECT = environ_get_or_warn("STRIPE_PRICE_OBJECT")
-    STRIPE_ENDPOINT_SECRET = environ_get_or_warn("STRIPE_ENDPOINT_SECRET")
 
     # Safari workaround for sessionid cookie
     SESSION_COOKIE_SECURE = False
@@ -169,31 +166,75 @@ class Development(Base):
                     "provider_id": "local-test",
                     "client_id": "test.id",
                     "secret": "secret",
+                    # TODO define server_url
                 }
             ]
         }
+        cls.configure_github_oauth()
+        cls.configure_google_oauth()
+        cls.configure_stripe()
+
+    @classmethod
+    def configure_github_oauth(cls) -> None:
+        """Check for GitHub OAuth config and apply if present."""
+        keys = "ALLAUTH_GITHUB_CLIENT_ID", "ALLAUTH_GITHUB_SECRET"
+        keys_present = all(key in os.environ for key in keys)
+        if not keys_present:
+            names = ", ".join(keys)
+            warnings.warn(
+                "To test GitHub OAuth in the local development environment, "
+                f"you must set the following environment variables: {names}"
+            )
+            return
         cls.SOCIALACCOUNT_PROVIDERS["github"]["APPS"].append(
             {
-                "client_id": environ_get_or_warn(
-                    "ALLAUTH_GITHUB_CLIENT_ID",
-                    "You need to set this environment variable for logging in with GitHub.",
-                ),
-                "secret": environ_get_or_warn(
-                    "ALLAUTH_GITHUB_SECRET",
-                    "You need to set this environment variable for logging in with Github.",
-                ),
+                "client_id": os.environ["ALLAUTH_GITHUB_CLIENT_ID"],
+                "secret": os.environ["ALLAUTH_GITHUB_SECRET"],
             }
         )
 
+    @classmethod
+    def configure_google_oauth(cls) -> None:
+        """Check for Google OAuth config and apply if present."""
+        keys = "ALLAUTH_GOOGLE_CLIENT_ID", "ALLAUTH_GOOGLE_SECRET"
+        keys_present = all(key in os.environ for key in keys)
+        if not keys_present:
+            names = ", ".join(keys)
+            warnings.warn(
+                "To test Google OAuth in the local development environment, "
+                f"you must set the following environment variables: {names}"
+            )
+            return
         cls.SOCIALACCOUNT_PROVIDERS["google"]["APPS"].append(
             {
-                "client_id": environ_get_or_warn(
-                    "ALLAUTH_GOOGLE_CLIENT_ID",
-                    "You need to set this environment variable to enable log in with Google",
-                ),
-                "secret": environ_get_or_warn(
-                    "ALLAUTH_GOOGLE_SECRET",
-                    "You need to set this environment variable to enable log in with Google",
-                ),
+                "client_id": os.environ["ALLAUTH_GOOGLE_CLIENT_ID"],
+                "secret": os.environ["ALLAUTH_GOOGLE_SECRET"],
             }
+        )
+
+    @classmethod
+    def configure_stripe(cls) -> None:
+        """Check for Stripe environment variables."""
+        required_keys = [
+            "STRIPE_PUBLISHABLE_KEY",
+            "STRIPE_SECRET_KEY",
+            "STRIPE_ENDPOINT_SECRET",
+            "STRIPE_PRICE_OBJECT",
+        ]
+        configuration_keys_present = all(
+            key in os.environ for key in required_keys
+        )
+        if not configuration_keys_present:
+            names = ", ".join(required_keys)
+            warnings.warn(
+                "To test the stripe integration in the local development environment, you "
+                f"must pass the following environment variables: {names}"
+            )
+            return
+
+        cls.STRIPE_CONFIG = StripeConfig(
+            STRIPE_PUBLISHABLE_KEY=os.environ["STRIPE_PUBLISHABLE_KEY"],
+            STRIPE_SECRET_KEY=os.environ["STRIPE_SECRET_KEY"],
+            STRIPE_PRICE_OBJECT=os.environ["STRIPE_PRICE_OBJECT"],
+            STRIPE_ENDPOINT_SECRET=os.environ["STRIPE_ENDPOINT_SECRET"],
         )

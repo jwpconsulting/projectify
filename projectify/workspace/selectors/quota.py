@@ -27,6 +27,7 @@ from typing import Literal, TypedDict, Union
 from projectify.corporate.selectors.customer import (
     customer_check_active_for_workspace,
 )
+from projectify.lib.settings import get_settings
 from projectify.workspace.types import Quota, WorkspaceQuota
 
 from ..models import ChatMessage, Label, Section, Task, TaskLabel, Workspace
@@ -81,7 +82,13 @@ trial_conditions: Limitations = {
 def get_workspace_quota_for_resource(
     resource: Resource, workspace: Workspace
 ) -> Limitation:
-    """Get specific resource quota for a workspace."""
+    """
+    Get specific resource quota for a workspace.
+
+    Return None if no limits exist or if Stripe integration isn't active.
+    """
+    if get_settings().STRIPE_CONFIG is None:
+        return None
     status = customer_check_active_for_workspace(workspace=workspace)
     # We regard inactive as trial
     if status in ["trial", "inactive"]:

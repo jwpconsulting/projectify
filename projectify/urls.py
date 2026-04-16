@@ -12,18 +12,16 @@ Several URL patterns are hidden behind a feature flag.
 This module also re-exports 403, 404, and 500 exception handlers
 """
 
-from collections.abc import Sequence
-from typing import Union
-
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
-from django.urls import URLPattern, URLResolver, include, path
+from django.urls import include, path
 from django.views.generic import TemplateView
 
 from allauth.urls import build_provider_urlpatterns
 
 from projectify.blog.sitemap import BlogSitemap
 from projectify.help.sitemap import HelpSitemap
+from projectify.lib.types import UrlPatterns
 from projectify.lib.views import permanent_redirect
 from projectify.storefront.sitemap import StorefrontSitemap
 from projectify.user.sitemap import UserSitemap
@@ -63,7 +61,7 @@ allauth_urls = (
 )
 
 
-urlpatterns: Sequence[Union[URLResolver, URLPattern]] = (
+urlpatterns: UrlPatterns = (
     # TODO may I use projectify.admin.admin.urls here?
     path("admin/", admin.site.urls),
     path("healthz", health_check, name="health-check"),

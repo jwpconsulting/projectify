@@ -581,40 +581,6 @@ def chat_message(
 
 
 @pytest.fixture
-def stripe_publishable_key(faker: Faker) -> str:
-    """Return a convincing looking stripe publishable key."""
-    key: str = faker.hexify(
-        "pk_test_^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-    )
-    return key
-
-
-@pytest.fixture
-def stripe_secret_key(faker: Faker) -> str:
-    """Return a convincing looking stripe secret key."""
-    key: str = faker.hexify(
-        "sk_test_^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-    )
-    return key
-
-
-@pytest.fixture
-def stripe_price_object(faker: Faker) -> str:
-    """Return a convincing looking stripe price object."""
-    key: str = faker.hexify("price_^^^^^^^^^^^^^^^^^^^^^^^^")
-    return key
-
-
-@pytest.fixture
-def stripe_endpoint_secret(faker: Faker) -> str:
-    """Return a convincing looking stripe endpoint secret."""
-    key: str = faker.hexify(
-        "whsec_^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-    )
-    return key
-
-
-@pytest.fixture
 def unpaid_customer(workspace: Workspace) -> Customer:
     """Create customer."""
     customer_cancel_subscription(customer=workspace.customer)
