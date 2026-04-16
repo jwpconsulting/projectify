@@ -169,31 +169,45 @@ class Development(Base):
                 }
             ]
         }
+        cls.configure_github_oauth()
+        cls.configure_google_oauth()
         cls.configure_stripe()
 
+    @classmethod
+    def configure_github_oauth(cls) -> None:
+        """Check for GitHub OAuth config and apply if present."""
+        keys = "ALLAUTH_GITHUB_CLIENT_ID", "ALLAUTH_GITHUB_SECRET"
+        keys_present = all(key in os.environ for key in keys)
+        if not keys_present:
+            names = ", ".join(keys)
+            warnings.warn(
+                "To test GitHub OAuth in the local development environment, "
+                f"you must set the following environment variables: {names}"
+            )
+            return
         cls.SOCIALACCOUNT_PROVIDERS["github"]["APPS"].append(
             {
-                "client_id": environ_get_or_warn(
-                    "ALLAUTH_GITHUB_CLIENT_ID",
-                    "You need to set this environment variable for logging in with GitHub.",
-                ),
-                "secret": environ_get_or_warn(
-                    "ALLAUTH_GITHUB_SECRET",
-                    "You need to set this environment variable for logging in with Github.",
-                ),
+                "client_id": os.environ["ALLAUTH_GITHUB_CLIENT_ID"],
+                "secret": os.environ["ALLAUTH_GITHUB_SECRET"],
             }
         )
 
+    @classmethod
+    def configure_google_oauth(cls) -> None:
+        """Check for Google OAuth config and apply if present."""
+        keys = "ALLAUTH_GOOGLE_CLIENT_ID", "ALLAUTH_GOOGLE_SECRET"
+        keys_present = all(key in os.environ for key in keys)
+        if not keys_present:
+            names = ", ".join(keys)
+            warnings.warn(
+                "To test Google OAuth in the local development environment, "
+                f"you must set the following environment variables: {names}"
+            )
+            return
         cls.SOCIALACCOUNT_PROVIDERS["google"]["APPS"].append(
             {
-                "client_id": environ_get_or_warn(
-                    "ALLAUTH_GOOGLE_CLIENT_ID",
-                    "You need to set this environment variable to enable log in with Google",
-                ),
-                "secret": environ_get_or_warn(
-                    "ALLAUTH_GOOGLE_SECRET",
-                    "You need to set this environment variable to enable log in with Google",
-                ),
+                "client_id": os.environ["ALLAUTH_GOOGLE_CLIENT_ID"],
+                "secret": os.environ["ALLAUTH_GOOGLE_SECRET"],
             }
         )
 
