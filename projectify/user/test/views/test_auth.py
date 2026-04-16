@@ -81,7 +81,7 @@ class TestSignUpDjango:
     ) -> None:
         """Test signing up a new user."""
         assert User.objects.count() == 0
-        with django_assert_num_queries(11):
+        with django_assert_num_queries(12):
             response = client.post(
                 resource_url,
                 {
@@ -105,7 +105,7 @@ class TestSignUpDjango:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test signing up a new user with a weak password."""
-        with django_assert_num_queries(6):
+        with django_assert_num_queries(5):
             response = client.post(
                 resource_url,
                 {
@@ -352,7 +352,7 @@ class TestLogInDjango:
         password: str,
     ) -> None:
         """Test logging in a user."""
-        with django_assert_num_queries(15):
+        with django_assert_num_queries(16):
             response = client.post(
                 resource_url,
                 {"email": user.email, "password": password},
@@ -368,7 +368,7 @@ class TestLogInDjango:
         user: User,
     ) -> None:
         """Test logging in with wrong password."""
-        with django_assert_num_queries(7):
+        with django_assert_num_queries(6):
             response = client.post(
                 resource_url,
                 {"email": user.email, "password": "wrong_password"},

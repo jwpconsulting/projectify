@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2024,2026 JWP Consulting GK
 """User authentication views."""
 
+import logging
 from typing import Any
 
 from django import forms
@@ -17,6 +18,8 @@ from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
+from allauth.socialaccount.adapter import get_adapter
+from allauth.socialaccount.providers.base.provider import Provider
 from django_ratelimit.core import UNSAFE, get_usage
 from django_ratelimit.decorators import ratelimit
 
@@ -31,6 +34,8 @@ from projectify.user.services.auth import (
     user_sign_up,
 )
 from projectify.user.services.internal import Token
+
+logger = logging.getLogger(__name__)
 
 
 def log_out(request: HttpRequest) -> HttpResponse:
@@ -73,6 +78,47 @@ class SignUpForm(forms.Form):
         )
 
 
+def allauth_provider_info(
+    request: HttpRequest,
+) -> list[dict[str, str]]:
+    """Format allauth socialaccount providers for log in and sign up."""
+    result: list[dict[str, str]] = []
+    # Copied from get_providers in
+    # allauth.socialaccount.templatetags.socialaccount
+    adapter = get_adapter()  # type: ignore[no-untyped-call]
+    providers: list[Provider] = adapter.list_providers(request)
+    for provider in providers:
+        logger.info(
+            "Provider: %s, slug: %s", type(provider), provider.get_slug()
+        )
+        if provider.app is None:
+            continue
+        # The original get_providers also checked the following:
+        # if provider.uses_apps or provider.app.settings.get("hidden")
+        # For Projectify's providers-GitHub, Google, and openid_connect for testing
+        # this means that they won't show up
+        slug = provider.get_slug()
+        match slug:
+            case "github":
+                label = _("Log in with GitHub")
+                alt = _("GitHub")
+                icon = "user/login_with_github.svg"
+            case "google":
+                label = _("Log in with Google")
+                alt = _("Google")
+                icon = "user/login_with_google.svg"
+            case "openid_connect":
+                label = _("Dummy log in")
+                alt = _("Dummy log in")
+                icon = "heroicons/user.svg"
+            case other:
+                logger.warning("Unrecognized auth provider %s", other)
+                continue
+        href = provider.get_login_url(request)
+        result.append({"label": label, "alt": alt, "icon": icon, "href": href})
+    return result
+
+
 # No authentication required
 @require_http_methods(["GET", "POST"])
 @ratelimit(key="ip", rate="10/h", method=UNSAFE)
@@ -80,9 +126,13 @@ def sign_up(request: HttpRequest) -> HttpResponse:
     """Sign the user up."""
     validators = password_validators_help_texts()
 
+    context = {
+        "validators": validators,
+        "allauth_providers": allauth_provider_info(request),
+    }
     if request.method == "GET":
         form = SignUpForm()
-        context = {"form": form, "validators": validators}
+        context = {**context, "form": form}
         return render(request, "user/sign_up.html", context=context)
 
     # XXX
@@ -100,7 +150,7 @@ def sign_up(request: HttpRequest) -> HttpResponse:
 
     # Rate limit and show appropraite error message
     if limit and limit["should_limit"]:
-        context = {"form": form, "validators": validators}
+        context = {**context, "form": form}
         form.add_error(
             field=None, error=_("Too many sign up attempts. Slow down.")
         )
@@ -109,7 +159,7 @@ def sign_up(request: HttpRequest) -> HttpResponse:
         )
 
     if not form.is_valid():
-        context = {"form": form, "validators": validators}
+        context = {**context, "form": form}
         return render(
             request, "user/sign_up.html", context=context, status=400
         )
@@ -124,27 +174,27 @@ def sign_up(request: HttpRequest) -> HttpResponse:
         )
     except ValidationError as error:
         populate_form_with_errors(form, error)
-        context = {"form": form, "validators": validators}
+        context = {**context, "form": form}
         return render(
             request, "user/sign_up.html", context=context, status=400
         )
-
-    # Increment limit only on success
-    # When you log the output here using print(limit), it prints the following:
-    # {'count': 1, 'limit': 4, 'should_limit': False, 'time_left': 1800}
-    # {'count': 2, 'limit': 4, 'should_limit': False, 'time_left': 1799}
-    # {'count': 3, 'limit': 4, 'should_limit': False, 'time_left': 1799}
-    # {'count': 4, 'limit': 4, 'should_limit': False, 'time_left': 1799}
-    # {'count': 5, 'limit': 4, 'should_limit': True, 'time_left': 1799}
-    # My expectation is that it limits when count == limit == 4, but it doesn't
-    limit = get_usage(
-        request,
-        group="projectify.user.views.auth.sign_up",
-        key="ip",
-        rate="3/h",
-        increment=True,
-    )
-    return redirect("users:sent-email-confirmation-link")
+    else:
+        # Increment limit only on success
+        # When you log the output here using print(limit), it prints the following:
+        # {'count': 1, 'limit': 4, 'should_limit': False, 'time_left': 1800}
+        # {'count': 2, 'limit': 4, 'should_limit': False, 'time_left': 1799}
+        # {'count': 3, 'limit': 4, 'should_limit': False, 'time_left': 1799}
+        # {'count': 4, 'limit': 4, 'should_limit': False, 'time_left': 1799}
+        # {'count': 5, 'limit': 4, 'should_limit': True, 'time_left': 1799}
+        # My expectation is that it limits when count == limit == 4, but it doesn't
+        limit = get_usage(
+            request,
+            group="projectify.user.views.auth.sign_up",
+            key="ip",
+            rate="3/h",
+            increment=True,
+        )
+        return redirect("users:sent-email-confirmation-link")
 
 
 def email_confirmation_link_sent(request: HttpRequest) -> HttpResponse:
@@ -209,9 +259,13 @@ def log_in(request: HttpRequest) -> HttpResponse:
         # TODO show flash "You're already logged in. Want to log out? Go to log
         # out..."
         return redirect("users:profile")
+
+    context: dict[str, object] = {
+        "allauth_providers": allauth_provider_info(request)
+    }
     if request.method == "GET":
         form = LogInForm()
-        context = {"form": form}
+        context = {**context, "form": form}
         return render(request, "user/log_in.html", context=context)
 
     limit = get_usage(
@@ -223,10 +277,9 @@ def log_in(request: HttpRequest) -> HttpResponse:
     )
 
     form = LogInForm(request.POST)
-    context = {"form": form}
+    context = {**context, "form": form}
 
     if limit and limit["should_limit"]:
-        context = {"form": form}
         form.add_error(
             field=None, error=_("Too many log in attempts. Slow down.")
         )
@@ -243,7 +296,7 @@ def log_in(request: HttpRequest) -> HttpResponse:
         )
     except ValidationError as error:
         populate_form_with_errors(form, error)
-        context = {"form": form}
+        context = {**context, "form": form}
         get_usage(
             request,
             group=FAILED_GROUP,
@@ -251,10 +304,10 @@ def log_in(request: HttpRequest) -> HttpResponse:
             rate=FAILED_RATE,
             increment=True,
         )
-        return render(request, "user/log_in.html", context=context, status=400)
-
-    next = request.GET.get("next", reverse("dashboard:dashboard"))
-    return redirect(next)
+    else:
+        next = request.GET.get("next", reverse("dashboard:dashboard"))
+        return redirect(next)
+    return render(request, "user/log_in.html", context=context, status=400)
 
 
 class PasswordResetRequestForm(forms.Form):

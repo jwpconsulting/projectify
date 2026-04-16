@@ -166,6 +166,7 @@ class Development(Base):
                     "provider_id": "local-test",
                     "client_id": "test.id",
                     "secret": "secret",
+                    # TODO define server_url
                 }
             ]
         }
