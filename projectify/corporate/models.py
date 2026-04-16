@@ -17,8 +17,7 @@ class Customer(BaseModel):
     """Customer model. One to one linked to workspace."""
 
     workspace = models.OneToOneField[Workspace](
-        Workspace,
-        on_delete=models.CASCADE,
+        Workspace, on_delete=models.CASCADE
     )
     seats = models.PositiveIntegerField(default=1)
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)

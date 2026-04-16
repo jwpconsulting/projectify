@@ -11,9 +11,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0068_section_minimized_by"),
-    ]
+    dependencies = [("workspace", "0068_section_minimized_by")]
 
     operations = [
         migrations.AddField(

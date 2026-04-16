@@ -14,10 +14,7 @@ from ..models import Label, Project, Section, Task, TeamMember
 from ..selectors.labels import labels_annotate_with_colors
 
 SectionDetailQuerySet = Section.objects.prefetch_related(
-    Prefetch(
-        "task_set",
-        queryset=Task.objects.annotate().order_by("_order"),
-    ),
+    Prefetch("task_set", queryset=Task.objects.annotate().order_by("_order")),
     "task_set__assignee",
     "task_set__assignee__user",
     Prefetch(
@@ -38,22 +35,15 @@ SectionDetailQuerySet = Section.objects.prefetch_related(
         "project__workspace__teammember_set",
         queryset=TeamMember.objects.select_related("user").annotate(
             task_count=Count(
-                "task",
-                filter=Q(task__section__project__archived__isnull=True),
+                "task", filter=Q(task__section__project__archived__isnull=True)
             )
         ),
     ),
-).select_related(
-    "project",
-    "project__workspace",
-)
+).select_related("project", "project__workspace")
 
 
 def section_find_for_user_and_uuid(
-    *,
-    section_uuid: UUID,
-    user: User,
-    qs: Optional[QuerySet[Section]] = None,
+    *, section_uuid: UUID, user: User, qs: Optional[QuerySet[Section]] = None
 ) -> Optional[Section]:
     """
     Find a section given a UUID and a user.
@@ -64,8 +54,7 @@ def section_find_for_user_and_uuid(
         qs = Section.objects
     try:
         return qs.filter(
-            project__workspace__users=user,
-            uuid=section_uuid,
+            project__workspace__users=user, uuid=section_uuid
         ).get()
     except Section.DoesNotExist:
         return None

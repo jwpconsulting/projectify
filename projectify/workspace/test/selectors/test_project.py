@@ -94,8 +94,7 @@ def test_project_find_by_workspace_uuid(
 ) -> None:
     """Test project_find_by_workspace_uuid."""
     qs = project_find_by_workspace_uuid(
-        who=team_member.user,
-        workspace_uuid=team_member.workspace.uuid,
+        who=team_member.user, workspace_uuid=team_member.workspace.uuid
     )
     assert qs.get() == project
 
@@ -124,47 +123,36 @@ def test_project_find_by_project_uuid(
     """Test finding project for a user by UUID."""
     # Normal case, user finds their project
     assert project_find_by_project_uuid(
-        project_uuid=project.uuid,
-        who=team_member.user,
+        project_uuid=project.uuid, who=team_member.user
     )
     # Unrelated user finds their board
     assert project_find_by_project_uuid(
-        project_uuid=unrelated_project.uuid,
-        who=unrelated_team_member.user,
+        project_uuid=unrelated_project.uuid, who=unrelated_team_member.user
     )
     # Unrelated team member does not have access
     assert (
         project_find_by_project_uuid(
-            project_uuid=project.uuid,
-            who=unrelated_team_member.user,
+            project_uuid=project.uuid, who=unrelated_team_member.user
         )
         is None
     )
     # And our user can not see unrelated user's board
     assert (
         project_find_by_project_uuid(
-            project_uuid=unrelated_project.uuid,
-            who=team_member.user,
+            project_uuid=unrelated_project.uuid, who=team_member.user
         )
         is None
     )
 
     # Archiving hides it unless passing extra flag
-    project_archive(
-        who=team_member.user,
-        project=project,
-        archived=True,
-    )
+    project_archive(who=team_member.user, project=project, archived=True)
     assert (
         project_find_by_project_uuid(
-            project_uuid=project.uuid,
-            who=team_member.user,
+            project_uuid=project.uuid, who=team_member.user
         )
         is None
     )
     # Passing archived will make it show up again
     assert project_find_by_project_uuid(
-        project_uuid=project.uuid,
-        who=team_member.user,
-        archived=True,
+        project_uuid=project.uuid, who=team_member.user, archived=True
     )

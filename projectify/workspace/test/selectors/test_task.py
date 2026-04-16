@@ -22,10 +22,7 @@ def test_task_find_by_task_uuid(
 ) -> None:
     """Test filter_for_user_and_uuid."""
     with django_assert_num_queries(1):
-        actual = task_find_by_task_uuid(
-            who=user,
-            task_uuid=task.uuid,
-        )
+        actual = task_find_by_task_uuid(who=user, task_uuid=task.uuid)
     assert actual == task
     with django_assert_num_queries(1):
         assert (

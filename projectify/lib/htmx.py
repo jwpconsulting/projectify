@@ -127,7 +127,7 @@ class HttpResponseClientRedirect(HttpResponseRedirectBase):
         if kwargs.get("preserve_request"):
             raise ValueError(
                 "The 'preserve_request' argument is not supported for "
-                "HttpResponseClientRedirect.",
+                "HttpResponseClientRedirect."
             )
         super().__init__(redirect_to, *args, **kwargs)
         self["HX-Redirect"] = self["Location"]

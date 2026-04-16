@@ -241,10 +241,7 @@ class TestProjectDetailViewActions:
 
     @pytest.mark.parametrize(
         "initial_state,post_value,expected_state",
-        [
-            (False, "true", True),
-            (True, "false", False),
-        ],
+        [(False, "true", True), (True, "false", False)],
     )
     def test_toggle_team_member_filter(
         self,
@@ -271,10 +268,7 @@ class TestProjectDetailViewActions:
 
     @pytest.mark.parametrize(
         "initial_state,post_value,expected_state",
-        [
-            (False, "true", True),
-            (True, "false", False),
-        ],
+        [(False, "true", True), (True, "false", False)],
     )
     def test_toggle_label_filter(
         self,
@@ -300,10 +294,7 @@ class TestProjectDetailViewActions:
         assert team_member.minimized_label_filter is expected_state
 
     def test_minimize_preserves_get_parameters(
-        self,
-        user_client: Client,
-        team_member: TeamMember,
-        resource_url: str,
+        self, user_client: Client, team_member: TeamMember, resource_url: str
     ) -> None:
         """Test that GET parameters are preserved after minimize action."""
         response = user_client.post(
@@ -541,10 +532,7 @@ class TestProjectCreateView:
         assert Project.objects.count() == initial_project_count + 1
 
     def test_create_project_invalid_form(
-        self,
-        user_client: Client,
-        resource_url: str,
-        team_member: TeamMember,
+        self, user_client: Client, resource_url: str, team_member: TeamMember
     ) -> None:
         """Test form validation with invalid data."""
         initial_project_count = Project.objects.count()
@@ -552,18 +540,14 @@ class TestProjectCreateView:
         assert Project.objects.count() == initial_project_count
 
     def test_workspace_not_found(
-        self,
-        user_client: Client,
-        team_member: TeamMember,
+        self, user_client: Client, team_member: TeamMember
     ) -> None:
         """Test accessing project creation for non-existent workspace."""
         url = reverse("dashboard:workspaces:create-project", args=(uuid4(),))
         assert user_client.get(url).status_code == 404
 
     def test_unauthorized_workspace_access(
-        self,
-        user_client: Client,
-        unrelated_workspace: Workspace,
+        self, user_client: Client, unrelated_workspace: Workspace
     ) -> None:
         """Test that users can't create projects in other workspaces."""
         uid = unrelated_workspace.uuid
@@ -606,10 +590,7 @@ class TestProjectUpdateView:
         updated_title = "Updated Project Title"
 
         with django_assert_num_queries(9):
-            response = user_client.post(
-                resource_url,
-                {"title": updated_title},
-            )
+            response = user_client.post(resource_url, {"title": updated_title})
             assert response.status_code == 302
 
         project.refresh_from_db()
@@ -631,9 +612,7 @@ class TestProjectUpdateView:
         assert project.title == original_title, "Shouldn't change"
 
     def test_project_not_found(
-        self,
-        user_client: Client,
-        team_member: TeamMember,
+        self, user_client: Client, team_member: TeamMember
     ) -> None:
         """Ensure that updating a non-existent project returns 404."""
         url = reverse("dashboard:projects:update", args=(uuid4(),))
@@ -654,9 +633,7 @@ class TestProjectUpdateView:
         assert response.status_code == 404
 
     def test_unauthorized_project_access(
-        self,
-        user_client: Client,
-        unrelated_project: Project,
+        self, user_client: Client, unrelated_project: Project
     ) -> None:
         """Test that users can't update projects they don't have access to."""
         url = reverse(
@@ -691,9 +668,7 @@ class TestProjectArchiveView:
         assert project.archived
 
     def test_project_not_found(
-        self,
-        user_client: Client,
-        team_member: TeamMember,
+        self, user_client: Client, team_member: TeamMember
     ) -> None:
         """Test archiving a non-existent project returns 404."""
         url = reverse("dashboard:projects:archive", args=(uuid4(),))
@@ -714,9 +689,7 @@ class TestProjectArchiveView:
         assert response.status_code == 404
 
     def test_unauthorized_project_access(
-        self,
-        user_client: Client,
-        unrelated_project: Project,
+        self, user_client: Client, unrelated_project: Project
     ) -> None:
         """Test that users can't archive projects they don't have access to."""
         url = reverse(
@@ -753,19 +726,14 @@ class TestProjectRecoverView:
         assert not archived_project.archived
 
     def test_get_method_not_allowed(
-        self,
-        user_client: Client,
-        resource_url: str,
-        team_member: TeamMember,
+        self, user_client: Client, resource_url: str, team_member: TeamMember
     ) -> None:
         """Test that GET requests are not allowed."""
         response = user_client.get(resource_url)
         assert response.status_code == 405
 
     def test_project_not_found(
-        self,
-        user_client: Client,
-        team_member: TeamMember,
+        self, user_client: Client, team_member: TeamMember
     ) -> None:
         """Test recovering a non-existent project returns 404."""
         url = reverse("dashboard:projects:recover", args=(uuid4(),))
@@ -773,10 +741,7 @@ class TestProjectRecoverView:
         assert response.status_code == 404
 
     def test_active_project_not_found(
-        self,
-        user_client: Client,
-        project: Project,
-        team_member: TeamMember,
+        self, user_client: Client, project: Project, team_member: TeamMember
     ) -> None:
         """Test that active (non-archived) projects can't be recovered."""
         url = reverse("dashboard:projects:recover", args=(project.uuid,))
@@ -784,17 +749,13 @@ class TestProjectRecoverView:
         assert response.status_code == 404
 
     def test_unauthorized_project_access(
-        self,
-        user_client: Client,
-        unrelated_project: Project,
-        now: datetime,
+        self, user_client: Client, unrelated_project: Project, now: datetime
     ) -> None:
         """Test that users can't recover projects they don't have access to."""
         unrelated_project.archived = now
         unrelated_project.save()
         url = reverse(
-            "dashboard:projects:recover",
-            args=(unrelated_project.uuid,),
+            "dashboard:projects:recover", args=(unrelated_project.uuid,)
         )
         response = user_client.post(url)
         assert response.status_code == 404
@@ -828,19 +789,14 @@ class TestProjectDeleteView:
         assert not Project.objects.filter(uuid=project_uuid).exists()
 
     def test_get_method_not_allowed(
-        self,
-        user_client: Client,
-        resource_url: str,
-        team_member: TeamMember,
+        self, user_client: Client, resource_url: str, team_member: TeamMember
     ) -> None:
         """Test that GET requests are not allowed."""
         response = user_client.get(resource_url)
         assert response.status_code == 405
 
     def test_project_not_found(
-        self,
-        user_client: Client,
-        team_member: TeamMember,
+        self, user_client: Client, team_member: TeamMember
     ) -> None:
         """Test deleting a non-existent project returns 404."""
         url = reverse("dashboard:projects:delete", args=(uuid4(),))
@@ -848,10 +804,7 @@ class TestProjectDeleteView:
         assert response.status_code == 404
 
     def test_active_project_not_found(
-        self,
-        user_client: Client,
-        project: Project,
-        team_member: TeamMember,
+        self, user_client: Client, project: Project, team_member: TeamMember
     ) -> None:
         """Test that active (non-archived) projects can't be deleted."""
         url = reverse("dashboard:projects:delete", args=(project.uuid,))
@@ -859,17 +812,13 @@ class TestProjectDeleteView:
         assert response.status_code == 404
 
     def test_unauthorized_project_access(
-        self,
-        user_client: Client,
-        unrelated_project: Project,
-        now: datetime,
+        self, user_client: Client, unrelated_project: Project, now: datetime
     ) -> None:
         """Test that users can't delete projects they don't have access to."""
         unrelated_project.archived = now
         unrelated_project.save()
         url = reverse(
-            "dashboard:projects:delete",
-            args=(unrelated_project.uuid,),
+            "dashboard:projects:delete", args=(unrelated_project.uuid,)
         )
         response = user_client.post(url)
         assert response.status_code == 404

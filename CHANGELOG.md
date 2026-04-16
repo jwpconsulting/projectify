@@ -8,6 +8,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## Unreleased
 
+### Accessibility
+
+- Fix "http://localhost:8100" anchor tag on landing page
+
 ### Internal
 
 - Make it easier to run Projectify locally by feature-gating the following
@@ -19,6 +23,7 @@ features:
 - Update vulture and regex package
 - Test Projectify compabilitity with Python 3.14
 - Make all workspace app models readonly in the Projectify Django admin.
+- Remove trailing "magic" commas with Ruff. This makes the code base shorter.
 
 ## 2026.4.15
 

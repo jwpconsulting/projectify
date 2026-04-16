@@ -65,8 +65,7 @@ class Test(Base):
         )
 
         cls.DATABASES["default"] = dj_database_url.config(
-            default="sqlite:///:memory:",
-            conn_max_age=cls.CONN_MAX_AGE,
+            default="sqlite:///:memory:", conn_max_age=cls.CONN_MAX_AGE
         )
 
         faker = Faker()

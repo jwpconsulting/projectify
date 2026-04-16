@@ -26,13 +26,7 @@ def label_create(
 
 # Update
 # TODO atomic
-def label_update(
-    *,
-    who: User,
-    label: Label,
-    name: str,
-    color: int,
-) -> Label:
+def label_update(*, who: User, label: Label, name: str, color: int) -> Label:
     """Update a label with new name and color."""
     validate_perm("workspace.update_label", who, label.workspace)
     label.name = name

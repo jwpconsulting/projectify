@@ -49,12 +49,7 @@ USER_AVATARS = [
     Path("projectify/test/test-images/cat3.jpg"),
     Path("projectify/test/test-images/cat4.jpg"),
 ]
-USER_NAMES = [
-    "Rebecca Porter",
-    "Joe Swish",
-    "Fran Bauer",
-    "Mina Kidane",
-]
+USER_NAMES = ["Rebecca Porter", "Joe Swish", "Fran Bauer", "Mina Kidane"]
 
 
 class Command(BaseCommand):
@@ -87,11 +82,7 @@ class Command(BaseCommand):
 
             with avatar_path.open("rb") as fd:
                 django_file = cast(
-                    FileDescriptor,
-                    File(
-                        fd,
-                        name=str(avatar_path),
-                    ),
+                    FileDescriptor, File(fd, name=str(avatar_path))
                 )
                 user_update(
                     who=user,
@@ -117,9 +108,7 @@ class Command(BaseCommand):
 
         for user in self.test_users:
             team_member_invite_create(
-                workspace=self.workspace,
-                email_or_user=user,
-                who=self.owner,
+                workspace=self.workspace, email_or_user=user, who=self.owner
             )
         team_members = self.workspace.teammember_set.all()
 
@@ -134,9 +123,7 @@ class Command(BaseCommand):
         ]
         labels = {
             name: Label.objects.create(
-                name=name,
-                color=color,
-                workspace=self.workspace,
+                name=name, color=color, workspace=self.workspace
             )
             for name, color in labels_data
         }
@@ -155,21 +142,15 @@ class Command(BaseCommand):
         )
 
         self.in_progress_section = Section.objects.create(
-            project=self.software_project,
-            title="In progress",
-            _order=0,
+            project=self.software_project, title="In progress", _order=0
         )
         self.coursework_section = Section.objects.create(
-            project=self.software_project,
-            title="Coursework",
-            _order=1,
+            project=self.software_project, title="Coursework", _order=1
         )
         # Put this last to conveniently hide the "Create section" button from
         # Selenium
         todo_section = Section.objects.create(
-            project=self.software_project,
-            title="To Do",
-            _order=2,
+            project=self.software_project, title="To Do", _order=2
         )
 
         # Used in development team solutions page
@@ -265,10 +246,7 @@ class Command(BaseCommand):
             self.stdout.write("No debug toolbar found")
 
     def take_screenshot(
-        self,
-        driver: WebDriver,
-        base_url: str,
-        output_directory: Path,
+        self, driver: WebDriver, base_url: str, output_directory: Path
     ) -> None:
         """Take all screenshots."""
         assert self.owner

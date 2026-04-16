@@ -12,17 +12,13 @@ class Migration(migrations.Migration):
     """Migration."""
 
     dependencies = [
-        ("workspace", "0058_rename_workspaceboardsection_section_and_more"),
+        ("workspace", "0058_rename_workspaceboardsection_section_and_more")
     ]
 
     operations = [
-        migrations.RenameModel(
-            old_name="WorkspaceBoard",
-            new_name="Project",
-        ),
+        migrations.RenameModel(old_name="WorkspaceBoard", new_name="Project"),
         migrations.RemoveConstraint(
-            model_name="section",
-            name="unique_workspace_board_order",
+            model_name="section", name="unique_workspace_board_order"
         ),
         migrations.AddConstraint(
             model_name="section",

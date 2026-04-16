@@ -17,17 +17,15 @@ class Migration(migrations.Migration):
     """
 
     dependencies = [
-        ("workspace", "0062_remove_task_unique_task_order_and_more"),
+        ("workspace", "0062_remove_task_unique_task_order_and_more")
     ]
 
     operations = [
         migrations.RemoveConstraint(
-            model_name="section",
-            name="unique_project_order",
+            model_name="section", name="unique_project_order"
         ),
         migrations.AlterOrderWithRespectTo(
-            name="section",
-            order_with_respect_to="uuid",
+            name="section", order_with_respect_to="uuid"
         ),
         migrations.RenameField(
             model_name="section",
@@ -43,7 +41,6 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AlterOrderWithRespectTo(
-            name="section",
-            order_with_respect_to="project",
+            name="section", order_with_respect_to="project"
         ),
     ]

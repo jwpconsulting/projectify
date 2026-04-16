@@ -17,12 +17,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterModelOptions(
-            name="workspaceuser",
-            options={},
-        ),
+        migrations.AlterModelOptions(name="workspaceuser", options={}),
         migrations.AlterUniqueTogether(
-            name="workspaceuser",
-            unique_together={("workspace", "user")},
+            name="workspaceuser", unique_together={("workspace", "user")}
         ),
     ]

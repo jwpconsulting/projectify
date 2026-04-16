@@ -39,8 +39,6 @@ class Migration(migrations.Migration):
                 ),
                 ("email", models.EmailField(max_length=254, unique=True)),
             ],
-            options={
-                "abstract": False,
-            },
-        ),
+            options={"abstract": False},
+        )
     ]

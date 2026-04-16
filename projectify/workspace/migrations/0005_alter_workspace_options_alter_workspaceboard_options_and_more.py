@@ -15,18 +15,12 @@ class Migration(migrations.Migration):
             "workspace",
             "0004_alter_workspace_options_alter_"
             "workspaceboard_options_and_more",
-        ),
+        )
     ]
 
     operations = [
-        migrations.AlterModelOptions(
-            name="workspace",
-            options={},
-        ),
-        migrations.AlterModelOptions(
-            name="workspaceboard",
-            options={},
-        ),
+        migrations.AlterModelOptions(name="workspace", options={}),
+        migrations.AlterModelOptions(name="workspaceboard", options={}),
         migrations.AddField(
             model_name="workspace",
             name="description",

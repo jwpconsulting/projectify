@@ -61,17 +61,11 @@ def user_create(
 
 
 def user_create_superuser(
-    *,
-    email: str,
-    password: Optional[str] = None,
+    *, email: str, password: Optional[str] = None
 ) -> "User":
     """Create a superuser."""
     return _user_create(
-        email,
-        password,
-        is_staff=True,
-        is_superuser=True,
-        is_active=True,
+        email, password, is_staff=True, is_superuser=True, is_active=True
     )
 
 

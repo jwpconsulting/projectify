@@ -51,9 +51,7 @@ def test_redeem(user: User, user_invite: UserInvite) -> None:
 
 @pytest.mark.django_db
 def test_redeem_invites(
-    user: User,
-    user_invite: UserInvite,
-    redeemed_user_invite: UserInvite,
+    user: User, user_invite: UserInvite, redeemed_user_invite: UserInvite
 ) -> None:
     """Test redeeming invites."""
     user_invite.email = user.email

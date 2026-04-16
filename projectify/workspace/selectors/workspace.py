@@ -35,8 +35,7 @@ def workspace_build_detail_query_set(
     if who is not None:
         teammembers = teammembers.annotate(
             is_current_user=ExpressionWrapper(
-                Q(user=who),
-                output_field=BooleanField(),
+                Q(user=who), output_field=BooleanField()
             )
         )
     teammember_prefetch: Prefetch[TeamMember] = Prefetch(

@@ -47,10 +47,7 @@ class EmailList(SuperUserTestMixin, TemplateView):
             "site_title": ProjectifyAdmin.site_title,
             "title": _("Emails"),
             "object_list": [
-                {
-                    "doc": getdoc(registry[key]),
-                    "slug": key,
-                }
+                {"doc": getdoc(registry[key]), "slug": key}
                 for key in registry.keys()
             ],
         }
@@ -66,8 +63,7 @@ class EmailPreview(SuperUserTestMixin, TemplateView):
         slug: str = self.kwargs["slug"]
         Email = registry[slug]
         email = Email(
-            receiver="hello@example.com",
-            obj=Email.model.objects.first(),
+            receiver="hello@example.com", obj=Email.model.objects.first()
         )
         return {
             **super().get_context_data(**kwargs),

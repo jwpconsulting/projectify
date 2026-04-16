@@ -224,19 +224,19 @@ class Base(Configuration):  # type:ignore
     AUTH_PASSWORD_VALIDATORS = [
         {
             "NAME": "django.contrib.auth.password_validation."
-            "UserAttributeSimilarityValidator",
+            "UserAttributeSimilarityValidator"
         },
         {
             "NAME": "django.contrib.auth.password_validation."
-            "MinimumLengthValidator",
+            "MinimumLengthValidator"
         },
         {
             "NAME": "django.contrib.auth.password_validation."
-            "CommonPasswordValidator",
+            "CommonPasswordValidator"
         },
         {
             "NAME": "django.contrib.auth.password_validation."
-            "NumericPasswordValidator",
+            "NumericPasswordValidator"
         },
     ]
 
@@ -263,7 +263,7 @@ class Base(Configuration):  # type:ignore
     SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = False
     SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
     SOCIALACCOUNT_FORMS = {
-        "signup": "projectify.user.forms.SocialAccountSignUpForm",
+        "signup": "projectify.user.forms.SocialAccountSignUpForm"
     }
     # Provider specific settings
     SOCIALACCOUNT_PROVIDERS: dict[str, SocialAccountProvider] = {
@@ -325,11 +325,9 @@ class Base(Configuration):  # type:ignore
     SENDFILE_ROOT: Path
 
     STORAGES: StoragesConfig = {
-        "default": {
-            "BACKEND": "django.core.files.storage.FileSystemStorage",
-        },
+        "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
         "staticfiles": {
-            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"
         },
     }
     # https://github.com/openwisp/django-minify-compress-staticfiles?tab=readme-ov-file#settings
@@ -353,7 +351,7 @@ class Base(Configuration):  # type:ignore
                     "django.template.context_processors.request",
                     "django.contrib.auth.context_processors.auth",
                     "django.contrib.messages.context_processors.messages",
-                ),
+                )
             },
         }
     ]
@@ -371,20 +369,20 @@ class Base(Configuration):  # type:ignore
         "disable_existing_loggers": False,
         "formatters": {
             "like_gunicorn": {
-                "format": "%(levelname)-s [%(name)s.%(module)s] ~ %(message)s",
-            },
+                "format": "%(levelname)-s [%(name)s.%(module)s] ~ %(message)s"
+            }
         },
         "handlers": {
             "console": {
                 "class": "logging.StreamHandler",
                 "formatter": "like_gunicorn",
-            },
+            }
         },
         "loggers": {
             "": {
                 "handlers": ["console"],
                 "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
-            },
+            }
         },
     }
     # https://docs.djangoproject.com/en/5.2/ref/settings/#std-setting-ADMINS
@@ -406,12 +404,7 @@ class Base(Configuration):  # type:ignore
     # Markdownify
     MARKDOWNIFY = {
         "default": {
-            "WHITELIST_ATTRS": [
-                "href",
-                "src",
-                "alt",
-                "id",
-            ],
+            "WHITELIST_ATTRS": ["href", "src", "alt", "id"],
             "WHITELIST_TAGS": [
                 "a",
                 # Blocks
@@ -449,9 +442,7 @@ class Base(Configuration):  # type:ignore
                 "td",
                 "tr",
             ],
-            "LINKIFY_TEXT": {
-                "PARSE_URLS": False,
-            },
+            "LINKIFY_TEXT": {"PARSE_URLS": False},
             "MARKDOWN_EXTENSIONS": [
                 "markdown.extensions.fenced_code",
                 "markdown.extensions.footnotes",

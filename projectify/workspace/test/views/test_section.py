@@ -97,10 +97,7 @@ class TestSectionUpdateView:
         assert section.title == new_title
 
     def test_post_save_section_empty_title(
-        self,
-        user_client: Client,
-        resource_url: str,
-        team_member: TeamMember,
+        self, user_client: Client, resource_url: str, team_member: TeamMember
     ) -> None:
         """Test saving section with empty title shows error."""
         response = user_client.post(resource_url, {"action": "save"})
@@ -149,9 +146,7 @@ class TestSectionUpdateView:
         assert section._order == original_order + 1
 
     def test_section_not_found(
-        self,
-        user_client: Client,
-        team_member: TeamMember,
+        self, user_client: Client, team_member: TeamMember
     ) -> None:
         """Test accessing non-existent section returns 404."""
         url = reverse("dashboard:sections:update", args=(uuid4(),))

@@ -10,14 +10,12 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0039_workspaceuser_role"),
-    ]
+    dependencies = [("workspace", "0039_workspaceuser_role")]
 
     operations = [
         migrations.AddField(
             model_name="workspaceuser",
             name="job_title",
             field=models.CharField(blank=True, max_length=255, null=True),
-        ),
+        )
     ]

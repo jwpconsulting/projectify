@@ -14,9 +14,7 @@ import projectify.lib.models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("user", "0012_rename_full_name_user_preferred_name"),
-    ]
+    dependencies = [("user", "0012_rename_full_name_user_preferred_name")]
 
     operations = [
         migrations.AddField(
@@ -68,9 +66,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={
-                "get_latest_by": "modified",
-                "abstract": False,
-            },
+            options={"get_latest_by": "modified", "abstract": False},
         ),
     ]

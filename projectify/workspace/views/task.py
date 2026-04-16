@@ -161,10 +161,7 @@ def task_create_view(
             return render(
                 request,
                 "workspace/task_create.html",
-                {
-                    **context,
-                    "form": TaskCreateForm(workspace=workspace),
-                },
+                {**context, "form": TaskCreateForm(workspace=workspace)},
             )
         case "POST":
             pass
@@ -238,9 +235,7 @@ class TaskUpdateForm(forms.Form):
 
     title = forms.CharField(
         label=_("Task title"),
-        widget=forms.TextInput(
-            attrs={"placeholder": _("Task title")},
-        ),
+        widget=forms.TextInput(attrs={"placeholder": _("Task title")}),
     )
     due_date = forms.DateTimeField(
         required=False,
@@ -352,11 +347,7 @@ def task_update_view(
                 workspace=workspace,
                 focus_field=focus_field,
             )
-            context = {
-                **context,
-                "form": form,
-                "task": task,
-            }
+            context = {**context, "form": form, "task": task}
             logger.warning("No action specified")
             next_url = reverse(
                 "dashboard:projects:detail", args=(task.section.project.uuid,)

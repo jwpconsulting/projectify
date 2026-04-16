@@ -20,12 +20,10 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RenameModel(
-            old_name="WorkspaceUser",
-            new_name="TeamMember",
+            old_name="WorkspaceUser", new_name="TeamMember"
         ),
         migrations.RenameModel(
-            old_name="WorkspaceUserInvite",
-            new_name="TeamMemberInvite",
+            old_name="WorkspaceUserInvite", new_name="TeamMemberInvite"
         ),
         migrations.AlterField(
             model_name="task",

@@ -50,8 +50,7 @@ class TemplateEmail(Generic[T]):
     def render_subject(self) -> SafeText:
         """Render subject."""
         subject = loader.render_to_string(
-            self.get_subject_template_path(),
-            self.get_context(),
+            self.get_subject_template_path(), self.get_context()
         )
         subject = mark_safe(subject.replace("\n", ""))
         subject = mark_safe(subject.strip())
@@ -63,8 +62,7 @@ class TemplateEmail(Generic[T]):
             r"\n\n\n+",
             "\n\n",
             loader.render_to_string(
-                self.get_body_template_path(),
-                self.get_context(),
+                self.get_body_template_path(), self.get_context()
             ).strip(),
         )
 

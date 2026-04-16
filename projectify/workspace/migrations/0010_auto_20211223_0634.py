@@ -12,9 +12,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0009_subtask"),
-    ]
+    dependencies = [("workspace", "0009_subtask")]
 
     operations = [
         migrations.AddField(

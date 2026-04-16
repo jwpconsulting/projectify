@@ -10,8 +10,6 @@ from django.db import migrations
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0046_chatmessage_author_workspace_user"),
-    ]
+    dependencies = [("workspace", "0046_chatmessage_author_workspace_user")]
 
     operations = []

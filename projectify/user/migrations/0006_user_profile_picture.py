@@ -10,9 +10,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("user", "0005_user_is_active"),
-    ]
+    dependencies = [("user", "0005_user_is_active")]
 
     operations = [
         migrations.AddField(
@@ -21,5 +19,5 @@ class Migration(migrations.Migration):
             field=models.ImageField(
                 blank=True, null=True, upload_to="profile_picture/"
             ),
-        ),
+        )
     ]

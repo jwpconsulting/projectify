@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     """Migration."""
 
     dependencies = [
-        ("workspace", "0074_remove_task_unique_task_number_and_more"),
+        ("workspace", "0074_remove_task_unique_task_number_and_more")
     ]
 
     operations = [
@@ -19,5 +19,5 @@ class Migration(migrations.Migration):
             model_name="task",
             name="done",
             field=models.DateTimeField(blank=True, null=True),
-        ),
+        )
     ]

@@ -63,8 +63,7 @@ def test_workspace_find_by_workspace_uuid(
 
 
 def test_queryset_prefetch_refresh(
-    team_member: TeamMember,
-    team_member_invite: TeamMemberInvite,
+    team_member: TeamMember, team_member_invite: TeamMemberInvite
 ) -> None:
     """Test that redeemed invites don't show up."""
     who = team_member.user
@@ -92,8 +91,7 @@ def test_queryset_prefetch_refresh(
 
 
 def test_prefetch_deleted_invite(
-    team_member: TeamMember,
-    team_member_invite: TeamMemberInvite,
+    team_member: TeamMember, team_member_invite: TeamMemberInvite
 ) -> None:
     """Test that redeemed invites don't show up."""
     who = team_member.user

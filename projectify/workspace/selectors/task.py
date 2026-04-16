@@ -22,15 +22,10 @@ from ..models import ChatMessage, Label, Project, Task, TeamMember
 from .labels import labels_annotate_with_colors
 
 TaskDetailQuerySet: QuerySet[Task] = (
-    Task.objects.select_related(
-        "workspace",
-        "assignee",
-        "assignee__user",
-    )
+    Task.objects.select_related("workspace", "assignee", "assignee__user")
     .prefetch_related(
         Prefetch(
-            "labels",
-            queryset=labels_annotate_with_colors(Label.objects.all()),
+            "labels", queryset=labels_annotate_with_colors(Label.objects.all())
         ),
         Prefetch(
             "workspace__label_set",
@@ -50,8 +45,7 @@ TaskDetailQuerySet: QuerySet[Task] = (
         Prefetch(
             "chatmessage_set",
             queryset=ChatMessage.objects.select_related(
-                "author",
-                "author__user",
+                "author", "author__user"
             ),
         ),
         Prefetch(
@@ -81,9 +75,6 @@ def task_find_by_task_uuid(
     # would cause the given qs to be prematurely evaluated
     qs = Task.objects if qs is None else qs
     try:
-        return qs.get(
-            section__project__workspace__users=who,
-            uuid=task_uuid,
-        )
+        return qs.get(section__project__workspace__users=who, uuid=task_uuid)
     except Task.DoesNotExist:
         return None

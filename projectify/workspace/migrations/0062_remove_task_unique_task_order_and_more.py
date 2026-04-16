@@ -17,17 +17,15 @@ class Migration(migrations.Migration):
     """
 
     dependencies = [
-        ("workspace", "0061_rename_workspaceuser_teammember_and_more"),
+        ("workspace", "0061_rename_workspaceuser_teammember_and_more")
     ]
 
     operations = [
         migrations.RemoveConstraint(
-            model_name="task",
-            name="unique_task_order",
+            model_name="task", name="unique_task_order"
         ),
         migrations.AlterOrderWithRespectTo(
-            name="task",
-            order_with_respect_to="uuid",
+            name="task", order_with_respect_to="uuid"
         ),
         migrations.RenameField(
             model_name="task",
@@ -43,7 +41,6 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AlterOrderWithRespectTo(
-            name="task",
-            order_with_respect_to="section",
+            name="task", order_with_respect_to="section"
         ),
     ]

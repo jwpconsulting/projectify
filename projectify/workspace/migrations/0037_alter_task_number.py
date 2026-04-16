@@ -10,14 +10,12 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0036"),
-    ]
+    dependencies = [("workspace", "0036")]
 
     operations = [
         migrations.AlterField(
             model_name="task",
             name="number",
             field=models.PositiveIntegerField(),
-        ),
+        )
     ]

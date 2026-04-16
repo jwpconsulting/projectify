@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     """Migration."""
 
     dependencies = [
-        ("workspace", "0059_rename_workspaceboard_project_and_more"),
+        ("workspace", "0059_rename_workspaceboard_project_and_more")
     ]
 
     operations = [
@@ -28,5 +28,5 @@ class Migration(migrations.Migration):
                 default="OBSERVER",
                 max_length=11,
             ),
-        ),
+        )
     ]

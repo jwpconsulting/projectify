@@ -11,9 +11,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0033_subtask_unique_sub_task_order"),
-    ]
+    dependencies = [("workspace", "0033_subtask_unique_sub_task_order")]
 
     operations = [
         migrations.AddField(

@@ -294,7 +294,12 @@ projectify/bin/projectify-demo</code></pre>
                 </div>
                 <div class="flex flex-col gap-4">
                     <p>
-                        {% blocktrans %}Open <a href="http://localhost:8100" class="text-primary hover:underline">http://localhost:8100</a> in your browser and press <strong>Log in</strong> in the top right. Use these demo credentials:{% endblocktrans %}
+                        {% anchor href="http://localhost:8100" label="http://localhost:8100" as anchor %}
+                        {% blocktrans with anchor=anchor %}
+                            Open {{ anchor }} in your browser and press
+                            <strong>Log in</strong> in the top right. Use these
+                            demo credentials:
+                        {% endblocktrans %}
                     </p>
                     <ul class="list-disc list-inside">
                         <li>

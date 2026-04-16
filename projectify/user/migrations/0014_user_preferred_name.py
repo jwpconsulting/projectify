@@ -26,5 +26,5 @@ class Migration(migrations.Migration):
                 name="preferred_name",
                 violation_error_message="Preferred name can only contain '.' or ':' if followed by whitespace.",
             ),
-        ),
+        )
     ]

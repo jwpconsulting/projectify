@@ -25,5 +25,5 @@ class Migration(migrations.Migration):
                 through_fields=("workspace", "user"),
                 to=settings.AUTH_USER_MODEL,
             ),
-        ),
+        )
     ]

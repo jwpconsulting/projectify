@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     """Migration."""
 
     dependencies = [
-        ("workspace", "0049_rename_author_workspace_user_chatmessage_author"),
+        ("workspace", "0049_rename_author_workspace_user_chatmessage_author")
     ]
 
     operations = [
@@ -28,5 +28,5 @@ class Migration(migrations.Migration):
                 default="OBSERVER",
                 max_length=10,
             ),
-        ),
+        )
     ]

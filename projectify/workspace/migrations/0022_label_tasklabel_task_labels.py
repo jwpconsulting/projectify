@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
     """Migration."""
 
     dependencies = [
-        ("workspace", "0021_alter_workspaceboardsection_workspace_board"),
+        ("workspace", "0021_alter_workspaceboardsection_workspace_board")
     ]
 
     operations = [
@@ -46,9 +46,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={
-                "unique_together": {("workspace", "name")},
-            },
+            options={"unique_together": {("workspace", "name")}},
         ),
         migrations.CreateModel(
             name="TaskLabel",
@@ -77,9 +75,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={
-                "unique_together": {("task", "label")},
-            },
+            options={"unique_together": {("task", "label")}},
         ),
         migrations.AddField(
             model_name="task",

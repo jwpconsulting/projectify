@@ -10,14 +10,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0048_remove_chatmessage_author"),
-    ]
+    dependencies = [("workspace", "0048_remove_chatmessage_author")]
 
     operations = [
         migrations.RenameField(
             model_name="chatmessage",
             old_name="author_workspace_user",
             new_name="author",
-        ),
+        )
     ]

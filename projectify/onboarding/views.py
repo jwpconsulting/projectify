@@ -71,10 +71,7 @@ def create_sample_sections(
         learn_label = learn_label_qs.first()
     else:
         learn_label = label_create(
-            workspace=workspace,
-            name=_("Learn"),
-            color=0,
-            who=who,
+            workspace=workspace, name=_("Learn"), color=0, who=who
         )
     assert learn_label
     section_create(who=who, title=_("To Do"), project=project)
@@ -322,9 +319,7 @@ def new_task(
     On error: Show task creation form with errors.
     """
     project = project_find_by_project_uuid(
-        project_uuid=project_uuid,
-        who=request.user,
-        qs=ProjectDetailQuerySet,
+        project_uuid=project_uuid, who=request.user, qs=ProjectDetailQuerySet
     )
     if project is None:
         raise Http404(_("Project not found"))

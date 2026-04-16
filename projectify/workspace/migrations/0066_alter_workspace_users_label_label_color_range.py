@@ -10,9 +10,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """The migration."""
 
-    dependencies = [
-        ("workspace", "0065_workspace_title"),
-    ]
+    dependencies = [("workspace", "0065_workspace_title")]
 
     operations = [
         migrations.AddConstraint(
@@ -23,5 +21,5 @@ class Migration(migrations.Migration):
                 name="label_color_range",
                 violation_error_message="Color must be between 0 and 7",
             ),
-        ),
+        )
     ]

@@ -30,9 +30,7 @@ class TestCustomerCreateStripeCheckoutSession:
     """Test customer_create_stripe_checkout_session."""
 
     @pytest.fixture(autouse=True)
-    def mock_stripe_checkout(
-        self,
-    ) -> Iterable[mock.MagicMock]:
+    def mock_stripe_checkout(self) -> Iterable[mock.MagicMock]:
         """Mock stripe checkout session creation."""
         with mock.patch(
             "stripe.checkout._session_service.SessionService.create"
@@ -47,12 +45,8 @@ class TestCustomerCreateStripeCheckoutSession:
         seats = unpaid_customer.workspace.users.count()
         with pytest.raises(ValidationError):
             customer_create_stripe_checkout_session(
-                who=team_member.user,
-                customer=unpaid_customer,
-                seats=seats - 1,
+                who=team_member.user, customer=unpaid_customer, seats=seats - 1
             )
         customer_create_stripe_checkout_session(
-            who=team_member.user,
-            customer=unpaid_customer,
-            seats=seats,
+            who=team_member.user, customer=unpaid_customer, seats=seats
         )

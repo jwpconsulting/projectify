@@ -30,10 +30,6 @@ def ensure_correct_order(apps: Apps, schema_editor: object) -> None:
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0027_auto_20220317_0115"),
-    ]
+    dependencies = [("workspace", "0027_auto_20220317_0115")]
 
-    operations = [
-        migrations.RunPython(ensure_correct_order),
-    ]
+    operations = [migrations.RunPython(ensure_correct_order)]

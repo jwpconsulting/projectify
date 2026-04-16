@@ -10,9 +10,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("blog", "0005_alter_post_options"),
-    ]
+    dependencies = [("blog", "0005_alter_post_options")]
 
     operations = [
         migrations.AddField(
@@ -21,5 +19,5 @@ class Migration(migrations.Migration):
             field=models.BooleanField(
                 default=False, verbose_name="Blog post draft status"
             ),
-        ),
+        )
     ]

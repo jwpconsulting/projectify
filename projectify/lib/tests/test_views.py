@@ -34,8 +34,5 @@ class TestColoredIconView:
     )
     def test_not_found(self, client: Client, icon: str, color: str) -> None:
         """Test that 404 is returned for invalid icon or color."""
-        url = reverse(
-            "colored-icon",
-            kwargs={"icon": icon, "color": color},
-        )
+        url = reverse("colored-icon", kwargs={"icon": icon, "color": color})
         assert client.get(url).status_code == 404

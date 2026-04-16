@@ -10,14 +10,12 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("user", "0006_user_profile_picture"),
-    ]
+    dependencies = [("user", "0006_user_profile_picture")]
 
     operations = [
         migrations.AddField(
             model_name="user",
             name="full_name",
             field=models.CharField(blank=True, max_length=255, null=True),
-        ),
+        )
     ]

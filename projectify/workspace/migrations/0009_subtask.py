@@ -13,9 +13,7 @@ import projectify.lib.models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0008_task"),
-    ]
+    dependencies = [("workspace", "0008_task")]
 
     operations = [
         migrations.CreateModel(
@@ -66,8 +64,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={
-                "ordering": ("task", "order"),
-            },
-        ),
+            options={"ordering": ("task", "order")},
+        )
     ]

@@ -14,12 +14,11 @@ class Migration(migrations.Migration):
         (
             "workspace",
             "0051_label_created_label_modified_tasklabel_created_and_more",
-        ),
+        )
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name="workspaceboard",
-            options={"ordering": ("-created",)},
-        ),
+            name="workspaceboard", options={"ordering": ("-created",)}
+        )
     ]

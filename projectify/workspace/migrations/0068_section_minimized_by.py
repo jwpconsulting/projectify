@@ -26,5 +26,5 @@ class Migration(migrations.Migration):
                 related_name="minimized_sections",
                 to=settings.AUTH_USER_MODEL,
             ),
-        ),
+        )
     ]

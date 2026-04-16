@@ -39,9 +39,7 @@ def get_image_format(file: UploadedFile) -> Optional[str]:
             return img.format
     except Exception as e:
         logger.warning(
-            "Couldn't detect image format for file %s",
-            file.name,
-            exc_info=e,
+            "Couldn't detect image format for file %s", file.name, exc_info=e
         )
     return None
 

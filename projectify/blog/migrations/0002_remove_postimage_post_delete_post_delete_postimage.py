@@ -10,19 +10,10 @@ from django.db import migrations
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("blog", "0001_initial"),
-    ]
+    dependencies = [("blog", "0001_initial")]
 
     operations = [
-        migrations.RemoveField(
-            model_name="postimage",
-            name="post",
-        ),
-        migrations.DeleteModel(
-            name="Post",
-        ),
-        migrations.DeleteModel(
-            name="PostImage",
-        ),
+        migrations.RemoveField(model_name="postimage", name="post"),
+        migrations.DeleteModel(name="Post"),
+        migrations.DeleteModel(name="PostImage"),
     ]

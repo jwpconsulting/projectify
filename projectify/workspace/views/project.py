@@ -141,7 +141,7 @@ class ProjectFilterForm(forms.Form):
         """Populate choices."""
         super().__init__(*args, **kwargs)
         member_widget = forms.CheckboxSelectMultiple(
-            attrs={"form": "task-filter"},
+            attrs={"form": "task-filter"}
         )
         member_widget.option_template_name = (
             "workspace/forms/widgets/select_team_member_option.html"
@@ -158,7 +158,7 @@ class ProjectFilterForm(forms.Form):
             )
         )
         label_widget = forms.CheckboxSelectMultiple(
-            attrs={"form": "task-filter"},
+            attrs={"form": "task-filter"}
         )
         label_widget.option_template_name = (
             "workspace/forms/widgets/select_label_option.html"
@@ -220,10 +220,7 @@ class TaskMoveForm(forms.Form):
 
     action = forms.CharField(required=True)
     direction = forms.ChoiceField(
-        choices=[
-            ("up", _("Up")),
-            ("down", _("Down")),
-        ]
+        choices=[("up", _("Up")), ("down", _("Down"))]
     )
 
     def __init__(self, project: Project, *args: Any, **kwargs: Any) -> None:
@@ -417,10 +414,7 @@ def project_detail_view(
         if enrich_section
         else None
     )
-    context = {
-        **context,
-        "section": section,
-    }
+    context = {**context, "section": section}
 
     # Mark this project as most recently visited
     team_member_visit_project(team_member=team_member, project=project)
@@ -430,9 +424,7 @@ def project_detail_view(
     labels = project.workspace.label_set.all()
 
     task_filter_form = ProjectFilterForm(
-        team_members=team_members,
-        labels=labels,
-        data=querydict,
+        team_members=team_members, labels=labels, data=querydict
     )
 
     context = {
@@ -486,9 +478,7 @@ def project_create_view(
             # Should never be hit
             assert False, other
     workspace = workspace_find_by_workspace_uuid(
-        workspace_uuid=workspace_uuid,
-        who=request.user,
-        qs=qs,
+        workspace_uuid=workspace_uuid, who=request.user, qs=qs
     )
     if workspace is None:
         raise Http404(_("No workspace found for this UUID"))
@@ -614,9 +604,7 @@ def project_archive_view(
     """Archive a project via HTMX."""
     assert request.method == "POST"
     project = project_find_by_project_uuid(
-        who=request.user,
-        project_uuid=project_uuid,
-        archived=False,
+        who=request.user, project_uuid=project_uuid, archived=False
     )
     if project is None:
         raise Http404(_("No project found for this uuid"))
@@ -651,9 +639,7 @@ def project_delete_view(
     assert request.method == "POST"
 
     project = project_find_by_project_uuid(
-        who=request.user,
-        project_uuid=project_uuid,
-        archived=True,
+        who=request.user, project_uuid=project_uuid, archived=True
     )
     if project is None:
         raise Http404(_("No archived project found for this uuid"))

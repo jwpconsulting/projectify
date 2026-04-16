@@ -10,14 +10,12 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0063_alter_section_order_with_respect_to"),
-    ]
+    dependencies = [("workspace", "0063_alter_section_order_with_respect_to")]
 
     operations = [
         migrations.AlterField(
             model_name="label",
             name="color",
             field=models.PositiveBigIntegerField(help_text="Color index"),
-        ),
+        )
     ]

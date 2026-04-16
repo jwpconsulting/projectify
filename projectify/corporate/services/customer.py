@@ -87,10 +87,7 @@ def customer_create_stripe_checkout_session(
     # XXX
     # Stripe types have invariance problems here
     line_items: list[Any] = [
-        {
-            "price": settings.STRIPE_PRICE_OBJECT,
-            "quantity": seats,
-        },
+        {"price": settings.STRIPE_PRICE_OBJECT, "quantity": seats}
     ]
     client = stripe_client()
     match customer.stripe_customer_id:

@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("blog", "0002_remove_postimage_post_delete_post_delete_postimage"),
+        ("blog", "0002_remove_postimage_post_delete_post_delete_postimage")
     ]
 
     operations = [
@@ -34,9 +34,7 @@ class Migration(migrations.Migration):
                 ),
                 ("content", projectify.lib.models.DocumentContentField()),
             ],
-            options={
-                "abstract": False,
-            },
+            options={"abstract": False},
         ),
         migrations.CreateModel(
             name="Post",
@@ -86,9 +84,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={
-                "get_latest_by": "modified",
-                "abstract": False,
-            },
+            options={"get_latest_by": "modified", "abstract": False},
         ),
     ]

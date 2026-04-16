@@ -10,9 +10,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0016_task_deadline"),
-    ]
+    dependencies = [("workspace", "0016_task_deadline")]
 
     operations = [
         migrations.AddField(
@@ -21,5 +19,5 @@ class Migration(migrations.Migration):
             field=models.ImageField(
                 blank=True, null=True, upload_to="workspace_picture/"
             ),
-        ),
+        )
     ]

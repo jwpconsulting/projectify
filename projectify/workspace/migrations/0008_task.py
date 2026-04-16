@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
     """Migration."""
 
     dependencies = [
-        ("workspace", "0007_alter_workspaceboardsection_options_and_more"),
+        ("workspace", "0007_alter_workspaceboardsection_options_and_more")
     ]
 
     operations = [
@@ -66,8 +66,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={
-                "ordering": ("workspace_board_section", "order"),
-            },
-        ),
+            options={"ordering": ("workspace_board_section", "order")},
+        )
     ]

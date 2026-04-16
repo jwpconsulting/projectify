@@ -9,8 +9,6 @@ from django.db import migrations
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0075_task_done"),
-    ]
+    dependencies = [("workspace", "0075_task_done")]
 
     operations = []

@@ -73,5 +73,5 @@ class Migration(migrations.Migration):
                 "get_latest_by": "modified",
                 "abstract": False,
             },
-        ),
+        )
     ]

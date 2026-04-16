@@ -51,15 +51,12 @@ LabelDetailQuerySet = Label.objects.select_related(
     Prefetch(
         "workspace__project_set",
         queryset=Project.objects.filter(archived__isnull=True),
-    ),
+    )
 )
 
 
 def label_find_by_label_uuid(
-    *,
-    label_uuid: UUID,
-    who: User,
-    qs: Optional[QuerySet[Label]] = None,
+    *, label_uuid: UUID, who: User, qs: Optional[QuerySet[Label]] = None
 ) -> Optional[Label]:
     """Find a label by uuid for a given user."""
     if qs is None:

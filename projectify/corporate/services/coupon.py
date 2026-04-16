@@ -38,10 +38,7 @@ COUPON_CHARS = "abcdefhijkmnpqrstuvwxy347"
 
 
 def coupon_create(
-    *,
-    who: User,
-    seats: int,
-    prefix: Optional[str] = None,
+    *, who: User, seats: int, prefix: Optional[str] = None
 ) -> Coupon:
     """Create a coupon for seats, for a user, with a given prefix."""
     suffix = get_random_string(10, COUPON_CHARS)
@@ -52,12 +49,7 @@ def coupon_create(
 
 
 @transaction.atomic
-def coupon_redeem(
-    *,
-    who: User,
-    code: str,
-    workspace: Workspace,
-) -> None:
+def coupon_redeem(*, who: User, code: str, workspace: Workspace) -> None:
     """Redeem a coupon for a workspace."""
     customer = workspace.customer
     validate_perm("corporate.can_update_customer", who, workspace)

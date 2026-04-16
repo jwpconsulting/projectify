@@ -10,15 +10,10 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0071_teammember_minimized_filters"),
-    ]
+    dependencies = [("workspace", "0071_teammember_minimized_filters")]
 
     operations = [
-        migrations.AlterUniqueTogether(
-            name="label",
-            unique_together=set(),
-        ),
+        migrations.AlterUniqueTogether(name="label", unique_together=set()),
         migrations.AddConstraint(
             model_name="label",
             constraint=models.UniqueConstraint(

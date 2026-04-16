@@ -15,21 +15,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0030_alter_task_assignee"),
-    ]
+    dependencies = [("workspace", "0030_alter_task_assignee")]
 
     operations = [
-        migrations.AlterModelOptions(
-            name="subtask",
-            options={},
-        ),
+        migrations.AlterModelOptions(name="subtask", options={}),
         migrations.AlterOrderWithRespectTo(
-            name="subtask",
-            order_with_respect_to="task",
+            name="subtask", order_with_respect_to="task"
         ),
-        migrations.RemoveField(
-            model_name="subtask",
-            name="order",
-        ),
+        migrations.RemoveField(model_name="subtask", name="order"),
     ]

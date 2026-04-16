@@ -17,17 +17,11 @@ from ..models import ChatMessage, Task
 
 
 # TODO this could take an author instead of who -> user is derived from author
-def chat_message_create(
-    *,
-    who: User,
-    task: Task,
-    text: str,
-) -> ChatMessage:
+def chat_message_create(*, who: User, task: Task, text: str) -> ChatMessage:
     """Create a chat message for a task."""
     validate_perm("workspace.create_chat_message", who, task.workspace)
     team_member = team_member_find_for_workspace(
-        workspace=task.workspace,
-        user=who,
+        workspace=task.workspace, user=who
     )
     instance = ChatMessage.objects.create(
         task=task, text=text, author=team_member

@@ -158,8 +158,7 @@ rules.add_perm(
 
 # Project
 rules.add_perm(
-    "workspace.create_project",
-    is_at_least_maintainer & within_project_quota,
+    "workspace.create_project", is_at_least_maintainer & within_project_quota
 )
 rules.add_perm("workspace.read_project", is_at_least_observer)
 rules.add_perm("workspace.update_project", is_at_least_maintainer)
@@ -167,8 +166,7 @@ rules.add_perm("workspace.delete_project", is_at_least_maintainer)
 
 # Section
 rules.add_perm(
-    "workspace.create_section",
-    is_at_least_maintainer & within_section_quota,
+    "workspace.create_section", is_at_least_maintainer & within_section_quota
 )
 rules.add_perm("workspace.read_section", is_at_least_observer)
 rules.add_perm("workspace.update_section", is_at_least_maintainer)

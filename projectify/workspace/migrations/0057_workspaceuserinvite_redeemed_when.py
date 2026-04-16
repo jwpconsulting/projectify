@@ -10,9 +10,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0056_alter_label_options"),
-    ]
+    dependencies = [("workspace", "0056_alter_label_options")]
 
     operations = [
         migrations.AddField(
@@ -25,5 +23,5 @@ class Migration(migrations.Migration):
                 help_text="When has this invite been redeemed?",
                 null=True,
             ),
-        ),
+        )
     ]

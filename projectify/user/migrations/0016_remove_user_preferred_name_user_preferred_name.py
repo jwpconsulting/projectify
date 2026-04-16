@@ -16,10 +16,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveConstraint(
-            model_name="user",
-            name="preferred_name",
-        ),
+        migrations.RemoveConstraint(model_name="user", name="preferred_name"),
         migrations.AddConstraint(
             model_name="user",
             constraint=models.CheckConstraint(

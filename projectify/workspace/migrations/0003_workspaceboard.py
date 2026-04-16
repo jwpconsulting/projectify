@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     """Migration."""
 
     dependencies = [
-        ("workspace", "0002_workspaceuser_workspace_users_and_more"),
+        ("workspace", "0002_workspaceuser_workspace_users_and_more")
     ]
 
     operations = [
@@ -36,5 +36,5 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-        ),
+        )
     ]

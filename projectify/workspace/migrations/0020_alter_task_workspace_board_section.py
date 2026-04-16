@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     """Migration."""
 
     dependencies = [
-        ("workspace", "0019_alter_chatmessage_author_alter_subtask_task"),
+        ("workspace", "0019_alter_chatmessage_author_alter_subtask_task")
     ]
 
     operations = [
@@ -23,5 +23,5 @@ class Migration(migrations.Migration):
                 on_delete=django.db.models.deletion.CASCADE,
                 to="workspace.workspaceboardsection",
             ),
-        ),
+        )
     ]

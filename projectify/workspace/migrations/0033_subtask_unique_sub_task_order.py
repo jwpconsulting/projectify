@@ -11,9 +11,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     """Migration."""
 
-    dependencies = [
-        ("workspace", "0032_auto_20220531_0427"),
-    ]
+    dependencies = [("workspace", "0032_auto_20220531_0427")]
 
     operations = [
         migrations.AddConstraint(
@@ -23,5 +21,5 @@ class Migration(migrations.Migration):
                 fields=("task", "_order"),
                 name="unique_sub_task_order",
             ),
-        ),
+        )
     ]

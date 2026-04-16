@@ -52,11 +52,7 @@ def task_create(
     assignee: Optional[TeamMember] = None,
 ) -> Task:
     """Create a task. This will replace the above task_create method."""
-    validate_perm(
-        "workspace.create_task",
-        who,
-        section.project.workspace,
-    )
+    validate_perm("workspace.create_task", who, section.project.workspace)
     # XXX Implicit N+1 here
     workspace = section.project.workspace
     if assignee and assignee.workspace != workspace:
@@ -165,10 +161,7 @@ def task_move_in_direction(
 
 @transaction.atomic
 def task_move_after(
-    *,
-    who: User,
-    task: Task,
-    after: Union[Task, Section],
+    *, who: User, task: Task, after: Union[Task, Section]
 ) -> Task:
     """Move a task after a task or in front of a section."""
     validate_perm("workspace.update_task", who, task.workspace)

@@ -22,11 +22,7 @@ def section_create(
     project: Project,
 ) -> Section:
     """Create a section."""
-    validate_perm(
-        "workspace.create_section",
-        who,
-        project.workspace,
-    )
+    validate_perm("workspace.create_section", who, project.workspace)
     section = Section(title=title, description=description, project=project)
     section.save()
     return section
@@ -42,11 +38,7 @@ def section_update(
     description: Optional[str] = None,
 ) -> Section:
     """Update a section."""
-    validate_perm(
-        "workspace.update_section",
-        who,
-        section.project.workspace,
-    )
+    validate_perm("workspace.update_section", who, section.project.workspace)
     section.title = title
     section.description = description
     section.save()
@@ -55,17 +47,9 @@ def section_update(
 
 # Delete
 @transaction.atomic
-def section_delete(
-    *,
-    who: User,
-    section: Section,
-) -> None:
+def section_delete(*, who: User, section: Section) -> None:
     """Delete a section."""
-    validate_perm(
-        "workspace.delete_section",
-        who,
-        section.project.workspace,
-    )
+    validate_perm("workspace.delete_section", who, section.project.workspace)
     section.delete()
 
 
@@ -87,22 +71,13 @@ def section_move_in_direction(
 
 # RPC
 @transaction.atomic
-def section_move(
-    *,
-    section: Section,
-    order: int,
-    who: User,
-) -> None:
+def section_move(*, section: Section, order: int, who: User) -> None:
     """
     Move to specified order n within project.
 
     No save required.
     """
-    validate_perm(
-        "workspace.update_section",
-        who,
-        section.project.workspace,
-    )
+    validate_perm("workspace.update_section", who, section.project.workspace)
     project = section.project
     neighbor_sections = project.section_set.select_for_update()
     # Force queryset to be evaluated to lock them for the time of
@@ -121,11 +96,7 @@ def section_move(
 
 def section_minimize(*, who: User, section: Section, minimized: bool) -> None:
     """Set section minimized state for user."""
-    validate_perm(
-        "workspace.read_section",
-        who,
-        section.project.workspace,
-    )
+    validate_perm("workspace.read_section", who, section.project.workspace)
     if minimized:
         section.minimized_by.add(who)
     else:

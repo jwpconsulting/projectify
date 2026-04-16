@@ -47,11 +47,7 @@ def _validate_password(
 
 @transaction.atomic()
 def user_sign_up(
-    *,
-    email: str,
-    password: str,
-    tos_agreed: bool,
-    privacy_policy_agreed: bool,
+    *, email: str, password: str, tos_agreed: bool, privacy_policy_agreed: bool
 ) -> User:
     """Sign up a user."""
     # Check if user exists
@@ -89,11 +85,7 @@ def user_sign_up(
 
 
 @transaction.atomic()
-def user_confirm_email(
-    *,
-    email: str,
-    token: Token,
-) -> Optional[User]:
+def user_confirm_email(*, email: str, token: Token) -> Optional[User]:
     """Confirm a user's email, return User on success."""
     user = user_find_by_email(email=email)
     if user is None:
@@ -114,12 +106,7 @@ def user_confirm_email(
 
 
 @transaction.atomic()
-def user_log_in(
-    *,
-    email: str,
-    password: str,
-    request: HttpRequest,
-) -> User:
+def user_log_in(*, email: str, password: str, request: HttpRequest) -> User:
     """Log a user in, return cookies."""
     user = authenticate(request, username=email, password=password)
     if user is None:
@@ -156,10 +143,7 @@ def user_log_in(
 
 
 @transaction.atomic()
-def user_log_out(
-    *,
-    request: HttpRequest,
-) -> None:
+def user_log_out(*, request: HttpRequest) -> None:
     """Log a user out, update cookies."""
     user = request.user
     if user.is_anonymous:
