@@ -41,7 +41,6 @@ from projectify.corporate.services.stripe import (
     customer_cancel_subscription,
 )
 from projectify.settings.base import Base
-from projectify.settings.types import StripeConfig
 from projectify.user import models as user_models
 from projectify.user.models import User, UserInvite
 from projectify.user.services.internal import (
@@ -582,40 +581,6 @@ def chat_message(
 
 
 @pytest.fixture
-def stripe_publishable_key(faker: Faker) -> str:
-    """Return a convincing looking stripe publishable key."""
-    key: str = faker.hexify(
-        "pk_test_^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-    )
-    return key
-
-
-@pytest.fixture
-def stripe_secret_key(faker: Faker) -> str:
-    """Return a convincing looking stripe secret key."""
-    key: str = faker.hexify(
-        "sk_test_^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-    )
-    return key
-
-
-@pytest.fixture
-def stripe_price_object(faker: Faker) -> str:
-    """Return a convincing looking stripe price object."""
-    key: str = faker.hexify("price_^^^^^^^^^^^^^^^^^^^^^^^^")
-    return key
-
-
-@pytest.fixture
-def stripe_endpoint_secret(faker: Faker) -> str:
-    """Return a convincing looking stripe endpoint secret."""
-    key: str = faker.hexify(
-        "whsec_^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-    )
-    return key
-
-
-@pytest.fixture
 def unpaid_customer(workspace: Workspace) -> Customer:
     """Create customer."""
     customer_cancel_subscription(customer=workspace.customer)
@@ -663,30 +628,4 @@ def post(faker: Faker, now: datetime, post_content: PostContent) -> Post:
     title = faker.sentence()
     return Post.objects.create(
         title=title, slug=faker.slug(), body=post_content, published=now.date()
-    )
-
-
-# This was originally in projectify/workspace/test/views/test_workspace.py
-# TODO decide if autouse is still appropriate
-# Maybe I can adjust the following test files to autouse this fixtures while
-# the others won't.
-# - projectify/workspace/test/views/test_workspace.py
-# - projectify/corporate/test/services/test_customer.py
-# - projectify/corporate/test/views/test_stripe.py
-# Another option is to just hardcode the settings in
-# projectify/settings/test.py
-@pytest.fixture(autouse=True)
-def patch_stripe_settings(
-    settings: Base,
-    stripe_publishable_key: str,
-    stripe_price_object: str,
-    stripe_secret_key: str,
-    stripe_endpoint_secret: str,
-) -> None:
-    """Patch stripe settings."""
-    settings.STRIPE_CONFIG = StripeConfig(
-        STRIPE_PUBLISHABLE_KEY=stripe_publishable_key,
-        STRIPE_SECRET_KEY=stripe_secret_key,
-        STRIPE_ENDPOINT_SECRET=stripe_endpoint_secret,
-        STRIPE_PRICE_OBJECT=stripe_price_object,
     )

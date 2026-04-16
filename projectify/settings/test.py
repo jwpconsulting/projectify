@@ -5,6 +5,10 @@
 
 import secrets
 
+from faker import Faker
+
+from projectify.settings.types import StripeConfig
+
 try:
     from dotenv import load_dotenv
 except ImportError as e:
@@ -63,4 +67,20 @@ class Test(Base):
         cls.DATABASES["default"] = dj_database_url.config(
             default="sqlite:///:memory:",
             conn_max_age=cls.CONN_MAX_AGE,
+        )
+
+        faker = Faker()
+        cls.STRIPE_CONFIG = StripeConfig(
+            STRIPE_PUBLISHABLE_KEY=faker.hexify(
+                "pk_test_^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+            ),
+            STRIPE_SECRET_KEY=faker.hexify(
+                "sk_test_^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+            ),
+            STRIPE_ENDPOINT_SECRET=faker.hexify(
+                "price_^^^^^^^^^^^^^^^^^^^^^^^^"
+            ),
+            STRIPE_PRICE_OBJECT=faker.hexify(
+                "whsec_^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+            ),
         )

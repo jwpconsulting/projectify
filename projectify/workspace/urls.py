@@ -4,8 +4,12 @@
 """Workspace URLs for dashboard."""
 # TODO rename to projectify.workspace.urls
 
+import logging
+
 from django.urls import include, path
 
+from projectify.lib.settings import get_settings
+from projectify.lib.types import UrlPatterns
 from projectify.workspace.views.avatar_marble import avatar_marble_view
 from projectify.workspace.views.dashboard import redirect_to_dashboard
 from projectify.workspace.views.project import (
@@ -48,10 +52,12 @@ from projectify.workspace.views.workspace import (
     workspace_view,
 )
 
+logger = logging.getLogger(__name__)
+
 # TODO rename to workspace
 # app_name = "workspace"
 app_name = "dashboard"
-workspace_patterns = (
+workspace_patterns: UrlPatterns = (
     # HTML
     path(
         "<uuid:workspace_uuid>",
@@ -111,21 +117,30 @@ workspace_patterns = (
         name="team-member-update",
     ),
     path(
-        "<uuid:workspace_uuid>/settings/billing",
-        workspace_settings_billing,
-        name="billing",
-    ),
-    path(
-        "<uuid:workspace_uuid>/settings/billing/edit",
-        workspace_settings_billing_edit,
-        name="billing-edit",
-    ),
-    path(
         "<uuid:workspace_uuid>/settings/quota",
         workspace_settings_quota,
         name="quota",
     ),
 )
+if get_settings().STRIPE_CONFIG is None:
+    logger.info(
+        "Stripe configuration not present. "
+        "Did not install stripe-webhook view in Projectify URL patterns."
+    )
+else:
+    workspace_patterns = (
+        *workspace_patterns,
+        path(
+            "<uuid:workspace_uuid>/settings/billing",
+            workspace_settings_billing,
+            name="billing",
+        ),
+        path(
+            "<uuid:workspace_uuid>/settings/billing/edit",
+            workspace_settings_billing_edit,
+            name="billing-edit",
+        ),
+    )
 project_patterns = (
     path(
         "<uuid:project_uuid>",
