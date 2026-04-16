@@ -126,7 +126,7 @@ class Base(Configuration):  # type:ignore
         ],
         "connect-src": [CSP.SELF],
         "frame-ancestors": [CSP.NONE],
-        "object-src": [CSP.SELF],
+        "object-src": [CSP.NONE],
         "frame-src": [CSP.NONE],
         "base-uri": [CSP.NONE],
     }
