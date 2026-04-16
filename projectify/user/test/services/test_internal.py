@@ -9,6 +9,8 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 import pytest
 
+from projectify.settings.base import Base
+
 from ...models import User
 from ...services.internal import (
     Token,
@@ -37,8 +39,7 @@ def test_user_create_superuser() -> None:
 @pytest.fixture
 def deterministic_user() -> User:
     """Return user with predictable fields for token fn checking."""
-    user = User(pk=1, last_login=None, email="hello@example", password="abc")
-    return user
+    return User(pk=1, last_login=None, email="hello@example", password="abc")
 
 
 def now(_self: object) -> datetime:
@@ -56,15 +57,20 @@ tokens: list[tuple[TokenKind, Token]] = [
 ]
 
 
+@pytest.fixture(autouse=True)
+def deterministic_token_result(
+    settings: Base, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Make sure test cases get the same token every time."""
+    settings.SECRET_KEY = "test"
+    monkeypatch.setattr(PasswordResetTokenGenerator, "_now", now)
+
+
 @pytest.mark.parametrize("kind,token", tokens)
 def test_user_make_token(
-    deterministic_user: User,
-    kind: TokenKind,
-    token: Token,
-    monkeypatch: pytest.MonkeyPatch,
+    deterministic_user: User, kind: TokenKind, token: Token
 ) -> None:
     """Test token making."""
-    monkeypatch.setattr(PasswordResetTokenGenerator, "_now", now)
     assert user_make_token(user=deterministic_user, kind=kind) == token
 
 
@@ -72,12 +78,9 @@ def test_user_make_token(
     "kind", ["confirm_email_address", "reset_password", "update_email_address"]
 )
 def test_user_make_token_with_unconfirmed_email(
-    deterministic_user: User,
-    monkeypatch: pytest.MonkeyPatch,
-    kind: TokenKind,
+    deterministic_user: User, kind: TokenKind
 ) -> None:
     """Test token making when unconfirmed_email changes."""
-    monkeypatch.setattr(PasswordResetTokenGenerator, "_now", now)
     token1 = user_make_token(user=deterministic_user, kind=kind)
     deterministic_user.unconfirmed_email = "abc@example.com"
     token2 = user_make_token(user=deterministic_user, kind=kind)
@@ -89,19 +92,11 @@ def test_user_make_token_with_unconfirmed_email(
 
 @pytest.mark.parametrize("kind,token", tokens)
 def test_user_check_token(
-    deterministic_user: User,
-    kind: TokenKind,
-    token: Token,
-    monkeypatch: pytest.MonkeyPatch,
+    deterministic_user: User, kind: TokenKind, token: Token
 ) -> None:
     """Test token checking."""
-    monkeypatch.setattr(PasswordResetTokenGenerator, "_now", now)
     assert (
-        user_check_token(
-            user=deterministic_user,
-            kind=kind,
-            token=token,
-        )
+        user_check_token(user=deterministic_user, kind=kind, token=token)
         is True
     )
     # We substring the token and test that it won't validate

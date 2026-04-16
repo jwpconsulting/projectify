@@ -3,6 +3,8 @@
 # SPDX-FileCopyrightText: 2021, 2022, 2023 JWP Consulting GK
 """Test settings."""
 
+import secrets
+
 try:
     from dotenv import load_dotenv
 except ImportError as e:
@@ -24,8 +26,7 @@ class Test(Base):
         a for a in Base.MIDDLEWARE if "stats.middleware.count_stats" not in a
     ]
 
-    # TODO populate me
-    SECRET_KEY = "test"
+    SECRET_KEY = secrets.token_hex(32)
 
     FRONTEND_URL = "https://example.com"
 
