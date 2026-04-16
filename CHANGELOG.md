@@ -25,6 +25,7 @@ features:
 - Make all workspace app models readonly in the Projectify Django admin.
 - Remove trailing "magic" commas with Ruff. This makes the code base shorter.
 - Fix inconsistencies in shell scripts (Thanks shellcheck!)
+- Remove SubTask model from workspace app.
 
 ### Security
 
