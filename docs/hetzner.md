@@ -139,7 +139,7 @@ Create users:
 
 Application data:
 
-- `/usr/share/projectify/release/current/static`: Projectify static files
+- `/usr/share/projectify/releases/current/static`: Projectify static files
 - `/usr/share/projectify/releases/current/venv`: Python virtual environmeny
 - `/usr/share/projectify/releases/current/app`: Projectify repository (no git clone)
 - `/var/lib/projectify`: `projectify` user home directory
