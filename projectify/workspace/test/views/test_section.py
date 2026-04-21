@@ -70,7 +70,8 @@ class TestSectionUpdateView:
     ) -> None:
         """Test getting the section update form."""
         # Gone up   from 7 -> 9 due to permission checks in sidemenu
-        with django_assert_num_queries(9):
+        # Gone down from 9 -> 8
+        with django_assert_num_queries(8):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert "Update Section" in response.content.decode()
@@ -87,7 +88,7 @@ class TestSectionUpdateView:
         """Test saving section updates."""
         new_title = "Updated Section Title"
 
-        with django_assert_num_queries(9):
+        with django_assert_num_queries(8):
             response = user_client.post(
                 resource_url, {"action": "save", "title": new_title}
             )
@@ -116,7 +117,7 @@ class TestSectionUpdateView:
 
         original_order = section._order
 
-        with django_assert_num_queries(10):
+        with django_assert_num_queries(9):
             response = user_client.post(resource_url, {"action": "move_up"})
             assert response.status_code == 302
 
@@ -138,7 +139,8 @@ class TestSectionUpdateView:
 
         # TODO optimize
         # Gone down from 17 -> 16
-        with django_assert_num_queries(16):
+        # Gone down from 16 -> 15
+        with django_assert_num_queries(15):
             response = user_client.post(resource_url, {"action": "move_down"})
             assert response.status_code == 302
 

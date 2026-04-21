@@ -104,7 +104,7 @@ class TaskCreateForm(forms.Form):
     )
 
     def __init__(self, workspace: Workspace, *args: Any, **kwargs: Any):
-        """Populate available assignees and labels."""
+        """Populate available assignees."""
         super().__init__(*args, **kwargs)
         assignee_widget = forms.RadioSelect()
         assignee_widget.option_template_name = (
@@ -120,22 +120,7 @@ class TaskCreateForm(forms.Form):
             empty_label=_("Assigned to nobody"),
         )
 
-        labels_widget = forms.CheckboxSelectMultiple()
-        labels_widget.option_template_name = (
-            "workspace/forms/widgets/select_label_option.html"
-        )
-        self.fields["labels"] = forms.ModelMultipleChoiceField(
-            required=False,
-            blank=True,
-            label=_("Labels"),
-            queryset=workspace.label_set.all(),
-            widget=labels_widget,
-            to_field_name="uuid",
-        )
-
-        self.order_fields(
-            ["title", "assignee", "labels", "due_date", "description"]
-        )
+        self.order_fields(["title", "assignee", "due_date", "description"])
 
 
 @platform_view
@@ -183,7 +168,6 @@ def task_create_view(
         description=form.cleaned_data.get("description"),
         assignee=form.cleaned_data.get("assignee"),
         due_date=form.cleaned_data.get("due_date"),
-        labels=form.cleaned_data["labels"],
     )
 
     match request.POST.get("action"):
@@ -278,22 +262,7 @@ class TaskUpdateForm(forms.Form):
             empty_label=_("Assigned to nobody"),
         )
 
-        labels_widget = forms.CheckboxSelectMultiple()
-        labels_widget.option_template_name = (
-            "workspace/forms/widgets/select_label_option.html"
-        )
-        self.fields["labels"] = forms.ModelMultipleChoiceField(
-            required=False,
-            blank=True,
-            label=_("Labels"),
-            queryset=workspace.label_set.all(),
-            widget=labels_widget,
-            to_field_name="uuid",
-        )
-
-        self.order_fields(
-            ["title", "assignee", "labels", "due_date", "description"]
-        )
+        self.order_fields(["title", "assignee", "due_date", "description"])
 
         if focus_field is None:
             return
@@ -328,7 +297,6 @@ def task_update_view(
     task_initial = {
         "title": task.title,
         "assignee": task.assignee,
-        "labels": task.labels.all(),
         "due_date": task.due_date,
         "description": task.description,
     }
@@ -383,7 +351,6 @@ def task_update_view(
         description=cleaned_data["description"],
         due_date=cleaned_data["due_date"],
         assignee=cleaned_data["assignee"],
-        labels=cleaned_data["labels"],
     )
     return redirect(next_url)
 

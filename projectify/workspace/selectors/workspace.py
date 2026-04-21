@@ -17,14 +17,13 @@ from django.db.models import (
 
 from projectify.user.models import User
 
-from ..models import Label, Project, TeamMember, TeamMemberInvite, Workspace
-from .labels import labels_annotate_with_colors
+from ..models import Project, TeamMember, TeamMemberInvite, Workspace
 
 logger = logging.getLogger(__name__)
 
 
 def workspace_build_detail_query_set(
-    *, who: Optional[User], annotate_labels: bool = False
+    *, who: Optional[User]
 ) -> QuerySet[Workspace]:
     """
     Build workspace detail query set.
@@ -42,12 +41,7 @@ def workspace_build_detail_query_set(
         "teammember_set", queryset=teammembers
     )
 
-    labels: QuerySet[Label] = Label.objects.all()
-    if annotate_labels:
-        labels = labels_annotate_with_colors(Label.objects.all())
-
     qs = Workspace.objects.prefetch_related(
-        Prefetch("label_set", labels),
         Prefetch(
             "project_set",
             queryset=Project.objects.filter(archived__isnull=True),

@@ -12,7 +12,6 @@ These are the onboarding steps:
 - _New workspace_: `/onboarding/new-workspace`
 - _New project_: `/onboarding/new-project/<uuid:workspace_uuid>`
 - _New task_: `/onboarding/new-task/<uuid:project_uuid>`
-- _New label_: `/onboarding/new-label/<uuid:task_uuid>`
 - _Assign task (confirmation)_: `/onboarding/assign-task/<uuid:task_uuid>`
 
 ## Design and implementation criteria
@@ -52,7 +51,6 @@ The onboarding steps should be:
 - New workspace: /onboarding/new-workspace
 - New project: /onboarding/new-project
 - New task: /onboarding/new-task
-- New label: /onboarding/new-label
 - Assign task: /onboarding/assign-task
 
 Furthermore, after _New project_, the user should be able to skip the
@@ -113,16 +111,7 @@ implemented at the time of writing. (2023-12-06)
 
 The task will be automatically assigned to them.
 
-### New label
-
-Here, we create a new label that will be assigned to the newly created task in
-the previous step.
-
-Bug: If a label has already been created (in a previous onboarding run), the
-user might try to create a label with the same name. This will lead to a 500
-error in the backend at the time of writing. (2023-12-06) There is an issue
-with a unique constraint for workspace and label name, which has to be
-resolved.
+This view then redirects the user to the **Assign task** view.
 
 ### Assign task
 

@@ -78,7 +78,7 @@
                 hx-select="#team-member-filters"
                 hx-post="{% url 'dashboard:projects:detail' project.uuid %}"
                 hx-swap="outerHTML"
-                hx-include="#task-filter,#team-member-filters,#label-filters"
+                hx-include="#task-filter,#team-member-filters"
                 aria-describedby="team-member-filter-help">
             <div class="flex flex-row items-center gap-2">
                 <div class="w-4 h-4">{% icon "user" %}</div>
@@ -100,7 +100,7 @@
             </div>
         </button>
         <span id="team-member-filter-help" class="hidden">
-            {% if current_team_member_qs.minimized_label_filter %}
+            {% if current_team_member_qs.minimized_team_member_filter %}
                 {% trans "Activate to show filter team member list" %}
             {% else %}
                 {% trans "Activate to hide filter team member list" %}
@@ -113,60 +113,6 @@
                 {% has_perm "workspace.create_team_member" user workspace as can_create_team_member %}
                 {% if can_create_team_member %}
                     {% go_to_action href="dashboard:workspaces:team-members" label=_("Add more team members") style="secondary" icon_style="plus" justify_left=True workspace_uuid=workspace.uuid %}
-                {% endif %}
-            {% endif %}
-        </fieldset>
-        {% include "projectify/forms/submit.html" with text=_("Filter")  form_name="task-filter" %}
-    </section>
-    <section id="label-filters"
-             class="flex flex-col px-4"
-             aria-labelledby="label-filter-title">
-        <input type="hidden"
-               name="label_filter_minimized"
-               value="{% if current_team_member_qs.minimized_label_filter %}false{% else %}true{% endif %}">
-        <button type="submit"
-                name="action"
-                value="minimize_label_filter"
-                class="flex w-full flex-row items-center justify-between gap-2 py-2 text-utility hover:text-base-content"
-                hx-post="{% url 'dashboard:projects:detail' project.uuid %}"
-                hx-swap="outerHTML"
-                hx-target="#label-filters"
-                hx-select="#label-filters"
-                hx-include="#task-filter,#team-member-filters,#label-filters"
-                aria-describedby="label-filter-help">
-            <div class="flex flex-row items-center gap-2">
-                <div class="w-4 h-4">{% icon "tag" %}</div>
-                <span id="label-filter-title" class="font-bold truncate">
-                    {% if has_label_filter %}
-                        {% trans "Labels (selected)" %}
-                    {% else %}
-                        {% trans "Labels" %}
-                    {% endif %}
-                </span>
-            </div>
-            <div class="flex flex-row items-center gap-2">
-                {% include "workspace/common/loading_spinner.html" %}
-                {% if current_team_member_qs.minimized_label_filter %}
-                    {% icon "chevron-up" size=4 %}
-                {% else %}
-                    {% icon "chevron-down" size=4 %}
-                {% endif %}
-            </div>
-        </button>
-        <span id="label-filter-help" class="hidden">
-            {% if current_team_member_qs.minimized_label_filter %}
-                {% trans "Activate to show filter label list" %}
-            {% else %}
-                {% trans "Activate to hide filter label list" %}
-            {% endif %}
-        </span>
-        <fieldset class="w-full max-w-full{% if current_team_member_qs.minimized_label_filter %} hidden{% endif %}">
-            <legend class="px-2 font-bold">{{ task_filter_form.filter_by_label.label }}</legend>
-            {{ task_filter_form.filter_by_label }}
-            {% if workspace %}
-                {% has_perm "workspace.create_label" user workspace as can_create_label %}
-                {% if can_create_label %}
-                    {% go_to_action href="dashboard:workspaces:labels" label=_("Add more labels") style="secondary" icon_style="plus" justify_left=True workspace_uuid=workspace.uuid %}
                 {% endif %}
             {% endif %}
         </fieldset>

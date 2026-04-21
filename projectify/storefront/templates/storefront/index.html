@@ -90,48 +90,11 @@
                     {% blocktrans %}Everything you need to <span class="text-primary">stay organized</span> and <span class="text-primary">deliver faster</span>{% endblocktrans %}
                 </h2>
                 <p class="text-center text-2xl font-bold md:text-3xl">
-                    {% trans "The go-to project management tool for developers." %}
+                    {% trans "The go-to project management tool for small teams." %}
                 </p>
             </section>
             <section class="flex flex-col gap-8">
-                <header class="flex flex-col gap-4">
-                    <h2 class="text-3xl font-bold md:text-5xl">{% trans "Meeting diverse needs with practical solutions." %}</h2>
-                    <p>
-                        {% trans "From companies big and small to individuals working alone, you can use Projectify to manage all kinds of tasks." %}
-                    </p>
-                </header>
-                <div class="grid grid-cols-1 gap-8 md:grid-cols-3 text-center">
-                    <a href="#development-teams" class="flex flex-col gap-4">
-                        {% picture src="solutions/hero-development-teams.png" alt=_("An illustration showing our mascot Poly working at a computer") %}
-                        <span class="font-bold">{% trans "Development teams" %}</span>
-                    </a>
-                    <a href="#project-management" class="flex flex-col gap-4">
-                        {% picture src="solutions/hero-project-management.png" alt=_("Two Polys in a factory pointing at machines symbolized by huge gears. The mascot on the left holds a wrench.") %}
-                        <span class="font-bold">{% trans "Project management" %}</span>
-                    </a>
-                    <a href="#academic-endeavours" class="flex flex-col gap-4">
-                        {% picture src="solutions/hero-academic.png" alt=_("Our mascot Poly celebrating their graduation from an educiational institution, wearing an academic dress, throwing a square academic cap into the air") %}
-                        <span class="font-bold">{% trans "Academic endeavours" %}</span>
-                    </a>
-                </div>
-                <div id="development-teams" class="flex flex-col gap-16">
-                    <header class="flex flex-col gap-4">
-                        <h2 class="text-3xl font-bold md:text-5xl">{% trans "Development teams" %}</h2>
-                        <p>
-                            {% trans "How development teams can use Projectify to create tasks, monitor pulls requests and deploy faster." %}
-                        </p>
-                    </header>
-                    <section class="flex flex-col items-center gap-6 md:grid grid-cols-2">
-                        <div class="w-full max-w-lg justify-self-center">
-                            {% picture src="solutions/development-teams-filter.png" alt=_("A illustration showing the label context menu used in Projectify") %}
-                        </div>
-                        <div class="flex flex-col gap-6 order-last md:order-none">
-                            <h3 class="text-2xl font-bold md:text-4xl">{% trans "Organise with labels and task numbers" %}</h3>
-                            <p>
-                                {% trans "Use labels with terms like bug, enhancement or backend to categorize tasks. Filter with labels or search by task number to quickly locate what you're looking for." %}
-                            </p>
-                        </div>
-                    </section>
+                <div class="flex flex-col gap-16">
                     <section class="flex flex-col items-center gap-6 md:grid grid-cols-2">
                         <div class="flex flex-col gap-6 order-last md:order-none">
                             <h3 class="text-2xl font-bold md:text-4xl">{% trans "Plan and execute" %}</h3>
@@ -142,53 +105,28 @@
                         </div>
                     </section>
                 </div>
-                <div id="project-management" class="flex flex-col gap-16">
-                    <header class="flex flex-col gap-4">
-                        <h2 class="text-3xl font-bold md:text-5xl">{% trans "Project management" %}</h2>
+                <section class="flex flex-col items-center gap-6 md:grid grid-cols-2">
+                    <div class="w-full max-w-lg justify-self-center">
+                        {% picture src="solutions/project-management-team-member.png" alt=_("An illustration showing how Projectify displays each team members assigned task count") %}
+                    </div>
+                    <div class="flex flex-col gap-6 order-last md:order-none">
+                        <h3 class="text-2xl font-bold md:text-4xl">{% trans "An ethical approach to management" %}</h3>
                         <p>
-                            {% trans "How project managers can use Projectify to efficiently manage tasks, projects and team members of their team." %}
+                            {% trans "View how many tasks a team member has assigned to them, so the workload can be divided equally. Filter by team member to see what individual colleagues are working on." %}
                         </p>
-                    </header>
-                    <section class="flex flex-col items-center gap-6 md:grid grid-cols-2">
-                        <div class="w-full max-w-lg justify-self-center">
-                            {% picture src="solutions/project-management-team-member.png" alt=_("An illustration showing how Projectify displays each team members assigned task count") %}
-                        </div>
-                        <div class="flex flex-col gap-6 order-last md:order-none">
-                            <h3 class="text-2xl font-bold md:text-4xl">{% trans "An ethical approach to management" %}</h3>
-                            <p>
-                                {% trans "View how many tasks a team member has assigned to them, so the workload can be divided equally. Filter by team member to see what individual colleagues are working on." %}
-                            </p>
-                        </div>
-                    </section>
-                    <section class="flex flex-col items-center gap-6 md:grid grid-cols-2">
-                        <div class="flex flex-col gap-6 order-last md:order-none">
-                            <h3 class="text-2xl font-bold md:text-4xl">{% trans "Permissions to control access" %}</h3>
-                            <p>
-                                {% trans "Make sure nothing important gets deleted. With permission roles - Owner, Maintainer, Contributor and Observer, you can be safe in knowing there won't be any accidental data loss." %}
-                            </p>
-                        </div>
-                        <div class="w-full max-w-lg justify-self-center">
-                            {% picture src="solutions/project-management-permissions.png" alt=_("An illustration of a settings screen showing team members belonging to a team member and their role within the workspace. The illustration also shows a button allowing filtering by role and another button letting a user invite new team members") %}
-                        </div>
-                    </section>
-                </div>
-                <div id="academic-endeavours" class="flex flex-col gap-16">
-                    <header class="flex flex-col gap-4">
-                        <h2 class="text-3xl font-bold md:text-5xl">{% trans "Academic endeavours" %}</h2>
-                        <p>{% trans "How students can use Projectify to plan a thesis, collaborate, or keep track of assignments." %}</p>
-                    </header>
-                    <section class="flex flex-col items-center gap-6 md:grid grid-cols-2">
-                        <div class="w-full max-w-lg justify-self-center">
-                            {% picture src="solutions/academic-tasks.png" alt=_("A screenshot showing academic tasks organized with labels and assignees") %}
-                        </div>
-                        <div class="flex flex-col gap-6 order-last md:order-none">
-                            <h3 class="text-2xl font-bold md:text-4xl">{% trans "Organize your coursework efficiently" %}</h3>
-                            <p>
-                                {% trans "Keep all your tasks organized in one place. From essay assignments to research projects, Projectify helps you  collaborate with classmates. Labels make it easy to categorize and prioritze your coursework." %}
-                            </p>
-                        </div>
-                    </section>
-                </div>
+                    </div>
+                </section>
+                <section class="flex flex-col items-center gap-6 md:grid grid-cols-2">
+                    <div class="flex flex-col gap-6 order-last md:order-none">
+                        <h3 class="text-2xl font-bold md:text-4xl">{% trans "Permissions to control access" %}</h3>
+                        <p>
+                            {% trans "Make sure nothing important gets deleted. With permission roles - Owner, Maintainer, Contributor and Observer, you can be safe in knowing there won't be any accidental data loss." %}
+                        </p>
+                    </div>
+                    <div class="w-full max-w-lg justify-self-center">
+                        {% picture src="solutions/project-management-permissions.png" alt=_("An illustration of a settings screen showing team members belonging to a team member and their role within the workspace. The illustration also shows a button allowing filtering by role and another button letting a user invite new team members") %}
+                    </div>
+                </section>
             </section>
             <section id="pricing"
                      class="flex flex-col items-start gap-6 md:grid grid-cols-2">
@@ -209,11 +147,10 @@
                             <li>{% trans "Unlimited tasks" %}</li>
                             <li>{% trans "Unlimited projects" %}</li>
                             <li>{% trans "Collaborate with team members" %}</li>
-                            <li>{% trans "Add multiple labels" %}</li>
                             <li>{% trans "Role permissions" %}</li>
                             <li>{% trans "Customize your workspace" %}</li>
                             <li>{% trans "Archive completed projects" %}</li>
-                            <li>{% trans "Filter by label or assignee" %}</li>
+                            <li>{% trans "Filter by assignee" %}</li>
                             <li>{% trans "Accessible interface" %}</li>
                         </ul>
                     </div>
@@ -248,9 +185,6 @@
                         </li>
                         <li>
                             {% blocktranslate with tasks=1000 %}You can create up to <strong>{{ tasks }}</strong> tasks{% endblocktranslate %}
-                        </li>
-                        <li>
-                            {% blocktranslate with labels=10 %}You can create up to <strong>{{ labels }}</strong> labels{% endblocktranslate %}
                         </li>
                     </ul>
                 </div>

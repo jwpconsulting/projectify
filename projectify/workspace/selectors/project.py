@@ -20,34 +20,22 @@ from django.db.models import (
 
 from projectify.user.models import User
 
-from ..models import Label, Project, Section, Task, TeamMember
-from .labels import labels_annotate_with_colors
+from ..models import Project, Section, Task, TeamMember
 
 
 def project_detail_query_set(
     *,
     filter_by_team_members: Optional[QuerySet[TeamMember]] = None,
-    filter_by_labels: Optional[QuerySet[Label]] = None,
     # TODO rename to filter_by_unassigned
     unassigned_tasks: bool = False,
-    # TODO rename to filter_by_unlabeled
-    unlabeled_tasks: bool = False,
     task_search_query: Optional[str] = None,
     who: Optional[User] = None,
-    prefetch_labels: bool = True,
 ) -> QuerySet[Project]:
     """Create a project detail query set."""
     project_not_archived = Q(task__section__project__archived__isnull=True)
     team_member_qs = TeamMember.objects.select_related("user").annotate(
         task_count=Count("task", filter=project_not_archived)
     )
-    label_qs = labels_annotate_with_colors(
-        Label.objects.all().annotate(
-            task_count=Count("tasklabel", filter=project_not_archived)
-        )
-    )
-    task_label_prefetch_qs = labels_annotate_with_colors(Label.objects.all())
-
     task_q = Q()
 
     # Annotate team members in side nav with whether they're filtered or not
@@ -73,27 +61,6 @@ def project_detail_query_set(
         is_filtered=team_member_is_filtered
     )
 
-    # Annotate labels shown in side nav with whether they're filtered or not
-    label_contained = Q(labels__in=filter_by_labels)
-    labels_empty = Q(labels__isnull=True)
-    label_is_filtered: Union[Value, Exists] = Value(False)
-    match filter_by_labels, unlabeled_tasks:
-        case None, False:
-            pass
-        case None, True:
-            task_q = task_q & labels_empty
-        case QuerySet(), False:
-            task_q = task_q & label_contained
-            label_is_filtered = Exists(
-                filter_by_labels.filter(pk=OuterRef("pk"))
-            )
-        case QuerySet(), True:
-            task_q = task_q & (label_contained | labels_empty)
-            label_is_filtered = Exists(
-                filter_by_labels.filter(pk=OuterRef("pk"))
-            )
-    label_qs = label_qs.annotate(is_filtered=label_is_filtered)
-
     if task_search_query is not None:
         task_q = task_q & (
             Q(title__icontains=task_search_query)
@@ -116,7 +83,7 @@ def project_detail_query_set(
     )
 
     project_prefetches: list[Prefetch[Any]] = [
-        # Prefetch for workspace 1 : N relations, label, projects, and team
+        # Prefetch for workspace 1 : N relations, projects, and team
         # members
         Prefetch(
             "workspace__project_set",
@@ -124,13 +91,6 @@ def project_detail_query_set(
         ),
         Prefetch("workspace__teammember_set", queryset=team_member_qs),
     ]
-    if prefetch_labels:
-        project_prefetches.append(
-            Prefetch("workspace__label_set", queryset=label_qs)
-        )
-        task_qs = task_qs.prefetch_related(
-            Prefetch("labels", queryset=task_label_prefetch_qs)
-        )
 
     section_qs = Section.objects.all().annotate(
         has_tasks=Exists(Task.objects.filter(section_id=OuterRef("pk")))

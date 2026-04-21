@@ -18,21 +18,11 @@ from django.db.models import (
 
 from projectify.user.models import User
 
-from ..models import ChatMessage, Label, Project, Task, TeamMember
-from .labels import labels_annotate_with_colors
+from ..models import ChatMessage, Project, Task, TeamMember
 
 TaskDetailQuerySet: QuerySet[Task] = (
     Task.objects.select_related("workspace", "assignee", "assignee__user")
     .prefetch_related(
-        Prefetch(
-            "labels", queryset=labels_annotate_with_colors(Label.objects.all())
-        ),
-        Prefetch(
-            "workspace__label_set",
-            queryset=labels_annotate_with_colors(
-                Label.objects.annotate(task_count=Count("task"))
-            ),
-        ),
         Prefetch(
             "workspace__teammember_set",
             queryset=TeamMember.objects.select_related("user").annotate(

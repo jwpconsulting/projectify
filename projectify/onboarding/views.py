@@ -8,23 +8,15 @@ from uuid import UUID
 
 from django import forms
 from django.contrib.auth.decorators import login_required
-from django.forms import ValidationError
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
-from projectify.lib.forms import populate_form_with_errors
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.user.models import User
-from projectify.workspace.models import (
-    Label,
-    Project,
-    Task,
-    TeamMember,
-    Workspace,
-)
+from projectify.workspace.models import Project, Task, TeamMember, Workspace
 from projectify.workspace.selectors.project import (
     ProjectDetailQuerySet,
     project_find_by_project_uuid,
@@ -38,10 +30,9 @@ from projectify.workspace.selectors.workspace import (
     workspace_find_by_workspace_uuid,
     workspace_find_for_user,
 )
-from projectify.workspace.services.label import label_create
 from projectify.workspace.services.project import project_create
 from projectify.workspace.services.section import section_create
-from projectify.workspace.services.task import task_create, task_update
+from projectify.workspace.services.task import task_create
 from projectify.workspace.services.workspace import workspace_create
 
 
@@ -52,28 +43,14 @@ def create_sample_project(
     project = project_create(
         who=who, workspace=workspace, title=_("Sample Project")
     )
-    create_sample_sections(
-        who=who, project=project, team_member=team_member, workspace=workspace
-    )
+    create_sample_sections(who=who, project=project, team_member=team_member)
     return project
 
 
 def create_sample_sections(
-    *,
-    who: User,
-    project: Project,
-    team_member: TeamMember,
-    workspace: Workspace,
+    *, who: User, project: Project, team_member: TeamMember
 ) -> None:
     """Create sample sections and tasks for onboarding."""
-    learn_label_qs = workspace.label_set.filter(name=_("Learn"))
-    if learn_label_qs.exists():
-        learn_label = learn_label_qs.first()
-    else:
-        learn_label = label_create(
-            workspace=workspace, name=_("Learn"), color=0, who=who
-        )
-    assert learn_label
     section_create(who=who, title=_("To Do"), project=project)
     section_about = section_create(
         who=who, title=_("About Projectify"), project=project
@@ -83,7 +60,6 @@ def create_sample_sections(
         section=section_about,
         title=_("Learn how to use Projectify"),
         assignee=team_member,
-        labels=[learn_label],
     )
     task_create(
         who=who,
@@ -349,12 +325,8 @@ def new_task(
             context = {**context, "form": TaskForm()}
         case "POST", "skip":
             if section is None:
-                workspace = project.workspace
                 create_sample_sections(
-                    who=request.user,
-                    project=project,
-                    team_member=team_member,
-                    workspace=workspace,
+                    who=request.user, project=project, team_member=team_member
                 )
             return redirect(project.get_absolute_url())
         case "POST", _:
@@ -372,7 +344,7 @@ def new_task(
                     assignee=team_member,
                 )
                 return redirect(
-                    reverse("onboarding:new_label", args=[str(task.uuid)])
+                    reverse("onboarding:assign_task", args=(task.uuid,))
                 )
             status = 400
             context = {**context, "form": form}
@@ -381,84 +353,6 @@ def new_task(
     return render(
         request, "onboarding/new_task.html", status=status, context=context
     )
-
-
-class LabelForm(forms.ModelForm):
-    """Create a label."""
-
-    name = forms.CharField(
-        label=_("Label name"),
-        widget=forms.TextInput(
-            attrs={"placeholder": _("e.g. Bug, Feature, Urgent, Design")}
-        ),
-    )
-
-    class Meta:
-        """Meta."""
-
-        model = Label
-        fields = ["name"]
-
-
-@login_required
-@require_http_methods(["GET", "POST"])
-def new_label(
-    request: AuthenticatedHttpRequest, task_uuid: UUID
-) -> HttpResponse:
-    """
-    Ask the user to give the newly created task a label.
-
-    GET:
-    Show label creation form for task `task_uuid`
-
-    POST:
-    On success:
-    Creates a label and adds it to the task. Redirect to
-    onboarding/assign-task/<task_uuid>.
-    On failure:
-    Show label creation form with errors.
-    """
-    task = task_find_by_task_uuid(task_uuid=task_uuid, who=request.user)
-    if task is None:
-        raise Http404(_("Task not found"))
-
-    match request.method, request.POST.get("action"):
-        case "GET", _:
-            form = LabelForm()
-            status = 200
-        case "POST", "skip":
-            return redirect(task.section.project.get_absolute_url())
-        case "POST", _:
-            form = LabelForm(request.POST)
-            if form.is_valid():
-                try:
-                    label = label_create(
-                        workspace=task.section.project.workspace,
-                        name=form.cleaned_data["name"],
-                        color=0,
-                        who=request.user,
-                    )
-                    task_update(
-                        who=request.user,
-                        task=task,
-                        title=task.title,
-                        labels=[label],
-                        assignee=task.assignee,
-                    )
-
-                    return redirect(
-                        reverse(
-                            "onboarding:assign_task", args=[str(task.uuid)]
-                        )
-                    )
-                except ValidationError as e:
-                    populate_form_with_errors(form, e)
-            status = 400
-        case method, _:
-            raise ValueError(f"Unexpected method {method}")
-
-    context = {"form": form, "task": task}
-    return render(request, "onboarding/new_label.html", context, status=status)
 
 
 @login_required

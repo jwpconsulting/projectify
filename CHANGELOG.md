@@ -8,6 +8,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## Unreleased
 
+### Breaking
+
+- Remove task labels
+
 ### Accessibility
 
 - Fix "http://localhost:8100" anchor tag on landing page

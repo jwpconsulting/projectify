@@ -12,7 +12,7 @@ section, please see the [help page on sections](/help/sections).
 
 # Add context to a task
 
-Context could be in the form of a title, description, label, assignee or due
+Context could be in the form of a title, description, assignee or due
 date. You have the freedom to add as little or as much context as you want,
 however we require having a title at the very least.
 

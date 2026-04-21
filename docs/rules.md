@@ -24,8 +24,6 @@ The resources that team members can work on are the following:
 - Project
 - Section
 - Task
-- Label
-- Task label
 - Chat message
 - Customer
 
@@ -50,8 +48,6 @@ role required to perform that action.
 | Project            | Maintainer  | Observer | Maintainer  | Maintainer  |
 | Section            | Maintainer  | Observer | Maintainer  | Maintainer  |
 | Task               | Contributor | Observer | Contributor | Maintainer  |
-| Label              | Maintainer  | Observer | Maintainer  | Maintainer  |
-| Task label         | Contributor | Observer | Contributor | Contributor |
 | Chat message       | Contributor | Observer | Contributor | Maintainer  |
 | Customer           | Owner       | Owner    | Owner       | Owner       |
 
@@ -71,8 +67,6 @@ changes on them or create them. They can read the following resources:
 - Projects
 - Sections
 - Tasks
-- Labels
-- Task labels
 - Chat messages
 
 ### Contributor
@@ -83,8 +77,6 @@ In addition to an observer's permissions, contributors have the following
 additional permissions:
 
 - A contributor can create and update tasks
-- A contributor can create, update and delete task labels, that is, they can
-  assign labels to tasks
 - A contributor can create and update chat messages.
 
 ### Maintainer
@@ -100,7 +92,6 @@ permissons:
 - Create, update and delete projects
 - Create, update and delete sections
 - Delete tasks
-- Create, update and delete labels
 - Delete chat messages
 
 ### Owner

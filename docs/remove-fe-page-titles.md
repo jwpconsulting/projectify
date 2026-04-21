@@ -48,7 +48,6 @@ messages file.
 | `help/billing`                                      | Billing                                                  |
 | `help/filters`                                      | Filters                                                  |
 | `help/keyboard-shortcuts`                           | Keyboard shortcuts                                       |
-| `help/labels`                                       | Labels                                                   |
 | `help/projects`                                     | Projects                                                 |
 | `help/quota`                                        | Workspace quotas                                         |
 | `help/roles`                                        | Roles                                                    |
@@ -59,7 +58,6 @@ messages file.
 | `help/workspaces`                                   | Workspaces                                               |
 | `onboarding/about-you`                              | About you - Projectify                                   |
 | `onboarding/assign-task/[uuid]`                     | Task "{taskTitle}" has been assigned to you - Projectify |
-| `onboarding/new-label/[uuid]`                       | Create a label for "{taskTitle}" - Projectify            |
 | `onboarding/new-project/[uuid]`                     | Add your first project - Projectify                      |
 | `onboarding/new-task/[uuid]`                        | Create your first task - Projectify                      |
 | `onboarding/new-workspace`                          | Create a new workspace - Projectify                      |

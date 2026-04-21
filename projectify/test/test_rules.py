@@ -19,7 +19,6 @@ from projectify.workspace.models import (
     Workspace,
 )
 from projectify.workspace.services.chat_message import chat_message_create
-from projectify.workspace.services.label import label_create
 from projectify.workspace.services.project import project_create
 from projectify.workspace.services.section import section_create
 from projectify.workspace.services.task import task_create
@@ -186,18 +185,6 @@ class TestTrialRules:
             raise_exception=False,
         )
         chat_message_create(who=user, task=task, text="hello")
-
-    def test_create_label(self, team_member: TeamMember) -> None:
-        """Assert only 1 labels can be created."""
-        user = team_member.user
-        workspace = team_member.workspace
-        assert validate_perm("workspace.create_label", user, workspace)
-        customer_cancel_subscription(customer=workspace.customer)
-        assert validate_perm("workspace.create_label", user, workspace)
-        label_create(workspace=workspace, name="label", color=0, who=user)
-        assert not validate_perm(
-            "workspace.create_label", user, workspace, raise_exception=False
-        )
 
     def test_create_task(
         self, team_member: TeamMember, section: Section, workspace: Workspace

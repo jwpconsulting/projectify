@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 
 import pytest
 
-from ..models import ChatMessage, Label, Task, TeamMember, Workspace
+from ..models import ChatMessage, Task, TeamMember, Workspace
 
 pytestmark = pytest.mark.django_db
 
@@ -56,14 +56,6 @@ class TestWorkspace:
 
         workspace.title = "Foob. Ar"
         workspace.full_clean()
-
-
-class TestLabel:
-    """Test Label model."""
-
-    def test_factory(self, label: Label) -> None:
-        """Test factory."""
-        assert label.color is not None
 
 
 class TestChatMessage:

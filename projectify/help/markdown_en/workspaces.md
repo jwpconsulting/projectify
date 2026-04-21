@@ -24,11 +24,10 @@ element in the side menu and shows your current workspace name.
 To go to the workspace settings, click the **workspace selector** in the side
 menu to expand it, then click **Workspace Settings** at the top of the list.
 
-The workspace settings consist of six tabs:
+The workspace settings consist of five tabs:
 
 - **General**,
 - **Projects**,
-- **Labels**,
 - **Team members**,
 - **Billing**, and
 - **Quota**,
@@ -39,10 +38,6 @@ the workspace.
 The **Projects** tab shows all projects in your workspace, including
 archived ones. You can edit, archive, and delete your projects.
 To learn more about the projects tab, visit the [projects help](/help/projects).
-
-The **Labels** tab allows you to create, edit and delete labels for
-organizing your tasks.
-To learn more about the labels tab, visit the [labels help](/help/labels).
 
 The **Team members** tab allows you to add, edit permissions and delete
 team members.

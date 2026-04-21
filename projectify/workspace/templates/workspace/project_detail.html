@@ -101,7 +101,7 @@
     <form hx-post="{% url 'dashboard:projects:detail' section.project.uuid %}"
           hx-target="#section-{{ section.uuid }}"
           hx-swap="outerHTML"
-          hx-include="#task-filter,#team-member-filters,#label-filters"
+          hx-include="#task-filter,#team-member-filters"
           hx-disabled-elt="find button"
           class="flex flex-row gap-2 items-center">
         {% csrf_token %}
@@ -125,7 +125,7 @@
                       hx-post="{% url 'dashboard:projects:detail' section.project.uuid %}"
                       hx-target="#section-{{ section.uuid }}"
                       hx-swap="outerHTML"
-                      hx-include="#task-filter,#team-member-filters,#label-filters"
+                      hx-include="#task-filter,#team-member-filters"
                       hx-disabled-elt="find button"
                       class="flex">
                     <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
@@ -161,18 +161,11 @@
                       id="task-{{ task.uuid }}-title">{{ task.title }}</span>
             </a>
         </td>
-        <td class="flex w-full flex-row items-center justify-start gap-1 self-start overflow-x-auto">
-            {% for label in task.labels.all %}
-                <div class="max-w-xs shrink-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-full px-3 py-1 font-bold {{ label.bg_class }} {{ label.text_class }}">
-                    {{ label.name }}
-                </div>
-            {% endfor %}
-        </td>
         <td class="flex ml-auto">
             {% if can_update_task %}
                 <form action="{% url 'dashboard:projects:detail' project.uuid %}"
                       method="post"
-                      hx-include="#task-filter,#team-member-filters,#label-filters"
+                      hx-include="#task-filter,#team-member-filters"
                       hx-boost="true"
                       hx-target="#section-{{ section.uuid }}"
                       hx-swap="outerHTML"
@@ -204,10 +197,9 @@
     {% has_perm "workspace.create_task" user project.workspace as can_create_task %}
     {% has_perm "workspace.update_task" user project.workspace as can_update_task %}
     <table aria-label="{% blocktranslate with section=section.title %}{{section}} tasks{% endblocktranslate %}"
-           class="flex flex-col gap-2 lg:grid lg:grid-cols-[8fr_3fr_max-content] lg:gap-1 lg:items-center">
+           class="flex flex-col gap-2 lg:grid lg:grid-cols-[1fr_max-content] lg:gap-1 lg:items-center">
         <thead class="sr-only">
             <th class="sr-only">{% translate "Task title" %}</th>
-            <th class="sr-only">{% translate "Task labels" %}</th>
             <th class="sr-only">{% translate "Task actions" %}</th>
         </thead>
         <tbody class="contents">
@@ -243,7 +235,7 @@
               hx-post="{% url 'dashboard:projects:detail' section.project.uuid %}"
               hx-target="#section-{{ section.uuid }}"
               hx-swap="outerHTML"
-              hx-include="#task-filter,#team-member-filters,#label-filters"
+              hx-include="#task-filter,#team-member-filters"
               aria-label="{% translate "Section actions" %}"
               title="{% blocktranslate with title=section.title %}Actions for {{title}} section{% endblocktranslate %}"
               class="sticky top-0 flex w-full flex-row items-center justify-between bg-foreground py-2 gap-3">

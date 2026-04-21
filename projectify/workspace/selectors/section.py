@@ -10,26 +10,15 @@ from django.db.models import Count, Prefetch, Q, QuerySet
 
 from projectify.user.models import User
 
-from ..models import Label, Project, Section, Task, TeamMember
-from ..selectors.labels import labels_annotate_with_colors
+from ..models import Project, Section, Task, TeamMember
 
 SectionDetailQuerySet = Section.objects.prefetch_related(
     Prefetch("task_set", queryset=Task.objects.annotate().order_by("_order")),
     "task_set__assignee",
     "task_set__assignee__user",
     Prefetch(
-        "task_set__labels",
-        queryset=labels_annotate_with_colors(Label.objects.all()),
-    ),
-    Prefetch(
         "project__workspace__project_set",
         queryset=Project.objects.filter(archived__isnull=True),
-    ),
-    Prefetch(
-        "project__workspace__label_set",
-        queryset=labels_annotate_with_colors(
-            Label.objects.annotate(task_count=Count("task"))
-        ),
     ),
     Prefetch(
         "project__workspace__teammember_set",
