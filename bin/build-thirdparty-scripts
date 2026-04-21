@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: 2026 JWP Consulting GK
+#
+# Refresh htmx.js bundle file and check if it changed.
+# See also `docs/frontend-scripting.md`
+set -e
+
+dest=projectify/static
+
+cp --no-preserve=all \
+    "$(nix build .#htmx-bundle --print-out-paths --no-link)/htmx.js" \
+    "$dest"
+cp --no-preserve=all \
+    --recursive \
+    "$(nix build .#trix-js --print-out-paths --no-link)/." \
+    projectify/static/trix/
+
+if ! git diff --exit-code --quiet HEAD -- "$dest"; then
+    echo "Third party scripts have changed. Please commit all changes at '$dest'."
+    exit 1
+fi
