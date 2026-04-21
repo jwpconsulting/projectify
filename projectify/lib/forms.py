@@ -77,7 +77,7 @@ class RichTextEditor(Textarea):
         """Use vendored in trix and prose files."""
 
         css = {"all": ("trix/trix.css", "prose/prose.css")}
-        js = ("trix/trix.js", "prose/prose.js")
+        js = ("trix/trix.umd.js", "prose/prose.js")
 
 
 # TODO Consider using ImageField
