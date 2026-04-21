@@ -17,7 +17,6 @@ from django.urls import reverse
 
 from faker import Faker
 from selenium import webdriver
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -277,26 +276,6 @@ class Command(BaseCommand):
         )
         team_members_element.screenshot(
             str(output_directory / "project-management-permissions.png")
-        )
-
-        # academic solutions coursework section
-        driver.get(
-            f"{base_url}{reverse('dashboard:projects:detail', kwargs={'project_uuid': self.software_project.uuid})}"
-        )
-        self.remove_debug_toolbar(driver)
-        coursework_section_selector = (
-            f"#section-{self.coursework_section.uuid}"
-        )
-        coursework_section_element = wait.until(
-            EC.presence_of_element_located(
-                (By.CSS_SELECTOR, coursework_section_selector)
-            )
-        )
-        ActionChains(driver).scroll_to_element(
-            coursework_section_element
-        ).perform()
-        coursework_section_element.screenshot(
-            str(output_directory / "academic-tasks.png")
         )
 
     def add_arguments(self, parser: Any) -> None:
