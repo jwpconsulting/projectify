@@ -31,7 +31,6 @@ from projectify.workspace.views.task import (
     task_create_view,
     task_delete_view,
     task_detail,
-    task_move,
     task_move_to_section,
     task_update_view,
 )
@@ -151,7 +150,6 @@ task_patterns = (
     path("<uuid:task_uuid>/actions", task_actions, name="actions"),
     path("<uuid:task_uuid>/delete", task_delete_view, name="delete"),
     # Form
-    path("<uuid:task_uuid>/move", task_move, name="move"),
     path(
         "<uuid:task_uuid>/move-to-section",
         task_move_to_section,

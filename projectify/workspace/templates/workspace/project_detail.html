@@ -161,24 +161,10 @@
                       id="task-{{ task.uuid }}-title">{{ task.title }}</span>
             </a>
         </td>
-        <td class="flex ml-auto">
+        <td class="flex ml-auto gap-2 items-center">
             {% if can_update_task %}
-                <form action="{% url 'dashboard:projects:detail' project.uuid %}"
-                      method="post"
-                      hx-include="#task-filter,#team-member-filters"
-                      hx-boost="true"
-                      hx-target="#section-{{ section.uuid }}"
-                      hx-swap="outerHTML"
-                      class="flex flex-row items-center gap-1">
-                    {# TODO in AT, say "currently assigned to ..." #}
-                    {% user_avatar task.assignee %}
-                    <input type="hidden" name="action" value="move_task">
-                    <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
-                    {% circle_button label=_("Move task up") value="up" name="direction" disabled=task.first icon_style="chevron-up" %}
-                    {% circle_button label=_("Move task down") value="down" name="direction" disabled=task.last icon_style="chevron-down" %}
-                    {% csrf_token %}
-                    <p class="htmx-indicator">...</p>
-                </form>
+                {# TODO in AT, say "currently assigned to ..." #}
+                {% user_avatar task.assignee %}
                 <a aria-label="{% translate "Task menu" %}"
                    href="{% url "dashboard:tasks:actions" task.uuid %}"
                    class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled"

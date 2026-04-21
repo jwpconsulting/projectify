@@ -15,7 +15,6 @@ import pytest
 from pytest_types import DjangoAssertNumQueries
 
 from ...models import Project, Section, Task, TeamMember, Workspace
-from ...services.task import task_create
 
 pytestmark = pytest.mark.django_db
 
@@ -303,87 +302,6 @@ class TestProjectDetailViewActions:
             "minimized": "true",
         }
         response = user_client.post(url, data)
-        assert response.status_code == 400
-
-    def test_move_task_up_down(
-        self,
-        user_client: Client,
-        resource_url: str,
-        team_member: TeamMember,
-        task: Task,
-        django_assert_num_queries: DjangoAssertNumQueries,
-    ) -> None:
-        """Test moving tasks up and down within a section."""
-        section = task.section
-        task2 = task_create(
-            who=team_member.user, section=task.section, title="Second task"
-        )
-        assert list(section.task_set.values_list("pk", flat=True)) == [
-            task.pk,
-            task2.pk,
-        ]
-
-        # Move task2 up (should swap positions)
-        # Gone up   from 32 -> 35 due to permission checks in template
-        # Gone down from 35 -> 34
-        # Gone down from 34 -> 31
-        # Gone down from 31 -> 29
-        with django_assert_num_queries(29):
-            response = user_client.post(
-                resource_url,
-                {
-                    "action": "move_task",
-                    "task_uuid": str(task2.uuid),
-                    "direction": "up",
-                },
-            )
-            assert response.status_code == 200
-        assert list(section.task_set.values_list("pk", flat=True)) == [
-            task2.pk,
-            task.pk,
-        ]
-
-        # Move task1 up (should swap back)
-        # Gone up   from 32 -> 35 due to permission checks in template
-        # Gone down from 35 -> 34
-        # Gone down from 34 -> 31
-        # Gone down from 31 -> 29
-        with django_assert_num_queries(29):
-            response = user_client.post(
-                resource_url,
-                {
-                    "action": "move_task",
-                    "task_uuid": str(task.uuid),
-                    "direction": "up",
-                },
-            )
-            assert response.status_code == 200
-        assert list(section.task_set.values_list("pk", flat=True)) == [
-            task.pk,
-            task2.pk,
-        ]
-
-    def test_move_task_form_validation(
-        self, user_client: Client, resource_url: str, task: Task
-    ) -> None:
-        """Test form validation."""
-        response = user_client.post(
-            resource_url,
-            {
-                "action": "move_task",
-                "task_uuid": str(task.uuid),
-                "direction": "inv",
-            },
-        )
-        assert response.status_code == 400
-        response = user_client.post(
-            resource_url,
-            {
-                "action": "move_task",
-                "task_uuid": str(uuid4()),
-                "direction": "up",
-            },
-        )
         assert response.status_code == 400
 
     def test_mark_task_done(

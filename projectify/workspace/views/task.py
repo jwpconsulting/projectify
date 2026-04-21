@@ -4,7 +4,7 @@
 """Task CRUD views."""
 
 import logging
-from typing import Any, Literal, Optional
+from typing import Any, Optional
 from uuid import UUID
 
 from django import forms
@@ -38,7 +38,6 @@ from ..services.task import (
     task_create,
     task_delete,
     task_move_after,
-    task_move_in_direction,
     task_update,
 )
 
@@ -328,43 +327,6 @@ def task_update_view(
 
 
 # Form
-class TaskMoveForm(forms.Form):
-    """Form that captures which direction to move a task."""
-
-    direction = forms.ChoiceField(
-        choices=[
-            ("top", _("Top")),
-            ("up", _("Up")),
-            ("down", _("Down")),
-            ("bottom", _("Bottom")),
-        ]
-    )
-
-
-@require_POST
-def task_move(
-    request: AuthenticatedHttpRequest, task_uuid: UUID
-) -> HttpResponse:
-    """Move a task depending on form input."""
-    task = get_object(request, task_uuid)
-    form = TaskMoveForm(request.POST)
-    if not form.is_valid():
-        # TODO
-        return HttpResponse(status=400)
-    direction: Literal["up", "down", "top", "bottom"]
-    dir_in: str = form.cleaned_data["direction"]
-    match dir_in:
-        case "up" | "down" | "top" | "bottom":
-            direction = dir_in
-        case _:
-            # TODO
-            raise Exception(f"Did not recognize direction {dir_in}")
-
-    task = task_move_in_direction(
-        who=request.user, task=task, direction=direction
-    )
-
-    return redirect("dashboard:projects:detail", task.section.project.uuid)
 
 
 class TaskMoveToSectionForm(forms.Form):

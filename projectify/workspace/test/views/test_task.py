@@ -55,7 +55,7 @@ class TestTaskCreateView:
             "assignee": str(team_member.uuid),
             "action": "create",
         }
-        with django_assert_num_queries(14):
+        with django_assert_num_queries(13):
             response = user_client.post(resource_url, data)
             assert response.status_code == 302, response.content
 

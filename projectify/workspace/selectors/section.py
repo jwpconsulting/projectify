@@ -10,10 +10,10 @@ from django.db.models import Count, Prefetch, Q, QuerySet
 
 from projectify.user.models import User
 
-from ..models import Project, Section, Task, TeamMember
+from ..models import Project, Section, TeamMember
 
 SectionDetailQuerySet = Section.objects.prefetch_related(
-    Prefetch("task_set", queryset=Task.objects.annotate().order_by("_order")),
+    "task_set",
     "task_set__assignee",
     "task_set__assignee__user",
     Prefetch(

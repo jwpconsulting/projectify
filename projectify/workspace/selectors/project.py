@@ -9,13 +9,11 @@ from uuid import UUID
 from django.db.models import (
     Count,
     Exists,
-    Max,
     OuterRef,
     Prefetch,
     Q,
     QuerySet,
     Value,
-    Window,
 )
 
 from projectify.user.models import User
@@ -68,19 +66,7 @@ def project_detail_query_set(
             | Q(section__project__title__icontains=task_search_query)
         )
 
-    task_qs = (
-        Task.objects.annotate(
-            first=Q(_order=Value(0)),
-            last=Q(
-                _order=Window(
-                    expression=Max("_order"), partition_by="section_id"
-                )
-            ),
-        )
-        .order_by("_order")
-        .select_related("assignee__user")
-        .filter(task_q)
-    )
+    task_qs = Task.objects.select_related("assignee__user").filter(task_q)
 
     project_prefetches: list[Prefetch[Any]] = [
         # Prefetch for workspace 1 : N relations, projects, and team
