@@ -3,8 +3,6 @@
 {% load projectify %}
 {% load i18n %}
 <div class="font-bold text-utility">
-    {% anchor "dashboard:projects:detail" title=_("Project link") label=section.project.title project_uuid=section.project.uuid %}
-    <span aria-hidden="true">&gt;</span>
     {% anchor href=section.get_absolute_url title=_("Section link") label=section.title %}
     <span aria-hidden="true">&gt;</span>
     {% if current_page_label and current_page_url %}

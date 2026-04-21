@@ -4,71 +4,62 @@
 {% load projectify %}
 {% load rules %}
 {% load i18n %}
+{% block title %}
+    {% blocktrans with task_title=task.title %}{{ task_title }} task - Projectify{% endblocktrans %}
+{% endblock title %}
 {% partialdef breadcrumbs %}
     <div class="flex shrink flex-row items-center gap-6">
-        <div class="shrink-0">
-            {% if request.htmx %}
-                <button type="button"
-                        id="close-task-detail-button"
-                        class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled"
-                        aria-label="{% trans 'Close task details' %}">{% icon "x" %}</button>
-            {% else %}
-                {% circle_anchor label=_("Go back to project") icon_style="x" href="dashboard:projects:detail" project_uuid=task.section.project.uuid %}
-            {% endif %}
-        </div>
+        {% if request.htmx %}
+            <button type="button"
+                    id="close-task-detail-button"
+                    class="shrink-0 size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled"
+                    aria-label="{% trans 'Close task details' %}">{% icon "x" %}</button>
+        {% else %}
+            {% circle_anchor label=_("Go back to project") icon_style="x" href="dashboard:projects:detail" project_uuid=task.section.project.uuid %}
+        {% endif %}
         {% include "workspace/task/breadcrumbs.html" with section=task.section task=task %}
     </div>
 {% endpartialdef breadcrumbs %}
 {% partialdef task_panel %}
-    <table class="max-w-full container flex flex-col gap-x-2 gap-y-4 sm:grid sm:grid-cols-[auto_1fr]">
-        <tbody class="contents">
-            <tr class="contents">
-                <th scope="row" class="text-left font-bold">{% trans "Task title" %}</th>
-                <td class="flex flex-row gap-4 items-center">
-                    {{ task.title }}
-                    {% if can_update_task %}
-                        {% circle_anchor label=_("Edit task title") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit task title") size=4 task_uuid=task.uuid focus_field="title" %}
-                    {% endif %}
-                </td>
-            </tr>
-            <tr class="contents">
-                <th scope="row" class="text-left font-bold">{% trans "Assignee" %}</th>
-                <td class="flex flex-row gap-2 items-center">
-                    {% user_avatar task.assignee %}
-                    <span class="truncate">{{ task.assignee|default:"No team member assigned" }}</span>
-                    {% if can_update_task %}
-                        {% circle_anchor label=_("Edit assignee") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit assignee") size=4 task_uuid=task.uuid focus_field="assignee" %}
-                    {% endif %}
-                </td>
-            </tr>
-            <tr class="contents">
-                <th scope="row" class="text-left font-bold">{% trans "Due date" %}</th>
-                <td class="flex flex-row gap-4 items-center">
-                    {% if task.due_date %}
-                        {{ task.due_date.date.isoformat }}
-                    {% else %}
-                        <p class="text-base-content">{% trans "No due date" %}</p>
-                    {% endif %}
-                    {% if can_update_task %}
-                        {% circle_anchor label=_("Edit due date") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit due date") size=4 task_uuid=task.uuid focus_field="due_date" %}
-                    {% endif %}
-                </td>
-            </tr>
-            <tr class="contents">
-                <th scope="row" class="text-left font-bold">{% trans "Description" %}</th>
-                <td class="flex w-full flex-row items-start gap-4">
-                    {% if task.description %}
-                        <div class="prose trix-content">{{ task.description }}</div>
-                    {% else %}
-                        <p class="text-base-content">{% trans "No description" %}</p>
-                    {% endif %}
-                    {% if can_update_task %}
-                        {% circle_anchor label=_("Edit description") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit description") size=4 task_uuid=task.uuid focus_field="description" %}
-                    {% endif %}
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    {% has_perm "workspace.update_task" user task.workspace as can_update_task %}
+    <div class="flex flex-col gap-8">
+        <div class="flex flex-col items-start gap-2">
+            <p class="font-bold">{% trans "Task description" %}</p>
+            <div class="flex w-full flex-row items-start gap-4">
+                {% if task.description %}
+                    <div class="prose trix-content">{{ task.description }}</div>
+                {% else %}
+                    <p class="text-base-content">{% trans "No description" %}</p>
+                {% endif %}
+                {% if can_update_task %}
+                    {% circle_anchor label=_("Edit description") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit description") size=4 task_uuid=task.uuid focus_field="description" %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="flex flex-col items-start gap-2">
+            <p class="font-bold">{% trans "Assignee" %}</p>
+            <div class="flex flex-row gap-2 items-center">
+                {% user_avatar task.assignee %}
+                <span class="truncate">{{ task.assignee|default:"No team member assigned" }}</span>
+                {% if can_update_task %}
+                    {% circle_anchor label=_("Edit assignee") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit assignee") size=4 task_uuid=task.uuid focus_field="assignee" %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="flex flex-col items-start gap-2">
+            <p class="font-bold">{% trans "Due date" %}</p>
+            <div class="flex flex-row gap-4 items-center">
+                {% if task.due_date %}
+                    {{ task.due_date.date.isoformat }}
+                {% else %}
+                    <p class="text-base-content">{% trans "No due date" %}</p>
+                {% endif %}
+                {% if can_update_task %}
+                    {% circle_anchor label=_("Edit due date") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit due date") size=4 task_uuid=task.uuid focus_field="due_date" %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
 {% endpartialdef task_panel %}
 {% partialdef task_inline %}
     {% has_perm "workspace.update_task" user task.workspace as can_update_task %}

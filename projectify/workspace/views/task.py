@@ -22,6 +22,7 @@ from projectify.lib.htmx import (
     HttpResponseClientRefresh,
 )
 from projectify.lib.types import AuthenticatedHttpRequest
+from projectify.lib.utils import extract_first_paragraph_text
 from projectify.lib.views import platform_view
 
 from ..const import TASK_EDITOR_MIN_HEIGHT_CLASS
@@ -77,34 +78,34 @@ def get_task_view_context(
     }
 
 
-class TaskCreateForm(forms.Form):
-    """Form for task creation."""
+class TaskForm(forms.Form):
+    """Base form for task creation and update."""
 
-    template_name_table = "workspace/forms/table.html"
-
-    title = forms.CharField(
-        label=_("Task title"),
-        widget=forms.TextInput(attrs={"placeholder": _("Task title")}),
-    )
     due_date = forms.DateTimeField(
         required=False,
         label=_("Due date"),
         widget=forms.DateTimeInput(attrs={"type": "date"}),
     )
     description = forms.CharField(
-        required=False,
-        label=_("Description"),
+        label=_("Task description"),
         widget=RichTextEditor(
             heading_blocks=False,
             attrs={
+                "expand": True,
                 "placeholder": _("Enter a description for your task"),
                 "class": TASK_EDITOR_MIN_HEIGHT_CLASS,
             },
         ),
     )
 
-    def __init__(self, workspace: Workspace, *args: Any, **kwargs: Any):
-        """Populate available assignees."""
+    def __init__(
+        self,
+        *args: Any,
+        workspace: Workspace,
+        focus_field: Optional[str] = None,
+        **kwargs: Any,
+    ):
+        """Populate available assignees and optionally set autofocus."""
         super().__init__(*args, **kwargs)
         assignee_widget = forms.RadioSelect()
         assignee_widget.option_template_name = (
@@ -119,8 +120,31 @@ class TaskCreateForm(forms.Form):
             to_field_name="uuid",
             empty_label=_("Assigned to nobody"),
         )
+        self.order_fields(["description", "assignee", "due_date"])
 
-        self.order_fields(["title", "assignee", "due_date", "description"])
+        if focus_field is None:
+            return
+        if focus_field in self.fields:
+            self.fields[focus_field].widget.attrs["autofocus"] = True
+        else:
+            logger.warning(
+                "Couldn't find focus_field=%s in self.fields", focus_field
+            )
+
+    def clean(self) -> dict[str, Any]:
+        """Extract title from the first paragraph of description."""
+        cleaned_data = super().clean()
+        # need to cleaned_data.get(field), not cleaned_data[field]. See:
+        # > So you also need to remember to allow for the fact that the fields you are wanting to validate might not have survived the initial individual field checks.
+        # Source: <https://docs.djangoproject.com/en/6.0/ref/forms/validation/#cleaning-and-validating-fields-that-depend-on-each-other>
+        description: Optional[str] = cleaned_data.get("description")
+        if description:
+            first_paragraph = extract_first_paragraph_text(description)
+            if first_paragraph:
+                cleaned_data["title"] = first_paragraph
+            else:
+                cleaned_data["title"] = description
+        return cleaned_data
 
 
 @platform_view
@@ -139,6 +163,7 @@ def task_create_view(
     context: dict[str, Any] = {
         **get_task_view_context(request, workspace),
         "section": section,
+        "project": section.project,
     }
 
     match request.method:
@@ -146,13 +171,18 @@ def task_create_view(
             return render(
                 request,
                 "workspace/task_create.html",
-                {**context, "form": TaskCreateForm(workspace=workspace)},
+                {
+                    **context,
+                    "form": TaskForm(
+                        workspace=workspace, initial={"section": section}
+                    ),
+                },
             )
         case "POST":
             pass
         case method:
             raise RuntimeError(f"Don't know how to handle method {method}")
-    form = TaskCreateForm(workspace, request.POST)
+    form = TaskForm(workspace=workspace, data=request.POST)
     if not form.is_valid():
         return render(
             request,
@@ -212,68 +242,6 @@ def task_detail(
     return render(request, template, context)
 
 
-class TaskUpdateForm(forms.Form):
-    """Form for task creation."""
-
-    template_name_table = "workspace/forms/table.html"
-
-    title = forms.CharField(
-        label=_("Task title"),
-        widget=forms.TextInput(attrs={"placeholder": _("Task title")}),
-    )
-    due_date = forms.DateTimeField(
-        required=False,
-        label=_("Due date"),
-        widget=forms.DateTimeInput(attrs={"type": "date"}),
-    )
-    description = forms.CharField(
-        required=False,
-        label=_("Description"),
-        widget=RichTextEditor(
-            heading_blocks=False,
-            attrs={
-                "expand": True,
-                "placeholder": _("Enter a description for your task"),
-                "class": TASK_EDITOR_MIN_HEIGHT_CLASS,
-            },
-        ),
-    )
-
-    def __init__(
-        self,
-        *args: Any,
-        workspace: Workspace,
-        focus_field: Optional[str],
-        **kwargs: Any,
-    ):
-        """Populate available assignees and set autofocus."""
-        super().__init__(*args, **kwargs)
-        assignee_widget = forms.RadioSelect()
-        assignee_widget.option_template_name = (
-            "workspace/forms/widgets/select_team_member_option.html"
-        )
-        self.fields["assignee"] = forms.ModelChoiceField(
-            required=False,
-            blank=True,
-            label=_("Assignee"),
-            queryset=workspace.teammember_set.all(),
-            widget=assignee_widget,
-            to_field_name="uuid",
-            empty_label=_("Assigned to nobody"),
-        )
-
-        self.order_fields(["title", "assignee", "due_date", "description"])
-
-        if focus_field is None:
-            return
-        if focus_field in self.fields:
-            self.fields[focus_field].widget.attrs["autofocus"] = True
-        else:
-            logger.warning(
-                "Couldn't find focus_field=%s in self.fields", focus_field
-            )
-
-
 @platform_view
 @require_http_methods(["GET", "POST"])
 def task_update_view(
@@ -293,12 +261,16 @@ def task_update_view(
         )
 
     workspace = task.workspace
-    context: dict[str, Any] = get_task_view_context(request, workspace)
+    context: dict[str, Any] = {
+        **get_task_view_context(request, workspace),
+        "project": task.section.project,
+    }
     task_initial = {
         "title": task.title,
         "assignee": task.assignee,
         "due_date": task.due_date,
         "description": task.description,
+        "section": task.section,
     }
 
     # Determine what update view action should be taken
@@ -310,7 +282,7 @@ def task_update_view(
         case "POST", "update_stay":
             next_url = reverse("dashboard:tasks:detail", args=(task.uuid,))
         case "GET", _:
-            form = TaskUpdateForm(
+            form = TaskForm(
                 initial=task_initial,
                 workspace=workspace,
                 focus_field=focus_field,
@@ -330,7 +302,7 @@ def task_update_view(
                 )
             )
 
-    form = TaskUpdateForm(
+    form = TaskForm(
         data=request.POST.copy(),
         initial=task_initial,
         workspace=workspace,

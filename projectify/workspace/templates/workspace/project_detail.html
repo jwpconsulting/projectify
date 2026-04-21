@@ -227,6 +227,7 @@
 {% endpartialdef section_contents %}
 {% partialdef section %}
     {% has_perm "workspace.update_section" user project.workspace as can_update_section %}
+    {% has_perm "workspace.create_task" user project.workspace as can_create_task %}
     <section class="flex flex-col bg-foreground rounded-b-2xl px-4 pb-4 gap-2"
              id="section-{{ section.uuid }}"
              aria-labelledby="section-{{ section.uuid }}-header"

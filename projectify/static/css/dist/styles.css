@@ -1427,6 +1427,10 @@ video {
   max-height: 20rem;
 }
 
+.max-h-\[320px\] {
+  max-height: 320px;
+}
+
 .min-h-0 {
   min-height: 0px;
 }
@@ -1527,6 +1531,10 @@ video {
 
 .max-w-5xl {
   max-width: 64rem;
+}
+
+.max-w-\[65ch\] {
+  max-width: 65ch;
 }
 
 .max-w-full {
@@ -2398,10 +2406,6 @@ video {
 
   .sm\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .sm\:grid-cols-\[auto_1fr\] {
-    grid-template-columns: auto 1fr;
   }
 
   .sm\:flex-row {
