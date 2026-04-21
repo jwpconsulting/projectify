@@ -13,7 +13,6 @@ can create within your workspace. Resources within your workspace are:
 - Team members and invitations
 - Projects and sections
 - Tasks
-- Labels
 
 # Quotas for paid workspaces
 

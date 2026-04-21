@@ -24,11 +24,10 @@ element in the side menu and shows your current workspace name.
 To go to the workspace settings, click the **workspace selector** in the side
 menu to expand it, then click **Workspace Settings** at the top of the list.
 
-The workspace settings consist of six tabs:
+The workspace settings consist of five tabs:
 
 - **General**,
 - **Projects**,
-- **Labels**,
 - **Team members**,
 - **Billing**, and
 - **Quota**,

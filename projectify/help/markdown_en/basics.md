@@ -39,10 +39,8 @@ help](/help/sections).
 
 # What is a task?
 
-A task is a step in your project that needs to be completed. Tasks can be
-assigned to any team member in your workspace. Labels and detailed information
-can be applied to tasks. For every task that is created, a unique task number
-is assigned to it for ease of reference and searching.
+A task is a step in your project that needs to be completed. You can assign
+tasks to any team member in your workspace.
 
 For more information on tasks please see the [tasks help](/help/tasks).
 
