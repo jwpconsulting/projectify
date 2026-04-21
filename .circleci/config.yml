@@ -147,7 +147,7 @@ jobs:
           command: uv run ./manage.py migrate
       - run:
           name: Seed DB
-          command: uv run ./manage.py seeddb --n-users 3 --n-workspaces 1 --n-projects 1 --n-labels 1 --n-tasks 1
+          command: uv run ./manage.py seeddb --n-users 3 --n-workspaces 1 --n-projects 1 --n-tasks 1
   tailwind_check:
     executor: node
     working_directory: ~/projectify
