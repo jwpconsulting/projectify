@@ -35,7 +35,8 @@ class TestTaskCreateView:
     ) -> None:
         """Test GETting the task creation page."""
         # Gone up   from 11 -> 13 due to permission checks in sidemenu
-        with django_assert_num_queries(13):
+        # Gone down from 13 -> 11
+        with django_assert_num_queries(11):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert section.title in response.content.decode()
@@ -49,7 +50,7 @@ class TestTaskCreateView:
     ) -> None:
         """Test creating a task."""
         initial_task_count = Task.objects.count()
-        with django_assert_num_queries(18):
+        with django_assert_num_queries(14):
             response = user_client.post(
                 resource_url,
                 {
@@ -100,7 +101,8 @@ class TestTaskUpdateView:
     ) -> None:
         """Test GETting the task update page."""
         # Gone up   from 14 -> 16 due to permission checks in sidemenu
-        with django_assert_num_queries(16):
+        # Gone down from 16 -> 13
+        with django_assert_num_queries(13):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert task.title in response.content.decode()
@@ -129,7 +131,7 @@ class TestTaskUpdateView:
     ) -> None:
         """Test updating a task."""
         original_title = task.title
-        with django_assert_num_queries(20):
+        with django_assert_num_queries(15):
             response = user_client.post(
                 resource_url,
                 {

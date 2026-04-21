@@ -41,7 +41,6 @@ In a trial workspace, the following quotas apply:
 - You can create up to 10 projects
 - You can create up to 100 sections
 - You can create up to 1000 tasks
-- You can create up to 10 labels
 
 If you would like to create more items, and invite more users to your
 workspace, you can upgrade to a paid workspace from the workspace billing

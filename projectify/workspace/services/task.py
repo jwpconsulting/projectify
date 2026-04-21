@@ -5,7 +5,7 @@
 
 import logging
 from datetime import datetime
-from typing import Literal, Optional, Sequence, Union
+from typing import Literal, Optional, Union
 
 from django.db import transaction
 from django.forms import ValidationError
@@ -15,28 +15,9 @@ from django.utils.translation import gettext_lazy as _
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 
-from ..models import Label, Section, Task, TeamMember
+from ..models import Section, Task, TeamMember
 
 logger = logging.getLogger(__name__)
-
-
-# TODO hide this
-def task_assign_labels(*, task: Task, labels: Sequence[Label]) -> None:
-    """Assign label uuids to the given task."""
-    workspace = task.workspace
-    ws_labels = workspace.label_set
-    # We filter for labels as part of this workspace, to make sure we
-    # don't assign labels from another workspace
-    intersection_qs = ws_labels.filter(id__in=[label.id for label in labels])
-    with transaction.atomic():
-        intersection = list(intersection_qs)
-        if not len(intersection) == len(labels):
-            logger.warning(
-                "Some of the labels specified in %s are "
-                "not part of this workspace",
-                ", ".join(str(label.uuid) for label in labels),
-            )
-        task.labels.set(intersection)
 
 
 @transaction.atomic
@@ -45,8 +26,6 @@ def task_create(
     who: User,
     section: Section,
     title: str,
-    # TODO make label optional
-    labels: Optional[Sequence[Label]] = None,
     description: Optional[str] = None,
     due_date: Optional[datetime] = None,
     assignee: Optional[TeamMember] = None,
@@ -73,8 +52,6 @@ def task_create(
         workspace=workspace,
         assignee=assignee,
     )
-    if labels is not None:
-        task_assign_labels(task=task, labels=labels)
     return task
 
 
@@ -88,23 +65,20 @@ def task_update(
     description: Optional[str] = None,
     due_date: Optional[datetime] = None,
     assignee: Optional[TeamMember] = None,
-    labels: Optional[Sequence[Label]] = None,
 ) -> Task:
-    """Assign labels, assign assignee."""
+    """Update task."""
     validate_perm("workspace.update_task", who, task.workspace)
     task.title = title
     task.description = description
     task.due_date = due_date
     task.assignee = assignee
     task.save()
-    if labels is not None:
-        task_assign_labels(task=task, labels=labels)
     return task
 
 
 @transaction.atomic
 def task_mark_done(*, who: User, task: Task, done: bool) -> Task:
-    """Assign labels, assign assignee."""
+    """Mark task as done."""
     validate_perm("workspace.update_task", who, task.workspace)
     task.done = now() if done else None
     task.save()

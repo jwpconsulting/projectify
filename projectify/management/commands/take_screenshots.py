@@ -29,7 +29,7 @@ from projectify.user.models import User
 from projectify.user.services.auth import user_confirm_email
 from projectify.user.services.internal import user_create, user_make_token
 from projectify.user.services.user import user_update
-from projectify.workspace.models import Label, Section, Workspace
+from projectify.workspace.models import Section, Workspace
 from projectify.workspace.services.project import (
     project_create,
     project_delete,
@@ -112,22 +112,6 @@ class Command(BaseCommand):
             )
         team_members = self.workspace.teammember_set.all()
 
-        labels_data = [
-            ("Bug", 0),
-            ("Enhancement", 1),
-            ("Backend", 2),
-            ("Frontend", 3),
-            ("Investigate", 4),
-            ("Testing", 5),
-            ("Design", 6),
-        ]
-        labels = {
-            name: Label.objects.create(
-                name=name, color=color, workspace=self.workspace
-            )
-            for name, color in labels_data
-        }
-
         self.software_project = project_create(
             who=self.owner,
             workspace=self.workspace,
@@ -149,7 +133,7 @@ class Command(BaseCommand):
         )
         # Put this last to conveniently hide the "Create section" button from
         # Selenium
-        todo_section = Section.objects.create(
+        Section.objects.create(
             project=self.software_project, title="To Do", _order=2
         )
 
@@ -159,7 +143,6 @@ class Command(BaseCommand):
             section=self.in_progress_section,
             title="Beta testing for level 6",
             description="Conduct beta testing for level 6 functionality",
-            labels=[labels["Testing"]],
             assignee=fake.random_element(elements=team_members),
         )
 
@@ -167,21 +150,18 @@ class Command(BaseCommand):
             (
                 "Fix collision engine bug",
                 "Investigate and fix the collision engine bug",
-                "Bug",
             ),
             (
                 "Character skin drafts",
                 "Create initial drafts for character skins",
-                "Design",
             ),
         ]
-        for title, description, label_name in tasks_data:
+        for title, description in tasks_data:
             task_create(
                 who=self.owner,
                 section=self.in_progress_section,
                 title=title,
                 description=description,
-                labels=[labels[label_name]],
                 assignee=fake.random_element(elements=team_members),
             )
 
@@ -191,14 +171,12 @@ class Command(BaseCommand):
             section=self.coursework_section,
             title="Write essay for assignment",
             description="Complete the essay assignment for the course",
-            labels=[labels["Investigate"]],
             assignee=fake.random_element(elements=team_members),
         )
         task_create(
             who=self.owner,
             section=self.coursework_section,
             title="Research methodology review",
-            labels=[],
             assignee=fake.random_element(elements=team_members),
         )
 
@@ -206,20 +184,8 @@ class Command(BaseCommand):
             who=self.owner,
             section=self.coursework_section,
             title="Prepare presentation slides",
-            labels=[labels["Design"]],
             assignee=fake.random_element(elements=team_members),
         )
-
-        for label_name in labels.keys():
-            for _ in range(fake.random_int(min=20, max=30)):
-                task_create(
-                    who=self.owner,
-                    section=todo_section,
-                    title=fake.catch_phrase(),
-                    description=fake.text(max_nb_chars=100),
-                    labels=[labels[label_name]],
-                    assignee=fake.random_element(elements=team_members),
-                )
 
     def cleanup_test_data(self) -> None:
         """Clean up test users and data."""
@@ -277,17 +243,6 @@ class Command(BaseCommand):
         )
 
         self.remove_debug_toolbar(driver)
-
-        # development teams solutions label filter
-        label_filters_selector = "#label-filters"
-        label_filters = wait.until(
-            EC.presence_of_element_located(
-                (By.CSS_SELECTOR, label_filters_selector)
-            )
-        )
-        label_filters.screenshot(
-            str(output_directory / "development-teams-filter.png")
-        )
 
         # development team solutions tasks
         section_selector = f"#section-{self.in_progress_section.uuid}"

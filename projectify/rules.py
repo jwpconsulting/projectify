@@ -96,14 +96,8 @@ def can_create_more(
 within_chat_message_quota = rules.predicate(
     partial(can_create_more, "ChatMessage")
 )
-# Return True if a label can be created for workspace
-within_label_quota = rules.predicate(partial(can_create_more, "Label"))
 # Return True if a task can be created in workspace
 within_task_quota = rules.predicate(partial(can_create_more, "Task"))
-# Return True if a task label can be created for a task
-within_task_label_quota = rules.predicate(
-    partial(can_create_more, "TaskLabel")
-)
 # Return True if a project can be created in workspace
 within_project_quota = rules.predicate(partial(can_create_more, "Project"))
 # Return True if a section can be created in a workspace
@@ -179,23 +173,6 @@ rules.add_perm(
 rules.add_perm("workspace.read_task", is_at_least_observer)
 rules.add_perm("workspace.update_task", is_at_least_contributor)
 rules.add_perm("workspace.delete_task", is_at_least_maintainer)
-
-# Label
-rules.add_perm(
-    "workspace.create_label", is_at_least_maintainer & within_label_quota
-)
-rules.add_perm("workspace.read_label", is_at_least_observer)
-rules.add_perm("workspace.update_label", is_at_least_maintainer)
-rules.add_perm("workspace.delete_label", is_at_least_maintainer)
-
-# Task label
-rules.add_perm(
-    "workspace.create_task_label",
-    is_at_least_contributor & within_task_label_quota,
-)
-rules.add_perm("workspace.read_task_label", is_at_least_observer)
-rules.add_perm("workspace.update_task_label", is_at_least_contributor)
-rules.add_perm("workspace.delete_task_label", is_at_least_contributor)
 
 
 # Chat message

@@ -21,7 +21,7 @@ from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 
-from ..models import Label, Project, Section, Task, TeamMember, Workspace
+from ..models import Project, Section, Task, TeamMember, Workspace
 from ..selectors.project import (
     project_detail_query_set,
     project_find_by_project_uuid,
@@ -42,7 +42,6 @@ from ..services.project import (
 from ..services.section import section_minimize
 from ..services.task import task_create, task_mark_done, task_move_in_direction
 from ..services.team_member import (
-    team_member_minimize_label_filter,
     team_member_minimize_team_member_filter,
     team_member_visit_project,
 )
@@ -132,11 +131,7 @@ class ProjectFilterForm(forms.Form):
     )
 
     def __init__(
-        self,
-        team_members: QuerySet[TeamMember],
-        labels: QuerySet[Label],
-        *args: Any,
-        **kwargs: Any,
+        self, team_members: QuerySet[TeamMember], *args: Any, **kwargs: Any
     ) -> None:
         """Populate choices."""
         super().__init__(*args, **kwargs)
@@ -156,21 +151,6 @@ class ProjectFilterForm(forms.Form):
                 to_field_name="uuid",
                 empty_label=_("Assigned to nobody"),
             )
-        )
-        label_widget = forms.CheckboxSelectMultiple(
-            attrs={"form": "task-filter"}
-        )
-        label_widget.option_template_name = (
-            "workspace/forms/widgets/select_label_option.html"
-        )
-        self.fields["filter_by_label"] = ModelMultipleChoiceFieldWithEmpty(
-            required=False,
-            blank=True,
-            label=_("Filter tasks by label:"),
-            queryset=labels,
-            widget=label_widget,
-            to_field_name="uuid",
-            empty_label=_("No label"),
         )
 
     def clean(self) -> dict[str, Any]:
@@ -325,12 +305,6 @@ def _project_detail_view_actions(
                 == "true",
             )
             template = "workspace/common/sidemenu/project_details.html"
-        case "POST", "minimize_label_filter":
-            team_member_minimize_label_filter(
-                team_member=team_member,
-                minimized=request.POST.get("label_filter_minimized") == "true",
-            )
-            template = "workspace/common/sidemenu/project_details.html"
         case "POST", action:
             raise BadRequest(
                 _("Unrecognized action '{action}'").format(action=action)
@@ -362,16 +336,13 @@ def project_detail_view(
 
     querydict = request.POST if request.method == "POST" else request.GET
     filter_by_team_member: Optional[QuerySet[TeamMember]] = None
-    filter_by_label: Optional[QuerySet[Label]] = None
-    filter_by_unlabeled: bool = False
     filter_by_unassigned: bool = False
     task_search_query: Optional[str] = None
     if len(querydict):
         team_members = project.workspace.teammember_set.all()
-        labels = project.workspace.label_set.all()
 
         task_filter_form = ProjectFilterForm(
-            team_members=team_members, labels=labels, data=querydict
+            team_members=team_members, data=querydict
         )
         if not task_filter_form.is_valid():
             raise BadRequest(task_filter_form.errors)
@@ -379,19 +350,13 @@ def project_detail_view(
         filter_by_unassigned, filter_by_team_member = (
             task_filter_form.cleaned_data["filter_by_team_member"]
         )
-        filter_by_unlabeled, filter_by_label = task_filter_form.cleaned_data[
-            "filter_by_label"
-        ]
         task_search_query = task_filter_form.cleaned_data["task_search_query"]
 
     qs = project_detail_query_set(
         filter_by_team_members=filter_by_team_member,
         unassigned_tasks=filter_by_unassigned,
-        filter_by_labels=filter_by_label,
-        unlabeled_tasks=filter_by_unlabeled,
         task_search_query=task_search_query,
         who=request.user,
-        prefetch_labels=True,
     )
 
     template, enrich_section, context = _project_detail_view_actions(
@@ -421,25 +386,21 @@ def project_detail_view(
 
     project.workspace.quota = workspace_get_all_quotas(project.workspace)
     team_members = project.workspace.teammember_set.all()
-    labels = project.workspace.label_set.all()
 
     task_filter_form = ProjectFilterForm(
-        team_members=team_members, labels=labels, data=querydict
+        team_members=team_members, data=querydict
     )
 
     context = {
         **context,
         **get_project_view_context(request, project.workspace),
         "project": project,
-        "labels": labels,
         "team_members": team_members,
         "unassigned_tasks": filter_by_unassigned,
-        "unlabeled_tasks": filter_by_unlabeled,
         "task_search_query": task_search_query,
         "task_filter_form": task_filter_form,
         "has_team_member_filter": filter_by_team_member is not None
         or filter_by_unassigned,
-        "has_label_filter": filter_by_label is not None or filter_by_unlabeled,
         "quick_add_task": TaskQuickAddForm(project=project),
     }
     return render(request, template, context)
@@ -469,9 +430,7 @@ def project_create_view(
     qs: Optional[QuerySet[Workspace]]
     match request.method:
         case "GET":
-            qs = workspace_build_detail_query_set(
-                who=request.user, annotate_labels=True
-            )
+            qs = workspace_build_detail_query_set(who=request.user)
         case "POST":
             qs = None
         case other:
@@ -546,7 +505,7 @@ def project_update_view(
     request: AuthenticatedHttpRequest, project_uuid: UUID
 ) -> HttpResponse:
     """Update an existing project."""
-    qs = project_detail_query_set(who=request.user, prefetch_labels=False)
+    qs = project_detail_query_set(who=request.user)
     project = project_find_by_project_uuid(
         who=request.user, project_uuid=project_uuid, qs=qs
     )

@@ -29,7 +29,7 @@ from projectify.workspace.services.team_member_invite import (
 from pytest_types import DjangoAssertNumQueries
 
 from ...const import TeamMemberRoles
-from ...models import Label, TeamMember, TeamMemberInvite, Workspace
+from ...models import TeamMember, TeamMemberInvite, Workspace
 
 pytestmark = pytest.mark.django_db
 
@@ -189,7 +189,8 @@ class TestWorkspaceSettings:
         # Query count went up   from 22 -> 24 due to permission checks in sidemenu
         # Query count went up   from 24 -> 25
         # Query count went down from 25 -> 24
-        with django_assert_num_queries(24):
+        # Query count went down from 24 -> 22
+        with django_assert_num_queries(22):
             response = user_client.post(
                 resource_url,
                 {
@@ -320,7 +321,8 @@ class TestWorkspaceSettingsTeamMembers:
         uid = str(other_team_member.uuid)
         data = {"action": "team_member_remove", "team_member": uid}
         # Gone down from 28 -> 25
-        with django_assert_num_queries(25):
+        # Gone down from 25 -> 23
+        with django_assert_num_queries(23):
             response = user_client.post(resource_url, data)
         assert response.status_code == 200
         assert workspace.teammember_set.count() == initial - 1
@@ -434,7 +436,7 @@ class TestWorkspaceSettingsTeamMemberUpdate:
         other_team_member.job_title = "Developer"
         other_team_member.save()
 
-        with django_assert_num_queries(14):
+        with django_assert_num_queries(13):
             response = user_client.post(
                 resource_url,
                 {"role": TeamMemberRoles.MAINTAINER, "job_title": "Foo"},
@@ -444,202 +446,6 @@ class TestWorkspaceSettingsTeamMemberUpdate:
         other_team_member.refresh_from_db()
         assert other_team_member.role == TeamMemberRoles.MAINTAINER
         assert other_team_member.job_title == "Foo"
-
-
-class TestWorkspaceSettingsLabels:
-    """Test workspace labels settings view."""
-
-    @pytest.fixture
-    def resource_url(self, workspace: Workspace) -> str:
-        """Return URL to this view."""
-        return reverse("dashboard:workspaces:labels", args=(workspace.uuid,))
-
-    def test_get_labels_list(
-        self, user_client: Client, resource_url: str, team_member: TeamMember
-    ) -> None:
-        """Test getting the page."""
-        assert user_client.get(resource_url).status_code == 200
-
-
-class TestWorkspaceSettingsCreateLabel:
-    """Test workspace create label view."""
-
-    @pytest.fixture
-    def resource_url(self, workspace: Workspace) -> str:
-        """Return URL to this view."""
-        return reverse(
-            "dashboard:workspaces:create-label", args=(workspace.uuid,)
-        )
-
-    def test_get_create_form(
-        self, user_client: Client, resource_url: str, team_member: TeamMember
-    ) -> None:
-        """Test getting the form."""
-        assert user_client.get(resource_url).status_code == 200
-
-    def test_create_label_success(
-        self,
-        user_client: Client,
-        resource_url: str,
-        workspace: Workspace,
-        team_member: TeamMember,
-        django_assert_num_queries: DjangoAssertNumQueries,
-    ) -> None:
-        """Test creating a new label."""
-        initial_label_count = workspace.label_set.count()
-        with django_assert_num_queries(20):
-            assert (
-                user_client.post(
-                    resource_url, {"name": "Bug", "color": 1}
-                ).status_code
-                == 302
-            )
-        assert workspace.label_set.count() == initial_label_count + 1
-        assert workspace.label_set.get(name="Bug").color == 1
-
-    def test_create_label_invalid_form(
-        self, user_client: Client, resource_url: str
-    ) -> None:
-        """Test form validation."""
-        assert (
-            user_client.post(
-                resource_url, {"name": "", "color": 1}
-            ).status_code
-            == 400
-        )
-
-    def test_create_label_duplicate_name(
-        self,
-        user_client: Client,
-        resource_url: str,
-        workspace: Workspace,
-        team_member: TeamMember,
-        label: Label,
-    ) -> None:
-        """Test creating a label with the same name as an existing one."""
-        initial_label_count = workspace.label_set.count()
-        assert (
-            user_client.post(
-                resource_url, {"name": label.name, "color": 1}
-            ).status_code
-            == 400
-        )
-        assert workspace.label_set.count() == initial_label_count
-
-
-class TestWorkspaceSettingsEditLabel:
-    """Test workspace edit label view."""
-
-    @pytest.fixture
-    def resource_url(self, workspace: Workspace, label: Label) -> str:
-        """Return URL to this view."""
-        return reverse(
-            "dashboard:workspaces:edit-label",
-            args=(workspace.uuid, label.uuid),
-        )
-
-    def test_get_edit_form(
-        self, user_client: Client, resource_url: str, team_member: TeamMember
-    ) -> None:
-        """Test GETting the edit label form."""
-        assert user_client.get(resource_url).status_code == 200
-
-    def test_update_label_success(
-        self,
-        user_client: Client,
-        resource_url: str,
-        team_member: TeamMember,
-        label: Label,
-        django_assert_num_queries: DjangoAssertNumQueries,
-    ) -> None:
-        """Test successfully updating a label."""
-        with django_assert_num_queries(16):
-            response = user_client.post(
-                resource_url, {"name": "Updated", "color": 3}
-            )
-            assert response.status_code == 302
-        label.refresh_from_db()
-        assert label.name == "Updated"
-        assert label.color == 3
-
-    def test_update_label_invalid_form(
-        self, user_client: Client, resource_url: str, team_member: TeamMember
-    ) -> None:
-        """Test form validation."""
-        assert (
-            user_client.post(
-                resource_url, {"name": "", "color": 3}
-            ).status_code
-            == 400
-        )
-
-    def test_update_label_duplicate_name(
-        self,
-        user_client: Client,
-        workspace: Workspace,
-        team_member: TeamMember,
-        label: Label,
-        labels: list[Label],
-    ) -> None:
-        """Test updating a label to have the same name as another existing label."""
-        other_label = labels[0]
-        original_name = label.name
-        url = reverse(
-            "dashboard:workspaces:edit-label",
-            args=(workspace.uuid, label.uuid),
-        )
-        response = user_client.post(
-            url, {"name": other_label.name, "color": 3}
-        )
-        assert response.status_code == 400
-
-        label.refresh_from_db()
-        assert label.name == original_name  # Should not have changed
-
-    def test_deleting(
-        self,
-        user_client: Client,
-        resource_url: str,
-        workspace: Workspace,
-        team_member: TeamMember,
-        django_assert_num_queries: DjangoAssertNumQueries,
-    ) -> None:
-        """Delete the label."""
-        initial_label_count = workspace.label_set.count()
-        with django_assert_num_queries(8):
-            assert user_client.delete(resource_url).status_code == 200
-        assert workspace.label_set.count() == initial_label_count - 1
-
-    def test_label_not_found(
-        self,
-        user_client: Client,
-        workspace: Workspace,
-        team_member: TeamMember,
-    ) -> None:
-        """Test editing a missing label."""
-        url = reverse(
-            "dashboard:workspaces:edit-label", args=(workspace.uuid, uuid4())
-        )
-        assert user_client.get(url).status_code == 404
-
-    def test_workspace_uuid_mismatch(
-        self, user_client: Client, team_member: TeamMember, label: Label
-    ) -> None:
-        """Test editing label with mismatched workspace UUID."""
-        url = reverse(
-            "dashboard:workspaces:edit-label", args=(uuid4(), label.uuid)
-        )
-        assert user_client.get(url).status_code == 400
-
-    def test_unauthorized_workspace_access(
-        self, user_client: Client, unrelated_label: Label
-    ) -> None:
-        """Test that users can't edit labels for other workspaces."""
-        url = reverse(
-            "dashboard:workspaces:edit-label",
-            args=(unrelated_label.workspace.uuid, unrelated_label.uuid),
-        )
-        assert user_client.get(url).status_code == 404
 
 
 class TestWorkspaceSettingsQuota:
@@ -659,7 +465,8 @@ class TestWorkspaceSettingsQuota:
     ) -> None:
         """Test getting the quota page."""
         # Gone up from 12 -> 13 due to permission checks in sidemenu
-        with django_assert_num_queries(13):
+        # Gone down from 13 -> 12
+        with django_assert_num_queries(12):
             response = user_client.get(resource_url)
             assert response.status_code == 200
 
@@ -669,7 +476,6 @@ class TestWorkspaceSettingsQuota:
         assert "<td>Projects" not in content
         assert "<td>Sections" not in content
         assert "<td>Tasks" not in content
-        assert "<td>Labels" not in content
 
     def test_get_quota_page_no_subscription(
         self,
@@ -681,7 +487,8 @@ class TestWorkspaceSettingsQuota:
         """Test getting the quota page."""
         customer_cancel_subscription(customer=team_member.workspace.customer)
         # Gone up from 16 -> 17 due to permission checks in sidemenu
-        with django_assert_num_queries(17):
+        # Gone down from 17 -> 15
+        with django_assert_num_queries(15):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         # These quotas should be listed
@@ -693,7 +500,6 @@ class TestWorkspaceSettingsQuota:
         assert "<td>Projects" in content
         assert "<td>Sections" in content
         assert "<td>Tasks" in content
-        assert "<td>Labels" in content
 
 
 class TestWorkspaceSettingsBilling:
@@ -732,7 +538,7 @@ class TestWorkspaceSettingsBilling:
     ) -> None:
         """Assert that an unpaid customer can't edit their billing settings."""
         data = {"action": "checkout", "seats": 5}
-        with django_assert_num_queries(20):
+        with django_assert_num_queries(18):
             response = user_client.post(resource_url, data=data)
             assert response.status_code == 302
         assert response.headers["Location"] == "https://www.example.com"
@@ -779,7 +585,7 @@ class TestWorkspaceSettingsBilling:
     ) -> None:
         """Test we can get a redirect when posting valid checkout data."""
         data = {"action": "checkout", "seats": "99"}
-        with django_assert_num_queries(20):
+        with django_assert_num_queries(18):
             response = user_client.post(resource_url, data=data)
             assert response.status_code == 302, response.content.decode()
         assert response.headers["Location"] == "https://www.example.com"
@@ -833,7 +639,8 @@ class TestWorkspaceSettingsBilling:
     ) -> None:
         """Test GET request with unpaid customer shows billing form."""
         # Gone up from 16 -> 17 due to permission checks in sidemenu
-        with django_assert_num_queries(17):
+        # Gone down from 17 -> 15
+        with django_assert_num_queries(15):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert b"Use a coupon code" in response.content
@@ -848,7 +655,8 @@ class TestWorkspaceSettingsBilling:
     ) -> None:
         """Test GET request with paying customer shows billing info."""
         # Gone up from 12 -> 13 due to permission checks in sidemenu
-        with django_assert_num_queries(13):
+        # Gone down from 13 -> 12
+        with django_assert_num_queries(12):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert b"You have a paid workspace" in response.content
@@ -877,8 +685,8 @@ class TestWorkspaceSettingsBillingCoupon:
         data = {"action": "redeem_coupon", "code": "foo"}
         # Gone up from 21 -> 22 due to permission checks in sidemenu
         # Gone up   from 22 -> 23
-        # Gone down from 23 -> 21
-        with django_assert_num_queries(21):
+        # Gone down from 23 -> 19
+        with django_assert_num_queries(19):
             res = user_client.post(resource_url, data=data)
             assert res.status_code == 400
         assert "No coupon is available for this code" in res.content.decode()
@@ -901,7 +709,7 @@ class TestWorkspaceSettingsBillingCoupon:
         active = customer_check_active_for_workspace(workspace=workspace)
         assert active == "trial"
         data = {"action": "redeem_coupon", "code": coupon.code}
-        with django_assert_num_queries(21):
+        with django_assert_num_queries(19):
             response = user_client.post(resource_url, data=data)
             assert response.status_code == 302
 

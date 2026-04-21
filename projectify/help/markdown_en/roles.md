@@ -35,8 +35,7 @@ actions are as follows:
 | Team members and invites   | Who has been added to the workspace, and who is invited     |
 | Project                    | Description and other information about a project           |
 | Sections                   | Name, position within project                               |
-| Tasks                      | Title, description, due date, label, assignee, and position |
-| Labels                     | Name and color                                              |
+| Tasks                      | Title, description, due date, assignee, and position |
 
 # Overview
 
@@ -61,7 +60,6 @@ individual cell in this table is as follows:
 | Project                    | Read     | Read        | Full       | Full  |
 | Sections                   | Read     | Read        | Full       | Full  |
 | Tasks                      | Read     | Write       | Full       | Full  |
-| Labels                     | Read     | Read        | Full       | Full  |
 
 # Observer
 
@@ -80,7 +78,7 @@ following additional permissions in their workspace:
 
 More importantly, they do not gain any additional delete permissions for the
 above two resources, or any other edit permissions for projects,
-sections, labels, users, billing settings, and the workspace itself.
+sections, users, billing settings, and the workspace itself.
 
 # Maintainer
 
@@ -89,7 +87,6 @@ possible, on top of the **contributor** permissions:
 
 - Create, update and delete projects
 - Create, update and delete sections
-- Create, update and delete labels
 - Delete tasks
 
 # Owner role

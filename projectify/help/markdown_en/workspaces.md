@@ -40,10 +40,6 @@ The **Projects** tab shows all projects in your workspace, including
 archived ones. You can edit, archive, and delete your projects.
 To learn more about the projects tab, visit the [projects help](/help/projects).
 
-The **Labels** tab allows you to create, edit and delete labels for
-organizing your tasks.
-To learn more about the labels tab, visit the [labels help](/help/labels).
-
 The **Team members** tab allows you to add, edit permissions and delete
 team members.
 To learn more about the team members tab, visit the [team members help](/help/team-members).

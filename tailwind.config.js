@@ -29,27 +29,6 @@ const colors = {
     "display": "#FFFFFF", // new, but not found in Colors spreadsheet
     "error": "#EF4444", // keep
     "info": "#0EA5E9", // keep
-    "label-blue": "#C8E1FF", // keep
-    "label-green": "#CFF0D7", // keep
-    "label-hover-blue": "#A0C2EC", // keep
-    "label-hover-green": "#ADD7B7", // keep
-    "label-hover-orange": "#FED7AA", // keep
-    "label-hover-pink": "#EEB0D5", // keep
-    "label-hover-purple": "#C3B2EC", // keep
-    "label-hover-red": "#F0B0B7", // keep
-    "label-hover-yellow": "#E7DC8E", // keep
-    "label-orange": "#FFEBDA", // keep
-    "label-pink": "#FEDBF0", // keep
-    "label-purple": "#DDD6FE", // keep
-    "label-red": "#FFDCE0", // keep
-    "label-text-blue": "#1E40AF", // renamed
-    "label-text-green": "#166534", // renamed
-    "label-text-orange": "#9A3412", // renamed
-    "label-text-pink": "#9D174D", // renamed
-    "label-text-purple": "#5B21B6", // renamed
-    "label-text-red": "#991B1B", // renamed
-    "label-text-yellow": "#854D0E", // renamed
-    "label-yellow": "#FFF5B1", // keep
     "primary": "#2563EB", // keep
     "primary-content": "#ffffff", // keep
     "primary-hover": "#1E40AF", // new

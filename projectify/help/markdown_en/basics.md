@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # What is a workspace?
 
-A workspace is an area where you can create projects, tasks, labels and invite
+A workspace is an area where you can create projects, tasks, and invite
 various members of your organization as team members. In a workspace you can
 set permissions and customize the overall look and feel of your productivity
 center.
@@ -51,7 +51,7 @@ For more information on tasks please see the [tasks help](/help/tasks).
 The side menu allows for full control of your workspace and projects.
 
 You are able to switch between workspaces or projects through this menu.
-Filtering between team members and labels can also be performed here. Workspace
+Filtering between team members can also be performed here. Workspace
 settings such as permissions and billing can be accessed from this menu.
 
 The menu can be viewed in full expanded mode or in collapsed mode.

@@ -71,8 +71,6 @@ changes on them or create them. They can read the following resources:
 - Projects
 - Sections
 - Tasks
-- Labels
-- Task labels
 - Chat messages
 
 ### Contributor
@@ -100,7 +98,6 @@ permissons:
 - Create, update and delete projects
 - Create, update and delete sections
 - Delete tasks
-- Create, update and delete labels
 - Delete chat messages
 
 ### Owner

@@ -42,21 +42,6 @@
                 </td>
             </tr>
             <tr class="contents">
-                <th scope="row" class="text-left font-bold">{% trans "Labels" %}</th>
-                <td class="gap-2 flex flex-row items-center">
-                    <div class="flex flex-row flex-wrap items-center gap-x-1 gap-y-2">
-                        {% for label in task.labels.all %}
-                            <span class="min-w-0 rounded-2.5xl px-3 py-1 font-bold {{ label.bg_class }} {{ label.text_class }}"
-                                  type="button"
-                                  disabled="">{{ label.name }}</span>
-                        {% endfor %}
-                    </div>
-                    {% if can_update_task %}
-                        {% circle_anchor label=_("Edit labels") icon_style="pencil" href="dashboard:tasks:update-focus-field" title=_("Edit labels") size=4 task_uuid=task.uuid focus_field="labels" %}
-                    {% endif %}
-                </td>
-            </tr>
-            <tr class="contents">
                 <th scope="row" class="text-left font-bold">{% trans "Due date" %}</th>
                 <td class="flex flex-row gap-4 items-center">
                     {% if task.due_date %}

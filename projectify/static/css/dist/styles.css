@@ -1626,10 +1626,6 @@ video {
   grid-template-columns: 1fr auto auto;
 }
 
-.grid-cols-\[1fr_max-content\] {
-  grid-template-columns: 1fr max-content;
-}
-
 .grid-cols-\[3fr_max-content\] {
   grid-template-columns: 3fr max-content;
 }
@@ -1718,18 +1714,9 @@ video {
   gap: 2rem;
 }
 
-.gap-x-1 {
-  -moz-column-gap: 0.25rem;
-       column-gap: 0.25rem;
-}
-
 .gap-x-2 {
   -moz-column-gap: 0.5rem;
        column-gap: 0.5rem;
-}
-
-.gap-y-2 {
-  row-gap: 0.5rem;
 }
 
 .gap-y-3 {
@@ -1784,10 +1771,6 @@ video {
 
 .text-ellipsis {
   text-overflow: ellipsis;
-}
-
-.whitespace-nowrap {
-  white-space: nowrap;
 }
 
 .rounded {
@@ -1857,41 +1840,6 @@ video {
   border-color: rgb(203 213 225 / var(--tw-border-opacity, 1));
 }
 
-.border-label-text-blue {
-  --tw-border-opacity: 1;
-  border-color: rgb(30 64 175 / var(--tw-border-opacity, 1));
-}
-
-.border-label-text-green {
-  --tw-border-opacity: 1;
-  border-color: rgb(22 101 52 / var(--tw-border-opacity, 1));
-}
-
-.border-label-text-orange {
-  --tw-border-opacity: 1;
-  border-color: rgb(154 52 18 / var(--tw-border-opacity, 1));
-}
-
-.border-label-text-pink {
-  --tw-border-opacity: 1;
-  border-color: rgb(157 23 77 / var(--tw-border-opacity, 1));
-}
-
-.border-label-text-purple {
-  --tw-border-opacity: 1;
-  border-color: rgb(91 33 182 / var(--tw-border-opacity, 1));
-}
-
-.border-label-text-red {
-  --tw-border-opacity: 1;
-  border-color: rgb(153 27 27 / var(--tw-border-opacity, 1));
-}
-
-.border-label-text-yellow {
-  --tw-border-opacity: 1;
-  border-color: rgb(133 77 14 / var(--tw-border-opacity, 1));
-}
-
 .border-primary {
   --tw-border-opacity: 1;
   border-color: rgb(37 99 235 / var(--tw-border-opacity, 1));
@@ -1918,41 +1866,6 @@ video {
 .bg-foreground {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
-}
-
-.bg-label-blue {
-  --tw-bg-opacity: 1;
-  background-color: rgb(200 225 255 / var(--tw-bg-opacity, 1));
-}
-
-.bg-label-green {
-  --tw-bg-opacity: 1;
-  background-color: rgb(207 240 215 / var(--tw-bg-opacity, 1));
-}
-
-.bg-label-orange {
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 235 218 / var(--tw-bg-opacity, 1));
-}
-
-.bg-label-pink {
-  --tw-bg-opacity: 1;
-  background-color: rgb(254 219 240 / var(--tw-bg-opacity, 1));
-}
-
-.bg-label-purple {
-  --tw-bg-opacity: 1;
-  background-color: rgb(221 214 254 / var(--tw-bg-opacity, 1));
-}
-
-.bg-label-red {
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 220 224 / var(--tw-bg-opacity, 1));
-}
-
-.bg-label-yellow {
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 245 177 / var(--tw-bg-opacity, 1));
 }
 
 .bg-primary {
@@ -2034,11 +1947,6 @@ video {
 .px-2 {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
-}
-
-.px-3 {
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
 }
 
 .px-4 {
@@ -2204,41 +2112,6 @@ video {
 .text-error {
   --tw-text-opacity: 1;
   color: rgb(239 68 68 / var(--tw-text-opacity, 1));
-}
-
-.text-label-text-blue {
-  --tw-text-opacity: 1;
-  color: rgb(30 64 175 / var(--tw-text-opacity, 1));
-}
-
-.text-label-text-green {
-  --tw-text-opacity: 1;
-  color: rgb(22 101 52 / var(--tw-text-opacity, 1));
-}
-
-.text-label-text-orange {
-  --tw-text-opacity: 1;
-  color: rgb(154 52 18 / var(--tw-text-opacity, 1));
-}
-
-.text-label-text-pink {
-  --tw-text-opacity: 1;
-  color: rgb(157 23 77 / var(--tw-text-opacity, 1));
-}
-
-.text-label-text-purple {
-  --tw-text-opacity: 1;
-  color: rgb(91 33 182 / var(--tw-text-opacity, 1));
-}
-
-.text-label-text-red {
-  --tw-text-opacity: 1;
-  color: rgb(153 27 27 / var(--tw-text-opacity, 1));
-}
-
-.text-label-text-yellow {
-  --tw-text-opacity: 1;
-  color: rgb(133 77 14 / var(--tw-text-opacity, 1));
 }
 
 .text-primary {
@@ -2695,12 +2568,12 @@ video {
     max-width: 20rem;
   }
 
-  .lg\:grid-cols-\[2fr_1fr\] {
-    grid-template-columns: 2fr 1fr;
+  .lg\:grid-cols-\[1fr_max-content\] {
+    grid-template-columns: 1fr max-content;
   }
 
-  .lg\:grid-cols-\[8fr_3fr_max-content\] {
-    grid-template-columns: 8fr 3fr max-content;
+  .lg\:grid-cols-\[2fr_1fr\] {
+    grid-template-columns: 2fr 1fr;
   }
 
   .lg\:flex-nowrap {

@@ -14,7 +14,7 @@ import pytest
 
 from pytest_types import DjangoAssertNumQueries
 
-from ...models import Label, Project, Section, Task, TeamMember, Workspace
+from ...models import Project, Section, Task, TeamMember, Workspace
 from ...services.task import task_create
 
 pytestmark = pytest.mark.django_db
@@ -50,7 +50,8 @@ class TestProjectDetailView:
         # Gone up   from 18 -> 24 due to permission checks in sidemenu
         # Gone down from 24 -> 23
         # Gone down from 23 -> 20
-        with django_assert_num_queries(20):
+        # Gone down from 20 -> 18
+        with django_assert_num_queries(18):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert project.title in response.content.decode()
@@ -103,7 +104,8 @@ class TestProjectDetailView:
         # Gone up   from 22 -> 31 due to permission checks in template
         # Gone down from 31 -> 30
         # Gone down from 30 -> 24
-        with django_assert_num_queries(24):
+        # Gone down from 24 -> 21
+        with django_assert_num_queries(21):
             response = user_client.get(
                 resource_url,
                 {"filter_by_team_member": [str(team_member.uuid)]},
@@ -129,56 +131,11 @@ class TestProjectDetailView:
         # Gone up   from 20 -> 29 due to permission checks in template
         # Gone down from 29 -> 28
         # Gone down from 28 -> 22
-        with django_assert_num_queries(22):
+        # Gone down from 22 -> 19
+        with django_assert_num_queries(19):
             response = user_client.get(
                 resource_url, {"filter_by_team_member": [""]}
             )
-            assert response.status_code == 200
-
-        assert task.title not in response.content.decode()
-        assert other_task.title in response.content.decode()
-
-    def test_filter_by_label(
-        self,
-        user_client: Client,
-        resource_url: str,
-        task: Task,
-        other_task: Task,
-        label: Label,
-        django_assert_num_queries: DjangoAssertNumQueries,
-    ) -> None:
-        """Test filtering tasks by label."""
-        task.labels.add(label)
-
-        # Gone up   from 22 -> 31 due to permission checks in template
-        # Gone down from 31 -> 30
-        # Gone down from 30 -> 24
-        with django_assert_num_queries(24):
-            response = user_client.get(
-                resource_url, {"filter_by_label": [str(label.uuid)]}
-            )
-            assert response.status_code == 200
-
-        assert task.title in response.content.decode()
-        assert other_task.title not in response.content.decode()
-
-    def test_filter_by_unlabeled_tasks(
-        self,
-        user_client: Client,
-        resource_url: str,
-        task: Task,
-        other_task: Task,
-        label: Label,
-        django_assert_num_queries: DjangoAssertNumQueries,
-    ) -> None:
-        """Test filtering for unlabeled tasks."""
-        task.labels.add(label)
-
-        # Gone up   from 20 -> 29 due to permission checks in template
-        # Gone down from 29 -> 28
-        # Gone down from 28 -> 22
-        with django_assert_num_queries(22):
-            response = user_client.get(resource_url, {"filter_by_label": [""]})
             assert response.status_code == 200
 
         assert task.title not in response.content.decode()
@@ -202,7 +159,8 @@ class TestProjectDetailView:
         # Gone up   from 20 -> 29 due to permission checks in template
         # Gone down from 29 -> 28
         # Gone down from 28 -> 22
-        with django_assert_num_queries(22):
+        # Gone down from 22 -> 19
+        with django_assert_num_queries(19):
             response = user_client.get(
                 resource_url, {"task_search_query": "bug"}
             )
@@ -266,33 +224,6 @@ class TestProjectDetailViewActions:
         team_member.refresh_from_db()
         assert team_member.minimized_team_member_filter is expected_state
 
-    @pytest.mark.parametrize(
-        "initial_state,post_value,expected_state",
-        [(False, "true", True), (True, "false", False)],
-    )
-    def test_toggle_label_filter(
-        self,
-        user_client: Client,
-        resource_url: str,
-        team_member: TeamMember,
-        initial_state: bool,
-        post_value: str,
-        expected_state: bool,
-    ) -> None:
-        """Test toggling the label filter minimized state."""
-        team_member.minimized_label_filter = initial_state
-        team_member.save()
-
-        data = {
-            "action": "minimize_label_filter",
-            "label_filter_minimized": post_value,
-        }
-        response = user_client.post(resource_url, data)
-        assert response.status_code == 200
-
-        team_member.refresh_from_db()
-        assert team_member.minimized_label_filter is expected_state
-
     def test_minimize_preserves_get_parameters(
         self, user_client: Client, team_member: TeamMember, resource_url: str
     ) -> None:
@@ -316,9 +247,9 @@ class TestProjectDetailViewActions:
         [
             # query count up from   19 -> 22 due to permission checks in tmplt
             # query count down from 22 -> 19
-            (False, "true", True, 19),  # minimize section
+            (False, "true", True, 18),  # minimize section
             # query count down from 22 -> 19
-            (True, "false", False, 19),  # expand section
+            (True, "false", False, 18),  # expand section
         ],
     )
     def test_section_minimize_toggle(
@@ -396,7 +327,8 @@ class TestProjectDetailViewActions:
         # Gone up   from 32 -> 35 due to permission checks in template
         # Gone down from 35 -> 34
         # Gone down from 34 -> 31
-        with django_assert_num_queries(31):
+        # Gone down from 31 -> 29
+        with django_assert_num_queries(29):
             response = user_client.post(
                 resource_url,
                 {
@@ -415,7 +347,8 @@ class TestProjectDetailViewActions:
         # Gone up   from 32 -> 35 due to permission checks in template
         # Gone down from 35 -> 34
         # Gone down from 34 -> 31
-        with django_assert_num_queries(31):
+        # Gone down from 31 -> 29
+        with django_assert_num_queries(29):
             response = user_client.post(
                 resource_url,
                 {
@@ -470,14 +403,15 @@ class TestProjectDetailViewActions:
         # check
         # Gone down from 29 -> 28
         # Gone down from 28 -> 26
-        with django_assert_num_queries(26):
+        # Gone down from 26 -> 24
+        with django_assert_num_queries(24):
             response = user_client.post(resource_url, data)
             assert response.status_code == 200
         task.refresh_from_db()
         assert task.done is not None
 
         data = {"action": "mark_task_done", "task_uuid": t_id, "done": "false"}
-        with django_assert_num_queries(26):
+        with django_assert_num_queries(24):
             response = user_client.post(resource_url, data)
             assert response.status_code == 200
         task.refresh_from_db()

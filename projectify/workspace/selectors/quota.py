@@ -13,9 +13,7 @@ Be able to create 10 labels, assign them to all tasks
 
 Limitations for a trial workspace are
 - ChatMessage: 0 chat messages,
-- Label: 10 labels
 - Task: 1000 tasks,
-- TaskLabel: unlimited,
 - Project: 10,
 - Section: 100,
 - TeamMember + TeamMemberInivite(unredeemed): 2
@@ -30,16 +28,10 @@ from projectify.corporate.selectors.customer import (
 from projectify.lib.settings import get_settings
 from projectify.workspace.types import Quota, WorkspaceQuota
 
-from ..models import ChatMessage, Label, Section, Task, TaskLabel, Workspace
+from ..models import ChatMessage, Section, Task, Workspace
 
 Resource = Literal[
-    "ChatMessage",
-    "Label",
-    "Task",
-    "TaskLabel",
-    "Project",
-    "Section",
-    "TeamMemberAndInvite",
+    "ChatMessage", "Task", "Project", "Section", "TeamMemberAndInvite"
 ]
 
 Limitation = Union[None, int]
@@ -49,9 +41,7 @@ class Limitations(TypedDict):
     """Contain all limitations."""
 
     ChatMessage: Limitation
-    Label: Limitation
     Task: Limitation
-    TaskLabel: Limitation
     Project: Limitation
     Section: Limitation
     TeamMemberAndInvite: Limitation
@@ -59,9 +49,7 @@ class Limitations(TypedDict):
 
 trial_conditions: Limitations = {
     "ChatMessage": 0,
-    "Label": 10,
     "Task": 1000,
-    "TaskLabel": None,
     "Project": 10,
     "Section": 100,
     "TeamMemberAndInvite": 2,
@@ -70,9 +58,7 @@ trial_conditions: Limitations = {
 # Full workspace conditions are somewhat like this:
 # {
 #     "ChatMessage": None,
-#     "Label": None,
 #     "Task": None,
-#     "TaskLabel": None,
 #     "Project": None,
 #     "Section": None,
 #     "TeamMemberAndInvite": workspace.customer.seats,
@@ -109,14 +95,10 @@ def get_workspace_resource_count(
             return ChatMessage.objects.filter(
                 task__workspace=workspace
             ).count()
-        case "Label":
-            return Label.objects.filter(workspace=workspace).count()
         case "Task":
             return Task.objects.filter(
                 section__project__workspace=workspace
             ).count()
-        case "TaskLabel":
-            return TaskLabel.objects.filter(label__workspace=workspace).count()
         case "Project":
             return workspace.project_set.count()
         case "Section":
@@ -147,9 +129,7 @@ def workspace_get_all_quotas(workspace: Workspace) -> WorkspaceQuota:
             workspace=workspace
         ),
         chat_messages=mk(resource="ChatMessage"),
-        labels=mk(resource="Label"),
         tasks=mk(resource="Task"),
-        task_labels=mk(resource="TaskLabel"),
         projects=mk(resource="Project"),
         sections=mk(resource="Section"),
         team_members_and_invites=mk(resource="TeamMemberAndInvite"),

@@ -51,11 +51,9 @@ from projectify.user.services.internal import (
 from projectify.workspace.const import TeamMemberRoles
 from projectify.workspace.models import (
     ChatMessage,
-    Label,
     Project,
     Section,
     Task,
-    TaskLabel,
     TeamMember,
     Workspace,
 )
@@ -65,7 +63,6 @@ Altogether = TypedDict(
     {
         "workspace": Workspace,
         "team_members": list[TeamMember],
-        "labels": list[Label],
         "projects": list[Project],
         "sections": list[Section],
     },
@@ -108,7 +105,6 @@ class Command(BaseCommand):
     n_users: int
     n_workspaces: int
     n_projects: int
-    n_labels: int
     n_tasks: int
     n_add_users: int
     n_posts: int
@@ -211,22 +207,6 @@ class Command(BaseCommand):
         something: list[tuple[Altogether, Task]] = list(
             zip([together for together, _, _ in task_combos], tasks)
         )
-        task_labels = TaskLabel.objects.bulk_create(
-            [
-                TaskLabel(task=task, label=label)
-                for together, task in something
-                for label in sample(
-                    # Make sure we don't go over the amount of labels we have
-                    # actually created for this workspace
-                    together["labels"],
-                    min(
-                        len(together["labels"]),
-                        randint(TASK_MIN_LABEL_COUNT, TASK_MAX_LABEL_COUNT),
-                    ),
-                )
-            ]
-        )
-        self.stdout.write(f"Created {len(task_labels)} task labels")
 
         chat_messages = ChatMessage.objects.bulk_create(
             [
@@ -295,18 +275,6 @@ class Command(BaseCommand):
             f"Added {len(workspaces_team_members)} users to "
             f"{len(workspaces)} new workspaces"
         )
-        workspaces_labels = Label.objects.bulk_create(
-            [
-                Label(
-                    name=self.fake.catch_phrase(),
-                    color=randint(0, 6),
-                    workspace=workspace,
-                )
-                for workspace in workspaces
-                for _ in range(self.n_labels)
-            ]
-        )
-        self.stdout.write(f"Created {len(workspaces_labels)} labels")
 
         workspaces_projects = Project.objects.bulk_create(
             [
@@ -354,25 +322,21 @@ class Command(BaseCommand):
         # So:
         # Create all workspaces
         # Assign all users to all new workspaces
-        # Create all labels for all new workspaces
         # Create all projects for all new workspaces
         # etc.
         altogether: list[Altogether] = [
             {
                 "workspace": workspace,
                 "team_members": list(team_members),
-                "labels": list(labels),
                 "projects": list(projects),
                 "sections": list(sections),
             }
             for (
                 (workspace, team_members),
-                (_, labels),
                 (_, projects),
                 (_, sections),
             ) in zip(
                 groupby(workspaces_team_members, key=lambda u: u.workspace),
-                groupby(workspaces_labels, key=lambda label: label.workspace),
                 groupby(workspaces_projects, key=lambda b: b.workspace),
                 groupby(
                     workspaces_sections, key=lambda b: b.project.workspace
@@ -466,12 +430,6 @@ class Command(BaseCommand):
             help="Ensure N users are added to new workspaces",
         )
         parser.add_argument(
-            "--n-labels",
-            type=int,
-            default=10,
-            help="Ensure N labels are added to a new workspace",
-        )
-        parser.add_argument(
             "--n-tasks",
             type=int,
             default=20,
@@ -495,7 +453,6 @@ class Command(BaseCommand):
         self.n_users = options["n_users"]
         self.n_workspaces = options["n_workspaces"]
         self.n_projects = options["n_projects"]
-        self.n_labels = options["n_labels"]
         self.n_tasks = options["n_tasks"]
         self.n_add_users = options["n_add_users"]
         self.n_posts = options["n_posts"]

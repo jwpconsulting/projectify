@@ -81,7 +81,6 @@ def workspace_delete(*, who: User, workspace: Workspace) -> None:
     - 1 remaining team member
     - No open invites
     - No boards
-    - No labels
     """
     validate_perm("workspace.delete_workspace", who, workspace)
     if workspace.teammember_set.count() > 1:

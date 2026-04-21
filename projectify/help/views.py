@@ -46,12 +46,6 @@ HELP_TOPICS = {
         "markdown_file": Path("tasks.md"),
         "href": reverse_lazy("help:topic:tasks"),
     },
-    "labels": {
-        "title": _("Labels"),
-        "description": _("Create categories for your tasks"),
-        "markdown_file": Path("labels.md"),
-        "href": reverse_lazy("help:topic:labels"),
-    },
     "team-members": {
         "title": _("Team members"),
         "description": _("Collaboration starts with an invite"),

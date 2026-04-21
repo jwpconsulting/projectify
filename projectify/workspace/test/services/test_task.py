@@ -9,11 +9,8 @@ from django.forms import ValidationError
 
 import pytest
 
-from projectify.workspace.services.label import label_create
-
-from ...models import Label, Project, Section, Task, TeamMember, Workspace
+from ...models import Project, Section, Task, TeamMember
 from ...services.task import (
-    task_assign_labels,
     task_create,
     task_mark_done,
     task_move_after,
@@ -21,41 +18,6 @@ from ...services.task import (
 )
 
 pytestmark = pytest.mark.django_db
-
-
-def test_set_labels(
-    task: Task,
-    labels: list[Label],
-    unrelated_workspace: Workspace,
-    unrelated_team_member: TeamMember,
-) -> None:
-    """Test setting labels."""
-    assert task.labels.count() == 0
-    a, b, c, d, e = labels
-    task_assign_labels(task=task, labels=[a, b])
-    assert task.labels.count() == 2
-    # The order is inverted since we are not actually sorting by the
-    # TaskLabel creation but the default ordering of the label itself
-    # Furthermore, we work independently of the service layer, so it is
-    # questionable how useful this code is to the application
-    # TODO refactor
-    assert list(task.labels.values_list("id", flat=True)) == [b.id, a.id]
-    task_assign_labels(task=task, labels=[c, d, e])
-    assert task.labels.count() == 3
-    assert list(task.labels.values_list("id", flat=True)) == [e.id, d.id, c.id]
-    task_assign_labels(task=task, labels=[])
-    assert task.labels.count() == 0
-    assert list(task.labels.values_list("id", flat=True)) == []
-
-    unrelated = label_create(
-        workspace=unrelated_workspace,
-        who=unrelated_team_member.user,
-        color=0,
-        name="don't care",
-    )
-    task_assign_labels(task=task, labels=[unrelated])
-    assert task.labels.count() == 0
-    assert list(task.labels.values_list("id", flat=True)) == []
 
 
 # Create
@@ -95,9 +57,7 @@ def test_create_task_unrelated_teammember(
     assert e.match("belongs to a different workspace")
 
 
-def test_task_create_nested(
-    label: Label, team_member: TeamMember, section: Section
-) -> None:
+def test_task_create_nested(team_member: TeamMember, section: Section) -> None:
     """Test task_create_nested."""
     task = task_create(
         who=team_member.user,
@@ -106,9 +66,7 @@ def test_task_create_nested(
         description=None,
         assignee=team_member,
         due_date=None,
-        labels=[label],
     )
-    assert list(task.labels.values_list("uuid", flat=True)) == [label.uuid]
     assert task.assignee == team_member
 
 
@@ -128,10 +86,7 @@ def test_add_task_due_date(
 
 # Update
 def test_task_update(
-    task: Task,
-    label: Label,
-    team_member: TeamMember,
-    other_team_member: TeamMember,
+    task: Task, team_member: TeamMember, other_team_member: TeamMember
 ) -> None:
     """Test updating a task."""
     task_update(
@@ -140,41 +95,14 @@ def test_task_update(
         title="Hello world",
         description=None,
         assignee=other_team_member,
-        labels=[label],
     )
     task.refresh_from_db()
     assert task.assignee == other_team_member
 
     assert task.due_date is None
 
-    assert list(task.labels.values_list("uuid", flat=True)) == [label.uuid]
-
     assert task.assignee
     assert task.assignee.user.email == other_team_member.user.email
-
-    # labels stay the same if labels=None passed
-    task_update(
-        who=team_member.user,
-        task=task,
-        title="Hello world",
-        description=None,
-        assignee=other_team_member,
-        labels=None,
-    )
-    task.refresh_from_db()
-    assert list(task.labels.values_list("uuid", flat=True)) == [label.uuid]
-
-    # labels disappear if empty list passed
-    task_update(
-        who=team_member.user,
-        task=task,
-        title="Hello world",
-        description=None,
-        assignee=other_team_member,
-        labels=[],
-    )
-    task.refresh_from_db()
-    assert list(task.labels.values_list("uuid", flat=True)) == []
 
 
 def test_moving_task_within_section(

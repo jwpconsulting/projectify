@@ -35,9 +35,7 @@ class WorkspaceQuota:
 
     workspace_status: WorkspaceFeatures
     chat_messages: Quota
-    labels: Quota
     tasks: Quota
-    task_labels: Quota
     projects: Quota
     sections: Quota
     team_members_and_invites: Quota

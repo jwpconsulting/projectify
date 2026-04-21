@@ -11,13 +11,7 @@ from django.urls import reverse
 import pytest
 
 from projectify.user.models import User
-from projectify.workspace.models import (
-    Label,
-    Project,
-    Task,
-    TeamMember,
-    Workspace,
-)
+from projectify.workspace.models import Project, Task, TeamMember, Workspace
 from pytest_types import DjangoAssertNumQueries
 
 pytestmark = pytest.mark.django_db
@@ -129,7 +123,7 @@ class TestNewProject(MixinForTests):
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test creating a new project."""
-        with django_assert_num_queries(10):
+        with django_assert_num_queries(9):
             response = user_client.post(resource_url, {"title": "BarFoo"})
             assert response.status_code == 302
         project = Project.objects.get(title="BarFoo")
@@ -182,7 +176,7 @@ class TestNewTask(MixinForTests):
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Create a new task."""
-        with django_assert_num_queries(16):
+        with django_assert_num_queries(15):
             assert (
                 user_client.post(
                     resource_url, {"title": "Test Task"}
@@ -214,67 +208,6 @@ class TestNewTask(MixinForTests):
             user_client.get(
                 reverse(
                     "onboarding:new_task", args=[str(unrelated_project.uuid)]
-                )
-            ).status_code
-            == 404
-        )
-
-
-class TestNewLabel(MixinForTests):
-    """Test new label view."""
-
-    @pytest.fixture
-    def resource_url(self, other_task: Task) -> str:
-        """Return URL to this view."""
-        return reverse("onboarding:new_label", args=[str(other_task.uuid)])
-
-    def test_post_new_label(
-        self,
-        user_client: Client,
-        resource_url: str,
-        other_task: Task,
-        django_assert_num_queries: DjangoAssertNumQueries,
-    ) -> None:
-        """Test POSTing to new label page."""
-        with django_assert_num_queries(26):
-            assert (
-                user_client.post(
-                    resource_url, {"name": "BarkWoof"}
-                ).status_code
-                == 302
-            )
-        assert Label.objects.get() in other_task.labels.all()
-
-    def test_form_validation(
-        self, user_client: Client, resource_url: str
-    ) -> None:
-        """Test what happens if we pass in an empty label."""
-        assert user_client.post(resource_url, {"name": ""}).status_code == 400
-
-    def test_label_conflict(
-        self, user_client: Client, resource_url: str
-    ) -> None:
-        """Test what happens if we pass in an empty label."""
-        assert user_client.post(resource_url, {"name": "T"}).status_code == 302
-        assert user_client.post(resource_url, {"name": "T"}).status_code == 400
-
-    def test_task_not_found(self, user_client: Client) -> None:
-        """Test not found handling."""
-        assert (
-            user_client.get(
-                reverse("onboarding:new_label", args=[str(uuid4())])
-            ).status_code
-            == 404
-        )
-
-    def test_authorization(
-        self, user_client: Client, unrelated_task: Task
-    ) -> None:
-        """Test that we can't work with unrelated tasks."""
-        assert (
-            user_client.get(
-                reverse(
-                    "onboarding:new_label", args=[str(unrelated_task.uuid)]
                 )
             ).status_code
             == 404

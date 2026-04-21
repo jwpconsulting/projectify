@@ -53,11 +53,9 @@ from projectify.user.services.user_invite import (
 )
 from projectify.workspace.models import (
     ChatMessage,
-    Label,
     Project,
     Section,
     Task,
-    TaskLabel,
     TeamMember,
     TeamMemberInvite,
     TeamMemberRoles,
@@ -67,7 +65,6 @@ from projectify.workspace.selectors.team_member import (
     team_member_find_for_workspace,
 )
 from projectify.workspace.services.chat_message import chat_message_create
-from projectify.workspace.services.label import label_create
 from projectify.workspace.services.project import (
     project_archive,
     project_create,
@@ -482,57 +479,6 @@ def unrelated_task(
         section=unrelated_section,
         title="I am an unrelated task",
     )
-
-
-@pytest.fixture
-def label(
-    faker: Faker, workspace: Workspace, team_member: TeamMember
-) -> Label:
-    """Return a label."""
-    return label_create(
-        workspace=workspace,
-        name=faker.catch_phrase(),
-        who=team_member.user,
-        color=faker.pyint(min_value=0, max_value=6),
-    )
-
-
-@pytest.fixture
-def unrelated_label(
-    faker: Faker,
-    unrelated_workspace: Workspace,
-    unrelated_team_member: TeamMember,
-) -> Label:
-    """Create an unrelated label."""
-    return label_create(
-        workspace=unrelated_workspace,
-        name=faker.catch_phrase(),
-        who=unrelated_team_member.user,
-        color=faker.pyint(min_value=0, max_value=6),
-    )
-
-
-@pytest.fixture
-def labels(workspace: Workspace, team_member: TeamMember) -> list[Label]:
-    """Create several labels."""
-    N = 5
-    return [
-        label_create(
-            who=team_member.user,
-            workspace=workspace,
-            name=f"Label {i}",
-            color=i,
-        )
-        for i in range(N)
-    ]
-
-
-@pytest.fixture
-def task_label(task: Task, label: Label) -> TaskLabel:
-    """Return a label."""
-    # TODO we will use a task_add_label service here in the future
-    task.labels.add(label)
-    return TaskLabel.objects.get(task=task)
 
 
 @pytest.fixture

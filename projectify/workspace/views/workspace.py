@@ -9,8 +9,6 @@ from typing import Any, Literal, TypedDict
 from uuid import UUID
 
 from django import forms
-from django.core import exceptions
-from django.db.models import QuerySet
 from django.forms import ValidationError
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
@@ -29,18 +27,11 @@ from projectify.corporate.services.customer import (
     customer_create_stripe_checkout_session,
 )
 from projectify.lib.forms import SafeImageField, populate_form_with_errors
-from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.settings import get_settings
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 
-from ..const import COLOR_MAP
-from ..models import Label, TeamMember, Workspace
-from ..selectors.labels import (
-    LabelDetailQuerySet,
-    label_find_by_label_uuid,
-    labels_annotate_with_colors,
-)
+from ..models import TeamMember, Workspace
 from ..selectors.project import project_find_by_workspace_uuid
 from ..selectors.quota import workspace_get_all_quotas
 from ..selectors.team_member import (
@@ -54,7 +45,6 @@ from ..selectors.workspace import (
     workspace_find_by_workspace_uuid,
     workspace_find_for_user,
 )
-from ..services.label import label_create, label_delete, label_update
 from ..services.team_member import (
     team_member_delete,
     team_member_minimize_project_list,
@@ -81,24 +71,11 @@ class ColorInfo:
     text_class: str
 
 
-def create_color_choices() -> dict[Any, ColorInfo]:
-    """Create color choices for label colors."""
-    return {
-        i: ColorInfo(
-            name=info["name"],
-            bg_class=info["bg_class"],
-            border_class=info["border_class"],
-            text_class=info["text_class"],
-        )
-        for i, info in COLOR_MAP.items()
-    }
-
-
 def _get_workspace_settings_context(
     request: AuthenticatedHttpRequest,
     workspace: Workspace,
     active_tab: Literal[
-        "general", "projects", "labels", "team-members", "billing", "quota"
+        "general", "projects", "team-members", "billing", "quota"
     ],
 ) -> dict[str, object]:
     """Get shared context for workspace settings views."""
@@ -113,11 +90,6 @@ def _get_workspace_settings_context(
             "href": reverse("dashboard:workspaces:projects", args=rev_args),
             "label": _("Projects"),
             "active": active_tab == "projects",
-        },
-        {
-            "href": reverse("dashboard:workspaces:labels", args=rev_args),
-            "label": _("Labels"),
-            "active": active_tab == "labels",
         },
         {
             "href": reverse(
@@ -386,211 +358,6 @@ def workspace_settings_projects(
     return render(
         request, "workspace/workspace_settings_projects.html", context=context
     )
-
-
-@require_http_methods(["GET"])
-@platform_view
-def workspace_settings_label(
-    request: AuthenticatedHttpRequest, workspace_uuid: UUID
-) -> HttpResponse:
-    """Show labels for this workspace."""
-    workspace = workspace_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=workspace_uuid,
-        qs=workspace_build_detail_query_set(who=None, annotate_labels=True),
-    )
-    if workspace is None:
-        raise Http404(_("Workspace not found"))
-    context = {
-        **_get_workspace_settings_context(
-            request=request, workspace=workspace, active_tab="labels"
-        ),
-        "labels": labels_annotate_with_colors(workspace.label_set.all()),
-    }
-    return render(
-        request, "workspace/workspace_settings_labels.html", context=context
-    )
-
-
-class LabelCreateForm(forms.ModelForm):
-    """Form for creating labels."""
-
-    name = forms.CharField(max_length=100)
-    color = forms.IntegerField()
-
-    def __init__(self, *args: Any, **kwargs: Any):
-        """Initialize form with color widget."""
-        super().__init__(*args, **kwargs)
-        color_widget = forms.RadioSelect()
-        color_widget.option_template_name = (
-            "workspace/forms/widgets/select_label_option.html"
-        )
-
-        self.fields["color"] = forms.ChoiceField(
-            label=_("Color"),
-            choices=create_color_choices(),
-            widget=color_widget,
-        )
-
-    class Meta:
-        """Meta settings for LabelCreateForm."""
-
-        fields = "name", "color"
-        model = Label
-
-
-@require_http_methods(["GET", "POST"])
-@platform_view
-def workspace_settings_new_label(
-    request: AuthenticatedHttpRequest, workspace_uuid: UUID
-) -> HttpResponse:
-    """Create a new label for the workspace."""
-    workspace = workspace_find_by_workspace_uuid(
-        who=request.user,
-        workspace_uuid=workspace_uuid,
-        qs=WorkspaceDetailQuerySet,
-    )
-    if workspace is None:
-        raise Http404(_("Workspace not found"))
-
-    context = {
-        **_get_workspace_settings_context(
-            request=request, workspace=workspace, active_tab="labels"
-        ),
-        "color_map": COLOR_MAP,
-    }
-    match request.method:
-        case "GET":
-            form = LabelCreateForm()
-            return render(
-                request,
-                "workspace/workspace_settings_create_label.html",
-                context={**context, "form": form},
-            )
-        case "POST":
-            pass
-        case other:
-            raise ValueError(f"Wrong HTTP method {other}")
-    form = LabelCreateForm(data=request.POST)
-    if not form.is_valid():
-        return render(
-            request,
-            "workspace/workspace_settings_create_label.html",
-            context={**context, "form": form},
-            status=400,
-        )
-
-    try:
-        label_create(
-            workspace=workspace,
-            name=form.cleaned_data["name"],
-            color=form.cleaned_data["color"],
-            who=request.user,
-        )
-    except (exceptions.ValidationError, ValidationError) as error:
-        populate_form_with_errors(form, error)
-        return render(
-            request,
-            "workspace/workspace_settings_create_label.html",
-            context={**context, "form": form},
-            status=400,
-        )
-
-    return redirect("dashboard:workspaces:labels", workspace.uuid)
-
-
-class LabelUpdateForm(forms.ModelForm):
-    """Form for updating labels."""
-
-    name = forms.CharField()
-    color = forms.IntegerField()
-
-    def __init__(self, labels: QuerySet[Label], *args: Any, **kwargs: Any):
-        """Initialize form with color widget."""
-        super().__init__(*args, **kwargs)
-        color_widget = forms.RadioSelect()
-        color_widget.option_template_name = (
-            "workspace/forms/widgets/select_label_option.html"
-        )
-
-        self.fields["color"] = forms.ChoiceField(
-            label=_("Color"),
-            choices=create_color_choices(),
-            widget=color_widget,
-        )
-
-    class Meta:
-        """Meta settings for LabelUpdateForm."""
-
-        fields = "name", "color"
-        model = Label
-
-
-@require_http_methods(["GET", "POST", "DELETE"])
-@platform_view
-def workspace_settings_edit_label(
-    request: AuthenticatedHttpRequest, workspace_uuid: UUID, label_uuid: UUID
-) -> HttpResponse:
-    """Show edit view for specific label."""
-    label = label_find_by_label_uuid(
-        who=request.user, label_uuid=label_uuid, qs=LabelDetailQuerySet
-    )
-    if label is None:
-        raise Http404(f"Couldn't find label with UUID {label_uuid}")
-    if label.workspace.uuid != workspace_uuid:
-        return HttpResponseBadRequest("Workspace UUIDs don't match")
-    context = {
-        **_get_workspace_settings_context(
-            request=request, workspace=label.workspace, active_tab="labels"
-        ),
-        "label": label,
-        "color_map": COLOR_MAP,
-    }
-    match request.method:
-        case "DELETE":
-            label_delete(who=request.user, label=label)
-            return HttpResponseClientRefresh()
-        case "GET":
-            form = LabelUpdateForm(
-                labels=label.workspace.label_set.all(), instance=label
-            )
-            return render(
-                request,
-                "workspace/workspace_settings_edit_label.html",
-                context={**context, "form": form},
-            )
-        case "POST":
-            pass
-        case other:
-            raise ValueError(f"Wrong HTTP method {other}")
-    form = LabelUpdateForm(
-        labels=label.workspace.label_set.all(),
-        instance=label,
-        data=request.POST,
-    )
-    if not form.is_valid():
-        return render(
-            request,
-            "workspace/workspace_settings_edit_label.html",
-            context={**context, "form": form},
-            status=400,
-        )
-    try:
-        label_update(
-            who=request.user,
-            label=label,
-            name=form.cleaned_data["name"],
-            color=form.cleaned_data["color"],
-        )
-    except (exceptions.ValidationError, ValidationError) as error:
-        populate_form_with_errors(form, error)
-        return render(
-            request,
-            "workspace/workspace_settings_edit_label.html",
-            context={**context, "form": form},
-            status=400,
-        )
-    return redirect("dashboard:workspaces:labels", label.workspace.uuid)
 
 
 class InviteTeamMemberForm(forms.Form):
@@ -960,8 +727,6 @@ def workspace_settings_quota(
         {"label": _("Projects"), "quota": workspace.quota.projects},
         {"label": _("Sections"), "quota": workspace.quota.sections},
         {"label": _("Tasks"), "quota": workspace.quota.tasks},
-        {"label": _("Labels"), "quota": workspace.quota.labels},
-        {"label": _("Task labels"), "quota": workspace.quota.task_labels},
     ]
     quota_rows = [q for q in quota_rows if q["quota"].limit is not None]
 
