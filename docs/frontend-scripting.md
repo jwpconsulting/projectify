@@ -11,11 +11,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 This document outlines the frontend scripting methods used by Projectify.
 
-Projectify uses HTMX.
+Projectify uses HTMX and ships with trix.js and Prose.
 
-To make the `htmx.js` bundle, ensure you've enabled Nix flakes on your system
+To all HTMX, trix.js and Prose with stylesheets, ensure you've enabled Nix flakes on your system
 and run the following:
 
 ```bash
-bin/build-htmx
+bin/build-thirdparty-scripts
 ```

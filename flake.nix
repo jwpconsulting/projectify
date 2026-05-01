@@ -24,6 +24,51 @@
       in
       {
         packages = rec {
+          trix-js = pkgs.stdenv.mkDerivation rec {
+            pname = "trix";
+            version = "2.1.18";
+            src = pkgs.fetchFromGitHub {
+              owner = "basecamp";
+              repo = "trix";
+              rev = "v${version}";
+              sha256 = "sha256-fyyXJiYCho031P1Ni9ehDdUk8smPqMZnayWvZXPoHaM=";
+            };
+            offlineCache = pkgs.fetchYarnDeps {
+              yarnLock = "${src}/yarn.lock";
+              sha256 = "sha256-8ihDdBuk2VliY+l2bAySzg7uDdMitwx9QFuEUL/disM=";
+            };
+            nativeBuildInputs = [
+              pkgs.yarnConfigHook
+              pkgs.nodejs
+              pkgs.rake
+            ];
+            # This fixes a /usr/bin/env issue, and
+            # changes lines like the following to use url() instead:
+            # $icon-attach: svg('trix/images/attach.svg');
+            # becomes
+            # $icon-attach: url('./attach.svg');
+            postPatch = ''
+              patchShebangs --build bin/sass-build
+              sed -i "s|svg('trix|url('.|g" assets/trix/stylesheets/icons.scss
+            '';
+            buildPhase = ''
+              export HOME=$(mktemp -d)
+              yarn --offline build
+            '';
+            installPhase = ''
+              mkdir $out $out/images
+              echo "\
+/*! SPDX-License-Identifier: MIT
+    SPDX-FileCopyrightText: 37signals, LLC */" > $out/trix.umd.js
+              cat dist/trix.umd.js >> $out/trix.umd.js
+              echo "\
+/*! SPDX-License-Identifier: MIT
+    SPDX-FileCopyrightText: 37signals, LLC */" > $out/trix.css
+              cat dist/trix.css >> $out/trix.css
+              cp -a assets/trix/images/*.svg $out/images
+            '';
+          };
+
           # This is where projectify-bundle once lived
           # Copy with:
           htmx-js = pkgs.stdenv.mkDerivation rec {

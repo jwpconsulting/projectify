@@ -74,10 +74,10 @@ class RichTextEditor(Textarea):
         return context
 
     class Media:
-        """Use vendored in {trix,prose}.{css,js}."""
+        """Use vendored in trix and prose files."""
 
-        css = {"all": ("trix/trix.css", "trix/prose.css")}
-        js = ("trix/trix.js", "trix/prose.js")
+        css = {"all": ("trix/trix.css", "prose/prose.css")}
+        js = ("trix/trix.umd.js", "prose/prose.js")
 
 
 # TODO Consider using ImageField
