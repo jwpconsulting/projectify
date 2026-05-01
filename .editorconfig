@@ -27,6 +27,9 @@ max_line_length = 72
 [*.{js,json}]
 indent_size = 2
 
+[*.css]
+indent_size = 4
+
 [*.{yml,yaml}]
 indent_size = 4
 
