@@ -14,6 +14,7 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.db.models.fields.files import FileDescriptor
 from django.urls import reverse
+from django.utils.html import format_html
 
 from faker import Faker
 from selenium import webdriver
@@ -140,8 +141,8 @@ class Command(BaseCommand):
         task_create(
             who=self.owner,
             section=self.in_progress_section,
-            title="Beta testing for level 6",
-            description="Conduct beta testing for level 6 functionality",
+            title_description="<p>Beta testing for level 6</p>"
+            "<p>Conduct beta testing for level 6 functionality</p>",
             assignee=fake.random_element(elements=team_members),
         )
 
@@ -159,8 +160,9 @@ class Command(BaseCommand):
             task_create(
                 who=self.owner,
                 section=self.in_progress_section,
-                title=title,
-                description=description,
+                title_description=format_html(
+                    "<p>{}</p><p>{}</p>", title, description
+                ),
                 assignee=fake.random_element(elements=team_members),
             )
 
@@ -168,21 +170,21 @@ class Command(BaseCommand):
         self.essay_task = task_create(
             who=self.owner,
             section=self.coursework_section,
-            title="Write essay for assignment",
-            description="Complete the essay assignment for the course",
+            title_description="<p>Write essay for assignment</p>"
+            "<p>Complete the essay assignment for the course</p>",
             assignee=fake.random_element(elements=team_members),
         )
         task_create(
             who=self.owner,
             section=self.coursework_section,
-            title="Research methodology review",
+            title_description="Research methodology review",
             assignee=fake.random_element(elements=team_members),
         )
 
         task_create(
             who=self.owner,
             section=self.coursework_section,
-            title="Prepare presentation slides",
+            title_description="Prepare presentation slides",
             assignee=fake.random_element(elements=team_members),
         )
 

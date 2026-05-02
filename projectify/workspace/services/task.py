@@ -13,6 +13,7 @@ from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.auth import validate_perm
+from projectify.lib.utils import extract_first_paragraph_text
 from projectify.user.models import User
 
 from ..models import Section, Task, TeamMember
@@ -25,8 +26,7 @@ def task_create(
     *,
     who: User,
     section: Section,
-    title: str,
-    description: Optional[str] = None,
+    title_description: str,
     due_date: Optional[datetime] = None,
     assignee: Optional[TeamMember] = None,
 ) -> Task:
@@ -44,10 +44,17 @@ def task_create(
                 ]
             }
         )
+
+    match extract_first_paragraph_text(title_description):
+        case str() as title:
+            pass
+        case None:
+            title = title_description
+
     task = Task.objects.create(
         section=section,
         title=title,
-        description=description,
+        description=title_description,
         due_date=due_date,
         workspace=workspace,
         assignee=assignee,
@@ -61,17 +68,22 @@ def task_update(
     *,
     who: User,
     task: Task,
-    title: str,
-    description: Optional[str] = None,
+    title_description: str,
     due_date: Optional[datetime] = None,
     assignee: Optional[TeamMember] = None,
 ) -> Task:
     """Update task."""
     validate_perm("workspace.update_task", who, task.workspace)
-    task.title = title
-    task.description = description
+    task.description = title_description
     task.due_date = due_date
     task.assignee = assignee
+
+    match extract_first_paragraph_text(title_description):
+        case str() as title:
+            task.title = title
+        case None:
+            task.title = title_description
+
     task.save()
     return task
 

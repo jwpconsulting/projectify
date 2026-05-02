@@ -250,8 +250,8 @@ def _project_detail_view_actions(
                 )
             section: Section = form.cleaned_data["section"]
             enrich_section = section
-            title = form.cleaned_data["title"]
-            task_create(who=request.user, section=section, title=title)
+            t = form.cleaned_data["title"]
+            task_create(who=request.user, section=section, title_description=t)
             template = "workspace/project_detail.html#section"
         case "POST", "minimize_section":
             section_minimize_form = SectionMinimizeForm(
