@@ -42,6 +42,7 @@ features:
 ### Security
 
 - Forbid `<object>` tags by setting the `object-src` CSP to `none`.
+- Update python-dotenv
 
 ## 2026.4.15
 
