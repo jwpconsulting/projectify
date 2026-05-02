@@ -29,6 +29,7 @@ from django.core.files.base import File
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import client
 from django.utils import timezone
+from django.utils.html import format_html
 
 import pytest
 from faker import Faker
@@ -450,8 +451,9 @@ def task(section: Section, team_member: TeamMember, faker: Faker) -> Task:
     return task_create(
         who=team_member.user,
         section=section,
-        title=faker.sentence(),
-        description=faker.paragraph(),
+        title_description=format_html(
+            "<p>{}</p><p>{}</p>", faker.sentence(), faker.paragraph()
+        ),
         assignee=team_member if faker.pybool() else None,
         due_date=faker.date_time(tzinfo=dt_timezone.utc),
     )
@@ -463,7 +465,9 @@ def other_task(task: Task, section: Section, team_member: TeamMember) -> Task:
     # Make sure that this is created AFTER `task`
     del task
     return task_create(
-        who=team_member.user, section=section, title="I am the other task"
+        who=team_member.user,
+        section=section,
+        title_description="I am the other task",
     )
 
 
@@ -475,7 +479,7 @@ def unrelated_task(
     return task_create(
         who=unrelated_team_member.user,
         section=unrelated_section,
-        title="I am an unrelated task",
+        title_description="I am an unrelated task",
     )
 
 

@@ -144,7 +144,7 @@ class TestTrialRules:
         assert validate_perm("workspace.create_task", user, workspace)
         customer_cancel_subscription(customer=workspace.customer)
         assert validate_perm("workspace.create_task", user, workspace)
-        task_create(section=section, title="task title", who=user)
+        task_create(section=section, title_description="task title", who=user)
         assert not validate_perm(
             "workspace.create_task", user, workspace, raise_exception=False
         )
@@ -152,7 +152,7 @@ class TestTrialRules:
         assert validate_perm(
             "workspace.create_task", user, workspace, raise_exception=False
         )
-        task_create(section=section, title="task title", who=user)
+        task_create(section=section, title_description="task title", who=user)
 
     def test_create_task(
         self, team_member: TeamMember, section: Section
@@ -163,7 +163,7 @@ class TestTrialRules:
         assert validate_perm("workspace.create_task", user, workspace)
         customer_cancel_subscription(customer=workspace.customer)
         assert validate_perm("workspace.create_task", user, workspace)
-        task_create(section=section, title="task title", who=user)
+        task_create(section=section, title_description="task title", who=user)
         assert not validate_perm(
             "workspace.create_task", user, workspace, raise_exception=False
         )

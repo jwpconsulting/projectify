@@ -55,18 +55,16 @@ def create_sample_sections(
     section_about = section_create(
         who=who, title=_("About Projectify"), project=project
     )
-    task_create(
-        who=who,
-        section=section_about,
-        title=_("Learn how to use Projectify"),
-        assignee=team_member,
-    )
-    task_create(
-        who=who,
-        section=section_about,
-        title=_("Invite my team members"),
-        assignee=team_member,
-    )
+    for title in [
+        _("Learn how to use Projectify"),
+        _("Invite my team members"),
+    ]:
+        task_create(
+            who=who,
+            section=section_about,
+            title_description=title,
+            assignee=team_member,
+        )
 
 
 @login_required
@@ -340,7 +338,7 @@ def new_task(
                 task = task_create(
                     who=request.user,
                     section=section,
-                    title=form.cleaned_data["title"],
+                    title_description=form.cleaned_data["title"],
                     assignee=team_member,
                 )
                 return redirect(

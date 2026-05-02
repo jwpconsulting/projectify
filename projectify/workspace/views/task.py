@@ -22,7 +22,6 @@ from projectify.lib.htmx import (
     HttpResponseClientRefresh,
 )
 from projectify.lib.types import AuthenticatedHttpRequest
-from projectify.lib.utils import extract_first_paragraph_text
 from projectify.lib.views import platform_view
 
 from ..const import TASK_EDITOR_MIN_HEIGHT_CLASS
@@ -130,21 +129,6 @@ class TaskForm(forms.Form):
                 "Couldn't find focus_field=%s in self.fields", focus_field
             )
 
-    def clean(self) -> dict[str, Any]:
-        """Extract title from the first paragraph of description."""
-        cleaned_data = super().clean()
-        # need to cleaned_data.get(field), not cleaned_data[field]. See:
-        # > So you also need to remember to allow for the fact that the fields you are wanting to validate might not have survived the initial individual field checks.
-        # Source: <https://docs.djangoproject.com/en/6.0/ref/forms/validation/#cleaning-and-validating-fields-that-depend-on-each-other>
-        description: Optional[str] = cleaned_data.get("description")
-        if description:
-            first_paragraph = extract_first_paragraph_text(description)
-            if first_paragraph:
-                cleaned_data["title"] = first_paragraph
-            else:
-                cleaned_data["title"] = description
-        return cleaned_data
-
 
 @platform_view
 @require_http_methods(["GET", "POST"])
@@ -193,8 +177,7 @@ def task_create_view(
     task = task_create(
         who=request.user,
         section=section,
-        title=form.cleaned_data["title"],
-        description=form.cleaned_data.get("description"),
+        title_description=form.cleaned_data["description"],
         assignee=form.cleaned_data.get("assignee"),
         due_date=form.cleaned_data.get("due_date"),
     )
@@ -265,7 +248,6 @@ def task_update_view(
         "project": task.section.project,
     }
     task_initial = {
-        "title": task.title,
         "assignee": task.assignee,
         "due_date": task.due_date,
         "description": task.description,
@@ -318,8 +300,7 @@ def task_update_view(
     task_update(
         who=request.user,
         task=task,
-        title=cleaned_data["title"],
-        description=cleaned_data["description"],
+        title_description=cleaned_data["description"],
         due_date=cleaned_data["due_date"],
         assignee=cleaned_data["assignee"],
     )

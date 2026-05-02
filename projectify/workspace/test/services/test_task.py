@@ -27,16 +27,22 @@ def test_create_task(
     """Test adding tasks to a project."""
     count = section.task_set.count()
     task = task_create(
-        who=team_member.user, section=section, title="foo", description="bar"
+        who=team_member.user, section=section, title_description="foo"
     )
+    assert task.title == "foo"
+    assert task.description == "foo"
+
     assert section.task_set.count() == count + 1
+
     task2 = task_create(
         who=team_member.user,
         section=section,
-        title="foo",
-        description="bar",
+        title_description="<p>foo</p><p>bar</p>",
         assignee=other_team_member,
     )
+    assert task2.title == "foo"
+    assert task2.description == "<p>foo</p><p>bar</p>"
+
     assert section.task_set.count() == count + 2
     assert list(section.task_set.all()) == [task2, task]
 
@@ -51,7 +57,7 @@ def test_create_task_unrelated_teammember(
         task_create(
             who=team_member.user,
             section=section,
-            title="foo",
+            title_description="foo",
             assignee=unrelated_team_member,
         )
     assert e.match("belongs to a different workspace")
@@ -62,10 +68,8 @@ def test_task_create_nested(team_member: TeamMember, section: Section) -> None:
     task = task_create(
         who=team_member.user,
         section=section,
-        title="hello",
-        description=None,
+        title_description="foo",
         assignee=team_member,
-        due_date=None,
     )
     assert task.assignee == team_member
 
@@ -77,8 +81,7 @@ def test_add_task_due_date(
     task = task_create(
         section=section,
         who=team_member.user,
-        title="foo",
-        description="bar",
+        title_description="foo",
         due_date=now,
     )
     assert task.due_date is not None
@@ -92,8 +95,7 @@ def test_task_update(
     task_update(
         who=team_member.user,
         task=task,
-        title="Hello world",
-        description=None,
+        title_description="Hello world",
         assignee=other_team_member,
     )
     task.refresh_from_db()
@@ -113,11 +115,13 @@ def test_moving_task_to_other_section(
 ) -> None:
     """Test moving a task around to another section."""
     other_task = task_create(
-        who=team_member.user, title="don't care", section=section
+        who=team_member.user, title_description="don't care", section=section
     )
     assert list(section.task_set.all()) == [other_task, task]
     other_section_task = task_create(
-        who=team_member.user, title="don't care", section=other_section
+        who=team_member.user,
+        title_description="don't care",
+        section=other_section,
     )
     assert list(other_section.task_set.all()) == [other_section_task]
     task_move_after(who=team_member.user, task=task, after=other_section)
