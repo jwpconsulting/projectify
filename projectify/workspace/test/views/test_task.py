@@ -50,20 +50,37 @@ class TestTaskCreateView:
     ) -> None:
         """Test creating a task."""
         initial_task_count = Task.objects.count()
-        with django_assert_num_queries(14):
-            response = user_client.post(
-                resource_url,
-                {
-                    "title": "Assigned Task",
-                    "assignee": str(team_member.uuid),
-                    "action": "create",
-                },
-            )
-            assert response.status_code == 302
+        data = {
+            "description": "<p>Assigned Task</p><h1>Rest</p><p>Bla</p>",
+            "assignee": str(team_member.uuid),
+            "action": "create",
+        }
+        with django_assert_num_queries(13):
+            response = user_client.post(resource_url, data)
+            assert response.status_code == 302, response.content
 
         assert Task.objects.count() == initial_task_count + 1
         task = Task.objects.get()
         assert task.assignee == team_member
+        assert task.title == "Assigned Task"
+
+    def test_create_task_title_extraction(
+        self, user_client: Client, resource_url: str, team_member: TeamMember
+    ) -> None:
+        """Test setting the title."""
+        # No description
+        data = {"assignee": str(team_member.uuid), "action": "create"}
+        response = user_client.post(resource_url, data)
+        assert response.status_code == 400
+
+        # Empty description
+        data = {
+            "assignee": str(team_member.uuid),
+            "action": "create",
+            "description": "",
+        }
+        response = user_client.post(resource_url, data)
+        assert response.status_code == 400
 
     def test_section_not_found(
         self, user_client: Client, team_member: TeamMember
@@ -135,7 +152,7 @@ class TestTaskUpdateView:
             response = user_client.post(
                 resource_url,
                 {
-                    "title": "Updated Task Title",
+                    "description": "<p>Updated Task Title</p><p>Rest</p>",
                     "assignee": str(team_member.uuid),
                     "action": "update",
                 },

@@ -30,7 +30,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         ),
     )
     # is_superuser comes from PermissionsMixin
-    # is_superuser = models.BooleanField()
+    # is_superuser = models.BooleanField(default=False)
     # Vendor the is_staff and is_active in from AbstractUser
     is_staff = models.BooleanField(
         _("staff status"),

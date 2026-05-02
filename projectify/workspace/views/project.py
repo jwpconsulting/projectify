@@ -40,7 +40,7 @@ from ..services.project import (
     project_update,
 )
 from ..services.section import section_minimize
-from ..services.task import task_create, task_mark_done, task_move_in_direction
+from ..services.task import task_create, task_mark_done
 from ..services.team_member import (
     team_member_minimize_team_member_filter,
     team_member_visit_project,
@@ -271,18 +271,6 @@ def _project_detail_view_actions(
                 minimized=minimized,
             )
 
-            template = "workspace/project_detail.html#section"
-        case "POST", "move_task":
-            task_move_form = TaskMoveForm(project=project, data=request.POST)
-            if not task_move_form.is_valid():
-                raise BadRequest()
-            task: Task = task_move_form.cleaned_data["task_uuid"]
-            enrich_section = task.section
-            task_move_in_direction(
-                who=request.user,
-                task=task,
-                direction=task_move_form.cleaned_data["direction"],
-            )
             template = "workspace/project_detail.html#section"
         case "POST", "mark_task_done":
             task_mark_done_form = TaskMarkDoneForm(

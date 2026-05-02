@@ -9,7 +9,7 @@ from django.forms import ValidationError
 
 import pytest
 
-from ...models import Project, Section, Task, TeamMember
+from ...models import Section, Task, TeamMember
 from ...services.task import (
     task_create,
     task_mark_done,
@@ -38,7 +38,7 @@ def test_create_task(
         assignee=other_team_member,
     )
     assert section.task_set.count() == count + 2
-    assert list(section.task_set.all()) == [task, task2]
+    assert list(section.task_set.all()) == [task2, task]
 
 
 def test_create_task_unrelated_teammember(
@@ -105,23 +105,7 @@ def test_task_update(
     assert task.assignee.user.email == other_team_member.user.email
 
 
-def test_moving_task_within_section(
-    section: Section, task: Task, team_member: TeamMember
-) -> None:
-    """Test moving a task around within the same section."""
-    other_task = task_create(
-        who=team_member.user, title="don't care", section=section
-    )
-    assert list(section.task_set.all()) == [task, other_task]
-    task_move_after(who=team_member.user, task=task, after=other_task)
-    assert list(section.task_set.all()) == [other_task, task]
-    task_move_after(who=team_member.user, task=task, after=section)
-    assert list(section.task_set.all()) == [task, other_task]
-
-
 def test_moving_task_to_other_section(
-    # TODO this fixture might not be needed
-    project: Project,
     section: Section,
     other_section: Section,
     task: Task,
@@ -131,7 +115,7 @@ def test_moving_task_to_other_section(
     other_task = task_create(
         who=team_member.user, title="don't care", section=section
     )
-    assert list(section.task_set.all()) == [task, other_task]
+    assert list(section.task_set.all()) == [other_task, task]
     other_section_task = task_create(
         who=team_member.user, title="don't care", section=other_section
     )
@@ -141,12 +125,7 @@ def test_moving_task_to_other_section(
 
 
 def test_moving_task_to_empty_section(
-    # TODO the following two fixtures might not be needed
-    project: Project,
-    section: Section,
-    other_section: Section,
-    task: Task,
-    team_member: TeamMember,
+    other_section: Section, task: Task, team_member: TeamMember
 ) -> None:
     """
     Test what happens if we move it into an empty section.
@@ -156,7 +135,6 @@ def test_moving_task_to_empty_section(
     task_move_after(who=team_member.user, task=task, after=other_section)
     assert list(other_section.task_set.all()) == [task]
     task.refresh_from_db()
-    assert task._order == 0
 
 
 def test_task_mark_done(task: Task, team_member: TeamMember) -> None:

@@ -18,11 +18,12 @@ rm projectify.sqlite; uv run ./manage.py seeddb
 """
 
 from argparse import ArgumentParser
+from dataclasses import dataclass
 from datetime import timezone
 from itertools import groupby
 from pathlib import Path
 from random import choice, randint, sample
-from typing import Any, TypedDict, cast
+from typing import Any, cast
 
 from django.contrib.auth.hashers import make_password
 from django.core.files import File
@@ -32,6 +33,7 @@ from django.db import transaction
 from django.db.models.fields.files import FileDescriptor
 from django.utils.text import slugify
 
+# Faker only exist when you install the uv dependency group "demo" or "dev"
 try:
     from faker import Faker
 except ImportError as e:
@@ -50,7 +52,6 @@ from projectify.user.services.internal import (
 )
 from projectify.workspace.const import TeamMemberRoles
 from projectify.workspace.models import (
-    ChatMessage,
     Project,
     Section,
     Task,
@@ -58,15 +59,16 @@ from projectify.workspace.models import (
     Workspace,
 )
 
-Altogether = TypedDict(
-    "Altogether",
-    {
-        "workspace": Workspace,
-        "team_members": list[TeamMember],
-        "projects": list[Project],
-        "sections": list[Section],
-    },
-)
+
+@dataclass
+class WorkspaceDescription:
+    """Describes a workspace and its related objects."""
+
+    workspace: Workspace
+    team_members: list[TeamMember]
+    projects: list[Project]
+    sections: list[Section]
+
 
 WORKSPACE_TITLE_MIN_LENGTH = 20
 WORKSPACE_TITLE_MAX_LENGTH = 200
@@ -125,18 +127,15 @@ class Command(BaseCommand):
             superuser = User.objects.get(email="admin@localhost")
             guest = User.objects.get(email="guest@localhost")
         remaining_users = self.n_users - User.objects.count()
-        new_users = User.objects.bulk_create(
-            [
-                User(
-                    email=self.fake.email(),
-                    preferred_name=self.fake.name() if randint(0, 1) else None,
-                    is_staff=False,
-                    is_superuser=False,
-                    password=make_password(None),
-                )
-                for _ in range(remaining_users)
-            ]
-        )
+        new_user_descs = [
+            User(
+                email=self.fake.email(),
+                preferred_name=self.fake.name() if randint(0, 1) else None,
+                password=make_password(None),
+            )
+            for _ in range(remaining_users)
+        ]
+        new_users = User.objects.bulk_create(new_user_descs)
         self.stdout.write(f"Created {len(new_users)} new users")
 
         # Assign random profile pictures
@@ -163,69 +162,36 @@ class Command(BaseCommand):
 
         return list(User.objects.all())
 
-    def create_tasks(self, altogether: list[Altogether]) -> None:
+    def create_tasks(
+        self, workspace_descriptions: list[WorkspaceDescription]
+    ) -> None:
         """
         Create tasks.
 
         Takes in a combination of workspaces, boards and sections and creates
         all tasks at once.
         """
-        # We store all the combinations in a list here (using tee was
-        # evaluated for a second)
-        task_combos = list(
-            (together, section, _order)
-            for together in altogether
-            for section in together["sections"]
-            for _order in range(randint(self.n_tasks // 2, self.n_tasks))
-        )
-        tasks = Task.objects.bulk_create(
-            [
-                Task(
-                    title=self.fake.text(
-                        randint(TASK_TITLE_MIN_LENGTH, TASK_TITLE_MAX_LENGTH)
-                    ),
-                    description=self.fake.paragraph(
-                        TASK_DESCRIPTION_SENTENCES
-                    ),
-                    section=section,
-                    due_date=self.fake.date_time(tzinfo=timezone.utc),
-                    workspace=together["workspace"],
-                    _order=_order,
-                    assignee=choice(together["team_members"])
-                    # 2 out of 3 tasks have an assignee
-                    if randint(0, 2)
-                    else None,
-                )
-                for (together, section, _order) in task_combos
-            ]
-        )
+        task_descs = [
+            Task(
+                title=self.fake.text(
+                    randint(TASK_TITLE_MIN_LENGTH, TASK_TITLE_MAX_LENGTH)
+                ),
+                description=self.fake.paragraph(TASK_DESCRIPTION_SENTENCES),
+                section=section,
+                due_date=self.fake.date_time(tzinfo=timezone.utc),
+                workspace=workspace_description.workspace,
+                assignee=choice(workspace_description.team_members)
+                # 2 out of 3 tasks have an assignee
+                if randint(0, 2)
+                else None,
+            )
+            for workspace_description in workspace_descriptions
+            for section in workspace_description.sections
+            # Random task amount per sections, at least floor(--n-tasks / 2)
+            for _ in range(randint(self.n_tasks // 2, self.n_tasks))
+        ]
+        tasks = Task.objects.bulk_create(task_descs)
         self.stdout.write(f"Created {len(tasks)} tasks")
-
-        # That way we can zip it back together and create the task labels
-        # and still have a reference to the labels that were used for this
-        # task
-        something: list[tuple[Altogether, Task]] = list(
-            zip([together for together, _, _ in task_combos], tasks)
-        )
-
-        chat_messages = ChatMessage.objects.bulk_create(
-            [
-                ChatMessage(
-                    task=task,
-                    text=self.fake.paragraph(),
-                    author=choice(together["team_members"]),
-                )
-                for together, task in something
-                for _ in range(
-                    randint(
-                        TASK_MIN_CHAT_MESSAGE_COUNT,
-                        TASK_MAX_CHAT_MESSAGE_COUNT,
-                    )
-                )
-            ]
-        )
-        self.stdout.write(f"Created {len(chat_messages)} chat messages")
-        self.stdout.write(f"Populated {len(tasks)} tasks")
 
     def create_workspaces(self, users: list[User]) -> list[Workspace]:
         """Create workspaces."""
@@ -235,20 +201,18 @@ class Command(BaseCommand):
         )
         remaining_workspaces = max(0, self.n_workspaces - existing_workspaces)
 
-        workspaces: list[Workspace] = Workspace.objects.bulk_create(
-            [
-                Workspace(
-                    title=self.fake.text(
-                        randint(
-                            WORKSPACE_TITLE_MIN_LENGTH,
-                            WORKSPACE_TITLE_MAX_LENGTH,
-                        )
-                    ),
-                    description=self.fake.paragraph(),
-                )
-                for _ in range(remaining_workspaces)
-            ]
-        )
+        workspace_descs = [
+            Workspace(
+                title=self.fake.text(
+                    randint(
+                        WORKSPACE_TITLE_MIN_LENGTH, WORKSPACE_TITLE_MAX_LENGTH
+                    )
+                ),
+                description=self.fake.paragraph(),
+            )
+            for _ in range(remaining_workspaces)
+        ]
+        workspaces = Workspace.objects.bulk_create(workspace_descs)
         self.stdout.write(f"Created {len(workspaces)} new workspaces")
         for workspace in workspaces:
             path = self.fake.random_element(USER_AVATARS)
@@ -258,64 +222,55 @@ class Command(BaseCommand):
                 workspace.save()
         self.stdout.write("Added pictures to workspaces")
 
-        workspaces_team_members = TeamMember.objects.bulk_create(
-            [
-                TeamMember(
-                    workspace=workspace,
-                    user=user,
-                    role=TeamMemberRoles.OWNER
-                    if user.email == "admin@localhost"
-                    else TeamMemberRoles.CONTRIBUTOR,
-                )
-                for workspace in workspaces
-                for user in sample(users, self.n_add_users)
-            ]
-        )
+        team_member_descs = [
+            TeamMember(
+                workspace=workspace,
+                user=user,
+                role=TeamMemberRoles.OWNER
+                if user.email == "admin@localhost"
+                else TeamMemberRoles.CONTRIBUTOR,
+            )
+            for workspace in workspaces
+            for user in sample(users, self.n_add_users)
+        ]
+        team_members = TeamMember.objects.bulk_create(team_member_descs)
         self.stdout.write(
-            f"Added {len(workspaces_team_members)} users to "
+            f"Added {len(team_members)} users to "
             f"{len(workspaces)} new workspaces"
         )
 
-        workspaces_projects = Project.objects.bulk_create(
-            [
-                Project(
-                    title=self.fake.text(
-                        randint(
-                            PROJECT_TITLE_MIN_LENGTH, PROJECT_TITLE_MAX_LENGTH
-                        )
-                    ),
-                    description=self.fake.paragraph(),
-                    workspace=workspace,
-                    due_date=self.fake.date_time(tzinfo=timezone.utc),
-                )
-                for workspace in workspaces
-                for _ in range(self.n_projects)
-            ]
-        )
+        project_descs = [
+            Project(
+                title=self.fake.text(
+                    randint(PROJECT_TITLE_MIN_LENGTH, PROJECT_TITLE_MAX_LENGTH)
+                ),
+                description=self.fake.paragraph(),
+                workspace=workspace,
+                due_date=self.fake.date_time(tzinfo=timezone.utc),
+            )
+            for workspace in workspaces
+            for _ in range(self.n_projects)
+        ]
+        workspaces_projects = Project.objects.bulk_create(project_descs)
         self.stdout.write(f"Created {len(workspaces_projects)} projects")
 
-        workspaces_sections = Section.objects.bulk_create(
-            [
-                Section(project=project, title=title, _order=_order)
-                for _, projects in groupby(
-                    workspaces_projects, key=lambda b: b.workspace
+        section_descs = [
+            Section(project=project, title=title, _order=_order)
+            for _, projects in groupby(
+                workspaces_projects, key=lambda b: b.workspace
+            )
+            for project in projects
+            for _order, title in enumerate(
+                self.fake.text(
+                    randint(SECTION_TITLE_MIN_LENGTH, SECTION_TITLE_MAX_LENGTH)
                 )
-                for project in projects
-                for _order, title in enumerate(
-                    self.fake.text(
-                        randint(
-                            SECTION_TITLE_MIN_LENGTH, SECTION_TITLE_MAX_LENGTH
-                        )
-                    )
-                    for _ in range(
-                        randint(PROJECT_MIN_SECTIONS, PROJECT_MAX_SECTIONS)
-                    )
+                for _ in range(
+                    randint(PROJECT_MIN_SECTIONS, PROJECT_MAX_SECTIONS)
                 )
-            ]
-        )
-        self.stdout.write(
-            f"Created {len(workspaces_sections)} workspace board sections"
-        )
+            )
+        ]
+        sections = Section.objects.bulk_create(section_descs)
+        self.stdout.write(f"Created {len(sections)} workspace board sections")
 
         # The idea here is that instead of going into each nested object in
         # a for loop, we create them altogether at once.
@@ -324,43 +279,46 @@ class Command(BaseCommand):
         # Assign all users to all new workspaces
         # Create all projects for all new workspaces
         # etc.
-        altogether: list[Altogether] = [
-            {
-                "workspace": workspace,
-                "team_members": list(team_members),
-                "projects": list(projects),
-                "sections": list(sections),
-            }
+        workspace_descriptions: list[WorkspaceDescription] = [
+            WorkspaceDescription(
+                workspace=workspace,
+                team_members=list(team_members),
+                projects=list(projects),
+                sections=list(sections),
+            )
             for (
                 (workspace, team_members),
                 (_, projects),
                 (_, sections),
             ) in zip(
-                groupby(workspaces_team_members, key=lambda u: u.workspace),
-                groupby(workspaces_projects, key=lambda b: b.workspace),
                 groupby(
-                    workspaces_sections, key=lambda b: b.project.workspace
+                    team_members, key=lambda team_member: team_member.workspace
+                ),
+                groupby(
+                    workspaces_projects, key=lambda project: project.workspace
+                ),
+                groupby(
+                    sections, key=lambda section: section.project.workspace
                 ),
             )
         ]
 
-        self.create_tasks(altogether)
+        self.create_tasks(workspace_descriptions)
         return workspaces
 
     def create_corporate_accounts(
         self, seats: int, workspaces: list[Workspace]
     ) -> None:
         """Create corporate accounts."""
-        customers = Customer.objects.bulk_create(
-            [
-                Customer(
-                    workspace=workspace,
-                    subscription_status=CustomerSubscriptionStatus.CUSTOM,
-                    seats=seats,
-                )
-                for workspace in workspaces
-            ]
-        )
+        customer_descs = [
+            Customer(
+                workspace=workspace,
+                subscription_status=CustomerSubscriptionStatus.CUSTOM,
+                seats=seats,
+            )
+            for workspace in workspaces
+        ]
+        customers = Customer.objects.bulk_create(customer_descs)
         self.stdout.write(f"Created customers for {len(customers)} workspaces")
 
     def create_blog_posts(self) -> None:
@@ -369,38 +327,36 @@ class Command(BaseCommand):
         self.stdout.write(f"There are already {existing_posts} blog posts")
         remaining_posts = max(0, self.n_posts - existing_posts)
 
-        post_contents = PostContent.objects.bulk_create(
-            [
-                PostContent(
-                    content="".join(
-                        [
-                            f"<p>{self.fake.paragraph()}</p>"
-                            for _ in range(
-                                randint(
-                                    POST_CONTENT_MIN_PARAGRAPHS,
-                                    POST_CONTENT_MAX_PARAGRAPHS,
-                                )
+        post_content_descs = [
+            PostContent(
+                content="".join(
+                    [
+                        f"<p>{self.fake.paragraph()}</p>"
+                        for _ in range(
+                            randint(
+                                POST_CONTENT_MIN_PARAGRAPHS,
+                                POST_CONTENT_MAX_PARAGRAPHS,
                             )
-                        ]
-                    )
+                        )
+                    ]
                 )
-                for _ in range(remaining_posts)
-            ]
-        )
+            )
+            for _ in range(remaining_posts)
+        ]
+        post_contents = PostContent.objects.bulk_create(post_content_descs)
         self.stdout.write(f"Created {len(post_contents)} post contents")
 
-        posts = Post.objects.bulk_create(
-            [
-                Post(
-                    title=self.fake.sentence(),
-                    author=self.fake.name(),
-                    slug=slugify(self.fake.sentence()),
-                    body=post_content,
-                    published=self.fake.date_this_decade(),
-                )
-                for post_content in post_contents
-            ]
-        )
+        post_descs = [
+            Post(
+                title=self.fake.sentence(),
+                author=self.fake.name(),
+                slug=slugify(self.fake.sentence()),
+                body=post_content,
+                published=self.fake.date_this_decade(),
+            )
+            for post_content in post_contents
+        ]
+        posts = Post.objects.bulk_create(post_descs)
         self.stdout.write(f"Created {len(posts)} blog posts")
 
     def add_arguments(self, parser: ArgumentParser) -> None:

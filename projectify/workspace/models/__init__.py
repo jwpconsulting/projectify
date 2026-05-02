@@ -269,7 +269,6 @@ class Task(TitleDescriptionModel, BaseModel):
     if TYPE_CHECKING:
         chatmessage_set: RelatedManager["ChatMessage"]
         tasklabel_set: RelatedManager["TaskLabel"]
-        _order: int
         id: int
 
     def save(self, *args: Any, **kwargs: Any) -> None:
@@ -291,14 +290,7 @@ class Task(TitleDescriptionModel, BaseModel):
     class Meta:
         """Meta."""
 
-        order_with_respect_to = "section"
-        constraints = [
-            models.UniqueConstraint(
-                fields=["section", "_order"],
-                name="unique_task_order",
-                deferrable=models.Deferrable.DEFERRED,
-            )
-        ]
+        ordering = ("done", "-modified")
 
 
 class TeamMemberInvite(BaseModel):

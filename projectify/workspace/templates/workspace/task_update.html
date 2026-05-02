@@ -4,7 +4,7 @@
 {% load i18n %}
 {% load projectify %}
 {% block title %}
-    {% translate "Editing task - Projectify" %}
+    {% blocktrans with task_title=task.title %}Edit {{ task_title }} task - Projectify{% endblocktrans %}
 {% endblock title %}
 {% block extrahead %}
     <meta name="trix-csp-nonce" content="{{ csp_nonce }}">
@@ -16,15 +16,10 @@
           method="post"
           class="min-w-0 grow"
           aria-label="{% translate "Update task" %}">
-        {{ form.errors }}
         <div class="flex h-full flex-col p-4 pt-0">
             <div class="sticky top-0 flex flex-row flex-wrap items-center justify-between gap-x-2 gap-y-4 bg-foreground pb-8 pt-4 lg:flex-nowrap">
                 <div class="flex shrink flex-row items-center gap-6">
-                    <div class="shrink-0">
-                        <a href="{% url "dashboard:projects:detail" task.section.project.uuid %}"
-                           class="block w-8 h-8 p-1.5 rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled"
-                           aria-label="{% translate "Go back to section" %}">{% icon "x" %}</a>
-                    </div>
+                    {% circle_anchor label=_("Go back to project") icon_style="x" href="dashboard:projects:detail" project_uuid=task.section.project.uuid %}
                     {% include "workspace/task/breadcrumbs.html" with section=task.section task=task %}
                 </div>
                 <div class="contents sm:flex items-center justify-between gap-4 sm:flex-row">
@@ -32,11 +27,7 @@
                     {% include "projectify/forms/submit.html" with name="action" value="update_stay" text=_("Update task and stay") %}
                 </div>
             </div>
-            <table class="max-w-full container flex flex-col gap-x-2 gap-y-4 sm:grid sm:grid-cols-[auto_1fr]">
-                <tbody class="contents">
-                    {{ form.as_table }}
-                </tbody>
-            </table>
+            <div class="min-w-0 grow max-w-[65ch]">{{ form }}</div>
             {% csrf_token %}
         </div>
     </form>

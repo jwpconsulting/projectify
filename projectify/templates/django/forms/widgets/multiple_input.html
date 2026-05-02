@@ -3,7 +3,7 @@
 {# SPDX-License-Identifier: BSD-3-Clause #}
 {# SPDX-FileCopyrightText: Django Software Foundation and individual contributors. #}
 {% with id=widget.attrs.id %}
-    <div class="grid grid-cols-[auto_max-content] items-center"
+    <div class="grid grid-cols-[auto_max-content] items-center max-h-[320px] overflow-y-auto w-full"
          {% if id %}id="{{ id }}"{% endif %}
          {% if widget.attrs.class %}class="{{ widget.attrs.class }}"{% endif %}>
         {% for group, options, index in widget.optgroups %}

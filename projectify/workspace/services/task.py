@@ -5,7 +5,7 @@
 
 import logging
 from datetime import datetime
-from typing import Literal, Optional, Union
+from typing import Optional
 
 from django.db import transaction
 from django.forms import ValidationError
@@ -94,79 +94,9 @@ def task_delete(*, task: Task, who: User) -> None:
 
 
 @transaction.atomic
-def task_move_in_direction(
-    *, who: User, task: Task, direction: Literal["up", "down", "top", "bottom"]
-) -> Task:
-    """
-    Move a task up, down, to top or bottom.
-
-    Uses task_move_after.
-    """
+def task_move_after(*, who: User, task: Task, after: Section) -> Task:
+    """Move a task to a new a section."""
     validate_perm("workspace.update_task", who, task.workspace)
-    section = task.section
-    tasks = section.task_set
-    neighbor: Union[Task, Section]
-    match direction:
-        case "up":
-            maybe_neighbor = tasks.filter(_order=task._order - 1)
-            if maybe_neighbor.exists():
-                neighbor = maybe_neighbor.get()
-            else:
-                neighbor = section
-
-        case "down":
-            maybe_neighbor = tasks.filter(_order=task._order + 1)
-            # TODO, maybe we just want to move it to the next section
-            if not maybe_neighbor.exists():
-                raise ValidationError(
-                    _("Can't move task down, there is no next task")
-                )
-            neighbor = maybe_neighbor.get()
-
-        case "bottom":
-            maybe_task = tasks.last()
-            if not maybe_task:
-                raise RuntimeError(f"There's no task after task {task.uuid}")
-            neighbor = maybe_task
-        case "top":
-            neighbor = section
-    return task_move_after(who=who, task=task, after=neighbor)
-
-
-@transaction.atomic
-def task_move_after(
-    *, who: User, task: Task, after: Union[Task, Section]
-) -> Task:
-    """Move a task after a task or in front of a section."""
-    validate_perm("workspace.update_task", who, task.workspace)
-    match after:
-        case Task():
-            section = after.section
-            order = after._order
-        case Section():
-            section = after
-            order = 0
-
-    # Lock tasks in own section
-    neighbor_tasks = section.task_set.select_for_update()
-    len(neighbor_tasks)
-
-    # Depending on whether we move within the same section, we
-    # might have to lock only this section, or the destination
-    # as well.
-    if task.section != section:
-        other_tasks = section.task_set.select_for_update()
-        len(other_tasks)
-        # And assign task's section
-        task.section = section
-        task.save()
-
-    # Change order
-    order_list = list(section.get_task_order())
-    current_object_index = order_list.index(task.pk)
-    order_list.insert(order, order_list.pop(current_object_index))
-
-    # Set the order
-    section.set_task_order(order_list)
-    section.save()
+    task.section = after
+    task.save()
     return task
