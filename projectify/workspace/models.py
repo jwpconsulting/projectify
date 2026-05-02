@@ -70,7 +70,6 @@ class Workspace(TitleDescriptionModel, BaseModel):
         project_set: RelatedManager["Project"]
         teammember_set: RelatedManager["TeamMember"]
         teammemberinvite_set: RelatedManager["TeamMemberInvite"]
-        label_set: RelatedManager["Label"]
         active_invites: Optional[RelatedManager["TeamMemberInvite"]]
 
     def __str__(self) -> str:
@@ -102,59 +101,6 @@ class Workspace(TitleDescriptionModel, BaseModel):
                 ),
             ),
         )
-
-
-class Label(BaseModel):
-    """A label."""
-
-    # TODO It should be fine to just use TitleDescription here
-    name = models.CharField(max_length=255)
-    """
-    0 -> orange
-    2 -> pink
-    3 -> blue
-    4 -> purple
-    5 -> yellow
-    6 -> red
-    7 -> green
-    """
-    color = models.PositiveBigIntegerField(help_text=_("Color index"))
-    workspace = models.ForeignKey["Workspace"](
-        "Workspace", on_delete=models.CASCADE
-    )
-    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
-
-    if TYPE_CHECKING:
-        id: int
-
-    def save(self, *args: Any, **kwargs: Any) -> None:
-        """Override save and call full_clean."""
-        self.full_clean()
-        return super().save(*args, **kwargs)
-
-    def __str__(self) -> str:
-        """Return name."""
-        return self.name
-
-    class Meta:
-        """Meta."""
-
-        ordering = ("-modified",)
-        constraints = [
-            models.CheckConstraint(
-                # type: ignore[call-arg]
-                condition=models.Q(color__gte=0) & models.Q(color__lte=7),
-                name="label_color_range",
-                violation_error_message=_("Color must be between 0 and 7"),
-            ),
-            models.UniqueConstraint(
-                fields=["name", "workspace"],
-                name="unique_label_name_per_workspace",
-                violation_error_message=_(
-                    "You can only create one label with this name."
-                ),
-            ),
-        ]
 
 
 class Project(TitleDescriptionModel, BaseModel):
@@ -261,13 +207,9 @@ class Task(TitleDescriptionModel, BaseModel):
     due_date = models.DateTimeField(
         null=True, blank=True, help_text=_("Due date for this task")
     )
-    labels = models.ManyToManyField(
-        "workspace.Label", through="workspace.TaskLabel"
-    )  # type: models.ManyToManyField["Label", "TaskLabel"]
     done = models.DateTimeField(null=True, blank=True)
 
     if TYPE_CHECKING:
-        tasklabel_set: RelatedManager["TaskLabel"]
         id: int
 
     def save(self, *args: Any, **kwargs: Any) -> None:
@@ -367,12 +309,6 @@ class TeamMember(BaseModel):
             "Whether this team member has minimized the team member filter in this workspace"
         ),
     )
-    minimized_label_filter = models.BooleanField(
-        default=False,
-        help_text=_(
-            "Whether this team member has minimized the label filter in this workspace"
-        ),
-    )
 
     if TYPE_CHECKING:
         # Related
@@ -391,24 +327,10 @@ class TeamMember(BaseModel):
         ordering = ("created",)
 
 
-class TaskLabel(BaseModel):
-    """A label to task assignment."""
-
-    task = models.ForeignKey["Task"](Task, on_delete=models.CASCADE)
-    label = models.ForeignKey["Label"](Label, on_delete=models.CASCADE)
-
-    class Meta:
-        """Meta."""
-
-        unique_together = ("task", "label")
-
-
 __all__ = (
-    "Label",
     "Project",
     "Section",
     "Task",
-    "TaskLabel",
     "TeamMember",
     "TeamMemberInvite",
     "TeamMemberRoles",

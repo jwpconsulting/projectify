@@ -95,13 +95,3 @@ def team_member_minimize_team_member_filter(
     team_member.minimized_team_member_filter = minimized
     team_member.save()
     return team_member
-
-
-@transaction.atomic
-def team_member_minimize_label_filter(
-    *, team_member: TeamMember, minimized: bool
-) -> TeamMember:
-    """Set the minimized state of the label filter for a team member."""
-    team_member.minimized_label_filter = minimized
-    team_member.save()
-    return team_member

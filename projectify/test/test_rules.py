@@ -127,9 +127,7 @@ class TestTrialRules:
         monkeypatch.setattr(
             "projectify.workspace.selectors.quota.trial_conditions",
             {
-                "Label": 1,
                 "Task": 1,
-                "TaskLabel": 1,
                 "Project": 1,
                 "Section": 1,
                 # We need at least one user to use the workspace at all

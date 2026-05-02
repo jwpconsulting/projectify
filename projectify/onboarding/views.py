@@ -290,7 +290,7 @@ def new_task(
     Show task creation form for project `project_uuid`
     POST:
     On success: Creates a section and task and assigns it to the user. Redirect
-    user to onboarding/new-label/<task-uuid> with the task uuid coming
+    user to onboarding/assign-task/<task-uuid> with the task uuid coming
     from the newly created task
     On error: Show task creation form with errors.
     """
