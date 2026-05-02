@@ -8,6 +8,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## Unreleased
 
+### Enhancement
+
+- Simplify new/edit task experience. Extract the task title from the
+  description.
+
 ### Breaking
 
 - Remove task labels
@@ -31,6 +36,8 @@ features:
 - Remove trailing "magic" commas with Ruff. This makes the code base shorter.
 - Fix inconsistencies in shell scripts (Thanks shellcheck!)
 - Remove SubTask model from workspace app.
+- Remove chat messages. Projectify hasn't supported chat messages in a while.
+- Build Trix from scratch, update Trix version
 
 ### Security
 
