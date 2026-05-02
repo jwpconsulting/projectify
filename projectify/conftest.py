@@ -52,7 +52,6 @@ from projectify.user.services.user_invite import (
     user_invite_redeem,
 )
 from projectify.workspace.models import (
-    ChatMessage,
     Project,
     Section,
     Task,
@@ -64,7 +63,6 @@ from projectify.workspace.models import (
 from projectify.workspace.selectors.team_member import (
     team_member_find_for_workspace,
 )
-from projectify.workspace.services.chat_message import chat_message_create
 from projectify.workspace.services.project import (
     project_archive,
     project_create,
@@ -478,16 +476,6 @@ def unrelated_task(
         who=unrelated_team_member.user,
         section=unrelated_section,
         title="I am an unrelated task",
-    )
-
-
-@pytest.fixture
-def chat_message(
-    task: Task, team_member: TeamMember, faker: Faker
-) -> ChatMessage:
-    """Return ChatMessage instance."""
-    return chat_message_create(
-        who=team_member.user, task=task, text=faker.paragraph()
     )
 
 

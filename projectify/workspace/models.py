@@ -267,7 +267,6 @@ class Task(TitleDescriptionModel, BaseModel):
     done = models.DateTimeField(null=True, blank=True)
 
     if TYPE_CHECKING:
-        chatmessage_set: RelatedManager["ChatMessage"]
         tasklabel_set: RelatedManager["TaskLabel"]
         id: int
 
@@ -404,24 +403,7 @@ class TaskLabel(BaseModel):
         unique_together = ("task", "label")
 
 
-class ChatMessage(BaseModel):
-    """ChatMessage, belongs to Task."""
-
-    task = models.ForeignKey["Task"](Task, on_delete=models.CASCADE)
-    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
-    text = models.TextField()
-    author = models.ForeignKey["TeamMember"](
-        TeamMember, on_delete=models.SET_NULL, blank=True, null=True
-    )
-
-    class Meta:
-        """Meta."""
-
-        ordering = ("created",)
-
-
 __all__ = (
-    "ChatMessage",
     "Label",
     "Project",
     "Section",

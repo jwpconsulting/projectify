@@ -34,7 +34,6 @@ class WorkspaceQuota:
     """Contain all workspace quota values."""
 
     workspace_status: WorkspaceFeatures
-    chat_messages: Quota
     tasks: Quota
     projects: Quota
     sections: Quota

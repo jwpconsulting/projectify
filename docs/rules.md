@@ -24,7 +24,6 @@ The resources that team members can work on are the following:
 - Project
 - Section
 - Task
-- Chat message
 - Customer
 
 The following actions are possible on each resource, modelled after a typical
@@ -48,7 +47,6 @@ role required to perform that action.
 | Project            | Maintainer  | Observer | Maintainer  | Maintainer  |
 | Section            | Maintainer  | Observer | Maintainer  | Maintainer  |
 | Task               | Contributor | Observer | Contributor | Maintainer  |
-| Chat message       | Contributor | Observer | Contributor | Maintainer  |
 | Customer           | Owner       | Owner    | Owner       | Owner       |
 
 ## Role descriptions
@@ -67,7 +65,6 @@ changes on them or create them. They can read the following resources:
 - Projects
 - Sections
 - Tasks
-- Chat messages
 
 ### Contributor
 
@@ -77,7 +74,6 @@ In addition to an observer's permissions, contributors have the following
 additional permissions:
 
 - A contributor can create and update tasks
-- A contributor can create and update chat messages.
 
 ### Maintainer
 
@@ -92,7 +88,6 @@ permissons:
 - Create, update and delete projects
 - Create, update and delete sections
 - Delete tasks
-- Delete chat messages
 
 ### Owner
 

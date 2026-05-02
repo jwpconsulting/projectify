@@ -119,7 +119,8 @@ class TestTaskUpdateView:
         """Test GETting the task update page."""
         # Gone up   from 14 -> 16 due to permission checks in sidemenu
         # Gone down from 16 -> 13
-        with django_assert_num_queries(13):
+        # Gone down from 13 -> 12
+        with django_assert_num_queries(12):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert task.title in response.content.decode()
@@ -148,7 +149,7 @@ class TestTaskUpdateView:
     ) -> None:
         """Test updating a task."""
         original_title = task.title
-        with django_assert_num_queries(15):
+        with django_assert_num_queries(14):
             response = user_client.post(
                 resource_url,
                 {

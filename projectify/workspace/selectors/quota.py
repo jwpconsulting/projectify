@@ -12,7 +12,6 @@ Be able to add one more user, therefore that workspace being limited to having
 Be able to create 10 labels, assign them to all tasks
 
 Limitations for a trial workspace are
-- ChatMessage: 0 chat messages,
 - Task: 1000 tasks,
 - Project: 10,
 - Section: 100,
@@ -28,11 +27,9 @@ from projectify.corporate.selectors.customer import (
 from projectify.lib.settings import get_settings
 from projectify.workspace.types import Quota, WorkspaceQuota
 
-from ..models import ChatMessage, Section, Task, Workspace
+from ..models import Section, Task, Workspace
 
-Resource = Literal[
-    "ChatMessage", "Task", "Project", "Section", "TeamMemberAndInvite"
-]
+Resource = Literal["Task", "Project", "Section", "TeamMemberAndInvite"]
 
 Limitation = Union[None, int]
 
@@ -40,7 +37,6 @@ Limitation = Union[None, int]
 class Limitations(TypedDict):
     """Contain all limitations."""
 
-    ChatMessage: Limitation
     Task: Limitation
     Project: Limitation
     Section: Limitation
@@ -48,7 +44,6 @@ class Limitations(TypedDict):
 
 
 trial_conditions: Limitations = {
-    "ChatMessage": 0,
     "Task": 1000,
     "Project": 10,
     "Section": 100,
@@ -57,7 +52,6 @@ trial_conditions: Limitations = {
 
 # Full workspace conditions are somewhat like this:
 # {
-#     "ChatMessage": None,
 #     "Task": None,
 #     "Project": None,
 #     "Section": None,
@@ -90,11 +84,6 @@ def get_workspace_resource_count(
 ) -> int:
     """Return resource count for a specific resource."""
     match resource:
-        case "ChatMessage":
-            # XXX At the moment, chat messages are not supported
-            return ChatMessage.objects.filter(
-                task__workspace=workspace
-            ).count()
         case "Task":
             return Task.objects.filter(
                 section__project__workspace=workspace
@@ -128,7 +117,6 @@ def workspace_get_all_quotas(workspace: Workspace) -> WorkspaceQuota:
         workspace_status=customer_check_active_for_workspace(
             workspace=workspace
         ),
-        chat_messages=mk(resource="ChatMessage"),
         tasks=mk(resource="Task"),
         projects=mk(resource="Project"),
         sections=mk(resource="Section"),
