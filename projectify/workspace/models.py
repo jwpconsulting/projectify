@@ -22,8 +22,8 @@ from projectify.lib.models import (
 )
 from projectify.user.models import UserInvite
 
-from ..const import TeamMemberRoles
-from ..types import WorkspaceQuota
+from .const import TeamMemberRoles
+from .types import WorkspaceQuota
 
 if TYPE_CHECKING:
     from django.db.models.fields.related import RelatedField  # noqa: F401
