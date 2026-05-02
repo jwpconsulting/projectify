@@ -10,7 +10,7 @@ from django.db.models import Count, Prefetch, Q, QuerySet
 
 from projectify.user.models import User
 
-from ..models import ChatMessage, Project, Task, TeamMember
+from ..models import Project, Task, TeamMember
 
 TaskDetailQuerySet: QuerySet[Task] = Task.objects.select_related(
     "workspace", "assignee", "assignee__user"
@@ -22,10 +22,6 @@ TaskDetailQuerySet: QuerySet[Task] = Task.objects.select_related(
                 "task", filter=Q(task__section__project__archived__isnull=True)
             )
         ),
-    ),
-    Prefetch(
-        "chatmessage_set",
-        queryset=ChatMessage.objects.select_related("author", "author__user"),
     ),
     Prefetch(
         "workspace__project_set",

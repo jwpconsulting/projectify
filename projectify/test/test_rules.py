@@ -11,14 +11,7 @@ from projectify.settings.base import Base
 from projectify.user.models import User
 from projectify.user.services.internal import user_create
 from projectify.workspace.const import TeamMemberRoles
-from projectify.workspace.models import (
-    Project,
-    Section,
-    Task,
-    TeamMember,
-    Workspace,
-)
-from projectify.workspace.services.chat_message import chat_message_create
+from projectify.workspace.models import Project, Section, TeamMember, Workspace
 from projectify.workspace.services.project import project_create
 from projectify.workspace.services.section import section_create
 from projectify.workspace.services.task import task_create
@@ -134,10 +127,7 @@ class TestTrialRules:
         monkeypatch.setattr(
             "projectify.workspace.selectors.quota.trial_conditions",
             {
-                "ChatMessage": 1,
-                "Label": 1,
                 "Task": 1,
-                "TaskLabel": 1,
                 "Project": 1,
                 "Section": 1,
                 # We need at least one user to use the workspace at all
@@ -145,51 +135,30 @@ class TestTrialRules:
             },
         )
 
-    def test_create_chat_message(
-        self, task: Task, team_member: TeamMember, workspace: Workspace
-    ) -> None:
-        """Assert 1 chat messages can not be created."""
-        user = team_member.user
-        assert validate_perm("workspace.create_chat_message", user, workspace)
-        customer_cancel_subscription(customer=workspace.customer)
-        assert validate_perm("workspace.create_chat_message", user, workspace)
-        chat_message_create(who=user, task=task, text="hello")
-        assert not validate_perm(
-            "workspace.create_chat_message",
-            user,
-            workspace,
-            raise_exception=False,
-        )
-
     def test_no_billing_integration(
-        self, settings: Base, task: Task, team_member: TeamMember
+        self, settings: Base, team_member: TeamMember, section: Section
     ) -> None:
-        """Assert that with no biling, the 1 message limit becomes inactive."""
+        """Assert that with no billing, the 1 task limit becomes inactive."""
         user = team_member.user
         workspace = team_member.workspace
-        assert validate_perm("workspace.create_chat_message", user, workspace)
+        assert validate_perm("workspace.create_task", user, workspace)
         customer_cancel_subscription(customer=workspace.customer)
-        assert validate_perm("workspace.create_chat_message", user, workspace)
-        chat_message_create(who=user, task=task, text="hello")
+        assert validate_perm("workspace.create_task", user, workspace)
+        task_create(section=section, title="task title", who=user)
         assert not validate_perm(
-            "workspace.create_chat_message",
-            user,
-            workspace,
-            raise_exception=False,
+            "workspace.create_task", user, workspace, raise_exception=False
         )
         settings.STRIPE_CONFIG = None
         assert validate_perm(
-            "workspace.create_chat_message",
-            user,
-            workspace,
-            raise_exception=False,
+            "workspace.create_task", user, workspace, raise_exception=False
         )
-        chat_message_create(who=user, task=task, text="hello")
+        task_create(section=section, title="task title", who=user)
 
     def test_create_task(
-        self, team_member: TeamMember, section: Section, workspace: Workspace
+        self, team_member: TeamMember, section: Section
     ) -> None:
         """Assert only 1 task can be created."""
+        workspace = section.project.workspace
         user = team_member.user
         assert validate_perm("workspace.create_task", user, workspace)
         customer_cancel_subscription(customer=workspace.customer)

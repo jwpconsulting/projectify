@@ -11,12 +11,9 @@ from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
 from .models import (
-    ChatMessage,
-    Label,
     Project,
     Section,
     Task,
-    TaskLabel,
     TeamMember,
     TeamMemberInvite,
     Workspace,
@@ -172,18 +169,10 @@ class SectionAdmin(ReadOnlyAdmin[Section], admin.ModelAdmin[Section]):
         return instance.project.workspace.title
 
 
-class TaskLabelInline(admin.TabularInline[TaskLabel]):
-    """TaskLabel inline admin."""
-
-    model = TaskLabel
-    extra = 0
-
-
 @admin.register(Task)
 class TaskAdmin(ReadOnlyAdmin[Task], admin.ModelAdmin[Task]):
     """Task Admin."""
 
-    inlines = (TaskLabelInline,)
     list_display = (
         "title",
         "section_title",
@@ -209,56 +198,3 @@ class TaskAdmin(ReadOnlyAdmin[Task], admin.ModelAdmin[Task]):
     def workspace_title(self, instance: Task) -> str:
         """Return the workspace's title."""
         return instance.section.project.workspace.title
-
-
-@admin.register(Label)
-class LabelAdmin(ReadOnlyAdmin[Label], admin.ModelAdmin[Label]):
-    """Label admin."""
-
-    list_display = ("name", "color", "workspace_title")
-    list_select_related = ("workspace",)
-    readonly_fields = ("uuid",)
-
-    @admin.display(description=_("Workspace title"))
-    def workspace_title(self, instance: Label) -> str:
-        """Return the workspace's title."""
-        return instance.workspace.title
-
-
-@admin.register(ChatMessage)
-class ChatMessageAdmin(
-    ReadOnlyAdmin[ChatMessage], admin.ModelAdmin[ChatMessage]
-):
-    """ChatMessage admin."""
-
-    list_display = (
-        "task_title",
-        "section_title",
-        "project_title",
-        "workspace_title",
-        "created",
-        "modified",
-    )
-    list_select_related = ("task__section__project__workspace",)
-    readonly_fields = ("uuid", "author")
-
-    @admin.display(description=_("Task title"))
-    def task_title(self, instance: ChatMessage) -> str:
-        """Return the task's title."""
-        return instance.task.title
-
-    @admin.display(description=_("Section title"))
-    def section_title(self, instance: ChatMessage) -> str:
-        """Return the project's title."""
-        return instance.task.section.title
-
-    @admin.display(description=_("Project title"))
-    def project_title(self, instance: ChatMessage) -> str:
-        """Return the project's title."""
-        return instance.task.section.project.title
-
-    @admin.display(description=_("Workspace title"))
-    def workspace_title(self, instance: ChatMessage) -> str:
-        """Return the workspace's title."""
-        project = instance.task.section.project
-        return project.workspace.title

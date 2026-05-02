@@ -92,10 +92,6 @@ def can_create_more(
 
 # Quota predicates
 # ----------------
-# Return True if a chat message can be created for workspace
-within_chat_message_quota = rules.predicate(
-    partial(can_create_more, "ChatMessage")
-)
 # Return True if a task can be created in workspace
 within_task_quota = rules.predicate(partial(can_create_more, "Task"))
 # Return True if a project can be created in workspace
@@ -173,17 +169,6 @@ rules.add_perm(
 rules.add_perm("workspace.read_task", is_at_least_observer)
 rules.add_perm("workspace.update_task", is_at_least_contributor)
 rules.add_perm("workspace.delete_task", is_at_least_maintainer)
-
-
-# Chat message
-rules.add_perm(
-    "workspace.create_chat_message",
-    is_at_least_contributor & within_chat_message_quota,
-)
-rules.add_perm("workspace.read_chat_message", is_at_least_observer)
-rules.add_perm("workspace.update_chat_message", is_at_least_contributor)
-rules.add_perm("workspace.delete_chat_message", is_at_least_maintainer)
-
 
 # Customer
 rules.add_perm("corporate.can_create_customer", is_at_least_owner)

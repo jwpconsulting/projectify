@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2021, 2022, 2023 JWP Consulting GK
+# SPDX-FileCopyrightText: 2021-2024,2026 JWP Consulting GK
 """Test workspace models."""
 
 from django.core.exceptions import ValidationError
 
 import pytest
 
-from ..models import ChatMessage, Task, TeamMember, Workspace
+from ..models import Task, Workspace
 
 pytestmark = pytest.mark.django_db
 
@@ -56,16 +56,6 @@ class TestWorkspace:
 
         workspace.title = "Foob. Ar"
         workspace.full_clean()
-
-
-class TestChatMessage:
-    """Test ChatMessage."""
-
-    def test_factory(
-        self, team_member: TeamMember, chat_message: ChatMessage
-    ) -> None:
-        """Test that chat message belongs to user."""
-        assert chat_message.author == team_member
 
 
 class TestTask:

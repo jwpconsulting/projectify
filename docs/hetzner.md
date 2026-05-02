@@ -403,8 +403,6 @@ Output:
  public | user_user_user_permissions_id_seq         | sequence | postgres
  public | user_userinvite                           | table    | postgres
  public | user_userinvite_id_seq                    | sequence | postgres
- public | workspace_chatmessage                     | table    | postgres
- public | workspace_chatmessage_id_seq              | sequence | postgres
  public | workspace_label                           | table    | postgres
  public | workspace_label_id_seq                    | sequence | postgres
  public | workspace_project                         | table    | postgres

@@ -10,7 +10,6 @@ Here are all the pages that could throw a 404 since they accept a [uuid] of
 some sort:
 
 - `onboarding/assign-task/<uuid:task_uuid>`
-- `onboarding/new-label/<uuid:task_uuid>`
 - `onboarding/new-task/<uuid:project_uuid>`
 - `onboarding/new-project/<uuid:workspace_uuid>`
 - `dashboard/task/<uuid:task_uuid>`
@@ -22,7 +21,6 @@ Here are some test links:
 
 ```
 http://localhost:8000/onboarding/assign-task/does-not-exist
-http://localhost:8000/onboarding/new-label/does-not-exist
 http://localhost:8000/onboarding/new-task/does-not-exist
 http://localhost:8000/onboarding/new-project/does-not-exist
 http://localhost:8000/dashboard/task/does-not-exist
@@ -35,7 +33,6 @@ The same domains using the production domain:
 
 ```
 https://www.projectifyapp.com/onboarding/assign-task/does-not-exist
-https://www.projectifyapp.com/onboarding/new-label/does-not-exist
 https://www.projectifyapp.com/onboarding/new-task/does-not-exist
 https://www.projectifyapp.com/onboarding/new-workspace-board/does-not-exist
 https://www.projectifyapp.com/dashboard/task/does-not-exist

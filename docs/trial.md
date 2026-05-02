@@ -71,8 +71,6 @@ limitations are as follows:
   limitations
 - A trial workspace can hold 1000 tasks. Again, there is no limitation where
   those tasks can be put, they could all be in the same project or section.
-- A trial workspace can not have any chat messages (they are not supported by
-  the application right now)
 
 There are no limitations for reading, updating and deleting.
 
