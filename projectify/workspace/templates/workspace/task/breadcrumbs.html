@@ -3,7 +3,7 @@
 {% load projectify %}
 {% load i18n %}
 <div class="font-bold text-utility">
-    {% anchor href=section.get_absolute_url title=_("Section link") label=section.title %}
+    {% anchor href=project.get_absolute_url title=_("Project link") label=project.title %}
     <span aria-hidden="true">&gt;</span>
     {% if current_page_label and current_page_url %}
         {% anchor href=current_page_url label=current_page_label %}

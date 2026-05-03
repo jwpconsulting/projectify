@@ -8,24 +8,6 @@
 {% endblock title %}
 {# inlined from projectify/workspace/templates/workspace/task_actions/internal.html #}
 {% partialdef task_actions_internal %}
-    <form action="{% url 'dashboard:tasks:move-to-section' task.uuid %}"
-          method="post"
-          hx-boost
-          aria-label="{% translate "Move task to other section" %}"
-          class="flex flex-col gap-2">
-        <h2 class="font-bold">{% trans "Move to section" %}</h2>
-        <ul class="flex flex-col items-left">
-            {% for section in sections %}
-                {% if section.uuid != task.section.uuid %}
-                    <li class="overflow-x-hidden">
-                        {% action_button justify_left=True text=section.title icon="selector" value=section.uuid name="section_uuid" %}
-                    </li>
-                {% endif %}
-            {% endfor %}
-        </ul>
-        <p class="htmx-indicator">{% trans "Saving..." %}</p>
-        {% csrf_token %}
-    </form>
     <form hx-post="{% url 'dashboard:tasks:delete' task.uuid %}"
           hx-confirm="{% blocktrans with title=task.title %}Are you sure you want to delete the following task: {{ title }}{% endblocktrans %}">
         {% action_button justify_left=True text=_("Delete task") icon="trash" style="destructive" %}
@@ -56,7 +38,7 @@
 {% endpartialdef tr_dropdown %}
 {% block form_content %}
     <div class="min-w-0 grow flex flex-col gap-4">
-        {% include "workspace/task/breadcrumbs.html" with task=task section=task.section %}
+        {% include "workspace/task/breadcrumbs.html" with task=task project=task.project %}
         <h1 class="text-2xl font-bold">
             {% translate "Task actions" %}
             <span class="htmx-indicator">{% translate "Saving..." %}</span>

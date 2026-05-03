@@ -3,8 +3,9 @@
 #
 # SPDX-FileCopyrightText: 2023,2026 JWP Consulting GK
 # Note:
-# Run within a uv shell, nix shell, or similar environment
+# This script prefixes commands with `uv run` so that you can just run
+# `bin/format.sh`
 set -e
-ruff format .
-ruff check --fix .
-djlint --reformat .
+uv run ruff format .
+uv run ruff check --fix .
+uv run djlint --reformat .

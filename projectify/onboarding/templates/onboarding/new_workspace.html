@@ -36,8 +36,7 @@
     {% include "onboarding/common/step_counter.html" with step=1 step_count=4 %}
 {% endblock onboarding_stepcounter %}
 {% block onboarding_preview %}
-    <div class="py-2 ring-4 gap-2 flex flex-col ring-border bg-foreground"
-         inert>
+    <div class="flex flex-col gap-2">
         <div class="mx-4 px-4 flex items-center gap-2 font-bold border rounded p-2">
             {% icon "briefcase" size=4 %}
             {% translate "Your workspace" as workspace_title_default %}
@@ -53,6 +52,8 @@
             <div class="line-clamp-1 min-w-0 font-bold">{% trans "Your project" %}</div>
         </div>
     </div>
+    {# empty project contents #}
+    <div class="grow mx-4 p-4 rounded-lg flex flex-col border border-border gap-6 truncate"></div>
     <script nonce="{{ csp_nonce }}">
         (() => {
             const titleInput = document.querySelector('input[name="title"]');

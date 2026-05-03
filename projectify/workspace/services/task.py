@@ -16,7 +16,7 @@ from projectify.lib.auth import validate_perm
 from projectify.lib.utils import extract_first_paragraph_text
 from projectify.user.models import User
 
-from ..models import Section, Task, TeamMember
+from ..models import Project, Task, TeamMember
 
 logger = logging.getLogger(__name__)
 
@@ -25,15 +25,15 @@ logger = logging.getLogger(__name__)
 def task_create(
     *,
     who: User,
-    section: Section,
+    project: Project,
     title_description: str,
     due_date: Optional[datetime] = None,
     assignee: Optional[TeamMember] = None,
 ) -> Task:
     """Create a task. This will replace the above task_create method."""
-    validate_perm("workspace.create_task", who, section.project.workspace)
+    validate_perm("workspace.create_task", who, project.workspace)
     # XXX Implicit N+1 here
-    workspace = section.project.workspace
+    workspace = project.workspace
     if assignee and assignee.workspace != workspace:
         raise ValidationError(
             {
@@ -52,7 +52,7 @@ def task_create(
             title = title_description
 
     task = Task.objects.create(
-        section=section,
+        project=project,
         title=title,
         description=title_description,
         due_date=due_date,
@@ -103,12 +103,3 @@ def task_delete(*, task: Task, who: User) -> None:
     """Delete a task."""
     validate_perm("workspace.delete_task", who, task.workspace)
     task.delete()
-
-
-@transaction.atomic
-def task_move_after(*, who: User, task: Task, after: Section) -> Task:
-    """Move a task to a new a section."""
-    validate_perm("workspace.update_task", who, task.workspace)
-    task.section = after
-    task.save()
-    return task

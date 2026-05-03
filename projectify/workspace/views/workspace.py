@@ -725,7 +725,6 @@ def workspace_settings_quota(
             "quota": workspace.quota.team_members_and_invites,
         },
         {"label": _("Projects"), "quota": workspace.quota.projects},
-        {"label": _("Sections"), "quota": workspace.quota.sections},
         {"label": _("Tasks"), "quota": workspace.quota.tasks},
     ]
     quota_rows = [q for q in quota_rows if q["quota"].limit is not None]

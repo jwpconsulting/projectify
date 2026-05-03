@@ -17,6 +17,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 - Remove task labels
 - Remove manual task ordering
+- Remove project sections. Projects now directly contain tasks.
 
 ### Accessibility
 

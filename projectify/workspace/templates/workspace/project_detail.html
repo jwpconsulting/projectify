@@ -10,34 +10,6 @@
 {% block extrahead %}
     {{ block.super }}
     <script nonce="{{ csp_nonce }}">
-        function cleansection(e) {
-            const formData = e.detail.requestConfig.formData;
-            const action = formData.get("action");
-            if (action !== "minimize_section") {
-                return;
-            }
-            const minimized = formData.get("minimized");
-            if (minimized !== "true") {
-                return;
-            }
-            section = e.target.closest("section");
-            if (!section) {
-                throw new Error("Couldn't find section for this form");
-            }
-            table = section.querySelector("table");
-            if (table === undefined) {
-                throw new Error("Couldn't find table within this section");
-            }
-            quickAddForm = table.nextElementSibling;
-
-            table.remove();
-            if (!quickAddForm) {
-                console.debug("No quick add form sibling for this table");
-            } else {
-                quickAddForm.remove();
-            }
-        }
-
         function hideTaskDetailPanel() {
             const panel = document.getElementById('task-detail-panel');
             if (!panel) {
@@ -91,28 +63,38 @@
             menu.textContent = '';
         }
 
-        document.addEventListener('htmx:beforeRequest', cleansection);
         document.addEventListener('htmx:afterSwap', attachCloseButtonListener);
         document.addEventListener('htmx:beforeRequest', checkScreenSize);
         document.addEventListener('htmx:beforeRequest', toggleTaskMenu);
     </script>
 {% endblock extrahead %}
 {% partialdef quick_add_task %}
-    <form hx-post="{% url 'dashboard:projects:detail' section.project.uuid %}"
-          hx-target="#section-{{ section.uuid }}"
+    <form hx-post="{% url 'dashboard:projects:detail' project.uuid %}"
+          hx-target="#project-tasks"
           hx-swap="outerHTML"
           hx-include="#task-filter,#team-member-filters"
           hx-disabled-elt="find button"
           class="flex flex-row gap-2 items-center">
         {% csrf_token %}
-        <input type="hidden" name="section" value="{{ section.uuid }}">
         {{ quick_add_task.title }}
+        {% include "workspace/common/loading_spinner.html" %}
         <div class="shrink">
             {% include "projectify/forms/submit.html" with name="action" value="quick_add_task" text=_("Add task") %}
         </div>
-        {% include "workspace/common/loading_spinner.html" %}
     </form>
 {% endpartialdef quick_add_task %}
+{% partialdef task_done %}
+    <button type="submit"
+            name="action"
+            value="mark_task_done"
+            class="shrink-0 size-6 flex items-center justify-center rounded border-2 transition-colors {% if task.done %}bg-primary border-primary text-primary-content{% else %}border-border hover:border-primary{% endif %} disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="{% if task.done %}{% translate 'Mark task as not done' %}{% else %}{% translate 'Mark task as done' %}{% endif %}"
+            title="{% if task.done %}{% translate 'Mark task as not done' %}{% else %}{% translate 'Mark task as done' %}{% endif %}">
+        {% if task.done %}
+            {% icon "check" size=4 color="white" %}
+        {% endif %}
+    </button>
+{% endpartialdef task_done %}
 {% partialdef taskrow %}
     <tr class="flex w-full flex-wrap items-center gap-1 rounded-lg border border-border p-3 lg:contents"
         id="task-{{ task.uuid }}-row"
@@ -120,10 +102,10 @@
         x-data="{ menuOpen: false }">
         <td class="flex flex-row items-center gap-2">
             {% if can_update_task %}
-                <form action="{% url 'dashboard:projects:detail' section.project.uuid %}"
+                <form action="{% url 'dashboard:projects:detail' project.uuid %}"
                       method="post"
-                      hx-post="{% url 'dashboard:projects:detail' section.project.uuid %}"
-                      hx-target="#section-{{ section.uuid }}"
+                      hx-post="{% url 'dashboard:projects:detail' project.uuid %}"
+                      hx-target="#project-tasks"
                       hx-swap="outerHTML"
                       hx-include="#task-filter,#team-member-filters"
                       hx-disabled-elt="find button"
@@ -133,16 +115,7 @@
                            name="done"
                            value="{% if task.done %}false{% else %}true{% endif %}">
                     {% csrf_token %}
-                    <button type="submit"
-                            name="action"
-                            value="mark_task_done"
-                            class="size-6 flex items-center justify-center rounded border-2 transition-colors {% if task.done %}bg-primary border-primary text-primary-content{% else %}border-border hover:border-primary{% endif %} disabled:opacity-50 disabled:cursor-not-allowed"
-                            aria-label="{% if task.done %}{% translate 'Mark task as not done' %}{% else %}{% translate 'Mark task as done' %}{% endif %}"
-                            title="{% if task.done %}{% translate 'Mark task as not done' %}{% else %}{% translate 'Mark task as done' %}{% endif %}">
-                        {% if task.done %}
-                            {% icon "check" size=4 color="white" %}
-                        {% endif %}
-                    </button>
+                    {% partial task_done %}
                 </form>
             {% else %}
                 <div class="shrink-0 size-6 flex items-center justify-center rounded border-2 {% if task.done %}bg-primary border-primary text-primary-content{% else %}border-border{% endif %}"
@@ -179,82 +152,44 @@
     </tr>
     <tr id="task-{{ task.uuid }}-menu" class="hidden"></tr>
 {% endpartialdef taskrow %}
-{% partialdef section_contents %}
+{% partialdef project_tasks %}
     {% has_perm "workspace.create_task" user project.workspace as can_create_task %}
     {% has_perm "workspace.update_task" user project.workspace as can_update_task %}
-    <table aria-label="{% blocktranslate with section=section.title %}{{section}} tasks{% endblocktranslate %}"
-           class="flex flex-col gap-2 lg:grid lg:grid-cols-[1fr_max-content] lg:gap-1 lg:items-center">
-        <thead class="sr-only">
-            <th class="sr-only">{% translate "Task title" %}</th>
-            <th class="sr-only">{% translate "Task actions" %}</th>
-        </thead>
-        <tbody class="contents">
-            {% for task in section.task_set.all %}
-                {% partial taskrow %}
-            {% empty %}
-                <tr class="contents">
-                    <td class="lg:col-span-3">
-                        {% if section.has_tasks %}
-                            {% translate "No tasks found for your search." %}
-                        {% else %}
-                            {% translate "No tasks in this section." %}
+    <div id="project-tasks"
+         class="bg-foreground flex flex-col py-2 px-4 gap-2">
+        <div class="flex shrink-0 flex-row items-center justify-between gap-1">
+            <h1 class="truncate font-bold">{{ project.title }}</h1>
+            {% if can_create_task %}
+                {% go_to_action href="dashboard:projects:create-task" label=_("Add task") style="secondary" icon_style="plus" project_uuid=project.uuid %}
+            {% endif %}
+        </div>
+        <table aria-label="{% blocktranslate with title=project.title %}{{ title }} tasks{% endblocktranslate %}"
+               class="flex flex-col gap-2 lg:grid lg:grid-cols-[1fr_max-content] lg:gap-1 lg:items-center">
+            <thead class="sr-only">
+                <th class="sr-only">{% translate "Task title" %}</th>
+                <th class="sr-only">{% translate "Task actions" %}</th>
+            </thead>
+            <tbody class="contents">
+                {% for task in project.task_set.all %}
+                    {% partial taskrow %}
+                {% empty %}
+                    <tr class="contents">
+                        <td class="lg:col-span-3">
+                            {% translate "No tasks in this project." %}
                             {% if can_create_task %}
-                                {% anchor 'dashboard:sections:create-task' label=_("Add a task here") section_uuid=section.uuid %}
+                                {% anchor 'dashboard:tasks:create' label=_("Add a task here") project_uuid=project.uuid %}
                             {% endif %}
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% if can_create_task %}
-        {% partial quick_add_task %}
-    {% endif %}
-{% endpartialdef section_contents %}
-{% partialdef section %}
-    {% has_perm "workspace.update_section" user project.workspace as can_update_section %}
-    {% has_perm "workspace.create_task" user project.workspace as can_create_task %}
-    <section class="flex flex-col bg-foreground rounded-b-2xl px-4 pb-4 gap-2"
-             id="section-{{ section.uuid }}"
-             aria-labelledby="section-{{ section.uuid }}-header">
-        <form method="post"
-              hx-post="{% url 'dashboard:projects:detail' section.project.uuid %}"
-              hx-target="#section-{{ section.uuid }}"
-              hx-swap="outerHTML"
-              hx-include="#task-filter,#team-member-filters"
-              aria-label="{% translate "Section actions" %}"
-              class="sticky top-0 flex w-full flex-row items-center justify-between bg-foreground py-2 gap-3">
-            <input type="hidden" name="action" value="minimize_section">
-            <input type="hidden" name="section" value="{{ section.uuid }}">
-            <input type="hidden"
-                   name="minimized"
-                   value="{% if section.minimized %}false{% else %}true{% endif %}">
-            {% csrf_token %}
-            <div class="flex min-w-0 shrink flex-row gap-4 items-center text-base-content">
-                <button type="submit"
-                        class="size-5 shrink-0 flex items-center justify-center hover:bg-secondary-hover rounded transition-transform duration-200 {% if section.minimized %}rotate-[-90deg]{% endif %}"
-                        aria-label="{% if section.minimized %}{% translate 'Expand section' %}{% else %}{% translate 'Minimize section' %}{% endif %}">
-                    {% icon "chevron-down" %}
-                </button>
-                <h1 id="section-{{ section.uuid }}-header" class="truncate font-bold">{{ section.title }}</h1>
-                {% if can_update_section %}
-                    {% circle_anchor label=_("Update section") icon_style="pencil" href="dashboard:sections:update" section_uuid=section.uuid size=4 %}
-                {% endif %}
-            </div>
-            <div class="flex shrink-0 flex-row items-center gap-1">
-                {% include "workspace/common/loading_spinner.html" %}
-                {% if can_create_task %}
-                    {% go_to_action href="dashboard:sections:create-task" label=_("Add task") style="secondary" icon_style="plus" section_uuid=section.uuid %}
-                {% endif %}
-            </div>
-        </form>
-        {% if not section.minimized %}
-            {% partial section_contents %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if can_create_task %}
+            {% partial quick_add_task %}
         {% endif %}
-    </section>
-{% endpartialdef section %}
+    </div>
+{% endpartialdef project_tasks %}
 {% block dashboard_content %}
-    {% has_perm "workspace.create_section" user project.workspace as can_create_section %}
     <main id="main"
           class="min-w-0 grow flex flex-col items-center gap-4 bg-background py-4">
         {% if task_filter_form %}
@@ -274,25 +209,7 @@
                 {% include "projectify/forms/submit.html" with text=_("Search tasks") %}
             </form>
         {% endif %}
-        <div class="flex w-full grow flex-col gap-4 md:p-2">
-            {% for section in project.section_set.all %}
-                {% partial section %}
-            {% empty %}
-                <section aria-labelledby="no-sections-{{ section.uuid }}"
-                         class="flex flex-col bg-foreground text-center rounded-sm gap-4 p-8">
-                    <h2 id="no-sections-{{ section.uuid }}" class="text-xl font-bold">{% translate "No sections yet" %}</h2>
-                    <p>{% translate "Create your first section to start organizing tasks." %}</p>
-                    {% if can_create_section %}
-                        {% go_to_action href="dashboard:projects:create-section" project_uuid=project.uuid label=_("Create section") title=_("Create a new section") %}
-                    {% endif %}
-                </section>
-            {% endfor %}
-            {% if can_create_section %}
-                <div class="sticky bottom-0 self-end p-2">
-                    {% go_to_action href="dashboard:projects:create-section" project_uuid=project.uuid label=_("Create section") title=_("Create a new section") style="primary" %}
-                </div>
-            {% endif %}
-        </div>
+        <div class="flex w-full grow flex-col gap-4 md:p-2">{% partial project_tasks %}</div>
     </main>
     {# djlint:off #}
     <aside id="task-detail-panel"

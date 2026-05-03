@@ -121,6 +121,8 @@ class Project(TitleDescriptionModel, BaseModel):
 
     if TYPE_CHECKING:
         # Related managers
+        task_set: RelatedManager["Task"]
+        # TODO remove
         section_set: RelatedManager["Section"]
 
         # For ordering
@@ -143,6 +145,7 @@ class Project(TitleDescriptionModel, BaseModel):
         ordering = ("-created",)
 
 
+# TODO remove
 class Section(TitleDescriptionModel, BaseModel):
     """Section of a Project."""
 
@@ -194,8 +197,7 @@ class Task(TitleDescriptionModel, BaseModel):
     workspace = models.ForeignKey["Workspace"](
         "workspace.Workspace", on_delete=models.CASCADE
     )
-
-    section = models.ForeignKey["Section"]("Section", on_delete=models.CASCADE)
+    project = models.ForeignKey[Project](Project, on_delete=models.CASCADE)
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     assignee = models.ForeignKey["TeamMember"](
         "TeamMember",
@@ -213,14 +215,11 @@ class Task(TitleDescriptionModel, BaseModel):
         id: int
 
     def save(self, *args: Any, **kwargs: Any) -> None:
-        """Validate workspace == section.project.workspace."""
-        section = self.section
-        correct_workspace = section.project.workspace
+        """Validate workspace == project.workspace."""
+        correct_workspace = self.project.workspace
         if self.workspace.pk != correct_workspace.pk:
             raise ValidationError(
-                _(
-                    "Task workspace must match section.project.workspace"
-                ).format()
+                _("Task workspace must match project.workspace").format()
             )
         return super().save(*args, **kwargs)
 
@@ -329,6 +328,7 @@ class TeamMember(BaseModel):
 
 __all__ = (
     "Project",
+    # TODO remove
     "Section",
     "Task",
     "TeamMember",

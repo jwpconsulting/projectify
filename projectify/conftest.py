@@ -24,6 +24,7 @@ from collections.abc import Generator
 from datetime import datetime
 from datetime import timezone as dt_timezone
 from pathlib import Path
+from uuid import UUID
 
 from django.core.files.base import File
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -54,7 +55,6 @@ from projectify.user.services.user_invite import (
 )
 from projectify.workspace.models import (
     Project,
-    Section,
     Task,
     TeamMember,
     TeamMemberInvite,
@@ -68,7 +68,6 @@ from projectify.workspace.services.project import (
     project_archive,
     project_create,
 )
-from projectify.workspace.services.section import section_create
 from projectify.workspace.services.task import task_create
 from projectify.workspace.services.team_member_invite import (
     team_member_invite_create,
@@ -399,58 +398,11 @@ def archived_project(
 
 
 @pytest.fixture
-def section(
-    project: Project,
-    # Another team member creates it, so that we can correctly assess
-    # permissions and not implicitly associate the main user with this
-    # workspace
-    other_team_member: TeamMember,
-    faker: Faker,
-) -> Section:
-    """Return section."""
-    return section_create(
-        who=other_team_member.user, project=project, title=faker.sentence()
-    )
-
-
-@pytest.fixture
-def other_section(
-    project: Project, team_member: TeamMember, faker: Faker
-) -> Section:
-    """Create another section."""
-    return section_create(
-        who=team_member.user, project=project, title=faker.sentence()
-    )
-
-
-@pytest.fixture
-def other_other_section(
-    project: Project, team_member: TeamMember, faker: Faker
-) -> Section:
-    """Create yet another section."""
-    return section_create(
-        who=team_member.user, project=project, title=faker.sentence()
-    )
-
-
-@pytest.fixture
-def unrelated_section(
-    unrelated_project: Project, unrelated_team_member: TeamMember, faker: Faker
-) -> Section:
-    """Return unrelated section."""
-    return section_create(
-        who=unrelated_team_member.user,
-        project=unrelated_project,
-        title=faker.sentence(),
-    )
-
-
-@pytest.fixture
-def task(section: Section, team_member: TeamMember, faker: Faker) -> Task:
+def task(project: Project, team_member: TeamMember, faker: Faker) -> Task:
     """Return task."""
     return task_create(
         who=team_member.user,
-        section=section,
+        project=project,
         title_description=format_html(
             "<p>{}</p><p>{}</p>", faker.sentence(), faker.paragraph()
         ),
@@ -460,25 +412,25 @@ def task(section: Section, team_member: TeamMember, faker: Faker) -> Task:
 
 
 @pytest.fixture
-def other_task(task: Task, section: Section, team_member: TeamMember) -> Task:
-    """Return another task belonging to the same section."""
+def other_task(task: Task, project: Project, team_member: TeamMember) -> Task:
+    """Return another task belonging to the same project."""
     # Make sure that this is created AFTER `task`
     del task
     return task_create(
         who=team_member.user,
-        section=section,
+        project=project,
         title_description="I am the other task",
     )
 
 
 @pytest.fixture
 def unrelated_task(
-    unrelated_section: Section, unrelated_team_member: TeamMember
+    unrelated_project: Project, unrelated_team_member: TeamMember
 ) -> Task:
-    """Return another task belonging to the same section."""
+    """Return another task belonging to the same project."""
     return task_create(
         who=unrelated_team_member.user,
-        section=unrelated_section,
+        project=unrelated_project,
         title_description="I am an unrelated task",
     )
 
@@ -532,3 +484,9 @@ def post(faker: Faker, now: datetime, post_content: PostContent) -> Post:
     return Post.objects.create(
         title=title, slug=faker.slug(), body=post_content, published=now.date()
     )
+
+
+@pytest.fixture
+def null_uuid() -> UUID:
+    """Create an all-null UUID."""
+    return UUID(int=0)

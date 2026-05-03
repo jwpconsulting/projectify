@@ -3,7 +3,6 @@
 # SPDX-FileCopyrightText: 2025 JWP Consulting GK
 """Onboarding Views."""
 
-from typing import Any
 from uuid import UUID
 
 from django import forms
@@ -31,7 +30,6 @@ from projectify.workspace.selectors.workspace import (
     workspace_find_for_user,
 )
 from projectify.workspace.services.project import project_create
-from projectify.workspace.services.section import section_create
 from projectify.workspace.services.task import task_create
 from projectify.workspace.services.workspace import workspace_create
 
@@ -39,29 +37,25 @@ from projectify.workspace.services.workspace import workspace_create
 def create_sample_project(
     *, who: User, workspace: Workspace, team_member: TeamMember
 ) -> Project:
-    """Create a sample project with sections and tasks for onboarding."""
+    """Create a sample project with tasks for onboarding."""
     project = project_create(
         who=who, workspace=workspace, title=_("Sample Project")
     )
-    create_sample_sections(who=who, project=project, team_member=team_member)
+    create_sample_tasks(who=who, project=project, team_member=team_member)
     return project
 
 
-def create_sample_sections(
+def create_sample_tasks(
     *, who: User, project: Project, team_member: TeamMember
 ) -> None:
-    """Create sample sections and tasks for onboarding."""
-    section_create(who=who, title=_("To Do"), project=project)
-    section_about = section_create(
-        who=who, title=_("About Projectify"), project=project
-    )
+    """Create tasks for onboarding."""
     for title in [
         _("Learn how to use Projectify"),
         _("Invite my team members"),
     ]:
         task_create(
             who=who,
-            section=section_about,
+            project=project,
             title_description=title,
             assignee=team_member,
         )
@@ -281,13 +275,10 @@ def new_task(
     """
     Create a new task inside the newly created project.
 
-    Put the task in a To Do section. Create this section before creating the
-    task.
-
     GET:
     Show task creation form for project `project_uuid`
     POST:
-    On success: Creates a section and task and assigns it to the user. Redirect
+    On success: Creates a task and assigns it to the user. Redirect
     user to onboarding/assign-task/<task-uuid> with the task uuid coming
     from the newly created task
     On error: Show task creation form with errors.
@@ -298,17 +289,6 @@ def new_task(
     if project is None:
         raise Http404(_("Project not found"))
 
-    section = project.section_set.first()
-    section_title = _("To Do")
-    if section:
-        section_title = section.title
-    context: dict[str, Any] = {
-        "workspace": project.workspace,
-        "project": project,
-        "section": section,
-        "section_title": section_title,
-    }
-
     team_member = team_member_find_for_workspace(
         user=request.user, workspace=project.workspace
     )
@@ -317,27 +297,23 @@ def new_task(
             f"No team_member found for current user in workspace {project.workspace.uuid}"
         )
 
+    no_tasks = project.task_set.count() == 0
     match request.method, request.POST.get("action"):
         case "GET", _:
             status = 200
-            context = {**context, "form": TaskForm()}
+            form = TaskForm()
         case "POST", "skip":
-            if section is None:
-                create_sample_sections(
+            if no_tasks:
+                create_sample_tasks(
                     who=request.user, project=project, team_member=team_member
                 )
             return redirect(project.get_absolute_url())
         case "POST", _:
-            if section is None:
-                section = section_create(
-                    who=request.user, title=section_title, project=project
-                )
-
             form = TaskForm(request.POST)
             if form.is_valid():
                 task = task_create(
                     who=request.user,
-                    section=section,
+                    project=project,
                     title_description=form.cleaned_data["title"],
                     assignee=team_member,
                 )
@@ -345,12 +321,11 @@ def new_task(
                     reverse("onboarding:assign_task", args=(task.uuid,))
                 )
             status = 400
-            context = {**context, "form": form}
         case method, _:
             raise ValueError(f"Unexpected method {method}")
-    return render(
-        request, "onboarding/new_task.html", status=status, context=context
-    )
+
+    context = {"project": project, "form": form}
+    return render(request, "onboarding/new_task.html", context, status=status)
 
 
 @login_required
@@ -363,7 +338,7 @@ def assign_task(
         raise Http404(_("Task not found"))
     context = {
         "task": task,
-        "project": task.section.project,
-        "workspace": task.section.project.workspace,
+        "project": task.project,
+        "workspace": task.project.workspace,
     }
     return render(request, "onboarding/assign_task.html", context)

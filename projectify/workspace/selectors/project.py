@@ -18,7 +18,7 @@ from django.db.models import (
 
 from projectify.user.models import User
 
-from ..models import Project, Section, Task, TeamMember
+from ..models import Project, Task, TeamMember
 
 
 def project_detail_query_set(
@@ -30,7 +30,7 @@ def project_detail_query_set(
     who: Optional[User] = None,
 ) -> QuerySet[Project]:
     """Create a project detail query set."""
-    project_not_archived = Q(task__section__project__archived__isnull=True)
+    project_not_archived = Q(task__project__archived__isnull=True)
     team_member_qs = TeamMember.objects.select_related("user").annotate(
         task_count=Count("task", filter=project_not_archived)
     )
@@ -62,8 +62,8 @@ def project_detail_query_set(
     if task_search_query is not None:
         task_q = task_q & (
             Q(title__icontains=task_search_query)
-            | Q(section__title__icontains=task_search_query)
-            | Q(section__project__title__icontains=task_search_query)
+            # TODO support querying tasks across projects
+            # | Q(project__title__icontains=task_search_query)
         )
 
     task_qs = Task.objects.select_related("assignee__user").filter(task_q)
@@ -78,18 +78,10 @@ def project_detail_query_set(
         Prefetch("workspace__teammember_set", queryset=team_member_qs),
     ]
 
-    section_qs = Section.objects.all().annotate(
-        has_tasks=Exists(Task.objects.filter(section_id=OuterRef("pk")))
-    )
     # If caller provides a user, filter out tasks for hidden sections,
     # and mark these sections as minimized
     if who is not None:
-        task_qs = task_qs.exclude(section__minimized_by=who)
-        section_qs = section_qs.annotate(
-            minimized=Exists(
-                Section.objects.filter(pk=OuterRef("pk"), minimized_by=who)
-            )
-        )
+        # task_qs = task_qs.exclude(section__minimized_by=who)
         current_team_member_qs = TeamMember.objects.filter(user=who)
         project_prefetches.append(
             Prefetch(
@@ -98,11 +90,8 @@ def project_detail_query_set(
                 to_attr="current_team_member_qs",
             )
         )
-        project_prefetches.append(Prefetch("section_set", queryset=section_qs))
 
-    project_prefetches.append(
-        Prefetch("section_set__task_set", queryset=task_qs)
-    )
+    project_prefetches.append(Prefetch("task_set", task_qs))
 
     project = Project.objects.prefetch_related(
         *project_prefetches

@@ -36,7 +36,6 @@ class WorkspaceQuota:
     workspace_status: WorkspaceFeatures
     tasks: Quota
     projects: Quota
-    sections: Quota
     team_members_and_invites: Quota
 
 

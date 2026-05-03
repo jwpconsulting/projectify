@@ -20,18 +20,11 @@ from projectify.workspace.views.project import (
     project_recover_view,
     project_update_view,
 )
-from projectify.workspace.views.section import (
-    section_create_view,
-    section_delete_view,
-    section_detail,
-    section_update_view,
-)
 from projectify.workspace.views.task import (
     task_actions,
     task_create_view,
     task_delete_view,
     task_detail,
-    task_move_to_section,
     task_update_view,
 )
 from projectify.workspace.views.team_member import team_member_picture
@@ -122,20 +115,9 @@ project_patterns = (
     path("<uuid:project_uuid>/archive", project_archive_view, name="archive"),
     path("<uuid:project_uuid>/delete", project_delete_view, name="delete"),
     path("<uuid:project_uuid>/recover", project_recover_view, name="recover"),
-    # Create section
+    # Create task within project
     path(
-        "<uuid:project_uuid>/create-section",
-        section_create_view,
-        name="create-section",
-    ),
-)
-section_patterns = (
-    path("<uuid:section_uuid>", section_detail, name="detail"),
-    path("<uuid:section_uuid>/update", section_update_view, name="update"),
-    path("<uuid:section_uuid>/delete", section_delete_view, name="delete"),
-    # Create task within section
-    path(
-        "<uuid:section_uuid>/create-task", task_create_view, name="create-task"
+        "<uuid:project_uuid>/create-task", task_create_view, name="create-task"
     ),
 )
 task_patterns = (
@@ -149,12 +131,6 @@ task_patterns = (
     # Move/delete actions menu
     path("<uuid:task_uuid>/actions", task_actions, name="actions"),
     path("<uuid:task_uuid>/delete", task_delete_view, name="delete"),
-    # Form
-    path(
-        "<uuid:task_uuid>/move-to-section",
-        task_move_to_section,
-        name="move-to-section",
-    ),
 )
 team_member_patterns = (
     path(
@@ -173,8 +149,6 @@ urlpatterns = (
     path("workspace/", include((workspace_patterns, "workspaces"))),
     # Project
     path("project/", include((project_patterns, "projects"))),
-    # Section
-    path("section/", include((section_patterns, "sections"))),
     # Task
     path("task/", include((task_patterns, "tasks"))),
     # Team member

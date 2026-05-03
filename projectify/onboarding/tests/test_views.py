@@ -176,7 +176,7 @@ class TestNewTask(MixinForTests):
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Create a new task."""
-        with django_assert_num_queries(14):
+        with django_assert_num_queries(12):
             assert (
                 user_client.post(
                     resource_url, {"title": "Test Task"}

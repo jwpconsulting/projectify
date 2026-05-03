@@ -119,11 +119,19 @@ class SectionInline(admin.TabularInline[Section]):
     extra = 0
 
 
+class TaskInline(admin.TabularInline[Task]):
+    """Task inline admin."""
+
+    model = Task
+    extra = 0
+    readonly_fields = ("assignee",)
+
+
 @admin.register(Project)
 class ProjectAdmin(ReadOnlyAdmin[Project], admin.ModelAdmin[Project]):
     """Project Admin."""
 
-    inlines = (SectionInline,)
+    inlines = (TaskInline,)
     list_display = ("title", "workspace_title", "created", "modified")
     list_select_related = ("workspace",)
     readonly_fields = ("uuid",)
@@ -135,19 +143,10 @@ class ProjectAdmin(ReadOnlyAdmin[Project], admin.ModelAdmin[Project]):
         return instance.workspace.title
 
 
-class TaskInline(admin.TabularInline[Task]):
-    """Task inline admin."""
-
-    model = Task
-    extra = 0
-    readonly_fields = ("assignee",)
-
-
 @admin.register(Section)
 class SectionAdmin(ReadOnlyAdmin[Section], admin.ModelAdmin[Section]):
     """Section Admin."""
 
-    inlines = (TaskInline,)
     list_display = (
         "title",
         "project_title",
@@ -175,26 +174,20 @@ class TaskAdmin(ReadOnlyAdmin[Task], admin.ModelAdmin[Task]):
 
     list_display = (
         "title",
-        "section_title",
         "project_title",
         "workspace_title",
         "created",
         "modified",
     )
-    list_select_related = ("section__project__workspace",)
+    list_select_related = ("project__workspace",)
     readonly_fields = ("uuid", "assignee")
-
-    @admin.display(description=_("Section title"))
-    def section_title(self, instance: Task) -> str:
-        """Return the project's title."""
-        return instance.section.title
 
     @admin.display(description=_("Project title"))
     def project_title(self, instance: Task) -> str:
         """Return the project's title."""
-        return instance.section.project.title
+        return str(instance.project.title)
 
     @admin.display(description=_("Workspace title"))
     def workspace_title(self, instance: Task) -> str:
         """Return the workspace's title."""
-        return instance.section.project.workspace.title
+        return str(instance.project.workspace.title)

@@ -7,8 +7,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 # Create a task
 
 Tasks are the backbone of Projectify. In order to create a task simply click
-the **Add task** button in a section panel. If you do not know how to create a
-section, please see the [help page on sections](/help/sections).
+the **Add task** button in a project panel. If you do not know how to create a
+project, please see the [help page on projects](/help/projects).
 
 # Add context to a task
 
@@ -31,27 +31,6 @@ right, or press the **pencil icon** at the right side of each task field.
 When you are done editing the task, you can save your changes using the
 **Update task** button in the top right. To continue viewing the task after
 saving your changes, press the **Update task and stay** button.
-
-# Move a task
-
-There are a few ways you can move a task as well as a few places.
-
-You can move your tasks around inside the section they are housed in as well as
-move them to other sections in your project. For example, if you have a section
-called _To Do_ and another section called _In Progress_, you can move tasks
-between these sections.
-
-Moving tasks is simple. On the right of a task are three buttons:
-
-- An **up button**,
-- a **down button**, and
-- the **task actions button** (…).
-
-The **up** and **down** buttons move the task inside the section.
-
-The **task actions button** (…) takes you to a task actions page that allows you to
-select a section to move the task to, as well as more actions inside the
-current section such as **Move to top** and **Move to bottom**.
 
 # Delete a task
 

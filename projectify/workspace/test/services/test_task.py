@@ -9,46 +9,41 @@ from django.forms import ValidationError
 
 import pytest
 
-from ...models import Section, Task, TeamMember
-from ...services.task import (
-    task_create,
-    task_mark_done,
-    task_move_after,
-    task_update,
-)
+from ...models import Project, Task, TeamMember
+from ...services.task import task_create, task_mark_done, task_update
 
 pytestmark = pytest.mark.django_db
 
 
 # Create
 def test_create_task(
-    section: Section, team_member: TeamMember, other_team_member: TeamMember
+    project: Project, team_member: TeamMember, other_team_member: TeamMember
 ) -> None:
     """Test adding tasks to a project."""
-    count = section.task_set.count()
+    count = project.task_set.count()
     task = task_create(
-        who=team_member.user, section=section, title_description="foo"
+        who=team_member.user, project=project, title_description="foo"
     )
     assert task.title == "foo"
     assert task.description == "foo"
 
-    assert section.task_set.count() == count + 1
+    assert project.task_set.count() == count + 1
 
     task2 = task_create(
         who=team_member.user,
-        section=section,
+        project=project,
         title_description="<p>foo</p><p>bar</p>",
         assignee=other_team_member,
     )
     assert task2.title == "foo"
     assert task2.description == "<p>foo</p><p>bar</p>"
 
-    assert section.task_set.count() == count + 2
-    assert list(section.task_set.all()) == [task2, task]
+    assert project.task_set.count() == count + 2
+    assert list(project.task_set.all()) == [task2, task]
 
 
 def test_create_task_unrelated_teammember(
-    section: Section,
+    project: Project,
     team_member: TeamMember,
     unrelated_team_member: TeamMember,
 ) -> None:
@@ -56,18 +51,18 @@ def test_create_task_unrelated_teammember(
     with pytest.raises(ValidationError) as e:
         task_create(
             who=team_member.user,
-            section=section,
+            project=project,
             title_description="foo",
             assignee=unrelated_team_member,
         )
     assert e.match("belongs to a different workspace")
 
 
-def test_task_create_nested(team_member: TeamMember, section: Section) -> None:
+def test_task_create_nested(team_member: TeamMember, project: Project) -> None:
     """Test task_create_nested."""
     task = task_create(
         who=team_member.user,
-        section=section,
+        project=project,
         title_description="foo",
         assignee=team_member,
     )
@@ -75,11 +70,11 @@ def test_task_create_nested(team_member: TeamMember, section: Section) -> None:
 
 
 def test_add_task_due_date(
-    section: Section, team_member: TeamMember, now: datetime
+    project: Project, team_member: TeamMember, now: datetime
 ) -> None:
     """Test adding a task with a due date."""
     task = task_create(
-        section=section,
+        project=project,
         who=team_member.user,
         title_description="foo",
         due_date=now,
@@ -105,40 +100,6 @@ def test_task_update(
 
     assert task.assignee
     assert task.assignee.user.email == other_team_member.user.email
-
-
-def test_moving_task_to_other_section(
-    section: Section,
-    other_section: Section,
-    task: Task,
-    team_member: TeamMember,
-) -> None:
-    """Test moving a task around to another section."""
-    other_task = task_create(
-        who=team_member.user, title_description="don't care", section=section
-    )
-    assert list(section.task_set.all()) == [other_task, task]
-    other_section_task = task_create(
-        who=team_member.user,
-        title_description="don't care",
-        section=other_section,
-    )
-    assert list(other_section.task_set.all()) == [other_section_task]
-    task_move_after(who=team_member.user, task=task, after=other_section)
-    assert list(other_section.task_set.all()) == [task, other_section_task]
-
-
-def test_moving_task_to_empty_section(
-    other_section: Section, task: Task, team_member: TeamMember
-) -> None:
-    """
-    Test what happens if we move it into an empty section.
-
-    We also see what happens when the id is set too high.
-    """
-    task_move_after(who=team_member.user, task=task, after=other_section)
-    assert list(other_section.task_set.all()) == [task]
-    task.refresh_from_db()
 
 
 def test_task_mark_done(task: Task, team_member: TeamMember) -> None:

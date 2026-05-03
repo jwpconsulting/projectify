@@ -29,7 +29,7 @@ from projectify.user.models import User
 from projectify.user.services.auth import user_confirm_email
 from projectify.user.services.internal import user_create, user_make_token
 from projectify.user.services.user import user_update
-from projectify.workspace.models import Section, Workspace
+from projectify.workspace.models import Workspace
 from projectify.workspace.services.project import (
     project_create,
     project_delete,
@@ -61,8 +61,8 @@ class Command(BaseCommand):
     owner: Optional[User] = None
     test_users: list[User] = []
     essay_task = None
-    in_progress_section = None
-    coursework_section = None
+    in_progress_project = None
+    coursework_project = None
     software_project = None
 
     @transaction.atomic
@@ -118,29 +118,23 @@ class Command(BaseCommand):
             title="Software Development Project",
             description="Main software development project",
         )
-        project_create(
+        self.in_progress_project = project_create(
             who=self.owner,
             workspace=self.workspace,
-            title="QA Project",
-            description="Quality assurance project",
+            title="In Progress",
+            description="In progress tasks",
         )
-
-        self.in_progress_section = Section.objects.create(
-            project=self.software_project, title="In progress", _order=0
-        )
-        self.coursework_section = Section.objects.create(
-            project=self.software_project, title="Coursework", _order=1
-        )
-        # Put this last to conveniently hide the "Create section" button from
-        # Selenium
-        Section.objects.create(
-            project=self.software_project, title="To Do", _order=2
+        self.coursework_project = project_create(
+            who=self.owner,
+            workspace=self.workspace,
+            title="Coursework",
+            description="Coursework tasks",
         )
 
         # Used in development team solutions page
         task_create(
             who=self.owner,
-            section=self.in_progress_section,
+            project=self.in_progress_project,
             title_description="<p>Beta testing for level 6</p>"
             "<p>Conduct beta testing for level 6 functionality</p>",
             assignee=fake.random_element(elements=team_members),
@@ -159,7 +153,7 @@ class Command(BaseCommand):
         for title, description in tasks_data:
             task_create(
                 who=self.owner,
-                section=self.in_progress_section,
+                project=self.in_progress_project,
                 title_description=format_html(
                     "<p>{}</p><p>{}</p>", title, description
                 ),
@@ -169,21 +163,21 @@ class Command(BaseCommand):
         # Used in academic solutions page
         self.essay_task = task_create(
             who=self.owner,
-            section=self.coursework_section,
+            project=self.coursework_project,
             title_description="<p>Write essay for assignment</p>"
             "<p>Complete the essay assignment for the course</p>",
             assignee=fake.random_element(elements=team_members),
         )
         task_create(
             who=self.owner,
-            section=self.coursework_section,
+            project=self.coursework_project,
             title_description="Research methodology review",
             assignee=fake.random_element(elements=team_members),
         )
 
         task_create(
             who=self.owner,
-            section=self.coursework_section,
+            project=self.coursework_project,
             title_description="Prepare presentation slides",
             assignee=fake.random_element(elements=team_members),
         )
@@ -219,8 +213,8 @@ class Command(BaseCommand):
         assert self.owner
         assert self.workspace
         assert self.software_project
-        assert self.in_progress_section
-        assert self.coursework_section
+        assert self.in_progress_project
+        assert self.coursework_project
         assert self.essay_task
 
         driver.get(f"{base_url}{reverse('users:log-in')}")
@@ -246,11 +240,17 @@ class Command(BaseCommand):
         self.remove_debug_toolbar(driver)
 
         # development team solutions tasks
-        section_selector = f"#section-{self.in_progress_section.uuid}"
-        section_element = wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, section_selector))
+        driver.get(
+            f"{base_url}{reverse('dashboard:projects:detail', kwargs={'project_uuid': self.in_progress_project.uuid})}"
         )
-        section_element.screenshot(
+        self.remove_debug_toolbar(driver)
+        project_main_selector = 'div[role="presentation"] main'
+        in_progress_element = wait.until(
+            EC.presence_of_element_located(
+                (By.CSS_SELECTOR, project_main_selector)
+            )
+        )
+        in_progress_element.screenshot(
             str(output_directory / "development-teams-tasks.png")
         )
 
