@@ -6,6 +6,20 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Changelog
 
+## Unrelease
+
+### Documentation
+
+- Inline [Trix documentation](https://github.com/basecamp/trix/tree/main) in `docs/frontend-scripting.md`.
+
+### Internal
+
+- Refactor task views and task view tests.
+- Fix how djlint indents `<trix-editor>` tags with the `custom_html` setting in
+  `pyproject.toml`.
+- Create separate Django test `Client()` instances for different user clients
+  in `projectify/conftest.py`.
+
 ## 2026.5.3
 
 ### Enhancement
