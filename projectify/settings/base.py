@@ -96,8 +96,15 @@ class Base(Configuration):  # type:ignore
     SESSION_COOKIE_SAMESITE = "Strict"
     SESSION_COOKIE_SECURE = True
 
-    # TODO remove when Svelte frontend is gone
     # CSRF
+    # Don't store CSRF cookies in session, for now.
+    # This increases many query count checks in tests by 4 queries.
+    # For reference, here's what you'd have to pay attention to if you enable
+    # CSRF_USE_SESSIONS = True
+    # > Since the default error views require the CSRF token, SessionMiddleware must appear in MIDDLEWARE before any middleware that may raise an exception to trigger an error view (such as PermissionDenied) if you’re using CSRF_USE_SESSIONS. See Middleware ordering.
+    # See
+    # https://docs.djangoproject.com/en/6.0/ref/settings/#std-setting-CSRF_USE_SESSIONS
+    # Note: Set to False now because it increases the query count
     CSRF_USE_SESSIONS = False
     CSRF_COOKIE_SAMESITE = "Strict"
     CSRF_COOKIE_SECURE = True
@@ -190,8 +197,13 @@ class Base(Configuration):  # type:ignore
         "django.middleware.csp.ContentSecurityPolicyMiddleware",
         "projectify.middleware.reverse_proxy",
         "django.middleware.gzip.GZipMiddleware",
+        # SessionMiddleware
+        # Before any middleware that may raise an exception to trigger an error view (such as PermissionDenied) if you’re using CSRF_USE_SESSIONS.
+        # https://docs.djangoproject.com/en/6.0/ref/middleware/#middleware-ordering
         "django.contrib.sessions.middleware.SessionMiddleware",
         "django.middleware.common.CommonMiddleware",
+        # CsrfViewMiddleware
+        # After SessionMiddleware if you’re using CSRF_USE_SESSIONS.
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",

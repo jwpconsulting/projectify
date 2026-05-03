@@ -94,8 +94,6 @@ class Development(Base):
 
     # Safari workaround for sessionid cookie
     SESSION_COOKIE_SECURE = False
-    # TODO remove after Svelte frontend is gone
-    SESSION_COOKIE_SAMESITE = "Lax"
 
     # Admins for local logging
     ADMINS = [["Local user", "user@localhost"]]
