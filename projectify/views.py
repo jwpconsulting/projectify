@@ -134,6 +134,7 @@ def handler404(
 
 def handler500(request: HttpRequest) -> HttpResponse:
     """Handle 500 errors with a custom page."""
+    logger.error("500 error page hit")
     return render(request, "500.html", status=500)
 
 
