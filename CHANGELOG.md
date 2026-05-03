@@ -12,6 +12,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 - Simplify new/edit task experience. Extract the task title from the
   description.
+- Place task search in top to save space
 
 ### Breaking
 
