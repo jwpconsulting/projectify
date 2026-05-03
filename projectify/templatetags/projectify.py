@@ -14,6 +14,7 @@ from django.utils.html import format_html
 from django.utils.safestring import SafeText, mark_safe
 from django.utils.translation import gettext_lazy as _
 
+from projectify.lib.types import SupportsGetAbsoluteUrl
 from projectify.lib.utils import static_image_get_with_dimensions
 from projectify.user.models import User
 from projectify.workspace.models import TeamMember
@@ -114,7 +115,7 @@ def circle_anchor(
     label: str,
     icon_style: str,
     # TODO rename to path, since we don't accept full URLs anymore
-    href: str,
+    href: Union[SupportsGetAbsoluteUrl, str],
     fragment: Optional[str] = None,
     title: Optional[str] = None,
     size: Literal[None, 4, 6] = None,
@@ -122,9 +123,13 @@ def circle_anchor(
     **kwargs: Any,
 ) -> SafeText:
     """Render a circular anchor link."""
-    if not href:
-        raise ValueError("Empty href supplied")
-    url = reverse(href, args=args, kwargs=kwargs)
+    match href:
+        case "":
+            raise ValueError("Empty href supplied")
+        case str():
+            url = reverse(href, args=args, kwargs=kwargs)
+        case model:
+            url = model.get_absolute_url()
     return format_html(
         '<a href="{url}" aria-label="{label}"{title} class="inline-block shrink-0 size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled">{icon}</a>',
         url=f"{url}#{fragment}" if fragment else url,
