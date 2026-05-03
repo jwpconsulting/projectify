@@ -331,6 +331,7 @@ def task_actions(
     return render(request, template, context)
 
 
+# TODO require POST
 def task_delete_view(
     request: AuthenticatedHttpRequest, task_uuid: UUID
 ) -> HttpResponse:
