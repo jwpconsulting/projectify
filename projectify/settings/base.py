@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 from django.utils.csp import CSP  # type: ignore
+from django.utils.log import DEFAULT_LOGGING
 
 import dj_database_url
 
@@ -27,7 +28,6 @@ from configurations import Configuration  # type: ignore
 
 from .monkeypatch import patch
 from .types import (
-    LoggingConfig,
     SocialAccountProvider,
     StoragesConfig,
     StripeConfig,
@@ -376,25 +376,31 @@ class Base(Configuration):  # type:ignore
     EMAIL_SUBJECT_PREFIX = "[Projectify-Admin] "
 
     # Logging
-    LOGGING: LoggingConfig = {
-        "version": 1,
-        "disable_existing_loggers": False,
+    LOGGING: Any = {
+        **DEFAULT_LOGGING,
         "formatters": {
+            **DEFAULT_LOGGING["formatters"],
             "like_gunicorn": {
                 "format": "%(levelname)-s [%(name)s.%(module)s] ~ %(message)s"
-            }
+            },
         },
         "handlers": {
+            **DEFAULT_LOGGING["handlers"],
             "console": {
-                "class": "logging.StreamHandler",
+                **DEFAULT_LOGGING["handlers"]["console"],
                 "formatter": "like_gunicorn",
-            }
+            },
         },
         "loggers": {
-            "": {
-                "handlers": ["console"],
+            **DEFAULT_LOGGING["loggers"],
+            "django": {
+                **DEFAULT_LOGGING["loggers"]["django"],
                 "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
-            }
+            },
+            "projectify": {
+                "handlers": ["console", "mail_admins"],
+                "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+            },
         },
     }
     # https://docs.djangoproject.com/en/5.2/ref/settings/#std-setting-ADMINS

@@ -95,9 +95,6 @@ class Development(Base):
     # Safari workaround for sessionid cookie
     SESSION_COOKIE_SECURE = False
 
-    # Admins for local logging
-    ADMINS = [["Local user", "user@localhost"]]
-
     # Show preview of all email types
     PREMAIL_PREVIEW = True
 
@@ -108,18 +105,20 @@ class Development(Base):
     TEMPLATES = Base.TEMPLATES
     TEMPLATES[0]["OPTIONS"] = {**TEMPLATES[0]["OPTIONS"], "debug": True}
 
+    # Development logging settings
+    # ============================
+    # Simulate sending error emails
+    # Set DEBUG = False to test the admin email handler
+    ADMINS = [["Local user", "user@localhost"]]
     # Logging with timestamps for development
     LOGGING = {
         **Base.LOGGING,
         "formatters": {
+            **Base.LOGGING["formatters"],
             "like_gunicorn": {
                 "format": "[%(asctime)s] %(levelname)-s [%(name)s.%(module)s] ~ %(message)s",
                 "datefmt": "%d/%b/%Y %H:%M:%S",
-            }
-        },
-        "loggers": {
-            **Base.LOGGING["loggers"],
-            "django": {"handlers": ["console"], "propagate": False},
+            },
         },
     }
 

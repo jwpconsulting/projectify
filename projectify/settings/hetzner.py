@@ -44,15 +44,6 @@ class Hetzner(Base):
     MEDIA_ROOT = Path(os.environ["MEDIA_ROOT"])
     SENDFILE_BACKEND = "django_sendfile.backends.xsendfile"
 
-    # Logging config
-    LOGGING = Base.LOGGING
-    LOGGING["handlers"]["mail_admins"] = {
-        "level": "ERROR",
-        "class": "django.utils.log.AdminEmailHandler",
-    }
-
-    # Emails
-
     @classmethod
     def setup(cls) -> None:
         """Load database config, after environment is correctly loaded."""
