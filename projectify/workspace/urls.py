@@ -31,6 +31,7 @@ from projectify.workspace.views.team_member import team_member_picture
 from projectify.workspace.views.workspace import (
     workspace_minimize_project_list,
     workspace_picture_view,
+    workspace_search_view,
     workspace_settings_billing,
     workspace_settings_billing_edit,
     workspace_settings_general,
@@ -63,6 +64,7 @@ workspace_patterns: UrlPatterns = (
     path(
         "<uuid:workspace_uuid>/picture", workspace_picture_view, name="picture"
     ),
+    path("<uuid:workspace_uuid>/search", workspace_search_view, name="search"),
     # Settings
     path(
         "<uuid:workspace_uuid>/settings",

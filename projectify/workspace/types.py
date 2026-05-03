@@ -4,18 +4,9 @@
 """Shared type definitions in workspace app."""
 
 from dataclasses import dataclass
-from typing import Literal, Optional, TypedDict
+from typing import Literal, Optional
 
 from projectify.corporate.types import WorkspaceFeatures
-
-
-class ConsumerEvent(TypedDict):
-    """Contains event data about what to send to client."""
-
-    type: Literal["change"]
-    resource: Literal["workspace", "project", "task"]
-    uuid: str
-    kind: Literal["changed", "gone"]
 
 
 @dataclass(frozen=True, kw_only=True)

@@ -1,16 +1,20 @@
-{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load static %}
 {% load i18n %}
 {% load projectify %}
 <nav aria-label="{% translate "Dashboard header" %}"
-     class="flex-row items-center justify-between border-b-2 border-border bg-foreground px-6 py-4 md:flex">
+     class="flex flex-col md:items-center justify-between border-b-2 border-border bg-foreground px-6 py-4 md:flex-row gap-y-2 gap-x-4">
     <a href="{% url "dashboard:dashboard" %}" class="shrink">
         <img src="{% static "polylogo.svg" %}"
              width="171"
              height="36"
              alt="Go to dashboard">
     </a>
+    <div class="grow"></div>
+    {% if workspace %}
+        {% workspace_search workspace %}
+    {% endif %}
     <div class="flex shrink-0 flex-row items-center gap-2">
         {% if user.is_authenticated %}
             {% anchor "dashboard:dashboard" _("Go to dashboard") %}

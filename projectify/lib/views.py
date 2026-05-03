@@ -3,24 +3,11 @@
 # SPDX-FileCopyrightText: 2026 JWP Consulting GK
 """View decorators."""
 
-from typing import Any, Protocol
-
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import RedirectView
 
-from projectify.lib.types import AuthenticatedHttpRequest
-
-
-class LoggedInViewP(Protocol):
-    """Django view method that takes an AuthenticatedHttpRequest."""
-
-    def __call__(
-        self, request: AuthenticatedHttpRequest, *args: Any, **kwargs: Any
-    ) -> HttpResponse:
-        """Take a request and respond."""
-        ...
+from projectify.lib.types import DjangoView, LoggedInViewP
 
 
 def platform_view(func: LoggedInViewP) -> LoggedInViewP:
@@ -30,20 +17,27 @@ def platform_view(func: LoggedInViewP) -> LoggedInViewP:
     This makes it easier to add required decorators or other things to views
     that are part of the platform, i.e., pages that require the user to be
     logged in.
+
+    Usage
+
+    from django.http import HttpResponse
+    from projectify.lib.types import AuthenticatedHttpRequest
+    from projectify.lib.views import platform_view
+    @platform_view
+    def method(request: AuthenticatedHttpRequest) -> HttpResponse:
+        pass
+
+    TODO, implement this
+
+    @platform_view(require_methods=["GET", "POST"])
+    def method(request: AuthenticatedHttpRequest) -> HttpResponse:
+        pass
+
+    This validates request.method in ["GET", "POST"]
     """
     return login_required(func)
 
 
-class View(Protocol):
-    """Generic Django view type."""
-
-    def __call__(
-        self, request: HttpRequest, *args: Any, **kwargs: Any
-    ) -> HttpResponse:
-        """Return response."""
-        ...
-
-
-def permanent_redirect(urlname: str) -> View:
+def permanent_redirect(urlname: str) -> DjangoView:
     """Return a permanent redirect view function."""
     return RedirectView.as_view(url=reverse_lazy(urlname), permanent=True)

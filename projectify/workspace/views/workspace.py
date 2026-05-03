@@ -5,7 +5,7 @@
 
 import logging
 from dataclasses import dataclass
-from typing import Any, Literal, TypedDict
+from typing import Any, Literal, Optional, TypedDict
 from uuid import UUID
 
 from django import forms
@@ -14,7 +14,7 @@ from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_GET, require_http_methods
 
 from django_sendfile import sendfile
 
@@ -31,6 +31,7 @@ from projectify.lib.settings import get_settings
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 
+from ..forms import ModelMultipleChoice, WorkspaceSearchForm
 from ..models import TeamMember, Workspace
 from ..selectors.project import project_find_by_workspace_uuid
 from ..selectors.quota import workspace_get_all_quotas
@@ -44,6 +45,7 @@ from ..selectors.workspace import (
     workspace_build_detail_query_set,
     workspace_find_by_workspace_uuid,
     workspace_find_for_user,
+    workspace_search,
 )
 from ..services.team_member import (
     team_member_delete,
@@ -163,6 +165,62 @@ def workspace_view(
     if project:
         return redirect(project.get_absolute_url())
     return redirect("onboarding:new_project", workspace_uuid=workspace_uuid)
+
+
+@require_GET
+@platform_view
+def workspace_search_view(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Search the workspace."""
+    search_qs = workspace_build_detail_query_set(
+        who=request.user, annotate_task_count=True
+    )
+    workspace = workspace_find_by_workspace_uuid(
+        workspace_uuid=workspace_uuid, who=request.user, qs=search_qs
+    )
+    if workspace is None:
+        raise Http404(_("Workspace not found"))
+
+    team_members = workspace.teammember_set.all()
+    if len(request.GET) > 0:
+        form = WorkspaceSearchForm(team_members=team_members, data=request.GET)
+        if form.is_valid():
+            filter_by_team_member_maybe: Optional[
+                ModelMultipleChoice[TeamMember]
+            ] = form.cleaned_data.get("filter_by_team_member")
+            if filter_by_team_member_maybe is not None:
+                filter_by_team_member = (
+                    filter_by_team_member_maybe.selected_objects
+                )
+                filter_by_unassigned = (
+                    filter_by_team_member_maybe.selected_blank
+                )
+            else:
+                filter_by_team_member = None
+                filter_by_unassigned = False
+
+            results = workspace_search(
+                workspace=workspace,
+                who=request.user,
+                query=form.cleaned_data["query"],
+                filter_by_team_members=filter_by_team_member,
+                unassigned_tasks=filter_by_unassigned,
+            )
+        else:
+            results = None
+    else:
+        form = WorkspaceSearchForm(team_members)
+        results = None
+
+    context = {
+        "workspace": workspace,
+        "projects": workspace.project_set.all(),
+        "workspaces": workspace_find_for_user(who=request.user),
+        "form": form,
+        "results": results,
+    }
+    return render(request, "workspace/workspace_search.html", context=context)
 
 
 @require_http_methods(["GET"])

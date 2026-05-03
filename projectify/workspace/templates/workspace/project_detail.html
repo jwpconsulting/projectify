@@ -72,7 +72,6 @@
     <form hx-post="{% url 'dashboard:projects:detail' project.uuid %}"
           hx-target="#project-tasks"
           hx-swap="outerHTML"
-          hx-include="#task-filter,#team-member-filters"
           hx-disabled-elt="find button"
           class="flex flex-row gap-2 items-center">
         {% csrf_token %}
@@ -107,7 +106,6 @@
                       hx-post="{% url 'dashboard:projects:detail' project.uuid %}"
                       hx-target="#project-tasks"
                       hx-swap="outerHTML"
-                      hx-include="#task-filter,#team-member-filters"
                       hx-disabled-elt="find button"
                       class="flex">
                     <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
@@ -192,23 +190,6 @@
 {% block dashboard_content %}
     <main id="main"
           class="min-w-0 grow flex flex-col items-center gap-4 bg-background py-4">
-        {% if task_filter_form %}
-            <form id="task-filter"
-                  role="search"
-                  title="{% translate "Task search form" %}"
-                  class="flex w-full max-w-md flex-col gap-2 rounded-xl bg-foreground px-4 py-4">
-                <label for="{{ task_filter_form.task_search_query.id_for_label }}"
-                       class="font-bold text-base-content first-letter:uppercase">{% translate "Task search" %}</label>
-                <input type="search"
-                       class="placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2"
-                       id="{{ task_filter_form.task_search_query.id_for_label }}"
-                       name="{{ task_filter_form.task_search_query.html_name }}"
-                       placeholder="{{ task_filter_form.task_search_query.help_text }}"
-                       form="task-filter"
-                       {% if task_filter_form.task_search_query.data %}value="{{ task_filter_form.task_search_query.data }}"{% endif %} />
-                {% include "projectify/forms/submit.html" with text=_("Search tasks") %}
-            </form>
-        {% endif %}
         <div class="flex w-full grow flex-col gap-4 md:p-2">{% partial project_tasks %}</div>
     </main>
     {# djlint:off #}

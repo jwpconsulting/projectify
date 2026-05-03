@@ -12,6 +12,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 - Simplify new/edit task experience. Extract the task title from the
   description.
+- Place task search in top to save space
+- You can now search tasks in all your workspace's projects
+  instead of having to look at each project individually.
 
 ### Breaking
 
@@ -39,6 +42,7 @@ features:
 - Remove SubTask model from workspace app.
 - Remove chat messages. Projectify hasn't supported chat messages in a while.
 - Build Trix from scratch, update Trix version
+- Update django debug toolbar 4.3.0 -> 6.3.0
 
 ### Security
 
