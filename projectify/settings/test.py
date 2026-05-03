@@ -57,7 +57,8 @@ class Test(Base):
         temp_dir = tempfile.TemporaryDirectory()
         # Make sure the temporary directory disappears
         weakref.finalize(temp_dir, temp_dir.cleanup)
-        cls.MEDIA_ROOT = Path(temp_dir.name)
+        cls.MEDIA_ROOT = Path(temp_dir.name) / "media"
+        cls.STATIC_ROOT = Path(temp_dir.name) / "staticfiles"
 
     @classmethod
     def setup(cls) -> None:
