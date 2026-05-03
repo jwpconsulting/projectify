@@ -4,11 +4,13 @@
 """Workspace model selectors."""
 
 import logging
+from dataclasses import dataclass
 from typing import Optional
 from uuid import UUID
 
 from django.db.models import (
     BooleanField,
+    Count,
     ExpressionWrapper,
     Prefetch,
     Q,
@@ -17,13 +19,13 @@ from django.db.models import (
 
 from projectify.user.models import User
 
-from ..models import Project, TeamMember, TeamMemberInvite, Workspace
+from ..models import Project, Task, TeamMember, TeamMemberInvite, Workspace
 
 logger = logging.getLogger(__name__)
 
 
 def workspace_build_detail_query_set(
-    *, who: Optional[User]
+    *, who: Optional[User], annotate_task_count: bool = False
 ) -> QuerySet[Workspace]:
     """
     Build workspace detail query set.
@@ -36,6 +38,11 @@ def workspace_build_detail_query_set(
             is_current_user=ExpressionWrapper(
                 Q(user=who), output_field=BooleanField()
             )
+        )
+    if annotate_task_count:
+        project_not_archived = Q(task__project__archived__isnull=True)
+        teammembers = teammembers.annotate(
+            task_count=Count("task", filter=project_not_archived)
         )
     teammember_prefetch: Prefetch[TeamMember] = Prefetch(
         "teammember_set", queryset=teammembers
@@ -101,3 +108,56 @@ def workspace_find_by_workspace_uuid(
     except Workspace.DoesNotExist:
         logger.warning("No workspace found for uuid %s", workspace_uuid)
         return None
+
+
+@dataclass
+class WorkspaceSearchResults:
+    """Contain search results for a workspace search."""
+
+    projects: QuerySet[Project]
+    tasks: QuerySet[Task]
+
+
+def workspace_search(
+    *,
+    workspace: Workspace,
+    who: User,
+    query: Optional[str],
+    filter_by_team_members: Optional[QuerySet[TeamMember]] = None,
+    # TODO rename to filter_by_unassigned
+    unassigned_tasks: bool = False,
+) -> WorkspaceSearchResults:
+    """Search workspace for `query`."""
+    workspace_filter = Q(workspace=workspace, workspace__users=who)
+
+    assignee_contained = Q(assignee__in=filter_by_team_members)
+    assignee_empty = Q(assignee__isnull=True)
+
+    task_q = workspace_filter & Q(project__archived__isnull=True)
+
+    match filter_by_team_members, unassigned_tasks:
+        case None, False:
+            task_q &= Q()
+        case None, True:
+            task_q &= assignee_empty
+        case _, False:
+            task_q &= assignee_contained
+        case _, True:
+            task_q &= assignee_contained | assignee_empty
+
+    if query is not None:
+        task_q &= Q(title__icontains=query) | Q(description__icontains=query)
+    tasks = (
+        Task.objects.filter(task_q)
+        .select_related("project", "assignee__user")
+        .order_by("project__modified")
+    )
+
+    project_q = workspace_filter & Q(archived__isnull=True)
+    if query is not None:
+        project_q &= Q(title__icontains=query) | Q(
+            description__icontains=query
+        )
+    project_qs = Project.objects.filter(project_q)
+
+    return WorkspaceSearchResults(projects=project_qs, tasks=tasks)

@@ -29,7 +29,7 @@ from projectify.workspace.services.team_member_invite import (
 from pytest_types import DjangoAssertNumQueries
 
 from ...const import TeamMemberRoles
-from ...models import TeamMember, TeamMemberInvite, Workspace
+from ...models import Task, TeamMember, TeamMemberInvite, Workspace
 
 pytestmark = pytest.mark.django_db
 
@@ -38,6 +38,111 @@ class MockSession:
     """Checkout and billing portal mock session."""
 
     url = "https://www.example.com"
+
+
+class TestWorspaceSearchView:
+    """Test workspace_search_view features."""
+
+    @pytest.fixture
+    def resource_url(self, workspace: Workspace) -> str:
+        """Return URL to this view."""
+        return reverse("dashboard:workspaces:search", args=(workspace.uuid,))
+
+    def test_get(
+        self, user_client: Client, resource_url: str, team_member: TeamMember
+    ) -> None:
+        """Test GETting the search page without any query."""
+        response = user_client.get(resource_url)
+        assert response.status_code == 200
+
+    def test_get_unauthorized(
+        self, unrelated_user_client: Client, resource_url: str
+    ) -> None:
+        """Test authorization check."""
+        response = unrelated_user_client.get(resource_url)
+        assert response.status_code == 404
+
+    def test_get_empty_query(
+        self, user_client: Client, resource_url: str
+    ) -> None:
+        """Test authorization check."""
+        data = {"query": ""}
+        response = user_client.get(resource_url, data)
+        assert response.status_code == 200
+        assert b"Please enter a search query" in response.content
+
+    def test_get_with_query(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        task: Task,
+    ) -> None:
+        """Test GETting the search page with a query."""
+        data = {"query": task.title}
+        response = user_client.get(resource_url, data)
+        assert response.status_code == 200
+        assert task.title in response.content.decode()
+
+    def test_get_filter_by_team_member(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        other_team_member: TeamMember,
+        task: Task,
+        other_task: Task,
+    ) -> None:
+        """Test filtering by team member and check task count."""
+        task.assignee = team_member
+        task.save()
+        other_task.assignee = other_team_member
+        other_task.save()
+        data = {"filter_by_team_member": [str(team_member.uuid)]}
+        response = user_client.get(resource_url, data)
+        assert response.status_code == 200
+        assert task.title in response.content.decode()
+        assert other_task.title not in response.content.decode()
+
+    def test_get_filter_by_team_member_and_query(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        other_team_member: TeamMember,
+        task: Task,
+        other_task: Task,
+    ) -> None:
+        """Test filtering by team member and query together."""
+        task.title = "Important bug fix"
+        task.assignee = team_member
+        task.save()
+        other_task.title = "Feature request"
+        other_task.assignee = other_team_member
+        other_task.save()
+        t_uid = str(team_member.uuid)
+        data = {"query": "bug", "filter_by_team_member": [t_uid]}
+        response = user_client.get(resource_url, data)
+        assert response.status_code == 200
+        assert task.title in response.content.decode()
+        assert other_task.title not in response.content.decode()
+
+    def test_get_filter_by_unassigned(
+        self,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
+        task: Task,
+        other_task: Task,
+    ) -> None:
+        """Test filtering for unassigned tasks."""
+        task.assignee = team_member
+        task.save()
+        data = {"filter_by_team_member": [""]}
+        response = user_client.get(resource_url, data)
+        assert response.status_code == 200
+        assert task.title not in response.content.decode()
+        assert other_task.title in response.content.decode()
 
 
 class TestWorkspacePictureView:

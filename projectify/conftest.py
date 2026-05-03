@@ -28,7 +28,7 @@ from uuid import UUID
 
 from django.core.files.base import File
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import client
+from django.test.client import Client
 from django.utils import timezone
 from django.utils.html import format_html
 
@@ -104,13 +104,21 @@ def superuser(faker: Faker) -> user_models.User:
 @pytest.fixture
 def other_user(faker: Faker) -> user_models.User:
     """Return another db user."""
-    return user_create(email=faker.email())
+    user = user_create(email=faker.email())
+    user.is_active = True
+    user.preferred_name = "Other user"
+    user.save()
+    return user
 
 
 @pytest.fixture
 def unrelated_user(faker: Faker) -> user_models.User:
     """Return unrelated user normally not in the same workspace."""
-    return user_create(email=faker.email())
+    user = user_create(email=faker.email())
+    user.is_active = True
+    user.preferred_name = "Unrelated user"
+    user.save()
+    return user
 
 
 @pytest.fixture
@@ -151,14 +159,21 @@ def redeemed_user_invite(faker: Faker) -> user_models.UserInvite:
 
 
 @pytest.fixture
-def user_client(client: client.Client, user: User) -> client.Client:
+def user_client(client: Client, user: User) -> Client:
     """Return logged in client."""
     client.force_login(user)
     return client
 
 
 @pytest.fixture
-def superuser_client(client: client.Client, superuser: User) -> client.Client:
+def unrelated_user_client(client: Client, unrelated_user: User) -> Client:
+    """Client for unrelated user."""
+    client.force_login(unrelated_user)
+    return client
+
+
+@pytest.fixture
+def superuser_client(client: Client, superuser: User) -> Client:
     """Return logged in super user client."""
     client.force_login(superuser)
     return client

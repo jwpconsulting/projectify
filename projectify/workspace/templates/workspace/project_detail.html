@@ -72,7 +72,6 @@
     <form hx-post="{% url 'dashboard:projects:detail' project.uuid %}"
           hx-target="#project-tasks"
           hx-swap="outerHTML"
-          hx-include="#task-filter,#team-member-filters"
           hx-disabled-elt="find button"
           class="flex flex-row gap-2 items-center">
         {% csrf_token %}
@@ -107,7 +106,6 @@
                       hx-post="{% url 'dashboard:projects:detail' project.uuid %}"
                       hx-target="#project-tasks"
                       hx-swap="outerHTML"
-                      hx-include="#task-filter,#team-member-filters"
                       hx-disabled-elt="find button"
                       class="flex">
                     <input type="hidden" name="task_uuid" value="{{ task.uuid }}">

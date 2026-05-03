@@ -17,7 +17,8 @@ from django.utils.translation import gettext_lazy as _
 from projectify.lib.types import SupportsGetAbsoluteUrl
 from projectify.lib.utils import static_image_get_with_dimensions
 from projectify.user.models import User
-from projectify.workspace.models import TeamMember
+from projectify.workspace.forms import WorkspaceSearchForm
+from projectify.workspace.models import TeamMember, Workspace
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +35,8 @@ def percent(value: Optional[float]) -> Optional[str]:
 
 @register.simple_tag
 def anchor(
-    href: str,
+    # Rename to path
+    href: Union[SupportsGetAbsoluteUrl, str],
     label: str,
     aria_label: Optional[str] = None,
     title: Optional[str] = None,
@@ -51,12 +53,16 @@ def anchor(
     """
     extra: Union[SafeText, str]
     a_extra: Union[SafeText, str]
-    if href == "":
-        raise ValueError("Empty href supplied")
-    try:
-        url = reverse(href, args=args, kwargs=kwargs)
-    except NoReverseMatch:
-        url = href
+    match href:
+        case "":
+            raise ValueError("Empty href supplied")
+        case str():
+            try:
+                url = reverse(href, args=args, kwargs=kwargs)
+            except NoReverseMatch:
+                url = href
+        case model:
+            url = model.get_absolute_url()
     # TODO, if we have a reverse match, we don't have external URLs
     # We could switch all callers of the anchor function to use the route name
     # and implicitly switch on external for all other URLs. After all, if it's
@@ -335,3 +341,9 @@ def picture(
         if fetchpriority
         else "",
     )
+
+
+@register.inclusion_tag("workspace/common/search_form.html")
+def workspace_search(workspace: Workspace) -> dict[str, object]:
+    """Render a workspace search form for the given workspace."""
+    return {"workspace": workspace, "form": WorkspaceSearchForm()}

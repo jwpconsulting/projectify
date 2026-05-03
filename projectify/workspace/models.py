@@ -151,6 +151,7 @@ class Section(TitleDescriptionModel, BaseModel):
 
     project = models.ForeignKey["Project"]("Project", on_delete=models.CASCADE)
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+    # TODO remove
     minimized_by = models.ManyToManyField(
         "user.User",
         blank=True,
@@ -300,12 +301,14 @@ class TeamMember(BaseModel):
             "Timestamp when this team member last visited this workspace"
         ),
     )
+    # TODO remove
     minimized_project_list = models.BooleanField(
         default=False,
         help_text=_(
             "Whether this team member has minimized the project list in this workspace"
         ),
     )
+    # TODO remove
     minimized_team_member_filter = models.BooleanField(
         default=False,
         help_text=_(

@@ -3,7 +3,6 @@
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 """Test project CRUD views."""
 
-import re
 from datetime import datetime
 from uuid import uuid4
 
@@ -36,21 +35,7 @@ class TestProjectDetailView:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test GETting the project detail page."""
-        # Gone up   from 14 -> 15, since we fetch all workspaces
-        # Gone down from 15 -> 14, since we optimized the prefetches
-        # Gone down from 14 -> 13, since we select the related workspace
-        # Gone down from 13 -> 11, since we prefetch projects
-        # Gone down from 11 -> 10, since we don't fetch label values()
-        # Gone up   from 10 -> 13, since we update the last visited project
-        # Gone up   from 13 -> 15
-        # Gone down from 15 -> 14
-        # Gone up   from 14 -> 15
-        # Gone up   from 15 -> 18
-        # Gone up   from 18 -> 24 due to permission checks in sidemenu
-        # Gone down from 24 -> 23
-        # Gone down from 23 -> 20
-        # Gone down from 20 -> 18
-        with django_assert_num_queries(18):
+        with django_assert_num_queries(15):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert project.title in response.content.decode()
@@ -83,91 +68,6 @@ class TestProjectDetailView:
             response = user_client.get(url)
             assert response.status_code == 404
 
-    def test_filter_by_team_member(
-        self,
-        user_client: Client,
-        resource_url: str,
-        team_member: TeamMember,
-        other_team_member: TeamMember,
-        task: Task,
-        other_task: Task,
-        django_assert_num_queries: DjangoAssertNumQueries,
-    ) -> None:
-        """Test filtering tasks by team member."""
-        task.assignee = team_member
-        task.save()
-
-        other_task.assignee = other_team_member
-        other_task.save()
-
-        # Gone up   from 22 -> 31 due to permission checks in template
-        # Gone down from 31 -> 30
-        # Gone down from 30 -> 24
-        # Gone down from 24 -> 21
-        with django_assert_num_queries(20):
-            response = user_client.get(
-                resource_url,
-                {"filter_by_team_member": [str(team_member.uuid)]},
-            )
-            assert response.status_code == 200
-
-        assert task.title in response.content.decode()
-        assert other_task.title not in response.content.decode()
-
-    def test_filter_by_unassigned_tasks(
-        self,
-        user_client: Client,
-        resource_url: str,
-        task: Task,
-        team_member: TeamMember,
-        other_task: Task,
-        django_assert_num_queries: DjangoAssertNumQueries,
-    ) -> None:
-        """Test filtering for unassigned tasks."""
-        task.assignee = team_member
-        task.save()
-
-        # Gone up   from 20 -> 29 due to permission checks in template
-        # Gone down from 29 -> 28
-        # Gone down from 28 -> 22
-        # Gone down from 22 -> 19
-        with django_assert_num_queries(18):
-            response = user_client.get(
-                resource_url, {"filter_by_team_member": [""]}
-            )
-            assert response.status_code == 200
-
-        assert task.title not in response.content.decode()
-        assert other_task.title in response.content.decode()
-
-    def test_filter_by_task_search_query(
-        self,
-        user_client: Client,
-        resource_url: str,
-        task: Task,
-        other_task: Task,
-        django_assert_num_queries: DjangoAssertNumQueries,
-    ) -> None:
-        """Test filtering tasks by search query."""
-        task.title = "Important bug fix"
-        task.save()
-
-        other_task.title = "Feature request"
-        other_task.save()
-
-        # Gone up   from 20 -> 29 due to permission checks in template
-        # Gone down from 29 -> 28
-        # Gone down from 28 -> 22
-        # Gone down from 22 -> 19
-        with django_assert_num_queries(18):
-            response = user_client.get(
-                resource_url, {"task_search_query": "bug"}
-            )
-            assert response.status_code == 200
-
-        assert task.title in response.content.decode()
-        assert other_task.title not in response.content.decode()
-
 
 class TestProjectDetailViewActions:
     """Test project detail view actions."""
@@ -190,51 +90,6 @@ class TestProjectDetailViewActions:
         data = {"action": "quick_add_task"}
         assert user_client.post(resource_url, data).status_code == 400
         assert Task.objects.count() == initial_count + 1
-
-    @pytest.mark.parametrize(
-        "initial_state,post_value,expected_state",
-        [(False, "true", True), (True, "false", False)],
-    )
-    def test_toggle_team_member_filter(
-        self,
-        user_client: Client,
-        resource_url: str,
-        team_member: TeamMember,
-        initial_state: bool,
-        post_value: str,
-        expected_state: bool,
-    ) -> None:
-        """Test toggling the team member filter minimized state."""
-        team_member.minimized_team_member_filter = initial_state
-        team_member.save()
-
-        data = {
-            "action": "minimize_team_member_filter",
-            "team_member_filter_minimized": post_value,
-        }
-        response = user_client.post(resource_url, data)
-        assert response.status_code == 200
-
-        team_member.refresh_from_db()
-        assert team_member.minimized_team_member_filter is expected_state
-
-    def test_minimize_preserves_get_parameters(
-        self, user_client: Client, team_member: TeamMember, resource_url: str
-    ) -> None:
-        """Test that GET parameters are preserved after minimize action."""
-        response = user_client.post(
-            resource_url,
-            {
-                "action": "minimize_team_member_filter",
-                "filter_by_team_member": team_member.uuid,
-                "minimized": "true",
-            },
-        )
-        assert response.status_code == 200
-        pattern = rf'<input[^>]*name="filter_by_team_member"[^>]*value="{team_member.uuid}"[^>]*checked[^>]*>'
-        assert re.search(
-            pattern, response.content.decode()
-        ), "Team member filter checkbox should be checked"
 
     def test_mark_task_done(
         self,

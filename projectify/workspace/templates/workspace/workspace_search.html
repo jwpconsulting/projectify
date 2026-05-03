@@ -1,0 +1,50 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{% extends "dashboard_base.html" %}
+{% load i18n %}
+{% load projectify %}
+{% block dashboard_content %}
+    <main id="main" class="flex flex-col gap-4 p-4 grow">
+        <h1 class="text-2xl font-bold">{% translate "Search workspace" %}</h1>
+        <form action="{% url 'dashboard:workspaces:search' workspace_uuid=workspace.uuid %}"
+              role="search"
+              class="flex flex-col gap-4 max-w-lg">
+            {{ form }}
+            {% include "projectify/forms/submit.html" with small=True text=_("Search") %}
+        </form>
+        {% if results is not None %}
+            <section class="flex flex-col gap-2">
+                <h2 class="text-xl font-bold">{% translate "Projects" %}</h2>
+                {% if results.projects %}
+                    <ul class="list-inside list-disc flex flex-col gap-2">
+                        {% for project in results.projects %}
+                            <li>{% anchor href=project label=project.title %}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>{% translate "No projects found." %}</p>
+                {% endif %}
+            </section>
+            <section class="flex flex-col gap-2">
+                <h2 class="text-xl font-bold">{% translate "Tasks" %}</h2>
+                {% if results.tasks %}
+                    {% regroup results.tasks by project as tasks_by_project %}
+                    <ul class="list-inside list-disc">
+                        {% for group in tasks_by_project %}
+                            <li>
+                                <span>{% blocktranslate with project=group.grouper.title %}In '{{ project }}' project:{% endblocktranslate %}</span>
+                                <ul class="list-inside list-[circle] flex flex-col gap-1 pl-4">
+                                    {% for task in group.list %}
+                                        <li>{% anchor href=task label=task.title %}</li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>{% translate "No tasks found." %}</p>
+                {% endif %}
+            </section>
+        {% endif %}
+    </main>
+{% endblock dashboard_content %}

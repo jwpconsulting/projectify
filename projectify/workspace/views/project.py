@@ -78,94 +78,6 @@ def get_project_view_context(
     }
 
 
-class ModelMultipleChoiceFieldWithEmpty(forms.ModelMultipleChoiceField):
-    """Override ModelMultipleChoiceField and allow empty label."""
-
-    def __init__(self, queryset: QuerySet[Any], **kwargs: Any) -> None:
-        """Override init."""
-        super(forms.ModelMultipleChoiceField, self).__init__(
-            queryset, **kwargs
-        )
-
-    def clean(self, value: list[str]) -> tuple[bool, Optional[QuerySet[Any]]]:
-        """
-        Return a tuple of values.
-
-        The first value is a bool that tells you whether the user selected the blank
-        option
-
-        The second value is an optional queryset.
-        If no values have been selected, it's empty. If values have been
-        selected, it's a queryset.
-        """
-        has_empty = False
-        value_without_empty: list[str] = []
-        if len(value) == 0:
-            return False, None
-        for v in value:
-            if len(v) == 0:
-                has_empty = True
-            else:
-                value_without_empty.append(v)
-        match value_without_empty:
-            case []:
-                cleaned = None
-            case values:
-                cleaned_qs: QuerySet[Any] = super().clean(values)
-                if not cleaned_qs.exists():
-                    cleaned = None
-                else:
-                    cleaned = cleaned_qs
-
-        return has_empty, cleaned
-
-
-class ProjectFilterForm(forms.Form):
-    """Form for deserializing project task filters."""
-
-    task_search_query = forms.CharField(
-        label=_("Task search"),
-        required=False,
-        widget=forms.TextInput(
-            attrs={
-                "type": "search",
-                "form": "task-filter",
-                "placeholder": _("Search workspace"),
-            }
-        ),
-    )
-
-    def __init__(
-        self, team_members: QuerySet[TeamMember], *args: Any, **kwargs: Any
-    ) -> None:
-        """Populate choices."""
-        super().__init__(*args, **kwargs)
-        member_widget = forms.CheckboxSelectMultiple(
-            attrs={"form": "task-filter"}
-        )
-        member_widget.option_template_name = (
-            "workspace/forms/widgets/select_team_member_option.html"
-        )
-        self.fields["filter_by_team_member"] = (
-            ModelMultipleChoiceFieldWithEmpty(
-                required=False,
-                blank=True,
-                label=_("Filter tasks by team member:"),
-                queryset=team_members,
-                widget=member_widget,
-                to_field_name="uuid",
-                empty_label=_("Assigned to nobody"),
-            )
-        )
-
-    def clean(self) -> dict[str, Any]:
-        """Override clean and make empty fields None instead."""
-        data = super().clean()
-        if data["task_search_query"] == "":
-            data["task_search_query"] = None
-        return data
-
-
 class TaskQuickAddForm(forms.Form):
     """Form for adding tasks with just a title."""
 
@@ -260,30 +172,7 @@ def project_detail_view(
     if team_member is None:
         raise RuntimeError("No team member")
 
-    querydict = request.POST if request.method == "POST" else request.GET
-    filter_by_team_member: Optional[QuerySet[TeamMember]] = None
-    filter_by_unassigned: bool = False
-    task_search_query: Optional[str] = None
-    if len(querydict):
-        team_members = project.workspace.teammember_set.all()
-
-        task_filter_form = ProjectFilterForm(
-            team_members=team_members, data=querydict
-        )
-        if not task_filter_form.is_valid():
-            raise BadRequest(task_filter_form.errors)
-
-        filter_by_unassigned, filter_by_team_member = (
-            task_filter_form.cleaned_data["filter_by_team_member"]
-        )
-        task_search_query = task_filter_form.cleaned_data["task_search_query"]
-
-    qs = project_detail_query_set(
-        filter_by_team_members=filter_by_team_member,
-        unassigned_tasks=filter_by_unassigned,
-        task_search_query=task_search_query,
-        who=request.user,
-    )
+    qs = project_detail_query_set(who=request.user)
 
     template, context = _project_detail_view_actions(
         request, project, team_member
@@ -301,20 +190,11 @@ def project_detail_view(
     project.workspace.quota = workspace_get_all_quotas(project.workspace)
     team_members = project.workspace.teammember_set.all()
 
-    task_filter_form = ProjectFilterForm(
-        team_members=team_members, data=querydict
-    )
-
     context = {
         **context,
         **get_project_view_context(request, project.workspace),
         "project": project,
         "team_members": team_members,
-        "unassigned_tasks": filter_by_unassigned,
-        "task_search_query": task_search_query,
-        "task_filter_form": task_filter_form,
-        "has_team_member_filter": filter_by_team_member is not None
-        or filter_by_unassigned,
         "quick_add_task": TaskQuickAddForm(),
     }
     return render(request, template, context)
