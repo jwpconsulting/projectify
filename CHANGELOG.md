@@ -40,6 +40,7 @@ features:
 - Remove SubTask model from workspace app.
 - Remove chat messages. Projectify hasn't supported chat messages in a while.
 - Build Trix from scratch, update Trix version
+- Update django debug toolbar 4.3.0 -> 6.3.0
 
 ### Security
 
