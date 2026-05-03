@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Changelog
 
-## Unreleased
+## 2026.5.3
 
 ### Enhancement
 
