@@ -14,7 +14,7 @@ import pytest
 
 from pytest_types import DjangoAssertNumQueries
 
-from ...models import Project, Section, Task, TeamMember, Workspace
+from ...models import Project, Task, TeamMember, Workspace
 
 pytestmark = pytest.mark.django_db
 
@@ -104,7 +104,7 @@ class TestProjectDetailView:
         # Gone down from 31 -> 30
         # Gone down from 30 -> 24
         # Gone down from 24 -> 21
-        with django_assert_num_queries(21):
+        with django_assert_num_queries(20):
             response = user_client.get(
                 resource_url,
                 {"filter_by_team_member": [str(team_member.uuid)]},
@@ -131,7 +131,7 @@ class TestProjectDetailView:
         # Gone down from 29 -> 28
         # Gone down from 28 -> 22
         # Gone down from 22 -> 19
-        with django_assert_num_queries(19):
+        with django_assert_num_queries(18):
             response = user_client.get(
                 resource_url, {"filter_by_team_member": [""]}
             )
@@ -159,7 +159,7 @@ class TestProjectDetailView:
         # Gone down from 29 -> 28
         # Gone down from 28 -> 22
         # Gone down from 22 -> 19
-        with django_assert_num_queries(19):
+        with django_assert_num_queries(18):
             response = user_client.get(
                 resource_url, {"task_search_query": "bug"}
             )
@@ -178,21 +178,16 @@ class TestProjectDetailViewActions:
         return reverse("dashboard:projects:detail", args=(project.uuid,))
 
     def test_quick_add_task_success(
-        self,
-        user_client: Client,
-        resource_url: str,
-        section: Section,
-        team_member: TeamMember,
+        self, user_client: Client, resource_url: str, team_member: TeamMember
     ) -> None:
         """Test successfully creating a task via quick add."""
         initial_count = Task.objects.count()
-        s_uid = str(section.uuid)
-        data = {"action": "quick_add_task", "section": s_uid, "title": "title"}
+        data = {"action": "quick_add_task", "title": "title"}
         assert user_client.post(resource_url, data).status_code == 200
         assert Task.objects.count() == initial_count + 1
 
-        # Test form validation
-        data = {"action": "quick_add_task", "section": s_uid}
+        # Test form validation, missing title
+        data = {"action": "quick_add_task"}
         assert user_client.post(resource_url, data).status_code == 400
         assert Task.objects.count() == initial_count + 1
 
@@ -241,69 +236,6 @@ class TestProjectDetailViewActions:
             pattern, response.content.decode()
         ), "Team member filter checkbox should be checked"
 
-    @pytest.mark.parametrize(
-        "initial_state,form_value,expected_final_state, query_count",
-        [
-            # query count up from   19 -> 22 due to permission checks in tmplt
-            # query count down from 22 -> 19
-            (False, "true", True, 18),  # minimize section
-            # query count down from 22 -> 19
-            (True, "false", False, 18),  # expand section
-        ],
-    )
-    def test_section_minimize_toggle(
-        self,
-        user_client: Client,
-        team_member: TeamMember,
-        section: Section,
-        initial_state: bool,
-        form_value: str,
-        expected_final_state: bool,
-        query_count: int,
-        django_assert_num_queries: DjangoAssertNumQueries,
-    ) -> None:
-        """Test minimizing and expanding a section."""
-        if initial_state:
-            section.minimized_by.add(team_member.user)
-
-        assert (
-            section.minimized_by.filter(pk=team_member.user.pk).exists()
-            == initial_state
-        )
-
-        url = reverse(
-            "dashboard:projects:detail", args=(section.project.uuid,)
-        )
-
-        uid = str(section.uuid)
-        data = {
-            "action": "minimize_section",
-            "section": uid,
-            "minimized": form_value,
-        }
-        with django_assert_num_queries(query_count):
-            response = user_client.post(url, data)
-            assert response.status_code == 200
-
-        section.refresh_from_db()
-        assert (
-            section.minimized_by.filter(pk=team_member.user.pk).exists()
-            == expected_final_state
-        )
-
-    def test_minimize_section_not_found(
-        self, user_client: Client, team_member: TeamMember, project: Project
-    ) -> None:
-        """Test minimize view with non-existent section."""
-        url = reverse("dashboard:projects:detail", args=(project.uuid,))
-        data = {
-            "action": "minimize_section",
-            "section": str(uuid4()),
-            "minimized": "true",
-        }
-        response = user_client.post(url, data)
-        assert response.status_code == 400
-
     def test_mark_task_done(
         self,
         user_client: Client,
@@ -321,15 +253,15 @@ class TestProjectDetailViewActions:
         # check
         # Gone down from 29 -> 28
         # Gone down from 28 -> 26
-        # Gone down from 26 -> 24
-        with django_assert_num_queries(24):
+        # Gone down from 26 -> 22
+        with django_assert_num_queries(22):
             response = user_client.post(resource_url, data)
             assert response.status_code == 200
         task.refresh_from_db()
         assert task.done is not None
 
         data = {"action": "mark_task_done", "task_uuid": t_id, "done": "false"}
-        with django_assert_num_queries(24):
+        with django_assert_num_queries(22):
             response = user_client.post(resource_url, data)
             assert response.status_code == 200
         task.refresh_from_db()
@@ -635,7 +567,8 @@ class TestProjectDeleteView:
         project_uuid = archived_project.uuid
         assert archived_project.archived
         # Gone from 7 -> 8 since we delete user preferences
-        with django_assert_num_queries(8):
+        # Gone up from 8 -> 9
+        with django_assert_num_queries(9):
             response = user_client.post(resource_url)
             assert response.status_code == 200
         assert not Project.objects.filter(uuid=project_uuid).exists()

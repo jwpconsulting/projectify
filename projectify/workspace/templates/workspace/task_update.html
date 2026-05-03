@@ -19,7 +19,7 @@
         <div class="flex h-full flex-col p-4 pt-0">
             <div class="sticky top-0 flex flex-row flex-wrap items-center justify-between gap-x-2 gap-y-4 bg-foreground pb-8 pt-4 lg:flex-nowrap">
                 <div class="flex shrink flex-row items-center gap-6">
-                    {% circle_anchor label=_("Go back to project") icon_style="x" href="dashboard:projects:detail" project_uuid=task.section.project.uuid %}
+                    {% circle_anchor label=_("Go back to project") icon_style="x" href="dashboard:projects:detail" project_uuid=task.project.uuid %}
                     {% include "workspace/task/breadcrumbs.html" with section=task.section task=task %}
                 </div>
                 <div class="contents sm:flex items-center justify-between gap-4 sm:flex-row">

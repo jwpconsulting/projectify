@@ -51,13 +51,7 @@ from projectify.user.services.internal import (
     user_create_superuser,
 )
 from projectify.workspace.const import TeamMemberRoles
-from projectify.workspace.models import (
-    Project,
-    Section,
-    Task,
-    TeamMember,
-    Workspace,
-)
+from projectify.workspace.models import Project, Task, TeamMember, Workspace
 
 
 @dataclass
@@ -67,25 +61,17 @@ class WorkspaceDescription:
     workspace: Workspace
     team_members: list[TeamMember]
     projects: list[Project]
-    sections: list[Section]
 
 
 WORKSPACE_TITLE_MIN_LENGTH = 20
 WORKSPACE_TITLE_MAX_LENGTH = 200
 
-PROJECT_MIN_SECTIONS = 2
-PROJECT_MAX_SECTIONS = 15
 PROJECT_TITLE_MIN_LENGTH = 20
 PROJECT_TITLE_MAX_LENGTH = 100
-
-SECTION_TITLE_MIN_LENGTH = 20
-SECTION_TITLE_MAX_LENGTH = 200
 
 TASK_TITLE_MIN_LENGTH = 40
 TASK_TITLE_MAX_LENGTH = 250
 TASK_DESCRIPTION_SENTENCES = 10
-TASK_MIN_LABEL_COUNT = 0
-TASK_MAX_LABEL_COUNT = 10
 
 POST_CONTENT_MIN_PARAGRAPHS = 5
 POST_CONTENT_MAX_PARAGRAPHS = 15
@@ -166,8 +152,8 @@ class Command(BaseCommand):
         """
         Create tasks.
 
-        Takes in a combination of workspaces, boards and sections and creates
-        all tasks at once.
+        Takes in a combination of workspaces, projects.
+        Creates all tasks at once.
         """
         task_descs = [
             Task(
@@ -175,17 +161,20 @@ class Command(BaseCommand):
                     randint(TASK_TITLE_MIN_LENGTH, TASK_TITLE_MAX_LENGTH)
                 ),
                 description=self.fake.paragraph(TASK_DESCRIPTION_SENTENCES),
-                section=section,
+                project=project,
                 due_date=self.fake.date_time(tzinfo=timezone.utc),
                 workspace=workspace_description.workspace,
+                done=self.fake.date_time(tzinfo=timezone.utc)
+                if self.fake.pybool()
+                else None,
                 assignee=choice(workspace_description.team_members)
                 # 2 out of 3 tasks have an assignee
                 if randint(0, 2)
                 else None,
             )
             for workspace_description in workspace_descriptions
-            for section in workspace_description.sections
-            # Random task amount per sections, at least floor(--n-tasks / 2)
+            for project in workspace_description.projects
+            # Random task amount per project, at least floor(--n-tasks / 2)
             for _ in range(randint(self.n_tasks // 2, self.n_tasks))
         ]
         tasks = Task.objects.bulk_create(task_descs)
@@ -252,24 +241,6 @@ class Command(BaseCommand):
         workspaces_projects = Project.objects.bulk_create(project_descs)
         self.stdout.write(f"Created {len(workspaces_projects)} projects")
 
-        section_descs = [
-            Section(project=project, title=title, _order=_order)
-            for _, projects in groupby(
-                workspaces_projects, key=lambda b: b.workspace
-            )
-            for project in projects
-            for _order, title in enumerate(
-                self.fake.text(
-                    randint(SECTION_TITLE_MIN_LENGTH, SECTION_TITLE_MAX_LENGTH)
-                )
-                for _ in range(
-                    randint(PROJECT_MIN_SECTIONS, PROJECT_MAX_SECTIONS)
-                )
-            )
-        ]
-        sections = Section.objects.bulk_create(section_descs)
-        self.stdout.write(f"Created {len(sections)} workspace board sections")
-
         # The idea here is that instead of going into each nested object in
         # a for loop, we create them altogether at once.
         # So:
@@ -282,21 +253,13 @@ class Command(BaseCommand):
                 workspace=workspace,
                 team_members=list(team_members),
                 projects=list(projects),
-                sections=list(sections),
             )
-            for (
-                (workspace, team_members),
-                (_, projects),
-                (_, sections),
-            ) in zip(
+            for ((workspace, team_members), (_, projects)) in zip(
                 groupby(
                     team_members, key=lambda team_member: team_member.workspace
                 ),
                 groupby(
                     workspaces_projects, key=lambda project: project.workspace
-                ),
-                groupby(
-                    sections, key=lambda section: section.project.workspace
                 ),
             )
         ]
@@ -387,7 +350,7 @@ class Command(BaseCommand):
             "--n-tasks",
             type=int,
             default=20,
-            help="Ensure up to N tasks are in new section",
+            help="Ensure up to N tasks are in new project",
         )
         parser.add_argument(
             "--n-posts",

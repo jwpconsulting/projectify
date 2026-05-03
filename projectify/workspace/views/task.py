@@ -14,7 +14,7 @@ from django.http.response import Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.views.decorators.http import require_http_methods, require_POST
+from django.views.decorators.http import require_http_methods
 
 from projectify.lib.forms import RichTextEditor
 from projectify.lib.htmx import (
@@ -23,22 +23,17 @@ from projectify.lib.htmx import (
 )
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
+from projectify.workspace.selectors.project import (
+    ProjectDetailQuerySet,
+    project_find_by_project_uuid,
+)
 
 from ..const import TASK_EDITOR_MIN_HEIGHT_CLASS
 from ..models import Task, Workspace
-from ..selectors.section import (
-    SectionDetailQuerySet,
-    section_find_for_user_and_uuid,
-)
 from ..selectors.task import TaskDetailQuerySet, task_find_by_task_uuid
 from ..selectors.team_member import team_member_find_for_workspace
 from ..selectors.workspace import workspace_find_for_user
-from ..services.task import (
-    task_create,
-    task_delete,
-    task_move_after,
-    task_update,
-)
+from ..services.task import task_create, task_delete, task_update
 
 logger = logging.getLogger(__name__)
 
@@ -133,20 +128,19 @@ class TaskForm(forms.Form):
 @platform_view
 @require_http_methods(["GET", "POST"])
 def task_create_view(
-    request: AuthenticatedHttpRequest, section_uuid: UUID
+    request: AuthenticatedHttpRequest, project_uuid: UUID
 ) -> HttpResponse:
     """Create a task. Render form error if unsuccessful."""
-    section = section_find_for_user_and_uuid(
-        user=request.user, section_uuid=section_uuid, qs=SectionDetailQuerySet
+    project = project_find_by_project_uuid(
+        who=request.user, project_uuid=project_uuid, qs=ProjectDetailQuerySet
     )
-    if section is None:
-        raise Http404(_("Section not found"))
+    if project is None:
+        raise Http404(_("Project not found"))
 
-    workspace = section.project.workspace
+    workspace = project.workspace
     context: dict[str, Any] = {
         **get_task_view_context(request, workspace),
-        "section": section,
-        "project": section.project,
+        "project": project,
     }
 
     match request.method:
@@ -157,7 +151,7 @@ def task_create_view(
                 {
                     **context,
                     "form": TaskForm(
-                        workspace=workspace, initial={"section": section}
+                        workspace=workspace, initial={"project": project}
                     ),
                 },
             )
@@ -176,7 +170,7 @@ def task_create_view(
 
     task = task_create(
         who=request.user,
-        section=section,
+        project=project,
         title_description=form.cleaned_data["description"],
         assignee=form.cleaned_data.get("assignee"),
         due_date=form.cleaned_data.get("due_date"),
@@ -186,7 +180,7 @@ def task_create_view(
         case "create_stay":
             return redirect("dashboard:tasks:detail", task.uuid)
         case "create":
-            return redirect(section.get_absolute_url())
+            return redirect(project)
         case action:
             raise BadRequest(
                 _("Invalid action: {action}").format(action=action)
@@ -213,7 +207,7 @@ def task_detail(
     context = {
         **get_task_view_context(request, workspace),
         "task": task,
-        "project": task.section.project,
+        "project": task.project,
     }
 
     # If HTMX request, return just the panel content
@@ -245,20 +239,20 @@ def task_update_view(
     workspace = task.workspace
     context: dict[str, Any] = {
         **get_task_view_context(request, workspace),
-        "project": task.section.project,
+        "project": task.project,
     }
     task_initial = {
         "assignee": task.assignee,
         "due_date": task.due_date,
         "description": task.description,
-        "section": task.section,
+        "project": task.project,
     }
 
     # Determine what update view action should be taken
     match request.method, request.POST.get("action"):
         case "POST", "update":
             next_url = reverse(
-                "dashboard:projects:detail", args=(task.section.project.uuid,)
+                "dashboard:projects:detail", args=(task.project.uuid,)
             )
         case "POST", "update_stay":
             next_url = reverse("dashboard:tasks:detail", args=(task.uuid,))
@@ -271,7 +265,7 @@ def task_update_view(
             context = {**context, "form": form, "task": task}
             logger.warning("No action specified")
             next_url = reverse(
-                "dashboard:projects:detail", args=(task.section.project.uuid,)
+                "dashboard:projects:detail", args=(task.project.uuid,)
             )
             return render(request, "workspace/task_update.html", context)
         case method, other_action:
@@ -310,36 +304,6 @@ def task_update_view(
 # Form
 
 
-class TaskMoveToSectionForm(forms.Form):
-    """Form that captures which section to move a task to."""
-
-    section_uuid = forms.UUIDField()
-
-
-@require_POST
-def task_move_to_section(
-    request: AuthenticatedHttpRequest, task_uuid: UUID
-) -> HttpResponse:
-    """Move a task to a given section."""
-    task = get_object(request, task_uuid)
-    form = TaskMoveToSectionForm(request.POST)
-    if not form.is_valid():
-        logger.warning("Form not valid for task_uuid %s", task_uuid)
-        # TODO
-        return HttpResponse(status=400)
-    section_uuid = form.cleaned_data["section_uuid"]
-    section = section_find_for_user_and_uuid(
-        user=request.user, section_uuid=section_uuid
-    )
-    if section is None:
-        logger.warning("Section with uuid %s not found", section_uuid)
-        # TODO give better validation message when section not found
-        return HttpResponse(status=400)
-    task = task_move_after(who=request.user, task=task, after=section)
-
-    return redirect("dashboard:projects:detail", task.section.project.uuid)
-
-
 def task_actions(
     request: AuthenticatedHttpRequest, task_uuid: UUID
 ) -> HttpResponse:
@@ -357,8 +321,7 @@ def task_actions(
     context = {
         **get_task_view_context(request, workspace),
         "task": task,
-        "sections": task.section.project.section_set.all(),
-        "project": task.section.project,
+        "project": task.project,
     }
 
     if request.htmx:
@@ -373,7 +336,7 @@ def task_delete_view(
 ) -> HttpResponse:
     """Delete task."""
     task = get_object(request, task_uuid)
-    project = task.section.project
+    project = task.project
     task_delete(who=request.user, task=task)
     if request.htmx.current_url and "/task/" in request.htmx.current_url:
         return HttpResponseClientRedirect(project.get_absolute_url())

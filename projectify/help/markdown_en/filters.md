@@ -29,7 +29,6 @@ further narrow down tasks. You can search tasks by:
 
 - **Task number**
 - **Task title**
-- **Section title**
 
 Enter your search terms in the field labeled **Task search** and search by
 clicking **Search tasks** below the **Task search** field, or by pressing the

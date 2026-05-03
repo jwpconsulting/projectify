@@ -34,7 +34,6 @@ actions are as follows:
 | Workspace billing settings | Current subscription status and payment information         |
 | Team members and invites   | Who has been added to the workspace, and who is invited     |
 | Project                    | Description and other information about a project           |
-| Sections                   | Name, position within project                               |
 | Tasks                      | Title, description, due date, assignee, and position |
 
 # Overview
@@ -58,7 +57,6 @@ individual cell in this table is as follows:
 | Workspace billing settings | -        | -           | -          | Full  |
 | Team members and invites   | Read     | Read        | Read       | Full  |
 | Project                    | Read     | Read        | Full       | Full  |
-| Sections                   | Read     | Read        | Full       | Full  |
 | Tasks                      | Read     | Write       | Full       | Full  |
 
 # Observer
@@ -78,7 +76,7 @@ following additional permissions in their workspace:
 
 More importantly, they do not gain any additional delete permissions for the
 above two resources, or any other edit permissions for projects,
-sections, users, billing settings, and the workspace itself.
+users, billing settings, and the workspace itself.
 
 # Maintainer
 
@@ -86,7 +84,6 @@ With the **maintainer** team member role, the following activities become
 possible, on top of the **contributor** permissions:
 
 - Create, update and delete projects
-- Create, update and delete sections
 - Delete tasks
 
 # Owner role

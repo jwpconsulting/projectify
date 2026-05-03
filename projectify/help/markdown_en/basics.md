@@ -23,20 +23,6 @@ from your workspace.
 
 For more information on projects please see the [projects help](/help/projects).
 
-# What is a section?
-
-A section is a category inside a project that you can divide tasks into.
-Popular categories in a Kanban-style project are the following:
-
-- **To do**,
-- **In progress**, and
-- **Done**.
-
-Sections can be moved and edited freely inside a project.
-
-For more information on sections please see the [sections
-help](/help/sections).
-
 # What is a task?
 
 A task is a step in your project that needs to be completed. You can assign

@@ -19,7 +19,7 @@ TaskDetailQuerySet: QuerySet[Task] = Task.objects.select_related(
         "workspace__teammember_set",
         queryset=TeamMember.objects.select_related("user").annotate(
             task_count=Count(
-                "task", filter=Q(task__section__project__archived__isnull=True)
+                "task", filter=Q(task__project__archived__isnull=True)
             )
         ),
     ),
@@ -38,6 +38,6 @@ def task_find_by_task_uuid(
     # would cause the given qs to be prematurely evaluated
     qs = Task.objects if qs is None else qs
     try:
-        return qs.get(section__project__workspace__users=who, uuid=task_uuid)
+        return qs.get(project__workspace__users=who, uuid=task_uuid)
     except Task.DoesNotExist:
         return None

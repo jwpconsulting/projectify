@@ -34,12 +34,6 @@ HELP_TOPICS = {
         "markdown_file": Path("projects.md"),
         "href": reverse_lazy("help:topic:projects"),
     },
-    "sections": {
-        "title": _("Sections"),
-        "description": _("Maximize the efficiency of your tasks"),
-        "markdown_file": Path("sections.md"),
-        "href": reverse_lazy("help:topic:sections"),
-    },
     "tasks": {
         "title": _("Tasks"),
         "description": _("All the ins and outs of task creation"),

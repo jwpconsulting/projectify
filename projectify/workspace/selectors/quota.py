@@ -4,17 +4,9 @@
 """
 Determine trial limit quota for workspace.
 
-Limitations for trial plan:
-Be able to create 10 boards and up to 100 sections across all boards
-Be able to create 1000 tasks in that workspace
-Be able to add one more user, therefore that workspace being limited to having
-2 team members in total.
-Be able to create 10 labels, assign them to all tasks
-
-Limitations for a trial workspace are
+Limitations for a trial workspaces:
 - Task: 1000 tasks,
 - Project: 10,
-- Section: 100,
 - TeamMember + TeamMemberInivite(unredeemed): 2
 """
 
@@ -27,9 +19,9 @@ from projectify.corporate.selectors.customer import (
 from projectify.lib.settings import get_settings
 from projectify.workspace.types import Quota, WorkspaceQuota
 
-from ..models import Section, Task, Workspace
+from ..models import Task, Workspace
 
-Resource = Literal["Task", "Project", "Section", "TeamMemberAndInvite"]
+Resource = Literal["Task", "Project", "TeamMemberAndInvite"]
 
 Limitation = Union[None, int]
 
@@ -39,14 +31,12 @@ class Limitations(TypedDict):
 
     Task: Limitation
     Project: Limitation
-    Section: Limitation
     TeamMemberAndInvite: Limitation
 
 
 trial_conditions: Limitations = {
     "Task": 1000,
     "Project": 10,
-    "Section": 100,
     "TeamMemberAndInvite": 2,
 }
 
@@ -54,7 +44,6 @@ trial_conditions: Limitations = {
 # {
 #     "Task": None,
 #     "Project": None,
-#     "Section": None,
 #     "TeamMemberAndInvite": workspace.customer.seats,
 # }
 
@@ -85,13 +74,9 @@ def get_workspace_resource_count(
     """Return resource count for a specific resource."""
     match resource:
         case "Task":
-            return Task.objects.filter(
-                section__project__workspace=workspace
-            ).count()
+            return Task.objects.filter(project__workspace=workspace).count()
         case "Project":
             return workspace.project_set.count()
-        case "Section":
-            return Section.objects.filter(project__workspace=workspace).count()
         case "TeamMemberAndInvite":
             user_count = workspace.users.count()
             invite_count = workspace.teammemberinvite_set.filter(
@@ -119,6 +104,5 @@ def workspace_get_all_quotas(workspace: Workspace) -> WorkspaceQuota:
         ),
         tasks=mk(resource="Task"),
         projects=mk(resource="Project"),
-        sections=mk(resource="Section"),
         team_members_and_invites=mk(resource="TeamMemberAndInvite"),
     )

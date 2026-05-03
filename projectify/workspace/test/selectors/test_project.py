@@ -39,12 +39,9 @@ def test_project_detail_query_set(
             id__in=[first_team_member.pk]
         )
     )
-    project_first = qs.first()
-    assert project_first
-    section = project_first.section_set.first()
-    assert section
-    assert section.task_set.count() == 1
-    task_found = section.task_set.first()
+    project_first = qs.get()
+    assert project_first.task_set.count() == 1
+    task_found = project_first.task_set.first()
     assert task_found
     # Check whether first team member is marked as filtered
     # XXX flaky test Justus 2026-03-27
@@ -65,7 +62,7 @@ def test_project_detail_query_set(
         ),
         unassigned_tasks=True,
     )
-    assert qs.get().section_set.all().get().task_set.count() == 2
+    assert qs.get().task_set.count() == 2
 
     # Filter by second team member (no task assigned)
     qs = project_detail_query_set(
@@ -73,12 +70,8 @@ def test_project_detail_query_set(
             id__in=[second_team_member.pk]
         )
     )
-    project_first = qs.first()
-    assert project_first
-    section = project_first.section_set.first()
-    assert section
-    task_found = section.task_set.first()
-    assert not task_found
+    project_first = qs.get()
+    task_found = project_first.task_set.first()
     # Check whether second team member is marked as filtered
     first_team_member, second_team_member = (
         project_first.workspace.teammember_set.all()

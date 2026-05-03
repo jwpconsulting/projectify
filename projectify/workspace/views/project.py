@@ -21,7 +21,7 @@ from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
 
-from ..models import Project, Section, Task, TeamMember, Workspace
+from ..models import Project, Task, TeamMember, Workspace
 from ..selectors.project import (
     project_detail_query_set,
     project_find_by_project_uuid,
@@ -39,7 +39,6 @@ from ..services.project import (
     project_delete,
     project_update,
 )
-from ..services.section import section_minimize
 from ..services.task import task_create, task_mark_done
 from ..services.team_member import (
     team_member_minimize_team_member_filter,
@@ -169,50 +168,6 @@ class TaskQuickAddForm(forms.Form):
         widget=forms.TextInput(attrs={"placeholder": _("Add a task")}),
     )
 
-    def __init__(self, project: Project, *args: Any, **kwargs: Any) -> None:
-        """Initialize form with section choices from project."""
-        super().__init__(*args, **kwargs)
-        self.fields["section"] = forms.ModelChoiceField(
-            queryset=project.section_set.all(),
-            to_field_name="uuid",
-            widget=forms.HiddenInput(),
-        )
-
-
-class SectionMinimizeForm(forms.Form):
-    """Form for handling section minimize actions."""
-
-    action = forms.CharField(required=True)
-    minimized = forms.BooleanField(required=False)
-
-    def __init__(self, project: Project, *args: Any, **kwargs: Any) -> None:
-        """Initialize form with section choices from project."""
-        super().__init__(*args, **kwargs)
-        self.fields["section"] = forms.ModelChoiceField(
-            queryset=project.section_set.all(),
-            to_field_name="uuid",
-            required=True,
-        )
-
-
-class TaskMoveForm(forms.Form):
-    """Form for handling task move actions."""
-
-    action = forms.CharField(required=True)
-    direction = forms.ChoiceField(
-        choices=[("up", _("Up")), ("down", _("Down"))]
-    )
-
-    def __init__(self, project: Project, *args: Any, **kwargs: Any) -> None:
-        """Initialize form with task choices from project."""
-        super().__init__(*args, **kwargs)
-        # TODO rename to just 'task'
-        self.fields["task_uuid"] = forms.ModelChoiceField(
-            queryset=Task.objects.filter(section__project=project),
-            to_field_name="uuid",
-            required=True,
-        )
-
 
 class TaskMarkDoneForm(forms.Form):
     """Form for handling task mark done actions."""
@@ -223,7 +178,7 @@ class TaskMarkDoneForm(forms.Form):
         """Initialize form with task choices from project."""
         super().__init__(*args, **kwargs)
         self.fields["task_uuid"] = forms.ModelChoiceField(
-            queryset=Task.objects.filter(section__project=project),
+            queryset=Task.objects.filter(project=project),
             to_field_name="uuid",
             required=True,
         )
@@ -234,44 +189,22 @@ def _project_detail_view_actions(
     request: AuthenticatedHttpRequest,
     project: Project,
     team_member: TeamMember,
-) -> tuple[str, Optional[Section], dict[str, Any]]:
+) -> tuple[str, dict[str, Any]]:
     """Handle POST actions for project detail view."""
     template = "workspace/project_detail.html"
-    enrich_section: Optional[Section] = None
     context: dict[str, Any] = {}
     match request.method, request.POST.get("action"):
         case "POST", "quick_add_task":
-            form = TaskQuickAddForm(project=project, data=request.POST)
+            form = TaskQuickAddForm(data=request.POST)
             if not form.is_valid():
                 raise BadRequest(
                     _(
                         "Task quick create form not valid. Errors={errors}"
                     ).format(errors=form.errors)
                 )
-            section: Section = form.cleaned_data["section"]
-            enrich_section = section
             t = form.cleaned_data["title"]
-            task_create(who=request.user, section=section, title_description=t)
-            template = "workspace/project_detail.html#section"
-        case "POST", "minimize_section":
-            section_minimize_form = SectionMinimizeForm(
-                project=project, data=request.POST
-            )
-            if not section_minimize_form.is_valid():
-                raise BadRequest()
-
-            enrich_section = section_minimize_form.cleaned_data["section"]
-            minimized: bool = section_minimize_form.cleaned_data["minimized"]
-            # TODO
-            # setattr(enrich_section, "minimzed", minimized)
-
-            section_minimize(
-                who=request.user,
-                section=section_minimize_form.cleaned_data["section"],
-                minimized=minimized,
-            )
-
-            template = "workspace/project_detail.html#section"
+            task_create(who=request.user, project=project, title_description=t)
+            template = "workspace/project_detail.html#project_tasks"
         case "POST", "mark_task_done":
             task_mark_done_form = TaskMarkDoneForm(
                 project=project, data=request.POST
@@ -279,13 +212,12 @@ def _project_detail_view_actions(
             if not task_mark_done_form.is_valid():
                 raise BadRequest()
             task = task_mark_done_form.cleaned_data["task_uuid"]
-            enrich_section = task.section
             task_mark_done(
                 who=request.user,
                 task=task,
                 done=task_mark_done_form.cleaned_data["done"],
             )
-            template = "workspace/project_detail.html#section"
+            template = "workspace/project_detail.html#project_tasks"
         case "POST", "minimize_team_member_filter":
             team_member_minimize_team_member_filter(
                 team_member=team_member,
@@ -300,7 +232,7 @@ def _project_detail_view_actions(
         case _:
             pass
 
-    return template, enrich_section, context
+    return template, context
 
 
 # HTML
@@ -347,7 +279,7 @@ def project_detail_view(
         who=request.user,
     )
 
-    template, enrich_section, context = _project_detail_view_actions(
+    template, context = _project_detail_view_actions(
         request, project, team_member
     )
 
@@ -356,18 +288,6 @@ def project_detail_view(
         who=request.user, project_uuid=project_uuid, qs=qs
     )
     assert project, "Project disappeared"
-
-    section: Optional[Section] = (
-        next(
-            filter(
-                lambda s: s.pk == enrich_section.pk, project.section_set.all()
-            ),
-            None,
-        )
-        if enrich_section
-        else None
-    )
-    context = {**context, "section": section}
 
     # Mark this project as most recently visited
     team_member_visit_project(team_member=team_member, project=project)
@@ -389,7 +309,7 @@ def project_detail_view(
         "task_filter_form": task_filter_form,
         "has_team_member_filter": filter_by_team_member is not None
         or filter_by_unassigned,
-        "quick_add_task": TaskQuickAddForm(project=project),
+        "quick_add_task": TaskQuickAddForm(),
     }
     return render(request, template, context)
 

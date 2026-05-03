@@ -11,7 +11,7 @@ usage quotas will apply. Usage quotas determine how many items of a resouce you
 can create within your workspace. Resources within your workspace are:
 
 - Team members and invitations
-- Projects and sections
+- Projects
 - Tasks
 
 # Quotas for paid workspaces
@@ -38,7 +38,6 @@ In a trial workspace, the following quotas apply:
 - You can invite and add up to 1 additional team member, for a total of 2
   including yourself.
 - You can create up to 10 projects
-- You can create up to 100 sections
 - You can create up to 1000 tasks
 
 If you would like to create more items, and invite more users to your

@@ -31,7 +31,7 @@ create your first project, task and so on.
 
 After the onboarding finishes, you can start using your trial workspace. You
 can add other team members to your trial workspace by going to the [team
-settings](/help/team-members). You can add new projects, sections,
+settings](/help/team-members). You can add new projects,
 and tasks, and use all the other workspace features available in Projectify.
 
 Within a trial, certain limits will apply to your workspace, such as how many

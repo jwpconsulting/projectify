@@ -11,9 +11,8 @@ from projectify.settings.base import Base
 from projectify.user.models import User
 from projectify.user.services.internal import user_create
 from projectify.workspace.const import TeamMemberRoles
-from projectify.workspace.models import Project, Section, TeamMember, Workspace
+from projectify.workspace.models import Project, TeamMember, Workspace
 from projectify.workspace.services.project import project_create
-from projectify.workspace.services.section import section_create
 from projectify.workspace.services.task import task_create
 from projectify.workspace.services.team_member import team_member_change_role
 from projectify.workspace.services.team_member_invite import (
@@ -129,14 +128,13 @@ class TestTrialRules:
             {
                 "Task": 1,
                 "Project": 1,
-                "Section": 1,
                 # We need at least one user to use the workspace at all
                 "TeamMemberAndInvite": 2,
             },
         )
 
     def test_no_billing_integration(
-        self, settings: Base, team_member: TeamMember, section: Section
+        self, settings: Base, team_member: TeamMember, project: Project
     ) -> None:
         """Assert that with no billing, the 1 task limit becomes inactive."""
         user = team_member.user
@@ -144,7 +142,7 @@ class TestTrialRules:
         assert validate_perm("workspace.create_task", user, workspace)
         customer_cancel_subscription(customer=workspace.customer)
         assert validate_perm("workspace.create_task", user, workspace)
-        task_create(section=section, title_description="task title", who=user)
+        task_create(project=project, title_description="task title", who=user)
         assert not validate_perm(
             "workspace.create_task", user, workspace, raise_exception=False
         )
@@ -152,18 +150,18 @@ class TestTrialRules:
         assert validate_perm(
             "workspace.create_task", user, workspace, raise_exception=False
         )
-        task_create(section=section, title_description="task title", who=user)
+        task_create(project=project, title_description="task title", who=user)
 
     def test_create_task(
-        self, team_member: TeamMember, section: Section
+        self, team_member: TeamMember, project: Project
     ) -> None:
         """Assert only 1 task can be created."""
-        workspace = section.project.workspace
+        workspace = project.workspace
         user = team_member.user
         assert validate_perm("workspace.create_task", user, workspace)
         customer_cancel_subscription(customer=workspace.customer)
         assert validate_perm("workspace.create_task", user, workspace)
-        task_create(section=section, title_description="task title", who=user)
+        task_create(project=project, title_description="task title", who=user)
         assert not validate_perm(
             "workspace.create_task", user, workspace, raise_exception=False
         )
@@ -178,19 +176,6 @@ class TestTrialRules:
         project_create(workspace=workspace, title="project", who=user)
         assert not validate_perm(
             "workspace.create_project", user, workspace, raise_exception=False
-        )
-
-    def test_create_section(
-        self, team_member: TeamMember, project: Project, workspace: Workspace
-    ) -> None:
-        """Assert only 100 sections can be created."""
-        user = team_member.user
-        assert validate_perm("workspace.create_section", user, workspace)
-        customer_cancel_subscription(customer=workspace.customer)
-        assert validate_perm("workspace.create_section", user, workspace)
-        section_create(project=project, title="section", who=user)
-        assert not validate_perm(
-            "workspace.create_section", user, workspace, raise_exception=False
         )
 
     def test_team_member_and_invite_limit(
