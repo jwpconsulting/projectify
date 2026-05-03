@@ -227,6 +227,10 @@ class Task(TitleDescriptionModel, BaseModel):
         """Return title."""
         return self.title
 
+    def get_absolute_url(self) -> str:
+        """Return absolute URL to this task."""
+        return reverse("dashboard:tasks:detail", args=(self.uuid,))
+
     class Meta:
         """Meta."""
 
