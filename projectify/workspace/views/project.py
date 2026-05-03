@@ -126,7 +126,13 @@ class ProjectFilterForm(forms.Form):
     task_search_query = forms.CharField(
         label=_("Task search"),
         required=False,
-        help_text=_("Enter search terms"),
+        widget=forms.TextInput(
+            attrs={
+                "type": "search",
+                "form": "task-filter",
+                "placeholder": _("Search workspace"),
+            }
+        ),
     )
 
     def __init__(
