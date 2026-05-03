@@ -159,22 +159,25 @@ def redeemed_user_invite(faker: Faker) -> user_models.UserInvite:
 
 
 @pytest.fixture
-def user_client(client: Client, user: User) -> Client:
+def user_client(user: User) -> Client:
     """Return logged in client."""
+    client = Client()
     client.force_login(user)
     return client
 
 
 @pytest.fixture
-def unrelated_user_client(client: Client, unrelated_user: User) -> Client:
+def unrelated_user_client(unrelated_user: User) -> Client:
     """Client for unrelated user."""
+    client = Client()
     client.force_login(unrelated_user)
     return client
 
 
 @pytest.fixture
-def superuser_client(client: Client, superuser: User) -> Client:
+def superuser_client(superuser: User) -> Client:
     """Return logged in super user client."""
+    client = Client()
     client.force_login(superuser)
     return client
 
