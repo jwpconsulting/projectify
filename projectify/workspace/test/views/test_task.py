@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
 """Test task CRUD views."""
 
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from django.test.client import Client
 from django.urls import reverse
@@ -27,6 +27,7 @@ class TestTaskCreateView:
 
     def test_get_task_create(
         self,
+        unrelated_user_client: Client,
         user_client: Client,
         resource_url: str,
         project: Project,
@@ -34,6 +35,8 @@ class TestTaskCreateView:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test GETting the task creation page."""
+        # Someone else can't access it
+        assert unrelated_user_client.get(resource_url).status_code == 404
         with django_assert_num_queries(10):
             response = user_client.get(resource_url)
             assert response.status_code == 200
@@ -48,11 +51,9 @@ class TestTaskCreateView:
     ) -> None:
         """Test creating a task."""
         initial_task_count = Task.objects.count()
-        data = {
-            "description": "<p>Assigned Task</p><h1>Rest</p><p>Bla</p>",
-            "assignee": str(team_member.uuid),
-            "action": "create",
-        }
+        t_uid = str(team_member.uuid)
+        desc = "<p>Assigned Task</p><h1>Bar</h1><p>Qux</p>"
+        data = {"description": desc, "assignee": t_uid, "action": "create"}
         with django_assert_num_queries(12):
             response = user_client.post(resource_url, data)
             assert response.status_code == 302, response.content
@@ -66,17 +67,14 @@ class TestTaskCreateView:
         self, user_client: Client, resource_url: str, team_member: TeamMember
     ) -> None:
         """Test setting the title."""
+        t_uid = str(team_member.uuid)
         # No description
-        data = {"assignee": str(team_member.uuid), "action": "create"}
+        data = {"assignee": t_uid, "action": "create"}
         response = user_client.post(resource_url, data)
         assert response.status_code == 400
 
         # Empty description
-        data = {
-            "assignee": str(team_member.uuid),
-            "action": "create",
-            "description": "",
-        }
+        data = {"assignee": t_uid, "action": "create", "description": ""}
         response = user_client.post(resource_url, data)
         assert response.status_code == 400
 
@@ -85,16 +83,6 @@ class TestTaskCreateView:
     ) -> None:
         """Test accessing task creation for non-existent project."""
         url = reverse("dashboard:projects:create-task", args=(null_uuid,))
-        response = user_client.get(url)
-        assert response.status_code == 404
-
-    def test_unauthorized_project_access(
-        self, user_client: Client, unrelated_project: Project
-    ) -> None:
-        """Test that users can't create tasks in projects they don't have access to."""
-        url = reverse(
-            "dashboard:projects:create-task", args=(unrelated_project.uuid,)
-        )
         response = user_client.get(url)
         assert response.status_code == 404
 
@@ -109,12 +97,15 @@ class TestTaskUpdateView:
 
     def test_get_task_update(
         self,
+        unrelated_user_client: Client,
         user_client: Client,
         resource_url: str,
         task: Task,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test GETting the task update page."""
+        # Someone else can't access it
+        assert unrelated_user_client.get(resource_url).status_code == 404
         # Gone up   from 14 -> 16 due to permission checks in sidemenu
         # Gone down from 16 -> 13
         # Gone down from 13 -> 12
@@ -124,17 +115,11 @@ class TestTaskUpdateView:
             assert response.status_code == 200
         assert task.title in response.content.decode()
 
-    def test_task_not_found(self, user_client: Client) -> None:
-        """Test accessing task update for non-existent task."""
-        url = reverse("dashboard:tasks:update", args=(uuid4(),))
-        response = user_client.get(url)
-        assert response.status_code == 404
-
-    def test_unauthorized_task_access(
-        self, user_client: Client, unrelated_task: Task
+    def test_task_not_found(
+        self, user_client: Client, null_uuid: UUID
     ) -> None:
-        """Test that users can't update tasks they don't have access to."""
-        url = reverse("dashboard:tasks:update", args=(unrelated_task.uuid,))
+        """Test accessing task update for non-existent task."""
+        url = reverse("dashboard:tasks:update", args=(null_uuid,))
         response = user_client.get(url)
         assert response.status_code == 404
 
@@ -147,19 +132,13 @@ class TestTaskUpdateView:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating a task."""
-        original_title = task.title
+        assert task.title != "Updated Task Title"
+        desc = "<p>Updated Task Title</p><p>Rest</p>"
+        t_uid = str(team_member.uuid)
+        data = {"description": desc, "assignee": t_uid, "action": "update"}
         with django_assert_num_queries(13):
-            response = user_client.post(
-                resource_url,
-                {
-                    "description": "<p>Updated Task Title</p><p>Rest</p>",
-                    "assignee": str(team_member.uuid),
-                    "action": "update",
-                },
-            )
+            response = user_client.post(resource_url, data)
             assert response.status_code == 302
-
         task.refresh_from_db()
         assert task.title == "Updated Task Title"
-        assert task.title != original_title
         assert task.assignee == team_member

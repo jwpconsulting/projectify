@@ -318,3 +318,5 @@ filterwarnings = [
 [tool.djlint]
 # slot comes from allauth
 custom_blocks = "slot,partialdef"
+# For Trix
+custom_html = "trix-editor"
