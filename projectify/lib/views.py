@@ -17,6 +17,23 @@ def platform_view(func: LoggedInViewP) -> LoggedInViewP:
     This makes it easier to add required decorators or other things to views
     that are part of the platform, i.e., pages that require the user to be
     logged in.
+
+    Usage
+
+    from django.http import HttpResponse
+    from projectify.lib.types import AuthenticatedHttpRequest
+    from projectify.lib.views import platform_view
+    @platform_view
+    def method(request: AuthenticatedHttpRequest) -> HttpResponse:
+        pass
+
+    TODO, implement this
+
+    @platform_view(require_methods=["GET", "POST"])
+    def method(request: AuthenticatedHttpRequest) -> HttpResponse:
+        pass
+
+    This validates request.method in ["GET", "POST"]
     """
     return login_required(func)
 
