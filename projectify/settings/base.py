@@ -326,10 +326,10 @@ class Base(Configuration):  # type:ignore
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/3.2/howto/static-files/
     STATIC_URL = "/static/django/"
-    STATIC_ROOT = BASE_DIR / "staticfiles"
+    STATIC_ROOT: Path
 
     # Where to store media
-    MEDIA_ROOT = BASE_DIR / "media"
+    MEDIA_ROOT: Path
     MEDIA_URL = "/media/"
     # This configures whether ./manage.py runserver should serve media files
     # ONLY use this for debugging or local development

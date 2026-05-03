@@ -89,7 +89,11 @@ class Development(Base):
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
     SERVER_EMAIL = "hello@projectifyapp.com"
 
-    # Media
+    # Static files
+    STATIC_ROOT = Base.BASE_DIR / "staticfiles"
+
+    # Media files
+    MEDIA_ROOT = Base.BASE_DIR / "media"
     SENDFILE_BACKEND = "django_sendfile.backends.simple"
 
     # Safari workaround for sessionid cookie
