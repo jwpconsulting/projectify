@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Any, Callable, Optional
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import F
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
@@ -235,7 +236,12 @@ class Task(TitleDescriptionModel, BaseModel):
     class Meta:
         """Meta."""
 
-        ordering = ("done", "-modified")
+        # This was originally the following
+        # ordering = ("done", "-modified")
+        # I've changed it to use these expressions to avoid sorting
+        # inconsistencies between local SQLite and PostgreSQL on the
+        # www.projectifyapp.com Hetzner instance
+        ordering = [F("done").asc(nulls_first=True), F("modified").desc()]
 
 
 class TeamMemberInvite(BaseModel):
