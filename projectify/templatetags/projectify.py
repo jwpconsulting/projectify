@@ -157,6 +157,7 @@ def action_button(
     grow: bool = True,
     disabled: bool = False,
     justify_left: bool = False,
+    type: Literal["button", "submit"] = "button",
 ) -> SafeText:
     """Render a styled action button with icon."""
     # Source: frontend/src/lib/funabashi/buttons/Button.svelte
@@ -166,12 +167,13 @@ def action_button(
     }
 
     return format_html(
-        '<button type="submit" '
-        'class="{width_class} {color_classes}{disabled_class} flex min-w-0 flex-row {justify} gap-2 rounded-lg px-4 py-2 font-bold"'
+        '<button type="{type}" '
+        'class="{width_class} shrink-0 {color_classes}{disabled_class} flex min-w-0 flex-row {justify} gap-2 rounded-lg px-4 py-2 font-bold"'
         "{disabled_attr}{value}{name}>"
         "{icon}"
         '<span class="truncate">{text}</span>'
         "</button>",
+        type=type,
         width_class="w-full" if grow else "",
         color_classes=color_classes[style],
         disabled_class=" opacity-20" if disabled else "",
@@ -247,6 +249,7 @@ def icon(
     icon: str,
     color: Optional[Literal["primary", "secondary", "destructive"]] = None,
     size: Literal[None, 4, 6] = None,
+    inline: bool = False,
 ) -> SafeText:
     """Return a rendered heroicon SVG file with optional color."""
     static_path = f"heroicons/{icon}.svg"
@@ -259,19 +262,16 @@ def icon(
     else:
         src = static.static(static_path)
     try:
-        size_class = (
-            format_html(" class={}", {4: "size-4", 6: "size-6"}[size])
-            if size
-            else ""
-        )
+        size_class = {4: "size-4", 6: "size-6"}[size] if size else ""
     except KeyError:
         logger.error(f"Missing size class for size {size}")
         size_class = ""
     return format_html(
-        '<img src="{src}" aria-hidden="true"{size_class}>',
+        '<img src="{src}" aria-hidden="true" class="{size_class}{display_style}">',
         src=src,
         icon=icon,
         size_class=size_class,
+        display_style=" inline" if inline else "",
     )
 
 
