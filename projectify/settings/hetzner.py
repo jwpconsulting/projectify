@@ -27,36 +27,17 @@ class Hetzner(Base):
     ALLOWED_HOSTS = [os.getenv("ALLOWED_HOST", "www.projectifyapp.com")]
     FRONTEND_URL = f"https://{ALLOWED_HOSTS[0]}"
 
-    # Static files
-    # We allow overriding this value in case the static files come prebuilt,
-    # for example in a container, and an exact path is contained in
-    # the STATIC_ROOT environment variable
-    # TODO make this non-optional and print error
-    STATIC_ROOT = (
-        Path(os.environ["STATIC_ROOT"])
-        if "STATIC_ROOT" in os.environ
-        else Base.STATIC_ROOT
-    )
-
     STORAGES = CollectStatic.STORAGES
 
-    # TODO print friendly error when MEDIA_ROOT not found
-    MEDIA_ROOT = Path(os.environ["MEDIA_ROOT"])
     SENDFILE_BACKEND = "django_sendfile.backends.xsendfile"
-
-    # Logging config
-    LOGGING = Base.LOGGING
-    LOGGING["handlers"]["mail_admins"] = {
-        "level": "ERROR",
-        "class": "django.utils.log.AdminEmailHandler",
-    }
-
-    # Emails
 
     @classmethod
     def setup(cls) -> None:
         """Load database config, after environment is correctly loaded."""
         super().setup()
+
+        cls.setup_runtime_directories()
+
         if "CREDENTIALS_FILE" not in os.environ:
             raise RuntimeError(
                 "Expected environment variable CREDENTIALS_FILE to be set."
@@ -94,6 +75,37 @@ class Hetzner(Base):
             warnings.warn("ADMIN_EMAIL environment variable not set")
         if admin_name and admin_email:
             cls.ADMINS = [[admin_name, admin_email]]
+
+    @classmethod
+    def setup_runtime_directories(cls) -> None:
+        """Set up runtime directories for media and static files."""
+        # Static files
+        # We allow overriding this value in case the static files come prebuilt,
+        # for example in a container, and an exact path is contained in
+        # the STATIC_ROOT environment variable
+        if "STATIC_ROOT" not in os.environ:
+            warnings.warn(
+                "Could not find STATIC_ROOT environment variable. "
+                f"Falling back to Base.STATIC_ROOT={Base.STATIC_ROOT}"
+            )
+            cls.STATIC_ROOT = Base.STATIC_ROOT
+        elif not Path(os.environ["STATIC_ROOT"]).exists():
+            raise RuntimeError(
+                f"The path STATIC_ROOT='{os.environ["STATIC_ROOT"]}' doesn't exist"
+            )
+        else:
+            cls.STATIC_ROOT = Path(os.environ["STATIC_ROOT"])
+        # TODO print friendly error when MEDIA_ROOT not found
+        if "MEDIA_ROOT" not in os.environ:
+            raise RuntimeError(
+                "You need to set the MEDIA_ROOT environment variable"
+            )
+        elif not Path(os.environ["MEDIA_ROOT"]).exists():
+            raise RuntimeError(
+                f"The path MEDIA_ROOT='{os.environ["MEDIA_ROOT"]}' doesn't exist"
+            )
+        else:
+            cls.MEDIA_ROOT = Path(os.environ["MEDIA_ROOT"])
 
     @classmethod
     def setup_billing(

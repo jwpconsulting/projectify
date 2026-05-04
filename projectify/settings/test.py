@@ -4,6 +4,9 @@
 """Test settings."""
 
 import secrets
+import tempfile
+import weakref
+from pathlib import Path
 
 from faker import Faker
 
@@ -51,6 +54,11 @@ class Test(Base):
         """Load environment variables from .env."""
         super().pre_setup()
         load_dotenv()
+        temp_dir = tempfile.TemporaryDirectory()
+        # Make sure the temporary directory disappears
+        weakref.finalize(temp_dir, temp_dir.cleanup)
+        cls.MEDIA_ROOT = Path(temp_dir.name) / "media"
+        cls.STATIC_ROOT = Path(temp_dir.name) / "staticfiles"
 
     @classmethod
     def setup(cls) -> None:

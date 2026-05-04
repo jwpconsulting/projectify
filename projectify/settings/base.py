@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 from django.utils.csp import CSP  # type: ignore
+from django.utils.log import DEFAULT_LOGGING
 
 import dj_database_url
 
@@ -27,7 +28,6 @@ from configurations import Configuration  # type: ignore
 
 from .monkeypatch import patch
 from .types import (
-    LoggingConfig,
     SocialAccountProvider,
     StoragesConfig,
     StripeConfig,
@@ -96,8 +96,15 @@ class Base(Configuration):  # type:ignore
     SESSION_COOKIE_SAMESITE = "Strict"
     SESSION_COOKIE_SECURE = True
 
-    # TODO remove when Svelte frontend is gone
     # CSRF
+    # Don't store CSRF cookies in session, for now.
+    # This increases many query count checks in tests by 4 queries.
+    # For reference, here's what you'd have to pay attention to if you enable
+    # CSRF_USE_SESSIONS = True
+    # > Since the default error views require the CSRF token, SessionMiddleware must appear in MIDDLEWARE before any middleware that may raise an exception to trigger an error view (such as PermissionDenied) if you’re using CSRF_USE_SESSIONS. See Middleware ordering.
+    # See
+    # https://docs.djangoproject.com/en/6.0/ref/settings/#std-setting-CSRF_USE_SESSIONS
+    # Note: Set to False now because it increases the query count
     CSRF_USE_SESSIONS = False
     CSRF_COOKIE_SAMESITE = "Strict"
     CSRF_COOKIE_SECURE = True
@@ -190,8 +197,13 @@ class Base(Configuration):  # type:ignore
         "django.middleware.csp.ContentSecurityPolicyMiddleware",
         "projectify.middleware.reverse_proxy",
         "django.middleware.gzip.GZipMiddleware",
+        # SessionMiddleware
+        # Before any middleware that may raise an exception to trigger an error view (such as PermissionDenied) if you’re using CSRF_USE_SESSIONS.
+        # https://docs.djangoproject.com/en/6.0/ref/middleware/#middleware-ordering
         "django.contrib.sessions.middleware.SessionMiddleware",
         "django.middleware.common.CommonMiddleware",
+        # CsrfViewMiddleware
+        # After SessionMiddleware if you’re using CSRF_USE_SESSIONS.
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
@@ -314,10 +326,10 @@ class Base(Configuration):  # type:ignore
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/3.2/howto/static-files/
     STATIC_URL = "/static/django/"
-    STATIC_ROOT = BASE_DIR / "staticfiles"
+    STATIC_ROOT: Path
 
     # Where to store media
-    MEDIA_ROOT = BASE_DIR / "media"
+    MEDIA_ROOT: Path
     MEDIA_URL = "/media/"
     # This configures whether ./manage.py runserver should serve media files
     # ONLY use this for debugging or local development
@@ -364,25 +376,31 @@ class Base(Configuration):  # type:ignore
     EMAIL_SUBJECT_PREFIX = "[Projectify-Admin] "
 
     # Logging
-    LOGGING: LoggingConfig = {
-        "version": 1,
-        "disable_existing_loggers": False,
+    LOGGING: Any = {
+        **DEFAULT_LOGGING,
         "formatters": {
+            **DEFAULT_LOGGING["formatters"],
             "like_gunicorn": {
                 "format": "%(levelname)-s [%(name)s.%(module)s] ~ %(message)s"
-            }
+            },
         },
         "handlers": {
+            **DEFAULT_LOGGING["handlers"],
             "console": {
-                "class": "logging.StreamHandler",
+                **DEFAULT_LOGGING["handlers"]["console"],
                 "formatter": "like_gunicorn",
-            }
+            },
         },
         "loggers": {
-            "": {
-                "handlers": ["console"],
+            **DEFAULT_LOGGING["loggers"],
+            "django": {
+                **DEFAULT_LOGGING["loggers"]["django"],
                 "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
-            }
+            },
+            "projectify": {
+                "handlers": ["console", "mail_admins"],
+                "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+            },
         },
     }
     # https://docs.djangoproject.com/en/5.2/ref/settings/#std-setting-ADMINS

@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Changelog
 
-## Unrelease
+## Unreleased
 
 ### Documentation
 
@@ -19,6 +19,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
   `pyproject.toml`.
 - Create separate Django test `Client()` instances for different user clients
   in `projectify/conftest.py`.
+- Clean up and refactor logging configuration
 
 ## 2026.5.3
 
