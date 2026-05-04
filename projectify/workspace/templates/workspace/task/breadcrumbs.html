@@ -2,12 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load projectify %}
 {% load i18n %}
-<div class="font-bold text-utility">
+<p>
+    {% icon "folder" size=4 inline=True %}
     {% anchor href=project.get_absolute_url title=_("Project link") label=project.title %}
-    <span aria-hidden="true">&gt;</span>
-    {% if current_page_label and current_page_url %}
-        {% anchor href=current_page_url label=current_page_label %}
-    {% else %}
-        {% anchor "dashboard:tasks:detail" aria_label=task.title label=task.title task_uuid=task.uuid %}
-    {% endif %}
-</div>
+</p>

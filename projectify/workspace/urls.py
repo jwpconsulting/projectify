@@ -21,7 +21,6 @@ from projectify.workspace.views.project import (
     project_update_view,
 )
 from projectify.workspace.views.task import (
-    task_actions,
     task_create_view,
     task_delete_view,
     task_detail,
@@ -39,6 +38,7 @@ from projectify.workspace.views.workspace import (
     workspace_settings_quota,
     workspace_settings_team_member_update,
     workspace_settings_team_members,
+    workspace_suggest_links,
     workspace_view,
 )
 
@@ -91,6 +91,12 @@ workspace_patterns: UrlPatterns = (
         workspace_settings_quota,
         name="quota",
     ),
+    # Suggest links from this workspace
+    path(
+        "<uuid:workspace_uuid>/suggest-links",
+        workspace_suggest_links,
+        name="suggest-links",
+    ),
 )
 if get_settings().STRIPE_CONFIG is None:
     logger.info(
@@ -130,8 +136,7 @@ task_patterns = (
         task_update_view,
         name="update-focus-field",
     ),
-    # Move/delete actions menu
-    path("<uuid:task_uuid>/actions", task_actions, name="actions"),
+    # Task delete
     path("<uuid:task_uuid>/delete", task_delete_view, name="delete"),
 )
 team_member_patterns = (

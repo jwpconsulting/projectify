@@ -80,7 +80,7 @@ class TaskForm(forms.Form):
         widget=forms.DateTimeInput(attrs={"type": "date"}),
     )
     description = forms.CharField(
-        label=_("Task description"),
+        label=_("Description"),
         widget=RichTextEditor(
             heading_blocks=False,
             attrs={
@@ -115,9 +115,15 @@ class TaskForm(forms.Form):
         )
         self.order_fields(["description", "assignee", "due_date"])
 
+        self.fields["description"].widget.attrs["data-suggest-links-url"] = (
+            reverse(
+                "dashboard:workspaces:suggest-links", args=(workspace.uuid,)
+            )
+        )
+
         if focus_field is None:
-            return
-        if focus_field in self.fields:
+            pass
+        elif focus_field in self.fields:
             self.fields[focus_field].widget.attrs["autofocus"] = True
         else:
             logger.warning(
@@ -136,55 +142,33 @@ def task_create_view(
     )
     if project is None:
         raise Http404(_("Project not found"))
-
     workspace = project.workspace
-    context: dict[str, Any] = {
-        **get_task_view_context(request, workspace),
-        "project": project,
-    }
-
     match request.method:
         case "GET":
-            return render(
-                request,
-                "workspace/task_create.html",
-                {
-                    **context,
-                    "form": TaskForm(
-                        workspace=workspace, initial={"project": project}
-                    ),
-                },
-            )
+            form = TaskForm(workspace=workspace, initial={"project": project})
+            status = 200
         case "POST":
-            pass
+            form = TaskForm(workspace=workspace, data=request.POST)
+            if form.is_valid():
+                task_create(
+                    who=request.user,
+                    project=project,
+                    title_description=form.cleaned_data["description"],
+                    assignee=form.cleaned_data.get("assignee"),
+                    due_date=form.cleaned_data.get("due_date"),
+                )
+                return redirect(project)
+            else:
+                status = 400
         case method:
             raise RuntimeError(f"Don't know how to handle method {method}")
-    form = TaskForm(workspace=workspace, data=request.POST)
-    if not form.is_valid():
-        return render(
-            request,
-            "workspace/task_create.html",
-            {**context, "form": form},
-            status=400,
-        )
-
-    task = task_create(
-        who=request.user,
-        project=project,
-        title_description=form.cleaned_data["description"],
-        assignee=form.cleaned_data.get("assignee"),
-        due_date=form.cleaned_data.get("due_date"),
-    )
-
-    match request.POST.get("action"):
-        case "create_stay":
-            return redirect("dashboard:tasks:detail", task.uuid)
-        case "create":
-            return redirect(project)
-        case action:
-            raise BadRequest(
-                _("Invalid action: {action}").format(action=action)
-            )
+    context = {
+        **get_task_view_context(request, workspace),
+        "project": project,
+        "form": form,
+    }
+    template = "workspace/task_create.html"
+    return render(request, template, context, status=status)
 
 
 @platform_view
@@ -237,98 +221,63 @@ def task_update_view(
         )
 
     workspace = task.workspace
-    context: dict[str, Any] = {
-        **get_task_view_context(request, workspace),
-        "project": task.project,
-    }
     task_initial = {
         "assignee": task.assignee,
         "due_date": task.due_date,
         "description": task.description,
         "project": task.project,
     }
-
-    # Determine what update view action should be taken
-    match request.method, request.POST.get("action"):
-        case "POST", "update":
-            next_url = reverse(
-                "dashboard:projects:detail", args=(task.project.uuid,)
-            )
-        case "POST", "update_stay":
-            next_url = reverse("dashboard:tasks:detail", args=(task.uuid,))
-        case "GET", _:
+    match request.method:
+        case "GET":
             form = TaskForm(
                 initial=task_initial,
                 workspace=workspace,
                 focus_field=focus_field,
             )
-            context = {**context, "form": form, "task": task}
-            logger.warning("No action specified")
-            next_url = reverse(
-                "dashboard:projects:detail", args=(task.project.uuid,)
+            status = 200
+        case "POST":
+            form = TaskForm(
+                data=request.POST,
+                initial=task_initial,
+                workspace=workspace,
+                focus_field=focus_field,
             )
-            return render(request, "workspace/task_update.html", context)
-        case method, other_action:
-            raise BadRequest(
-                _(
-                    "Invalid method {method} and action {action}".format(
-                        method=method, action=other_action
-                    )
+            form.full_clean()
+            if form.is_valid():
+                task_update(
+                    who=request.user,
+                    task=task,
+                    title_description=form.cleaned_data["description"],
+                    due_date=form.cleaned_data["due_date"],
+                    assignee=form.cleaned_data["assignee"],
                 )
+                # Determine the update view action
+                match request.POST.get("action"):
+                    case "update":
+                        return redirect(task.project)
+                    case "update_stay":
+                        return redirect(task)
+                    case None:
+                        logger.warning("No action specified")
+                        return redirect(task)
+                    case action:
+                        raise BadRequest(
+                            _("Invalid action {action}").format(action=action)
+                        )
+            else:
+                status = 400
+        case method:
+            raise BadRequest(
+                _("Invalid method {method}").format(method=method)
             )
-
-    form = TaskForm(
-        data=request.POST.copy(),
-        initial=task_initial,
-        workspace=workspace,
-        focus_field=focus_field,
-    )
-    form.full_clean()
-    if not form.is_valid():
-        context = {**context, "form": form, "task": task}
-        return render(
-            request, "workspace/task_update.html", context, status=400
-        )
-
-    cleaned_data = form.cleaned_data
-    task_update(
-        who=request.user,
-        task=task,
-        title_description=cleaned_data["description"],
-        due_date=cleaned_data["due_date"],
-        assignee=cleaned_data["assignee"],
-    )
-    return redirect(next_url)
-
-
-# Form
-
-
-def task_actions(
-    request: AuthenticatedHttpRequest, task_uuid: UUID
-) -> HttpResponse:
-    """Render task actions menu page."""
-    task = task_find_by_task_uuid(
-        who=request.user, task_uuid=task_uuid, qs=TaskDetailQuerySet
-    )
-    if task is None:
-        raise Http404(
-            _("Could not find task with uuid {task_uuid}").format(
-                task_uuid=task_uuid
-            )
-        )
-    workspace = task.workspace
     context = {
         **get_task_view_context(request, workspace),
-        "task": task,
         "project": task.project,
+        "form": form,
+        "task": task,
     }
-
-    if request.htmx:
-        template = "workspace/task_actions.html#tr_dropdown"
-    else:
-        template = "workspace/task_actions.html"
-    return render(request, template, context)
+    template = "workspace/task_update.html"
+    return render(request, template, context, status=status)
 
 
 # TODO require POST

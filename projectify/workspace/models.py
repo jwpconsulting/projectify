@@ -68,6 +68,7 @@ class Workspace(TitleDescriptionModel, BaseModel):
         customer: RelatedField[None, "Customer"]
 
         # Related sets
+        task_set: RelatedManager["Task"]
         project_set: RelatedManager["Project"]
         teammember_set: RelatedManager["TeamMember"]
         teammemberinvite_set: RelatedManager["TeamMemberInvite"]

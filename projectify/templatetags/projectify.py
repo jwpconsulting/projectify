@@ -70,7 +70,7 @@ def anchor(
     if external:
         a_extra = mark_safe(' target="_blank"')
         extra = format_html(
-            '<img class="inline-block w-4 h-4" src="{src}" alt="{text}">',
+            '<img class="inline-block size-4" src="{src}" alt="{text}">',
             src=reverse(
                 "colored-icon",
                 kwargs={"icon": "external_links", "color": "primary"},
@@ -100,15 +100,18 @@ def circle_button(
     label: str,
     icon_style: str,
     name: str,
+    id: Optional[str] = None,
     value: Optional[str] = None,
     disabled: bool = False,
 ) -> SafeText:
     """Render a circular button."""
     return format_html(
         '<button name="{name}"{value}{disabled} type="submit" hx-swap="outerHTML" '
+        "{id}"
         'aria-label="{label}"'
         ' class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled disabled:bg-transparent disabled:opacity-20">{icon}</button>',
         name=name,
+        id="{id} " if id else "",
         disabled=" disabled" if disabled else "",
         value=format_html(' value="{}"', value) if value else "",
         icon=icon(icon_style),
@@ -157,6 +160,7 @@ def action_button(
     grow: bool = True,
     disabled: bool = False,
     justify_left: bool = False,
+    type: Literal["button", "submit"] = "button",
 ) -> SafeText:
     """Render a styled action button with icon."""
     # Source: frontend/src/lib/funabashi/buttons/Button.svelte
@@ -166,12 +170,13 @@ def action_button(
     }
 
     return format_html(
-        '<button type="submit" '
-        'class="{width_class} {color_classes}{disabled_class} flex min-w-0 flex-row {justify} gap-2 rounded-lg px-4 py-2 font-bold"'
+        '<button type="{type}" '
+        'class="{width_class} shrink-0 {color_classes}{disabled_class} flex min-w-0 flex-row {justify} gap-2 rounded-lg px-4 py-2 font-bold"'
         "{disabled_attr}{value}{name}>"
         "{icon}"
         '<span class="truncate">{text}</span>'
         "</button>",
+        type=type,
         width_class="w-full" if grow else "",
         color_classes=color_classes[style],
         disabled_class=" opacity-20" if disabled else "",
@@ -180,7 +185,7 @@ def action_button(
         # TODO
         # icon=icon(icon, style, 6) if icon else "",
         icon=format_html(
-            '<img class="w-6 h-6 shrink-0" src="{src}" aria-hidden="true">',
+            '<img class="size-6 shrink-0" src="{src}" aria-hidden="true">',
             src=reverse(
                 "colored-icon",
                 kwargs={
@@ -247,6 +252,7 @@ def icon(
     icon: str,
     color: Optional[Literal["primary", "secondary", "destructive"]] = None,
     size: Literal[None, 4, 6] = None,
+    inline: bool = False,
 ) -> SafeText:
     """Return a rendered heroicon SVG file with optional color."""
     static_path = f"heroicons/{icon}.svg"
@@ -259,19 +265,16 @@ def icon(
     else:
         src = static.static(static_path)
     try:
-        size_class = (
-            format_html(" class={}", {4: "size-4", 6: "size-6"}[size])
-            if size
-            else ""
-        )
+        size_class = {4: "size-4", 6: "size-6"}[size] if size else ""
     except KeyError:
         logger.error(f"Missing size class for size {size}")
         size_class = ""
     return format_html(
-        '<img src="{src}" aria-hidden="true"{size_class}>',
+        '<img src="{src}" aria-hidden="true" class="{size_class}{display_style}">',
         src=src,
         icon=icon,
         size_class=size_class,
+        display_style=" inline" if inline else "",
     )
 
 
@@ -287,7 +290,7 @@ def user_avatar(
     match team_member_or_user:
         case TeamMember(user=user) as team_member if user.profile_picture:
             return format_html(
-                '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary"><img src="{src}" alt="{alt}" height="24" width="24" class="h-full w-full overflow-x-auto rounded-full object-cover object-center"></div>',
+                '<div class="shrink-0 flex flex-row size-6 items-center rounded-full border border-primary"><img src="{src}" alt="{alt}" height="24" width="24" class="h-full w-full overflow-x-auto rounded-full object-cover object-center"></div>',
                 src=reverse(
                     "dashboard:team-members:picture", args=(team_member.uuid,)
                 ),
@@ -298,13 +301,13 @@ def user_avatar(
                 "dashboard:avatar-marble", args=[team_member.uuid]
             )
             return format_html(
-                '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary"><img src="{src}?size=24" alt="{alt}" height="24" width="24" class="h-full w-full overflow-x-auto rounded-full object-cover object-center"></div>',
+                '<div class="shrink-0 flex flex-row size-6 items-center rounded-full border border-primary"><img src="{src}?size=24" alt="{alt}" height="24" width="24" class="h-full w-full overflow-x-auto rounded-full object-cover object-center"></div>',
                 src=avatar_url,
                 alt=_("Team member {} avatar").format(str(user)),
             )
         case _:
             return mark_safe(
-                '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary bg-background"></div>'
+                '<div class="shrink-0 flex flex-row size-6 items-center rounded-full border border-primary bg-background"></div>'
             )
 
 

@@ -27,7 +27,7 @@
                                 <a href="{% url 'dashboard:projects:update' project_uuid=project.uuid %}"
                                    class="flex items-center gap-1 text-primary truncate">
                                     <span class="truncate">{{ project }}</span>
-                                    <div class="w-4 h-4 shrink-0">{% icon "pencil" %}</div>
+                                    {% icon "pencil" size=4 %}
                                 </a>
                             {% else %}
                                 <span class="truncate">{{ project }}</span>

@@ -126,6 +126,7 @@ def workspace_search(
     filter_by_team_members: Optional[QuerySet[TeamMember]] = None,
     # TODO rename to filter_by_unassigned
     unassigned_tasks: bool = False,
+    exclude_task: Optional[UUID] = None,
 ) -> WorkspaceSearchResults:
     """Search workspace for `query`."""
     workspace_filter = Q(workspace=workspace, workspace__users=who)
@@ -147,6 +148,8 @@ def workspace_search(
 
     if query is not None:
         task_q &= Q(title__icontains=query) | Q(description__icontains=query)
+    if exclude_task is not None:
+        task_q &= ~Q(uuid=exclude_task)
     tasks = (
         Task.objects.filter(task_q)
         .select_related("project", "assignee__user")
