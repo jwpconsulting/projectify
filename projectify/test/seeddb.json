@@ -1,0 +1,258 @@
+{
+  "projects": [
+    {
+      "title": "Customer Portal Redesign",
+      "description": "<h2>Customer Portal Redesign</h2><p>A comprehensive overhaul of our customer-facing portal to improve usability, accessibility, and overall user satisfaction. This project encompasses UX research, visual design, frontend implementation, and backend API updates.</p><ul><li>Conduct user interviews and usability testing</li><li>Redesign information architecture</li><li>Implement new component library</li><li>Migrate legacy API endpoints</li></ul><p>Success will be measured by a <strong>30% reduction in support tickets</strong> and improved NPS scores post-launch.</p>"
+    },
+    {
+      "title": "Mobile App — iOS & Android Launch",
+      "description": "<h2>Mobile App — iOS & Android Launch</h2><p>Design and ship the first version of our native mobile application for both iOS and Android platforms. The app must reach feature parity with the core web product and pass App Store and Google Play review guidelines.</p><ul><li>Define MVP feature set with product team</li><li>Set up React Native project scaffolding</li><li>Integrate push notification service</li><li>Submit to App Store and Google Play</li></ul><p><em>Target launch date: Q3.</em> All critical bugs must be resolved before submission.</p>"
+    },
+    {
+      "title": "Data Warehouse Migration",
+      "description": "<h2>Data Warehouse Migration</h2><p>Migrate our existing on-premise data warehouse to a cloud-based solution (BigQuery). This project will reduce infrastructure costs, improve query performance, and enable self-serve analytics for business stakeholders.</p><ol><li>Audit existing schemas and ETL pipelines</li><li>Design target schema in BigQuery</li><li>Rewrite ETL jobs using Apache Beam</li><li>Validate data integrity post-migration</li><li>Decommission legacy warehouse</li></ol><p><strong>Zero data loss</strong> is a hard requirement. A parallel-run period of four weeks is mandatory before cutover.</p>"
+    },
+    {
+      "title": "SOC 2 Type II Compliance",
+      "description": "<h2>SOC 2 Type II Compliance</h2><p>Achieve SOC 2 Type II certification to satisfy enterprise customer security requirements and unlock new sales opportunities. This cross-functional project involves Engineering, Legal, HR, and Operations.</p><ul><li>Gap analysis against Trust Service Criteria</li><li>Implement missing security controls</li><li>Deploy continuous monitoring tooling</li><li>Coordinate with external auditor</li><li>Remediate audit findings</li></ul><p>Certification is a <strong>blocker for three enterprise deals</strong> currently in the pipeline.</p>"
+    },
+    {
+      "title": "Onboarding Flow Optimisation",
+      "description": "<h2>Onboarding Flow Optimisation</h2><p>Reduce time-to-value for new users by streamlining the sign-up and onboarding experience. Current data shows a <strong>62% drop-off</strong> between account creation and first meaningful action.</p><ul><li>Analyse funnel drop-off with Mixpanel</li><li>Run A/B tests on welcome email sequences</li><li>Simplify the initial workspace setup wizard</li><li>Add contextual in-app tooltips</li></ul><p>Target: reduce drop-off to below 35% within 60 days of launch.</p>"
+    },
+    {
+      "title": "Payment Gateway Integration",
+      "description": "<h2>Payment Gateway Integration</h2><p>Integrate Stripe Billing to support subscription management, invoicing, and metered usage billing. This replaces our current manual invoicing process and unblocks self-serve upgrades.</p><ul><li>Implement Stripe Checkout and Customer Portal</li><li>Handle webhook events for subscription lifecycle</li><li>Build internal billing dashboard for support team</li><li>Write migration script for existing subscribers</li></ul><p><em>PCI DSS compliance must be maintained throughout.</em></p>"
+    },
+    {
+      "title": "Internal Developer Platform",
+      "description": "<h2>Internal Developer Platform</h2><p>Build a self-service platform that allows engineering teams to provision infrastructure, deploy services, and manage configuration without filing tickets with the platform team. Inspired by the DORA metrics research on developer productivity.</p><ul><li>Evaluate Backstage vs. custom solution</li><li>Integrate with Terraform Cloud for provisioning</li><li>Build service catalogue with ownership metadata</li><li>Implement golden-path templates for new services</li></ul><p>Goal: reduce mean time to provision a new service from <strong>3 days to under 2 hours</strong>.</p>"
+    },
+    {
+      "title": "Accessibility Audit & Remediation",
+      "description": "<h2>Accessibility Audit & Remediation</h2><p>Bring the entire product to WCAG 2.1 AA compliance. An external audit identified 47 issues ranging from missing ARIA labels to insufficient colour contrast. Fixing these issues is both a legal obligation and the right thing to do.</p><ol><li>Triage and prioritise all 47 audit findings</li><li>Fix critical issues (keyboard traps, missing alt text)</li><li>Update design tokens for colour contrast</li><li>Add automated accessibility checks to CI pipeline</li><li>Commission follow-up audit to verify remediation</li></ol>"
+    },
+    {
+      "title": "Search & Discovery Overhaul",
+      "description": "<h2>Search & Discovery Overhaul</h2><p>Replace the current basic text search with a full-featured search experience powered by Elasticsearch. Users frequently cite poor search as a top pain point in quarterly surveys.</p><ul><li>Deploy and configure Elasticsearch cluster</li><li>Design indexing strategy for all content types</li><li>Implement faceted filtering and relevance tuning</li><li>Build search analytics dashboard</li><li>Deprecate legacy search endpoint</li></ul><p>Expected outcome: <strong>40% increase in search success rate</strong> as measured by click-through on first result.</p>"
+    },
+    {
+      "title": "Annual Performance Review System",
+      "description": "<h2>Annual Performance Review System</h2><p>Design and implement an internal performance review system to replace the current spreadsheet-based process. The system must support 360-degree feedback, goal tracking, and manager calibration sessions.</p><ul><li>Gather requirements from HR and team leads</li><li>Design data model for reviews, goals, and feedback</li><li>Build review submission and calibration UI</li><li>Integrate with HRIS for employee data sync</li><li>Pilot with one department before company-wide rollout</li></ul><p><em>Confidentiality and data access controls are critical requirements.</em></p>"
+    }
+  ],
+  "tasks": [
+    {
+      "title": "Write API documentation for the authentication endpoints",
+      "description": "<h3>Write API documentation for the authentication endpoints</h3><p>Our authentication endpoints are currently undocumented, causing friction for integration partners. Document all endpoints in OpenAPI 3.1 format, including request/response schemas, error codes, and example payloads.</p><ul><li>Cover <code>/auth/login</code>, <code>/auth/logout</code>, <code>/auth/refresh</code>, and <code>/auth/password-reset</code></li><li>Include rate limiting information</li><li>Add code samples in Python, JavaScript, and cURL</li></ul>"
+    },
+    {
+      "title": "Fix memory leak in the background job processor",
+      "description": "<h3>Fix memory leak in the background job processor</h3><p>The Celery worker process grows in memory usage over time and must be restarted every 6 hours. A heap dump taken last Tuesday points to unclosed database connections inside the <code>process_export_job</code> task.</p><ul><li>Reproduce the leak in a local environment using <code>memory-profiler</code></li><li>Identify and close all unclosed connections</li><li>Add a regression test that monitors memory growth over 1000 iterations</li></ul><p><strong>Priority: High.</strong> This is causing customer-facing export failures.</p>"
+    },
+    {
+      "title": "Set up staging environment with production data anonymisation",
+      "description": "<h3>Set up staging environment with production data anonymisation</h3><p>Engineers currently test against a stale, manually maintained staging database. We need an automated pipeline that clones production data, anonymises PII, and refreshes the staging environment weekly.</p><ul><li>Use <code>faker</code> to replace names, emails, and phone numbers</li><li>Ensure foreign key integrity is preserved after anonymisation</li><li>Schedule weekly refresh via GitHub Actions</li><li>Document the process in the engineering wiki</li></ul>"
+    },
+    {
+      "title": "Implement dark mode support across the design system",
+      "description": "<h3>Implement dark mode support across the design system</h3><p>Add dark mode support using CSS custom properties and the <code>prefers-color-scheme</code> media query. Users have been requesting this feature for over a year and it is the top-voted item on our public roadmap.</p><ul><li>Define dark-mode colour tokens in the design system</li><li>Update all components to use semantic colour tokens</li><li>Add a manual toggle in user preferences</li><li>Test across Chrome, Firefox, Safari, and Edge</li></ul>"
+    },
+    {
+      "title": "Migrate from Webpack to Vite",
+      "description": "<h3>Migrate from Webpack to Vite</h3><p>Our current Webpack build takes 4 minutes on a cold start and 45 seconds for hot reload. Migrating to Vite is expected to reduce cold build time to under 30 seconds and hot reload to under 500ms.</p><ol><li>Audit all Webpack plugins and loaders for Vite equivalents</li><li>Migrate configuration incrementally</li><li>Verify all existing tests pass after migration</li><li>Update CI pipeline build steps</li><li>Remove Webpack and related dependencies</li></ol>"
+    },
+    {
+      "title": "Add multi-factor authentication (TOTP) support",
+      "description": "<h3>Add multi-factor authentication (TOTP) support</h3><p>Implement TOTP-based MFA using the RFC 6238 standard. Users should be able to enrol via any authenticator app (Google Authenticator, Authy, 1Password). MFA should be optional for standard users and enforceable by workspace admins.</p><ul><li>Generate and display QR code during enrolment</li><li>Store encrypted TOTP secret per user</li><li>Provide backup codes on enrolment</li><li>Add admin setting to enforce MFA workspace-wide</li></ul>"
+    },
+    {
+      "title": "Refactor the notification service to use an event-driven architecture",
+      "description": "<h3>Refactor the notification service to use an event-driven architecture</h3><p>The current notification service is tightly coupled to business logic via direct function calls. Refactor it to consume events from a message queue (RabbitMQ) so that new notification types can be added without modifying core business logic.</p><ul><li>Define event schema for all notification-triggering actions</li><li>Publish events from service layer functions</li><li>Implement consumer workers for email, in-app, and push notifications</li><li>Write integration tests for the full event lifecycle</li></ul>"
+    },
+    {
+      "title": "Create end-to-end tests for the checkout flow",
+      "description": "<h3>Create end-to-end tests for the checkout flow</h3><p>The checkout flow has no automated end-to-end test coverage. Three regressions in the past quarter were caught only by customers. Use Playwright to cover the critical happy path and the most common error scenarios.</p><ul><li>Happy path: select plan → enter payment details → confirm subscription</li><li>Error: declined card handling</li><li>Error: network timeout during payment processing</li><li>Run tests in CI on every pull request targeting <code>main</code></li></ul>"
+    },
+    {
+      "title": "Optimise slow database queries on the workspace dashboard",
+      "description": "<h3>Optimise slow database queries on the workspace dashboard</h3><p>The workspace dashboard endpoint has a p95 response time of 3.2 seconds. Query analysis in Datadog shows N+1 queries being executed for team member avatars and project task counts.</p><ul><li>Add <code>select_related</code> and <code>prefetch_related</code> where appropriate</li><li>Add a database index on <code>task.workspace_id</code> and <code>task.done</code></li><li>Verify p95 drops below 400ms in load testing</li><li>Add a regression test using <code>django-assert-num-queries</code></li></ul>"
+    },
+    {
+      "title": "Design and implement the CSV export feature",
+      "description": "<h3>Design and implement the CSV export feature</h3><p>Users need to export their task and project data to CSV for reporting purposes. The export should be generated asynchronously for large datasets and delivered via email when ready.</p><ul><li>Add export button to project and workspace views</li><li>Implement async Celery task for CSV generation</li><li>Send download link via email when export is complete</li><li>Expire download links after 24 hours</li><li>Support filtering by date range and status</li></ul>"
+    },
+    {
+      "title": "Implement role-based access control for API endpoints",
+      "description": "<h3>Implement role-based access control for API endpoints</h3><p>Several API endpoints do not enforce role checks, allowing contributors to perform owner-only actions. Audit all endpoints and enforce the correct permission level on each.</p><ul><li>Audit all 87 API endpoints against the permission matrix</li><li>Add missing permission checks using the <code>validate_perm</code> helper</li><li>Write tests for each permission boundary</li><li>Document the permission model in the API reference</li></ul><p><strong>Security issue — treat as high priority.</strong></p>"
+    },
+    {
+      "title": "Set up error monitoring with Sentry",
+      "description": "<h3>Set up error monitoring with Sentry</h3><p>We currently have no centralised error monitoring. Errors are discovered reactively via customer reports. Integrate Sentry for both the backend (Django) and frontend (TypeScript) to enable proactive error detection.</p><ul><li>Create Sentry project and configure DSN in environment variables</li><li>Install and configure <code>sentry-sdk</code> for Django</li><li>Install and configure Sentry browser SDK</li><li>Set up alerting rules for new and regressed errors</li><li>Configure source maps upload in CI for readable stack traces</li></ul>"
+    },
+    {
+      "title": "Write a runbook for database failover procedures",
+      "description": "<h3>Write a runbook for database failover procedures</h3><p>We have no documented procedure for handling a primary database failure. During last month's incident, the team spent 40 minutes figuring out the failover steps. This runbook must be clear enough for an on-call engineer unfamiliar with the infrastructure to execute.</p><ul><li>Document steps to promote the read replica to primary</li><li>Include DNS update and application reconfiguration steps</li><li>Add verification checklist to confirm successful failover</li><li>Store in the incident response section of the wiki</li></ul>"
+    },
+    {
+      "title": "Add pagination to the task list API endpoint",
+      "description": "<h3>Add pagination to the task list API endpoint</h3><p>The task list endpoint currently returns all tasks in a single response. Workspaces with thousands of tasks are experiencing timeouts. Implement cursor-based pagination to support large datasets efficiently.</p><ul><li>Implement cursor-based pagination using <code>created_at</code> as the cursor field</li><li>Default page size: 50, maximum: 200</li><li>Return <code>next_cursor</code> and <code>previous_cursor</code> in the response envelope</li><li>Update API documentation and client SDKs</li></ul>"
+    },
+    {
+      "title": "Conduct a security penetration test on the public API",
+      "description": "<h3>Conduct a security penetration test on the public API</h3><p>Engage an external security firm to perform a black-box penetration test on the public API. Scope includes authentication, authorisation, injection attacks, and rate limiting. All critical and high findings must be remediated before the next major release.</p><ul><li>Define scope and rules of engagement with the security firm</li><li>Provide test credentials and API documentation</li><li>Triage findings and create remediation tickets</li><li>Retest after remediation to confirm fixes</li></ul>"
+    },
+    {
+      "title": "Implement webhook delivery with retry logic",
+      "description": "<h3>Implement webhook delivery with retry logic</h3><p>Build a webhook system that allows customers to subscribe to events and receive HTTP POST notifications. Delivery must be reliable, with exponential backoff retries and a dead-letter queue for persistently failing endpoints.</p><ul><li>Design webhook subscription management UI and API</li><li>Implement delivery worker with exponential backoff (max 5 retries)</li><li>Store delivery logs for the last 72 hours</li><li>Provide a manual retry button in the developer dashboard</li></ul>"
+    },
+    {
+      "title": "Upgrade Django from 4.2 to 5.1",
+      "description": "<h3>Upgrade Django from 4.2 to 5.1</h3><p>Django 4.2 LTS reaches end-of-life in April 2026. Upgrade to Django 5.1 to stay on a supported version and take advantage of new features including the simplified template engine and improved async ORM support.</p><ol><li>Review Django 5.0 and 5.1 release notes for breaking changes</li><li>Update <code>pyproject.toml</code> and resolve dependency conflicts</li><li>Fix all deprecation warnings introduced in 5.x</li><li>Run the full test suite and fix any failures</li><li>Deploy to staging and monitor for one week before production</li></ol>"
+    },
+    {
+      "title": "Build a feature flag system",
+      "description": "<h3>Build a feature flag system</h3><p>Implement a lightweight feature flag system to enable gradual rollouts, A/B testing, and kill switches for new features. The system should support targeting by user, workspace, and percentage rollout.</p><ul><li>Evaluate <code>django-waffle</code> vs. a custom implementation</li><li>Implement flag evaluation with workspace and user targeting</li><li>Build an admin UI for managing flags</li><li>Add flag checks to the three features currently gated behind environment variables</li></ul>"
+    },
+    {
+      "title": "Localise the application into French and German",
+      "description": "<h3>Localise the application into French and German</h3><p>Expand into the European market by adding French and German localisations. All user-facing strings must be translated, including emails, error messages, and the marketing site.</p><ul><li>Audit all user-facing strings and ensure they use <code>gettext_lazy</code></li><li>Extract <code>.po</code> files and send to translation agency</li><li>Implement locale switching in user preferences</li><li>QA translated strings in context with native speakers</li></ul>"
+    },
+    {
+      "title": "Implement audit logging for sensitive actions",
+      "description": "<h3>Implement audit logging for sensitive actions</h3><p>Enterprise customers require a tamper-evident audit log of sensitive actions such as user role changes, data exports, and billing modifications. The log must be queryable and exportable by workspace admins.</p><ul><li>Define the list of auditable actions with the security team</li><li>Implement an <code>AuditLog</code> model and write-only service</li><li>Surface the audit log in the workspace settings UI</li><li>Ensure logs cannot be deleted by any user role</li></ul>"
+    },
+    {
+      "title": "Add support for SSO via SAML 2.0",
+      "description": "<h3>Add support for SSO via SAML 2.0</h3><p>Enterprise customers require SAML 2.0 SSO integration with identity providers such as Okta, Azure AD, and Google Workspace. SSO must be configurable per workspace and support just-in-time user provisioning.</p><ul><li>Integrate <code>python3-saml</code> library</li><li>Build SAML configuration UI for workspace admins</li><li>Implement JIT provisioning for new users</li><li>Test with Okta, Azure AD, and Google Workspace IdPs</li><li>Document setup process for customers</li></ul>"
+    },
+    {
+      "title": "Reduce Docker image size for the web service",
+      "description": "<h3>Reduce Docker image size for the web service</h3><p>The production Docker image for the web service is currently 2.1 GB, causing slow deployments (8-minute pull times). Target is under 400 MB using a multi-stage build and a minimal base image.</p><ul><li>Switch to a multi-stage build to exclude build-time dependencies</li><li>Use <code>python:3.12-slim</code> as the runtime base image</li><li>Remove unnecessary system packages</li><li>Verify the reduced image passes all smoke tests</li></ul>"
+    },
+    {
+      "title": "Implement real-time collaboration indicators",
+      "description": "<h3>Implement real-time collaboration indicators</h3><p>Show users who else is currently viewing or editing a project in real time. This reduces conflicts and improves team coordination. Use Django Channels and WebSockets for the presence system.</p><ul><li>Set up Django Channels with Redis channel layer</li><li>Implement presence tracking on project and task views</li><li>Display avatar stack of active users in the UI</li><li>Handle disconnection and reconnection gracefully</li></ul>"
+    },
+    {
+      "title": "Write a data retention and deletion policy",
+      "description": "<h3>Write a data retention and deletion policy</h3><p>We currently have no formal data retention policy, which is a GDPR compliance risk. Define retention periods for all data categories and implement automated deletion jobs for data past its retention period.</p><ul><li>Classify all data categories with the legal team</li><li>Define retention periods per category</li><li>Implement scheduled deletion jobs for each category</li><li>Add a user-facing account deletion flow that removes all personal data</li></ul>"
+    },
+    {
+      "title": "Improve test coverage for the billing module",
+      "description": "<h3>Improve test coverage for the billing module</h3><p>The billing module has 23% test coverage, the lowest in the codebase. Given that billing bugs directly impact revenue, this is unacceptable. Target: 85% coverage with meaningful tests, not just coverage padding.</p><ul><li>Identify untested code paths using <code>coverage.py</code></li><li>Write unit tests for all service layer functions</li><li>Write integration tests for Stripe webhook handling</li><li>Add tests for subscription edge cases (trial expiry, downgrade, cancellation)</li></ul>"
+    },
+    {
+      "title": "Create a public status page",
+      "description": "<h3>Create a public status page</h3><p>Customers have no visibility into service health during incidents. Build a public status page that shows real-time and historical uptime for all major services, and allows customers to subscribe to incident notifications.</p><ul><li>Evaluate Statuspage.io vs. a self-hosted solution (Cachet)</li><li>Integrate with our existing uptime monitoring (Uptime Robot)</li><li>Implement incident creation and update workflow for the ops team</li><li>Add email and RSS subscription for incident notifications</li></ul>"
+    },
+    {
+      "title": "Migrate secrets management to HashiCorp Vault",
+      "description": "<h3>Migrate secrets management to HashiCorp Vault</h3><p>Application secrets are currently stored in plaintext environment variables in our CI system. Migrate to HashiCorp Vault to improve security, enable secret rotation, and provide an audit trail for secret access.</p><ul><li>Deploy Vault cluster in HA mode</li><li>Migrate all application secrets to Vault</li><li>Update application to fetch secrets at startup via the Vault SDK</li><li>Implement automatic secret rotation for database credentials</li></ul>"
+    },
+    {
+      "title": "Add keyboard shortcuts to the task management UI",
+      "description": "<h3>Add keyboard shortcuts to the task management UI</h3><p>Power users have requested keyboard shortcuts to speed up task management workflows. Implement a set of shortcuts for the most common actions and display them in a discoverable help modal.</p><ul><li>Define shortcut map with the product team</li><li>Implement shortcuts using a keyboard event handler library</li><li>Build a <kbd>?</kbd>-triggered help modal listing all shortcuts</li><li>Ensure shortcuts do not conflict with browser or OS defaults</li><li>Test with screen readers to ensure accessibility is not degraded</li></ul>"
+    },
+    {
+      "title": "Implement task dependencies (blocking/blocked-by relationships)",
+      "description": "<h3>Implement task dependencies (blocking/blocked-by relationships)</h3><p>Allow users to mark tasks as blocking or blocked by other tasks. Blocked tasks should be visually distinguished and excluded from assignee workload calculations until their blockers are resolved.</p><ul><li>Add a <code>TaskDependency</code> model with <code>blocking</code> and <code>blocked_by</code> relations</li><li>Prevent circular dependency chains at the service layer</li><li>Update the task UI to show dependency badges</li><li>Filter blocked tasks from the assignee workload view</li></ul>"
+    },
+    {
+      "title": "Set up a developer onboarding guide",
+      "description": "<h3>Set up a developer onboarding guide</h3><p>New engineers currently take 2–3 weeks to become productive. A structured onboarding guide with a working local development environment setup should reduce this to under one week.</p><ul><li>Document prerequisites (Python version, Node version, Docker)</li><li>Write step-by-step local setup instructions</li><li>Create a <code>make bootstrap</code> command that automates setup</li><li>Include a list of recommended first issues for new contributors</li><li>Have two new engineers follow the guide and incorporate their feedback</li></ul>"
+    },
+    {
+      "title": "Implement email open and click tracking",
+      "description": "<h3>Implement email open and click tracking</h3><p>We have no visibility into whether transactional emails are being opened or acted upon. Implement open and click tracking to measure email effectiveness and identify deliverability issues.</p><ul><li>Add a 1×1 tracking pixel to all outbound emails</li><li>Wrap all links with a redirect tracking endpoint</li><li>Store open and click events in the database</li><li>Build a simple email analytics dashboard for the marketing team</li></ul><p><em>Ensure tracking is disclosed in the privacy policy.</em></p>"
+    },
+    {
+      "title": "Refactor the monolithic settings file into environment-specific modules",
+      "description": "<h3>Refactor the monolithic settings file into environment-specific modules</h3><p>The Django settings file has grown to over 800 lines and mixes development, staging, and production configuration. Split it into a base module and environment-specific overrides to reduce the risk of production settings leaking into development.</p><ul><li>Create <code>settings/base.py</code>, <code>settings/development.py</code>, <code>settings/production.py</code></li><li>Move all environment-specific values to the correct module</li><li>Update <code>DJANGO_SETTINGS_MODULE</code> in all deployment configurations</li><li>Verify all environments start correctly after the refactor</li></ul>"
+    },
+    {
+      "title": "Add support for bulk task operations",
+      "description": "<h3>Add support for bulk task operations</h3><p>Users managing large projects need to perform actions on multiple tasks at once. Implement bulk select, bulk assign, bulk status change, and bulk delete operations in the task list view.</p><ul><li>Add a checkbox column to the task list</li><li>Implement a bulk action toolbar that appears when tasks are selected</li><li>Support bulk assign, bulk mark done, and bulk delete</li><li>Confirm destructive bulk actions with a modal dialog</li></ul>"
+    },
+    {
+      "title": "Investigate and resolve intermittent CI test failures",
+      "description": "<h3>Investigate and resolve intermittent CI test failures</h3><p>Approximately 8% of CI runs fail due to flaky tests. This is eroding developer trust in the test suite and causing unnecessary re-runs. Identify the root causes and fix or quarantine the flaky tests.</p><ul><li>Collect failure data from the last 30 days of CI runs</li><li>Identify the top 10 most frequently failing tests</li><li>Fix root causes (race conditions, time-dependent assertions, shared state)</li><li>Add a flaky test label and quarantine process for tests that cannot be fixed immediately</li></ul>"
+    },
+    {
+      "title": "Implement a task commenting system",
+      "description": "<h3>Implement a task commenting system</h3><p>Allow team members to leave comments on tasks to facilitate discussion without leaving the tool. Comments should support rich text, @mentions, and file attachments.</p><ul><li>Design the <code>Comment</code> model with author, task, and body fields</li><li>Implement the comment submission form with rich text editor</li><li>Add @mention autocomplete with workspace member lookup</li><li>Send email notifications to mentioned users</li><li>Support editing and deleting own comments</li></ul>"
+    },
+    {
+      "title": "Build a Gantt chart view for project timelines",
+      "description": "<h3>Build a Gantt chart view for project timelines</h3><p>Project managers need a visual timeline view to plan and communicate project schedules. Implement a Gantt chart that renders tasks with due dates as bars on a timeline, with drag-to-reschedule support.</p><ul><li>Evaluate charting libraries (DHTMLX Gantt, Frappe Gantt, custom SVG)</li><li>Render tasks with <code>due_date</code> as Gantt bars</li><li>Support drag-to-reschedule with optimistic UI updates</li><li>Export Gantt chart as PNG or PDF</li></ul>"
+    },
+    {
+      "title": "Implement rate limiting on the public API",
+      "description": "<h3>Implement rate limiting on the public API</h3><p>The public API has no rate limiting, making it vulnerable to abuse and accidental denial-of-service from misbehaving clients. Implement per-user and per-IP rate limits with informative error responses.</p><ul><li>Implement rate limiting using <code>django-ratelimit</code> or a Redis-based token bucket</li><li>Set limits: 1000 requests/hour per authenticated user, 100/hour per IP for unauthenticated requests</li><li>Return <code>429 Too Many Requests</code> with <code>Retry-After</code> header</li><li>Document rate limits in the API reference</li></ul>"
+    },
+    {
+      "title": "Create a data model diagram for the engineering wiki",
+      "description": "<h3>Create a data model diagram for the engineering wiki</h3><p>New engineers struggle to understand the relationships between models. Create an up-to-date entity-relationship diagram and embed it in the engineering wiki alongside written descriptions of each model's purpose.</p><ul><li>Use <code>django-extensions</code> <code>graph_models</code> to generate a base diagram</li><li>Clean up and annotate the diagram in Mermaid or draw.io</li><li>Write a one-paragraph description for each major model</li><li>Set up a CI check to warn when models change without updating the diagram</li></ul>"
+    },
+    {
+      "title": "Add support for recurring tasks",
+      "description": "<h3>Add support for recurring tasks</h3><p>Users want to create tasks that automatically recur on a schedule (daily, weekly, monthly, or custom). When a recurring task is marked done, a new instance should be created for the next occurrence.</p><ul><li>Add recurrence rule fields to the <code>Task</code> model (using iCalendar RRULE format)</li><li>Implement a scheduled job to create next occurrences</li><li>Build a recurrence configuration UI in the task detail view</li><li>Handle edge cases: skipped occurrences, end dates, timezone changes</li></ul>"
+    },
+    {
+      "title": "Implement a global search with keyboard navigation",
+      "description": "<h3>Implement a global search with keyboard navigation</h3><p>Add a command-palette-style global search (triggered by <kbd>Cmd+K</kbd> / <kbd>Ctrl+K</kbd>) that allows users to quickly navigate to any workspace, project, or task. Results should update as the user types.</p><ul><li>Build a debounced search input that queries the search API</li><li>Display results grouped by type (workspaces, projects, tasks)</li><li>Support full keyboard navigation (arrow keys, Enter, Escape)</li><li>Highlight matching terms in results</li></ul>"
+    },
+    {
+      "title": "Set up log aggregation with structured logging",
+      "description": "<h3>Set up log aggregation with structured logging</h3><p>Application logs are currently written to stdout in an unstructured format and are difficult to query during incidents. Switch to structured JSON logging and ship logs to a centralised log aggregation service.</p><ul><li>Configure <code>python-json-logger</code> for structured output</li><li>Add request ID to all log entries for traceability</li><li>Ship logs to Loki or Elasticsearch via Fluentd</li><li>Create a Grafana dashboard for error rate and latency</li></ul>"
+    },
+    {
+      "title": "Implement task time tracking",
+      "description": "<h3>Implement task time tracking</h3><p>Allow team members to log time spent on tasks. Time entries should include a duration, a date, and an optional note. Aggregate time logs should be visible on the task and in project-level reports.</p><ul><li>Design the <code>TimeEntry</code> model</li><li>Build a time logging form on the task detail view</li><li>Display total logged time on the task card</li><li>Add a project-level time report grouped by team member</li></ul>"
+    },
+    {
+      "title": "Add two-factor authentication recovery codes",
+      "description": "<h3>Add two-factor authentication recovery codes</h3><p>Users who lose access to their TOTP device are currently locked out of their accounts permanently. Implement one-time recovery codes that users can use to regain access and re-enrol their authenticator.</p><ul><li>Generate 10 single-use recovery codes on MFA enrolment</li><li>Store hashed recovery codes in the database</li><li>Allow users to regenerate recovery codes from account settings</li><li>Invalidate all recovery codes when MFA is disabled</li></ul>"
+    },
+    {
+      "title": "Migrate from Celery Beat to a database-backed scheduler",
+      "description": "<h3>Migrate from Celery Beat to a database-backed scheduler</h3><p>Celery Beat schedules are currently hardcoded in the settings file, requiring a deployment to change them. Migrate to <code>django-celery-beat</code> so that schedules can be managed at runtime via the admin panel.</p><ul><li>Install and configure <code>django-celery-beat</code></li><li>Migrate all existing periodic tasks to the database</li><li>Verify all tasks run on their expected schedules after migration</li><li>Remove hardcoded <code>CELERY_BEAT_SCHEDULE</code> from settings</li></ul>"
+    },
+    {
+      "title": "Build a team workload view",
+      "description": "<h3>Build a team workload view</h3><p>Managers need visibility into how work is distributed across team members. Build a workload view that shows each team member's assigned tasks, grouped by due date, with visual indicators for overloaded members.</p><ul><li>Design the workload view layout with the design team</li><li>Query tasks grouped by assignee and due date</li><li>Highlight team members with more than N tasks due this week</li><li>Allow managers to reassign tasks directly from the workload view</li></ul>"
+    },
+    {
+      "title": "Implement GDPR right-to-erasure request handling",
+      "description": "<h3>Implement GDPR right-to-erasure request handling</h3><p>We must be able to process right-to-erasure requests within 30 days as required by GDPR. Implement a workflow for users to request deletion of their personal data and for the ops team to process and confirm these requests.</p><ul><li>Add a data deletion request form to account settings</li><li>Implement a deletion job that anonymises or removes all personal data</li><li>Notify the user by email when deletion is complete</li><li>Log all deletion requests and their outcomes for compliance purposes</li></ul>"
+    },
+    {
+      "title": "Add project archiving functionality",
+      "description": "<h3>Add project archiving functionality</h3><p>Completed projects clutter the workspace sidebar. Allow workspace owners to archive projects, hiding them from the default view while preserving all data for historical reference.</p><ul><li>Add an <code>archived_at</code> field to the <code>Project</code> model</li><li>Filter archived projects from the default workspace view</li><li>Add an \"Archived projects\" section accessible from workspace settings</li><li>Allow unarchiving a project to restore it to the active view</li></ul>"
+    },
+    {
+      "title": "Implement custom task labels and filtering",
+      "description": "<h3>Implement custom task labels and filtering</h3><p>Allow workspace members to create custom labels (e.g. \"bug\", \"feature\", \"urgent\") and apply them to tasks. Labels should be filterable in the task list and project views.</p><ul><li>Design the <code>Label</code> model with name and colour fields</li><li>Build a label management UI in workspace settings</li><li>Add a label picker to the task creation and edit forms</li><li>Implement label-based filtering in the task list view</li></ul>"
+    },
+    {
+      "title": "Conduct load testing for the 10,000 concurrent users milestone",
+      "description": "<h3>Conduct load testing for the 10,000 concurrent users milestone</h3><p>We are targeting 10,000 concurrent users by end of year. Conduct load testing to identify bottlenecks before we hit that scale in production. Use k6 to simulate realistic user journeys.</p><ul><li>Define realistic user journey scripts in k6</li><li>Run tests at 1k, 5k, and 10k concurrent users</li><li>Identify and document all bottlenecks (database, cache, application server)</li><li>Create a remediation plan for each bottleneck</li></ul>"
+    },
+    {
+      "title": "Add a project progress dashboard with burndown chart",
+      "description": "<h3>Add a project progress dashboard with burndown chart</h3><p>Project managers need a high-level view of project progress. Build a dashboard that shows task completion over time as a burndown chart, alongside summary statistics for the current sprint or milestone.</p><ul><li>Record task completion timestamps to enable historical charting</li><li>Implement a burndown chart using a charting library (Chart.js or Recharts)</li><li>Display summary stats: total tasks, completed, in progress, overdue</li><li>Allow filtering by date range and team member</li></ul>"
+    },
+    {
+      "title": "Implement a customer feedback widget",
+      "description": "<h3>Implement a customer feedback widget</h3><p>Add an in-app feedback widget that allows users to submit bug reports and feature requests without leaving the application. Submissions should be routed to the appropriate team in our issue tracker.</p><ul><li>Build a floating feedback button and modal form</li><li>Allow users to attach a screenshot (using the browser Screenshot API)</li><li>Route bug reports to GitHub Issues and feature requests to the product backlog</li><li>Send a confirmation email to the user with a reference number</li></ul>"
+    },
+    {
+      "title": "Automate dependency updates with Dependabot",
+      "description": "<h3>Automate dependency updates with Dependabot</h3><p>We currently update dependencies manually and infrequently, accumulating security vulnerabilities. Configure Dependabot to automatically open pull requests for dependency updates on a weekly schedule.</p><ul><li>Add <code>.github/dependabot.yml</code> configuration for Python (pip/uv) and JavaScript (npm) dependencies</li><li>Configure auto-merge for patch-level updates that pass CI</li><li>Set up a weekly review process for minor and major updates</li><li>Add Dependabot alerts to the security dashboard</li></ul>"
+    },
+    {
+      "title": "Build an admin dashboard for customer success team",
+      "description": "<h3>Build an admin dashboard for customer success team</h3><p>The customer success team currently relies on direct database queries to answer customer questions. Build an internal admin dashboard that surfaces key customer metrics without requiring SQL knowledge.</p><ul><li>Show workspace activity (last active, task count, team member count)</li><li>Display subscription status and billing history</li><li>Allow CS team to impersonate users for troubleshooting (with audit logging)</li><li>Add search by email, workspace name, and subscription status</li></ul>"
+    }
+  ]
+}

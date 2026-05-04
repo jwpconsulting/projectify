@@ -17,13 +17,14 @@ re-create the database with the following shell command:
 rm projectify.sqlite; uv run ./manage.py seeddb
 """
 
+import json
 from argparse import ArgumentParser
 from dataclasses import dataclass
 from datetime import timezone
 from itertools import groupby
 from pathlib import Path
 from random import choice, randint, sample
-from typing import Any, cast
+from typing import Any, TypedDict, cast
 
 from django.contrib.auth.hashers import make_password
 from django.core.files import File
@@ -32,6 +33,8 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.db.models.fields.files import FileDescriptor
 from django.utils.text import slugify
+
+from projectify.lib.settings import get_settings
 
 # Faker only exist when you install the uv dependency group "demo" or "dev"
 try:
@@ -63,25 +66,22 @@ class WorkspaceDescription:
     projects: list[Project]
 
 
-WORKSPACE_TITLE_MIN_LENGTH = 20
-WORKSPACE_TITLE_MAX_LENGTH = 200
-
-PROJECT_TITLE_MIN_LENGTH = 20
-PROJECT_TITLE_MAX_LENGTH = 100
-
-TASK_TITLE_MIN_LENGTH = 40
-TASK_TITLE_MAX_LENGTH = 250
-TASK_DESCRIPTION_SENTENCES = 10
-
 POST_CONTENT_MIN_PARAGRAPHS = 5
 POST_CONTENT_MAX_PARAGRAPHS = 15
 
+# Path constants
+BASE_DIR = get_settings().BASE_DIR
+SEEDDB_JSON = BASE_DIR / "test" / "seeddb.json"
+TEST_IMAGES_DIR = Path("projectify") / "test" / "test-images"
 USER_AVATARS = [
-    Path("projectify/test/test-images/cat1.jpg"),
-    Path("projectify/test/test-images/cat2.jpg"),
-    Path("projectify/test/test-images/cat3.jpg"),
-    Path("projectify/test/test-images/cat4.jpg"),
+    TEST_IMAGES_DIR / c
+    for c in ["cat1.jpg", "cat2.jpg", "cat3.jpg", "cat4.jpg"]
 ]
+
+SeedDataItem = TypedDict("SeedDataItem", {"title": str, "description": str})
+SeedData = TypedDict(
+    "SeedData", {"projects": list[SeedDataItem], "tasks": list[SeedDataItem]}
+)
 
 
 class Command(BaseCommand):
@@ -94,6 +94,8 @@ class Command(BaseCommand):
     n_tasks: int
     n_add_users: int
     n_posts: int
+
+    seed_data: SeedData
 
     def create_users(self) -> list["User"]:
         """Create users."""
@@ -157,10 +159,8 @@ class Command(BaseCommand):
         """
         task_descs = [
             Task(
-                title=self.fake.text(
-                    randint(TASK_TITLE_MIN_LENGTH, TASK_TITLE_MAX_LENGTH)
-                ),
-                description=self.fake.paragraph(TASK_DESCRIPTION_SENTENCES),
+                title=seed["title"],
+                description=seed["description"],
                 project=project,
                 due_date=self.fake.date_time(tzinfo=timezone.utc),
                 workspace=workspace_description.workspace,
@@ -175,7 +175,10 @@ class Command(BaseCommand):
             for workspace_description in workspace_descriptions
             for project in workspace_description.projects
             # Random task amount per project, at least floor(--n-tasks / 2)
-            for _ in range(randint(self.n_tasks // 2, self.n_tasks))
+            for seed in self.fake.random_elements(
+                self.seed_data["tasks"],
+                randint(self.n_tasks // 2, self.n_tasks),
+            )
         ]
         tasks = Task.objects.bulk_create(task_descs)
         self.stdout.write(f"Created {len(tasks)} tasks")
@@ -190,12 +193,7 @@ class Command(BaseCommand):
 
         workspace_descs = [
             Workspace(
-                title=self.fake.text(
-                    randint(
-                        WORKSPACE_TITLE_MIN_LENGTH, WORKSPACE_TITLE_MAX_LENGTH
-                    )
-                ),
-                description=self.fake.paragraph(),
+                title=self.fake.company(), description=self.fake.paragraph()
             )
             for _ in range(remaining_workspaces)
         ]
@@ -228,15 +226,15 @@ class Command(BaseCommand):
 
         project_descs = [
             Project(
-                title=self.fake.text(
-                    randint(PROJECT_TITLE_MIN_LENGTH, PROJECT_TITLE_MAX_LENGTH)
-                ),
-                description=self.fake.paragraph(),
+                title=seed["title"],
+                description=seed["description"],
                 workspace=workspace,
                 due_date=self.fake.date_time(tzinfo=timezone.utc),
             )
             for workspace in workspaces
-            for _ in range(self.n_projects)
+            for seed in self.fake.random_elements(
+                self.seed_data["projects"], self.n_projects
+            )
         ]
         workspaces_projects = Project.objects.bulk_create(project_descs)
         self.stdout.write(f"Created {len(workspaces_projects)} projects")
@@ -383,6 +381,9 @@ class Command(BaseCommand):
                 f"{self.n_add_users}."
             )
             self.n_users = max(self.n_users, self.n_add_users)
+
+        with SEEDDB_JSON.open() as f:
+            self.seed_data = json.load(f)
 
         with transaction.atomic():
             users = self.create_users()
