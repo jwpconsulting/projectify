@@ -1415,6 +1415,10 @@ video {
   min-height: 0px;
 }
 
+.min-h-\[200px\] {
+  min-height: 200px;
+}
+
 .min-h-\[300px\] {
   min-height: 300px;
 }
@@ -1437,6 +1441,10 @@ video {
 
 .w-\[128px\] {
   width: 128px;
+}
+
+.w-\[400px\] {
+  width: 400px;
 }
 
 .w-\[64px\] {
@@ -1941,6 +1949,11 @@ video {
   padding-bottom: 0.25rem;
 }
 
+.py-1\.5 {
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+}
+
 .py-2 {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -2176,6 +2189,10 @@ video {
 
 .animation-delay-1000 {
   animation-delay: 1s;
+}
+
+.open\:flex[open] {
+  display: flex;
 }
 
 .hover\:border-foreground:hover {

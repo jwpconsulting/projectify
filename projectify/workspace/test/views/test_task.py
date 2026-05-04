@@ -54,7 +54,7 @@ class TestTaskCreateView:
         t_uid = str(team_member.uuid)
         desc = "<p>Assigned Task</p><h1>Bar</h1><p>Qux</p>"
         data = {"description": desc, "assignee": t_uid, "action": "create"}
-        with django_assert_num_queries(12):
+        with django_assert_num_queries(11):
             response = user_client.post(resource_url, data)
             assert response.status_code == 302, response.content
 
@@ -136,7 +136,7 @@ class TestTaskUpdateView:
         desc = "<p>Updated Task Title</p><p>Rest</p>"
         t_uid = str(team_member.uuid)
         data = {"description": desc, "assignee": t_uid, "action": "update"}
-        with django_assert_num_queries(13):
+        with django_assert_num_queries(12):
             response = user_client.post(resource_url, data)
             assert response.status_code == 302
         task.refresh_from_db()

@@ -38,6 +38,7 @@ from projectify.workspace.views.workspace import (
     workspace_settings_quota,
     workspace_settings_team_member_update,
     workspace_settings_team_members,
+    workspace_suggest_links,
     workspace_view,
 )
 
@@ -89,6 +90,12 @@ workspace_patterns: UrlPatterns = (
         "<uuid:workspace_uuid>/settings/quota",
         workspace_settings_quota,
         name="quota",
+    ),
+    # Suggest links from this workspace
+    path(
+        "<uuid:workspace_uuid>/suggest-links",
+        workspace_suggest_links,
+        name="suggest-links",
     ),
 )
 if get_settings().STRIPE_CONFIG is None:

@@ -1,0 +1,34 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{% load i18n %}
+{% load projectify %}
+{% partialdef results %}
+    <div id="prose-link-suggestions-results" class="flex flex-col">
+        {% if results is None %}
+        {% elif results %}
+            {% for result in results %}
+                <button type="button"
+                        class="text-left w-full px-2 py-1.5 hover:bg-secondary-hover active:bg-secondary-pressed truncate"
+                        data-url="{{ result.1 }}"
+                        data-title="{{ result.0 }}">{{ result.0 }}</button>
+            {% endfor %}
+        {% else %}
+            <p>{% translate "No tasks or projects found" %}</p>
+        {% endif %}
+    </div>
+{% endpartialdef results %}
+<div class="flex gap-2 justify-between">
+    <h1 class="font-bold text-xl">{% translate "Link to task or project" %}</h1>
+    {% circle_button label=_("Close") name="close" icon_style="x" %}
+</div>
+<form method="dialog"
+      class="flex flex-col gap-2"
+      hx-post="{% url 'dashboard:workspaces:suggest-links' workspace_uuid=workspace.uuid %}"
+      hx-target="#prose-link-suggestions-results"
+      hx-swap="innerHtml"
+      hx-trigger="input delay:500ms from:find input[type=search]">
+    {% csrf_token %}
+    {{ form.search.as_field_group }}
+    <div class="flex flex-row justify-between items-center gap-2">{% action_button text=_("Search") %}</div>
+</form>
+{% partial results %}

@@ -791,3 +791,78 @@ def workspace_settings_quota(
     return render(
         request, "workspace/workspace_settings_quota.html", context=context
     )
+
+
+class SuggestLinksForm(forms.Form):
+    """Form for searching tasks and projects to suggest as links."""
+
+    search = forms.CharField(
+        label=_("Search tasks and projects"),
+        widget=forms.TextInput(
+            attrs={"type": "search", "placeholder": _("Enter search")}
+        ),
+    )
+
+    def __init__(self, *args: Any, **kwargs: Any):
+        """Initialize form and add hidden exclude_task field."""
+        super().__init__(*args, **kwargs)
+        self.fields["exclude_task"] = forms.UUIDField(
+            required=False, widget=forms.HiddenInput()
+        )
+
+
+@platform_view
+@require_http_methods(["GET", "POST"])
+def workspace_suggest_links(
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+) -> HttpResponse:
+    """Suggest links for tasks and forms for Projectify's Trix editor."""
+    workspace = workspace_find_by_workspace_uuid(
+        workspace_uuid=workspace_uuid, who=request.user
+    )
+    if workspace is None:
+        raise Http404(
+            _("Could not find workspace with UUID {workspace_uuid}").format(
+                workspace_uuid=workspace_uuid
+            )
+        )
+    match request.method, request.POST, request.GET:
+        case ("POST", data, _) | ("GET", _, {"search": _} as data):
+            form = SuggestLinksForm(data)
+            if form.is_valid():
+                results = workspace_search(
+                    workspace=workspace,
+                    who=request.user,
+                    query=form.cleaned_data["search"],
+                    exclude_task=form.cleaned_data.get("exclude_task"),
+                )
+                suggestions = [
+                    *(
+                        (task.title, task.get_absolute_url())
+                        for task in results.tasks
+                    ),
+                    *(
+                        (project.title, project.get_absolute_url())
+                        for project in results.projects
+                    ),
+                ]
+                template = "workspace/workspace_suggest_links.html#results"
+                status = 200
+            else:
+                suggestions = None
+                status = 400
+            # If this is an HTMX+POST request, infer that you should only
+            # return the results partial
+            if request.htmx and request.method == "POST":
+                template = "workspace/workspace_suggest_links.html#results"
+            else:
+                template = "workspace/workspace_suggest_links.html"
+        case "GET", _, _:
+            form = SuggestLinksForm()
+            suggestions = None
+            template = "workspace/workspace_suggest_links.html"
+            status = 200
+        case method:
+            raise RuntimeError(f"Don't know how to handle method {method}")
+    context = {"form": form, "results": suggestions, "workspace": workspace}
+    return render(request, template, context, status=status)
