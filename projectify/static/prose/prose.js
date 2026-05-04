@@ -2,7 +2,9 @@
     SPDX-FileCopyrightText: 2022 LOGIC SMPC <paris@withlogic.co> */
 // This code goes in /static/prose/editor.js or similar
 async function uploadFile(host, attachment) {
-  const csrfToken = document.querySelector("input[name=csrfmiddlewaretoken]").value;
+  const csrfToken = document.querySelector(
+    "input[name=csrfmiddlewaretoken]",
+  ).value;
 
   const { file } = attachment;
   const formData = new FormData();
@@ -11,7 +13,7 @@ async function uploadFile(host, attachment) {
   formData.append("csrfmiddlewaretoken", csrfToken);
 
   // This used to support progress updating before
-  const response = await fetch(host, {method: "POST", body: formData});
+  const response = await fetch(host, { method: "POST", body: formData });
   if (response.status !== 201) {
     throw new Error(`Bad response ${response.status}`);
   }
@@ -42,14 +44,18 @@ function initializeEditors() {
  * https://github.com/withlogicco/django-prose/issues/100
  */
 function patchTrixEditorWithNameSetter() {
-  Object.defineProperty(window.Trix.elements.TrixEditorElement.prototype, "name", {
-    get() {
-      return this.inputElement?.name;
+  Object.defineProperty(
+    window.Trix.elements.TrixEditorElement.prototype,
+    "name",
+    {
+      get() {
+        return this.inputElement?.name;
+      },
+      set(value) {
+        this.inputElement.name = value;
+      },
     },
-    set(value) {
-      this.inputElement.name = value;
-    },
-  });
+  );
 }
 
 // When the DOM is initially loaded
@@ -59,18 +65,22 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("trix-before-initialize", configureToolbar);
   // https://github.com/basecamp/trix/issues/117#issuecomment-463275725
   // https://github.com/basecamp/trix/issues/680#issuecomment-735742942
-  Trix.config.blockAttributes.default.tagName = "p"
+  Trix.config.blockAttributes.default.tagName = "p";
   Trix.config.blockAttributes.default.breakOnReturn = true;
 
-  Trix.Block.prototype.breaksOnReturn = function(){
+  Trix.Block.prototype.breaksOnReturn = function () {
     const attr = this.getLastAttribute();
     // https://github.com/basecamp/trix/issues/680#issuecomment-1591104806
     const config = Trix.config.blockAttributes[attr ? attr : "default"];
     return config ? config.breakOnReturn : false;
   };
-  Trix.LineBreakInsertion.prototype.shouldInsertBlockBreak = function(){
-    if(this.block.hasAttributes() && this.block.isListItem() && !this.block.isEmpty()) {
-      return this.startLocation.offset > 0
+  Trix.LineBreakInsertion.prototype.shouldInsertBlockBreak = function () {
+    if (
+      this.block.hasAttributes() &&
+      this.block.isListItem() &&
+      !this.block.isEmpty()
+    ) {
+      return this.startLocation.offset > 0;
     } else {
       return !this.shouldBreakFormattedBlock() ? this.breaksOnReturn : false;
     }
@@ -97,11 +107,12 @@ function createHeadingButton(attribute, title, text) {
 }
 
 function configureToolbar(event) {
-  const { toolbarElement } = event.target
+  const editor = event.target;
+  const { toolbarElement } = editor;
 
-  if (event.target.dataset.headingBlocks === "True") {
-    Trix.config.blockAttributes.subHeadingh2 = { tagName: "h2" }
-    Trix.config.blockAttributes.subHeadingh3 = { tagName: "h3" }
+  if (editor.dataset.headingBlocks === "True") {
+    Trix.config.blockAttributes.subHeadingh2 = { tagName: "h2" };
+    Trix.config.blockAttributes.subHeadingh3 = { tagName: "h3" };
 
     const trixTitleButton = toolbarElement.querySelector(
       "[data-trix-attribute=heading1]",
@@ -120,4 +131,4 @@ function configureToolbar(event) {
     }
   }
 }
-// SPDX-SnippetEnd
+/*! SPDX-SnippetEnd */
