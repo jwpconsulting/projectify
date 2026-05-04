@@ -70,7 +70,7 @@ def anchor(
     if external:
         a_extra = mark_safe(' target="_blank"')
         extra = format_html(
-            '<img class="inline-block w-4 h-4" src="{src}" alt="{text}">',
+            '<img class="inline-block size-4" src="{src}" alt="{text}">',
             src=reverse(
                 "colored-icon",
                 kwargs={"icon": "external_links", "color": "primary"},
@@ -180,7 +180,7 @@ def action_button(
         # TODO
         # icon=icon(icon, style, 6) if icon else "",
         icon=format_html(
-            '<img class="w-6 h-6 shrink-0" src="{src}" aria-hidden="true">',
+            '<img class="size-6 shrink-0" src="{src}" aria-hidden="true">',
             src=reverse(
                 "colored-icon",
                 kwargs={
@@ -287,7 +287,7 @@ def user_avatar(
     match team_member_or_user:
         case TeamMember(user=user) as team_member if user.profile_picture:
             return format_html(
-                '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary"><img src="{src}" alt="{alt}" height="24" width="24" class="h-full w-full overflow-x-auto rounded-full object-cover object-center"></div>',
+                '<div class="shrink-0 flex flex-row size-6 items-center rounded-full border border-primary"><img src="{src}" alt="{alt}" height="24" width="24" class="h-full w-full overflow-x-auto rounded-full object-cover object-center"></div>',
                 src=reverse(
                     "dashboard:team-members:picture", args=(team_member.uuid,)
                 ),
@@ -298,13 +298,13 @@ def user_avatar(
                 "dashboard:avatar-marble", args=[team_member.uuid]
             )
             return format_html(
-                '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary"><img src="{src}?size=24" alt="{alt}" height="24" width="24" class="h-full w-full overflow-x-auto rounded-full object-cover object-center"></div>',
+                '<div class="shrink-0 flex flex-row size-6 items-center rounded-full border border-primary"><img src="{src}?size=24" alt="{alt}" height="24" width="24" class="h-full w-full overflow-x-auto rounded-full object-cover object-center"></div>',
                 src=avatar_url,
                 alt=_("Team member {} avatar").format(str(user)),
             )
         case _:
             return mark_safe(
-                '<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary bg-background"></div>'
+                '<div class="shrink-0 flex flex-row size-6 items-center rounded-full border border-primary bg-background"></div>'
             )
 
 

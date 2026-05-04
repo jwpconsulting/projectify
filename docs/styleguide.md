@@ -354,7 +354,7 @@ Here's how the project settings menu makes the project update link read-only:
     <a href="{% url 'dashboard:projects:update' project_uuid=project.uuid %}"
        class="flex items-center gap-1 text-primary truncate">
         <span class="truncate">{{ project }}</span>
-        <div class="w-4 h-4 shrink-0">{% icon "pencil" %}</div>
+        <div class="size-4 shrink-0">{% icon "pencil" %}</div>
     </a>
 {% else %}
     <span class="truncate">{{ project }}</span>
@@ -524,7 +524,7 @@ If there's not picture, it renders the following:
 
 ```html
 <!-- TODO update -->
-<div class="shrink-0 flex flex-row h-6 w-6 items-center rounded-full border border-primary bg-background"></div>
+<div class="shrink-0 flex flex-row size-6 items-center rounded-full border border-primary bg-background"></div>
 ```
 
 #### Picture

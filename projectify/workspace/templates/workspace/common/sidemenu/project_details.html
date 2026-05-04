@@ -81,7 +81,7 @@
                 hx-include="#task-filter,#team-member-filters"
                 aria-describedby="team-member-filter-help">
             <div class="flex flex-row items-center gap-2">
-                <div class="w-4 h-4">{% icon "user" %}</div>
+                {% icon "user" size=4 %}
                 <span id="team-member-filter-title" class="font-bold truncate">
                     {% if has_team_member_filter %}
                         {% trans "Team members (selected)" %}
