@@ -66,6 +66,15 @@ else
     exit 1
 fi
 
+# reuse struggles recognizing that these two files we encode the following
+# two files as UTF-8:
+#
+# projectify/storefront/templates/storefront/privacy/pp-ja-formatted.html
+# projectify/storefront/templates/storefront/tos/tos-ja-formatted.html
+#
+# See also:
+# https://codeberg.org/fsfe/reuse-tool/issues/1244
+export REUSE_ENCODING_MODULE=chardet
 if uv run reuse lint
 then
     echo "reuse lint did not find any issues"

@@ -99,7 +99,7 @@ test = [
     "types-requests>=2.32.0.20240712,<3",
     "djlint>=1.36.1,<2",
     "types-markdown>=3.10.2.20260211,<4",
-    "reuse>=6.2.0,<7",
+    "reuse[chardet]>=6.2.0,<7",
 ]
 
 [tool.uv]
@@ -313,6 +313,9 @@ filterwarnings = [
     "ignore:ALLAUTH_GITHUB_*",
     "ignore:ALLAUTH_GOOGLE_*",
     "ignore:STRIPE_*",
+    # Ignore this error
+    # requests.exceptions.RequestsDependencyWarning: urllib3 (2.5.0) or chardet (7.4.3)/charset_normalizer (3.4.3) doesn't match a supported version!
+    "ignore:urllib3 *",
 ]
 
 [tool.djlint]
