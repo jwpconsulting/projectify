@@ -100,15 +100,18 @@ def circle_button(
     label: str,
     icon_style: str,
     name: str,
+    id: Optional[str] = None,
     value: Optional[str] = None,
     disabled: bool = False,
 ) -> SafeText:
     """Render a circular button."""
     return format_html(
         '<button name="{name}"{value}{disabled} type="submit" hx-swap="outerHTML" '
+        "{id}"
         'aria-label="{label}"'
         ' class="size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled disabled:bg-transparent disabled:opacity-20">{icon}</button>',
         name=name,
+        id="{id} " if id else "",
         disabled=" disabled" if disabled else "",
         value=format_html(' value="{}"', value) if value else "",
         icon=icon(icon_style),
