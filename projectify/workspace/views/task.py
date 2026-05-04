@@ -80,7 +80,7 @@ class TaskForm(forms.Form):
         widget=forms.DateTimeInput(attrs={"type": "date"}),
     )
     description = forms.CharField(
-        label=_("Task description"),
+        label=_("Description"),
         widget=RichTextEditor(
             heading_blocks=False,
             attrs={
@@ -136,55 +136,33 @@ def task_create_view(
     )
     if project is None:
         raise Http404(_("Project not found"))
-
     workspace = project.workspace
-    context: dict[str, Any] = {
-        **get_task_view_context(request, workspace),
-        "project": project,
-    }
-
     match request.method:
         case "GET":
-            return render(
-                request,
-                "workspace/task_create.html",
-                {
-                    **context,
-                    "form": TaskForm(
-                        workspace=workspace, initial={"project": project}
-                    ),
-                },
-            )
+            form = TaskForm(workspace=workspace, initial={"project": project})
+            status = 200
         case "POST":
-            pass
+            form = TaskForm(workspace=workspace, data=request.POST)
+            if form.is_valid():
+                task_create(
+                    who=request.user,
+                    project=project,
+                    title_description=form.cleaned_data["description"],
+                    assignee=form.cleaned_data.get("assignee"),
+                    due_date=form.cleaned_data.get("due_date"),
+                )
+                return redirect(project)
+            else:
+                status = 400
         case method:
             raise RuntimeError(f"Don't know how to handle method {method}")
-    form = TaskForm(workspace=workspace, data=request.POST)
-    if not form.is_valid():
-        return render(
-            request,
-            "workspace/task_create.html",
-            {**context, "form": form},
-            status=400,
-        )
-
-    task = task_create(
-        who=request.user,
-        project=project,
-        title_description=form.cleaned_data["description"],
-        assignee=form.cleaned_data.get("assignee"),
-        due_date=form.cleaned_data.get("due_date"),
-    )
-
-    match request.POST.get("action"):
-        case "create_stay":
-            return redirect("dashboard:tasks:detail", task.uuid)
-        case "create":
-            return redirect(project)
-        case action:
-            raise BadRequest(
-                _("Invalid action: {action}").format(action=action)
-            )
+    context = {
+        **get_task_view_context(request, workspace),
+        "project": project,
+        "form": form,
+    }
+    template = "workspace/task_create.html"
+    return render(request, template, context, status=status)
 
 
 @platform_view
