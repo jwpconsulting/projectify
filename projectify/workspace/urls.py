@@ -21,7 +21,6 @@ from projectify.workspace.views.project import (
     project_update_view,
 )
 from projectify.workspace.views.task import (
-    task_actions,
     task_create_view,
     task_delete_view,
     task_detail,
@@ -130,8 +129,7 @@ task_patterns = (
         task_update_view,
         name="update-focus-field",
     ),
-    # Move/delete actions menu
-    path("<uuid:task_uuid>/actions", task_actions, name="actions"),
+    # Task delete
     path("<uuid:task_uuid>/delete", task_delete_view, name="delete"),
 )
 team_member_patterns = (

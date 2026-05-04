@@ -1292,10 +1292,6 @@ video {
   margin-bottom: 2rem;
 }
 
-.ml-10 {
-  margin-left: 2.5rem;
-}
-
 .ml-auto {
   margin-left: auto;
 }
@@ -2484,10 +2480,6 @@ video {
 
   .lg\:top-20 {
     top: 5rem;
-  }
-
-  .lg\:col-span-2 {
-    grid-column: span 2 / span 2;
   }
 
   .lg\:col-span-3 {

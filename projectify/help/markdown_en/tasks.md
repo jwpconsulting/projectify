@@ -34,6 +34,7 @@ saving your changes, press the **Update task and stay** button.
 
 # Delete a task
 
+<!-- TODO update delete instructions -->
 In order to delete a task, click the **task actions button** (…) in the task
 card and select **Delete task** from the task actions page. This will ask you to
 confirm your choice to delete this task.

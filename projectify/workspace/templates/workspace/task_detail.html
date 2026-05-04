@@ -80,7 +80,6 @@
                 {% if can_update_task %}
                     {% go_to_action "dashboard:tasks:update" label=_("Edit") title=_("Edit this task") task_uuid=task.uuid %}
                 {% endif %}
-                {% circle_anchor label=_("Task menu") title=_("Open task context menu") icon_style="dots-vertical" href="dashboard:tasks:actions" task_uuid=task.uuid %}
             </div>
         </div>
         {% partial task_panel %}
