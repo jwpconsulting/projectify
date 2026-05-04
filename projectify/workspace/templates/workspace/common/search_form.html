@@ -1,6 +1,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
 {% load i18n %}
+{% load projectify %}
 <form role="search"
       hx-boost="true"
       title="{% translate "Workspace search form" %}"
@@ -8,5 +9,5 @@
       class="shrink-0 flex max-w-md flex-row gap-2 items-center">
     <label for="{{ form.query.id_for_label }}" class="sr-only">{{ form.query.label }}</label>
     {{ form.query }}
-    {% include "projectify/forms/submit.html" with small=True text=_("Search") %}
+    {% action_button icon="search" grow=False text=_("Search") type="submit" %}
 </form>
