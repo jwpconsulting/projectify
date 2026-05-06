@@ -1,8 +1,9 @@
 {# SPDX-FileCopyrightText: 2024-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "dashboard_base.html" %}
+{% extends "workspace/form_base.html" %}
 {% load i18n %}
 {% load projectify %}
+{% load rules %}
 {% block title %}
     {% blocktrans with task_title=task.title %}Edit {{ task_title }} task - Projectify{% endblocktrans %}
 {% endblock title %}
@@ -10,25 +11,23 @@
     <meta name="trix-csp-nonce" content="{{ csp_nonce }}">
     {{ form.media }}
 {% endblock extrahead %}
-{% block dashboard_content %}
-    <form id="main"
-          action="{% url 'dashboard:tasks:update' task.uuid %}"
-          method="post"
-          class="min-w-0 grow"
-          aria-label="{% translate "Update task" %}">
-        <div class="flex h-full flex-col p-4 pt-0">
-            <div class="sticky top-0 flex flex-row flex-wrap items-center justify-between gap-x-2 gap-y-4 bg-foreground pb-8 pt-4 lg:flex-nowrap">
-                <div class="flex shrink flex-row items-center gap-6">
-                    {% circle_anchor label=_("Go back to project") icon_style="x" href="dashboard:projects:detail" project_uuid=task.project.uuid %}
-                    {% include "workspace/task/breadcrumbs.html" with section=task.section task=task %}
-                </div>
-                <div class="contents sm:flex items-center justify-between gap-4 sm:flex-row">
-                    {% include "projectify/forms/submit.html" with name="action" value="update" text=_("Update task") %}
-                    {% include "projectify/forms/submit.html" with name="action" value="update_stay" text=_("Update task and stay") %}
-                </div>
+{% block form_title %}
+    {% translate "Edit task" %}
+{% endblock form_title %}
+{% block form_header %}
+    {% include "workspace/task/breadcrumbs.html" with section=task.section task=task current_page_label=_("Edit task") current_page_url=request.get_full_path %}
+    <div class="flex gap-2">
+        {% has_perm "workspace.delete_task" user project.workspace as can_delete_task %}
+        {% if can_delete_task %}
+            <div class="flex gap-1 grow-0"
+                 hx-post="{% url 'dashboard:tasks:delete' task.uuid %}"
+                 hx-confirm="{% blocktrans with title=task.title %}Are you sure you want to delete the following task: {{ title }}{% endblocktrans %}">
+                {% action_button form="delete-task" grow=False text=_("Delete task") style="destructive" %}
             </div>
-            <div class="min-w-0 grow max-w-[65ch]">{{ form }}</div>
-            {% csrf_token %}
-        </div>
-    </form>
-{% endblock dashboard_content %}
+            {% include "projectify/forms/submit.html" with text=_("Save") %}
+        {% endif %}
+    </div>
+{% endblock form_header %}
+{% block form_content %}
+    {{ form.as_p }}
+{% endblock form_content %}

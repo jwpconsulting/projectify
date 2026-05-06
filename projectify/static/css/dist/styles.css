@@ -2359,10 +2359,6 @@ video {
     order: 2;
   }
 
-  .sm\:flex {
-    display: flex;
-  }
-
   .sm\:grid {
     display: grid;
   }

@@ -110,7 +110,8 @@ class TestTaskUpdateView:
         # Gone down from 16 -> 13
         # Gone down from 13 -> 12
         # Gone down from 12 -> 11
-        with django_assert_num_queries(11):
+        # Gone up   from 11 -> 13
+        with django_assert_num_queries(13):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert task.title in response.content.decode()
