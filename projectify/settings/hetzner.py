@@ -34,8 +34,6 @@ class Hetzner(Base):
     @classmethod
     def setup(cls) -> None:
         """Load database config, after environment is correctly loaded."""
-        super().setup()
-
         cls.setup_runtime_directories()
 
         if "CREDENTIALS_FILE" not in os.environ:
@@ -75,6 +73,8 @@ class Hetzner(Base):
             warnings.warn("ADMIN_EMAIL environment variable not set")
         if admin_name and admin_email:
             cls.ADMINS = [[admin_name, admin_email]]
+
+        super().setup()
 
     @classmethod
     def setup_runtime_directories(cls) -> None:
