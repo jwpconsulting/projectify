@@ -5,6 +5,7 @@
 # Prepare a new version to be released
 set -e
 version="$(date "+%Y.%-m.%-d")"
+hyphenated_version="$(date "+%Y-%-m-%-d")"
 echo "Version: $version"
 
 PYPROJECT_TOML="pyproject.toml"
@@ -31,5 +32,12 @@ read -r _
 eval "$next_cmd"
 
 echo "Now run the following:
-git push --set-upstream origin && git push --tags
+git push --set-upstream origin $(git rev-parse --abbrev-ref HEAD) &&
+ git push --tags
+
+open the following URLs in your browser:
+
+https://github.com/jwpconsulting/projectify/releases/new?title=${version}
+
+https://www.projectifyapp.com/admin/blog/post/add/?title=New%20Projectify%20release%20${hyphenated_version}&slug=projectify-release-${hyphenated_version}
 "
