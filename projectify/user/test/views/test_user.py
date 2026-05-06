@@ -41,7 +41,25 @@ class TestUserProfile:
         assert response.status_code == 200
         assert str(user).encode() in response.content
 
-    def test_update_profile_and_preferred_name(
+    def test_update_preferred_name(
+        self,
+        user: User,
+        user_client: Client,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test updating both preferred name and profile picture."""
+        data = {"preferred_name": "Foo", "profile_picture": ""}
+        with django_assert_num_queries(14):
+            response = user_client.post(resource_url, data, follow=True)
+            assert response.status_code == 200
+            assert response.redirect_chain[-1][0] == reverse("users:profile")
+        user.refresh_from_db()
+        assert user.preferred_name == "Foo"
+        # It's not None, but it's not something either (empty FileField)
+        assert not user.profile_picture
+
+    def test_update_preferred_name_picture(
         self,
         user: User,
         user_client: Client,
@@ -50,20 +68,13 @@ class TestUserProfile:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating both preferred name and profile picture."""
+        data = {"preferred_name": "Jeff", "profile_picture": uploaded_file}
         with django_assert_num_queries(14):
-            response = user_client.post(
-                resource_url,
-                {
-                    "preferred_name": "New Preferred Name",
-                    "profile_picture": uploaded_file,
-                },
-                follow=True,
-            )
+            response = user_client.post(resource_url, data, follow=True)
             assert response.status_code == 200
             assert response.redirect_chain[-1][0] == reverse("users:profile")
-
         user.refresh_from_db()
-        assert user.preferred_name == "New Preferred Name"
+        assert user.preferred_name == "Jeff"
         assert user.profile_picture is not None
 
     def test_clear_profile_picture(
