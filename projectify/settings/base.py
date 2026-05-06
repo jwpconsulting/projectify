@@ -329,7 +329,7 @@ class Base(Configuration):  # type:ignore
     STATIC_ROOT: Path
 
     # Where to store media
-    MEDIA_ROOT: Path
+    MEDIA_ROOT: Optional[Path]
     MEDIA_URL = "/media/"
     # This configures whether ./manage.py runserver should serve media files
     # ONLY use this for debugging or local development
@@ -476,7 +476,15 @@ class Base(Configuration):  # type:ignore
         cls.DATABASES = {
             "default": dj_database_url.config(conn_max_age=cls.CONN_MAX_AGE)
         }
-        cls.SENDFILE_ROOT = cls.MEDIA_ROOT
+        if cls.MEDIA_ROOT is not None:
+            cls.SENDFILE_ROOT = cls.MEDIA_ROOT
+        else:
+            warnings.warn(
+                "Skipping SENDFILE_ROOT configuration. "
+                "Set the MEDIA_ROOT environment variable to configure SENFILE_ROOT. "
+                "If you encounter any image file upload or download issues, "
+                "check the MEDIA_ROOT settings."
+            )
 
     @classmethod
     def post_setup(cls) -> None:

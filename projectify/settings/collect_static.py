@@ -13,6 +13,7 @@ class CollectStatic(Base):
     """Only contain the settings necessary to run ./manage.py collectstatic."""
 
     STATIC_ROOT = Path(os.environ["STATIC_ROOT"])
+    MEDIA_ROOT = None
 
     STORAGES = {
         "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
