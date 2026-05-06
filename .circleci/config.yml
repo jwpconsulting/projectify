@@ -112,10 +112,7 @@ jobs:
       - prepare_uv
       - run:
           name: Run collectstatic
-          command: uv run ./manage.py collectstatic --noinput
-          environment:
-            STATIC_ROOT: /tmp/static
-            DJANGO_CONFIGURATION: Test
+          command: bin/test_collectstatic.sh
   tests:
     executor: python_and_postgres
     # TODO change to
