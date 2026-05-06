@@ -87,12 +87,8 @@ class TestUserProfile:
         """Test clearing the profile picture."""
         user.profile_picture = cast(FileDescriptor, uploaded_file)
         user.save()
-
-        response = user_client.post(
-            resource_url,
-            {"preferred_name": "Test User", "profile_picture-clear": "1"},
-            follow=True,
-        )
+        data = {"preferred_name": "Test User", "profile_picture-clear": "1"}
+        response = user_client.post(resource_url, data, follow=True)
         assert response.status_code == 200
         assert response.redirect_chain[-1][0] == reverse("users:profile")
 
@@ -228,16 +224,13 @@ class TestPasswordChangeDjango:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test changing password with a good password."""
+        data = {
+            "current_password": password,
+            "new_password": "hello-world123",
+            "new_password_confirm": "hello-world123",
+        }
         with django_assert_num_queries(20):
-            response = user_client.post(
-                resource_url,
-                {
-                    "current_password": password,
-                    "new_password": "hello-world123",
-                    "new_password_confirm": "hello-world123",
-                },
-                follow=True,
-            )
+            response = user_client.post(resource_url, data, follow=True)
             assert response.status_code == 200, response.content
         assert response.wsgi_request.user.is_authenticated
         user.refresh_from_db()
@@ -247,14 +240,12 @@ class TestPasswordChangeDjango:
         self, user: User, user_client: Client, resource_url: str
     ) -> None:
         """Test changing password with an incorrect current password."""
-        response = user_client.post(
-            resource_url,
-            {
-                "current_password": "wrong-password",
-                "new_password": "new-password123",
-                "new_password_confirm": "new-password123",
-            },
-        )
+        data = {
+            "current_password": "wrong-password",
+            "new_password": "new-password123",
+            "new_password_confirm": "new-password123",
+        }
+        response = user_client.post(resource_url, data)
         # Should return to the form with an error
         assert response.status_code == 400, response.content
         # Check that the form has an error
@@ -267,14 +258,12 @@ class TestPasswordChangeDjango:
         self, user: User, password: str, user_client: Client, resource_url: str
     ) -> None:
         """Test changing password with a weak new password."""
-        response = user_client.post(
-            resource_url,
-            {
-                "current_password": password,
-                "new_password": "123456",
-                "new_password_confirm": "123456",
-            },
-        )
+        data = {
+            "current_password": password,
+            "new_password": "123456",
+            "new_password_confirm": "123456",
+        }
+        response = user_client.post(resource_url, data)
         # Should return to the form with an error
         assert response.status_code == 400, response.content
         # Check that the form has an error for the new password field
@@ -297,27 +286,22 @@ class TestPasswordChangeDjango:
 
         # Make 5 requests (the limit is 5/h)
         for _ in range(5):
-            response = user_client.post(
-                resource_url,
-                {
-                    "current_password": password,
-                    "new_password": faker.password(),
-                    "new_password_confirm": faker.password(),
-                },
-                follow=True,
-            )
+            data = {
+                "current_password": password,
+                "new_password": faker.password(),
+                "new_password_confirm": faker.password(),
+            }
+            response = user_client.post(resource_url, data, follow=True)
             # These should succeed (even if password validation fails)
             assert response.status_code in [200, 400]
 
         # The 6th request should be rate limited
-        response = user_client.post(
-            resource_url,
-            {
-                "current_password": password,
-                "new_password": faker.password(),
-                "new_password_confirm": faker.password(),
-            },
-        )
+        data = {
+            "current_password": password,
+            "new_password": faker.password(),
+            "new_password_confirm": faker.password(),
+        }
+        response = user_client.post(resource_url, data)
         assert response.status_code == 429
 
 
@@ -347,12 +331,9 @@ class TestEmailAddressUpdateDjango:
         old_email = user.email
         new_email = "new-email@example.com"
 
+        data = {"new_email": new_email, "password": password}
         with django_assert_num_queries(11):
-            response = user_client.post(
-                resource_url,
-                {"new_email": new_email, "password": password},
-                follow=True,
-            )
+            response = user_client.post(resource_url, data, follow=True)
             assert response.status_code == 200
 
         assert response.redirect_chain[-1][0] == reverse(
@@ -371,10 +352,8 @@ class TestEmailAddressUpdateDjango:
         old_email = user.email
         new_email = "new-email@example.com"
 
-        response = user_client.post(
-            resource_url,
-            {"new_email": new_email, "password": "wrong-password"},
-        )
+        data = {"new_email": new_email, "password": "wrong-password"}
+        response = user_client.post(resource_url, data)
 
         # Should return to the form with an error
         assert response.status_code == 400
@@ -399,17 +378,13 @@ class TestEmailAddressUpdateDjango:
 
         # Make 5 requests (the limit is 5/h)
         for _ in range(5):
-            response = user_client.post(
-                resource_url,
-                {"new_email": faker.email(), "password": password},
-                follow=True,
-            )
+            data = {"new_email": faker.email(), "password": password}
+            response = user_client.post(resource_url, data, follow=True)
             assert response.status_code == 200
 
         # The 6th request should be rate limited
-        response = user_client.post(
-            resource_url, {"new_email": faker.email(), "password": password}
-        )
+        data = {"new_email": faker.email(), "password": password}
+        response = user_client.post(resource_url, data)
         assert response.status_code == 429
         assert user.unconfirmed_email is None
 
@@ -419,9 +394,8 @@ class TestEmailAddressUpdateDjango:
         """Test submitting the form with an invalid email."""
         old_email = user.email
 
-        response = user_client.post(
-            resource_url, {"new_email": "not-an-email", "password": password}
-        )
+        data = {"new_email": "not-an-email", "password": password}
+        response = user_client.post(resource_url, data)
 
         # Should return to the form with an error
         assert response.status_code == 400
