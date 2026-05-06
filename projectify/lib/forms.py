@@ -98,11 +98,11 @@ class SafeImageField(FileField):
 
     def clean(
         self, data: Any, initial: Any = None
-    ) -> Union[UploadedFile, bool]:
+    ) -> Union[UploadedFile, bool, None]:
         """Validate file size and type."""
-        result: Union[UploadedFile, bool] = super().clean(data, initial)
+        result: Union[None, UploadedFile, bool] = super().clean(data, initial)
         match result:
-            case bool():
+            case bool() | None:
                 return result
             case UploadedFile() as file:
                 pass
