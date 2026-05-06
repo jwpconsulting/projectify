@@ -172,6 +172,14 @@ jobs:
       - run:
           name: Run reuse lint
           command: uv run reuse lint
+  test_production_startup:
+    executor: python
+    working_directory: ~/projectify
+    steps:
+      - prepare_uv
+      - run:
+          name: Test production startup
+          command: bin/test-production-startup.sh
 workflows:
   test_all:
     jobs:
@@ -185,3 +193,4 @@ workflows:
       - tailwind_check
       - check_images
       - tools_reuse_lint
+      - test_production_startup
