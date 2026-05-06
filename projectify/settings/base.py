@@ -329,7 +329,7 @@ class Base(Configuration):  # type:ignore
     STATIC_ROOT: Path
 
     # Where to store media
-    MEDIA_ROOT: Optional[Path]
+    MEDIA_ROOT: Optional[Path] = None
     MEDIA_URL = "/media/"
     # This configures whether ./manage.py runserver should serve media files
     # ONLY use this for debugging or local development
