@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2023, 2024 JWP Consulting GK
+# SPDX-FileCopyrightText: 2023, 2024, 2026 JWP Consulting GK
 """Test workspace CRUD views."""
 
 from collections.abc import Iterable
 from datetime import datetime
 from typing import cast
 from unittest import mock
-from uuid import uuid4
+from uuid import UUID
 
 from django.core.files import File
 from django.db.models.fields.files import FileDescriptor
@@ -226,11 +226,11 @@ class TestMinimizeLists:
         assert response.status_code == 405
 
     def test_workspace_not_found(
-        self, user_client: Client, team_member: TeamMember
+        self, user_client: Client, team_member: TeamMember, null_uuid: UUID
     ) -> None:
         """Test minimizing project list for non-existent workspace."""
         url = reverse(
-            "dashboard:workspaces:minimize-project-list", args=(uuid4(),)
+            "dashboard:workspaces:minimize-project-list", args=(null_uuid,)
         )
         response = user_client.post(url, {"minimized": "true"})
         assert response.status_code == 404
