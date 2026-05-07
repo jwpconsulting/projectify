@@ -10,6 +10,7 @@ import pytest
 from ..utils import (
     extract_first_paragraph_text,
     static_image_get_with_dimensions,
+    strip_first_paragraph,
 )
 
 
@@ -32,6 +33,7 @@ from ..utils import (
             "<p>Multiple <strong>tags</strong> inside</p>",
             "Multiple tags inside",
         ),
+        # TODO this should extract <h1>Heading</h1>
         ("<h1>Heading</h1><p>After heading</p>", "After heading"),
         # Adversarial examples
         # Unclosed tag
@@ -51,6 +53,46 @@ def test_extract_first_paragraph_text(
 ) -> None:
     """Test extracting plain text from the first paragraph."""
     assert extract_first_paragraph_text(html) == expected
+
+
+@pytest.mark.parametrize(
+    "html,expected",
+    [
+        ("Hello world", None),
+        ("<p>Hello world</p>", None),
+        ("<p>First</p><p>Second</p>", "<p>Second</p>"),
+        (
+            '<p>First</p><a href="#url">Second  bla   </a>',
+            '<a href="#url">Second  bla   </a>',
+        ),
+        ("<div><p>Nested</p></div>", None),
+        ("<p>Hey</p><p>  whitespace  </p>", "<p>  whitespace  </p>"),
+        ("<p></p>", None),
+        ("", None),
+        ("<p>no paragraph here</p><p>But here</p>", "<p>But here</p>"),
+        ("<h1>Heading</h1><p>After heading</p>", "<p>After heading</p>"),
+        # Adversarial examples
+        # Unclosed tag
+        ("<p>hey</p><p>  whitespace ", "<p>  whitespace </p>"),
+        # Script tag
+        (
+            "<p>hey</p><p><script>alert('xss')</script></p>",
+            "<p>alert('xss')</p>",
+        ),
+        # Empty paragraphs are skipped; the first non-empty one is returned
+        ("<p></p><p>Second non-empty</p><p>Third</p>", "<p>Third</p>"),
+        # Multiple empty paragraphs before a non-empty one
+        (
+            "<p></p><p>  </p><p>Third non-empty</p><p>Fourth</p>",
+            "<p>Fourth</p>",
+        ),
+        # HTML entities
+        ("<p>first</p><p>&amp;&lt;&gt;</p>", "<p>&amp;&lt;&gt;</p>"),
+    ],
+)
+def test_strip_first_paragraph(html: str, expected: Optional[str]) -> None:
+    """Test stripping the first paragraph."""
+    assert strip_first_paragraph(html) == expected
 
 
 def test_static_image_get_with_dimensions() -> None:
