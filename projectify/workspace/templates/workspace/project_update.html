@@ -3,29 +3,17 @@
 {% extends "workspace/form_base.html" %}
 {% load i18n %}
 {% load projectify %}
+{% block extrahead %}
+    <meta name="trix-csp-nonce" content="{{ csp_nonce }}">
+    {{ form.media }}
+{% endblock extrahead %}
 {% block form_title %}
-    {% translate "Update project" %}
+    {% translate "Edit project" %}
 {% endblock form_title %}
+{% block form_header %}
+    <h1 class="font-bold text-3xl">{% translate "Edit project" %}</h1>
+    <div class="grow-0">{% include "projectify/forms/submit.html" with text=_("Save") %}</div>
+{% endblock form_header %}
 {% block form_content %}
-    <form action="{% url 'dashboard:projects:update' project.uuid %}"
-          method="post"
-          class="min-w-0 grow"
-          id="main">
-        {{ form.errors }}{# TODO refactor error display #}
-        <div class="flex h-full flex-col p-4 pt-0">
-            <div class="flex flex-col gap-8">
-                <div class="flex flex-col gap-6">
-                    {{ form.title.as_field_group }}
-                    {{ form.description.as_field_group }}
-                    <button type="submit"
-                            class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">
-                        {% trans "Update project" %}
-                    </button>
-                    {% url 'dashboard:workspaces:projects' workspace_uuid=project.workspace.uuid as back_url %}
-                    {% anchor href=back_url label=_("Go back to workspace project settings") %}
-                </div>
-                {% csrf_token %}
-            </div>
-        </div>
-    </form>
+    {{ form.as_p }}
 {% endblock form_content %}

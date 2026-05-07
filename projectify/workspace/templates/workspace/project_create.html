@@ -3,26 +3,17 @@
 {% extends "workspace/form_base.html" %}
 {% load i18n %}
 {% load projectify %}
+{% block extrahead %}
+    <meta name="trix-csp-nonce" content="{{ csp_nonce }}">
+    {{ form.media }}
+{% endblock extrahead %}
 {% block form_title %}
-    {% translate "Create project" %}
+    {% translate "Add a project" %}
 {% endblock form_title %}
+{% block form_header %}
+    <h1 class="font-bold text-3xl">{% translate "Add a project" %}</h1>
+    <div class="grow-0">{% include "projectify/forms/submit.html" with text=_("Save") %}</div>
+{% endblock form_header %}
 {% block form_content %}
-    <form action="{% url 'dashboard:workspaces:create-project' workspace.uuid %}"
-          method="post"
-          class="min-w-0 grow"
-          id="main">
-        {{ form.errors }}{# TODO refactor error display #}
-        <div class="flex h-full flex-col p-4 pt-0">
-            <div class="flex flex-col gap-8">
-                <div class="flex flex-col gap-6">
-                    {{ form.title.as_field_group }}
-                    {{ form.description.as_field_group }}
-                    {% include "projectify/forms/submit.html" with text=_("Create project") %}
-                    {% url 'dashboard:workspaces:settings' workspace_uuid=workspace.uuid as url %}
-                    {% anchor href=url label=_("Go to workspace settings") %}
-                </div>
-                {% csrf_token %}
-            </div>
-        </div>
-    </form>
+    {{ form.as_p }}
 {% endblock form_content %}

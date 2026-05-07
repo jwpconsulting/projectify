@@ -1,8 +1,9 @@
 {# SPDX-FileCopyrightText: 2024-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "dashboard_base.html" %}
+{% extends "workspace/form_base.html" %}
 {% load i18n %}
 {% load projectify %}
+{% load rules %}
 {% block title %}
     {% blocktrans with project_title=project.title %}Add task to {{ project_title }} - Projectify{% endblocktrans %}
 {% endblock title %}
@@ -10,19 +11,13 @@
     <meta name="trix-csp-nonce" content="{{ csp_nonce }}">
     {{ form.media }}
 {% endblock extrahead %}
-{% block dashboard_content %}
-    <form action="{% url 'dashboard:projects:create-task' project.uuid %}"
-          method="post"
-          class="min-w-0 grow"
-          aria-label="{% translate "Task creation form" %}"
-          id="main">
-        <div class="flex h-full flex-col p-4 pt-0 max-w-[65ch]">
-            <div class="sticky top-0 flex flex-row flex-wrap items-start justify-between gap-x-4 gap-y-4 bg-foreground pb-8 pt-4 lg:flex-nowrap">
-                {% include "workspace/task/breadcrumbs.html" with project=project current_page_label=_("New task (currently creating)") current_page_url=request.get_full_path %}
-                <div class="grow-0">{% include "projectify/forms/submit.html" with text=_("Save") %}</div>
-            </div>
-            <div class="min-w-0 grow max-w-[65ch]">{{ form }}</div>
-            {% csrf_token %}
-        </div>
-    </form>
-{% endblock dashboard_content %}
+{% block form_title %}
+    {% translate "Create task" %}
+{% endblock form_title %}
+{% block form_header %}
+    {% include "workspace/task/breadcrumbs.html" with project=project current_page_label=_("New task (currently creating)") current_page_url=request.get_full_path %}
+    <div class="grow-0">{% include "projectify/forms/submit.html" with text=_("Save") %}</div>
+{% endblock form_header %}
+{% block form_content %}
+    {{ form.as_p }}
+{% endblock form_content %}
