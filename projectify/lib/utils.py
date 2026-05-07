@@ -11,11 +11,29 @@ from typing import Any, Optional, Tuple
 from django.contrib.staticfiles import finders
 from django.core.cache import cache
 from django.templatetags import static
+from django.utils.safestring import SafeString, mark_safe
 
 import bleach
 from PIL import Image
 
+from projectify.lib.settings import get_settings
+
 logger = logging.getLogger(__name__)
+
+
+def clean_rich_text(text: str) -> SafeString:
+    """Clean the text for rich text content."""
+    settings = get_settings()
+    tags = settings.MARKDOWNIFY["default"]["WHITELIST_TAGS"]
+    attrs = settings.MARKDOWNIFY["default"]["WHITELIST_ATTRS"]
+    sanitized_html: str = bleach.clean(
+        text, tags=tags, attributes=attrs, strip=True
+    )  # type: ignore[no-untyped-call]
+    # Remember that just marking it "safe" doesn't make it safe
+    # sanitized_html is safe to mark as "safe" because `bleach.clean` has
+    # cleaned it.
+    safe_html = mark_safe(sanitized_html)
+    return safe_html
 
 
 # See `projectify/lib/tests/test_utils.py` for sanitization test cases
