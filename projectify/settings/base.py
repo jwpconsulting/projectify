@@ -23,6 +23,7 @@ from django.utils.csp import CSP  # type: ignore
 from django.utils.log import DEFAULT_LOGGING
 
 import dj_database_url
+from justhtml import SanitizationPolicy, UrlPolicy, UrlRule
 
 from configurations import Configuration  # type: ignore
 
@@ -420,46 +421,60 @@ class Base(Configuration):  # type:ignore
     BROWSER_RELOAD = False
 
     # Markdownify
+    # JustHTML Policy
+    HTML_SANITIZATION_POLICY = SanitizationPolicy(
+        allowed_tags=[
+            "a",
+            # Blocks
+            "blockquote",
+            "div",
+            "p",
+            # Formatting
+            "em",
+            "strong",
+            "sup",
+            "br",
+            "span",
+            # images
+            "figure",
+            "figcaption",
+            "img",
+            # Lists
+            "ul",
+            "li",
+            "ol",
+            # Headings
+            "h1",
+            "h2",
+            "h3",
+            # Code
+            "pre",
+            "code",
+            # HTML 5 things
+            "abbr",
+            "acronym",
+            # Table things
+            "table",
+            "thead",
+            "th",
+            "td",
+            "tr",
+        ],
+        allowed_attributes={"a": {"href"}, "img": {"src", "alt"}, "*": {"id"}},
+        url_policy=UrlPolicy(
+            default_allow_relative=True,
+            allow_rules={
+                ("img", "src"): UrlRule(
+                    allowed_schemes={"https"}, allowed_hosts=[]
+                ),
+                ("a", "href"): UrlRule(
+                    allowed_schemes={"https"}, allowed_hosts=[]
+                ),
+            },
+        ),
+    )
     MARKDOWNIFY = {
         "default": {
-            "WHITELIST_ATTRS": ["href", "src", "alt", "id"],
-            "WHITELIST_TAGS": [
-                "a",
-                # Blocks
-                "blockquote",
-                "div",
-                "p",
-                # Formatting
-                "em",
-                "strong",
-                "sup",
-                "br",
-                "span",
-                # images
-                "figure",
-                "figcaption",
-                "img",
-                # Lists
-                "ul",
-                "li",
-                "ol",
-                # Headings
-                "h1",
-                "h2",
-                "h3",
-                # Code
-                "pre",
-                "code",
-                # HTML 5 things
-                "abbr",
-                "acronym",
-                # Table things
-                "table",
-                "thead",
-                "th",
-                "td",
-                "tr",
-            ],
             "LINKIFY_TEXT": {"PARSE_URLS": False},
             "MARKDOWN_EXTENSIONS": [
                 "markdown.extensions.fenced_code",
