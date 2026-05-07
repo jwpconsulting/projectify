@@ -78,16 +78,6 @@ def team_member_visit_project(
 
 
 @transaction.atomic
-def team_member_minimize_project_list(
-    *, team_member: TeamMember, minimized: bool
-) -> TeamMember:
-    """Set the minimized state of the project list for a team member."""
-    team_member.minimized_project_list = minimized
-    team_member.save()
-    return team_member
-
-
-@transaction.atomic
 def team_member_minimize_team_member_filter(
     *, team_member: TeamMember, minimized: bool
 ) -> TeamMember:

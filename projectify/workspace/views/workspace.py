@@ -49,7 +49,6 @@ from ..selectors.workspace import (
 )
 from ..services.team_member import (
     team_member_delete,
-    team_member_minimize_project_list,
     team_member_update,
     team_member_visit_workspace,
 )
@@ -238,68 +237,6 @@ def workspace_picture_view(
         raise Http404(_("No picture available"))
     picture_path = workspace.picture.path
     return sendfile(request, picture_path)
-
-
-# TODO use the form in
-# projectify/workspace/templates/workspace/common/sidemenu/project_details.html
-class MinimizeProjectListForm(forms.Form):
-    """Form for minimizingand expanding the project list."""
-
-    project_list_minimized = forms.BooleanField(required=False)
-
-    def __init__(self, workspace: Workspace, *args: Any, **kwargs: Any):
-        """Create current project field."""
-        super().__init__(*args, **kwargs)
-        self.fields["current_project"] = forms.ModelChoiceField(
-            required=False,
-            to_field_name="uuid",
-            # Hopefully this project_set only contains non-archived projects
-            queryset=workspace.project_set.all(),
-        )
-
-
-@require_http_methods(["POST"])
-@platform_view
-def workspace_minimize_project_list(
-    request: AuthenticatedHttpRequest, workspace_uuid: UUID
-) -> HttpResponse:
-    """Toggle the minimized state of the project list."""
-    assert request.method == "POST"
-    workspace = workspace_find_by_workspace_uuid(
-        workspace_uuid=workspace_uuid,
-        who=request.user,
-        qs=WorkspaceDetailQuerySet,
-    )
-    if workspace is None:
-        raise Http404(_("No workspace found for this UUID"))
-
-    form = MinimizeProjectListForm(workspace, request.POST)
-    if not form.is_valid():
-        return HttpResponse(status=400)
-
-    current_team_member_qs = team_member_find_for_workspace(
-        user=request.user, workspace=workspace
-    )
-    if current_team_member_qs is None:
-        raise Http404(_("Team member not found"))
-
-    team_member_minimize_project_list(
-        team_member=current_team_member_qs,
-        minimized=form.cleaned_data["project_list_minimized"],
-    )
-
-    context = {
-        "workspace": workspace,
-        "project": form.cleaned_data.get("current_project"),
-        "projects": workspace.project_set.all(),
-        "current_team_member_qs": current_team_member_qs,
-    }
-
-    return render(
-        request,
-        "workspace/common/sidemenu/project_details.html",
-        context=context,
-    )
 
 
 class WorkspaceSettingsForm(forms.ModelForm):
