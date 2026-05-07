@@ -13,6 +13,7 @@ from django.db.models import Model, QuerySet
 from django.forms import ValidationError
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
@@ -216,6 +217,15 @@ class ProjectForm(forms.Form):
         ),
     )
 
+    def __init__(self, *args: Any, workspace: Workspace, **kwargs: Any):
+        """Populate available assignees and optionally set autofocus."""
+        super().__init__(*args, **kwargs)
+        self.fields["description"].widget.attrs["data-suggest-links-url"] = (
+            reverse(
+                "dashboard:workspaces:suggest-links", args=(workspace.uuid,)
+            )
+        )
+
 
 @require_http_methods(["GET", "POST"])
 @platform_view
@@ -241,11 +251,11 @@ def project_create_view(
     if request.method == "GET":
         context = {
             **get_project_view_context(request, workspace),
-            "form": ProjectForm(),
+            "form": ProjectForm(workspace=workspace),
         }
         return render(request, "workspace/project_create.html", context)
 
-    form = ProjectForm(request.POST)
+    form = ProjectForm(request.POST, workspace=workspace)
     if not form.is_valid():
         context = {
             **get_project_view_context(request, workspace),
@@ -302,11 +312,13 @@ def project_update_view(
     }
 
     if request.method == "GET":
-        form = ProjectForm(initial={"description": project.description})
+        form = ProjectForm(
+            workspace=workspace, initial={"description": project.description}
+        )
         context = {"form": form, **context}
         return render(request, "workspace/project_update.html", context)
 
-    form = ProjectForm(data=request.POST)
+    form = ProjectForm(data=request.POST, workspace=workspace)
     if not form.is_valid():
         context = {"form": form, **context}
         return render(

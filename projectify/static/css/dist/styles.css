@@ -2444,10 +2444,6 @@ video {
     align-items: center;
   }
 
-  .md\:p-2 {
-    padding: 0.5rem;
-  }
-
   .md\:py-12 {
     padding-top: 3rem;
     padding-bottom: 3rem;

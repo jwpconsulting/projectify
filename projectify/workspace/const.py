@@ -16,4 +16,6 @@ class TeamMemberRoles(models.TextChoices):
     OWNER = "OWNER", _("Owner")
 
 
+# XXX used for ProjectForm in `projectify/workspace/views/project.py`
+# so it should have a more generic name
 TASK_EDITOR_MIN_HEIGHT_CLASS = "min-h-[300px]"

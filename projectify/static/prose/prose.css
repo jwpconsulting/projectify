@@ -29,7 +29,7 @@ form .aligned .django-prose-editor-container trix-editor ul li {
 
 .django-prose-editor-container .trix-button-row {
     flex-wrap: wrap;
-    gap: 0 4px;
+    gap: 0 2px;
 }
 
 .django-prose-editor-container .trix-button-row .trix-button-group-spacer {

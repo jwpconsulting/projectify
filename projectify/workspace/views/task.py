@@ -251,19 +251,7 @@ def task_update_view(
                     due_date=form.cleaned_data["due_date"],
                     assignee=form.cleaned_data["assignee"],
                 )
-                # Determine the update view action
-                match request.POST.get("action"):
-                    case "update":
-                        return redirect(task.project)
-                    case "update_stay":
-                        return redirect(task)
-                    case None:
-                        logger.warning("No action specified")
-                        return redirect(task)
-                    case action:
-                        raise BadRequest(
-                            _("Invalid action {action}").format(action=action)
-                        )
+                return redirect(task.get_absolute_url())
             else:
                 status = 400
         case method:
