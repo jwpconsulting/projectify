@@ -145,7 +145,7 @@
     <div id="project-tasks"
          class="bg-foreground flex flex-col py-2 px-4 gap-2">
         <div class="flex shrink-0 flex-row items-center justify-between gap-1">
-            <h1 class="truncate font-bold">{{ project.title }}</h1>
+            <h2 class="font-bold text-xl">{% trans "Tasks" %}</h2>
             {% if can_create_task %}
                 {% go_to_action href="dashboard:projects:create-task" label=_("Add task") style="secondary" icon_style="plus" project_uuid=project.uuid %}
             {% endif %}
@@ -153,8 +153,8 @@
         <table aria-label="{% blocktranslate with title=project.title %}{{ title }} tasks{% endblocktranslate %}"
                class="flex flex-col gap-2 lg:grid lg:grid-cols-[1fr_max-content] lg:gap-1 lg:items-center">
             <thead class="sr-only">
-                <th class="sr-only">{% translate "Task title" %}</th>
-                <th class="sr-only">{% translate "Task actions" %}</th>
+                <th class="sr-only">{% translate "Title" %}</th>
+                <th class="sr-only">{% translate "Assigned to" %}</th>
             </thead>
             <tbody class="contents">
                 {% for task in project.task_set.all %}
@@ -178,8 +178,16 @@
 {% endpartialdef project_tasks %}
 {% block dashboard_content %}
     <main id="main"
-          class="min-w-0 grow flex flex-col items-center gap-4 bg-background py-4">
-        <div class="flex w-full grow flex-col gap-4 md:p-2">{% partial project_tasks %}</div>
+          class="max-w-4xl min-w-0 grow flex flex-col gap-4 px-4 py-4">
+        <div class="flex justify-between">
+            <h1 class="truncate font-bold text-2xl">{{ project.title }}</h1>
+            {% has_perm "workspace.update_project" user workspace as can_update_project %}
+            {% if can_update_project %}
+                {% go_to_action "dashboard:projects:update" label=_("Edit") title=_("Edit this task") project_uuid=project.uuid %}
+            {% endif %}
+        </div>
+        {% if project_description %}<div class="prose">{{ project_description }}</div>{% endif %}
+        {% partial project_tasks %}
     </main>
     {# djlint:off #}
     <aside id="task-detail-panel"
