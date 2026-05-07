@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 });
 
-function initializeLinkSuggestions(editor, suggestLinksUrl) {
+function initializeLinkSuggestions(editor, suggestLinksUrl, type) {
   const dialog = document.getElementById("prose-link-suggestions-dialog");
   if (dialog === null) {
     throw new Error("Couldn't find link suggestions dialog");
@@ -92,7 +92,9 @@ function initializeLinkSuggestions(editor, suggestLinksUrl) {
     if (closeButton === null) {
       throw new Error("Couldn't find close button");
     }
-    closeButton.addEventListener("click", dialog.close);
+    closeButton.addEventListener("click", () => {
+      dialog.close();
+    });
 
     // Find list of results inside dialog. The results hold url and
     // title data- attributes
@@ -128,7 +130,7 @@ function initializeLinkSuggestions(editor, suggestLinksUrl) {
   }
 
   editor.addEventListener("trix-action-invoke", (event) => {
-    if (event.actionName !== "x-suggest-links") {
+    if (event.actionName !== `x-suggest-${type}`) {
       return;
     }
     // Already open
@@ -217,13 +219,23 @@ function configureToolbar(event) {
     if (buttonGroup === null) {
       throw new Error("Couldn't find Trix button group");
     }
-    const suggestLinksButton = createActionButton(
-      "Project/Task",
-      "Suggest links",
-      "x-suggest-links",
+    const suggestLinksUrl = editor.dataset.suggestLinksUrl;
+    const suggestProjectsUrl = editor.dataset.suggestProjectsUrl;
+    const suggestProjectsButton = createActionButton(
+      "Project",
+      "Suggest projects",
+      "x-suggest-project",
     );
-    buttonGroup.appendChild(suggestLinksButton);
-    initializeLinkSuggestions(editor, editor.dataset.suggestLinksUrl);
+    buttonGroup.appendChild(suggestProjectsButton);
+    initializeLinkSuggestions(editor, suggestProjectsUrl, "project");
+
+    const suggestTasksButton = createActionButton(
+      "Task",
+      "Suggest tasks",
+      "x-suggest-task",
+    );
+    buttonGroup.appendChild(suggestTasksButton);
+    initializeLinkSuggestions(editor, suggestLinksUrl, "task");
   }
   editor.classList.add("initialized");
 }

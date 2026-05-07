@@ -10,20 +10,42 @@
                 <button type="button"
                         class="text-left w-full px-2 py-1.5 hover:bg-secondary-hover active:bg-secondary-pressed truncate"
                         data-url="{{ result.1 }}"
-                        data-title="{{ result.0 }}">{{ result.0 }}</button>
+                        data-title="{{ result.0 }}">
+                    {% if search_type == "task" %}
+                        {% icon "circle" size=4 inline=True %}
+                    {% elif search_type == "project" %}
+                        {% icon "folder" size=4 inline=True %}
+                    {% else %}
+                    {% endif %}
+                    {{ result.0 }}
+                </button>
             {% endfor %}
         {% else %}
-            <p>{% translate "No tasks or projects found" %}</p>
+            {% if search_type == "task" %}
+                <p>{% translate "No tasks found" %}</p>
+            {% elif search_type == "project" %}
+                <p>{% translate "No projects found" %}</p>
+            {% else %}
+                <p>{% translate "No tasks or projects found" %}</p>
+            {% endif %}
         {% endif %}
     </div>
 {% endpartialdef results %}
 <div class="flex gap-2 justify-between">
-    <h1 class="font-bold text-xl">{% translate "Link to task or project" %}</h1>
-    {% circle_button label=_("Close") name="close" icon_style="x" %}
+    <h1 class="font-bold text-xl">
+        {% if search_type == "task" %}
+            {% translate "Link to task" %}
+        {% elif search_type == "project" %}
+            {% translate "Link to project" %}
+        {% else %}
+            {% translate "Link to task or project" %}
+        {% endif %}
+    </h1>
+    {% circle_button label=_("Close") name="close" icon_style="x" type="button" %}
 </div>
 <form method="dialog"
       class="flex flex-col gap-2"
-      hx-post="{% url 'dashboard:workspaces:suggest-links' workspace_uuid=workspace.uuid %}"
+      hx-post="{{ suggest_links_url }}"
       hx-target="#prose-link-suggestions-results"
       hx-swap="innerHtml"
       hx-trigger="input delay:500ms from:find input[type=search]">

@@ -28,7 +28,6 @@ from projectify.workspace.views.task import (
 )
 from projectify.workspace.views.team_member import team_member_picture
 from projectify.workspace.views.workspace import (
-    workspace_minimize_project_list,
     workspace_picture_view,
     workspace_search_view,
     workspace_settings_billing,
@@ -55,11 +54,6 @@ workspace_patterns: UrlPatterns = (
         "<uuid:workspace_uuid>/create-project",
         project_create_view,
         name="create-project",
-    ),
-    path(
-        "<uuid:workspace_uuid>/minimize-project-list",
-        workspace_minimize_project_list,
-        name="minimize-project-list",
     ),
     path(
         "<uuid:workspace_uuid>/picture", workspace_picture_view, name="picture"
@@ -93,9 +87,16 @@ workspace_patterns: UrlPatterns = (
     ),
     # Suggest links from this workspace
     path(
-        "<uuid:workspace_uuid>/suggest-links",
+        "<uuid:workspace_uuid>/suggest-links/task",
         workspace_suggest_links,
-        name="suggest-links",
+        {"link_type": "task"},
+        name="suggest-links-task",
+    ),
+    path(
+        "<uuid:workspace_uuid>/suggest-links/project",
+        workspace_suggest_links,
+        {"link_type": "project"},
+        name="suggest-links-project",
     ),
 )
 if get_settings().STRIPE_CONFIG is None:

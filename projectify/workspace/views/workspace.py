@@ -49,7 +49,6 @@ from ..selectors.workspace import (
 )
 from ..services.team_member import (
     team_member_delete,
-    team_member_minimize_project_list,
     team_member_update,
     team_member_visit_workspace,
 )
@@ -238,68 +237,6 @@ def workspace_picture_view(
         raise Http404(_("No picture available"))
     picture_path = workspace.picture.path
     return sendfile(request, picture_path)
-
-
-# TODO use the form in
-# projectify/workspace/templates/workspace/common/sidemenu/project_details.html
-class MinimizeProjectListForm(forms.Form):
-    """Form for minimizingand expanding the project list."""
-
-    project_list_minimized = forms.BooleanField(required=False)
-
-    def __init__(self, workspace: Workspace, *args: Any, **kwargs: Any):
-        """Create current project field."""
-        super().__init__(*args, **kwargs)
-        self.fields["current_project"] = forms.ModelChoiceField(
-            required=False,
-            to_field_name="uuid",
-            # Hopefully this project_set only contains non-archived projects
-            queryset=workspace.project_set.all(),
-        )
-
-
-@require_http_methods(["POST"])
-@platform_view
-def workspace_minimize_project_list(
-    request: AuthenticatedHttpRequest, workspace_uuid: UUID
-) -> HttpResponse:
-    """Toggle the minimized state of the project list."""
-    assert request.method == "POST"
-    workspace = workspace_find_by_workspace_uuid(
-        workspace_uuid=workspace_uuid,
-        who=request.user,
-        qs=WorkspaceDetailQuerySet,
-    )
-    if workspace is None:
-        raise Http404(_("No workspace found for this UUID"))
-
-    form = MinimizeProjectListForm(workspace, request.POST)
-    if not form.is_valid():
-        return HttpResponse(status=400)
-
-    current_team_member_qs = team_member_find_for_workspace(
-        user=request.user, workspace=workspace
-    )
-    if current_team_member_qs is None:
-        raise Http404(_("Team member not found"))
-
-    team_member_minimize_project_list(
-        team_member=current_team_member_qs,
-        minimized=form.cleaned_data["project_list_minimized"],
-    )
-
-    context = {
-        "workspace": workspace,
-        "project": form.cleaned_data.get("current_project"),
-        "projects": workspace.project_set.all(),
-        "current_team_member_qs": current_team_member_qs,
-    }
-
-    return render(
-        request,
-        "workspace/common/sidemenu/project_details.html",
-        context=context,
-    )
 
 
 class WorkspaceSettingsForm(forms.ModelForm):
@@ -797,7 +734,7 @@ class SuggestLinksForm(forms.Form):
     """Form for searching tasks and projects to suggest as links."""
 
     search = forms.CharField(
-        label=_("Search tasks and projects"),
+        label=_("Search terms"),
         widget=forms.TextInput(
             attrs={"type": "search", "placeholder": _("Enter search")}
         ),
@@ -814,12 +751,13 @@ class SuggestLinksForm(forms.Form):
 @platform_view
 @require_http_methods(["GET", "POST"])
 def workspace_suggest_links(
-    request: AuthenticatedHttpRequest, workspace_uuid: UUID
+    request: AuthenticatedHttpRequest, workspace_uuid: UUID, link_type: str
 ) -> HttpResponse:
     """Suggest links for tasks and forms for Projectify's Trix editor."""
     workspace = workspace_find_by_workspace_uuid(
         workspace_uuid=workspace_uuid, who=request.user
     )
+    assert link_type in {"project", "task"}, f"{link_type=} unrecognnized"
     if workspace is None:
         raise Http404(
             _("Could not find workspace with UUID {workspace_uuid}").format(
@@ -836,16 +774,21 @@ def workspace_suggest_links(
                     query=form.cleaned_data["search"],
                     exclude_task=form.cleaned_data.get("exclude_task"),
                 )
-                suggestions = [
-                    *(
-                        (task.title, task.get_absolute_url())
-                        for task in results.tasks
-                    ),
-                    *(
-                        (project.title, project.get_absolute_url())
-                        for project in results.projects
-                    ),
-                ]
+                match link_type:
+                    case "project":
+                        suggestions = [
+                            (project.title, project.get_absolute_url())
+                            for project in results.projects
+                        ]
+                    case "task":
+                        suggestions = [
+                            (task.title, task.get_absolute_url())
+                            for task in results.tasks
+                        ]
+                    case other:
+                        return HttpResponseBadRequest(
+                            _("Unknown query type {type}").format(type=other)
+                        )
                 template = "workspace/workspace_suggest_links.html#results"
                 status = 200
             else:
@@ -862,7 +805,16 @@ def workspace_suggest_links(
             suggestions = None
             template = "workspace/workspace_suggest_links.html"
             status = 200
-        case method:
+        case method, _, _:
             raise RuntimeError(f"Don't know how to handle method {method}")
-    context = {"form": form, "results": suggestions, "workspace": workspace}
+    context = {
+        "form": form,
+        "results": suggestions,
+        "workspace": workspace,
+        "search_type": link_type,
+        "suggest_links_url": reverse(
+            f"dashboard:workspaces:suggest-links-{link_type}",
+            args=(workspace_uuid,),
+        ),
+    }
     return render(request, template, context, status=status)

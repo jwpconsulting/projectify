@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# SPDX-FileCopyrightText: 2023, 2024 JWP Consulting GK
+# SPDX-FileCopyrightText: 2023, 2024, 2026 JWP Consulting GK
 """Test workspace CRUD views."""
 
 from collections.abc import Iterable
 from datetime import datetime
 from typing import cast
 from unittest import mock
-from uuid import uuid4
+from uuid import UUID
 
 from django.core.files import File
 from django.db.models.fields.files import FileDescriptor
@@ -29,7 +29,7 @@ from projectify.workspace.services.team_member_invite import (
 from pytest_types import DjangoAssertNumQueries
 
 from ...const import TeamMemberRoles
-from ...models import Task, TeamMember, TeamMemberInvite, Workspace
+from ...models import Project, Task, TeamMember, TeamMemberInvite, Workspace
 
 pytestmark = pytest.mark.django_db
 
@@ -176,82 +176,6 @@ class TestWorkspacePictureView:
             "dashboard:workspaces:picture", args=(unrelated_workspace.uuid,)
         )
         assert user_client.get(url).status_code == 404
-
-
-class TestMinimizeLists:
-    """Test minimizing various lists."""
-
-    @pytest.fixture
-    def resource_url(self, workspace: Workspace) -> str:
-        """Return URL to this view."""
-        return reverse(
-            "dashboard:workspaces:minimize-project-list",
-            args=(workspace.uuid,),
-        )
-
-    @pytest.mark.parametrize(
-        "initial_state,post_value,expected_state",
-        [(False, "true", True), (True, "false", False)],
-    )
-    def test_toggle_project_list(
-        self,
-        user_client: Client,
-        resource_url: str,
-        team_member: TeamMember,
-        django_assert_max_num_queries: DjangoAssertNumQueries,
-        initial_state: bool,
-        post_value: str,
-        expected_state: bool,
-    ) -> None:
-        """Test toggling the project list minimized state via HTMX."""
-        team_member.minimized_project_list = initial_state
-        team_member.save()
-
-        # Gone up from 11 -> 13 due to permission checks in sidemenu
-        # XX non-deterministic test
-        with django_assert_max_num_queries(13):
-            response = user_client.post(
-                resource_url, {"project_list_minimized": post_value}
-            )
-            assert response.status_code == 200
-
-        team_member.refresh_from_db()
-        assert team_member.minimized_project_list is expected_state
-
-    def test_get_method_not_allowed(
-        self, user_client: Client, resource_url: str, team_member: TeamMember
-    ) -> None:
-        """Test that GET requests are not allowed."""
-        response = user_client.get(resource_url)
-        assert response.status_code == 405
-
-    def test_workspace_not_found(
-        self, user_client: Client, team_member: TeamMember
-    ) -> None:
-        """Test minimizing project list for non-existent workspace."""
-        url = reverse(
-            "dashboard:workspaces:minimize-project-list", args=(uuid4(),)
-        )
-        response = user_client.post(url, {"minimized": "true"})
-        assert response.status_code == 404
-
-    def test_invalid_form(
-        self, user_client: Client, resource_url: str, team_member: TeamMember
-    ) -> None:
-        """Test form validation with invalid data."""
-        response = user_client.post(resource_url, {})
-        assert response.status_code == 200
-
-    def test_unauthorized_workspace_access(
-        self, user_client: Client, unrelated_workspace: Workspace
-    ) -> None:
-        """Test that users can't minimize project list for other workspaces."""
-        url = reverse(
-            "dashboard:workspaces:minimize-project-list",
-            args=(unrelated_workspace.uuid,),
-        )
-        response = user_client.post(url, {"minimized": "true"})
-        assert response.status_code == 404
 
 
 class TestWorkspaceSettings:
@@ -826,3 +750,149 @@ class TestWorkspaceSettingsBillingCoupon:
         assert active == "full"
         # Should be 20
         assert unpaid_customer.seats == coupon.seats
+
+
+class TestWorkspaceSuggestLinks:
+    """Test workspace_suggest_links view."""
+
+    @pytest.fixture
+    def task_url(self, workspace: Workspace) -> str:
+        """Return URL to the suggest-links-task view."""
+        id = workspace.uuid
+        return reverse("dashboard:workspaces:suggest-links-task", args=(id,))
+
+    @pytest.fixture
+    def project_url(self, workspace: Workspace) -> str:
+        """Return URL to the suggest-links-project view."""
+        id = workspace.uuid
+        return reverse(
+            "dashboard:workspaces:suggest-links-project", args=(id,)
+        )
+
+    def test_get_with_task_search(
+        self,
+        user_client: Client,
+        unrelated_user_client: Client,
+        task_url: str,
+        team_member: TeamMember,
+        task: Task,
+    ) -> None:
+        """Test GET with search and type=task returns matching tasks."""
+        data = {"search": task.title}
+        response = user_client.get(task_url, data)
+        assert response.status_code == 200
+        assert task.title in response.content.decode()
+        # Unrelated user gets 404 for same url
+        assert unrelated_user_client.get(task_url).status_code == 404
+
+    def test_get_with_project_search(
+        self,
+        user_client: Client,
+        unrelated_user_client: Client,
+        project_url: str,
+        team_member: TeamMember,
+        project: Project,
+    ) -> None:
+        """Test GET with search and type=project returns matching projects."""
+        data = {"search": project.title}
+        response = user_client.get(project_url, data)
+        assert response.status_code == 200
+        assert project.title in response.content.decode()
+        # Unrelated user gets 404 for same url
+        assert unrelated_user_client.get(project_url).status_code == 404
+
+    def test_get_unknown_workspace(
+        self, user_client: Client, team_member: TeamMember, null_uuid: UUID
+    ) -> None:
+        """Test GET with unknown workspace UUID returns 404."""
+        url = reverse(
+            "dashboard:workspaces:suggest-links-task", args=(null_uuid,)
+        )
+        response = user_client.get(url)
+        assert response.status_code == 404
+
+    def test_get_with_empty_search(
+        self,
+        user_client: Client,
+        task_url: str,
+        project_url: str,
+        team_member: TeamMember,
+    ) -> None:
+        """Test GET with empty search returns 400."""
+        data = {"search": ""}
+        assert user_client.get(task_url, data).status_code == 400
+        assert user_client.get(project_url, data).status_code == 400
+
+    def test_post_task_search(
+        self,
+        user_client: Client,
+        task_url: str,
+        team_member: TeamMember,
+        task: Task,
+    ) -> None:
+        """Test POST with type=task returns matching tasks."""
+        data = {"search": task.title}
+        response = user_client.post(task_url, data)
+        assert response.status_code == 200
+        assert task.title in response.content.decode()
+
+    def test_post_project_search(
+        self,
+        user_client: Client,
+        project_url: str,
+        team_member: TeamMember,
+        project: Project,
+    ) -> None:
+        """Test POST with type=project returns matching projects."""
+        data = {"search": project.title}
+        response = user_client.post(project_url, data)
+        assert response.status_code == 200
+        assert project.title in response.content.decode()
+
+    def test_post_invalid_form(
+        self, user_client: Client, task_url: str, team_member: TeamMember
+    ) -> None:
+        """Test POST with missing fields returns 400."""
+        response = user_client.post(task_url, {})
+        assert response.status_code == 400
+
+    def test_post_htmx_returns_partial(
+        self,
+        user_client: Client,
+        task_url: str,
+        project_url: str,
+        team_member: TeamMember,
+        task: Task,
+    ) -> None:
+        """Test that HTMX POST returns only the results partial."""
+        data = {"search": task.title}
+        headers = {"HTTP_HX-Request": "true"}
+        for url in [task_url, project_url]:
+            response = user_client.post(url, data, headers=headers)
+            assert response.status_code == 200
+            # The partial should contain the results container but not the full
+            # page form
+            content = response.content.decode()
+            assert "prose-link-suggestions-results" in content
+
+    def test_post_exclude_task(
+        self,
+        user_client: Client,
+        task_url: str,
+        team_member: TeamMember,
+        task: Task,
+        other_task: Task,
+    ) -> None:
+        """Test POST with exclude_task excludes the specified task."""
+        t_uid = str(task.uuid)
+        data = {"search": task.title, "exclude_task": t_uid}
+        response = user_client.post(task_url, data)
+        assert response.status_code == 200
+        assert str(task.uuid) not in response.content.decode()
+        assert str(other_task.uuid) not in response.content.decode()
+
+        data = {"search": other_task.title, "exclude_task": t_uid}
+        response = user_client.post(task_url, data)
+        assert response.status_code == 200
+        assert str(other_task.uuid) in response.content.decode()
+        assert str(task.uuid) not in response.content.decode()

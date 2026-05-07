@@ -75,23 +75,3 @@ def team_member_visit_project(
     team_member.last_visited_project = project
     team_member.last_visited_workspace = now()
     team_member.save()
-
-
-@transaction.atomic
-def team_member_minimize_project_list(
-    *, team_member: TeamMember, minimized: bool
-) -> TeamMember:
-    """Set the minimized state of the project list for a team member."""
-    team_member.minimized_project_list = minimized
-    team_member.save()
-    return team_member
-
-
-@transaction.atomic
-def team_member_minimize_team_member_filter(
-    *, team_member: TeamMember, minimized: bool
-) -> TeamMember:
-    """Set the minimized state of the team member filter for a team member."""
-    team_member.minimized_team_member_filter = minimized
-    team_member.save()
-    return team_member
