@@ -4,7 +4,7 @@
 """Test project CRUD views."""
 
 from datetime import datetime
-from uuid import uuid4
+from uuid import UUID
 
 from django.test.client import Client
 from django.urls import reverse
@@ -46,9 +46,10 @@ class TestProjectDetailView:
         user_client: Client,
         team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
+        null_uuid: UUID,
     ) -> None:
         """Ensure that accessing a non-existent project returns 404."""
-        url = reverse("dashboard:projects:detail", args=(uuid4(),))
+        url = reverse("dashboard:projects:detail", args=(null_uuid,))
         with django_assert_num_queries(3):
             response = user_client.get(url)
             assert response.status_code == 404
@@ -123,12 +124,12 @@ class TestProjectDetailViewActions:
         assert task.done is None
 
     def test_mark_task_done_form_validation(
-        self, user_client: Client, resource_url: str
+        self, user_client: Client, resource_url: str, null_uuid: UUID
     ) -> None:
         """Test form validation for mark task done action."""
         d = {"action": "mark_task_done"}
         response = user_client.post(
-            resource_url, {**d, "task_uuid": str(uuid4()), "done": "true"}
+            resource_url, {**d, "task_uuid": str(null_uuid), "done": "true"}
         )
         assert response.status_code == 400
         response = user_client.post(
@@ -148,11 +149,15 @@ class TestProjectCreateView:
         )
 
     def test_get(
-        self, user_client: Client, resource_url: str, team_member: TeamMember
+        self,
+        unrelated_user_client: Client,
+        user_client: Client,
+        resource_url: str,
+        team_member: TeamMember,
     ) -> None:
         """Test getting this page."""
-        response = user_client.get(resource_url)
-        assert response.status_code == 200
+        assert unrelated_user_client.get(resource_url).status_code == 404
+        assert user_client.get(resource_url).status_code == 200
 
     def test_create_project_success(
         self,
@@ -179,18 +184,10 @@ class TestProjectCreateView:
         assert Project.objects.count() == initial_project_count
 
     def test_workspace_not_found(
-        self, user_client: Client, team_member: TeamMember
+        self, user_client: Client, team_member: TeamMember, null_uuid: UUID
     ) -> None:
         """Test accessing project creation for non-existent workspace."""
-        url = reverse("dashboard:workspaces:create-project", args=(uuid4(),))
-        assert user_client.get(url).status_code == 404
-
-    def test_unauthorized_workspace_access(
-        self, user_client: Client, unrelated_workspace: Workspace
-    ) -> None:
-        """Test that users can't create projects in other workspaces."""
-        uid = unrelated_workspace.uuid
-        url = reverse("dashboard:workspaces:create-project", args=(uid,))
+        url = reverse("dashboard:workspaces:create-project", args=(null_uuid,))
         assert user_client.get(url).status_code == 404
 
 
@@ -204,6 +201,7 @@ class TestProjectUpdateView:
 
     def test_get_project_update(
         self,
+        unrelated_user_client: Client,
         user_client: Client,
         resource_url: str,
         project: Project,
@@ -211,6 +209,8 @@ class TestProjectUpdateView:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test GETting the project update page."""
+        # Unauthorized access
+        assert unrelated_user_client.get(resource_url).status_code == 404
         # Gone up   from 8 -> 9 due to permission checks in sidemenu
         with django_assert_num_queries(9):
             response = user_client.get(resource_url)
@@ -251,15 +251,14 @@ class TestProjectUpdateView:
         original_title = project.title
         response = user_client.post(resource_url, {"title_description": ""})
         assert response.status_code == 400
-
         project.refresh_from_db()
         assert project.title == original_title, "Shouldn't change"
 
     def test_project_not_found(
-        self, user_client: Client, team_member: TeamMember
+        self, user_client: Client, team_member: TeamMember, null_uuid: UUID
     ) -> None:
         """Ensure that updating a non-existent project returns 404."""
-        url = reverse("dashboard:projects:update", args=(uuid4(),))
+        url = reverse("dashboard:projects:update", args=(null_uuid,))
         response = user_client.get(url)
         assert response.status_code == 404
 
@@ -272,16 +271,6 @@ class TestProjectUpdateView:
         """Ensure that the client can't update archived projects."""
         url = reverse(
             "dashboard:projects:update", args=(archived_project.uuid,)
-        )
-        response = user_client.get(url)
-        assert response.status_code == 404
-
-    def test_unauthorized_project_access(
-        self, user_client: Client, unrelated_project: Project
-    ) -> None:
-        """Test that users can't update projects they don't have access to."""
-        url = reverse(
-            "dashboard:projects:update", args=(unrelated_project.uuid,)
         )
         response = user_client.get(url)
         assert response.status_code == 404
@@ -312,10 +301,10 @@ class TestProjectArchiveView:
         assert project.archived
 
     def test_project_not_found(
-        self, user_client: Client, team_member: TeamMember
+        self, user_client: Client, team_member: TeamMember, null_uuid: UUID
     ) -> None:
         """Test archiving a non-existent project returns 404."""
-        url = reverse("dashboard:projects:archive", args=(uuid4(),))
+        url = reverse("dashboard:projects:archive", args=(null_uuid,))
         response = user_client.post(url)
         assert response.status_code == 404
 
@@ -377,10 +366,10 @@ class TestProjectRecoverView:
         assert response.status_code == 405
 
     def test_project_not_found(
-        self, user_client: Client, team_member: TeamMember
+        self, user_client: Client, team_member: TeamMember, null_uuid: UUID
     ) -> None:
         """Test recovering a non-existent project returns 404."""
-        url = reverse("dashboard:projects:recover", args=(uuid4(),))
+        url = reverse("dashboard:projects:recover", args=(null_uuid,))
         response = user_client.post(url)
         assert response.status_code == 404
 
@@ -441,10 +430,10 @@ class TestProjectDeleteView:
         assert response.status_code == 405
 
     def test_project_not_found(
-        self, user_client: Client, team_member: TeamMember
+        self, user_client: Client, team_member: TeamMember, null_uuid: UUID
     ) -> None:
         """Test deleting a non-existent project returns 404."""
-        url = reverse("dashboard:projects:delete", args=(uuid4(),))
+        url = reverse("dashboard:projects:delete", args=(null_uuid,))
         response = user_client.post(url)
         assert response.status_code == 404
 
