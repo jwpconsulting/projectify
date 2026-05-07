@@ -14,7 +14,6 @@ from ...models import Project, TeamMember
 from ...services.team_member import (
     team_member_change_role,
     team_member_delete,
-    team_member_minimize_team_member_filter,
     team_member_update,
     team_member_visit_project,
     team_member_visit_workspace,
@@ -91,20 +90,3 @@ def test_team_member_visit_functions(
         team_member_visit_project(
             team_member=team_member, project=other_project
         )
-
-
-def test_team_member_minimize_team_member_filter(
-    team_member: TeamMember,
-) -> None:
-    """Test setting the minimized state of the team member filter."""
-    assert team_member.minimized_team_member_filter is False
-
-    updated_team_member = team_member_minimize_team_member_filter(
-        team_member=team_member, minimized=True
-    )
-    assert updated_team_member.minimized_team_member_filter is True
-
-    updated_team_member = team_member_minimize_team_member_filter(
-        team_member=team_member, minimized=False
-    )
-    assert updated_team_member.minimized_team_member_filter is False

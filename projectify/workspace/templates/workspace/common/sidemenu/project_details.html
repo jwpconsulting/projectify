@@ -7,26 +7,24 @@
     <div class="flex w-full flex-row items-center justify-start gap-2 px-5 py-1">
         <div class="font-bold">{% trans "Projects" %}</div>
     </div>
-    {% if not current_team_member_qs.minimized_project_list %}
-        {% for project_item in projects %}
-            <a class="flex flex-row items-center gap-2 px-4 py-1 hover:bg-secondary-hover"
-               aria-label="{% blocktranslate with project=project_item.title %}{{ project }} project{%endblocktranslate %}"
-               href="{% url "dashboard:projects:detail" project_item.uuid %}">
-                <div class="shrink-0 rounded-md p-1{% if project_item == project %} bg-primary-hover{% endif %}">
-                    {% if project_item == project %}
-                        {% icon "folder" "white" size=4 %}
-                    {% else %}
-                        {% icon "folder" size=4 %}
-                    {% endif %}
-                </div>
-                <div class="truncate min-w-0 font-bold">{{ project_item.title }}</div>
-            </a>
-        {% endfor %}
-        {% if workspace %}
-            {% has_perm "workspace.create_project" user workspace as can_create_project %}
-            {% if can_create_project %}
-                {% go_to_action href="dashboard:workspaces:create-project" label=_("Create new project") style="secondary" icon_style="plus" justify_left=True workspace_uuid=workspace.uuid %}
-            {% endif %}
+    {% for project_item in projects %}
+        <a class="flex flex-row items-center gap-2 px-4 py-1 hover:bg-secondary-hover"
+           aria-label="{% blocktranslate with project=project_item.title %}{{ project }} project{%endblocktranslate %}"
+           href="{% url "dashboard:projects:detail" project_item.uuid %}">
+            <div class="shrink-0 rounded-md p-1{% if project_item == project %} bg-primary-hover{% endif %}">
+                {% if project_item == project %}
+                    {% icon "folder" "white" size=4 %}
+                {% else %}
+                    {% icon "folder" size=4 %}
+                {% endif %}
+            </div>
+            <div class="truncate min-w-0 font-bold">{{ project_item.title }}</div>
+        </a>
+    {% endfor %}
+    {% if workspace %}
+        {% has_perm "workspace.create_project" user workspace as can_create_project %}
+        {% if can_create_project %}
+            {% go_to_action href="dashboard:workspaces:create-project" label=_("Create new project") style="secondary" icon_style="plus" justify_left=True workspace_uuid=workspace.uuid %}
         {% endif %}
     {% endif %}
 </div>

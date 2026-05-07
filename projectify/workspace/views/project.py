@@ -43,10 +43,7 @@ from ..services.project import (
     project_update,
 )
 from ..services.task import task_create, task_mark_done
-from ..services.team_member import (
-    team_member_minimize_team_member_filter,
-    team_member_visit_project,
-)
+from ..services.team_member import team_member_visit_project
 
 logger = logging.getLogger(__name__)
 
@@ -139,13 +136,6 @@ def _project_detail_view_actions(
                 done=task_mark_done_form.cleaned_data["done"],
             )
             template = "workspace/project_detail.html#project_tasks"
-        case "POST", "minimize_team_member_filter":
-            team_member_minimize_team_member_filter(
-                team_member=team_member,
-                minimized=request.POST.get("team_member_filter_minimized")
-                == "true",
-            )
-            template = "workspace/common/sidemenu/project_details.html"
         case "POST", action:
             raise BadRequest(
                 _("Unrecognized action '{action}'").format(action=action)

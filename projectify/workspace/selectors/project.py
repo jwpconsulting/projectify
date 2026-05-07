@@ -78,10 +78,8 @@ def project_detail_query_set(
         Prefetch("workspace__teammember_set", queryset=team_member_qs),
     ]
 
-    # If caller provides a user, filter out tasks for hidden sections,
-    # and mark these sections as minimized
+    # Annotate project with current user's team member
     if who is not None:
-        # task_qs = task_qs.exclude(section__minimized_by=who)
         current_team_member_qs = TeamMember.objects.filter(user=who)
         project_prefetches.append(
             Prefetch(
