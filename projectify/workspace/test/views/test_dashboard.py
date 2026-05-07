@@ -107,8 +107,7 @@ class TestRedirectToDashboard:
         del project
         new_project = project_create(
             who=team_member.user,
-            title=faker.text(),
-            description=faker.paragraph(),
+            title_description=faker.paragraph(),
             workspace=workspace,
         )
 

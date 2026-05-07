@@ -346,8 +346,9 @@ def project(
     """Return project."""
     return project_create(
         who=other_team_member.user,
-        title=faker.text(),
-        description=faker.paragraph(),
+        title_description=format_html(
+            "<h1>{}</h1><p>{}</p>", faker.text(), faker.paragraph()
+        ),
         workspace=workspace,
         due_date=faker.date_time(tzinfo=dt_timezone.utc)
         if faker.pybool()
@@ -360,8 +361,11 @@ def other_project_same_workspace(user: User, workspace: Workspace) -> Project:
     """Return project that belongs to the normal workspace."""
     return project_create(
         who=user,
-        title="Other project for the same workspace",
-        description="This is another project that this user can access",
+        title_description=format_html(
+            "<h1>{}</h1><p>{}</p>",
+            "Other project for the same workspace",
+            "This is another project that this user can access",
+        ),
         workspace=workspace,
         due_date=None,
     )
@@ -376,8 +380,11 @@ def other_project(user: User, other_workspace: Workspace) -> Project:
     """
     return project_create(
         who=user,
-        title="Other project from a different workspace",
-        description="This is in another workspace and the user can access it",
+        title_description=format_html(
+            "<h1>{}</h1><p>{}</p>",
+            "Other project from a different workspace",
+            "This is in another workspace and the user can access it",
+        ),
         workspace=other_workspace,
         due_date=None,
     )
@@ -392,8 +399,9 @@ def unrelated_project(
     """Return an unrelated project."""
     return project_create(
         who=unrelated_team_member.user,
-        title=faker.text(),
-        description=faker.paragraph(),
+        title_description=format_html(
+            "<h1>{}</h1><p>{}</p>", faker.text(), faker.paragraph()
+        ),
         workspace=unrelated_workspace,
         # XXX another victim to non-determinism
         due_date=faker.date_time(tzinfo=dt_timezone.utc),
@@ -407,8 +415,9 @@ def archived_project(
     """Return archived project."""
     project = project_create(
         who=other_team_member.user,
-        title=faker.text(),
-        description=faker.paragraph(),
+        title_description=format_html(
+            "<h1>{}</h1><p>{}</p>", faker.text(), faker.paragraph()
+        ),
         workspace=workspace,
     )
     project_archive(who=other_team_member.user, project=project, archived=True)

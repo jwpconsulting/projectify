@@ -9,6 +9,7 @@ from typing import Optional
 from django.utils.timezone import now
 
 from projectify.lib.auth import validate_perm
+from projectify.lib.utils import extract_first_paragraph_text
 from projectify.user.models import User
 from projectify.workspace.models import Project, Workspace
 
@@ -19,14 +20,20 @@ def project_create(
     *,
     who: User,
     workspace: Workspace,
-    title: str,
-    description: Optional[str] = None,
+    title_description: str,
     due_date: Optional[datetime] = None,
 ) -> Project:
     """Create a project inside a given workspace."""
     validate_perm("workspace.create_project", who, workspace)
+
+    match extract_first_paragraph_text(title_description):
+        case str() as title:
+            pass
+        case None:
+            title = title_description
+
     project = workspace.project_set.create(
-        title=title, description=description, due_date=due_date
+        title=title, description=title_description, due_date=due_date
     )
     # 1+1 query?
     return project
@@ -38,14 +45,21 @@ def project_update(
     *,
     who: User,
     project: Project,
-    title: str,
-    description: Optional[str] = None,
+    title_description: str,
     due_date: Optional[datetime] = None,
 ) -> Project:
     """Update a project."""
     validate_perm("workspace.update_project", who, project.workspace)
+
+    match extract_first_paragraph_text(title_description):
+        case str() as title:
+            pass
+        case None:
+            title = title_description
+
     project.title = title
-    project.description = description
+    project.description = title_description
+
     if due_date and due_date.tzinfo is None:
         raise ValueError(f"tzinfo must be specified, got {due_date}")
     project.due_date = due_date

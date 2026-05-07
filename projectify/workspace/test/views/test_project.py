@@ -163,12 +163,12 @@ class TestProjectCreateView:
     ) -> None:
         """Test successfully creating a project."""
         initial_project_count = Project.objects.count()
-        data = {"title": "New Test Project"}
+        data = {"description": "<h1>New Test Project</h1>"}
         with django_assert_num_queries(6):
             response = user_client.post(resource_url, data)
             assert response.status_code == 302
-
         assert Project.objects.count() == initial_project_count + 1
+        assert Project.objects.get().title == "New Test Project"
 
     def test_create_project_invalid_form(
         self, user_client: Client, resource_url: str, team_member: TeamMember
@@ -226,14 +226,19 @@ class TestProjectUpdateView:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test successfully updating a project."""
-        updated_title = "Updated Project Title"
+        updated_title = "<h1>Updated Project Title</h1><p>foo bar</p>"
 
-        with django_assert_num_queries(9):
-            response = user_client.post(resource_url, {"title": updated_title})
+        data = {"description": updated_title}
+        with django_assert_num_queries(7):
+            response = user_client.post(resource_url, data)
             assert response.status_code == 302
 
         project.refresh_from_db()
-        assert project.title == updated_title
+        assert project.title == "Updated Project Title"
+        assert (
+            project.description
+            == "<h1>Updated Project Title</h1><p>foo bar</p>"
+        )
 
     def test_update_project_invalid_form(
         self,
@@ -244,7 +249,7 @@ class TestProjectUpdateView:
     ) -> None:
         """Test form validation with invalid data."""
         original_title = project.title
-        response = user_client.post(resource_url, {"title": ""})
+        response = user_client.post(resource_url, {"title_description": ""})
         assert response.status_code == 400
 
         project.refresh_from_db()

@@ -111,6 +111,7 @@ class Project(TitleDescriptionModel, BaseModel):
     workspace = models.ForeignKey["Workspace"](
         Workspace, on_delete=models.PROTECT
     )
+    description = RichTextField(_("description"), blank=True, null=True)
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     archived = models.DateTimeField(
         null=True,
