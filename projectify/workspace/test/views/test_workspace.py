@@ -29,7 +29,7 @@ from projectify.workspace.services.team_member_invite import (
 from pytest_types import DjangoAssertNumQueries
 
 from ...const import TeamMemberRoles
-from ...models import Task, TeamMember, TeamMemberInvite, Workspace
+from ...models import Project, Task, TeamMember, TeamMemberInvite, Workspace
 
 pytestmark = pytest.mark.django_db
 
@@ -826,3 +826,149 @@ class TestWorkspaceSettingsBillingCoupon:
         assert active == "full"
         # Should be 20
         assert unpaid_customer.seats == coupon.seats
+
+
+class TestWorkspaceSuggestLinks:
+    """Test workspace_suggest_links view."""
+
+    @pytest.fixture
+    def task_url(self, workspace: Workspace) -> str:
+        """Return URL to the suggest-links-task view."""
+        id = workspace.uuid
+        return reverse("dashboard:workspaces:suggest-links-task", args=(id,))
+
+    @pytest.fixture
+    def project_url(self, workspace: Workspace) -> str:
+        """Return URL to the suggest-links-project view."""
+        id = workspace.uuid
+        return reverse(
+            "dashboard:workspaces:suggest-links-project", args=(id,)
+        )
+
+    def test_get_with_task_search(
+        self,
+        user_client: Client,
+        unrelated_user_client: Client,
+        task_url: str,
+        team_member: TeamMember,
+        task: Task,
+    ) -> None:
+        """Test GET with search and type=task returns matching tasks."""
+        data = {"search": task.title}
+        response = user_client.get(task_url, data)
+        assert response.status_code == 200
+        assert task.title in response.content.decode()
+        # Unrelated user gets 404 for same url
+        assert unrelated_user_client.get(task_url).status_code == 404
+
+    def test_get_with_project_search(
+        self,
+        user_client: Client,
+        unrelated_user_client: Client,
+        project_url: str,
+        team_member: TeamMember,
+        project: Project,
+    ) -> None:
+        """Test GET with search and type=project returns matching projects."""
+        data = {"search": project.title}
+        response = user_client.get(project_url, data)
+        assert response.status_code == 200
+        assert project.title in response.content.decode()
+        # Unrelated user gets 404 for same url
+        assert unrelated_user_client.get(project_url).status_code == 404
+
+    def test_get_unknown_workspace(
+        self, user_client: Client, team_member: TeamMember, null_uuid: UUID
+    ) -> None:
+        """Test GET with unknown workspace UUID returns 404."""
+        url = reverse(
+            "dashboard:workspaces:suggest-links-task", args=(null_uuid,)
+        )
+        response = user_client.get(url)
+        assert response.status_code == 404
+
+    def test_get_with_empty_search(
+        self,
+        user_client: Client,
+        task_url: str,
+        project_url: str,
+        team_member: TeamMember,
+    ) -> None:
+        """Test GET with empty search returns 400."""
+        data = {"search": ""}
+        assert user_client.get(task_url, data).status_code == 400
+        assert user_client.get(project_url, data).status_code == 400
+
+    def test_post_task_search(
+        self,
+        user_client: Client,
+        task_url: str,
+        team_member: TeamMember,
+        task: Task,
+    ) -> None:
+        """Test POST with type=task returns matching tasks."""
+        data = {"search": task.title}
+        response = user_client.post(task_url, data)
+        assert response.status_code == 200
+        assert task.title in response.content.decode()
+
+    def test_post_project_search(
+        self,
+        user_client: Client,
+        project_url: str,
+        team_member: TeamMember,
+        project: Project,
+    ) -> None:
+        """Test POST with type=project returns matching projects."""
+        data = {"search": project.title}
+        response = user_client.post(project_url, data)
+        assert response.status_code == 200
+        assert project.title in response.content.decode()
+
+    def test_post_invalid_form(
+        self, user_client: Client, task_url: str, team_member: TeamMember
+    ) -> None:
+        """Test POST with missing fields returns 400."""
+        response = user_client.post(task_url, {})
+        assert response.status_code == 400
+
+    def test_post_htmx_returns_partial(
+        self,
+        user_client: Client,
+        task_url: str,
+        project_url: str,
+        team_member: TeamMember,
+        task: Task,
+    ) -> None:
+        """Test that HTMX POST returns only the results partial."""
+        data = {"search": task.title}
+        headers = {"HTTP_HX-Request": "true"}
+        for url in [task_url, project_url]:
+            response = user_client.post(url, data, headers=headers)
+            assert response.status_code == 200
+            # The partial should contain the results container but not the full
+            # page form
+            content = response.content.decode()
+            assert "prose-link-suggestions-results" in content
+
+    def test_post_exclude_task(
+        self,
+        user_client: Client,
+        task_url: str,
+        team_member: TeamMember,
+        task: Task,
+        other_task: Task,
+    ) -> None:
+        """Test POST with exclude_task excludes the specified task."""
+        t_uid = str(task.uuid)
+        data = {"search": task.title, "exclude_task": t_uid}
+        response = user_client.post(task_url, data)
+        assert response.status_code == 200
+        assert str(task.uuid) not in response.content.decode()
+        assert str(other_task.uuid) not in response.content.decode()
+
+        data = {"search": other_task.title, "exclude_task": t_uid}
+        response = user_client.post(task_url, data)
+        assert response.status_code == 200
+        assert str(other_task.uuid) in response.content.decode()
+        assert str(task.uuid) not in response.content.decode()

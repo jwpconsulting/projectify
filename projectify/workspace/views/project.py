@@ -222,8 +222,15 @@ class ProjectForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.fields["description"].widget.attrs["data-suggest-links-url"] = (
             reverse(
-                "dashboard:workspaces:suggest-links", args=(workspace.uuid,)
+                "dashboard:workspaces:suggest-links-task",
+                args=(workspace.uuid,),
             )
+        )
+        self.fields["description"].widget.attrs[
+            "data-suggest-projects-url"
+        ] = reverse(
+            "dashboard:workspaces:suggest-links-project",
+            args=(workspace.uuid,),
         )
 
 

@@ -93,9 +93,16 @@ workspace_patterns: UrlPatterns = (
     ),
     # Suggest links from this workspace
     path(
-        "<uuid:workspace_uuid>/suggest-links",
+        "<uuid:workspace_uuid>/suggest-links/task",
         workspace_suggest_links,
-        name="suggest-links",
+        {"link_type": "task"},
+        name="suggest-links-task",
+    ),
+    path(
+        "<uuid:workspace_uuid>/suggest-links/project",
+        workspace_suggest_links,
+        {"link_type": "project"},
+        name="suggest-links-project",
     ),
 )
 if get_settings().STRIPE_CONFIG is None:
