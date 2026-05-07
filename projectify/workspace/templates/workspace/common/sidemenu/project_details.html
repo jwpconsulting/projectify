@@ -4,42 +4,9 @@
 {% load projectify %}
 {% load rules %}
 <div id="sidemenu-project-section">
-    <form hx-post="{% url 'dashboard:workspaces:minimize-project-list' workspace.uuid %}"
-          hx-swap="outerHTML"
-          hx-target="#sidemenu-project-section">
-        {% csrf_token %}
-        {# TODO use MinimizeProjectListForm #}
-        <input type="hidden"
-               name="project_list_minimized"
-               value="{% if current_team_member_qs.minimized_project_list %}false{% else %}true{% endif %}">
-        {% if project %}<input type="hidden" name="current_project" value="{{ project.uuid }}">{% endif %}
-        <button type="submit"
-                aria-label="{% if current_team_member_qs.minimized_project_list %}{% translate "Project list, minimized" %}{% else %}{% translate "Project list, expanded" %}{% endif %}"
-                aria-describedby="sidemenu-project-section-help"
-                class="flex w-full flex-row items-center justify-between gap-2 px-4 py-2 text-utility hover:text-base-content">
-            <div class="flex flex-row items-center gap-4">
-                <div class="flex flex-row items-center gap-2">
-                    {% icon "folder" size=4 %}
-                    <div class="font-bold">{% trans "Projects" %}</div>
-                </div>
-            </div>
-            <div class="flex flex-row items-center gap-2">
-                {% include "workspace/common/loading_spinner.html" %}
-                {% if current_team_member_qs.minimized_project_list %}
-                    {% icon "chevron-up" size=4 %}
-                {% else %}
-                    {% icon "chevron-down" size=4 %}
-                {% endif %}
-            </div>
-        </button>
-    </form>
-    <span class="hidden" id="sidemenu-project-section-help">
-        {% if current_team_member_qs.minimized_project_list %}
-            {% translate "Activate to show projects" %}
-        {% else %}
-            {% translate "Activate to hide projects" %}
-        {% endif %}
-    </span>
+    <div class="flex w-full flex-row items-center justify-start gap-2 px-5 py-1">
+        <div class="font-bold">{% trans "Projects" %}</div>
+    </div>
     {% if not current_team_member_qs.minimized_project_list %}
         {% for project_item in projects %}
             <a class="flex flex-row items-center gap-2 px-4 py-1 hover:bg-secondary-hover"
