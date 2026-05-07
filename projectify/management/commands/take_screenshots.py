@@ -115,20 +115,25 @@ class Command(BaseCommand):
         self.software_project = project_create(
             who=self.owner,
             workspace=self.workspace,
-            title="Software Development Project",
-            description="Main software development project",
+            title_description=format_html(
+                "<h1>{}</h1><p>{}</p>",
+                "Software Development Project",
+                "Main software development project",
+            ),
         )
         self.in_progress_project = project_create(
             who=self.owner,
             workspace=self.workspace,
-            title="In Progress",
-            description="In progress tasks",
+            title_description=format_html(
+                "<h1>{}</h1><p>{}</p>", "In Progress", "In progress tasks"
+            ),
         )
         self.coursework_project = project_create(
             who=self.owner,
             workspace=self.workspace,
-            title="Coursework",
-            description="Coursework tasks",
+            title_description=format_html(
+                "<h1>{}</h1><p>{}</p>", "Coursework", "Coursework tasks"
+            ),
         )
 
         # Used in development team solutions page

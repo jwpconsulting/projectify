@@ -13,7 +13,7 @@ from django.utils.translation import gettext_lazy as _
 
 from projectify.blog.models import Post, PostContent
 from projectify.lib.forms import RichTextEditor
-from projectify.lib.models import clean_rich_text
+from projectify.lib.utils import clean_rich_text
 
 
 class PostAdminForm(forms.ModelForm):

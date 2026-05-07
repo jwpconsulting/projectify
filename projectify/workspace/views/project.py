@@ -16,10 +16,12 @@ from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
-from projectify.lib.forms import populate_form_with_errors
+from projectify.lib.forms import RichTextEditor, populate_form_with_errors
 from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.types import AuthenticatedHttpRequest
+from projectify.lib.utils import strip_first_paragraph
 from projectify.lib.views import platform_view
+from projectify.workspace.const import TASK_EDITOR_MIN_HEIGHT_CLASS
 
 from ..models import Project, Task, TeamMember, Workspace
 from ..selectors.project import (
@@ -193,6 +195,9 @@ def project_detail_view(
     context = {
         **context,
         **get_project_view_context(request, project.workspace),
+        "project_description": strip_first_paragraph(
+            project.description or ""
+        ),
         "project": project,
         "team_members": team_members,
         "quick_add_task": TaskQuickAddForm(),
@@ -200,17 +205,14 @@ def project_detail_view(
     return render(request, template, context)
 
 
-class ProjectCreateForm(forms.Form):
+class ProjectForm(forms.Form):
     """Form for project creation."""
 
-    title = forms.CharField(
-        label=_("Project title"),
-        widget=forms.TextInput(attrs={"placeholder": _("Project title")}),
-    )
     description = forms.CharField(
-        required=False,
-        widget=forms.Textarea(
-            attrs={"placeholder": _("Enter a description for your project")}
+        label=_("Description"),
+        widget=RichTextEditor(
+            heading_blocks=False,
+            attrs={"expand": True, "class": TASK_EDITOR_MIN_HEIGHT_CLASS},
         ),
     )
 
@@ -239,11 +241,11 @@ def project_create_view(
     if request.method == "GET":
         context = {
             **get_project_view_context(request, workspace),
-            "form": ProjectCreateForm(),
+            "form": ProjectForm(),
         }
         return render(request, "workspace/project_create.html", context)
 
-    form = ProjectCreateForm(request.POST)
+    form = ProjectForm(request.POST)
     if not form.is_valid():
         context = {
             **get_project_view_context(request, workspace),
@@ -255,8 +257,7 @@ def project_create_view(
 
     try:
         project: Project = project_create(
-            title=form.cleaned_data["title"],
-            description=form.cleaned_data.get("description"),
+            title_description=form.cleaned_data["description"],
             due_date=form.cleaned_data.get("due_date"),
             who=request.user,
             workspace=workspace,
@@ -273,33 +274,20 @@ def project_create_view(
         )
 
 
-class ProjectUpdateForm(forms.Form):
-    """Form for project updates."""
-
-    title = forms.CharField(
-        label=_("Project title"),
-        widget=forms.TextInput(attrs={"placeholder": _("Project title")}),
-    )
-    description = forms.CharField(
-        required=False,
-        widget=forms.Textarea(
-            attrs={"placeholder": _("Enter a description for your project")}
-        ),
-    )
-    due_date = forms.DateField(
-        required=False,
-        label=_("Due date"),
-        widget=forms.DateInput(attrs={"type": "date"}),
-    )
-
-
 @require_http_methods(["GET", "POST"])
 @platform_view
 def project_update_view(
     request: AuthenticatedHttpRequest, project_uuid: UUID
 ) -> HttpResponse:
     """Update an existing project."""
-    qs = project_detail_query_set(who=request.user)
+    qs: Optional[QuerySet[Project]]
+    match request.method:
+        case "GET":
+            qs = project_detail_query_set(who=request.user)
+        case "POST":
+            qs = None
+        case other:
+            assert False, other
     project = project_find_by_project_uuid(
         who=request.user, project_uuid=project_uuid, qs=qs
     )
@@ -307,23 +295,18 @@ def project_update_view(
         raise Http404(_("No project found for this uuid"))
 
     workspace = project.workspace
-
     context = {
         **get_project_view_context(request, workspace),
         "project": project,
+        "workspace": workspace,
     }
 
     if request.method == "GET":
-        form = ProjectUpdateForm(
-            initial={
-                "title": project.title,
-                "description": project.description,
-            }
-        )
+        form = ProjectForm(initial={"description": project.description})
         context = {"form": form, **context}
         return render(request, "workspace/project_update.html", context)
 
-    form = ProjectUpdateForm(request.POST)
+    form = ProjectForm(data=request.POST)
     if not form.is_valid():
         context = {"form": form, **context}
         return render(
@@ -334,13 +317,9 @@ def project_update_view(
         project_update(
             who=request.user,
             project=project,
-            title=form.cleaned_data["title"],
-            description=form.cleaned_data.get("description"),
+            title_description=form.cleaned_data["description"],
         )
-        return redirect(
-            "dashboard:workspaces:projects",
-            workspace_uuid=project.workspace.uuid,
-        )
+        return redirect(project.get_absolute_url())
     except ValidationError as error:
         populate_form_with_errors(form, error)
         context = {"form": form, **context}

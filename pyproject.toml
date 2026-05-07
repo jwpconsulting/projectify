@@ -27,7 +27,7 @@ dependencies = [
     "django-ratelimit>=4.1.0,<5",
     "django-markdownify>=0.9.5,<0.10",
     "django-allauth[socialaccount]>=65.14.3",
-    "bleach>=6.2.0",
+    "justhtml>=1.18.0",
     # TODO make this a "hosted" only dependency
     "stripe>=8,<9",
     "django-sendfile2>=0.7.2",

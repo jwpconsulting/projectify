@@ -598,6 +598,15 @@ wheels = [
 ]
 
 [[package]]
+name = "justhtml"
+version = "1.18.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/fc/3f/a4344c56738f83feb69b7799b6fffe2f1e61c51116a0d26d37cf91a86bfc/justhtml-1.18.0.tar.gz", hash = "sha256:74407e840dc34f77230acda83cbee4ada8a6dbe77543684eac9f7874028e072a", size = 406145, upload-time = "2026-05-04T20:31:55.233Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/cd/41/375ec477f524a230520cc8be504661c7525fc9560f8a8a30e9f89063bdcc/justhtml-1.18.0-py3-none-any.whl", hash = "sha256:38d74b92c06f2cf55aa14c3532fbd2ced65884c2c32c3544b389f321799a7fc2", size = 144347, upload-time = "2026-05-04T20:31:53.458Z" },
+]
+
+[[package]]
 name = "librt"
 version = "0.7.8"
 source = { registry = "https://pypi.org/simple" }
@@ -897,7 +906,6 @@ name = "projectify-app"
 version = "2026.5.3"
 source = { editable = "." }
 dependencies = [
-    { name = "bleach" },
     { name = "dj-database-url" },
     { name = "django" },
     { name = "django-allauth", extra = ["socialaccount"] },
@@ -906,6 +914,7 @@ dependencies = [
     { name = "django-ratelimit" },
     { name = "django-sendfile2" },
     { name = "gunicorn" },
+    { name = "justhtml" },
     { name = "pillow" },
     { name = "stripe" },
 ]
@@ -945,7 +954,6 @@ test = [
 
 [package.metadata]
 requires-dist = [
-    { name = "bleach", specifier = ">=6.2.0" },
     { name = "dj-database-url", specifier = "~=2.1.0" },
     { name = "django", specifier = ">=6.0.0,<7" },
     { name = "django-allauth", extras = ["socialaccount"], specifier = ">=65.14.3" },
@@ -955,6 +963,7 @@ requires-dist = [
     { name = "django-sendfile2", specifier = ">=0.7.2" },
     { name = "faker", marker = "extra == 'demo'", specifier = ">=19.13.0,<20" },
     { name = "gunicorn", specifier = ">=25" },
+    { name = "justhtml", specifier = ">=1.18.0" },
     { name = "pillow", specifier = ">=12.1.1" },
     { name = "psycopg", extras = ["c"], marker = "extra == 'postgresql'", specifier = ">=3.1.18,<4" },
     { name = "stripe", specifier = ">=8,<9" },

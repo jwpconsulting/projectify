@@ -39,7 +39,7 @@ def create_sample_project(
 ) -> Project:
     """Create a sample project with tasks for onboarding."""
     project = project_create(
-        who=who, workspace=workspace, title=_("Sample Project")
+        who=who, workspace=workspace, title_description=_("Sample Project")
     )
     create_sample_tasks(who=who, project=project, team_member=team_member)
     return project
@@ -228,7 +228,7 @@ def new_project(
                 project = project_create(
                     who=request.user,
                     workspace=workspace,
-                    title=form.cleaned_data["title"],
+                    title_description=form.cleaned_data["title"],
                 )
                 return redirect(
                     reverse("onboarding:new_task", args=[str(project.uuid)])

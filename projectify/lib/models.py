@@ -13,10 +13,8 @@ from django.utils import safestring
 from django.utils.html import strip_tags
 from django.utils.translation import gettext_lazy as _
 
-import bleach
-
 from projectify.lib.forms import RichTextEditor
-from projectify.lib.settings import get_settings
+from projectify.lib.utils import clean_rich_text
 
 Pks = list[str]
 
@@ -151,17 +149,6 @@ class BaseModel(Model):
 # SPDX-SnippetBegin
 # SPDX-License-Identifier: MIT
 # SPDX-SnippetCopyrightText: 2022 LOGIC SMPC <paris@withlogic.co>
-def clean_rich_text(text: str) -> safestring.SafeString:
-    """Clean the text for rich text content."""
-    settings = get_settings()
-    tags = settings.MARKDOWNIFY["default"]["WHITELIST_TAGS"]
-    attrs = settings.MARKDOWNIFY["default"]["WHITELIST_ATTRS"]
-    sanitized_html: str = bleach.clean(text, tags=tags, attributes=attrs)  # type: ignore[no-untyped-call]
-    # Remember that just marking it "safe" doesn't make it safe
-    # sanitized_html is safe to mark as "safe" because `bleach.clean` has
-    # cleaned it.
-    safe_html = safestring.mark_safe(sanitized_html)
-    return safe_html
 
 
 class RichTextField(TextField):  # type: ignore

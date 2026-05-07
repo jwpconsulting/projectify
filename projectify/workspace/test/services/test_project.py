@@ -19,11 +19,14 @@ def test_project_create(
     """Test adding a project."""
     assert workspace.project_set.count() == 0
     board = project_create(
-        workspace=workspace, title="foo", description="bar", who=user
+        workspace=workspace, title_description="<p>foo</p><p>bar</p>", who=user
     )
     assert workspace.project_set.count() == 1
+    assert board.title == "foo"
+    assert board.description == "<p>foo</p><p>bar</p>"
+
     board2 = project_create(
-        workspace=workspace, title="foo", description="bar", who=user
+        workspace=workspace, title_description="bar", who=user
     )
     assert workspace.project_set.count() == 2
     # Projects are ordered by most recently created

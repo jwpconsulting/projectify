@@ -4,76 +4,87 @@
 """Projectify utils."""
 
 import logging
-from html.parser import HTMLParser
 from pathlib import Path
-from typing import Any, Optional, Tuple
+from typing import Optional, Tuple
 
 from django.contrib.staticfiles import finders
 from django.core.cache import cache
 from django.templatetags import static
+from django.utils.safestring import SafeString, mark_safe
 
-import bleach
+from justhtml import JustHTML, PruneEmpty
 from PIL import Image
+
+from projectify.lib.settings import get_settings
 
 logger = logging.getLogger(__name__)
 
 
-# See `projectify/lib/tests/test_utils.py` for sanitization test cases
-class _FirstParagraphParser(HTMLParser):
-    """Extract plain text from the first non-empty <p> tag in an HTML string."""
-
-    def __init__(self) -> None:
-        """Initialize parser state."""
-        super().__init__()
-        self._in_p: bool = False
-        self._done: bool = False
-        self._text_parts: list[str] = []
-
-    def handle_starttag(self, tag: str, attrs: Any) -> None:
-        """Track entry into a <p> tag."""
-        if tag == "p" and not self._done:
-            self._in_p = True
-            self._text_parts = []
-
-    def handle_endtag(self, tag: str) -> None:
-        """Track exit from a <p> tag; stop if it was non-empty."""
-        if tag == "p" and self._in_p:
-            self._in_p = False
-            if "".join(self._text_parts).strip():
-                self._done = True
-
-    def handle_data(self, data: str) -> None:
-        """Collect text data inside a <p> tag."""
-        if self._in_p:
-            self._text_parts.append(data)
-
-    @property
-    def first_paragraph_text(self) -> Optional[str]:
-        """Return the collected text, or None if nothing was found."""
-        result = "".join(self._text_parts).strip()
-        return result if result else None
+def clean_rich_text(unsafe_html: str) -> SafeString:
+    """Clean the text for rich text content."""
+    settings = get_settings()
+    # https://github.com/EmilStenstrom/justhtml/blob/main/docs/sanitization.md
+    sanitized_html: str = JustHTML(
+        unsafe_html, policy=settings.HTML_SANITIZATION_POLICY, fragment=True
+    ).to_html(pretty=False)
+    # Remember that just marking it "safe" doesn't make it safe
+    # sanitized_html is safe to mark as "safe" because `bleach.clean` has
+    # cleaned it.
+    safe_html = mark_safe(sanitized_html)
+    return safe_html
 
 
-def extract_first_paragraph_text(html: str) -> Optional[str]:
-    """Return plain text from the first <p> tag in html, or None."""
-    if len(html) == 0:
+def extract_first_paragraph_text(unsafe_html: str) -> Optional[str]:
+    """Return plain text from the first non-empty block tag in html, or None."""
+    if len(unsafe_html) == 0:
         return None
+    settings = get_settings()
     # Try extracting the contents of the first <p> tag
-    sanitized_html: str = bleach.clean(
-        html, strip=True, tags=["p"], attributes=[]
-    )  # type: ignore[no-untyped-call]
-    parser = _FirstParagraphParser()
-    parser.feed(sanitized_html)
-    if parser.first_paragraph_text:
-        return parser.first_paragraph_text
-    # If the parser couldn't find the first paragraph, return the full
-    # text stripped of all tags.
-    all_tags_stripped: str = bleach.clean(
-        html, strip=True, tags=[], attributes=[]
-    )  # type: ignore[no-untyped-call]
-    if len(all_tags_stripped) == 0:
+    doc = JustHTML(
+        unsafe_html,
+        policy=settings.HTML_SANITIZATION_POLICY,
+        fragment=True,
+        transforms=[PruneEmpty("*")],
+    )
+    if not doc.root.children:
         return None
-    return all_tags_stripped
+    for child in doc.root.children:
+        text: str = child.to_text()
+        if len(text) > 0:
+            return text
+    else:
+        return None
+
+
+def strip_first_paragraph(unsafe_html: str) -> Optional[SafeString]:
+    """
+    Strip the first paragraph or other block element.
+
+    Return all following paragraphs as long they're not empty.
+
+    Return None if there's nothing after the first block.
+    """
+    if len(unsafe_html) == 0:
+        return None
+    settings = get_settings()
+    # Try extracting the contents of the first <p> tag
+    doc = JustHTML(
+        unsafe_html,
+        policy=settings.HTML_SANITIZATION_POLICY,
+        fragment=True,
+        transforms=[PruneEmpty("*")],
+    )
+    if not doc.root.children:
+        return None
+    elif len(doc.root.children) <= 1:
+        return None
+    else:
+        doc.root.children = doc.root.children[1:]
+        sanitized_html = doc.to_html()
+        # calling mark_safe doesn't make it safe
+        # html is safe because JustHTML outputs safe html in
+        # doc.to_html()
+        return mark_safe(sanitized_html)
 
 
 def static_image_get_with_dimensions(

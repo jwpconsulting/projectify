@@ -173,7 +173,7 @@ class TestTrialRules:
         assert validate_perm("workspace.create_project", user, workspace)
         customer_cancel_subscription(customer=workspace.customer)
         assert validate_perm("workspace.create_project", user, workspace)
-        project_create(workspace=workspace, title="project", who=user)
+        project_create(workspace=workspace, title_description="foo", who=user)
         assert not validate_perm(
             "workspace.create_project", user, workspace, raise_exception=False
         )
