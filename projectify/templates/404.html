@@ -14,7 +14,10 @@
             {% picture src="status404Image.png" alt=_("Illustration of Poly the mascot looking lost") klass="max-w-sm" %}
             <p>{% trans "The page you're looking for doesn't exist. Maybe there is a typo in the URL you meant to visit?" %}</p>
             <p>
-                {% trans "If you have difficulties using the Projectify application, or would like to report a problem, please contact us:" %}
+                {% anchor "storefront:contact-us" _("contact us") as contact_us_anchor %}
+                {% blocktranslate with contact_us_anchor=contact_us_anchor %}
+                    If you have difficulties using the Projectify application, or would like to report a problem, please {{ contact_us_anchor }}.
+                {% endblocktranslate %}
             </p>
             {% anchor "/" _("Go Back Home") %}
         </main>
