@@ -30,6 +30,7 @@ from .lib.settings import get_settings
 from .views import (
     colored_icon,
     csrf_failure,
+    handler400,
     handler403,
     handler404,
     handler500,
@@ -131,6 +132,7 @@ if settings.BROWSER_RELOAD:
 if settings.DEBUG_ERROR_PAGES:
     urlpatterns = (
         *urlpatterns,
+        path("400.html", handler400),
         path("403.html", handler403),
         path("403_csrf.html", csrf_failure),
         path("404.html", handler404),

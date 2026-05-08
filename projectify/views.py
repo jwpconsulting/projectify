@@ -110,6 +110,16 @@ def manifest_view(request: HttpRequest) -> JsonResponse:
     return JsonResponse(manifest_data)
 
 
+def handler400(
+    request: HttpRequest, exception: Optional[Exception] = None
+) -> HttpResponse:
+    """Handle 400 bad request errors."""
+    del request
+    if exception:
+        logger.warning("Encountered 400 error", exc_info=exception)
+    return HttpResponseBadRequest(_("Forbidden."))
+
+
 def handler403(
     request: HttpRequest, exception: Optional[Exception] = None
 ) -> HttpResponse:
