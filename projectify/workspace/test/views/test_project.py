@@ -83,9 +83,11 @@ class TestProjectDetailViewActions:
     ) -> None:
         """Test successfully creating a task via quick add."""
         initial_count = Task.objects.count()
-        data = {"action": "quick_add_task", "title": "title"}
+        data = {"action": "quick_add_task", "title": "<h1>title"}
         assert user_client.post(resource_url, data).status_code == 200
         assert Task.objects.count() == initial_count + 1
+        task = Task.objects.latest("modified")
+        assert task.title == "<h1>title"
 
         # Test form validation, missing title
         data = {"action": "quick_add_task"}

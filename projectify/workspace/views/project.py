@@ -14,6 +14,7 @@ from django.forms import ValidationError
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils.html import escape
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
@@ -85,6 +86,15 @@ class TaskQuickAddForm(forms.Form):
         label=_("Task title"),
         widget=forms.TextInput(attrs={"placeholder": _("Add a task")}),
     )
+
+    def clean_title(self) -> str:
+        """
+        Escape all HTML characters.
+
+        "fix all <h1> tags" should become "fix all &lt;h1&gt; tags"
+        """
+        data: str = self.cleaned_data["title"]
+        return escape(data)
 
 
 class TaskMarkDoneForm(forms.Form):
