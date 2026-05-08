@@ -16,11 +16,9 @@ from django.http import (
     HttpRequest,
     HttpResponse,
     HttpResponseBadRequest,
-    HttpResponseForbidden,
     JsonResponse,
 )
 from django.shortcuts import render
-from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
@@ -114,20 +112,25 @@ def handler400(
     request: HttpRequest, exception: Optional[Exception] = None
 ) -> HttpResponse:
     """Handle 400 bad request errors."""
-    del request
     if exception:
         logger.warning("Encountered 400 error", exc_info=exception)
-    return HttpResponseBadRequest(_("Forbidden."))
+    return render(request, "400.html", status=400)
 
 
 def handler403(
     request: HttpRequest, exception: Optional[Exception] = None
 ) -> HttpResponse:
     """Handle Throttled exceptions."""
-    del request
     if isinstance(exception, Ratelimited):
-        return HttpResponse(_("Too many requests."), status=429)
-    return HttpResponseForbidden(_("Forbidden."))
+        return render(request, "429.html", status=429)
+    return render(request, "403.html", status=403)
+
+
+def csrf_failure(request: HttpRequest, reason: str = "") -> HttpResponse:
+    """Handle CSRF errors."""
+    if len(reason) > 0:
+        logger.warning("CSRF error reason: %s", reason)
+    return render(request, "403_csrf.html", status=403)
 
 
 def handler404(
@@ -144,12 +147,6 @@ def handler404(
 def handler500(request: HttpRequest) -> HttpResponse:
     """Handle 500 errors with a custom page."""
     return render(request, "500.html", status=500)
-
-
-def csrf_failure(request: HttpRequest, reason: str = "") -> HttpResponse:
-    """Handle CSRF errors."""
-    context = {"reason": reason}
-    return render(request, "403_csrf.html", context, status=403)
 
 
 def health_check(request: HttpRequest) -> HttpResponse:

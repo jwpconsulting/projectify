@@ -4,7 +4,7 @@
 {% load projectify %}
 {% load i18n %}
 {% block title %}
-    {% trans "Server Error" %} - Projectify
+    {% trans "Application error" %} - Projectify
 {% endblock title %}
 {% block body %}
     {% include "common/navigation/header/landing.html" %}
@@ -13,8 +13,13 @@
             <h1 class="text-5xl font-bold">{% trans "Application error" %}</h1>
             {% picture src="status500Image.png" alt=_("Illustration of a broken egg") klass="max-w-sm" %}
             <p>{% trans "An error occured that the application does not know how to handle." %}</p>
-            <p>{% trans "We are sorry this happened. If the same error keeps happening, please contact us:" %}</p>
             {% anchor "storefront:contact_us" _("Go to contact us page") %}
+            <p>
+                {% anchor "storefront:contact-us" _("contact us") as contact_us_anchor %}
+                {% blocktranslate with contact_us_anchor=contact_us_anchor %}
+                    We are sorry this happened. If the same error keeps happening, please {{ contact_us_anchor }}.
+                {% endblocktranslate %}
+            </p>
         </main>
     </div>
     {% include "common/footer.html" %}

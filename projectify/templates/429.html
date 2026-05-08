@@ -4,20 +4,20 @@
 {% load projectify %}
 {% load i18n %}
 {% block title %}
-    {% trans "Form submission failed" %} - Projectify
+    {% trans "Too many requests" %} - Projectify
 {% endblock title %}
 {% block body %}
     {% include "common/navigation/header/landing.html" %}
     <div class="flex grow flex-col items-center gap-12 p-20">
         <main id="main" class="flex max-w-lg flex-col gap-6">
-            <h1 class="text-5xl font-bold">{% trans "Form submission failed" %}</h1>
+            <h1 class="text-5xl font-bold">{% trans "Too many requests" %}</h1>
             <p>
-                {% blocktranslate %}The form that you've submitted contained invalid data and Projectify encountered a <strong>CSRF</strong> error.{% endblocktranslate %}
+                {% blocktranslate %}You're making too many requests to Projectify. Please slow down, wait a moment, and try again later.{% endblocktranslate %}
             </p>
             <p>
                 {% anchor "storefront:contact-us" _("contact us") as contact_us_anchor %}
                 {% blocktranslate with contact_us_anchor=contact_us_anchor %}
-                Please load this form again and submit it one more time. If this problem keeps happening, please {{ contact_us_anchor }}.
+                Please {{ contact_us_anchor }} if you see frequently this page.
                 {% endblocktranslate %}
             </p>
             {% anchor "/" _("Go back home") %}

@@ -4,15 +4,15 @@
 {% load projectify %}
 {% load i18n %}
 {% block title %}
-    {% trans "Form submission failed" %} - Projectify
+    {% trans "Permission denied" %} - Projectify
 {% endblock title %}
 {% block body %}
     {% include "common/navigation/header/landing.html" %}
     <div class="flex grow flex-col items-center gap-12 p-20">
         <main id="main" class="flex max-w-lg flex-col gap-6">
-            <h1 class="text-5xl font-bold">{% trans "Form submission failed" %}</h1>
+            <h1 class="text-5xl font-bold">{% trans "Permission denied" %}</h1>
             <p>
-                {% blocktranslate %}The form that you've submitted contained invalid data and Projectify encountered a <strong>CSRF</strong> error.{% endblocktranslate %}
+                {% blocktranslate %}You don't have the permission required to perform view a page or perform an action. Please make sure that you're opening the right address. Ask your workspace owner for help if you need permission to change something in your workspace.{% endblocktranslate %}
             </p>
             <p>
                 {% anchor "storefront:contact-us" _("contact us") as contact_us_anchor %}
