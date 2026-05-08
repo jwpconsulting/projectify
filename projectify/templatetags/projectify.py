@@ -53,7 +53,7 @@ def anchor(
     Set external=True when you want the link to open
     """
     extra: Union[SafeText, str]
-    a_extra: Union[SafeText, str]
+    target: Union[SafeText, str]
     match href:
         case "":
             raise ValueError("Empty href supplied")
@@ -69,7 +69,7 @@ def anchor(
     # and implicitly switch on external for all other URLs. After all, if it's
     # an internal resource, we'd have a named route for that resource.
     if external:
-        a_extra = mark_safe(' target="_blank"')
+        target = "_blank"
         extra = format_html(
             '<img class="inline-block size-4" src="{src}" alt="{text}">',
             src=reverse(
@@ -79,17 +79,29 @@ def anchor(
             text=_("(Opens in new tab)"),
         )
     else:
-        a_extra = ""
+        target = ""
         extra = ""
     return format_html(
-        '<a href="{url}"{aria_label}{title} class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"{a_extra}>{label}{extra}</a>',
+        '<a href="{url}"{aria_label}{title} '
+        'class="text-primary underline hover:text-primary-hover active:text-primary-pressed text-base"'
+        "{target}"
+        "{aria_current}"
+        ">"
+        "{label}{extra}</a>",
         aria_label=format_html(' aria-label="{label}"', label=aria_label)
         if aria_label is not None
         else "",
         title=format_html(' title="{title}"', title=title)
         if title is not None
         else "",
-        a_extra=a_extra,
+        target=format_html(' target="{target}"', target=target)
+        if target
+        else "",
+        aria_current=format_html(
+            ' aria-current="{aria_current}"', aria_current=aria_current
+        )
+        if aria_current
+        else "",
         url=url,
         label=label,
         extra=extra,
