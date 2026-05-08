@@ -10,14 +10,7 @@ from django.db.models import Model
 from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
-from .models import (
-    Project,
-    Section,
-    Task,
-    TeamMember,
-    TeamMemberInvite,
-    Workspace,
-)
+from .models import Project, Task, TeamMember, TeamMemberInvite, Workspace
 
 M = TypeVar("M", bound=Model)
 
@@ -112,13 +105,6 @@ class TeamMemberAdmin(ReadOnlyAdmin[TeamMember], admin.ModelAdmin[TeamMember]):
         return instance.user.email
 
 
-class SectionInline(admin.TabularInline[Section]):
-    """Section inline admin."""
-
-    model = Section
-    extra = 0
-
-
 class TaskInline(admin.TabularInline[Task]):
     """Task inline admin."""
 
@@ -141,31 +127,6 @@ class ProjectAdmin(ReadOnlyAdmin[Project], admin.ModelAdmin[Project]):
     def workspace_title(self, instance: Project) -> str:
         """Return the workspace's title."""
         return instance.workspace.title
-
-
-@admin.register(Section)
-class SectionAdmin(ReadOnlyAdmin[Section], admin.ModelAdmin[Section]):
-    """Section Admin."""
-
-    list_display = (
-        "title",
-        "project_title",
-        "workspace_title",
-        "created",
-        "modified",
-    )
-    list_select_related = ("project__workspace",)
-    readonly_fields = ("uuid",)
-
-    @admin.display(description=_("Project title"))
-    def project_title(self, instance: Section) -> str:
-        """Return the project's title."""
-        return instance.project.title
-
-    @admin.display(description=_("Workspace title"))
-    def workspace_title(self, instance: Section) -> str:
-        """Return the workspace's title."""
-        return instance.project.workspace.title
 
 
 @admin.register(Task)

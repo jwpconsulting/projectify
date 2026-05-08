@@ -38,6 +38,7 @@ Here's what this release improves for you:
 - Clean up and refactor logging configuration
 - Add tests and debug views for Projectify error pages
 - Fix an error with mail deliverability for Django admin emails
+- Remove `Section` model
 
 ## 2026.5.3
 
