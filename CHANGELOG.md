@@ -8,6 +8,22 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## Unreleased
 
+###  Enhancement
+
+Here's what this release improves for you:
+
+- You can add links to other projects or tasks into your project or task description
+- This release improves the look and feel of project and task forms.
+- You can edit project descriptions with the same rich text editor that tasks
+  have.
+- You can edit project title and description in one go with the same editor.
+- This release removes clutter from the side menu and makes your projects
+  easier to find.
+- This release redesigns the project's task overview and makes your tasks
+  easier to find.
+- This release improves the appearance of error pages and makes it easier to
+  understand when something goes wrong.
+
 ### Documentation
 
 - Inline [Trix documentation](https://github.com/basecamp/trix/tree/main) in `docs/frontend-scripting.md`.
@@ -20,6 +36,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 - Create separate Django test `Client()` instances for different user clients
   in `projectify/conftest.py`.
 - Clean up and refactor logging configuration
+- Add tests and debug views for Projectify error pages
+- Fix an error with mail deliverability for Django admin emails
 
 ## 2026.5.3
 
