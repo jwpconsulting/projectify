@@ -204,6 +204,9 @@ class Hetzner(Base):
             )
         if "DEFAULT_FROM_EMAIL" in credentials:
             cls.DEFAULT_FROM_EMAIL = credentials["DEFAULT_FROM_EMAIL"]
+            cls.SERVER_EMAIL = cls.DEFAULT_FROM_EMAIL
+        else:
+            warnings.warn("Not setting DEFAULT_FROM_EMAIL and SERVER_EMAIL")
 
     @classmethod
     def post_setup(cls) -> None:

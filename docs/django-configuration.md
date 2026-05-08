@@ -70,9 +70,14 @@ See also `docs/billing_integration.md`.
 
 ## Emails
 
-Set the email from address with the following credential value:
+Set the email *from* address with the following credential value:
 
 - `DEFAULT_FROM_EMAIL` (optional): default is `"Projectify" <hello@projectifyapp.com>`
+
+Projectify uses the `DEFAULT_FROM_EMAIL` address for the following emails:
+
+- Transactional emails to user
+- Error messages to administrator at `ADMIN_EMAIL`
 
 If you use an SMTP server with implicit TLS (port 465), set these credentials:
 
