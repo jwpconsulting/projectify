@@ -146,8 +146,7 @@
 {% partialdef project_tasks %}
     {% has_perm "workspace.create_task" user project.workspace as can_create_task %}
     {% has_perm "workspace.update_task" user project.workspace as can_update_task %}
-    <div id="project-tasks"
-         class="bg-foreground flex flex-col py-2 px-4 gap-2">
+    <div id="project-tasks" class="bg-foreground flex flex-col py-2 gap-2">
         <div class="flex shrink-0 flex-row items-center justify-between gap-1">
             <h2 class="font-bold text-xl">{% trans "Tasks" %}</h2>
             {% if can_create_task %}
@@ -168,7 +167,7 @@
                         <td class="lg:col-span-3">
                             {% translate "No tasks in this project." %}
                             {% if can_create_task %}
-                                {% anchor 'dashboard:tasks:create' label=_("Add a task here") project_uuid=project.uuid %}
+                                {% anchor href='dashboard:projects:create-task' label=_("Add a task here") project_uuid=project.uuid %}
                             {% endif %}
                         </td>
                     </tr>
@@ -182,7 +181,7 @@
 {% endpartialdef project_tasks %}
 {% block dashboard_content %}
     <main id="main"
-          class="max-w-4xl min-w-0 grow flex flex-col gap-4 px-4 py-4">
+          class="max-w-4xl min-w-0 grow flex flex-col gap-4 px-4 sm:px-8 py-4">
         <div class="flex justify-between">
             <h1 class="truncate font-bold text-2xl">{{ project.title }}</h1>
             {% has_perm "workspace.update_project" user workspace as can_update_project %}
