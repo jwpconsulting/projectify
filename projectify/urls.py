@@ -130,13 +130,16 @@ if settings.BROWSER_RELOAD:
     )
 
 if settings.DEBUG_ERROR_PAGES:
+    from .view_tests import debug_error_pages
+
     urlpatterns = (
         *urlpatterns,
-        path("400.html", handler400),
-        path("403.html", handler403),
-        path("403_csrf.html", csrf_failure),
-        path("404.html", handler404),
-        path("500.html", handler500),
+        path("400.html", handler400, name="400.html"),
+        path("403.html", handler403, name="403.html"),
+        path("403_csrf.html", csrf_failure, name="403_csrf.html"),
+        path("404.html", handler404, name="404.html"),
+        path("500.html", handler500, name="500.html"),
+        path("debug_error_pages", debug_error_pages, name="debug-error-pages"),
     )
 
 if settings.DEBUG_AUTH:

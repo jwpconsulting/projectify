@@ -1,0 +1,18 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{% extends "storefront_base.html" %}
+{% load i18n %}
+{% load projectify %}
+{% block title %}
+    {% translate "Debug Error Pages" %}
+{% endblock title %}
+{% block storefront_content %}
+    <main id="main" class="content mx-auto">
+        <h1 class="font-bold text-2xl">{% translate "Debug Error Pages" %}</h1>
+        <ul class="list-disc list-inside">
+            {% for url, label in error_pages %}
+                <li>{% anchor href=url label=label %}</li>
+            {% endfor %}
+        </ul>
+    </main>
+{% endblock storefront_content %}
