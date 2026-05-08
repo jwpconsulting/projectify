@@ -5,11 +5,13 @@
 
 import logging
 
+from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest, HttpResponse
 from django.test.client import Client
 from django.urls import path, reverse
 
 import pytest
+from django_ratelimit.exceptions import Ratelimited
 
 from .. import urls
 
@@ -57,13 +59,37 @@ def error_view(request: HttpRequest) -> HttpResponse:
     raise Exception("Test error")
 
 
-urlpatterns = (path("error/", error_view, name="error"), *urls.urlpatterns)
+def forbidden_view(request: HttpRequest) -> HttpResponse:
+    """Throw a generic 403 forbidden error."""
+    del request
+    raise PermissionDenied("Forbidden")
 
 
+def ratelimited_view(request: HttpRequest) -> HttpResponse:
+    """Throw a Ratelimited exception."""
+    del request
+    raise Ratelimited()
+
+
+# Combine the three error views and override the rest of the Projectify
+# urlpatterns
+urlpatterns = (
+    path("error/", error_view, name="error"),
+    path("forbidden/", forbidden_view, name="forbidden"),
+    path("ratelimited/", ratelimited_view, name="ratelimited"),
+    *urls.urlpatterns,
+)
+# Because pytest.mark.urls override the URLconf,
+# we need to manually specify these values:
+handler403 = urls.handler403
+handler404 = urls.handler404
+handler500 = urls.handler500
+
+
+@pytest.mark.urls("projectify.test.test_views")
 class Test500InternalServerError:
     """Test the 500 internal server error view."""
 
-    @pytest.mark.urls("projectify.test.test_views")
     def test_500(
         self, client: Client, caplog: pytest.LogCaptureFixture
     ) -> None:
@@ -74,3 +100,22 @@ class Test500InternalServerError:
             assert response.status_code == 500
             assert b"We are sorry this happened" in response.content
         assert "Internal Server Error" in caplog.text
+
+
+@pytest.mark.urls("projectify.test.test_views")
+class Test403Forbidden:
+    """Test the 403 forbidden view."""
+
+    def test_403(self, client: Client) -> None:
+        """Test that a generic exception returns 403 Forbidden."""
+        client.raise_request_exception = False
+        response = client.get("/forbidden/")
+        assert response.status_code == 403
+        assert b"Forbidden" in response.content
+
+    def test_ratelimited(self, client: Client) -> None:
+        """Test that a Ratelimited exception returns 429 Too Many Requests."""
+        client.raise_request_exception = False
+        response = client.get("/ratelimited/")
+        assert response.status_code == 429
+        assert b"Too many requests" in response.content
