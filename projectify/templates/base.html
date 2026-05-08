@@ -53,15 +53,12 @@
         {% block structured_data %}
         {% endblock structured_data %}
     </head>
-    <body class="min-h-screen w-full max-w-full bg-foreground text-base-content"
-          hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
         <a href="#main" class="sr-only">{% translate "Skip to main content" %}</a>
         {% if debug %}
             {% include "common/navigation/header/development_view_bar.html" %}
         {% endif %}
-        <div class="flex min-h-screen flex-col"
-             id="app-content"
-             role="presentation">
+        <div class="flex flex-col min-h-screen w-full max-w-full">
             {% block body %}
             {% endblock body %}
         </div>

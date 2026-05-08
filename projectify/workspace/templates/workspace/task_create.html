@@ -15,7 +15,7 @@
     {% translate "Create task" %}
 {% endblock form_title %}
 {% block form_header %}
-    {% include "workspace/task/breadcrumbs.html" with project=project current_page_label=_("New task (currently creating)") current_page_url=request.get_full_path %}
+    {% include "workspace/task/breadcrumbs.html" with current_page_title=_("New task") current_page_href=request.path %}
     <div class="grow-0">{% include "projectify/forms/submit.html" with text=_("Save") %}</div>
 {% endblock form_header %}
 {% block form_content %}

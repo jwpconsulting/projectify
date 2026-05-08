@@ -6,6 +6,7 @@
 from datetime import datetime
 from typing import Optional
 
+from django.db import transaction
 from django.utils.timezone import now
 
 from projectify.lib.auth import validate_perm
@@ -15,7 +16,7 @@ from projectify.workspace.models import Project, Workspace
 
 
 # Create
-# TODO atomic
+@transaction.atomic
 def project_create(
     *,
     who: User,
@@ -40,7 +41,7 @@ def project_create(
 
 
 # Update
-# TODO atomic
+@transaction.atomic
 def project_update(
     *,
     who: User,
@@ -68,7 +69,7 @@ def project_update(
 
 
 # Delete
-# TODO atomic
+@transaction.atomic
 def project_delete(*, who: User, project: Project) -> None:
     """Delete a project."""
     validate_perm("workspace.delete_project", who, project.workspace)
@@ -76,7 +77,7 @@ def project_delete(*, who: User, project: Project) -> None:
 
 
 # RPC
-# TODO atomic
+@transaction.atomic
 def project_archive(*, who: User, project: Project, archived: bool) -> Project:
     """Archive a project, or not."""
     validate_perm("workspace.update_project", who, project.workspace)
