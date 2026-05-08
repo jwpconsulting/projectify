@@ -256,20 +256,6 @@ class TeamMember(BaseModel):
             "Timestamp when this team member last visited this workspace"
         ),
     )
-    # TODO remove
-    minimized_project_list = models.BooleanField(
-        default=False,
-        help_text=_(
-            "Whether this team member has minimized the project list in this workspace"
-        ),
-    )
-    # TODO remove
-    minimized_team_member_filter = models.BooleanField(
-        default=False,
-        help_text=_(
-            "Whether this team member has minimized the team member filter in this workspace"
-        ),
-    )
 
     if TYPE_CHECKING:
         # Related
