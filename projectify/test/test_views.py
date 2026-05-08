@@ -5,10 +5,13 @@
 
 import logging
 
+from django.http import HttpRequest, HttpResponse
 from django.test.client import Client
-from django.urls import reverse
+from django.urls import path, reverse
 
 import pytest
+
+from .. import urls
 
 
 class TestHealthCheck:
@@ -46,3 +49,28 @@ class Test404NotFound:
             assert b"Page not found" in response.content
 
         assert "Received Resolver404 exception for 404 error" in caplog.text
+
+
+def error_view(request: HttpRequest) -> HttpResponse:
+    """Throws an error."""
+    del request
+    raise Exception("Test error")
+
+
+urlpatterns = (path("error/", error_view, name="error"), *urls.urlpatterns)
+
+
+class Test500InternalServerError:
+    """Test the 500 internal server error view."""
+
+    @pytest.mark.urls("projectify.test.test_views")
+    def test_500(
+        self, client: Client, caplog: pytest.LogCaptureFixture
+    ) -> None:
+        """Test 500 status, custom template, and logging behaviour."""
+        client.raise_request_exception = False
+        with caplog.at_level(logging.WARNING):
+            response = client.get("/error/")
+            assert response.status_code == 500
+            assert b"We are sorry this happened" in response.content
+        assert "Internal Server Error" in caplog.text
