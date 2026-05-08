@@ -4,11 +4,11 @@
 {% load i18n %}
 {% load projectify %}
 {% block body %}
-    <div class="flex min-h-screen grow flex-col">
+    <div class="flex grow flex-col">
         {% include "common/navigation/header/dashboard.html" %}
         <div class="flex min-h-0 shrink grow flex-col md:flex-row">
             <nav aria-label="{% translate "Side menu" %}"
-                 class="max-w-full md:max-w-xs 2xl:max-w-md shrink-0 flex flex-col py-4 border-r border-border">
+                 class="order-last md:order-first max-w-full md:max-w-xs 2xl:max-w-md shrink-0 flex flex-col py-4 border-r border-border">
                 {% if workspace %}
                     <div class="px-4 flex flex-col gap-2 pb-4">
                         <details name="workspace-select" class="min-w-0 w-full ">

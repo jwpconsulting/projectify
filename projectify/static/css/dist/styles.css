@@ -2412,6 +2412,10 @@ video {
 }
 
 @media (min-width: 768px) {
+  .md\:order-first {
+    order: -9999;
+  }
+
   .md\:order-none {
     order: 0;
   }
