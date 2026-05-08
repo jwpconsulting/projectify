@@ -15,7 +15,7 @@
     {% translate "Edit task" %}
 {% endblock form_title %}
 {% block form_header %}
-    {% include "workspace/task/breadcrumbs.html" with section=task.section task=task current_page_label=_("Edit task") current_page_url=request.get_full_path %}
+    {% include "workspace/task/breadcrumbs.html" with current_page_title=task.title current_page_href=request.path %}
     <div class="flex gap-2">
         {% has_perm "workspace.delete_task" user project.workspace as can_delete_task %}
         {% if can_delete_task %}
