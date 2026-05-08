@@ -16,11 +16,9 @@ from django.http import (
     HttpRequest,
     HttpResponse,
     HttpResponseBadRequest,
-    HttpResponseForbidden,
     JsonResponse,
 )
 from django.shortcuts import render
-from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
@@ -110,14 +108,29 @@ def manifest_view(request: HttpRequest) -> JsonResponse:
     return JsonResponse(manifest_data)
 
 
+def handler400(
+    request: HttpRequest, exception: Optional[Exception] = None
+) -> HttpResponse:
+    """Handle 400 bad request errors."""
+    if exception:
+        logger.warning("Encountered 400 error", exc_info=exception)
+    return render(request, "400.html", status=400)
+
+
 def handler403(
     request: HttpRequest, exception: Optional[Exception] = None
 ) -> HttpResponse:
     """Handle Throttled exceptions."""
-    del request
     if isinstance(exception, Ratelimited):
-        return HttpResponse(_("Too many requests."), status=429)
-    return HttpResponseForbidden(_("Forbidden."))
+        return render(request, "429.html", status=429)
+    return render(request, "403.html", status=403)
+
+
+def csrf_failure(request: HttpRequest, reason: str = "") -> HttpResponse:
+    """Handle CSRF errors."""
+    if len(reason) > 0:
+        logger.warning("CSRF error reason: %s", reason)
+    return render(request, "403_csrf.html", status=403)
 
 
 def handler404(
@@ -125,16 +138,14 @@ def handler404(
 ) -> HttpResponse:
     """Handle 404 errors with a custom page."""
     if exception:
-        context = {"error": str(exception)}
-    else:
-        context = {}
-    logger.warning("Handling 404 error for exception=%s", exception)
-    return render(request, "404.html", status=404, context=context)
+        logger.warning(
+            "Received %s exception for 404 error", exception.__class__.__name__
+        )
+    return render(request, "404.html", status=404)
 
 
 def handler500(request: HttpRequest) -> HttpResponse:
     """Handle 500 errors with a custom page."""
-    logger.error("500 error page hit")
     return render(request, "500.html", status=500)
 
 

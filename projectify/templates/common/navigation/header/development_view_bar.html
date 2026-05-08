@@ -4,10 +4,14 @@
 {% load projectify %}
 <div class="absolute left-0 top-0 w-full bg-destructive/30 flex items-center justify-center gap-4">
     <span class="font-bold">{% translate "Development preview" %}</span>
+    {# TODO check if DEBUG_AUTH is set #}
+    {% anchor label=_("User test urls") href="users-testing:test-index" %}
+    {% anchor label=_("Onboarding") href="onboarding:welcome" %}
+    {# TODO check if DEBUG_ERROR_PAGES is set #}
+    {% anchor label=_("Error pages") href="debug-error-pages" %}
+    {# other #}
     {% if request.user.is_staff %}
         {% anchor label=_("Projectify Admin") href="admin:index" %}
     {% endif %}
-    {% anchor label=_("User test urls") href="users-testing:test-index" %}
-    {% anchor label=_("Onboarding") href="onboarding:welcome" %}
     {% anchor label=_("Sitemap") href="django.contrib.sitemaps.views.sitemap" %}
 </div>

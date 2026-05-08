@@ -9,8 +9,9 @@ import pytest
 
 from ..models import User, UserInvite
 
+pytestmark = pytest.mark.django_db
 
-@pytest.mark.django_db
+
 class TestUser:
     """Test User class."""
 
@@ -59,7 +60,6 @@ class TestUser:
         user.save()
 
 
-@pytest.mark.django_db
 class TestUserInvite:
     """Test UserInvite."""
 
