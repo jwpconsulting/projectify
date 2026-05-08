@@ -41,6 +41,7 @@ def anchor(
     aria_label: Optional[str] = None,
     title: Optional[str] = None,
     external: bool = False,
+    aria_current: Optional[str] = None,
     *args: Any,
     **kwargs: Any,
 ) -> SafeText:

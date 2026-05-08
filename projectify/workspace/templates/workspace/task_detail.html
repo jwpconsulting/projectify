@@ -14,10 +14,8 @@
                     id="close-task-detail-button"
                     class="shrink-0 size-8 p-1.5 rounded-full border border-transparent hover:bg-secondary-hover active:bg-disabled"
                     aria-label="{% trans 'Close task details' %}">{% icon "x" %}</button>
-        {% else %}
-            {% circle_anchor label=_("Go back to project") icon_style="x" href=project %}
         {% endif %}
-        {% include "workspace/task/breadcrumbs.html" with section=task.section task=task %}
+        {% include "workspace/task/breadcrumbs.html" with current_page_title=task.title current_page_href=request.path %}
     </div>
 {% endpartialdef breadcrumbs %}
 {% partialdef task_panel %}

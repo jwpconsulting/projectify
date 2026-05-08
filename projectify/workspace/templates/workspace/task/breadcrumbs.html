@@ -2,7 +2,17 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load projectify %}
 {% load i18n %}
-<p>
-    {% icon "folder" size=4 inline=True %}
-    {% anchor href=project.get_absolute_url title=_("Project link") label=project.title %}
-</p>
+<nav aria-label="{% translate 'Breadcrumb' %}" class="shrink">
+    <ol class="contents">
+        <li class="inline whitespace-nowrap">
+            {% icon "folder" size=4 inline=True %}
+            {% anchor href=project.get_absolute_url title=_("Project link") label=project.title %}
+        </li>
+        {% if current_page_href and current_page_title %}
+            <li class="inline whitespace-nowrap">
+                {% icon "circle" size=4 inline=True %}
+                {% anchor href=current_page_href label=current_page_title aria_current="page" %}
+            </li>
+        {% endif %}
+    </ol>
+</nav>
