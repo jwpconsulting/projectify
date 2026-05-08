@@ -71,12 +71,19 @@ def ratelimited_view(request: HttpRequest) -> HttpResponse:
     raise Ratelimited()
 
 
+def csrf_protected_view(request: HttpRequest) -> HttpResponse:
+    """Return OK, don't do anything else."""
+    del request
+    return HttpResponse("OK")
+
+
 # Combine the three error views and override the rest of the Projectify
 # urlpatterns
 urlpatterns = (
-    path("error/", error_view, name="error"),
-    path("forbidden/", forbidden_view, name="forbidden"),
-    path("ratelimited/", ratelimited_view, name="ratelimited"),
+    path("error", error_view, name="error"),
+    path("forbidden", forbidden_view, name="forbidden"),
+    path("ratelimited", ratelimited_view, name="ratelimited"),
+    path("csrf-protected", csrf_protected_view, name="csrf-protected"),
     *urls.urlpatterns,
 )
 # Because pytest.mark.urls override the URLconf,
@@ -84,6 +91,7 @@ urlpatterns = (
 handler403 = urls.handler403
 handler404 = urls.handler404
 handler500 = urls.handler500
+csrf_failure = urls.csrf_failure
 
 
 @pytest.mark.urls("projectify.test.test_views")
@@ -96,7 +104,7 @@ class Test500InternalServerError:
         """Test 500 status, custom template, and logging behaviour."""
         client.raise_request_exception = False
         with caplog.at_level(logging.WARNING):
-            response = client.get("/error/")
+            response = client.get("/error")
             assert response.status_code == 500
             assert b"We are sorry this happened" in response.content
         assert "Internal Server Error" in caplog.text
@@ -109,13 +117,34 @@ class Test403Forbidden:
     def test_403(self, client: Client) -> None:
         """Test that a generic exception returns 403 Forbidden."""
         client.raise_request_exception = False
-        response = client.get("/forbidden/")
+        response = client.get("/forbidden")
         assert response.status_code == 403
         assert b"Forbidden" in response.content
 
     def test_ratelimited(self, client: Client) -> None:
         """Test that a Ratelimited exception returns 429 Too Many Requests."""
         client.raise_request_exception = False
-        response = client.get("/ratelimited/")
+        response = client.get("/ratelimited")
         assert response.status_code == 429
         assert b"Too many requests" in response.content
+
+
+@pytest.mark.urls("projectify.test.test_views")
+class TestCsrfFailure:
+    """Test the CSRF failure view."""
+
+    def test_csrf_view(self) -> None:
+        """Test that a POST request without a CSRF token returns 403."""
+        client = Client(enforce_csrf_checks=True)
+        response = client.post("/csrf-protected")
+        assert response.status_code == 403
+        assert b"Go back home" in response.content
+
+        # Visiting csrf-protected happens to already set the csrf cookie
+        csrf_token = client.cookies.get("csrftoken")
+        assert csrf_token, client.cookies
+
+        data = {"csrfmiddlewaretoken": csrf_token.value}
+        response = client.post("/csrf-protected", data)
+        assert response.status_code == 200
+        assert b"Go back home" not in response.content

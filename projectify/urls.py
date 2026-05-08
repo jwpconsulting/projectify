@@ -152,4 +152,10 @@ if settings.DEBUG:
     ]
 
 
-__all__ = ("handler404", "handler500", "handler403", "urlpatterns")
+__all__ = (
+    "handler404",
+    "handler500",
+    "handler403",
+    "csrf_failure",
+    "urlpatterns",
+)
