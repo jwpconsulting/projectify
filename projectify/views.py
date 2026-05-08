@@ -136,6 +136,12 @@ def handler500(request: HttpRequest) -> HttpResponse:
     return render(request, "500.html", status=500)
 
 
+def csrf_failure(request: HttpRequest, reason: str = "") -> HttpResponse:
+    """Handle CSRF errors."""
+    context = {"reason": reason}
+    return render(request, "403_csrf.html", context, status=403)
+
+
 def health_check(request: HttpRequest) -> HttpResponse:
     """Health check endpoint that returns 204 No Content."""
     del request

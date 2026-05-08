@@ -29,6 +29,7 @@ from projectify.user.sitemap import UserSitemap
 from .lib.settings import get_settings
 from .views import (
     colored_icon,
+    csrf_failure,
     handler403,
     handler404,
     handler500,
@@ -131,6 +132,7 @@ if settings.DEBUG_ERROR_PAGES:
     urlpatterns = (
         *urlpatterns,
         path("403.html", handler403),
+        path("403_csrf.html", csrf_failure),
         path("404.html", handler404),
         path("500.html", handler500),
     )
