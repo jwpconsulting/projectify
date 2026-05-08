@@ -415,9 +415,10 @@ class TestProjectDeleteView:
         """Test successfully deleting an archived project via HTMX."""
         project_uuid = archived_project.uuid
         assert archived_project.archived
-        # Gone from 7 -> 8 since we delete user preferences
-        # Gone up from 8 -> 9
-        with django_assert_num_queries(9):
+        # Gone up from   7 -> 8 since we delete user preferences
+        # Gone up from   8 -> 9
+        # Gone down from 9 -> 8 after deleting the Section model
+        with django_assert_num_queries(8):
             response = user_client.post(resource_url)
             assert response.status_code == 200
         assert not Project.objects.filter(uuid=project_uuid).exists()

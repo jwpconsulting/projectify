@@ -38,6 +38,9 @@ Here's what this release improves for you:
 - Clean up and refactor logging configuration
 - Add tests and debug views for Projectify error pages
 - Fix an error with mail deliverability for Django admin emails
+- Remove `Section` model
+- Remove WorkspaceUser unused `minimized_project_list` and
+   `minimized_team_member_filter` properties.
 
 ## 2026.5.3
 
