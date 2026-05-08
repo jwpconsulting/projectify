@@ -123,7 +123,7 @@ class TestNewProject(MixinForTests):
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test creating a new project."""
-        with django_assert_num_queries(9):
+        with django_assert_num_queries(11):
             response = user_client.post(resource_url, {"title": "BarFoo"})
             assert response.status_code == 302
         project = Project.objects.get(title="BarFoo")

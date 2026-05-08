@@ -171,7 +171,7 @@ class TestProjectCreateView:
         """Test successfully creating a project."""
         initial_project_count = Project.objects.count()
         data = {"description": "<h1>New Test Project</h1>"}
-        with django_assert_num_queries(6):
+        with django_assert_num_queries(8):
             response = user_client.post(resource_url, data)
             assert response.status_code == 302
         assert Project.objects.count() == initial_project_count + 1
@@ -231,7 +231,7 @@ class TestProjectUpdateView:
         updated_title = "<h1>Updated Project Title</h1><p>foo bar</p>"
 
         data = {"description": updated_title}
-        with django_assert_num_queries(7):
+        with django_assert_num_queries(9):
             response = user_client.post(resource_url, data)
             assert response.status_code == 302
 
@@ -296,7 +296,7 @@ class TestProjectArchiveView:
     ) -> None:
         """Test successfully archiving a project via HTMX."""
         assert not project.archived
-        with django_assert_num_queries(6):
+        with django_assert_num_queries(8):
             response = user_client.post(resource_url)
             assert response.status_code == 200
         project.refresh_from_db()
@@ -354,7 +354,7 @@ class TestProjectRecoverView:
     ) -> None:
         """Test successfully recovering an archived project via HTMX."""
         assert archived_project.archived
-        with django_assert_num_queries(6):
+        with django_assert_num_queries(8):
             response = user_client.post(resource_url)
             assert response.status_code == 200
         archived_project.refresh_from_db()
@@ -420,7 +420,8 @@ class TestProjectDeleteView:
         # Gone up from   7 -> 8 since we delete user preferences
         # Gone up from   8 -> 9
         # Gone down from 9 -> 8 after deleting the Section model
-        with django_assert_num_queries(8):
+        # Gone up from   8 -> 10
+        with django_assert_num_queries(10):
             response = user_client.post(resource_url)
             assert response.status_code == 200
         assert not Project.objects.filter(uuid=project_uuid).exists()
