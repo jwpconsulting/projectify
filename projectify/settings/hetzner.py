@@ -23,9 +23,6 @@ class Hetzner(Base):
     """
 
     SITE_TITLE = "Projectify Production on Hetzner"
-    # TODO remove default value
-    ALLOWED_HOSTS = [os.getenv("ALLOWED_HOST", "www.projectifyapp.com")]
-    FRONTEND_URL = f"https://{ALLOWED_HOSTS[0]}"
 
     STORAGES = CollectStatic.STORAGES
 
@@ -35,6 +32,7 @@ class Hetzner(Base):
     def setup(cls) -> None:
         """Load database config, after environment is correctly loaded."""
         cls.setup_runtime_directories()
+        cls.setup_allowed_hosts()
 
         if "CREDENTIALS_FILE" not in os.environ:
             raise RuntimeError(
@@ -77,6 +75,23 @@ class Hetzner(Base):
         super().setup()
 
     @classmethod
+    def setup_allowed_hosts(cls) -> None:
+        """Configure Django ALLOWED_HOSTS variable from environment."""
+        if "ALLOWED_HOST" in os.environ:
+            allowed_host = os.environ["ALLOWED_HOST"]
+        else:
+            # TODO remove default value and make this raise a
+            #  RuntimeError instead
+            allowed_host = "www.projectifyapp.com"
+            warnings.warn(
+                "Expected ALLOWED_HOST variable in the environment."
+                "Falling back to "
+                f"ALLOWED_HOST={allowed_host}"
+            )
+        cls.ALLOWED_HOSTS = [allowed_host]
+        cls.FRONTEND_URL = f"https://{allowed_host}"
+
+    @classmethod
     def setup_runtime_directories(cls) -> None:
         """Set up runtime directories for media and static files."""
         # Static files
@@ -95,7 +110,6 @@ class Hetzner(Base):
             )
         else:
             cls.STATIC_ROOT = Path(os.environ["STATIC_ROOT"])
-        # TODO print friendly error when MEDIA_ROOT not found
         if "MEDIA_ROOT" not in os.environ:
             raise RuntimeError(
                 "You need to set the MEDIA_ROOT environment variable"
