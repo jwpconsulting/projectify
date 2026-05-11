@@ -63,15 +63,6 @@ class Hetzner(Base):
         cls.setup_billing(credentials_file, credentials)
         cls.setup_email(credentials_file, credentials)
 
-        admin_name = credentials.get("ADMIN_NAME")
-        if admin_name is None:
-            warnings.warn("ADMIN_NAME environment variable not set")
-        admin_email = credentials.get("ADMIN_EMAIL")
-        if admin_email is None:
-            warnings.warn("ADMIN_EMAIL environment variable not set")
-        if admin_name and admin_email:
-            cls.ADMINS = [[admin_name, admin_email]]
-
         super().setup()
 
     @classmethod
@@ -126,70 +117,67 @@ class Hetzner(Base):
         cls, credentials_file: Path, credentials: dict[str, Any]
     ) -> None:
         """Load stripe configuration."""
-        if "STRIPE_PUBLISHABLE_KEY" not in credentials:
-            raise RuntimeError(
-                f"You must specify the STRIPE_PUBLISHABLE_KEY in {credentials_file}"
+        stripe_keys = {
+            "STRIPE_PUBLISHABLE_KEY",
+            "STRIPE_SECRET_KEY",
+            "STRIPE_PRICE_OBJECT",
+            "STRIPE_ENDPOINT_SECRET",
+        }
+        if all(key in credentials for key in stripe_keys):
+            cls.STRIPE_CONFIG = StripeConfig(
+                STRIPE_PUBLISHABLE_KEY=credentials["STRIPE_PUBLISHABLE_KEY"],
+                STRIPE_SECRET_KEY=credentials["STRIPE_SECRET_KEY"],
+                STRIPE_PRICE_OBJECT=credentials["STRIPE_PRICE_OBJECT"],
+                STRIPE_ENDPOINT_SECRET=credentials["STRIPE_ENDPOINT_SECRET"],
             )
-        if "STRIPE_SECRET_KEY" not in credentials:
+        else:
             raise RuntimeError(
-                f"You must specify the STRIPE_SECRET_KEY in {credentials_file}"
+                f"You must specify the following Stripe configuration "
+                f"in {credentials_file}:\n"
+                f"{', '.join(stripe_keys)}"
             )
-        if "STRIPE_PRICE_OBJECT" not in credentials:
-            raise RuntimeError(
-                f"You must specify the STRIPE_PRICE_OBJECT in {credentials_file}"
-            )
-        if "STRIPE_ENDPOINT_SECRET" not in credentials:
-            raise RuntimeError(
-                f"You must specify the STRIPE_ENDPOINT_SECRET in {credentials_file}"
-            )
-
-        cls.STRIPE_CONFIG = StripeConfig(
-            STRIPE_PUBLISHABLE_KEY=credentials["STRIPE_PUBLISHABLE_KEY"],
-            STRIPE_SECRET_KEY=credentials["STRIPE_SECRET_KEY"],
-            STRIPE_PRICE_OBJECT=credentials["STRIPE_PRICE_OBJECT"],
-            STRIPE_ENDPOINT_SECRET=credentials["STRIPE_ENDPOINT_SECRET"],
-        )
 
     @classmethod
     def setup_allauth(
         cls, credentials_file: Path, credentials: dict[str, Any]
     ) -> None:
         """Load allauth configuration."""
-        if (
-            "ALLAUTH_GITHUB_CLIENT_ID" not in credentials
-            or "ALLAUTH_GITHUB_SECRET" not in credentials
-        ):
+        github_keys = {"ALLAUTH_GITHUB_CLIENT_ID", "ALLAUTH_GITHUB_SECRET"}
+        if all(key in credentials for key in github_keys):
+            cls.SOCIALACCOUNT_PROVIDERS["github"]["APPS"].append(
+                {
+                    "client_id": credentials["ALLAUTH_GITHUB_CLIENT_ID"],
+                    "secret": credentials["ALLAUTH_GITHUB_SECRET"],
+                }
+            )
+        else:
             raise RuntimeError(
-                f"You must specify the GitHub OAuth credentials ALLAUTH_GITHUB_CLIENT_ID and ALLAUTH_GITHUB_SECRET in {credentials_file}"
+                f"You must specify the following Google OAuth credentials "
+                f"in {credentials_file}:\n"
+                f"{', '.join(github_keys)}"
             )
 
-        cls.SOCIALACCOUNT_PROVIDERS["github"]["APPS"].append(
-            {
-                "client_id": credentials["ALLAUTH_GITHUB_CLIENT_ID"],
-                "secret": credentials["ALLAUTH_GITHUB_SECRET"],
-            }
-        )
-
-        if (
-            "ALLAUTH_GOOGLE_CLIENT_ID" not in credentials
-            or "ALLAUTH_GOOGLE_SECRET" not in credentials
-        ):
-            raise RuntimeError(
-                f"You must specify the Google OAuth credentials ALLAUTH_GOOGLE_CLIENT_ID and ALLAUTH_GOOGLE_SECRET in {credentials_file}"
+        google_keys = {"ALLAUTH_GOOGLE_CLIENT_ID", "ALLAUTH_GOOGLE_SECRET"}
+        if all(key in credentials for key in google_keys):
+            cls.SOCIALACCOUNT_PROVIDERS["google"]["APPS"].append(
+                {
+                    "client_id": credentials["ALLAUTH_GOOGLE_CLIENT_ID"],
+                    "secret": credentials["ALLAUTH_GOOGLE_SECRET"],
+                }
             )
-        cls.SOCIALACCOUNT_PROVIDERS["google"]["APPS"].append(
-            {
-                "client_id": credentials["ALLAUTH_GOOGLE_CLIENT_ID"],
-                "secret": credentials["ALLAUTH_GOOGLE_SECRET"],
-            }
-        )
+        else:
+            raise RuntimeError(
+                f"You must specify the following Google OAuth credentials "
+                f"in {credentials_file}:\n"
+                f"{', '.join(google_keys)}"
+            )
 
-        apple_keys = [
+        apple_keys = {
             "ALLAUTH_APPLE_CLIENT_ID",
             "ALLAUTH_APPLE_SECRET",
             "ALLAUTH_APPLE_KEY",
             "ALLAUTH_APPLE_CERTIFICATE_KEY",
-        ]
+        }
         # TODO make log in with apple NOT optional
         if all(key in credentials for key in apple_keys):
             cls.SOCIALACCOUNT_PROVIDERS["apple"]["APPS"].append(
@@ -208,7 +196,7 @@ class Hetzner(Base):
             warnings.warn(
                 "Launching Projectify without Apple OAuth credentials. "
                 f"You must specify the following keys in {credentials_file}:\n"
-                f"{', '.join(apple_keys)}"
+                f"{', '.join(apple_keys)} to enable Apple OAuth"
             )
 
     @classmethod
@@ -216,11 +204,8 @@ class Hetzner(Base):
         cls, credentials_file: Path, credentials: dict[str, Any]
     ) -> None:
         """Load SMTP mail configuration."""
-        if (
-            "EMAIL_HOST" in credentials
-            and "EMAIL_HOST_USER" in credentials
-            and "EMAIL_HOST_PASSWORD" in credentials
-        ):
+        keys = "EMAIL_HOST", "EMAIL_HOST_USER", "EMAIL_HOST_PASSWORD"
+        if all(key in credentials for key in keys):
             cls.EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
             # If you're using Lettermint, this is smtp.lettermint.co
             cls.EMAIL_HOST = credentials["EMAIL_HOST"]
@@ -243,11 +228,27 @@ class Hetzner(Base):
             raise RuntimeError(
                 f"You must specify the SMTP configuration in {credentials_file}"
             )
+
+        email_keys = {"ADMIN_NAME", "ADMIN_EMAIL"}
+        if all(key in credentials for key in email_keys):
+            cls.ADMINS = [
+                [credentials["ADMIN_NAME"], credentials["ADMIN_EMAIL"]]
+            ]
+        else:
+            raise RuntimeError(
+                f"You must specify the following admin email configuration variables"
+                f"in {credentials_file}:\n"
+                f"{', '.join(email_keys)}"
+            )
+
         if "DEFAULT_FROM_EMAIL" in credentials:
             cls.DEFAULT_FROM_EMAIL = credentials["DEFAULT_FROM_EMAIL"]
             cls.SERVER_EMAIL = cls.DEFAULT_FROM_EMAIL
         else:
-            warnings.warn("Not setting DEFAULT_FROM_EMAIL and SERVER_EMAIL")
+            warnings.warn(
+                f"You need to set DEFAULT_FROM_EMAIL in {credentials_file}\n"
+                "Not setting DEFAULT_FROM_EMAIL and SERVER_EMAIL"
+            )
 
     @classmethod
     def post_setup(cls) -> None:

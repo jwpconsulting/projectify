@@ -135,7 +135,6 @@ class Development(Base):
     @classmethod
     def setup(cls) -> None:
         """Enable debug toolbar."""
-        super().setup()
         if cls.DEBUG_TOOLBAR:
             cls.INSTALLED_APPS = (*cls.INSTALLED_APPS, "debug_toolbar")
         cls.MIDDLEWARE = list(
@@ -145,77 +144,80 @@ class Development(Base):
         )
 
         # Add CSP report URI for development
+        # XXX doesn't work well with ublock origin
         cls.SECURE_CSP = {**Base.SECURE_CSP, "report-uri": ["/csp-report/"]}
-        cls.DATABASES["default"] = dj_database_url.config(
-            default="sqlite:///projectify.sqlite",
-            conn_max_age=cls.CONN_MAX_AGE,
-        )
-
-        # Allauth mock app, GitHub OAuth, and Google OAuth settings
-        cls.SOCIALACCOUNT_PROVIDERS["openid_connect"] = {
-            "APPS": [
-                {
-                    "provider_id": "local-test",
-                    "client_id": "test.id",
-                    "secret": "secret",
-                    # TODO define server_url
-                }
-            ]
+        cls.DATABASES = {
+            "default": dj_database_url.config(
+                default="sqlite:///projectify.sqlite",
+                conn_max_age=cls.CONN_MAX_AGE,
+            )
         }
-        cls.configure_github_oauth()
-        cls.configure_google_oauth()
-        cls.configure_apple_oauth()
-        cls.configure_stripe()
+        cls.setup_allauth()
+        cls.setup_billing()
+
+        super().setup()
 
     @classmethod
-    def configure_github_oauth(cls) -> None:
-        """Check for GitHub OAuth config and apply if present."""
-        keys = "ALLAUTH_GITHUB_CLIENT_ID", "ALLAUTH_GITHUB_SECRET"
-        keys_present = all(key in os.environ for key in keys)
-        if not keys_present:
-            names = ", ".join(keys)
+    def setup_billing(cls) -> None:
+        """Load development environment Stripe configuration."""
+        stripe_keys = {
+            "STRIPE_PUBLISHABLE_KEY",
+            "STRIPE_SECRET_KEY",
+            "STRIPE_PRICE_OBJECT",
+            "STRIPE_ENDPOINT_SECRET",
+        }
+        if all(key in os.environ for key in stripe_keys):
+            cls.STRIPE_CONFIG = StripeConfig(
+                STRIPE_PUBLISHABLE_KEY=os.environ["STRIPE_PUBLISHABLE_KEY"],
+                STRIPE_SECRET_KEY=os.environ["STRIPE_SECRET_KEY"],
+                STRIPE_PRICE_OBJECT=os.environ["STRIPE_PRICE_OBJECT"],
+                STRIPE_ENDPOINT_SECRET=os.environ["STRIPE_ENDPOINT_SECRET"],
+            )
+        else:
+            warnings.warn(
+                "To test the stripe integration in the local development environment, you "
+                "must pass the following environment variables: "
+                f"{', '.join(stripe_keys)}"
+            )
+
+    @classmethod
+    def setup_allauth(cls) -> None:
+        """Load development environment allauth configuration."""
+        github_keys = {"ALLAUTH_GITHUB_CLIENT_ID", "ALLAUTH_GITHUB_SECRET"}
+        if all(key in os.environ for key in github_keys):
+            cls.SOCIALACCOUNT_PROVIDERS["github"]["APPS"].append(
+                {
+                    "client_id": os.environ["ALLAUTH_GITHUB_CLIENT_ID"],
+                    "secret": os.environ["ALLAUTH_GITHUB_SECRET"],
+                }
+            )
+        else:
             warnings.warn(
                 "To test GitHub OAuth in the local development environment, "
-                f"you must set the following environment variables: {names}"
+                "you must set the following environment variables: "
+                f"{', '.join(github_keys)}"
             )
-            return
-        cls.SOCIALACCOUNT_PROVIDERS["github"]["APPS"].append(
-            {
-                "client_id": os.environ["ALLAUTH_GITHUB_CLIENT_ID"],
-                "secret": os.environ["ALLAUTH_GITHUB_SECRET"],
-            }
-        )
-
-    @classmethod
-    def configure_google_oauth(cls) -> None:
-        """Check for Google OAuth config and apply if present."""
-        keys = "ALLAUTH_GOOGLE_CLIENT_ID", "ALLAUTH_GOOGLE_SECRET"
-        keys_present = all(key in os.environ for key in keys)
-        if not keys_present:
-            names = ", ".join(keys)
+        google_keys = {"ALLAUTH_GOOGLE_CLIENT_ID", "ALLAUTH_GOOGLE_SECRET"}
+        if all(key in os.environ for key in google_keys):
+            cls.SOCIALACCOUNT_PROVIDERS["google"]["APPS"].append(
+                {
+                    "client_id": os.environ["ALLAUTH_GOOGLE_CLIENT_ID"],
+                    "secret": os.environ["ALLAUTH_GOOGLE_SECRET"],
+                }
+            )
+        else:
             warnings.warn(
                 "To test Google OAuth in the local development environment, "
-                f"you must set the following environment variables: {names}"
+                "you must set the following environment variables: "
+                f"{', '.join(google_keys)}"
             )
-            return
-        cls.SOCIALACCOUNT_PROVIDERS["google"]["APPS"].append(
-            {
-                "client_id": os.environ["ALLAUTH_GOOGLE_CLIENT_ID"],
-                "secret": os.environ["ALLAUTH_GOOGLE_SECRET"],
-            }
-        )
-
-    @classmethod
-    def configure_apple_oauth(cls) -> None:
-        """Check for Apple OAuth config and apply if present."""
-        keys = (
+        apple_keys = {
             "ALLAUTH_APPLE_CLIENT_ID",
             "ALLAUTH_APPLE_SECRET",
             "ALLAUTH_APPLE_KEY",
             "ALLAUTH_APPLE_CERTIFICATE_KEY",
-        )
-        keys_present = all(key in os.environ for key in keys)
-        if keys_present:
+        }
+        if all(key in os.environ for key in apple_keys):
             cls.SOCIALACCOUNT_PROVIDERS["apple"]["APPS"].append(
                 {
                     "client_id": os.environ["ALLAUTH_APPLE_CLIENT_ID"],
@@ -232,32 +234,17 @@ class Development(Base):
             warnings.warn(
                 "To test Apple OAuth in the local development environment, "
                 "you must set the following environment variables: "
-                f"{', '.join(keys)}"
+                f"{', '.join(apple_keys)}"
             )
 
-    @classmethod
-    def configure_stripe(cls) -> None:
-        """Check for Stripe environment variables."""
-        required_keys = [
-            "STRIPE_PUBLISHABLE_KEY",
-            "STRIPE_SECRET_KEY",
-            "STRIPE_ENDPOINT_SECRET",
-            "STRIPE_PRICE_OBJECT",
-        ]
-        configuration_keys_present = all(
-            key in os.environ for key in required_keys
-        )
-        if not configuration_keys_present:
-            names = ", ".join(required_keys)
-            warnings.warn(
-                "To test the stripe integration in the local development environment, you "
-                f"must pass the following environment variables: {names}"
-            )
-            return
-
-        cls.STRIPE_CONFIG = StripeConfig(
-            STRIPE_PUBLISHABLE_KEY=os.environ["STRIPE_PUBLISHABLE_KEY"],
-            STRIPE_SECRET_KEY=os.environ["STRIPE_SECRET_KEY"],
-            STRIPE_PRICE_OBJECT=os.environ["STRIPE_PRICE_OBJECT"],
-            STRIPE_ENDPOINT_SECRET=os.environ["STRIPE_ENDPOINT_SECRET"],
-        )
+        # Allauth mock app, GitHub OAuth, and Google OAuth settings
+        cls.SOCIALACCOUNT_PROVIDERS["openid_connect"] = {
+            "APPS": [
+                {
+                    "provider_id": "local-test",
+                    "client_id": "test.id",
+                    "secret": "secret",
+                    # TODO define server_url
+                }
+            ]
+        }
