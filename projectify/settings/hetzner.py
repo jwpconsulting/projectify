@@ -184,6 +184,33 @@ class Hetzner(Base):
             }
         )
 
+        apple_keys = [
+            "ALLAUTH_APPLE_CLIENT_ID",
+            "ALLAUTH_APPLE_SECRET",
+            "ALLAUTH_APPLE_KEY",
+            "ALLAUTH_APPLE_CERTIFICATE_KEY",
+        ]
+        # TODO make log in with apple NOT optional
+        if all(key in credentials for key in apple_keys):
+            cls.SOCIALACCOUNT_PROVIDERS["apple"]["APPS"].append(
+                {
+                    "client_id": credentials["ALLAUTH_APPLE_CLIENT_ID"],
+                    "secret": credentials["ALLAUTH_APPLE_SECRET"],
+                    "key": credentials["ALLAUTH_APPLE_KEY"],
+                    "settings": {
+                        "certificate_key": credentials[
+                            "ALLAUTH_APPLE_CERTIFICATE_KEY"
+                        ]
+                    },
+                }
+            )
+        else:
+            warnings.warn(
+                "Launching Projectify without Apple OAuth credentials. "
+                f"You must specify the following keys in {credentials_file}:\n"
+                f"{', '.join(apple_keys)}"
+            )
+
     @classmethod
     def setup_email(
         cls, credentials_file: Path, credentials: dict[str, Any]

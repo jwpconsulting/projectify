@@ -163,6 +163,7 @@ class Base(Configuration):  # type:ignore
         "allauth.socialaccount",
         "allauth.socialaccount.providers.github",
         "allauth.socialaccount.providers.google",
+        "allauth.socialaccount.providers.apple",
     )
 
     INSTALLED_APPS_FIRST_PARTY = (
@@ -281,20 +282,11 @@ class Base(Configuration):  # type:ignore
     # Provider specific settings
     SOCIALACCOUNT_PROVIDERS: dict[str, SocialAccountProvider] = {
         # See `docs/auth.md` under **Edit GitHub OAuth settings**
-        "github": {
-            "SCOPE": ["user:email"],
-            # TODO add django configuration check for these variables
-            # TODO disable GH log in route if no APPS are set
-            "APPS": [],
-        },
+        "github": {"SCOPE": ["user:email"], "APPS": []},
         # See `docs/auth.md` under **Edit Google OAuth settings**
-        "google": {
-            "SCOPE": ["email"],
-            # TODO add django configuration check for these variables
-            # TODO disable GH log in route if these env vars are not
-            # given
-            "APPS": [],
-        },
+        "google": {"SCOPE": ["email"], "APPS": []},
+        # See `docs/auth.md` under **Edit Apple OAuth settings**
+        "apple": {"SCOPE": ["email"], "APPS": []},
     }
 
     # Internationalization

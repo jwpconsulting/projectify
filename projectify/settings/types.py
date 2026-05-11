@@ -35,6 +35,9 @@ SocialAccountApp = TypedDict(
         "secret": Optional[str],
         # For openid_connect
         "provider_id": NotRequired[str],
+        # For apple
+        "key": NotRequired[str],
+        "settings": NotRequired[dict[str, str]],
     },
 )
 

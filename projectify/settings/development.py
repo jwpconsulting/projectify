@@ -164,6 +164,7 @@ class Development(Base):
         }
         cls.configure_github_oauth()
         cls.configure_google_oauth()
+        cls.configure_apple_oauth()
         cls.configure_stripe()
 
     @classmethod
@@ -203,6 +204,36 @@ class Development(Base):
                 "secret": os.environ["ALLAUTH_GOOGLE_SECRET"],
             }
         )
+
+    @classmethod
+    def configure_apple_oauth(cls) -> None:
+        """Check for Apple OAuth config and apply if present."""
+        keys = (
+            "ALLAUTH_APPLE_CLIENT_ID",
+            "ALLAUTH_APPLE_SECRET",
+            "ALLAUTH_APPLE_KEY",
+            "ALLAUTH_APPLE_CERTIFICATE_KEY",
+        )
+        keys_present = all(key in os.environ for key in keys)
+        if keys_present:
+            cls.SOCIALACCOUNT_PROVIDERS["apple"]["APPS"].append(
+                {
+                    "client_id": os.environ["ALLAUTH_APPLE_CLIENT_ID"],
+                    "secret": os.environ["ALLAUTH_APPLE_SECRET"],
+                    "key": os.environ["ALLAUTH_APPLE_KEY"],
+                    "settings": {
+                        "certificate_key": os.environ[
+                            "ALLAUTH_APPLE_CERTIFICATE_KEY"
+                        ]
+                    },
+                }
+            )
+        else:
+            warnings.warn(
+                "To test Apple OAuth in the local development environment, "
+                "you must set the following environment variables: "
+                f"{', '.join(keys)}"
+            )
 
     @classmethod
     def configure_stripe(cls) -> None:
