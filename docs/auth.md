@@ -122,7 +122,21 @@ http://localhost:8000/user/auth/google/login/callback/
 
 Source: <https://docs.allauth.org/en/latest/socialaccount/providers/apple.html>
 
-Create an **App ID**:
+To enable Apple OAuth in Projectify, you need to create the following 4
+credentials:
+
+1. `ALLAUTH_APPLE_CLIENT_ID`: **Services ID** identifier. Example: `net.jwpconsulting.projectify.service`
+3. `ALLAUTH_APPLE_KEY`: **App ID Prefix**. Identifies App. your  10 letter uppercase alphanumeric string
+2. `ALLAUTH_APPLE_SECRET`: **Key ID**. Identifies your certificate. 10 letter uppcercase alphanumeric string
+4. `ALLAUTH_APPLE_CERTIFICATE_KEY`: Starts with `-----BEGIN PRIVATE KEY---`
+and ends on `-----END PRIVATE KEY-----`.
+
+The next sections explain how to create these 4 credentials.
+
+### Create an App ID
+
+In this step you'll create your `ALLAUTH_APPLE_KEY`.
+
 1. Go to [Identifiers page](https://developer.apple.com/account/resources/identifiers/list)
    in the Apple Developer **Certificates, Identifiers & Profiles** settings.
 2. In the **Identifiers** section, press the blue **Register an Services ID**
@@ -148,7 +162,9 @@ Create an **App ID**:
 12. After you press **Save**, the site may prompt you to confirm that this
     invalidates provisioning profiles. Press **Confirm**.
 
-Create a **Service ID**:
+### Create a Service ID
+
+In this step, you'll create your `ALLAUTH_APPLE_CLIENT_ID`.
 
 1. In the **Identifiers** section, press the blue Plus (`+`)
    button.
@@ -177,7 +193,10 @@ Create a **Service ID**:
    "Depending on your product, you may need to configure multiple components for Sign in with Apple – From registering domains for Web Authentication to providing email sources to communicate with your users through the Private Email Relay service."
    Press **Save**.
 
-Create a **Key**:
+### Create a key
+
+In this step you'll create our `ALLAUTH_APPLE_SECRET` and
+`ALLAUTH_APPLE_CERTIFICATE_KEY`.
 
 1. Go to the
    [Keys](https://developer.apple.com/account/resources/authkeys/list)
@@ -197,16 +216,8 @@ Create a **Key**:
 file that with a `.p8` extension. The contents of this file are your
 `ALLAUTH_APPLE_CERTIFICATE_KEY` configuration variable.
 6. Press the white **Done** button.
-7. Note the uppercase alphanumberic **KEY ID** on the next page. This is your Django `ALLAUTH_APPLE_SECRET`
-   configuration variable.
-
-You should have now have four configuration variables:
-
-1. `ALLAUTH_APPLE_CLIENT_ID`: Your Services ID identifier, `net.jwpconsulting.projectify.service`
-2. `ALLAUTH_APPLE_SECRET`: **App ID Prefix**, 10 letter uppercase alphanumeric string
-3. ALLAUTH_APPLE_KEY`: 10 letter uppcercase alphanumeric string
-4. `ALLAUTH_APPLE_CERTIFICATE_KEY`: Starts with `-----BEGIN PRIVATE KEY---`
-and ends on `-----END PRIVATE KEY-----`.
+7. Note the uppercase alphanumberic **KEY ID** on the next page. This is your
+   Django `ALLAUTH_APPLE_SECRET` configuration variable.
 
 # Naming things in authentication
 

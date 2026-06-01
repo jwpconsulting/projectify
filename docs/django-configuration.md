@@ -111,8 +111,8 @@ See `docs/auth.md` under **django-allauth**.
 - `ALLAUTH_GOOGLE_CLIENT_ID`: Google OAuth client id
 - `ALLAUTH_GOOGLE_SECRET`: Google Oauth client secret
 - `ALLAUTH_APPLE_CLIENT_ID`: Apple OAuth service identifier
-- `ALLAUTH_APPLE_SECRET`: Apple OAuth Key ID
 - `ALLAUTH_APPLE_KEY`: Apple OAUth Member ID/App ID prefix
+- `ALLAUTH_APPLE_SECRET`: Apple OAuth Key ID
 - `ALLAUTH_APPLE_CERTIFICATE_KEY`: Certificate, begins with `----BEGIN PRIVATE KEY----`
 
 ## Sample credentials file
