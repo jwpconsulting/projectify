@@ -110,6 +110,10 @@ See `docs/auth.md` under **django-allauth**.
 - `ALLAUTH_GITHUB_SECRET`: GitHub OAuth client secret
 - `ALLAUTH_GOOGLE_CLIENT_ID`: Google OAuth client id
 - `ALLAUTH_GOOGLE_SECRET`: Google Oauth client secret
+- `ALLAUTH_APPLE_CLIENT_ID`: Apple OAuth service identifier
+- `ALLAUTH_APPLE_SECRET`: Apple OAuth Key ID
+- `ALLAUTH_APPLE_KEY`: Apple OAUth Member ID/App ID prefix
+- `ALLAUTH_APPLE_CERTIFICATE_KEY`: Certificate, begins with `----BEGIN PRIVATE KEY----`
 
 ## Sample credentials file
 
@@ -136,4 +140,11 @@ ALLAUTH_GITHUB_CLIENT_ID = "..."
 ALLAUTH_GITHUB_SECRET = "..."
 ALLAUTH_GOOGLE_CLIENT_ID = "XXX.apps.googleusercontent.com"
 ALLAUTH_GOOGLE_SECRET = "GOCSPX-XXX"
+ALLAUTH_APPLE_CLIENT_ID = "com.example.hello-world"
+ALLAUTH_APPLE_SECRET = "ABCD12EF34"
+ALLAUTH_APPLE_KEY = "MNOP56QR78"
+ALLAUTH_APPLE_CERTIFICATE_KEY = """\
+---BEGIN PRIVATE KEY---
+asdsdjlkasjdlkasdasdjalksdjasd
+---END PRIVATE KEY---"""
 ```

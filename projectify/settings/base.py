@@ -25,7 +25,7 @@ from django.utils.log import DEFAULT_LOGGING
 import dj_database_url
 from justhtml import SanitizationPolicy, UrlPolicy, UrlRule
 
-from configurations import Configuration  # type: ignore
+from configurations import Configuration
 
 from .monkeypatch import patch
 from .types import (
@@ -54,7 +54,7 @@ def environ_get_or_warn(
 patch()
 
 
-class Base(Configuration):  # type:ignore
+class Base(Configuration):
     """
     Base configuration.
 
@@ -163,6 +163,7 @@ class Base(Configuration):  # type:ignore
         "allauth.socialaccount",
         "allauth.socialaccount.providers.github",
         "allauth.socialaccount.providers.google",
+        "allauth.socialaccount.providers.apple",
     )
 
     INSTALLED_APPS_FIRST_PARTY = (
@@ -281,20 +282,11 @@ class Base(Configuration):  # type:ignore
     # Provider specific settings
     SOCIALACCOUNT_PROVIDERS: dict[str, SocialAccountProvider] = {
         # See `docs/auth.md` under **Edit GitHub OAuth settings**
-        "github": {
-            "SCOPE": ["user:email"],
-            # TODO add django configuration check for these variables
-            # TODO disable GH log in route if no APPS are set
-            "APPS": [],
-        },
+        "github": {"SCOPE": ["user:email"], "APPS": []},
         # See `docs/auth.md` under **Edit Google OAuth settings**
-        "google": {
-            "SCOPE": ["email"],
-            # TODO add django configuration check for these variables
-            # TODO disable GH log in route if these env vars are not
-            # given
-            "APPS": [],
-        },
+        "google": {"SCOPE": ["email"], "APPS": []},
+        # See `docs/auth.md` under **Edit Apple OAuth settings**
+        "apple": {"SCOPE": ["email"], "APPS": []},
     }
 
     # Internationalization
@@ -372,9 +364,19 @@ class Base(Configuration):  # type:ignore
 
     # Email
     DEFAULT_FROM_EMAIL: str = '"Projectify" <hello@projectifyapp.com>'
+    # Email address for admin emails
+    SERVER_EMAIL: str
     # Prefix for admin emails, see
     # https://docs.djangoproject.com/en/6.0/ref/settings/#email-subject-prefix
     EMAIL_SUBJECT_PREFIX = "[Projectify-Admin] "
+    # SMTP credentials
+    EMAIL_BACKEND: str
+    EMAIL_HOST: str
+    EMAIL_PORT: int
+    EMAIL_HOST_USER: str
+    EMAIL_HOST_PASSWORD: str
+    EMAIL_USE_TLS: bool
+    EMAIL_USE_SSL: bool
 
     # Logging
     LOGGING: Any = {

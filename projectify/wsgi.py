@@ -3,9 +3,7 @@
 # SPDX-FileCopyrightText: 2026 JWP Consulting GK
 """WSGI application for Projectify."""
 
-from configurations.wsgi import (  # type: ignore[attr-defined]
-    get_wsgi_application,
-)
+from configurations.wsgi import get_wsgi_application
 
 application = get_wsgi_application()
 __all__ = ("application",)

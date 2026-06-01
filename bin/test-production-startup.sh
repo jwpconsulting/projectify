@@ -16,6 +16,10 @@ CREDENTIALS_FILE=$(mktemp -d)/credentials.toml
 
 export STATIC_ROOT MEDIA_ROOT CREDENTIALS_FILE
 
+export PYTHON_DOTENV_DISABLED=1
+echo "Note: Disabled load_dotenv() behavior in manage.py by setting"
+echo "PYTHON_DOTENV_DISABLED=1"
+
 cat > "$CREDENTIALS_FILE" << 'EOF'
 SECRET_KEY = "test-secret-key-for-startup-check"
 

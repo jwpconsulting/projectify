@@ -32,18 +32,9 @@ def main() -> None:
             "environment. See the projectify/settings folder for all "
             "available configuration classes."
         )
-    try:
-        from configurations.management import (  # type: ignore[attr-defined]
-            execute_from_command_line,
-        )
-    except ImportError as exc:
-        raise ImportError(
-            "Couldn't import configurations. Are you sure it's installed and "
-            "available on your PYTHONPATH environment variable? Did you "
-            "forget to activate your virtual environment?"
-        ) from exc
+    from configurations import management
 
-    execute_from_command_line(sys.argv)
+    management.execute_from_command_line(sys.argv)
 
 
 if __name__ == "__main__":

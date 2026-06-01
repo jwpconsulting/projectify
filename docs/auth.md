@@ -31,27 +31,30 @@ Prefer using `projectify.user.models.User` over Django's
 Projectify uses django-allauth. django-allauth has many features. It doesn't
 replace Projectify's existing authentication code.
 
+`allauth_provider_info()` in `projectify/user/views/auth.py` is responsible
+for returning a list of OAuth login addresses.
+
 Integrating allauth adds the following URLs:
 
-```
+```python
 # allauth.socialaccount.views.ConnectionsView
 # socialaccount_connections
-/user/auth/
+"/user/auth/"
 # allauth.socialaccount.providers.oauth2.views.view
 # github_login
-/user/auth/github/login/
+"/user/auth/github/login/"
 # allauth.socialaccount.providers.oauth2.views.view
 # github_callback
-/user/auth/github/login/callback/
+"/user/auth/github/login/callback/"
 # allauth.socialaccount.views.LoginCancelledView
 # socialaccount_login_cancelled
-/user/auth/login/cancelled/
-#allauth.socialaccount.views.LoginErrorView
+"/user/auth/login/cancelled/"
+# allauth.socialaccount.views.LoginErrorView
 # socialaccount_login_error
-/user/auth/login/error/
+"/user/auth/login/error/"
 # allauth.socialaccount.views.SignupView
 # socialaccount_signup
-/user/auth/signup/
+"/user/auth/signup/"
 ```
 
 Here's what these views do:
@@ -114,6 +117,96 @@ Note: For local development, use the following redirect URI.
 ```
 http://localhost:8000/user/auth/google/login/callback/
 ```
+
+## Edit Apple OAuth settings
+
+Source: <https://docs.allauth.org/en/latest/socialaccount/providers/apple.html>
+
+Create an **App ID**:
+1. Go to [Identifiers page](https://developer.apple.com/account/resources/identifiers/list)
+   in the Apple Developer **Certificates, Identifiers & Profiles** settings.
+2. In the **Identifiers** section, press the blue **Register an Services ID**
+   button.
+3. Under **Register a new identifer**, select **App IDs** and press
+   the blue **Continue** button.
+4. Under **Select a type**, select **App** and press the blue **Continue**
+   button. This takes you to the **Register an App ID** screen.
+5. In the **Register an App ID** screen, enter the following:
+    a. **Description**: `Projectify`
+    b. **Bundle ID**: `net.jwpconsulting.projectify`
+6. Press **Confirm**. This takes you to the **Confirm your App ID** screen.
+7. Press **Register**. This takes you back to the **Identifiers** section.
+8. Select the `Projectify` App ID. This takes you to the **Edit your App ID
+   Configuration** screen.
+9. Note the uppercase alphanumeric string under **App ID Prefix** ending on "(Team ID)". This is your `ALLAUTH_APPLE_KEY` configuration variable.
+9. Scroll down and enable the check box next left of the **Sign In with Apple**
+  entry. Press the white **Edit** button in the same row on the right side.
+  This opens a **Sign In with Apple: App ID Configuration** modal.
+10. Press the blue **Save** button in the bottom right. This closes the modal.
+11. On the same **Edit yoru App ID Configuration** page, press the blue
+    **Save** button in the top right.
+12. After you press **Save**, the site may prompt you to confirm that this
+    invalidates provisioning profiles. Press **Confirm**.
+
+Create a **Service ID**:
+
+1. In the **Identifiers** section, press the blue Plus (`+`)
+   button.
+2. Under **Register a new identifer**, select **Service IDs** and press
+   the blue **Continue** button.
+3. In the **Register a Services ID**, enter the following data:
+    a. **Description**: `Projectify`
+    b. **Identifier**: `net.jwpconsulting.projectify.service`. This is your `ALLAUTH_APPLE_CLIENT_ID`
+4. Press **Confirm**, then press **Register**. This takes you back to the **Identifiers**
+   section.
+5. Select the `Projectify` identifier that you've just created.
+   This takes you to a **Edit your Services ID Configuration** screen.
+6. In the list below the **Description** and **Identifier**, enable the
+   checkbox to the left of the **Sign In with Apple** entry and press the white
+   **Configure** button. This opens a **Web Authentication Configuration**
+   modal.
+7. In the **Web Authentication Configuration** modal, enter the following:
+   a. **Primary App ID**: make sure that you select the **Projectify** App ID.
+   b. **Domains and Subdomains**: `www.projectifyapp.com`
+   c. **Return URLs**: `https://www.projectifyapp.com/user/auth/apple/login/callback/`
+8. In the following **Confirm your web authentication configuration** screen,
+   press the blue **Done** button in the bottom right.
+9. On the same **Edit your Services ID Configuration** page, press
+   **Continue**.
+10. The next page should state the following:
+   "Depending on your product, you may need to configure multiple components for Sign in with Apple – From registering domains for Web Authentication to providing email sources to communicate with your users through the Private Email Relay service."
+   Press **Save**.
+
+Create a **Key**:
+
+1. Go to the
+   [Keys](https://developer.apple.com/account/resources/authkeys/list)
+   settings in the Apple Developer **Certificates, Identifiers & Profiles**
+   settings.
+2. Press the blue **Create a key** button. This takes you to a page titled
+**Register a New Key**.
+3. Fill out the **Register a New Key** form:
+   a. **Key Name**: `Projectify Sign in with Apple Key`
+   b. **Key Usage Description**: "Projectify OAuth Sign in with Apple Key"
+   c. Enable the checkbox to the left of the **Sign in with Apple** row.
+   d. Press **Configure** on the right side of the **Sign in with Apple** row.
+   e. Under **Configure Key**, select `Projectify` as the Primary App ID.
+   f. Press **Save**. This takes you back to the **Register a New Key** page.
+4. Press **Continue** and **Register** to create your new key.
+5. Press the **Download** button to download the key. This downloads a key
+file that with a `.p8` extension. The contents of this file are your
+`ALLAUTH_APPLE_CERTIFICATE_KEY` configuration variable.
+6. Press the white **Done** button.
+7. Note the uppercase alphanumberic **KEY ID** on the next page. This is your Django `ALLAUTH_APPLE_SECRET`
+   configuration variable.
+
+You should have now have four configuration variables:
+
+1. `ALLAUTH_APPLE_CLIENT_ID`: Your Services ID identifier, `net.jwpconsulting.projectify.service`
+2. `ALLAUTH_APPLE_SECRET`: **App ID Prefix**, 10 letter uppercase alphanumeric string
+3. ALLAUTH_APPLE_KEY`: 10 letter uppcercase alphanumeric string
+4. `ALLAUTH_APPLE_CERTIFICATE_KEY`: Starts with `-----BEGIN PRIVATE KEY---`
+and ends on `-----END PRIVATE KEY-----`.
 
 # Naming things in authentication
 
@@ -194,20 +287,20 @@ To keep our terminology uniform, we prefer log in over sign in.
 
 ## Evidence
 
-Here's code that might be responsible for the password being wiped
+Here's code that might be responsible for the password being wiped:
 
 ```python
 # https://github.com/pennersr/django-allauth/blob/cf7f55d79e421e5d5ba078e31119a799f8b149e8/allauth/socialaccount/models.py#L397
 # allauth/socialaccount/models.py#L397
 def _accept_login(self, request) -> None:
-        from allauth.socialaccount.internal.flows.email_authentication import (
-            wipe_password,
-        )
+  from allauth.socialaccount.internal.flows.email_authentication import (
+    wipe_password,
+  )
 
-        if self._did_authenticate_by_email:
-            wipe_password(request, self.user, self._did_authenticate_by_email)
-            if app_settings.EMAIL_AUTHENTICATION_AUTO_CONNECT:
-                self.connect(context.request, self.user)
+   if self._did_authenticate_by_email:
+     wipe_password(request, self.user, self._did_authenticate_by_email)
+     if app_settings.EMAIL_AUTHENTICATION_AUTO_CONNECT:
+       self.connect(context.request, self.user)
 ```
 
 `_login` calls `_accept_login` here:
