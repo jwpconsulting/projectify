@@ -18,11 +18,11 @@
                 {% endif %}
             </h1>
             <div class="flex flex-col gap-2 text-lg">
-                {% if workspace %}
+                {% if new_workspace %}
                     <p>
-                        {% blocktrans with title=workspace.title%}It looks like you already have a workspace called "{{ title }}", would you like to continue with this workspace and create a project?{% endblocktrans %}
+                        {% blocktrans with title=new_workspace.title%}It looks like you already have a workspace called "{{ title }}", would you like to continue with this workspace and create a project?{% endblocktrans %}
                     </p>
-                    {% anchor href="onboarding:new_project" label="Continue with this workspace and create a project" workspace_uuid=workspace.uuid %}
+                    {% anchor href="onboarding:new_project" label="Continue with this workspace and create a project" workspace_uuid=new_workspace.uuid %}
                 {% else %}
                     <p>{% trans "You can create and manage numerous workspaces." %}</p>
                 {% endif %}
