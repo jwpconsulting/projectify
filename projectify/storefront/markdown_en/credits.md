@@ -9,7 +9,8 @@ to learn more.
 
 The Projectify frontend uses the following software libraries. You can also
 review Projectify's [source code](/free-software#source-code) to learn what
-other software libraries it uses.
+other software libraries it uses. Other assets like SVG icons not mentioned
+here contain SPDX identifiers in their file contents.
 
 # boring-avatars
 
@@ -90,4 +91,22 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+```
+
+# htmx
+
+```
+Zero-Clause BSD
+=============
+
+Permission to use, copy, modify, and/or distribute this software for
+any purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL
+WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES
+OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE
+FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY
+DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN
+AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ```
