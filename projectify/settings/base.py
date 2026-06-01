@@ -364,9 +364,19 @@ class Base(Configuration):
 
     # Email
     DEFAULT_FROM_EMAIL: str = '"Projectify" <hello@projectifyapp.com>'
+    # Email address for admin emails
+    SERVER_EMAIL: str
     # Prefix for admin emails, see
     # https://docs.djangoproject.com/en/6.0/ref/settings/#email-subject-prefix
     EMAIL_SUBJECT_PREFIX = "[Projectify-Admin] "
+    # SMTP credentials
+    EMAIL_BACKEND: str
+    EMAIL_HOST: str
+    EMAIL_PORT: int
+    EMAIL_HOST_USER: str
+    EMAIL_HOST_PASSWORD: str
+    EMAIL_USE_TLS: bool
+    EMAIL_USE_SSL: bool
 
     # Logging
     LOGGING: Any = {
