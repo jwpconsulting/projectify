@@ -50,7 +50,7 @@ class PostAdminForm(forms.ModelForm):
             return
         body = self.instance.body
         # body.content is safe because pre_save()
-        # sanitizes it with bleach
+        # sanitizes it with JustHTML
         self.fields["content"].initial = body.content
 
     def clean_content(self) -> str:

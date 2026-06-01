@@ -8,6 +8,7 @@ from django.shortcuts import render
 
 from projectify.blog.selectors.post import post_list_published
 from projectify.lib.settings import get_settings
+from projectify.lib.utils import markdown_to_safe_html
 
 
 def accessibility(request: HttpRequest) -> HttpResponse:
@@ -18,7 +19,8 @@ def accessibility(request: HttpRequest) -> HttpResponse:
         / "markdown_en"
         / "accessibility.md"
     ).read_text()
-    context = {"markdowntext": markdowntext}
+    content, _ = markdown_to_safe_html(markdowntext)
+    context = {"content": content}
     return render(request, "storefront/accessibility.html", context)
 
 
@@ -30,7 +32,8 @@ def contact_us(request: HttpRequest) -> HttpResponse:
         / "markdown_en"
         / "contact-us.md"
     ).read_text()
-    context = {"markdowntext": markdowntext}
+    content, _ = markdown_to_safe_html(markdowntext)
+    context = {"content": content}
     return render(request, "storefront/contact_us.html", context)
 
 
@@ -39,7 +42,8 @@ def download(request: HttpRequest) -> HttpResponse:
     markdowntext = (
         get_settings().BASE_DIR / "storefront" / "markdown_en" / "download.md"
     ).read_text()
-    context = {"markdowntext": markdowntext}
+    content, _ = markdown_to_safe_html(markdowntext)
+    context = {"content": content}
     return render(request, "storefront/download.html", context)
 
 
@@ -48,7 +52,8 @@ def credits(request: HttpRequest) -> HttpResponse:
     markdowntext = (
         get_settings().BASE_DIR / "storefront" / "markdown_en" / "credits.md"
     ).read_text()
-    context = {"markdowntext": markdowntext}
+    content, _ = markdown_to_safe_html(markdowntext)
+    context = {"content": content}
     return render(request, "storefront/credits.html", context)
 
 
@@ -67,7 +72,8 @@ def free_software(request: HttpRequest) -> HttpResponse:
         / "markdown_en"
         / "free-software.md"
     ).read_text()
-    context = {"markdowntext": markdowntext}
+    content, _ = markdown_to_safe_html(markdowntext)
+    context = {"content": content}
     return render(request, "storefront/free_software.html", context)
 
 
@@ -85,7 +91,8 @@ def security_disclose(request: HttpRequest) -> HttpResponse:
         / "security"
         / "disclose.md"
     ).read_text()
-    context = {"markdowntext": markdowntext}
+    content, _ = markdown_to_safe_html(markdowntext)
+    context = {"content": content}
     return render(request, "storefront/security/disclose.html", context)
 
 
@@ -98,7 +105,8 @@ def security_general(request: HttpRequest) -> HttpResponse:
         / "security"
         / "general.md"
     ).read_text()
-    context = {"markdowntext": markdowntext}
+    content, _ = markdown_to_safe_html(markdowntext)
+    context = {"content": content}
     return render(request, "storefront/security/general.html", context)
 
 

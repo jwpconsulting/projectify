@@ -155,7 +155,6 @@ class Base(Configuration):
     # we can, while avoiding to reinvent the wheel every time.
     INSTALLED_APPS_THIRD_PARTY = (
         "rules.apps.AutodiscoverRulesConfig",
-        "markdownify.apps.MarkdownifyConfig",
         # Allauth
         "allauth",
         "allauth.account",
@@ -422,7 +421,6 @@ class Base(Configuration):
     # https://github.com/adamchainz/django-browser-reload
     BROWSER_RELOAD = False
 
-    # Markdownify
     # JustHTML Policy
     HTML_SANITIZATION_POLICY = SanitizationPolicy(
         allowed_tags=[
@@ -475,17 +473,13 @@ class Base(Configuration):
             },
         ),
     )
-    MARKDOWNIFY = {
-        "default": {
-            "LINKIFY_TEXT": {"PARSE_URLS": False},
-            "MARKDOWN_EXTENSIONS": [
-                "markdown.extensions.fenced_code",
-                "markdown.extensions.footnotes",
-                "markdown.extensions.tables",
-                "markdown.extensions.toc",
-            ],
-        }
-    }
+    # Markdown conversion
+    MARKDOWN_EXTENSIONS = [
+        "markdown.extensions.fenced_code",
+        "markdown.extensions.footnotes",
+        "markdown.extensions.tables",
+        "markdown.extensions.toc",
+    ]
 
     @classmethod
     def setup(cls) -> None:

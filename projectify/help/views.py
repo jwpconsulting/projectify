@@ -3,16 +3,18 @@
 # SPDX-FileCopyrightText: 2025 JWP Consulting GK
 """Help Views."""
 
+import warnings
 from pathlib import Path
 
-from django.conf import settings
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
-import markdown
+from projectify.lib.settings import get_settings
+from projectify.lib.utils import markdown_to_safe_html
+
+settings = get_settings()
 
 HELP_TOPICS = {
     "basics": {
@@ -105,26 +107,20 @@ def help_detail(request: HttpRequest, page: str) -> HttpResponse:
     topic = HELP_TOPICS.get(page)
     if topic is None:
         raise Http404(
-            _("{page} is not a valid help page title").format(page=page)
+            _("Couldn't find help for topic {topic}").format(page=page)
         )
-    help_page = (settings.BASE_DIR / "help/markdown_en") / topic[
-        "markdown_file"
-    ]
-    markdowntext = help_page.read_text()
+    help_text = (
+        (settings.BASE_DIR / "help/markdown_en") / topic["markdown_file"]
+    ).read_text()
 
-    # Skip markdownify and generate Markdown directly
-    md = markdown.Markdown(
-        extensions=settings.MARKDOWNIFY["default"]["MARKDOWN_EXTENSIONS"]
-    )
     # NOTE: This is safe as long as we don't let the user control the page
     # (e.g., local file inclusion)
-    help_html = mark_safe(md.convert(markdowntext))
-    toc_html = mark_safe(getattr(md, "toc", None))
-    assert toc_html
+    content, toc_html = markdown_to_safe_html(help_text)
+    if not toc_html:
+        warnings.warn(f"No TOC for help topic {topic}")
 
     context = {
-        "help_text": markdowntext,
-        "help_html": help_html,
+        "content": content,
         "toc_html": toc_html,
         "helptopics": help_topics_with_index.values(),
         "helptopic": topic,

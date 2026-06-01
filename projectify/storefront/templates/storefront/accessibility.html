@@ -1,7 +1,6 @@
 {# SPDX-FileCopyrightText: 2024-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "storefront_base.html" %}
-{% load markdownify %}
 {% load i18n %}
 {% load projectify %}
 {% block title %}
@@ -16,6 +15,6 @@
                 {% picture src="hero-accessibility.png" alt=_("Accessibility logo") klass="justify-self-center order-1 sm:order-2 max-w-20 lg:max-w-xs" fetchpriority="high" %}
             </header>
         </div>
-        <div class="prose w-full p-6">{{ markdowntext|markdownify }}</div>
+        <div class="prose w-full p-6">{{ content }}</div>
     </main>
 {% endblock storefront_content %}

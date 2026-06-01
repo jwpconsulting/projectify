@@ -13,6 +13,7 @@ from django.templatetags import static
 from django.utils.safestring import SafeString, mark_safe
 
 from justhtml import JustHTML, PruneEmpty
+from markdown import Markdown
 from PIL import Image
 
 from projectify.lib.settings import get_settings
@@ -28,7 +29,7 @@ def clean_rich_text(unsafe_html: str) -> SafeString:
         unsafe_html, policy=settings.HTML_SANITIZATION_POLICY, fragment=True
     ).to_html(pretty=False)
     # Remember that just marking it "safe" doesn't make it safe
-    # sanitized_html is safe to mark as "safe" because `bleach.clean` has
+    # sanitized_html is safe to mark as "safe" because `JustHTML` has
     # cleaned it.
     safe_html = mark_safe(sanitized_html)
     return safe_html
@@ -122,3 +123,15 @@ def static_image_get_with_dimensions(
     result = static.static(final_src), width, height
     cache.set(cache_key, result)
     return result
+
+
+def markdown_to_safe_html(
+    markdown: str,
+) -> tuple[SafeString, Optional[SafeString]]:
+    """Convert markdown to safe html for storefront and help pages."""
+    settings = get_settings()
+    md = Markdown(extensions=settings.MARKDOWN_EXTENSIONS)
+    unsafe_html = md.convert(markdown)
+    html = clean_rich_text(unsafe_html)
+    toc = getattr(md, "toc", None)
+    return html, toc
