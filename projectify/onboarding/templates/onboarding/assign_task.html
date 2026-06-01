@@ -4,24 +4,24 @@
 {% load i18n %}
 {% load projectify %}
 {% block title %}
-    {% blocktrans %}Task "{{ task }}" has been assigned to you - Projectify{% endblocktrans %}
+    {% blocktrans with task_title=new_task.title%}Task "{{ task_title }}" has been assigned to you - Projectify{% endblocktrans %}
 {% endblock title %}
 {% block onboarding_content %}
-    <div class="flex flex-col gap-4">
-        <h1 class="min-w-fit max-w-lg text-4xl font-bold">
-            {% blocktrans %}You've created your first task!{% endblocktrans %}
-        </h1>
-        <div class="flex flex-col gap-2 text-lg">
-            <p>{% trans "You're all set." %}</p>
-            <p>
-                {% trans "If you wish to add new team members to your workspace, please go to the workspace settings menu next to your workspace name." %}
-            </p>
-            {% anchor href="help:topic:billing" label=_("Learn more about workspace billing settings") external=True %}
-            {% anchor href="dashboard:workspaces:billing" label=_("Go to workspace billing settings") external=True workspace_uuid=workspace.uuid %}
+    <div class="flex flex-col grow gap-16">
+        <div class="flex flex-col gap-4">
+            <h1 class="min-w-fit max-w-lg text-4xl font-bold">{% translate "You've created your first task!" %}</h1>
+            <div class="flex flex-col gap-2 text-lg">
+                <p>{% trans "You're all set." %}</p>
+                <p>
+                    {% trans "If you wish to add new team members to your workspace, please go to the workspace settings menu next to your workspace name." %}
+                </p>
+                {% anchor href="help:topic:billing" label=_("Learn more about workspace billing settings") external=True %}
+                {% anchor href="dashboard:workspaces:billing" label=_("Go to workspace billing settings") external=True workspace_uuid=new_task.project.workspace.uuid %}
+            </div>
         </div>
+        <a href="{% url "dashboard:projects:detail" new_task.project.uuid %}"
+           class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Get started" %}</a>
     </div>
-    <a href="{% url "dashboard:projects:detail" project.uuid %}"
-       class="w-full bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed text-base flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content">{% trans "Get started" %}</a>
 {% endblock onboarding_content %}
 {% block onboarding_stepcounter %}
     {% include "onboarding/common/step_counter.html" with step=4 step_count="4" %}
@@ -30,7 +30,7 @@
     <div class="flex flex-col gap-2">
         <div class="mx-4 px-4 flex items-center gap-2 font-bold border rounded p-2">
             {% icon "briefcase" size=4 %}
-            <span class="max-w-16 truncate">{{ task.workspace.title }}</span>
+            <span class="max-w-16 truncate">{{ new_task.workspace.title }}</span>
         </div>
         <div class="mx-4 flex flex-row items-center justify-start text-utility gap-2">
             {% icon "folder" size=4 %}
@@ -39,14 +39,14 @@
         </div>
         <div class="flex w-full flex-row items-center gap-1 px-4 py-1">
             {% icon "folder" size=4 %}
-            <div class="max-w-16 line-clamp-1 min-w-0 font-bold">{{ task.project.title }}</div>
+            <div class="max-w-16 line-clamp-1 min-w-0 font-bold">{{ new_task.project.title }}</div>
         </div>
     </div>
     <div class="grow mx-4 p-4 rounded-lg flex flex-col border border-border gap-6 truncate">
-        <h1 class="font-bold">{{ task.project.title }}</h1>
+        <h1 class="font-bold">{{ new_task.project.title }}</h1>
         <div class="flex gap-2">
             {% include "workspace/project_detail.html#task_done" %}
-            <span class="truncate" id="task-title">{{ task.title }}</span>
+            <span class="truncate" id="task-title">{{ new_task.title }}</span>
         </div>
     </div>
 {% endblock onboarding_preview %}

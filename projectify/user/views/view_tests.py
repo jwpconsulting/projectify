@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import redirect, render
 from django.urls import reverse
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_http_methods, require_POST
 
 from allauth.socialaccount.models import SocialAccount, SocialApp, SocialLogin
 from allauth.socialaccount.providers.openid_connect.provider import (
@@ -192,13 +192,12 @@ def email_update_confirm_test(
     )
 
 
-@require_http_methods(["GET", "POST"])
+@require_POST
 def socialaccount_signup_test(request: HttpRequest) -> HttpResponse:
     """
     Test the allauth socialaccount signup flow.
 
-    Simulates two scenarios.
-    Scenario a., new user
+    Simulates the following scenario.
     Set up
     1. User already has account with IdP X and email A.
     2. They don't have an account on Projectify.
@@ -208,24 +207,11 @@ def socialaccount_signup_test(request: HttpRequest) -> HttpResponse:
     2. They are prompted to agree with TOS/privacy policy on Projectify
     3. They now have an account on Projectify with email A
     4. They can now log in on Projectify using IdP X
-
-    Scenario b., existing user on Projectify
-    Set up
-    1. User has account with Idp X and email A.
-    2. User has account on Projectify with email A.
-
-    Steps
-    1. User logs out on Projectify
-    2. User signs up on Projectify using IdpX
-    3. The user sees a warning telling them they've already
-    created an account on PRoejctiyf with email A.
     """
     if not settings.DEBUG_AUTH:
         return HttpResponseForbidden(
             "This page is only available in development mode"
         )
-    if request.method == "GET":
-        return render(request, "user/test_socialaccount_signup.html")
     if request.user.is_authenticated:
         return HttpResponseForbidden("You must be logged out to use this page")
 
@@ -234,38 +220,12 @@ def socialaccount_signup_test(request: HttpRequest) -> HttpResponse:
     # https://github.com/pennersr/django-allauth/blob/cf7f55d79e421e5d5ba078e31119a799f8b149e8/allauth/socialaccount/adapter.py#L262
     app = SocialApp(provider="openid_connect", client_id="test.id")
     provider = OpenIDConnectProvider(request, app=app)  # type: ignore
-
-    match request.POST.get("scenario"):
-        case "new_user":
-            test_email = f"test-new-{secrets.token_hex(8)}@example.com"
-            user = User(email=test_email)
-            user.set_unusable_password()
-            mock_account = SocialAccount(
-                provider=app.provider,
-                uid=secrets.token_hex(8),
-                extra_data={"email": test_email},
-            )
-        case "existing_user":
-            test_email = f"test-existing-{secrets.token_hex(8)}@example.com"
-            existing_user = user_sign_up(
-                email=test_email,
-                password=secrets.token_hex(32),
-                tos_agreed=True,
-                privacy_policy_agreed=True,
-            )
-            existing_user.is_active = True
-            existing_user.save()
-            user = User(email=test_email)
-            user.set_unusable_password()
-            mock_account = SocialAccount(
-                provider=app.provider,
-                uid=secrets.token_hex(8),
-                extra_data={"email": test_email},
-            )
-        case _:
-            return HttpResponseForbidden("Invalid scenario")
-    sociallogin = SocialLogin(
-        user=user, account=mock_account, provider=provider
-    )
+    test_email = f"test-new-{secrets.token_hex(8)}@example.com"
+    user = User(email=test_email)
+    user.set_unusable_password()
+    data = {"email": test_email}
+    uid = secrets.token_hex(8)
+    mock_acc = SocialAccount(provider=app.provider, uid=uid, extra_data=data)
+    sociallogin = SocialLogin(user=user, account=mock_acc, provider=provider)
     request.session["socialaccount_sociallogin"] = sociallogin.serialize()
     return redirect("socialaccount_signup")

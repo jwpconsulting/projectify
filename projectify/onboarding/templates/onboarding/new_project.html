@@ -12,11 +12,11 @@
         <div class="flex flex-col gap-4">
             <h1 class="min-w-fit max-w-lg text-4xl font-bold">{% trans "Add your first project" %}</h1>
             <div class="flex flex-col gap-2 text-lg">
-                {% if project %}
+                {% if new_project %}
                     <p>
-                        {% blocktrans %}It looks like you already have a project called "{{ project }}". Would you like to continue adding a task for it?{% endblocktrans %}
+                        {% blocktrans with project_title=new_project.title%}It looks like you already have a project called "{{ project_title }}". Would you like to continue adding a task for it?{% endblocktrans %}
                     </p>
-                    {% anchor href="onboarding:new_task" project_uuid=project.uuid label=_("Continue adding a task to this project") %}
+                    {% anchor href="onboarding:new_task" project_uuid=new_project.uuid label=_("Continue adding a task to this project") %}
                 {% else %}
                     <p>{% trans "You can create unlimited projects per workspace." %}</p>
                     <p>{% trans "Projects help you to focus on different projects you may be working on." %}</p>
@@ -30,7 +30,7 @@
 {% block onboarding_skip %}
     <form method="post" class="flex shrink grow flex-col gap-16">
         {% csrf_token %}
-        {% action_button text=_("Skip onboarding") style="secondary" name="action" value="skip" %}
+        {% action_button type="submit" text=_("Skip onboarding") style="secondary" name="action" value="skip" %}
     </form>
 {% endblock onboarding_skip %}
 {% block onboarding_stepcounter %}
@@ -40,7 +40,7 @@
     <div class="flex flex-col gap-2">
         <div class="mx-4 px-4 flex items-center gap-2 font-bold border rounded p-2">
             {% icon "briefcase" size=4 %}
-            <span class="max-w-xs truncate">{{ workspace.title }}</span>
+            <span class="max-w-xs truncate">{{ new_workspace.title }}</span>
         </div>
         <div class="mx-4 flex flex-row items-center justify-start text-utility gap-2">
             {% icon "folder" size=4 %}
