@@ -17,7 +17,9 @@
     {% endif %}
     <div class="flex shrink-0 flex-row items-center gap-2">
         {% if user.is_authenticated %}
-            {% anchor "dashboard:dashboard" _("Go to dashboard") %}
+            {% if show_go_to_dashboard %}
+                {% anchor "dashboard:dashboard" _("Go to dashboard") %}
+            {% endif %}
             {% anchor "users:log-out" _("Log out") %}
             {% anchor "users:profile" _("Profile") %}
         {% else %}
