@@ -1,35 +1,34 @@
 ---
-title: Email testing snippets
+title: Email deliverability tests
 date: 2025-01-05
+updated: 2026-06-01
 author: Justus Perlwitz
 ---
 
 <!--
-SPDX-FileCopyrightText: 2025 JWP Consulting GK
+SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 # How to test email delivery
 
-To test sending an email from Render.com, you need to find the correct SSH
-connection string. Please review [this document](https://render.com/docs/ssh)
-to find out how to get the correct SSH connection string for your instance.
-
-This is how it may look like:
+To test sending an email from Projectify on Hetzner, connect to the app server
+through the SSH bastion. Open a Django shell using the following commands:
 
 ```bash
-ssh XXX@ssh.YYY.render.com
+cd /usr/share/projectify/releases/current
+sudo -u projectify \
+  DJANGO_SETTINGS_MODULE=projectify.settings.hetzner \
+  DJANGO_CONFIGURATION=Hetzner \
+  STATIC_ROOT=$PWD/static \
+  MEDIA_ROOT=/var/lib/projectify/state/media \
+  DATABASE_URL=postgresql://projectify@localhost/projectify \
+  CREDENTIALS_FILE=/var/lib/projectify/credentials.toml \
+  venv/bin/python app/manage.py shell
 ```
 
-Open a Django shell using the following command in the ssh session you have
-just connected to:
-
-```bash
-python ./manage.py
-```
-
-Then, once the Django shell is open, you need to find a User model to send
+In the Django shell, find a User to send
 emails to. These are the two Python commands needed to import the User model
 and find a User by email address.
 
@@ -66,4 +65,20 @@ A successful run of these three commands looks like this:
 >>> from projectify.user.emails import UserEmailConfirmationEmail
 >>> e = UserEmailConfirmationEmail(receiver=u, obj=u)
 >>> e.send()
+```
+
+# Test admin email
+
+To test emailing admins, run the following commands in a Django shell:
+
+```
+from django.core.mail import mail_admins
+mail_admins("Test subject", "Test message")
+```
+
+Review the current admins by inspecting the value of the `settings.ADMINS` variable. Here's an example:
+
+```
+>>> settings.ADMINS
+[['Foo', 'foo+bar@example.com']]
 ```

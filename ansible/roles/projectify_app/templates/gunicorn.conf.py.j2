@@ -27,6 +27,8 @@ raw_env = [
     "DATABASE_URL={{ database_url }}",
     "STATIC_ROOT={{ static_root }}",
     "MEDIA_ROOT={{ media_root }}",
+    # TODO add ALLOWED_HOSTS:
+    # "ALLOWED_HOSTS={{ allowed_host }}"
     # TODO use LoadCredential in systemd for secrets
     "CREDENTIALS_FILE={{ credentials_file }}",
 ]
