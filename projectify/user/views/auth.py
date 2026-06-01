@@ -65,7 +65,7 @@ def allauth_provider_info(request: HttpRequest) -> list[dict[str, str]]:
             case "apple":
                 label = _("Log in with Apple")
                 alt = _("Apple")
-                icon = "user/login_with_google.svg"
+                icon = "user/login_with_apple.svg"
             case "openid_connect":
                 label = _("Dummy log in")
                 alt = _("Dummy log in")
