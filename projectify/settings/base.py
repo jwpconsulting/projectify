@@ -155,7 +155,6 @@ class Base(Configuration):  # type:ignore
     # we can, while avoiding to reinvent the wheel every time.
     INSTALLED_APPS_THIRD_PARTY = (
         "rules.apps.AutodiscoverRulesConfig",
-        "markdownify.apps.MarkdownifyConfig",
         # Allauth
         "allauth",
         "allauth.account",

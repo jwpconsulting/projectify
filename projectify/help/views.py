@@ -113,7 +113,6 @@ def help_detail(request: HttpRequest, page: str) -> HttpResponse:
         (settings.BASE_DIR / "help/markdown_en") / topic["markdown_file"]
     ).read_text()
 
-    # Skip markdownify and generate Markdown directly
     # NOTE: This is safe as long as we don't let the user control the page
     # (e.g., local file inclusion)
     content, toc_html = markdown_to_safe_html(help_text)
