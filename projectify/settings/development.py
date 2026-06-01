@@ -213,16 +213,16 @@ class Development(Base):
             )
         apple_keys = {
             "ALLAUTH_APPLE_CLIENT_ID",
-            "ALLAUTH_APPLE_SECRET",
             "ALLAUTH_APPLE_KEY",
+            "ALLAUTH_APPLE_SECRET",
             "ALLAUTH_APPLE_CERTIFICATE_KEY",
         }
         if all(key in os.environ for key in apple_keys):
             cls.SOCIALACCOUNT_PROVIDERS["apple"]["APPS"].append(
                 {
                     "client_id": os.environ["ALLAUTH_APPLE_CLIENT_ID"],
-                    "secret": os.environ["ALLAUTH_APPLE_SECRET"],
                     "key": os.environ["ALLAUTH_APPLE_KEY"],
+                    "secret": os.environ["ALLAUTH_APPLE_SECRET"],
                     "settings": {
                         "certificate_key": os.environ[
                             "ALLAUTH_APPLE_CERTIFICATE_KEY"

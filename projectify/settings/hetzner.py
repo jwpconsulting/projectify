@@ -174,8 +174,8 @@ class Hetzner(Base):
 
         apple_keys = {
             "ALLAUTH_APPLE_CLIENT_ID",
-            "ALLAUTH_APPLE_SECRET",
             "ALLAUTH_APPLE_KEY",
+            "ALLAUTH_APPLE_SECRET",
             "ALLAUTH_APPLE_CERTIFICATE_KEY",
         }
         # TODO make log in with apple NOT optional
@@ -183,8 +183,8 @@ class Hetzner(Base):
             cls.SOCIALACCOUNT_PROVIDERS["apple"]["APPS"].append(
                 {
                     "client_id": credentials["ALLAUTH_APPLE_CLIENT_ID"],
-                    "secret": credentials["ALLAUTH_APPLE_SECRET"],
                     "key": credentials["ALLAUTH_APPLE_KEY"],
+                    "secret": credentials["ALLAUTH_APPLE_SECRET"],
                     "settings": {
                         "certificate_key": credentials[
                             "ALLAUTH_APPLE_CERTIFICATE_KEY"
