@@ -9,7 +9,8 @@ to learn more.
 
 The Projectify frontend uses the following software libraries. You can also
 review Projectify's [source code](/free-software#source-code) to learn what
-other software libraries it uses.
+other software libraries it uses. Other assets like SVG icons not mentioned
+here contain SPDX identifiers in their file contents.
 
 # boring-avatars
 
