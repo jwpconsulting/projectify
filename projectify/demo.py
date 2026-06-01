@@ -58,9 +58,7 @@ def _main(tmpdir: str) -> None:
     env["DJANGO_SETTINGS_MODULE"] = "projectify.settings.demo"
     env["DJANGO_CONFIGURATION"] = "Demo"
 
-    from configurations.management import (  # type: ignore
-        execute_from_command_line,
-    )
+    from configurations.management import execute_from_command_line
 
     execute_from_command_line([".", "seeddb"])
     execute_from_command_line([".", "collectstatic", "--noinput"])

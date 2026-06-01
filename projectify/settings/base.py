@@ -25,7 +25,7 @@ from django.utils.log import DEFAULT_LOGGING
 import dj_database_url
 from justhtml import SanitizationPolicy, UrlPolicy, UrlRule
 
-from configurations import Configuration  # type: ignore
+from configurations import Configuration
 
 from .monkeypatch import patch
 from .types import (
@@ -54,7 +54,7 @@ def environ_get_or_warn(
 patch()
 
 
-class Base(Configuration):  # type:ignore
+class Base(Configuration):
     """
     Base configuration.
 

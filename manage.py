@@ -32,9 +32,9 @@ def main() -> None:
             "environment. See the projectify/settings folder for all "
             "available configuration classes."
         )
-    from configurations.management import execute_from_command_line
+    from configurations import management
 
-    execute_from_command_line(sys.argv)
+    management.execute_from_command_line(sys.argv)
 
 
 if __name__ == "__main__":
