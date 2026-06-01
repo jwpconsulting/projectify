@@ -12,7 +12,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 Here's what this release improves for you:
 
-- You can add links to other projects or tasks into your project or task description
+- You can now log into Projectify using your Apple account.
+- You can add links to other projects or tasks into your project or task description.
 - This release improves the look and feel of project and task forms.
 - You can edit project descriptions with the same rich text editor that tasks
   have.
@@ -27,6 +28,7 @@ Here's what this release improves for you:
 ### Documentation
 
 - Inline [Trix documentation](https://github.com/basecamp/trix/tree/main) in `docs/frontend-scripting.md`.
+- Update Projectify credits to mention HTMX and SVG assets
 
 ### Internal
 
@@ -41,6 +43,12 @@ Here's what this release improves for you:
 - Remove `Section` model
 - Remove WorkspaceUser unused `minimized_project_list` and
    `minimized_team_member_filter` properties.
+
+### Security
+
+- Update Django to version 6.0.5
+- Update urllib3 to version 2.7.0
+- Update idna to version 3.17
 
 ## 2026.5.3
 
