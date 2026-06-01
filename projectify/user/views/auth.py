@@ -46,9 +46,6 @@ def allauth_provider_info(request: HttpRequest) -> list[dict[str, str]]:
     adapter = get_adapter()  # type: ignore[no-untyped-call]
     providers: list[Provider] = adapter.list_providers(request)
     for provider in providers:
-        logger.info(
-            "Provider: %s, slug: %s", type(provider), provider.get_slug()
-        )
         if provider.app is None:
             continue
         # The original get_providers also checked the following:
@@ -74,7 +71,7 @@ def allauth_provider_info(request: HttpRequest) -> list[dict[str, str]]:
                 alt = _("Dummy log in")
                 icon = "heroicons/user.svg"
             case other:
-                logger.warning("Unrecognized auth provider %s", other)
+                logger.error("Unrecognized auth provider %s", other)
                 continue
         href = provider.get_login_url(request)
         result.append({"label": label, "alt": alt, "icon": icon, "href": href})
