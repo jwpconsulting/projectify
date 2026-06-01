@@ -336,9 +336,5 @@ def assign_task(
     task = task_find_by_task_uuid(task_uuid=task_uuid, who=request.user)
     if task is None:
         raise Http404(_("Task not found"))
-    context = {
-        "task": task,
-        "project": task.project,
-        "workspace": task.project.workspace,
-    }
+    context = {"new_task": task}
     return render(request, "onboarding/assign_task.html", context)
