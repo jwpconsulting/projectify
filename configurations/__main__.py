@@ -2,7 +2,6 @@
 # SPDX-FileCopyrightText: 2025, UhuruTechnology
 #
 # SPDX-License-Identifier: BSD-3-Clause
-# type: ignore
 
 """
 invokes django-cadmin when the dj_configurator module is run as a script.

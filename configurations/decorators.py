@@ -2,7 +2,6 @@
 # SPDX-FileCopyrightText: 2025, UhuruTechnology
 #
 # SPDX-License-Identifier: BSD-3-Clause
-# type: ignore
 
 def pristinemethod(func):
     """

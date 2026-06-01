@@ -2,7 +2,6 @@
 # SPDX-FileCopyrightText: 2026 2025, UhuruTechnology
 #
 # SPDX-License-Identifier: BSD-3-Clause
-# type: ignore
 
 from importlib.machinery import PathFinder
 import logging
