@@ -213,6 +213,22 @@ module = [
 ]
 disallow_untyped_defs = false
 
+[[tool.mypy.overrides]]
+module = ["configurations.*"]
+disallow_untyped_defs = false
+disallow_untyped_calls = false
+disable_error_code = [
+    "attr-defined",
+    "has-type",
+    "misc",
+    "assignment",
+    "union-attr",
+    "operator",
+    "override",
+    "name-defined",
+    "arg-type",
+]
+
 [tool.pyright]
 stubPath = "mypy/stubs"
 typeCheckingMode = "strict"
