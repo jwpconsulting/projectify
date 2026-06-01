@@ -137,10 +137,7 @@ def handler404(
     request: HttpRequest, exception: Optional[Exception] = None
 ) -> HttpResponse:
     """Handle 404 errors with a custom page."""
-    if exception:
-        logger.warning(
-            "Received %s exception for 404 error", exception.__class__.__name__
-        )
+    del exception
     return render(request, "404.html", status=404)
 
 

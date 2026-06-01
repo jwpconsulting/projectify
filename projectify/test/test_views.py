@@ -143,12 +143,12 @@ class Test404NotFound:
         self, client: Client, caplog: pytest.LogCaptureFixture
     ) -> None:
         """Check log output for 404 handler."""
-        with caplog.at_level(logging.WARNING, logger="projectify.views"):
+        with caplog.at_level(logging.WARNING):
             response = client.get("/this-page-does-not-exist/")
             assert response.status_code == 404
             assert b"Page not found" in response.content
 
-        assert "Received Resolver404 exception for 404 error" in caplog.text
+        assert caplog.text == ""
 
 
 @pytest.mark.urls("projectify.test.test_views")

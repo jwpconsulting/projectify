@@ -399,6 +399,9 @@ class Base(Configuration):
                 **DEFAULT_LOGGING["loggers"]["django"],
                 "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
             },
+            # Suppress log output like this:
+            # WARNING [django.request.log] ~ Not Found: /apple-touch-icon-72x72.png
+            "django.request": {"level": "ERROR"},
             "projectify": {
                 "handlers": ["console", "mail_admins"],
                 "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
