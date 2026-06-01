@@ -124,16 +124,16 @@ class Configuration(metaclass=ConfigurationBase):
             cls.DOTENV_LOADED = dotenv
 
     @classmethod
-    def pre_setup(cls):
+    def pre_setup(cls) -> None:
         if cls.DOTENV_LOADED is None or cls.DOTENV_RELOAD:
             cls.load_dotenv()
 
     @classmethod
-    def post_setup(cls):
+    def post_setup(cls) -> None:
         pass
 
     @classmethod
-    def setup(cls):
+    def setup(cls) -> None:
         for name, value in uppercase_attributes(cls).items():
             if isinstance(value, Value):
                 setup_value(cls, name, value)
