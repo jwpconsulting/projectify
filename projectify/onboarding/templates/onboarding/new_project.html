@@ -30,7 +30,7 @@
 {% block onboarding_skip %}
     <form method="post" class="flex shrink grow flex-col gap-16">
         {% csrf_token %}
-        {% action_button text=_("Skip onboarding") style="secondary" name="action" value="skip" %}
+        {% action_button type="submit" text=_("Skip onboarding") style="secondary" name="action" value="skip" %}
     </form>
 {% endblock onboarding_skip %}
 {% block onboarding_stepcounter %}
