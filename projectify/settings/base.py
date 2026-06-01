@@ -420,7 +420,6 @@ class Base(Configuration):  # type:ignore
     # https://github.com/adamchainz/django-browser-reload
     BROWSER_RELOAD = False
 
-    # Markdownify
     # JustHTML Policy
     HTML_SANITIZATION_POLICY = SanitizationPolicy(
         allowed_tags=[
@@ -473,17 +472,13 @@ class Base(Configuration):  # type:ignore
             },
         ),
     )
-    MARKDOWNIFY = {
-        "default": {
-            "LINKIFY_TEXT": {"PARSE_URLS": False},
-            "MARKDOWN_EXTENSIONS": [
-                "markdown.extensions.fenced_code",
-                "markdown.extensions.footnotes",
-                "markdown.extensions.tables",
-                "markdown.extensions.toc",
-            ],
-        }
-    }
+    # Markdown conversion
+    MARKDOWN_EXTENSIONS = [
+        "markdown.extensions.fenced_code",
+        "markdown.extensions.footnotes",
+        "markdown.extensions.tables",
+        "markdown.extensions.toc",
+    ]
 
     @classmethod
     def setup(cls) -> None:

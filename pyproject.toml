@@ -25,7 +25,7 @@ dependencies = [
     "gunicorn>=25",
     "pillow>=12.1.1",
     "django-ratelimit>=4.1.0,<5",
-    "django-markdownify>=0.9.5,<0.10",
+    "markdown>=3.10.2",
     "django-allauth[socialaccount]>=65.14.3",
     "justhtml>=1.18.0",
     # TODO make this a "hosted" only dependency
@@ -203,7 +203,7 @@ exclude = [
 
 # Library imports
 [[tool.mypy.overrides]]
-module = ["allauth.*", "bleach"]
+module = ["allauth.*"]
 follow_untyped_imports = true
 
 [[tool.mypy.overrides]]
