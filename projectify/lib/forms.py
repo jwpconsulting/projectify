@@ -15,6 +15,8 @@ from django.utils.translation import gettext_lazy as _
 
 from PIL import Image
 
+from projectify.lib.const import RICH_TEXT_EDITOR_DEFAULT_CLASS
+
 logger = logging.getLogger(__name__)
 
 
@@ -54,11 +56,14 @@ class RichTextEditor(Textarea):
 
     def __init__(
         self,
-        attrs: Any = None,
+        attrs: Optional[dict[str, Any]] = None,
         heading_blocks: bool = True,
         upload_url: Optional[str] = None,
     ):
         """Initialize the widget with optional heading_blocks and upload_url attributes."""
+        existing_klass = attrs["class"] if attrs and "class" in attrs else ""
+        klass = " ".join([RICH_TEXT_EDITOR_DEFAULT_CLASS, existing_klass])
+        attrs = {**(attrs or {}), "class": klass}
         super().__init__(attrs)
         self.heading_blocks = heading_blocks
         self.upload_url = upload_url

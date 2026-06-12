@@ -1,20 +1,20 @@
 {# SPDX-License-Identifier: MIT #}
 {# SPDX-SnippetCopyrightText: 2022 LOGIC SMPC <paris@withlogic.co> #}
 {% load i18n %}
-<div class="django-prose-editor-container">
-    {# need to force_escape for this hidden input because we're marking the value as safe #}
-    <input name="{{ widget.name }}"
-           type="hidden"
-           id="input-{{ widget.attrs.id }}"
-           {% if widget.value %}value="{{ widget.value|force_escape }}"{% endif %} />
-    <trix-editor input="input-{{ widget.attrs.id }}"
-                 class="django-prose-editor trix-content prose {% if widget.attrs.class %}{{ widget.attrs.class }}{% endif %} "
-                 {% include "django/forms/attrs.html" with attrs=widget.attrs %}
-                 id="{{ widget.attrs.id }}"
-                 data-heading-blocks="{{ widget.heading_blocks }}"
-                 {% if widget.upload_url %}data-upload-attachment-url="{{ widget.upload_url }}"{% endif %}>
-    </trix-editor>
-</div>
-<dialog id="prose-link-suggestions-dialog"
-        class="open:flex flex-col gap-2 border border-border p-4 bg-foreground w-[400px] min-h-[200px]">
-</dialog>
+{# need to force_escape for this hidden input because we're marking the value as safe #}
+<input name="{{ widget.name }}"
+       type="hidden"
+       id="input-{{ widget.attrs.id }}"
+       {% if widget.value %}value="{{ widget.value|force_escape }}"{% endif %} />
+<trix-editor input="input-{{ widget.attrs.id }}"
+             {% include "django/forms/attrs.html" with attrs=widget.attrs %}
+             data-heading-blocks="{{ widget.heading_blocks }}"
+             {% if widget.upload_url %}data-upload-attachment-url="{{ widget.upload_url }}"{% endif %}>
+</trix-editor>
+{% comment %}
+This used to contain the prose-link-suggestions-dialog. I've moved it to
+projectify/workspace/templates/workspace/form_base.html
+
+As long as your forms base off form_base, they'll have a dialog for link
+suggestions.
+{% endcomment %}

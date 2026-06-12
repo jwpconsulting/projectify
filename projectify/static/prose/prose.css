@@ -1,9 +1,5 @@
 /*! SPDX-License-Identifier: MIT
     SPDX-FileCopyrightText: 2022 LOGIC SMPC <paris@withlogic.co> */
-.django-prose-editor-container {
-    overflow: auto;
-    width: 100%;
-}
 form .aligned .django-prose-editor-container trix-editor {
     min-height: 350px;
     width: 100%;
