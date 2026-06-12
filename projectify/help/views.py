@@ -115,12 +115,12 @@ def help_detail(request: HttpRequest, page: str) -> HttpResponse:
 
     # NOTE: This is safe as long as we don't let the user control the page
     # (e.g., local file inclusion)
-    content, toc_html = markdown_to_safe_html(help_text)
+    help_html, toc_html = markdown_to_safe_html(help_text)
     if not toc_html:
         warnings.warn(f"No TOC for help topic {topic}")
 
     context = {
-        "content": content,
+        "help_html": help_html,
         "toc_html": toc_html,
         "helptopics": help_topics_with_index.values(),
         "helptopic": topic,
