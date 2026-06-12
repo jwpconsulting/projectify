@@ -52,7 +52,7 @@ def get_image_format(file: UploadedFile) -> Optional[str]:
 class RichTextEditor(Textarea):
     """Rich text editor widget for prose's RichTextField."""
 
-    template_name = "prose/forms/widgets/editor.html"
+    template_name = "common/trix-editor.html"
 
     def __init__(
         self,
