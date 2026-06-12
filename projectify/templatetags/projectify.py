@@ -187,19 +187,19 @@ def action_button(
 
     return format_html(
         '<button type="{type}" '
-        'class="{width_class} shrink-0 {color_classes}{disabled_class} flex min-w-0 flex-row {justify} gap-2 rounded-lg px-4 py-2 font-bold"'
+        'class="{width_class}shrink-0 {color_classes}{disabled_class} flex min-w-0 flex-row {justify} gap-2 rounded-lg px-4 py-2 font-bold"'
         "{form}"
         "{disabled_attr}{value}{name}>"
         "{icon}"
         '<span class="truncate">{text}</span>'
         "</button>",
         type=type,
-        width_class="w-full" if grow else "",
+        width_class="w-full " if grow else "",
         color_classes=color_classes[style],
         disabled_class=" opacity-20" if disabled else "",
         disabled_attr=" disabled" if disabled else "",
         justify="justify-left" if justify_left else "justify-center",
-        form=format_html('form="{form}"', form=form) if form else "",
+        form=format_html(' form="{form}"', form=form) if form else "",
         # TODO
         # icon=icon(icon, style, 6) if icon else "",
         icon=format_html(
