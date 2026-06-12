@@ -81,8 +81,9 @@ def task_update(
     match extract_first_paragraph_text(title_description):
         case str() as title:
             task.title = title
+        # Keep the task title when nothing matches
         case None:
-            task.title = title_description
+            pass
 
     task.save()
     return task

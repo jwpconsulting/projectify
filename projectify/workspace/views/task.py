@@ -27,6 +27,7 @@ from projectify.workspace.selectors.project import (
     ProjectDetailQuerySet,
     project_find_by_project_uuid,
 )
+from projectify.workspace.utils import extract_first_paragraph_text
 
 from ..const import TASK_EDITOR_MIN_HEIGHT_CLASS
 from ..models import Task, Workspace
@@ -90,6 +91,17 @@ class TaskForm(forms.Form):
             },
         ),
     )
+
+    def clean_description(self) -> str:
+        """Make sure that the description has at least one child."""
+        description: str = self.cleaned_data["description"]
+        match extract_first_paragraph_text(description):
+            case str():
+                return description
+            case None:
+                raise forms.ValidationError(
+                    _("Please enter a task description")
+                )
 
     def __init__(
         self,
@@ -231,7 +243,7 @@ def task_update_view(
     task_initial = {
         "assignee": task.assignee,
         "due_date": task.due_date,
-        "description": task.description,
+        "description": task.description or task.title,
         "project": task.project,
     }
     match request.method:

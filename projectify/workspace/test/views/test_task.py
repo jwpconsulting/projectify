@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2023-2024 JWP Consulting GK
 """Test task CRUD views."""
 
+import re
 from uuid import UUID
 
 from django.test.client import Client
@@ -78,6 +79,15 @@ class TestTaskCreateView:
         response = user_client.post(resource_url, data)
         assert response.status_code == 400
 
+        # Empty-ish description
+        data = {
+            "assignee": t_uid,
+            "action": "create",
+            "description": "<p></p>",
+        }
+        response = user_client.post(resource_url, data)
+        assert response.status_code == 400
+
     def test_project_not_found(
         self, user_client: Client, null_uuid: UUID
     ) -> None:
@@ -116,6 +126,22 @@ class TestTaskUpdateView:
             assert response.status_code == 200
         assert task.title in response.content.decode()
 
+    def test_get_no_description(
+        self, user_client: Client, resource_url: str, task: Task
+    ) -> None:
+        """Test getting the form when the task has no description."""
+        task.description = ""
+        task.save()
+        response = user_client.get(resource_url)
+        assert response.status_code == 200
+        match = re.search(
+            r'\<input name="description".+?value="(.+?)" />',
+            response.content.decode(),
+            re.DOTALL,
+        )
+        assert match is not None
+        assert match.group(1) == task.title, match.group(0)
+
     def test_task_not_found(
         self, user_client: Client, null_uuid: UUID
     ) -> None:
@@ -136,10 +162,19 @@ class TestTaskUpdateView:
         assert task.title != "Updated Task Title"
         desc = "<p>Updated Task Title</p><p>Rest</p>"
         t_uid = str(team_member.uuid)
-        data = {"description": desc, "assignee": t_uid, "action": "update"}
+        data = {"description": desc, "assignee": t_uid}
         with django_assert_num_queries(12):
             response = user_client.post(resource_url, data)
             assert response.status_code == 302
         task.refresh_from_db()
         assert task.title == "Updated Task Title"
         assert task.assignee == team_member
+
+    def test_update_task_no_description(
+        self, user_client: Client, resource_url: str, team_member: TeamMember
+    ) -> None:
+        """Assert that you have to give the task a title."""
+        t_uid = str(team_member.uuid)
+        data = {"description": "<p></p>", "assignee": t_uid}
+        response = user_client.post(resource_url, data)
+        assert response.status_code == 400, response.content
