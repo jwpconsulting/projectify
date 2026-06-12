@@ -17,21 +17,23 @@ def extract_first_paragraph_text(unsafe_html: str) -> Optional[str]:
     if len(unsafe_html) == 0:
         return None
     settings = get_settings()
-    # Try extracting the contents of the first <p> tag
     doc = JustHTML(
         unsafe_html,
         policy=settings.HTML_USER_POLICY,
         fragment=True,
         transforms=[PruneEmpty("*")],
     )
-    if not doc.root.children:
-        return None
-    for child in doc.root.children:
+    match doc.root.children:
+        case None | []:
+            return None
+        case children:
+            pass
+    # Try extracting the contents of the first non-empty HTML element
+    for child in children:
         text: str = child.to_text()
         if len(text) > 0:
             return text
-    else:
-        return None
+    return None
 
 
 def strip_first_paragraph(unsafe_html: str) -> Optional[SafeString]:
@@ -45,21 +47,22 @@ def strip_first_paragraph(unsafe_html: str) -> Optional[SafeString]:
     if len(unsafe_html) == 0:
         return None
     settings = get_settings()
-    # Try extracting the contents of the first <p> tag
     doc = JustHTML(
         unsafe_html,
         policy=settings.HTML_USER_POLICY,
         fragment=True,
         transforms=[PruneEmpty("*")],
     )
-    if not doc.root.children:
-        return None
-    elif len(doc.root.children) <= 1:
-        return None
-    else:
-        doc.root.children = doc.root.children[1:]
-        sanitized_html = doc.to_html()
-        # calling mark_safe doesn't make it safe
-        # html is safe because JustHTML outputs safe html in
-        # doc.to_html()
-        return mark_safe(sanitized_html)
+    match doc.root.children:
+        case None:
+            return None
+        # Empty or just one element
+        case [] | [_]:
+            return None
+        case children:
+            doc.root.children = children[1:]
+            sanitized_html = doc.to_html()
+            # calling mark_safe doesn't make it safe
+            # html is safe because JustHTML outputs safe html in
+            # doc.to_html()
+            return mark_safe(sanitized_html)
