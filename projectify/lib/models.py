@@ -8,10 +8,13 @@ from collections.abc import Iterable, Sequence
 from typing import Any, Callable, Optional
 
 from django import forms
+from django.conf import settings
 from django.db.models import CharField, DateTimeField, Model, TextField
 from django.utils import safestring
 from django.utils.html import strip_tags
 from django.utils.translation import gettext_lazy as _
+
+from justhtml import DEFAULT_POLICY, SanitizationPolicy
 
 from projectify.lib.forms import RichTextEditor
 from projectify.lib.utils import clean_rich_text
@@ -151,8 +154,23 @@ class BaseModel(Model):
 # SPDX-SnippetCopyrightText: 2022 LOGIC SMPC <paris@withlogic.co>
 
 
-class RichTextField(TextField):  # type: ignore
+# XXX it would be great if changeing the policy= attribute emits
+# a new migration.
+# I've tried non_db_attrs and it doesn't affect migrations
+# Adding it as a deconstruct field doesn't work because SanitizationPolicy
+# is difficult to serialize.
+class RichTextField(TextField):  # type: ignore[type-arg]
     """Vendored in RichTextField from django-prose."""
+
+    def __init__(
+        self,
+        policy: Optional[SanitizationPolicy] = None,
+        *args: Any,
+        **kwargs: Any,
+    ):
+        """Override TextField.__init__ and track JustHTML policy."""
+        self.policy = policy or DEFAULT_POLICY
+        super().__init__(*args, **kwargs)
 
     def formfield(self, **kwargs: Any) -> forms.Field:
         """Return widget."""
@@ -165,9 +183,9 @@ class RichTextField(TextField):  # type: ignore
         del add
         raw_html: str = getattr(model_instance, self.attname)
         if not raw_html:
-            return raw_html
+            return ""
 
-        sanitized_html = clean_rich_text(raw_html)
+        sanitized_html = clean_rich_text(raw_html, policy=self.policy)
         return sanitized_html
 
     def from_db_value(
@@ -188,7 +206,7 @@ class DocumentContentField(RichTextField):
 class AbstractDocument(Model):
     """Class copied in from prose/models.py."""
 
-    content = DocumentContentField()
+    content = DocumentContentField(policy=settings.HTML_PROJECTIFY_POLICY)
 
     def get_plain_text_content(self) -> str:
         """Return plain text content."""

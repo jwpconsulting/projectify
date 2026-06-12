@@ -427,7 +427,7 @@ class Base(Configuration):
     BROWSER_RELOAD = False
 
     # JustHTML Policy
-    HTML_SANITIZATION_POLICY = SanitizationPolicy(
+    HTML_USER_POLICY = SanitizationPolicy(
         allowed_tags=[
             "a",
             # Blocks
@@ -470,13 +470,78 @@ class Base(Configuration):
             default_allow_relative=True,
             allow_rules={
                 ("img", "src"): UrlRule(
-                    allowed_schemes={"https"}, allowed_hosts=[]
+                    # Allow no external hosts for <img src=>
+                    allowed_schemes={"https"},
+                    allowed_hosts=[],
                 ),
                 ("a", "href"): UrlRule(
-                    allowed_schemes={"https"}, allowed_hosts=[]
+                    # Allow all external hosts for <a href=>
+                    allowed_schemes={"https"},
+                    allowed_hosts=None,
                 ),
             },
         ),
+    )
+    # SanitizationPolicy for internal content coming from Projectify
+    # storefront, blog, or help pages.
+    HTML_PROJECTIFY_POLICY = SanitizationPolicy(
+        allowed_tags=[
+            "a",
+            # Blocks
+            "blockquote",
+            "div",
+            "p",
+            # Formatting
+            "em",
+            "strong",
+            "sup",
+            "br",
+            "span",
+            "hr",
+            # images
+            "figure",
+            "figcaption",
+            "img",
+            # Lists
+            "ul",
+            "li",
+            "ol",
+            # Headings
+            "h1",
+            "h2",
+            "h3",
+            # Code
+            "pre",
+            "code",
+            # HTML 5 things
+            "abbr",
+            "acronym",
+            # Table things
+            "table",
+            "tbody",
+            "thead",
+            "th",
+            "td",
+            "tr",
+        ],
+        allowed_attributes={
+            "div": {"class"},
+            "a": {"href", "title", "class"},
+            "img": {"src", "alt"},
+            "*": {"id"},
+        },
+        url_policy=UrlPolicy(
+            default_allow_relative=True,
+            allow_rules={
+                ("img", "src"): UrlRule(
+                    allowed_schemes={"https"}, allowed_hosts=[]
+                ),
+                ("a", "href"): UrlRule(
+                    allowed_schemes={"https", "mailto"}, allowed_hosts=None
+                ),
+            },
+        ),
+        unsafe_handling="collect",
     )
     # Markdown conversion
     MARKDOWN_EXTENSIONS = [

@@ -21,9 +21,9 @@ from django.views.decorators.http import require_http_methods
 from projectify.lib.forms import RichTextEditor, populate_form_with_errors
 from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.types import AuthenticatedHttpRequest
-from projectify.lib.utils import strip_first_paragraph
 from projectify.lib.views import platform_view
 from projectify.workspace.const import TASK_EDITOR_MIN_HEIGHT_CLASS
+from projectify.workspace.utils import strip_first_paragraph
 
 from ..models import Project, Task, TeamMember, Workspace
 from ..selectors.project import (
