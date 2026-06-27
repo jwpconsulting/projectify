@@ -13,7 +13,7 @@
         {% include "projectify/forms/submit.html" with text=_("Continue") %}
     </form>
 {% endblock onboarding_content %}
-{% block onboarding_preview %}
+{% block onboarding_preview_container %}
     <h1 class="w-full overflow-hidden text-ellipsis text-center text-4xl font-bold">
         {% translate "Welcome" as welcome %}
         <span id="welcome-message">
@@ -41,4 +41,4 @@
             });
         })();
     </script>
-{% endblock onboarding_preview %}
+{% endblock onboarding_preview_container %}

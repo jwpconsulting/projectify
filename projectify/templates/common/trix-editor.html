@@ -1,0 +1,20 @@
+{# SPDX-License-Identifier: MIT #}
+{# SPDX-SnippetCopyrightText: 2022 LOGIC SMPC <paris@withlogic.co> #}
+{% load i18n %}
+{# need to force_escape for this hidden input because we're marking the value as safe #}
+<input name="{{ widget.name }}"
+       type="hidden"
+       id="input-{{ widget.attrs.id }}"
+       {% if widget.value %}value="{{ widget.value|force_escape }}"{% endif %} />
+<trix-editor input="input-{{ widget.attrs.id }}"
+             {% include "django/forms/attrs.html" with attrs=widget.attrs %}
+             data-heading-blocks="{{ widget.heading_blocks }}"
+             {% if widget.upload_url %}data-upload-attachment-url="{{ widget.upload_url }}"{% endif %}>
+</trix-editor>
+{% comment %}
+This used to contain the prose-link-suggestions-dialog. I've moved it to
+projectify/workspace/templates/workspace/form_base.html
+
+As long as your forms base off form_base, they'll have a dialog for link
+suggestions.
+{% endcomment %}

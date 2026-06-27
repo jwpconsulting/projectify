@@ -6,6 +6,19 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Fix storefront URLs not rendering by adjusting HTML sanitization
+  configuration. Projectify's migration from bleach to JustHTML introduced
+  a regression in sanitization behavior.
+
+### Internal
+
+- Split HTML sanitization configuration between user-generated and
+  Projectify-generated content.
+
 ## 2026.6.8
 
 ###  Enhancement

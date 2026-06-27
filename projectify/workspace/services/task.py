@@ -13,8 +13,8 @@ from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.auth import validate_perm
-from projectify.lib.utils import extract_first_paragraph_text
 from projectify.user.models import User
+from projectify.workspace.utils import extract_first_paragraph_text
 
 from ..models import Project, Task, TeamMember
 
@@ -81,8 +81,9 @@ def task_update(
     match extract_first_paragraph_text(title_description):
         case str() as title:
             task.title = title
+        # Keep the task title when nothing matches
         case None:
-            task.title = title_description
+            pass
 
     task.save()
     return task

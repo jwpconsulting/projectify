@@ -109,7 +109,12 @@ class Project(TitleDescriptionModel, BaseModel):
     workspace = models.ForeignKey["Workspace"](
         Workspace, on_delete=models.PROTECT
     )
-    description = RichTextField(_("description"), blank=True, null=True)
+    description = RichTextField(
+        verbose_name=_("description"),
+        blank=True,
+        null=True,
+        policy=settings.HTML_USER_POLICY,
+    )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     archived = models.DateTimeField(
         null=True,
@@ -144,7 +149,12 @@ class Task(TitleDescriptionModel, BaseModel):
     """Task, belongs to project."""
 
     # Override description and make it a rich text field
-    description = RichTextField(_("description"), blank=True, null=True)
+    description = RichTextField(
+        blank=True,
+        verbose_name=_("description"),
+        null=True,
+        policy=settings.HTML_USER_POLICY,
+    )
     workspace = models.ForeignKey["Workspace"](
         "workspace.Workspace", on_delete=models.CASCADE
     )

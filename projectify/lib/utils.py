@@ -12,7 +12,7 @@ from django.core.cache import cache
 from django.templatetags import static
 from django.utils.safestring import SafeString, mark_safe
 
-from justhtml import JustHTML, PruneEmpty
+from justhtml import JustHTML, SanitizationPolicy
 from markdown import Markdown
 from PIL import Image
 
@@ -21,71 +21,22 @@ from projectify.lib.settings import get_settings
 logger = logging.getLogger(__name__)
 
 
-def clean_rich_text(unsafe_html: str) -> SafeString:
+settings = get_settings()
+
+
+def clean_rich_text(
+    unsafe_html: str, policy: SanitizationPolicy = settings.HTML_USER_POLICY
+) -> SafeString:
     """Clean the text for rich text content."""
-    settings = get_settings()
     # https://github.com/EmilStenstrom/justhtml/blob/main/docs/sanitization.md
     sanitized_html: str = JustHTML(
-        unsafe_html, policy=settings.HTML_SANITIZATION_POLICY, fragment=True
+        unsafe_html, policy=policy, fragment=True
     ).to_html(pretty=False)
     # Remember that just marking it "safe" doesn't make it safe
     # sanitized_html is safe to mark as "safe" because `JustHTML` has
     # cleaned it.
     safe_html = mark_safe(sanitized_html)
     return safe_html
-
-
-def extract_first_paragraph_text(unsafe_html: str) -> Optional[str]:
-    """Return plain text from the first non-empty block tag in html, or None."""
-    if len(unsafe_html) == 0:
-        return None
-    settings = get_settings()
-    # Try extracting the contents of the first <p> tag
-    doc = JustHTML(
-        unsafe_html,
-        policy=settings.HTML_SANITIZATION_POLICY,
-        fragment=True,
-        transforms=[PruneEmpty("*")],
-    )
-    if not doc.root.children:
-        return None
-    for child in doc.root.children:
-        text: str = child.to_text()
-        if len(text) > 0:
-            return text
-    else:
-        return None
-
-
-def strip_first_paragraph(unsafe_html: str) -> Optional[SafeString]:
-    """
-    Strip the first paragraph or other block element.
-
-    Return all following paragraphs as long they're not empty.
-
-    Return None if there's nothing after the first block.
-    """
-    if len(unsafe_html) == 0:
-        return None
-    settings = get_settings()
-    # Try extracting the contents of the first <p> tag
-    doc = JustHTML(
-        unsafe_html,
-        policy=settings.HTML_SANITIZATION_POLICY,
-        fragment=True,
-        transforms=[PruneEmpty("*")],
-    )
-    if not doc.root.children:
-        return None
-    elif len(doc.root.children) <= 1:
-        return None
-    else:
-        doc.root.children = doc.root.children[1:]
-        sanitized_html = doc.to_html()
-        # calling mark_safe doesn't make it safe
-        # html is safe because JustHTML outputs safe html in
-        # doc.to_html()
-        return mark_safe(sanitized_html)
 
 
 def static_image_get_with_dimensions(
@@ -132,6 +83,24 @@ def markdown_to_safe_html(
     settings = get_settings()
     md = Markdown(extensions=settings.MARKDOWN_EXTENSIONS)
     unsafe_html = md.convert(markdown)
-    html = clean_rich_text(unsafe_html)
-    toc = getattr(md, "toc", None)
-    return html, toc
+    sanitized_html: str = JustHTML(
+        # NOTE: This uses the HTML_PROJECTIFY_POLICY and is only
+        # suitable for content coming from Projectify
+        unsafe_html,
+        policy=settings.HTML_PROJECTIFY_POLICY,
+        fragment=True,
+        strict=True,
+    ).to_html(pretty=False)
+    safe_html = mark_safe(sanitized_html)
+    unsafe_toc_html = getattr(md, "toc", None)
+    if unsafe_toc_html:
+        sanitzed_toc_html = JustHTML(
+            unsafe_toc_html,
+            policy=settings.HTML_PROJECTIFY_POLICY,
+            fragment=True,
+            strict=True,
+        ).to_html(pretty=False)
+        safe_toc = mark_safe(sanitzed_toc_html)
+    else:
+        safe_toc = None
+    return safe_html, safe_toc

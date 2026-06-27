@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-FileCopyrightText: 20252-2026 JWP Consulting GK
+# SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Prepare a new version to be released
@@ -31,13 +31,28 @@ printf "about to run %s\nContinue? (c-c to exit)" "$next_cmd"
 read -r _
 eval "$next_cmd"
 
-echo "Now run the following:
-git push --set-upstream origin $(git rev-parse --abbrev-ref HEAD) &&
- git push --tags
+branch_name=$(git rev-parse --abbrev-ref HEAD)
+next_cmd=$(printf 'git push --setup-upstreadm origin %s' "$branch_name")
+printf "about to run %s\nContinue? (c-c to exit)" "$next_cmd"
+read -r _
+eval "$next_cmd"
 
-open the following URLs in your browser:
+next_cmd="git push --tags"
+printf "about to run %s\nContinue? (c-c to exit)" "$next_cmd"
+read -r _
+eval "$next_cmd"
 
-https://github.com/jwpconsulting/projectify/releases/new?title=${version}
+echo "
+1. Create a pull request:
 
-https://www.projectifyapp.com/admin/blog/post/add/?title=New%20Projectify%20release%20${hyphenated_version}&slug=projectify-release-${hyphenated_version}
+   https://github.com/jwpconsulting/projectify/compare/${branch_name}
+
+2. Merge your pull request.
+3. Create a release on GitHub:
+
+   https://github.com/jwpconsulting/projectify/releases/new?title=${version}&tag=${version}
+
+4. Create a release blog post on Projectify:
+
+   https://www.projectifyapp.com/admin/blog/post/add/?title=New%20Projectify%20release%20${hyphenated_version}&slug=projectify-release-${hyphenated_version}
 "
