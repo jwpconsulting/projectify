@@ -13,6 +13,7 @@ from django.contrib.auth.models import (
     PermissionsMixin,
 )
 from django.db import models
+from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import BaseModel
@@ -51,6 +52,13 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         upload_to="profile_picture/", blank=True, null=True
     )
     preferred_name = models.CharField(max_length=255, blank=True, null=True)
+    activated = models.DateTimeField(
+        verbose_name=_("Activated"),
+        help_text=_("Date and time user account was activated"),
+        editable=False,
+        blank=True,
+        null=True,
+    )
     tos_agreed = models.DateTimeField(
         verbose_name=_("Terms of service agreed"),
         help_text=_("Date and time user has agreed to terms of service"),
@@ -66,6 +74,13 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     objects: ClassVar[BaseUserManager["User"]] = BaseUserManager()
 
     USERNAME_FIELD = "email"
+
+    def clean(self) -> None:
+        """Validate model fields."""
+        # You'd need to adjust save_user in allauth/account/adapter.py
+        # without the following:
+        if self.is_active and self.activated is None:
+            self.activated = now()
 
     def save(self, *args: Any, **kwargs: Any) -> None:
         """Override save and call full_clean."""

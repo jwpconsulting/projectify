@@ -99,6 +99,7 @@ def user_confirm_email(*, email: str, token: Token) -> Optional[User]:
             {"token": [_("This email confirmation token is invalid")]}
         )
     user.is_active = True
+    user.activated = timezone.now()
     user.save()
     logger.info("Confirmed email for user %s", email)
     # TODO do not return User here

@@ -83,8 +83,23 @@ def test_user_sign_up_weak_password(faker: Faker) -> None:
     assert User.objects.count() == 0
 
 
+def test_user_active_requires_activated(user: User) -> None:
+    """Test that an active user must have activated set."""
+    activated = user.activated
+    assert activated is not None
+    # When you set it to None
+    user.activated = None
+    # And you save
+    user.save()
+    activated_new = user.activated
+    assert activated_new is not None
+    # clean() updates it and gives it a new one
+    assert activated_new > activated
+
+
 def test_user_confirm_email(user: User, inactive_user: User) -> None:
     """Test activating an active and inactive user."""
+    assert user.activated is not None
     assert user.is_active
     user_confirm_email(
         email=user.email,
@@ -92,8 +107,10 @@ def test_user_confirm_email(user: User, inactive_user: User) -> None:
     )
     user.refresh_from_db()
     assert user.is_active
+    assert user.activated is not None
 
     assert not inactive_user.is_active
+    assert inactive_user.activated is None
     user_confirm_email(
         email=inactive_user.email,
         token=user_make_token(
@@ -102,6 +119,7 @@ def test_user_confirm_email(user: User, inactive_user: User) -> None:
     )
     inactive_user.refresh_from_db()
     assert inactive_user.is_active
+    assert inactive_user.activated is not None
 
 
 @pytest.fixture
