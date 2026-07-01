@@ -18,6 +18,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 - Split HTML sanitization configuration between user-generated and
   Projectify-generated content.
+- Track user email confirmation timestamp in `activated` field
 
 ### Security
 
