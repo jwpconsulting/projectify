@@ -22,6 +22,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 ### Security
 
 - Update JustHTML -> 1.23.0
+- Update pyjwt -> 2.13.0
 
 ## 2026.6.8
 
