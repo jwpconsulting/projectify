@@ -13,6 +13,7 @@ from django.forms import ValidationError
 import pytest
 from faker import Faker
 
+from projectify.corporate.types import CustomerSubscriptionStatus
 from projectify.user.models import User
 
 from ...models import Project, TeamMember, TeamMemberRoles, Workspace
@@ -24,11 +25,22 @@ from ...services.team_member_invite import (
 )
 from ...services.workspace import (
     workspace_add_user,
+    workspace_create,
     workspace_delete,
     workspace_update,
 )
 
 pytestmark = pytest.mark.django_db
+
+
+def test_workspace_create_only_one_unpaid(faker: Faker, user: User) -> None:
+    """Test that a user can't create more than one unpaid workspace."""
+    ws = workspace_create(title=faker.company(), owner=user)
+    customer = ws.customer
+    assert customer.subscription_status == CustomerSubscriptionStatus.UNPAID
+    with pytest.raises(ValidationError) as error:
+        workspace_create(title=faker.company(), owner=user)
+    assert error.match("unpaid workspace")
 
 
 def test_workspace_delete(workspace: Workspace, user: User) -> None:

@@ -89,7 +89,6 @@ def markdown_to_safe_html(
         unsafe_html,
         policy=settings.HTML_PROJECTIFY_POLICY,
         fragment=True,
-        strict=True,
     ).to_html(pretty=False)
     safe_html = mark_safe(sanitized_html)
     unsafe_toc_html = getattr(md, "toc", None)

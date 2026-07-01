@@ -482,13 +482,28 @@ class TestPasswordResetRequestDjango:
             )
             for _ in range(6)
         ]
+        # Projectify requires users to confirm their email first before being
+        # able to request password resets
+        for u in [*first_users, last_user]:
+            u.is_active = True
+            u.save()
 
         for i, user in enumerate(first_users):
             response = client.post(resource_url, {"email": user.email})
-            assert response.status_code == 302, f"Attempt {i}"
+            assert (
+                response.status_code == 302
+            ), f"Attempt {i}, {response.content.decode()}"
 
         response = client.post(resource_url, {"email": last_user.email})
         assert response.status_code == 429
+
+    def test_post_password_reset_request_inactive_user(
+        self, client: Client, resource_url: str, inactive_user: User
+    ) -> None:
+        """Test POST request with an inactive (unconfirmed) user's email."""
+        response = client.post(resource_url, {"email": inactive_user.email})
+        assert response.status_code == 400, response.content
+        assert b"activate this account first" in response.content
 
 
 class TestPasswordResetRequestedDjango:

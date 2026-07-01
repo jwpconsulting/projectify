@@ -163,6 +163,16 @@ def user_request_password_reset(
         raise ValidationError(
             {"email": [_("No user could be found for this email")]}
         )
+    if not user.is_active:
+        raise ValidationError(
+            {
+                "email": [
+                    _(
+                        "You need to activate this account first. Please check your email inbox for a confirmation email."
+                    )
+                ]
+            }
+        )
     password_reset_email = UserPasswordResetEmail(receiver=user, obj=user)
     password_reset_email.send()
 

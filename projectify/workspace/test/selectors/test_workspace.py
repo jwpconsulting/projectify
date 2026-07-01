@@ -4,16 +4,40 @@
 """Test workspace model selectors."""
 
 import pytest
+from faker import Faker
+
+from projectify.corporate.services.stripe import customer_activate_subscription
 
 from ...models import TeamMember, TeamMemberInvite
 from ...selectors.workspace import (
     WorkspaceDetailQuerySet,
     workspace_find_by_workspace_uuid,
     workspace_find_for_user,
+    workspace_find_unpaid_for_user,
 )
-from ...services.workspace import workspace_delete
+from ...services.workspace import workspace_create, workspace_delete
 
 pytestmark = pytest.mark.django_db
+
+
+def test_workspace_find_unpaid_for_user(
+    team_member: TeamMember, faker: Faker
+) -> None:
+    """Test workspace_find_unpaid_for_user."""
+    # the fixture team_member's workspace is paid
+    user = team_member.user
+    assert workspace_find_unpaid_for_user(who=user).count() == 0
+
+    # make a new, unpaid workspace
+    unpaid = workspace_create(title=faker.company(), owner=user)
+    # it's unpaid and shows up as a selector result
+    assert workspace_find_unpaid_for_user(who=user).get() == unpaid
+
+    # Activate the subscription and it won't show up as unpaid in the selector
+    customer_activate_subscription(
+        customer=unpaid.customer, stripe_customer_id="stripe_test", seats=5
+    )
+    assert workspace_find_unpaid_for_user(who=user).count() == 0
 
 
 def test_workspace_find_for_user(

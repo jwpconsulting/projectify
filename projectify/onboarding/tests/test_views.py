@@ -91,7 +91,7 @@ class TestNewWorkspace(MixinForTests):
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Create a new workspace."""
-        with django_assert_num_queries(9):
+        with django_assert_num_queries(10):
             assert (
                 user_client.post(
                     resource_url, {"title": "Woof woof"}
@@ -105,6 +105,21 @@ class TestNewWorkspace(MixinForTests):
     ) -> None:
         """Test form validation."""
         assert user_client.post(resource_url, {"title": ""}).status_code == 400
+
+    def test_new_workspace_upper_limit(
+        self, team_member: TeamMember, user_client: Client, resource_url: str
+    ) -> None:
+        """Test form validation."""
+        # The team member workspace is paid
+        # Create one unpaid one
+        response = user_client.post(resource_url, {"title": "bla"})
+        # Should work
+        assert response.status_code == 302, response.content
+        # Create a second one
+        response = user_client.post(resource_url, {"title": "bla"})
+        # Should fail
+        assert response.status_code == 400, response.content
+        assert b"already have an unpaid workspace" in response.content
 
 
 class TestNewProject(MixinForTests):
