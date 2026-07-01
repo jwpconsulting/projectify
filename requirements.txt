@@ -177,9 +177,9 @@ idna==3.17 \
     --hash=sha256:466e48829084efe2548012b855df21540b96f2e20e51bd124c851536556a592c \
     --hash=sha256:5eb0cb53bc467c12eadcf6de83163ad8527cec9416f44b9b61b19caedad2b87f
     # via requests
-justhtml==1.18.0 \
-    --hash=sha256:38d74b92c06f2cf55aa14c3532fbd2ced65884c2c32c3544b389f321799a7fc2 \
-    --hash=sha256:74407e840dc34f77230acda83cbee4ada8a6dbe77543684eac9f7874028e072a
+justhtml==1.23.0 \
+    --hash=sha256:36f72598a5a6d0313f3baea5ee04c25f8a2a6b12f38cb7cc48adf12eefd4c09d \
+    --hash=sha256:a0d25847e770698795176e64f6007e9faa7b7da5df2afb1f2030d9813c78bbbf
     # via projectify-app
 markdown==3.10.2 \
     --hash=sha256:994d51325d25ad8aa7ce4ebaec003febcce822c3f8c911e3b17c52f7f589f950 \

@@ -19,6 +19,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 - Split HTML sanitization configuration between user-generated and
   Projectify-generated content.
 
+### Security
+
+- Update JustHTML -> 1.23.0
+
 ## 2026.6.8
 
 ###  Enhancement
