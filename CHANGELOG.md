@@ -25,6 +25,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 - Update pyjwt -> 2.13.0
 - Update cryptography -> 48.0.1
 - Prevent password resets before email confirmation to decrease spam risk
+- Limit users to owning one unpaid workspace at a time
 
 ## 2026.6.8
 

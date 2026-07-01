@@ -17,6 +17,7 @@ from django.db.models import (
     QuerySet,
 )
 
+from projectify.corporate.types import CustomerSubscriptionStatus
 from projectify.user.models import User
 
 from ..models import Project, Task, TeamMember, TeamMemberInvite, Workspace
@@ -83,6 +84,15 @@ def workspace_build_detail_query_set(
 
 
 WorkspaceDetailQuerySet = workspace_build_detail_query_set(who=None)
+
+
+def workspace_find_unpaid_for_user(*, who: User) -> QuerySet[Workspace]:
+    """Find unpaid workspaces owned by a given user."""
+    return Workspace.objects.filter(
+        teammember__user=who,
+        teammember__role="OWNER",
+        customer__subscription_status=CustomerSubscriptionStatus.UNPAID,
+    )
 
 
 def workspace_find_for_user(

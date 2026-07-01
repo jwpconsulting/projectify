@@ -7,12 +7,14 @@ from uuid import UUID
 
 from django import forms
 from django.contrib.auth.decorators import login_required
+from django.forms import ValidationError
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
+from projectify.lib.forms import populate_form_with_errors
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.user.models import User
 from projectify.workspace.models import Project, Task, TeamMember, Workspace
@@ -149,12 +151,17 @@ def new_workspace(request: AuthenticatedHttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = WorkspaceForm(request.POST)
         if form.is_valid():
-            workspace = workspace_create(
-                title=form.cleaned_data["title"], owner=request.user
-            )
-            return redirect(
-                reverse("onboarding:new_project", args=[str(workspace.uuid)])
-            )
+            try:
+                workspace = workspace_create(
+                    title=form.cleaned_data["title"], owner=request.user
+                )
+                return redirect(
+                    reverse(
+                        "onboarding:new_project", args=[str(workspace.uuid)]
+                    )
+                )
+            except ValidationError as e:
+                populate_form_with_errors(form, e)
         status = 400
     else:
         form = WorkspaceForm()

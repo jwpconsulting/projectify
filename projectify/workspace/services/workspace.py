@@ -18,6 +18,9 @@ from django.utils.translation import gettext_lazy as _
 from projectify.corporate.services.customer import customer_create
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
+from projectify.workspace.selectors.workspace import (
+    workspace_find_unpaid_for_user,
+)
 
 from ..const import TeamMemberRoles
 from ..models import TeamMember, Workspace
@@ -30,7 +33,12 @@ def workspace_create(
     *, title: str, description: Optional[str] = None, owner: User
 ) -> Workspace:
     """Create a workspace."""
-    # TODO validate that user can only create 1 unpaid workspace
+    if workspace_find_unpaid_for_user(who=owner).exists():
+        raise ValidationError(
+            _(
+                "You already have an unpaid workspace. Please upgrade or delete your existing unpaid workspace before creating a new one."
+            )
+        )
     workspace = Workspace.objects.create(title=title, description=description)
     workspace_add_user(
         workspace=workspace, user=owner, role=TeamMemberRoles.OWNER
