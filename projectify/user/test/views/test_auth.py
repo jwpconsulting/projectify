@@ -492,7 +492,7 @@ class TestPasswordResetRequestDjango:
             response = client.post(resource_url, {"email": user.email})
             assert (
                 response.status_code == 302
-            ), f"Attempt {i}, {response.content}"
+            ), f"Attempt {i}, {response.content.decode()}"
 
         response = client.post(resource_url, {"email": last_user.email})
         assert response.status_code == 429
