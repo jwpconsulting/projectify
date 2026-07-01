@@ -195,6 +195,17 @@ def test_request_password_reset(
     assert len(mailoutbox) == 1
 
 
+def test_request_password_reset_inactive_user(
+    inactive_user: User, mailoutbox: list[object]
+) -> None:
+    """Test that an inactive user cannot request a password reset."""
+    assert len(mailoutbox) == 0
+    with pytest.raises(ValidationError) as error:
+        user_request_password_reset(email=inactive_user.email)
+    assert error.match("need to activate this account first.")
+    assert len(mailoutbox) == 0
+
+
 @pytest.fixture
 def reset_token(user: User) -> Token:
     """Create reset token for user."""
