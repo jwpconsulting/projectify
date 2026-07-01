@@ -86,10 +86,11 @@ def password(faker: Faker) -> str:
 
 
 @pytest.fixture
-def user(faker: Faker, password: str) -> user_models.User:
+def user(now: datetime, faker: Faker, password: str) -> user_models.User:
     """Return a db user."""
     user = user_create(email=faker.email(), password=password)
     user.is_active = True
+    user.activated = now
     user.preferred_name = faker.name()
     user.save()
     return user

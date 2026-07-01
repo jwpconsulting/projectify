@@ -9,6 +9,7 @@ from typing import Literal, NewType, Optional
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.timezone import now
 
 from projectify.user.models import User
 from projectify.user.services.user_invite import user_invite_redeem_many
@@ -33,6 +34,8 @@ def _user_create(
         tos_agreed=tos_agreed,
         privacy_policy_agreed=privacy_policy_agreed,
     )
+    if is_active:
+        user.activated = now()
     # TODO cann this be user.set_password(password) ?
     user.password = make_password(password)
     # XXX self._db needed? user.save(using=self._db)

@@ -17,7 +17,7 @@ from projectify.settings.base import Base
 from pytest_types import DjangoAssertNumQueries
 
 from ...models import User
-from ...services.auth import user_sign_up
+from ...services.auth import user_confirm_email, user_sign_up
 from ...services.internal import user_make_token
 
 pytestmark = pytest.mark.django_db
@@ -485,14 +485,15 @@ class TestPasswordResetRequestDjango:
         # Projectify requires users to confirm their email first before being
         # able to request password resets
         for u in [*first_users, last_user]:
-            u.is_active = True
-            u.save()
+            user_confirm_email(
+                email=u.email,
+                token=user_make_token(user=u, kind="confirm_email_address"),
+            )
 
         for i, user in enumerate(first_users):
             response = client.post(resource_url, {"email": user.email})
-            assert (
-                response.status_code == 302
-            ), f"Attempt {i}, {response.content.decode()}"
+            assert response.status_code != 400, response.content
+            assert response.status_code == 302, f"Attempt {i}"
 
         response = client.post(resource_url, {"email": last_user.email})
         assert response.status_code == 429
