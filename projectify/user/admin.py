@@ -23,13 +23,15 @@ class UserAdmin(admin.ModelAdmin[User]):
         "preferred_name",
         "is_superuser",
         "last_login",
+        "activated",
     )
     list_filter = ("is_active", "is_staff", "is_superuser")
     list_display = (
         "__str__",
-        "is_active",
         "is_staff",
         "is_superuser",
+        "created",
+        "activated",
         "last_login",
     )
     search_fields = ("email", "preferred_name")
