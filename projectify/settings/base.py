@@ -358,6 +358,8 @@ class Base(Configuration):
                 "context_processors": (
                     # For header nav "Go to dashboard" link
                     "projectify.context_processors.show_go_to_dashboard",
+                    # Pass state of feature flags into frontend
+                    "projectify.context_processors.feature_flags",
                     "django.template.context_processors.csp",
                     "django.template.context_processors.debug",
                     # `allauth` needs this from django
