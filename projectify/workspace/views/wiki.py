@@ -55,12 +55,15 @@ class WikiPageForm(forms.ModelForm):
 
     def __init__(self, *args: Any, workspace: Workspace, **kwargs: Any):
         """Populate available assignees and optionally set autofocus."""
-        if self.instance:
-            self.page_title = self.instance.page_title
-        elif "page_title" in kwargs:
-            self.page_title = kwargs.pop("page_title")
-        else:
-            raise ValueError("Must call with page_title")
+        match kwargs:
+            case {"instance": WikiPage() as instance}:
+                self.page_title = instance.title
+            case {"page_title": str()}:
+                self.page_title = kwargs.pop("page_title")
+            case other:
+                raise ValueError(
+                    f"Must call with page_title, received {other}"
+                )
         super().__init__(*args, **kwargs)
         self.workspace = workspace
         self.fields["content"].widget = WorkspaceRichTextEditor(self.workspace)
@@ -101,14 +104,16 @@ def wiki_page_view(
             raise Http404(_("Workspace not found"))
         match request.method:
             case "POST":
-                form = WikiPageForm(workspace=ws, data=request.POST)
+                form = WikiPageForm(
+                    workspace=ws, page_title=page_title, data=request.POST
+                )
                 if form.is_valid():
-                    page = form.save(page_title=page_title)
+                    page = form.save()
                     return redirect(page)
                 else:
                     status = 400
             case "GET":
-                form = WikiPageForm(workspace=ws)
+                form = WikiPageForm(workspace=ws, page_title=page_title)
                 status = 200
             case _:
                 raise RuntimeError("Shouldn't reach this")
@@ -159,7 +164,7 @@ def wiki_page_edit(
                 workspace=page.workspace, instance=page, data=request.POST
             )
             if form.is_valid():
-                form.save(page_title=page_title)
+                form.save()
                 return redirect(page)
             else:
                 status = 400
