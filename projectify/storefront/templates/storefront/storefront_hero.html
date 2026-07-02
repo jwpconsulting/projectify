@@ -1,0 +1,20 @@
+{# SPDX-FileCopyrightText: 2024-2026 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "storefront_base.html" %}
+{% load i18n %}
+{% block storefront_content %}
+    <main id="main"
+          class="flex flex-col items-center gap-10 bg-foreground pb-20">
+        <header class="flex w-full flex-col items-center gap-4 bg-background justify-center p-6 sm:py-12">
+            <h1 class="text-4xl lg:text-6xl font-bold max-w-4xl">
+                {% block hero_title %}
+                {% endblock hero_title %}
+            </h1>
+        </header>
+        <div class="p-6 max-w-4xl">
+            {% block hero_content %}
+                <div class="prose">{{ content }}</div>
+            {% endblock hero_content %}
+        </div>
+    </main>
+{% endblock storefront_content %}
