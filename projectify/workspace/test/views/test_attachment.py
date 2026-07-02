@@ -82,3 +82,5 @@ def test_view_unauthorized(
 
 
 # TODO test path traversal
+# TODO test upload file size limits
+# TODO test file type validation

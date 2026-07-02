@@ -32,6 +32,8 @@ def clean_rich_text(
     sanitized_html: str = JustHTML(
         unsafe_html, policy=policy, fragment=True
     ).to_html(pretty=False)
+    # TODO strip empty blocks
+    # TODO strip repeated whitespace "  " -> " "
     # Remember that just marking it "safe" doesn't make it safe
     # sanitized_html is safe to mark as "safe" because `JustHTML` has
     # cleaned it.

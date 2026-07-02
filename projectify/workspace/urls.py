@@ -2,7 +2,6 @@
 #
 # SPDX-FileCopyrightText: 2024 JWP Consulting GK
 """Workspace URLs for dashboard."""
-# TODO rename to projectify.workspace.urls
 
 import logging
 

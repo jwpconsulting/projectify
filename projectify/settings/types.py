@@ -51,6 +51,8 @@ SocialAccountProvider = TypedDict(
 )
 
 
+# TODO
+# @dataclass(freeze=True, kw_only=True)
 @dataclass
 class StripeConfig:
     """Hold configuration needed to use Stripe."""
