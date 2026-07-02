@@ -70,7 +70,7 @@ class Workspace(TitleDescriptionModel, BaseModel):
         project_set: RelatedManager["Project"]
         teammember_set: RelatedManager["TeamMember"]
         teammemberinvite_set: RelatedManager["TeamMemberInvite"]
-        active_invites: Optional[RelatedManager["TeamMemberInvite"]]
+        active_invites: Optional[list["TeamMemberInvite"]]
 
     def __str__(self) -> str:
         """Return title."""
