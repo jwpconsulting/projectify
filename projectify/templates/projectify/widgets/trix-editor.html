@@ -17,4 +17,9 @@ projectify/workspace/templates/workspace/form_base.html
 
 As long as your forms base off form_base, they'll have a dialog for link
 suggestions.
+
+I've removed the dialogs to make this widget fit inside a <p> tag. This is
+useful when you're rendering a form with .as_p() HTML forbids block
+elements like <dialog> inside <p> tags. At the same time, the MDN docs
+recommend putting form elements inside <p> tags
 {% endcomment %}

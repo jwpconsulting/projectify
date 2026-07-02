@@ -8,7 +8,6 @@ from typing import Mapping
 from django.http import HttpRequest
 
 
-
 def show_go_to_dashboard(request: HttpRequest) -> Mapping[str, bool]:
     """Tell header nav that it can show "Go to dashboard"."""
     match = request.resolver_match

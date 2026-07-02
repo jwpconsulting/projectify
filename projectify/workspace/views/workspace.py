@@ -757,7 +757,6 @@ def workspace_suggest_links(
     workspace = workspace_find_by_workspace_uuid(
         workspace_uuid=workspace_uuid, who=request.user
     )
-    assert link_type in {"project", "task"}, f"{link_type=} unrecognnized"
     if workspace is None:
         raise Http404(
             _("Could not find workspace with UUID {workspace_uuid}").format(

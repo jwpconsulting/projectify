@@ -219,22 +219,18 @@ function configureToolbar(event) {
     if (buttonGroup === null) {
       throw new Error("Couldn't find Trix button group");
     }
-    const suggestLinksUrl = editor.dataset.suggestLinksUrl;
-    const suggestProjectsUrl = editor.dataset.suggestProjectsUrl;
-    const suggestProjectsButton = createActionButton(
+    const { suggestLinksUrl,  suggestProjectsUrl } = editor.dataset;
+    buttonGroup.appendChild(createActionButton(
       "Project",
       "Suggest projects",
       "x-suggest-project",
-    );
-    buttonGroup.appendChild(suggestProjectsButton);
+    ));
     initializeLinkSuggestions(editor, suggestProjectsUrl, "project");
-
-    const suggestTasksButton = createActionButton(
+    buttonGroup.appendChild(createActionButton(
       "Task",
       "Suggest tasks",
       "x-suggest-task",
-    );
-    buttonGroup.appendChild(suggestTasksButton);
+    ));
     initializeLinkSuggestions(editor, suggestLinksUrl, "task");
   }
   editor.classList.add("initialized");
