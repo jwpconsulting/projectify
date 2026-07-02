@@ -1,9 +1,9 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {# SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK #}
-{% extends "storefront_base.html" %}
+{% extends "user_base.html" %}
 {% load projectify %}
-{% block storefront_content %}
-    <div class="mx-auto prose">
+{% block user_content %}
+    <div class="p-8 prose">
         <h1>User app test views</h1>
         <p>You can test Projectify user app features using the buttons below.</p>
         <h2>Authentication status</h2>
@@ -71,4 +71,4 @@
             </form>
         {% endif %}
     </div>
-{% endblock %}
+{% endblock user_content %}

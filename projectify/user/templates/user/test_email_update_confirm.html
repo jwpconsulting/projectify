@@ -1,8 +1,8 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
-{% extends "storefront_base.html" %}
-{% block storefront_content %}
-    <div class="prose">
+{% extends "user_base.html" %}
+{% block user_content %}
+    <div class="p-8 prose">
         <h1>Email Address Update Confirmation Test Page</h1>
         <h2>Test Data</h2>
         <ul>
@@ -27,4 +27,4 @@
         <p>User: {{ user.email }}</p>
         <p>Unconfirmed Email: {{ user.unconfirmed_email }}</p>
     </div>
-{% endblock %}
+{% endblock user_content %}
