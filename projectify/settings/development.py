@@ -9,7 +9,7 @@ from collections.abc import Iterable, Sequence
 
 import dj_database_url
 
-from .types import StripeConfig
+from .types import FeatureFlags, StripeConfig
 
 try:
     from dotenv import load_dotenv
@@ -43,6 +43,8 @@ def add_dev_middleware(
 
 class Development(Base):
     """Development configuration."""
+
+    FEATURE_FLAGS = FeatureFlags(workspace_attachments=True)
 
     SITE_TITLE = "Local Development"
 

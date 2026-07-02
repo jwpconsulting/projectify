@@ -47,6 +47,9 @@ from projectify.workspace.views.workspace import (
 
 logger = logging.getLogger(__name__)
 
+
+settings = get_settings()
+
 # TODO rename to workspace
 # app_name = "workspace"
 app_name = "dashboard"
@@ -155,7 +158,7 @@ attachment_patterns = (
         "<uuid:ws_uuid>/attachments/<str:name>", attachment_view, name="view"
     ),
 )
-urlpatterns = (
+urlpatterns: UrlPatterns = (
     path("", redirect_to_dashboard, name="dashboard"),
     # Avatar
     path(
@@ -167,5 +170,9 @@ urlpatterns = (
     path("project/", include((project_patterns, "projects"))),
     path("task/", include((task_patterns, "tasks"))),
     path("team-member/", include((team_member_patterns, "team-members"))),
-    path("workspace/", include((attachment_patterns, "attachments"))),
 )
+if settings.FEATURE_FLAGS.workspace_attachments:
+    urlpatterns = (
+        *urlpatterns,
+        path("workspace/", include((attachment_patterns, "attachments"))),
+    )

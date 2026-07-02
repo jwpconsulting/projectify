@@ -10,7 +10,7 @@ from pathlib import Path
 
 from faker import Faker
 
-from projectify.settings.types import StripeConfig
+from .types import FeatureFlags, StripeConfig
 
 try:
     from dotenv import load_dotenv
@@ -26,6 +26,8 @@ from .base import Base
 
 class Test(Base):
     """Test configuration."""
+
+    FEATURE_FLAGS = FeatureFlags(workspace_attachments=True)
 
     SITE_TITLE = "Projectify Pytest"
 

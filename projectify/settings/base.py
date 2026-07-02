@@ -29,6 +29,7 @@ from configurations import Configuration
 
 from .monkeypatch import patch
 from .types import (
+    FeatureFlags,
     SocialAccountProvider,
     StoragesConfig,
     StripeConfig,
@@ -64,6 +65,12 @@ class Base(Configuration):
     See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
     """
 
+    # Feature flags
+    # =============
+    # This tracks which features Projectify should activate
+    # For development -related features, see "Debug flags" below
+    FEATURE_FLAGS = FeatureFlags(workspace_attachments=False)
+
     SECRET_KEY: str
 
     # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -75,7 +82,8 @@ class Base(Configuration):
     # SECURITY WARNING: don't run with debug turned on in production!
     ALLOWED_HOSTS: Sequence[str] = []
 
-    # Debug
+    # Debug flags
+    # ===========
     # Should Django run in debug mode?
     DEBUG = False
     # Should Projectify render the Django debug toolbar?
