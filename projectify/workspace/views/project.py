@@ -13,16 +13,15 @@ from django.db.models import Model, QuerySet
 from django.forms import ValidationError
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
-from django.urls import reverse
 from django.utils.html import escape
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
-from projectify.lib.forms import RichTextEditor, populate_form_with_errors
+from projectify.lib.forms import populate_form_with_errors
 from projectify.lib.htmx import HttpResponseClientRefresh
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
-from projectify.workspace.const import TASK_EDITOR_MIN_HEIGHT_CLASS
+from projectify.workspace.forms import WorkspaceRichTextEditor
 from projectify.workspace.utils import strip_first_paragraph
 
 from ..models import Project, Task, TeamMember, Workspace
@@ -214,29 +213,7 @@ class ProjectForm(forms.Form):
     def __init__(self, *args: Any, workspace: Workspace, **kwargs: Any):
         """Populate available assignees and optionally set autofocus."""
         super().__init__(*args, **kwargs)
-        # XXX duplicated from projectify/workspace/views/task.py:TaskForm
-        editor = RichTextEditor(
-            heading_blocks=False,
-            upload_url=reverse(
-                "dashboard:attachments:create", args=(workspace.uuid,)
-            ),
-            attrs={
-                "expand": True,
-                "placeholder": _("Enter a description for your task"),
-                "class": TASK_EDITOR_MIN_HEIGHT_CLASS,
-                "data-suggest-projects-url": reverse(
-                    "dashboard:workspaces:suggest-links-project",
-                    args=(workspace.uuid,),
-                ),
-                "data-suggest-links-url": (
-                    reverse(
-                        "dashboard:workspaces:suggest-links-task",
-                        args=(workspace.uuid,),
-                    ),
-                ),
-            },
-        )
-        self.fields["description"].widget = editor
+        self.fields["description"].widget = WorkspaceRichTextEditor(workspace)
 
 
 @require_http_methods(["GET", "POST"])
