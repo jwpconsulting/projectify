@@ -27,7 +27,9 @@ from .base import Base
 class Test(Base):
     """Test configuration."""
 
-    FEATURE_FLAGS = FeatureFlags(workspace_attachments=True)
+    FEATURE_FLAGS = FeatureFlags(
+        workspace_attachments=True, workspace_wikis=True
+    )
 
     SITE_TITLE = "Projectify Pytest"
 

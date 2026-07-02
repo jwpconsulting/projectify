@@ -74,4 +74,6 @@ class FeatureFlags:
     """Projectify feature flags."""
 
     """Set to True to Enable workspace attachments."""
-    workspace_attachments: bool
+    workspace_attachments: bool = False
+    """Set to True to Enable workspace Wikis."""
+    workspace_wikis: bool = False
