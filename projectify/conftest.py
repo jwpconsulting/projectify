@@ -54,6 +54,7 @@ from projectify.user.services.user_invite import (
     user_invite_redeem,
 )
 from projectify.workspace.models import (
+    Attachment,
     Project,
     Task,
     TeamMember,
@@ -64,6 +65,7 @@ from projectify.workspace.models import (
 from projectify.workspace.selectors.team_member import (
     team_member_find_for_workspace,
 )
+from projectify.workspace.services.attachment import attachment_create
 from projectify.workspace.services.project import (
     project_archive,
     project_create,
@@ -461,6 +463,14 @@ def unrelated_task(
         project=unrelated_project,
         title_description="I am an unrelated task",
     )
+
+
+@pytest.fixture
+def attachment(
+    team_member: TeamMember, uploaded_file: SimpleUploadedFile
+) -> Attachment:
+    """Return an attachment uploaded by the normal user."""
+    return attachment_create(who=team_member, file=uploaded_file)
 
 
 @pytest.fixture

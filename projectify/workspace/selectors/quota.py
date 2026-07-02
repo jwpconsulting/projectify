@@ -13,6 +13,8 @@ Limitations for a trial workspaces:
 from functools import partial
 from typing import Literal, TypedDict, Union
 
+from django.db.models import Sum
+
 from projectify.corporate.selectors.customer import (
     customer_check_active_for_workspace,
 )
@@ -21,7 +23,7 @@ from projectify.workspace.types import Quota, WorkspaceQuota
 
 from ..models import Task, Workspace
 
-Resource = Literal["Task", "Project", "TeamMemberAndInvite"]
+Resource = Literal["Task", "Project", "TeamMemberAndInvite", "Attachment"]
 
 Limitation = Union[None, int]
 
@@ -32,12 +34,15 @@ class Limitations(TypedDict):
     Task: Limitation
     Project: Limitation
     TeamMemberAndInvite: Limitation
+    Attachment: Limitation
 
 
 trial_conditions: Limitations = {
     "Task": 1000,
     "Project": 10,
     "TeamMemberAndInvite": 2,
+    # No attachments for trial
+    "Attachment": 0,
 }
 
 # Full workspace conditions are somewhat like this:
@@ -58,10 +63,11 @@ def get_workspace_quota_for_resource(
     """
     if get_settings().STRIPE_CONFIG is None:
         return None
-    status = customer_check_active_for_workspace(workspace=workspace)
-    # We regard inactive as trial
-    if status in ["trial", "inactive"]:
-        return trial_conditions[resource]
+    match customer_check_active_for_workspace(workspace=workspace):
+        case "trial" | "inactive":
+            return trial_conditions[resource]
+        case "full":
+            pass
     if resource == "TeamMemberAndInvite":
         customer = workspace.customer
         return customer.seats
@@ -83,6 +89,14 @@ def get_workspace_resource_count(
                 redeemed=False
             ).count()
             return user_count + invite_count
+        case "Attachment":
+            match workspace.attachment_set.aggregate(total_size=Sum("size")):
+                case {"total_size": int() as result}:
+                    return result
+                case other:
+                    raise RuntimeError(
+                        f"Encountered unexpected result {other}"
+                    )
 
 
 def workspace_quota_for(*, resource: Resource, workspace: Workspace) -> Quota:
@@ -105,4 +119,5 @@ def workspace_get_all_quotas(workspace: Workspace) -> WorkspaceQuota:
         tasks=mk(resource="Task"),
         projects=mk(resource="Project"),
         team_members_and_invites=mk(resource="TeamMemberAndInvite"),
+        attachments=mk(resource="Attachment"),
     )

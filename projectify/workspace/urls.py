@@ -10,6 +10,10 @@ from django.urls import include, path
 
 from projectify.lib.settings import get_settings
 from projectify.lib.types import UrlPatterns
+from projectify.workspace.views.attachment import (
+    attachment_create_view,
+    attachment_view,
+)
 from projectify.workspace.views.avatar_marble import avatar_marble_view
 from projectify.workspace.views.dashboard import redirect_to_dashboard
 from projectify.workspace.views.project import (
@@ -145,6 +149,12 @@ team_member_patterns = (
         "<uuid:team_member_uuid>/picture", team_member_picture, name="picture"
     ),
 )
+attachment_patterns = (
+    path("<uuid:ws_uuid>/attachments", attachment_create_view, name="create"),
+    path(
+        "<uuid:ws_uuid>/attachments/<str:name>", attachment_view, name="view"
+    ),
+)
 urlpatterns = (
     path("", redirect_to_dashboard, name="dashboard"),
     # Avatar
@@ -153,12 +163,9 @@ urlpatterns = (
         avatar_marble_view,
         name="avatar-marble",
     ),
-    # Workspace
     path("workspace/", include((workspace_patterns, "workspaces"))),
-    # Project
     path("project/", include((project_patterns, "projects"))),
-    # Task
     path("task/", include((task_patterns, "tasks"))),
-    # Team member
     path("team-member/", include((team_member_patterns, "team-members"))),
+    path("workspace/", include((attachment_patterns, "attachments"))),
 )

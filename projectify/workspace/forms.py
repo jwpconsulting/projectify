@@ -11,6 +11,8 @@ from django.core.exceptions import ValidationError
 from django.db.models import Model, QuerySet
 from django.utils.translation import gettext_lazy as _
 
+from projectify.lib.forms import SafeImageField
+from projectify.lib.settings import get_settings
 from projectify.workspace.models import TeamMember
 
 
@@ -120,3 +122,16 @@ class WorkspaceSearchForm(forms.Form):
                 )
             )
         return cleaned_data
+
+
+class AttachmentUploadForm(forms.Form):
+    """Form for uploading project or task attachments."""
+
+    def __init__(self, *args: Any, **kwargs: Any):
+        """Initialize form with SafeImageField configured from settings."""
+        super().__init__(*args, **kwargs)
+        settings = get_settings()
+        self.fields["file"] = SafeImageField(
+            allowed_file_types=settings.BLOG_ALLOWED_FILE_TYPES,
+            allowed_file_size=settings.BLOG_ALLOWED_FILE_SIZE,
+        )

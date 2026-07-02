@@ -14,7 +14,7 @@ from django.http.response import Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_http_methods, require_POST
 
 from projectify.lib.forms import RichTextEditor
 from projectify.lib.htmx import (
@@ -287,7 +287,7 @@ def task_update_view(
     return render(request, template, context, status=status)
 
 
-# TODO require POST
+@require_POST
 def task_delete_view(
     request: AuthenticatedHttpRequest, task_uuid: UUID
 ) -> HttpResponse:

@@ -4,7 +4,7 @@
 """Shared type definitions in workspace app."""
 
 from dataclasses import dataclass
-from typing import Literal, Optional
+from typing import Optional
 
 from projectify.corporate.types import WorkspaceFeatures
 
@@ -28,6 +28,4 @@ class WorkspaceQuota:
     tasks: Quota
     projects: Quota
     team_members_and_invites: Quota
-
-
-Resource = Literal["workspace", "project", "task"]
+    attachments: Quota

@@ -5,6 +5,7 @@
 
 import logging
 import uuid
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, Optional
 
 from django.conf import settings
@@ -69,6 +70,7 @@ class Workspace(TitleDescriptionModel, BaseModel):
         task_set: RelatedManager["Task"]
         project_set: RelatedManager["Project"]
         teammember_set: RelatedManager["TeamMember"]
+        attachment_set: RelatedManager["Attachment"]
         teammemberinvite_set: RelatedManager["TeamMemberInvite"]
         active_invites: Optional[RelatedManager["TeamMemberInvite"]]
 
@@ -284,9 +286,55 @@ class TeamMember(BaseModel):
         ordering = ("created",)
 
 
+class Attachment(BaseModel):
+    """Workspace file attachment."""
+
+    name = models.CharField(
+        max_length=512,
+        unique=True,
+        db_index=True,
+        help_text=_("Attachment file name"),
+    )
+    size = models.PositiveIntegerField(help_text=_("Attachment size in bytes"))
+    uploader = models.ForeignKey["TeamMember"](
+        TeamMember, on_delete=models.SET_NULL, editable=False, null=True
+    )
+    workspace = models.ForeignKey[Workspace](
+        Workspace, on_delete=models.CASCADE
+    )
+    # TODO store a cryptographic digest here to help users deduplicate
+    # file uploads and save on storage
+
+    class Meta:
+        """Meta."""
+
+    def get_absolute_url(self) -> str:
+        """
+        Return URL for direct viewing.
+
+        Direct means that Projectify returns the file as-is and not as
+        part of an attachment edit form or similar.
+        """
+        return reverse(
+            "dashboard:attachments:view", args=(self.workspace.uuid, self.name)
+        )
+
+    @property
+    def storage_path(self) -> Path:
+        """Return full storage path for attachment."""
+        # helloworld.png ->
+        # workspace/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX/attachments/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX.hellowor.png/
+        return (
+            Path("workspace")
+            / str(self.workspace.uuid)
+            / "attachments"
+            / self.name
+        )
+
+
+# TODO remove
 __all__ = (
     "Project",
-    # TODO remove
     "Task",
     "TeamMember",
     "TeamMemberInvite",

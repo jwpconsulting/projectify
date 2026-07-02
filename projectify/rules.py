@@ -103,6 +103,9 @@ within_team_member_quota = rules.predicate(
 )
 # Return True if a team member invite can be sent for a workspace
 within_team_member_invite_quota = within_team_member_quota
+within_attachment_quota = rules.predicate(
+    partial(can_create_more, "Attachment")
+)
 
 
 # Workspace
@@ -159,6 +162,15 @@ rules.add_perm(
 rules.add_perm("workspace.read_task", is_at_least_observer)
 rules.add_perm("workspace.update_task", is_at_least_contributor)
 rules.add_perm("workspace.delete_task", is_at_least_maintainer)
+
+# Attachments
+rules.add_perm(
+    "workspace.create_attachment",
+    is_at_least_contributor & within_attachment_quota,
+)
+rules.add_perm("workspace.read_attachment", is_at_least_observer)
+rules.add_perm("workspace.update_attachment", is_at_least_contributor)
+rules.add_perm("workspace.delete_attachment", is_at_least_maintainer)
 
 # Customer
 rules.add_perm("corporate.can_create_customer", is_at_least_owner)
