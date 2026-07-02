@@ -356,7 +356,6 @@ class Base(Configuration):
             "APP_DIRS": True,
             "OPTIONS": {
                 "context_processors": (
-                    "projectify.context_processors.frontend_url",
                     # For header nav "Go to dashboard" link
                     "projectify.context_processors.show_go_to_dashboard",
                     "django.template.context_processors.csp",

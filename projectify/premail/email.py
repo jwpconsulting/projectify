@@ -9,7 +9,6 @@ from typing import Any, Generic, NewType, TypeVar, Union
 from django.template import loader
 from django.utils.safestring import SafeText, mark_safe
 
-from projectify.context_processors import frontend_url
 from projectify.user.models import User
 
 Context = dict[str, Any]
@@ -41,11 +40,7 @@ class TemplateEmail(Generic[T]):
 
     def get_context(self) -> Context:
         """Get context. To override."""
-        return {
-            **frontend_url(None),
-            "object": self.obj,
-            "addressee": self.addressee,
-        }
+        return {"object": self.obj, "addressee": self.addressee}
 
     def render_subject(self) -> SafeText:
         """Render subject."""
