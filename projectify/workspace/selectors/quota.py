@@ -90,7 +90,9 @@ def get_workspace_resource_count(
             ).count()
             return user_count + invite_count
         case "Attachment":
-            match workspace.attachment_set.aggregate(total_size=Sum("size")):
+            match workspace.attachment_set.aggregate(
+                total_size=Sum("size", default=0)
+            ):
                 case {"total_size": int() as result}:
                     return result
                 case other:

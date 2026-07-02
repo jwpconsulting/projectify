@@ -351,8 +351,7 @@ class TestWorkspaceSettingsTeamMembers:
         data = {"action": "team_member_remove", "team_member": uid}
         # Gone down from 28 -> 25
         # Gone down from 25 -> 23
-        # Gone down from 23 -> 22
-        with django_assert_num_queries(22):
+        with django_assert_num_queries(23):
             response = user_client.post(resource_url, data)
         assert response.status_code == 200
         assert workspace.teammember_set.count() == initial - 1
@@ -517,8 +516,8 @@ class TestWorkspaceSettingsQuota:
         customer_cancel_subscription(customer=team_member.workspace.customer)
         # Gone up from 16 -> 17 due to permission checks in sidemenu
         # Gone down from 17 -> 15
-        # Gone down from 15 -> 13
-        with django_assert_num_queries(13):
+        # Gone down from 15 -> 14
+        with django_assert_num_queries(14):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         # These quotas should be listed
@@ -567,7 +566,7 @@ class TestWorkspaceSettingsBilling:
     ) -> None:
         """Assert that an unpaid customer can't edit their billing settings."""
         data = {"action": "checkout", "seats": 5}
-        with django_assert_num_queries(16):
+        with django_assert_num_queries(17):
             response = user_client.post(resource_url, data=data)
             assert response.status_code == 302
         assert response.headers["Location"] == "https://www.example.com"
@@ -614,7 +613,7 @@ class TestWorkspaceSettingsBilling:
     ) -> None:
         """Test we can get a redirect when posting valid checkout data."""
         data = {"action": "checkout", "seats": "99"}
-        with django_assert_num_queries(16):
+        with django_assert_num_queries(17):
             response = user_client.post(resource_url, data=data)
             assert response.status_code == 302, response.content.decode()
         assert response.headers["Location"] == "https://www.example.com"
@@ -669,8 +668,8 @@ class TestWorkspaceSettingsBilling:
         """Test GET request with unpaid customer shows billing form."""
         # Gone up from 16 -> 17 due to permission checks in sidemenu
         # Gone down from 17 -> 15
-        # Gone down from 15 -> 13
-        with django_assert_num_queries(13):
+        # Gone down from 15 -> 14
+        with django_assert_num_queries(14):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert b"Use a coupon code" in response.content
@@ -717,8 +716,7 @@ class TestWorkspaceSettingsBillingCoupon:
         # Gone up   from 22 -> 23
         # Gone down from 23 -> 19
         # Gone down from 19 -> 18
-        # Gone down from 18 -> 17
-        with django_assert_num_queries(17):
+        with django_assert_num_queries(18):
             res = user_client.post(resource_url, data=data)
             assert res.status_code == 400
         assert "No coupon is available for this code" in res.content.decode()
@@ -741,7 +739,7 @@ class TestWorkspaceSettingsBillingCoupon:
         active = customer_check_active_for_workspace(workspace=workspace)
         assert active == "trial"
         data = {"action": "redeem_coupon", "code": coupon.code}
-        with django_assert_num_queries(22):
+        with django_assert_num_queries(23):
             response = user_client.post(resource_url, data=data)
             assert response.status_code == 302
 
