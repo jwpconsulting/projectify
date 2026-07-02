@@ -1,15 +1,10 @@
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "storefront_base.html" %}
+{% extends "storefront/storefront_hero.html" %}
 {% load i18n %}
 {% block title %}
     {% translate "Vulnerability Disclosure Policy - Projectify" %}
 {% endblock title %}
-{% block storefront_content %}
-    <main id="main"
-          class="flex flex-col items-center gap-10 bg-foreground pb-20">
-        <div class="w-full p-6 max-w-4xl">
-            <div class="prose">{{ content }}</div>
-        </div>
-    </main>
-{% endblock storefront_content %}
+{% block hero_title %}
+    {% trans "JWP Consulting GK Vulnerability Disclosure Policy" %}
+{% endblock hero_title %}

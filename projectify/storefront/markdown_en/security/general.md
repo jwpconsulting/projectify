@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2024 JWP Consulting GK
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-# Security
+# Introduction
 
 This page explains measures taken by JWP Consulting GK (hereinafter referred to
 as "JWP") to ensure the security of the Projectify software (hereinafter
