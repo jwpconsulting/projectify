@@ -1,17 +1,16 @@
 {# SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "base.html" %}
+{% extends "user_base.html" %}
 {% load i18n %}
-{% block body %}
+{% block user_header %}
     {% include "common/navigation/header/dashboard.html" %}
-    <div class="flex h-full flex-col items-center bg-background p-8">
-        <div class="flex flex-col gap-4 max-w-lg w-full">
-            <h1 class="text-2xl font-bold">{% trans "User account settings" %}</h1>
-            <div class="flex flex-col gap-12 rounded-lg bg-foreground p-4">
-                {% block user_profile_content %}
-                {% endblock user_profile_content %}
-            </div>
-        </div>
+{% endblock user_header %}
+{% block user_title %}
+    <h1 class="text-2xl font-bold">{% trans "User account settings" %}</h1>
+{% endblock user_title %}
+{% block user_content %}
+    <div class="flex flex-col gap-12 rounded-lg bg-foreground p-4">
+        {% block user_profile_content %}
+        {% endblock user_profile_content %}
     </div>
-    {% include "common/footer.html" %}
-{% endblock body %}
+{% endblock user_content %}
