@@ -219,7 +219,7 @@ class TestWorkspaceSettings:
         # Query count went up   from 24 -> 25
         # Query count went down from 25 -> 24
         # Query count went down from 24 -> 22
-        with django_assert_num_queries(22):
+        with django_assert_num_queries(26):
             response = user_client.post(
                 resource_url,
                 {
@@ -466,7 +466,7 @@ class TestWorkspaceSettingsTeamMemberUpdate:
         other_team_member.job_title = "Developer"
         other_team_member.save()
 
-        with django_assert_num_queries(13):
+        with django_assert_num_queries(17):
             response = user_client.post(
                 resource_url,
                 {"role": TeamMemberRoles.MAINTAINER, "job_title": "Foo"},
@@ -741,7 +741,7 @@ class TestWorkspaceSettingsBillingCoupon:
         active = customer_check_active_for_workspace(workspace=workspace)
         assert active == "trial"
         data = {"action": "redeem_coupon", "code": coupon.code}
-        with django_assert_num_queries(17):
+        with django_assert_num_queries(22):
             response = user_client.post(resource_url, data=data)
             assert response.status_code == 302
 

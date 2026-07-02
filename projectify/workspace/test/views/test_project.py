@@ -35,7 +35,7 @@ class TestProjectDetailView:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test GETting the project detail page."""
-        with django_assert_num_queries(15):
+        with django_assert_num_queries(20):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert project.title in response.content.decode()
@@ -103,6 +103,17 @@ class TestProjectDetailViewActions:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test marking a task as done and then not done."""
+        # XXX non-deterministic test with either 30 or 31 queries
+        # This is because I've introduced full_clean to all BaseModel-derived
+        # save()s
+        # Workaround: Prevent assignee full_clean by assigning None
+        # Why does it work? conftes.tpy randomly assigns (faker.pybool())
+        # an assignee to a task, or not.
+        # A better fix would be to prevent the project view in question here
+        # from trying to update any other column than the done status
+        # of a task
+        task.assignee = None
+        task.save()
         assert task.done is None
         t_id = str(task.uuid)
         data = {"action": "mark_task_done", "task_uuid": t_id, "done": "true"}
@@ -112,14 +123,14 @@ class TestProjectDetailViewActions:
         # Gone down from 29 -> 28
         # Gone down from 28 -> 26
         # Gone down from 26 -> 22
-        with django_assert_num_queries(22):
+        with django_assert_num_queries(30):
             response = user_client.post(resource_url, data)
             assert response.status_code == 200
         task.refresh_from_db()
         assert task.done is not None
 
         data = {"action": "mark_task_done", "task_uuid": t_id, "done": "false"}
-        with django_assert_num_queries(22):
+        with django_assert_num_queries(30):
             response = user_client.post(resource_url, data)
             assert response.status_code == 200
         task.refresh_from_db()
@@ -171,7 +182,7 @@ class TestProjectCreateView:
         """Test successfully creating a project."""
         initial_project_count = Project.objects.count()
         data = {"description": "<h1>New Test Project</h1>"}
-        with django_assert_num_queries(8):
+        with django_assert_num_queries(10):
             response = user_client.post(resource_url, data)
             assert response.status_code == 302
         assert Project.objects.count() == initial_project_count + 1
@@ -231,7 +242,7 @@ class TestProjectUpdateView:
         updated_title = "<h1>Updated Project Title</h1><p>foo bar</p>"
 
         data = {"description": updated_title}
-        with django_assert_num_queries(9):
+        with django_assert_num_queries(11):
             response = user_client.post(resource_url, data)
             assert response.status_code == 302
 
@@ -296,7 +307,7 @@ class TestProjectArchiveView:
     ) -> None:
         """Test successfully archiving a project via HTMX."""
         assert not project.archived
-        with django_assert_num_queries(8):
+        with django_assert_num_queries(10):
             response = user_client.post(resource_url)
             assert response.status_code == 200
         project.refresh_from_db()
@@ -354,7 +365,7 @@ class TestProjectRecoverView:
     ) -> None:
         """Test successfully recovering an archived project via HTMX."""
         assert archived_project.archived
-        with django_assert_num_queries(8):
+        with django_assert_num_queries(10):
             response = user_client.post(resource_url)
             assert response.status_code == 200
         archived_project.refresh_from_db()
