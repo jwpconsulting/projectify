@@ -4,7 +4,7 @@
 """Test blog views."""
 
 from django.core.files.storage import default_storage
-from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client
 from django.urls import reverse
 
@@ -55,8 +55,10 @@ def test_post_draft_others_cant_view(
     post.draft = True
     post.save()
     url = reverse("blog:post_draft_preview", args=[post.slug])
+    # Regular user
     response = user_client.get(url)
     assert response.status_code == 302
+    # Not logged-in user
     response = client.get(url)
     assert response.status_code == 302
 
@@ -70,7 +72,9 @@ def test_post_detail_redirect(client: Client, post: Post) -> None:
 
 
 def test_uploading_attachments(
-    superuser_client: Client, uploaded_file: UploadedFile, png_image: bytes
+    superuser_client: Client,
+    uploaded_file: SimpleUploadedFile,
+    png_image: bytes,
 ) -> None:
     """Test that superuser can upload files and view them, too."""
     url = reverse("blog:upload_attachment")
@@ -86,7 +90,7 @@ def test_uploading_attachments(
 
 
 def test_upload_attachment_regular_user_cannot_upload(
-    user_client: Client, uploaded_file: UploadedFile
+    user_client: Client, uploaded_file: SimpleUploadedFile
 ) -> None:
     """Test that regular users cannot upload files."""
     url = reverse("blog:upload_attachment")
@@ -94,7 +98,7 @@ def test_upload_attachment_regular_user_cannot_upload(
 
 
 def test_upload_attachment_anonymous_user_cannot_upload(
-    client: Client, uploaded_file: UploadedFile
+    client: Client, uploaded_file: SimpleUploadedFile
 ) -> None:
     """Test that anonymous users cannot upload files."""
     url = reverse("blog:upload_attachment")
@@ -123,7 +127,7 @@ def test_post_feed_accessible(client: Client, post: Post) -> None:
 
 
 def test_serve_picture(
-    client: Client, uploaded_file: UploadedFile, png_image: bytes
+    client: Client, uploaded_file: SimpleUploadedFile, png_image: bytes
 ) -> None:
     """Test that serve_picture returns an uploaded file."""
     # Missing file
