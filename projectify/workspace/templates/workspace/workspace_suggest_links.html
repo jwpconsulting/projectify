@@ -15,7 +15,10 @@
                         {% icon "circle" size=4 inline=True %}
                     {% elif search_type == "project" %}
                         {% icon "folder" size=4 inline=True %}
+                    {% elif search_type == "wiki" %}
+                        {% icon "folder" size=4 inline=True %}
                     {% else %}
+                        UNKNOWN
                     {% endif %}
                     {{ result.0 }}
                 </button>
@@ -25,6 +28,8 @@
                 <p>{% translate "No tasks found" %}</p>
             {% elif search_type == "project" %}
                 <p>{% translate "No projects found" %}</p>
+            {% elif search_type == "wiki" %}
+                <p>{% translate "No wiki page found" %}</p>
             {% else %}
                 <p>{% translate "No tasks or projects found" %}</p>
             {% endif %}
@@ -37,6 +42,8 @@
             {% translate "Link to task" %}
         {% elif search_type == "project" %}
             {% translate "Link to project" %}
+        {% elif search_type == "wiki" %}
+            {% translate "Link to wiki page" %}
         {% else %}
             {% translate "Link to task or project" %}
         {% endif %}

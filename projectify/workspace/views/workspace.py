@@ -784,6 +784,11 @@ def workspace_suggest_links(
                             (task.title, task.get_absolute_url())
                             for task in results.tasks
                         ]
+                    case "wiki":
+                        suggestions = [
+                            (page.title, page.get_absolute_url())
+                            for page in results.wiki_pages
+                        ]
                     case other:
                         return HttpResponseBadRequest(
                             _("Unknown query type {type}").format(type=other)

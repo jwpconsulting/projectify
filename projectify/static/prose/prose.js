@@ -232,6 +232,15 @@ function configureToolbar(event) {
       "x-suggest-task",
     ));
     initializeLinkSuggestions(editor, suggestLinksUrl, "task");
+    const { suggestWikiUrl } = editor.dataset;
+    if (suggestWikiUrl !== undefined) {
+      buttonGroup.appendChild(createActionButton(
+        "Wiki Page",
+        "Suggest Wiki pages",
+        "x-suggest-wiki",
+      ));
+      initializeLinkSuggestions(editor, suggestWikiUrl, "wiki");
+    }
   }
   editor.classList.add("initialized");
 }

@@ -8,11 +8,11 @@
     {% blocktrans with title=page.title %}{{ title }} - Projectify{% endblocktrans %}
 {% endblock title %}
 {% block dashboard_content %}
-    <h1>{{ page.title }}</h1>
-    <nav>
-        {% anchor label="edit" href="dashboard:wiki:edit" ws_uuid=workspace.uuid page_title=page.title %}
-    </nav>
     <main>
-        {{ page.content }}
+        <nav>
+            {% anchor label="edit" href="dashboard:wiki:edit" ws_uuid=workspace.uuid page_title=page.title %}
+        </nav>
+        <h1>{{ page.title }}</h1>
+        <div class="prose">{{ page.content }}</div>
     </main>
 {% endblock dashboard_content %}

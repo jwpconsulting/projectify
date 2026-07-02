@@ -110,6 +110,16 @@ workspace_patterns: UrlPatterns = (
         name="suggest-links-project",
     ),
 )
+if settings.FEATURE_FLAGS.workspace_wikis:
+    workspace_patterns = (
+        *workspace_patterns,
+        path(
+            "<uuid:workspace_uuid>/suggest-links/wiki",
+            workspace_suggest_links,
+            {"link_type": "wiki"},
+            name="suggest-links-wiki",
+        ),
+    )
 if get_settings().STRIPE_CONFIG is None:
     logger.info(
         "Stripe configuration not present. "

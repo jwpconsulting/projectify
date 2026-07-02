@@ -9,10 +9,10 @@
     {{ form.media }}
 {% endblock extrahead %}
 {% block title %}
-    {% blocktrans with title=page.title %}Editing {{ title }} - Projectify{% endblocktrans %}
+    {% blocktrans  %}New {{ page_title }} - Projectify{% endblocktrans %}
 {% endblock title %}
 {% block form_header %}
-    {% blocktrans with title=page.title %}{{ title }}{% endblocktrans %}
+    {% blocktrans %}{{ page_title }}{% endblocktrans %}
 {% endblock form_header %}
 {% block form_content %}
     <form class="flex flex-col" method="post">

@@ -39,6 +39,14 @@ class WorkspaceRichTextEditor(RichTextEditor):
                 args=(workspace.uuid,),
             ),
         }
+        if settings.FEATURE_FLAGS.workspace_wikis:
+            attrs = {
+                **attrs,
+                "data-suggest-wiki-url": reverse(
+                    "dashboard:workspaces:suggest-links-wiki",
+                    args=(workspace.uuid,),
+                ),
+            }
         super().__init__(
             heading_blocks=False,
             upload_url=reverse(

@@ -20,7 +20,14 @@ from django.db.models import (
 from projectify.corporate.types import CustomerSubscriptionStatus
 from projectify.user.models import User
 
-from ..models import Project, Task, TeamMember, TeamMemberInvite, Workspace
+from ..models import (
+    Project,
+    Task,
+    TeamMember,
+    TeamMemberInvite,
+    WikiPage,
+    Workspace,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -126,6 +133,7 @@ class WorkspaceSearchResults:
 
     projects: QuerySet[Project]
     tasks: QuerySet[Task]
+    wiki_pages: QuerySet[WikiPage]
 
 
 def workspace_search(
@@ -173,4 +181,12 @@ def workspace_search(
         )
     project_qs = Project.objects.filter(project_q)
 
-    return WorkspaceSearchResults(projects=project_qs, tasks=tasks)
+    wiki_page_q = workspace_filter
+    if query is not None:
+        # TODO add full text search with vectors
+        wiki_page_q &= Q(title__icontains=query)
+    wiki_page_qs = WikiPage.objects.filter(wiki_page_q)
+
+    return WorkspaceSearchResults(
+        projects=project_qs, tasks=tasks, wiki_pages=wiki_page_qs
+    )
