@@ -4,7 +4,6 @@
 """Workspace models."""
 
 import logging
-import uuid
 from typing import TYPE_CHECKING, Any, Optional
 
 from django.conf import settings
@@ -16,6 +15,7 @@ from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import (
     BaseModel,
+    BaseModelUUID,
     RichTextField,
     TitleDescriptionModel,
 )
@@ -35,7 +35,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class Workspace(TitleDescriptionModel, BaseModel):
+class Workspace(TitleDescriptionModel, BaseModelUUID):
     """Workspace."""
 
     users = models.ManyToManyField(
@@ -43,7 +43,6 @@ class Workspace(TitleDescriptionModel, BaseModel):
         through="TeamMember",
         through_fields=("workspace", "user"),
     )  # type: models.ManyToManyField[User, "TeamMember"]
-    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     picture = models.ImageField(
         upload_to="workspace_picture/", blank=True, null=True
     )
@@ -103,7 +102,7 @@ class Workspace(TitleDescriptionModel, BaseModel):
         )
 
 
-class Project(TitleDescriptionModel, BaseModel):
+class Project(TitleDescriptionModel, BaseModelUUID):
     """Project."""
 
     workspace = models.ForeignKey["Workspace"](
@@ -115,7 +114,6 @@ class Project(TitleDescriptionModel, BaseModel):
         null=True,
         policy=settings.HTML_USER_POLICY,
     )
-    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     archived = models.DateTimeField(
         null=True,
         blank=True,
@@ -145,7 +143,7 @@ class Project(TitleDescriptionModel, BaseModel):
         ordering = ("-created",)
 
 
-class Task(TitleDescriptionModel, BaseModel):
+class Task(TitleDescriptionModel, BaseModelUUID):
     """Task, belongs to project."""
 
     # Override description and make it a rich text field
@@ -159,7 +157,6 @@ class Task(TitleDescriptionModel, BaseModel):
         "workspace.Workspace", on_delete=models.CASCADE
     )
     project = models.ForeignKey[Project](Project, on_delete=models.CASCADE)
-    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     assignee = models.ForeignKey["TeamMember"](
         "TeamMember",
         null=True,
@@ -231,7 +228,7 @@ class TeamMemberInvite(BaseModel):
         ordering = ("created",)
 
 
-class TeamMember(BaseModel):
+class TeamMember(BaseModelUUID):
     """Workspace to user mapping."""
 
     workspace = models.ForeignKey["Workspace"](
@@ -249,7 +246,6 @@ class TeamMember(BaseModel):
         default=TeamMemberRoles.OBSERVER,
     )
     job_title = models.CharField(max_length=255, null=True, blank=True)
-    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     last_visited_project = models.ForeignKey(
         Project,
         on_delete=models.SET_NULL,
