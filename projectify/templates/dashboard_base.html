@@ -3,42 +3,64 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load projectify %}
+{% load rules %}
 {% block body %}
-    <div class="flex grow flex-col">
-        {% include "common/navigation/header/dashboard.html" %}
-        <div class="flex min-h-0 shrink grow flex-col md:flex-row">
-            <nav aria-label="{% translate "Side menu" %}"
-                 class="order-last md:order-first max-w-full md:max-w-xs 2xl:max-w-md shrink-0 flex flex-col py-4 border-r border-border">
-                {% if workspace %}
-                    <div class="px-4 flex flex-col gap-2 pb-4">
-                        <details name="workspace-select" class="min-w-0 w-full ">
-                            <summary class="flex items-center gap-2 hover:bg-secondary-hover font-bold border rounded cursor-pointer p-2">
-                                {% icon "briefcase" size=4 %}
-                                <span class="truncate">{{ workspace.title }}</span>
-                            </summary>
-                            <ul class="flex flex-col max-h-40 overflow-y-auto">
-                                <li class="flex items-center gap-2 border-b"></li>
-                                {% for w in workspaces %}
-                                    <li>
-                                        <a href="{% url "dashboard:workspaces:detail" w.uuid %}"
-                                           class="flex w-full flex-row items-center gap-2 px-4 py-2 hover:bg-secondary-hover active:bg-disabled disabled:active:bg-secondary-hover text-base-content">
-                                            {% icon "briefcase" size=4 %}
-                                            <span class="truncate">{{ w.title }}</span>
-                                        </a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </details>
-                        {% anchor label=_("Workspace settings") href='dashboard:workspaces:settings' workspace_uuid=workspace.uuid %}
-                    </div>
-                {% endif %}
-                {% block dashboard_projects %}
-                    {% include "workspace/common/sidemenu/project_details.html" %}
-                {% endblock dashboard_projects %}
-            </nav>
-            {% block dashboard_content %}
-            {% endblock dashboard_content %}
-        </div>
+    {% include "common/navigation/header/dashboard.html" %}
+    <div class="flex min-h-0 shrink grow flex-col md:flex-row">
+        <nav aria-label="{% translate "Side menu" %}"
+             class="order-last md:order-first max-w-full md:max-w-xs 2xl:max-w-md shrink-0 flex flex-col py-4 border-r border-border gap-4">
+            <section class="flex flex-col gap-4 px-4 w-full">
+                <details name="workspace-select" class="min-w-0">
+                    <summary class="flex items-center gap-2 hover:bg-secondary-hover font-bold border rounded cursor-pointer p-2">
+                        {% icon "briefcase" size=4 %}
+                        <span class="truncate">{{ workspace.title }}</span>
+                    </summary>
+                    <ul class="flex flex-col max-h-40 overflow-y-auto">
+                        {% for w in workspaces %}
+                            <li>
+                                <a href="{% url "dashboard:workspaces:detail" w.uuid %}"
+                                   class="flex w-full flex-row items-center gap-2 px-4 py-2 hover:bg-secondary-hover active:bg-disabled disabled:active:bg-secondary-hover text-base-content">
+                                    {% icon "briefcase" size=4 %}
+                                    <span class="truncate">{{ w.title }}</span>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </details>
+                {% anchor label=_("Workspace settings") href='dashboard:workspaces:settings' workspace_uuid=workspace.uuid %}
+            </section>
+            <section>
+                <p class="px-5 py-1 font-bold">{% trans "Projects" %}</p>
+                <ul>
+                    {% for project_item in projects %}
+                        <li>
+                            <a class="flex flex-row items-center gap-2 px-4 py-1 hover:bg-secondary-hover"
+                               aria-label="{% blocktranslate with project=project_item.title %}{{ project }} project{%endblocktranslate %}"
+                               href="{% url "dashboard:projects:detail" project_item.uuid %}">
+                                <span class="shrink-0 rounded-md p-1{% if project_item == project %} bg-primary-hover{% endif %}">
+                                    {% if project_item == project %}
+                                        {% icon "folder" "white" size=4 %}
+                                    {% else %}
+                                        {% icon "folder" size=4 %}
+                                    {% endif %}
+                                </span>
+                                <span class="truncate min-w-0 font-bold">{{ project_item.title }}</span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                    {% if workspace %}
+                        {% has_perm "workspace.create_project" user workspace as can_create_project %}
+                        {% if can_create_project %}
+                            <li>
+                                {% go_to_action href="dashboard:workspaces:create-project" label=_("Create new project") style="secondary" icon_style="plus" justify_left=True workspace_uuid=workspace.uuid %}
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
+            </section>
+        </nav>
+        {% block dashboard_content %}
+        {% endblock dashboard_content %}
     </div>
     {% include "common/footer.html" %}
 {% endblock body %}
