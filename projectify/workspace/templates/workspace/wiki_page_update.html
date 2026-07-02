@@ -1,0 +1,20 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "dashboard_base.html" %}
+{% load projectify %}
+{% load rules %}
+{% load i18n %}
+{% block extrahead %}
+    <meta name="trix-csp-nonce" content="{{ csp_nonce }}">
+    {{ form.media }}
+{% endblock extrahead %}
+{% block title %}
+    {% blocktrans with task_title=task.title %}{{ task_title }} task - Projectify{% endblocktrans %}
+{% endblock title %}
+{% block dashboard_content %}
+    <form class="flex flex-col" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" />
+    </form>
+{% endblock dashboard_content %}

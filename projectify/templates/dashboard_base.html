@@ -58,6 +58,11 @@
                     {% endif %}
                 </ul>
             </section>
+            {% if feature_flags.workspace_wikis %}
+                <section>
+                    {% anchor label=_("Wiki") href='dashboard:wiki:index' ws_uuid=workspace.uuid %}
+                </section>
+            {% endif %}
         </nav>
         {% block dashboard_content %}
         {% endblock dashboard_content %}

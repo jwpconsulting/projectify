@@ -12,6 +12,7 @@ Usage quotas determine how many items of a resource you
 can create within your workspace. Resources within your workspace are:
 
 - Team members and invitations
+- Wiki pages
 - Projects
 - Tasks
 - Attachments
@@ -38,6 +39,7 @@ Trial workspaces have the following usage quotas:
 
 - You can invite and add up to 1 additional team member, for a total of 2
   including yourself.
+- You can create up to 25 wiki pages
 - You can create up to 10 projects
 - You can create up to 1000 tasks
 - You can not upload any attachments

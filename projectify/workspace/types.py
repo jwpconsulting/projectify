@@ -25,6 +25,7 @@ class WorkspaceQuota:
     """Contain all workspace quota values."""
 
     workspace_status: WorkspaceFeatures
+    wiki_pages: Quota
     tasks: Quota
     projects: Quota
     team_members_and_invites: Quota

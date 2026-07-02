@@ -66,6 +66,7 @@ class Workspace(TitleDescriptionModel, BaseModelUUID):
         customer: RelatedField[None, "Customer"]
 
         # Related sets
+        wikipage_set: RelatedManager["WikiPage"]
         task_set: RelatedManager["Task"]
         project_set: RelatedManager["Project"]
         teammember_set: RelatedManager["TeamMember"]
@@ -102,6 +103,34 @@ class Workspace(TitleDescriptionModel, BaseModelUUID):
                 ),
             ),
         )
+
+
+class WikiPage(BaseModelUUID):
+    workspace = models.ForeignKey["Workspace"](
+        Workspace, on_delete=models.PROTECT
+    )
+    title = models.CharField(
+        _("title"),
+        help_text=_("Wiki page title"),
+        max_length=255,
+        db_index=True,
+    )
+    content = RichTextField(
+        verbose_name=_("content"),
+        blank=True,
+        null=True,
+        policy=settings.HTML_USER_POLICY,
+    )
+
+    def get_absolute_url(self) -> str:
+        """Return path to wiki page."""
+        return reverse(
+            "dashboard:wiki:view", args=(self.workspace.uuid, self.title)
+        )
+
+    class Meta:
+        # Can only have one page with the same title per workspace
+        unique_together = ("title", "workspace")
 
 
 class Project(TitleDescriptionModel, BaseModelUUID):

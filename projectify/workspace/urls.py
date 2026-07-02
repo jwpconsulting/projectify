@@ -30,6 +30,11 @@ from projectify.workspace.views.task import (
     task_update_view,
 )
 from projectify.workspace.views.team_member import team_member_picture
+from projectify.workspace.views.wiki import (
+    wiki_index,
+    wiki_page_edit,
+    wiki_page_view,
+)
 from projectify.workspace.views.workspace import (
     workspace_picture_view,
     workspace_search_view,
@@ -157,6 +162,15 @@ attachment_patterns = (
         "<uuid:ws_uuid>/attachments/<str:name>", attachment_view, name="view"
     ),
 )
+wiki_patterns = (
+    path("<uuid:ws_uuid>/wiki", wiki_index, name="index"),
+    path("<uuid:ws_uuid>/wiki/<str:page_title>", wiki_page_view, name="view"),
+    path(
+        "<uuid:ws_uuid>/wiki/<str:page_title>/edit",
+        wiki_page_edit,
+        name="edit",
+    ),
+)
 urlpatterns: UrlPatterns = (
     path("", redirect_to_dashboard, name="dashboard"),
     # Avatar
@@ -174,4 +188,9 @@ if settings.FEATURE_FLAGS.workspace_attachments:
     urlpatterns = (
         *urlpatterns,
         path("workspace/", include((attachment_patterns, "attachments"))),
+    )
+if settings.FEATURE_FLAGS.workspace_wikis:
+    urlpatterns = (
+        *urlpatterns,
+        path("workspace/", include((wiki_patterns, "wiki"))),
     )

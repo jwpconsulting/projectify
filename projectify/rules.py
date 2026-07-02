@@ -115,6 +115,12 @@ rules.add_perm("workspace.read_workspace", is_at_least_observer)
 rules.add_perm("workspace.update_workspace", is_at_least_owner)
 rules.add_perm("workspace.delete_workspace", is_at_least_owner)
 
+# Wiki pages
+rules.add_perm("workspace.create_wiki_page", is_at_least_contributor)
+rules.add_perm("workspace.read_wiki_page", is_at_least_observer)
+rules.add_perm("workspace.update_wiki_page", is_at_least_contributor)
+rules.add_perm("workspace.delete_wiki_page", is_at_least_maintainer)
+
 # Team member invite
 rules.add_perm(
     "workspace.create_team_member_invite",

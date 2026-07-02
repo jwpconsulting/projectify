@@ -23,7 +23,9 @@ from projectify.workspace.types import Quota, WorkspaceQuota
 
 from ..models import Task, Workspace
 
-Resource = Literal["Task", "Project", "TeamMemberAndInvite", "Attachment"]
+Resource = Literal[
+    "Task", "Project", "TeamMemberAndInvite", "Attachment", "WikiPage"
+]
 
 Limitation = Union[None, int]
 
@@ -35,6 +37,7 @@ class Limitations(TypedDict):
     Project: Limitation
     TeamMemberAndInvite: Limitation
     Attachment: Limitation
+    WikiPage: Limitation
 
 
 trial_conditions: Limitations = {
@@ -43,6 +46,7 @@ trial_conditions: Limitations = {
     "TeamMemberAndInvite": 2,
     # No attachments for trial
     "Attachment": 0,
+    "WikiPage": 25,
 }
 
 
@@ -85,6 +89,8 @@ def workspace_quota_for(*, resource: Resource, workspace: Workspace) -> Quota:
     if limit is None:
         return Quota(current=None, limit=None, can_create_more=True)
     match resource:
+        case "WikiPage":
+            current = workspace.wikipage_set.count()
         case "Task":
             current = Task.objects.filter(project__workspace=workspace).count()
         case "Project":
@@ -114,6 +120,7 @@ def workspace_get_all_quotas(workspace: Workspace) -> WorkspaceQuota:
         workspace_status=customer_check_active_for_workspace(
             workspace=workspace
         ),
+        wiki_pages=mk(resource="WikiPage"),
         tasks=mk(resource="Task"),
         projects=mk(resource="Project"),
         team_members_and_invites=mk(resource="TeamMemberAndInvite"),
