@@ -83,7 +83,7 @@ class TestSignUpDjango:
             "tos_agreed": True,
             "privacy_policy_agreed": True,
         }
-        with django_assert_num_queries(11):
+        with django_assert_num_queries(15):
             response = client.post(resource_url, data, follow=True)
         assert response.status_code == 200, response.content
         assert User.objects.count() == 1
@@ -264,7 +264,7 @@ class TestConfirmEmailDjango:
         )
         token = user_make_token(user=user, kind="confirm_email_address")
         url = reverse("users:confirm-email", args=("hello@world.com", token))
-        with django_assert_num_queries(8):
+        with django_assert_num_queries(12):
             response = client.get(url, follow=True)
         assert response.status_code == 200, response.content
 
@@ -308,7 +308,7 @@ class TestLogInDjango:
     ) -> None:
         """Test logging in a user."""
         data = {"email": user.email, "password": password}
-        with django_assert_num_queries(15):
+        with django_assert_num_queries(19):
             response = client.post(resource_url, data)
         assert response.status_code == 302, response.content
         assert "sessionid" in response.cookies
@@ -546,7 +546,7 @@ class TestPasswordResetConfirmDjango:
         new_pw = "evenmoresecurepassword123"
         data = {"new_password": new_pw, "new_password_confirm": new_pw}
         url = reverse("users:confirm-password-reset", args=(user.email, token))
-        with django_assert_num_queries(8):
+        with django_assert_num_queries(12):
             response = client.post(url, data)
             assert response.status_code == 302, response.content
         user.refresh_from_db()

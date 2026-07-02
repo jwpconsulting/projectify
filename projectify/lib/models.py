@@ -140,7 +140,12 @@ class BaseModel(Model):
 
     created = CreationDateTimeField(verbose_name=_("created"))
     modified = ModificationDateTimeField(verbose_name=_("modified"))
-    # TODO add full_clean() on save()
+
+    def save(self, *args: Any, **kwargs: Any) -> None:
+        """Run full_clean()."""
+        # At the time of writing, this applies to _all_ Projectify models
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
     class Meta:
         """Make this model abstract."""

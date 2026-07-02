@@ -510,7 +510,11 @@ def post(faker: Faker, now: datetime, post_content: PostContent) -> Post:
     """Return a blog post."""
     title = faker.sentence()
     return Post.objects.create(
-        title=title, slug=faker.slug(), body=post_content, published=now.date()
+        title=title,
+        slug=faker.slug(),
+        body=post_content,
+        published=now.date(),
+        author=faker.name(),
     )
 
 
