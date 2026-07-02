@@ -45,27 +45,8 @@
             window.location.href = e.detail.requestConfig.path;
         }
 
-        function toggleTaskMenu(event) {
-            const anchor = event.target.closest('[data-task-menu-toggle]');
-            if (!anchor) {
-                return;
-            }
-            const taskUuid = anchor.dataset.taskMenuToggle;
-            const menu = document.getElementById(`task-${taskUuid}-menu`);
-            if (!menu) {
-                throw new Error(`Couldn't find task menu for task ${taskUuid}`);
-            }
-            if (menu.classList.contains('hidden')) {
-                return;
-            }
-            event.preventDefault();
-            menu.classList.add('hidden');
-            menu.textContent = '';
-        }
-
         document.addEventListener('htmx:afterSwap', attachCloseButtonListener);
         document.addEventListener('htmx:beforeRequest', checkScreenSize);
-        document.addEventListener('htmx:beforeRequest', toggleTaskMenu);
     </script>
 {% endblock extrahead %}
 {% partialdef quick_add_task %}
@@ -97,8 +78,7 @@
 {% partialdef taskrow %}
     <tr class="flex w-full flex-wrap items-center gap-1 rounded-lg border border-border p-3 lg:contents"
         id="task-{{ task.uuid }}-row"
-        aria-labelledby="task-{{ task.uuid }}-title"
-        x-data="{ menuOpen: false }">
+        aria-labelledby="task-{{ task.uuid }}-title">
         <td class="flex flex-row items-center gap-2">
             {% if can_update_task %}
                 <form action="{% url 'dashboard:projects:detail' project.uuid %}"
@@ -141,7 +121,6 @@
             {% user_avatar task.assignee %}
         </td>
     </tr>
-    <tr id="task-{{ task.uuid }}-menu" class="hidden"></tr>
 {% endpartialdef taskrow %}
 {% partialdef project_tasks %}
     {% has_perm "workspace.create_task" user project.workspace as can_create_task %}
