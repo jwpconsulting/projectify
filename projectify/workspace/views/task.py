@@ -80,17 +80,8 @@ class TaskForm(forms.Form):
         label=_("Due date"),
         widget=forms.DateTimeInput(attrs={"type": "date"}),
     )
-    description = forms.CharField(
-        label=_("Description"),
-        widget=RichTextEditor(
-            heading_blocks=False,
-            attrs={
-                "expand": True,
-                "placeholder": _("Enter a description for your task"),
-                "class": TASK_EDITOR_MIN_HEIGHT_CLASS,
-            },
-        ),
-    )
+
+    description = forms.CharField(label=_("Description"))
 
     def clean_description(self) -> str:
         """Make sure that the description has at least one child."""
@@ -127,18 +118,28 @@ class TaskForm(forms.Form):
         )
         self.order_fields(["description", "assignee", "due_date"])
 
-        self.fields["description"].widget.attrs["data-suggest-links-url"] = (
-            reverse(
-                "dashboard:workspaces:suggest-links-task",
-                args=(workspace.uuid,),
-            )
+        editor = RichTextEditor(
+            heading_blocks=False,
+            upload_url=reverse(
+                "dashboard:attachments:create", args=(workspace.uuid,)
+            ),
+            attrs={
+                "expand": True,
+                "placeholder": _("Enter a description for your task"),
+                "class": TASK_EDITOR_MIN_HEIGHT_CLASS,
+                "data-suggest-projects-url": reverse(
+                    "dashboard:workspaces:suggest-links-project",
+                    args=(workspace.uuid,),
+                ),
+                "data-suggest-links-url": (
+                    reverse(
+                        "dashboard:workspaces:suggest-links-task",
+                        args=(workspace.uuid,),
+                    ),
+                ),
+            },
         )
-        self.fields["description"].widget.attrs[
-            "data-suggest-projects-url"
-        ] = reverse(
-            "dashboard:workspaces:suggest-links-project",
-            args=(workspace.uuid,),
-        )
+        self.fields["description"].widget = editor
 
         if focus_field is None:
             pass

@@ -209,29 +209,34 @@ def project_detail_view(
 class ProjectForm(forms.Form):
     """Form for project creation."""
 
-    description = forms.CharField(
-        label=_("Description"),
-        widget=RichTextEditor(
-            heading_blocks=False,
-            attrs={"expand": True, "class": TASK_EDITOR_MIN_HEIGHT_CLASS},
-        ),
-    )
+    description = forms.CharField(label=_("Description"))
 
     def __init__(self, *args: Any, workspace: Workspace, **kwargs: Any):
         """Populate available assignees and optionally set autofocus."""
         super().__init__(*args, **kwargs)
-        self.fields["description"].widget.attrs["data-suggest-links-url"] = (
-            reverse(
-                "dashboard:workspaces:suggest-links-task",
-                args=(workspace.uuid,),
-            )
+        # XXX duplicated from projectify/workspace/views/task.py:TaskForm
+        editor = RichTextEditor(
+            heading_blocks=False,
+            upload_url=reverse(
+                "dashboard:attachments:create", args=(workspace.uuid,)
+            ),
+            attrs={
+                "expand": True,
+                "placeholder": _("Enter a description for your task"),
+                "class": TASK_EDITOR_MIN_HEIGHT_CLASS,
+                "data-suggest-projects-url": reverse(
+                    "dashboard:workspaces:suggest-links-project",
+                    args=(workspace.uuid,),
+                ),
+                "data-suggest-links-url": (
+                    reverse(
+                        "dashboard:workspaces:suggest-links-task",
+                        args=(workspace.uuid,),
+                    ),
+                ),
+            },
         )
-        self.fields["description"].widget.attrs[
-            "data-suggest-projects-url"
-        ] = reverse(
-            "dashboard:workspaces:suggest-links-project",
-            args=(workspace.uuid,),
-        )
+        self.fields["description"].widget = editor
 
 
 @require_http_methods(["GET", "POST"])
