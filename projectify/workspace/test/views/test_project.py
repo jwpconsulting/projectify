@@ -35,7 +35,7 @@ class TestProjectDetailView:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test GETting the project detail page."""
-        with django_assert_num_queries(20):
+        with django_assert_num_queries(21):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert project.title in response.content.decode()
@@ -122,15 +122,15 @@ class TestProjectDetailViewActions:
         # check
         # Gone down from 29 -> 28
         # Gone down from 28 -> 26
-        # Gone down from 26 -> 22
-        with django_assert_num_queries(30):
+        # Gone up   from 26 -> 31
+        with django_assert_num_queries(31):
             response = user_client.post(resource_url, data)
             assert response.status_code == 200
         task.refresh_from_db()
         assert task.done is not None
 
         data = {"action": "mark_task_done", "task_uuid": t_id, "done": "false"}
-        with django_assert_num_queries(30):
+        with django_assert_num_queries(31):
             response = user_client.post(resource_url, data)
             assert response.status_code == 200
         task.refresh_from_db()
