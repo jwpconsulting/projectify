@@ -12,7 +12,8 @@ from django.core.cache import cache
 from django.templatetags import static
 from django.utils.safestring import SafeString, mark_safe
 
-from justhtml import JustHTML, SanitizationPolicy
+from justhtml import Decide, JustHTML, Node, PruneEmpty, SanitizationPolicy
+from justhtml.transforms_spec import DecideAction
 from markdown import Markdown
 from PIL import Image
 
@@ -24,13 +25,25 @@ logger = logging.getLogger(__name__)
 settings = get_settings()
 
 
+def has_only_br(node: Node) -> DecideAction:
+    """Return DROP when this Node is of the form <XXX><br></XXX>."""
+    match node.children:
+        case [Node(name="br")]:
+            return DecideAction.DROP
+        case _:
+            return DecideAction.KEEP
+
+
 def clean_rich_text(
     unsafe_html: str, policy: SanitizationPolicy = settings.HTML_USER_POLICY
 ) -> SafeString:
     """Clean the text for rich text content."""
     # https://github.com/EmilStenstrom/justhtml/blob/main/docs/sanitization.md
     sanitized_html: str = JustHTML(
-        unsafe_html, policy=policy, fragment=True
+        unsafe_html,
+        policy=policy,
+        fragment=True,
+        transforms=[Decide("p", has_only_br), PruneEmpty("*")],
     ).to_html(pretty=False)
     # TODO strip empty blocks
     # TODO strip repeated whitespace "  " -> " "
