@@ -6,14 +6,14 @@
 {% load rules %}
 {% block body %}
     {% include "common/navigation/header/dashboard.html" %}
-    <div class="flex min-h-0 shrink grow flex-col md:flex-row">
+    <div class="flex min-h-0 shrink grow flex-col md:grid md:grid-cols-[1fr_3fr]">
         <nav aria-label="{% translate "Side menu" %}"
-             class="order-last md:order-first max-w-full md:max-w-xs 2xl:max-w-md shrink-0 flex flex-col py-4 border-r border-border gap-4">
+             class="order-last md:order-first flex flex-col py-4 border-r border-border gap-2">
             <section class="flex flex-col gap-4 px-4 w-full">
                 <details name="workspace-select" class="min-w-0">
                     <summary class="flex items-center gap-2 hover:bg-secondary-hover font-bold border rounded cursor-pointer p-2">
                         {% icon "briefcase" size=4 %}
-                        <span class="truncate">{{ workspace.title }}</span>
+                        <h1 class="truncate">{{ workspace.title }}</h1>
                     </summary>
                     <ul class="flex flex-col max-h-40 overflow-y-auto">
                         {% for w in workspaces %}
@@ -27,24 +27,16 @@
                         {% endfor %}
                     </ul>
                 </details>
-                {% anchor label=_("Workspace settings") href='dashboard:workspaces:settings' workspace_uuid=workspace.uuid %}
             </section>
             <section>
-                <p class="px-5 py-1 font-bold">{% trans "Projects" %}</p>
+                <h2 class="px-4 py-1 font-bold text-lg">{% trans "Projects" %}</h2>
                 <ul>
                     {% for project_item in projects %}
                         <li>
                             <a class="flex flex-row items-center gap-2 px-4 py-1 hover:bg-secondary-hover"
                                aria-label="{% blocktranslate with project=project_item.title %}{{ project }} project{%endblocktranslate %}"
                                href="{% url "dashboard:projects:detail" project_item.uuid %}">
-                                <span class="shrink-0 rounded-md p-1{% if project_item == project %} bg-primary-hover{% endif %}">
-                                    {% if project_item == project %}
-                                        {% icon "folder" "white" size=4 %}
-                                    {% else %}
-                                        {% icon "folder" size=4 %}
-                                    {% endif %}
-                                </span>
-                                <span class="truncate min-w-0 font-bold">{{ project_item.title }}</span>
+                                <span class="truncate min-w-0 {% if project_item == project %}font-bold{% endif %}">{{ project_item.title }}</span>
                             </a>
                         </li>
                     {% endfor %}
@@ -59,10 +51,17 @@
                 </ul>
             </section>
             {% if feature_flags.workspace_wikis %}
-                <section>
-                    {% anchor label=_("Wiki") href='dashboard:wiki:index' ws_uuid=workspace.uuid %}
+                <section class="px-4">
+                    <h2 class="text-lg font-bold">{% trans "Wiki" %}</h2>
+                    <ul class="flex flex-col gap-1">
+                        <li>{% anchor label=_("Wiki home") href='dashboard:wiki:index' ws_uuid=workspace.uuid %}</li>
+                    </ul>
                 </section>
             {% endif %}
+            <section class="px-4">
+                <h2 class="text-lg font-bold">{% trans "Workspace" %}</h2>
+                {% anchor label=_("Workspace settings") href='dashboard:workspaces:settings' workspace_uuid=workspace.uuid %}
+            </section>
         </nav>
         {% block dashboard_content %}
         {% endblock dashboard_content %}
