@@ -307,6 +307,42 @@ def log_in_first(request: AuthenticatedHttpRequest) -> HttpResponse: ...
 - To style templates, Projectify uses [Tailwind version 3](https://v3.tailwindcss.com/). Refer to the tailwind
 configuration at `tailwind.config.js`.
 
+### Partial defs
+
+Use Django `partialdef` like so:
+
+```html
+{% partialdef button %}
+  <button>Hello {{ name }}</button>
+{% endpartialdef %}
+
+{% partial button %}
+```
+
+With `context={"name": "world"}`, this becomes the following:
+
+```html
+  <button>Hello world</button>
+```
+
+Pass arguments with `{% with %}`:
+
+```html
+{% partialdef button %}
+  <button>Hello {{ name }}</button>
+{% endpartialdef %}
+
+{% with name="foobar" %}
+{% partial button %}
+{% endwith
+```
+
+This becomes the following:
+
+```html
+  <button>Hello foobar</button>
+```
+
 ## Template includes
 
 ### Submit button
