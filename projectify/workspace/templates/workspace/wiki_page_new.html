@@ -12,12 +12,9 @@
     {% blocktrans  %}New {{ page_title }} - Projectify{% endblocktrans %}
 {% endblock title %}
 {% block form_header %}
-    {% blocktrans %}{{ page_title }}{% endblocktrans %}
+    {% blocktrans with title=page.title %}{{ title }}{% endblocktrans %}
+    {% include "projectify/forms/submit.html" with text=_("Save") small=True form_name="main" %}
 {% endblock form_header %}
 {% block form_content %}
-    <form class="flex flex-col" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" />
-    </form>
+    {{ form.as_p }}
 {% endblock form_content %}
