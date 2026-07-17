@@ -9,7 +9,7 @@ from typing import Any, Literal, Optional, Union
 from django import template
 from django.contrib.staticfiles import finders
 from django.templatetags import static
-from django.urls import reverse
+from django.urls import NoReverseMatch, reverse
 from django.utils.html import format_html
 from django.utils.safestring import SafeText, mark_safe
 from django.utils.translation import gettext_lazy as _
@@ -58,7 +58,10 @@ def anchor(
         case "", _, _:
             raise ValueError("Empty href supplied")
         case str(), args, kwargs if len(args) == len(kwargs) == 0:
-            url = href
+            try:
+                url = reverse(href)
+            except NoReverseMatch:
+                url = href
         case str(), args, kwargs:
             url = reverse(href, args=args, kwargs=kwargs)
         case model, _, _:
