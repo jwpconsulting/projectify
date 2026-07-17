@@ -75,11 +75,9 @@
           class="max-w-4xl min-w-0 grow flex flex-col gap-4 p-4 sm:px-8">
         <div class="sticky top-0 flex flex-row flex-wrap items-center justify-between gap-x-2 gap-y-4 bg-foreground lg:flex-nowrap">
             {% partial breadcrumbs %}
-            <div class="flex items-center justify-between gap-4 sm:flex-row">
-                {% if can_update_task %}
-                    {% go_to_action "dashboard:tasks:update" label=_("Edit") title=_("Edit this task") task_uuid=task.uuid %}
-                {% endif %}
-            </div>
+            {% if can_update_task %}
+                {% go_to_action "dashboard:tasks:update" label=_("Edit") title=_("Edit this task") task_uuid=task.uuid %}
+            {% endif %}
         </div>
         {% partial task_panel %}
     </main>
