@@ -158,8 +158,7 @@
                     <p>
                         {% trans "Our platform fully complies with GDPR regulations, amongst others, so you can rest assured that your private information stays private." %}
                     </p>
-                    {% url "storefront:privacy" as pp_url %}
-                    {% anchor pp_url label=_("Learn more about privacy and Projectify") %}
+                    {% anchor "storefront:privacy" label=_("Learn more about privacy and Projectify") %}
                 </div>
                 <div class="w-full max-w-lg justify-self-center">
                     <a href="{% url 'storefront:privacy' %}">{% picture src="privacy.png" alt=_("An illustration showing our mascot Poly safekeeping your data") %}</a>
@@ -175,8 +174,7 @@
                     <p>
                         {% trans "We respect your freedom and privacy and provide you with the source code under a Free Software license. The Projectify application is licensed under the GNU Affero General Public License (AGPL) version 3.0 or later." %}
                     </p>
-                    {% url "storefront:free_software" as learnmore_url %}
-                    {% anchor learnmore_url label=_("Learn more about Free Software") %}
+                    {% anchor "storefront:free_software" label=_("Learn more about Free Software") %}
                 </div>
             </section>
             <section class="flex flex-col gap-8">

@@ -57,12 +57,14 @@ def anchor(
     match href:
         case "":
             raise ValueError("Empty href supplied")
-        case str():
+        case str(), args, kwargs if len(args) == len(kwargs) == 0:
             try:
-                url = reverse(href, args=args, kwargs=kwargs)
+                url = reverse(href)
             except NoReverseMatch:
                 url = href
-        case model:
+        case str(), args, kwargs:
+            url = reverse(href, args=args, kwargs=kwargs)
+        case model, _, _:
             url = model.get_absolute_url()
     # TODO, if we have a reverse match, we don't have external URLs
     # We could switch all callers of the anchor function to use the route name
