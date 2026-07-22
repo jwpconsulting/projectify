@@ -148,53 +148,49 @@ class TestWorspaceSearchView:
 class TestWorkspacePictureView:
     """Test workspace_picture_view function."""
 
+    @pytest.fixture
+    def resource_url(
+        self, team_member: TeamMember, uploaded_file: File
+    ) -> str:
+        """Return URL to this view."""
+        team_member.workspace.picture = cast(FileDescriptor, uploaded_file)
+        team_member.workspace.save()
+        return reverse(
+            "dashboard:workspaces:picture", args=(team_member.workspace.uuid,)
+        )
+
     def test_authorized_access(
         self,
         user_client: Client,
-        team_member: TeamMember,
-        uploaded_file: File,
         django_assert_num_queries: DjangoAssertNumQueries,
+        resource_url: str,
     ) -> None:
         """Test that authorized team members can access workspace picture."""
-        workspace = team_member.workspace
-        workspace.picture = cast(FileDescriptor, uploaded_file)
-        workspace.save()
-        url = reverse("dashboard:workspaces:picture", args=(workspace.uuid,))
         with django_assert_num_queries(3):
-            assert user_client.get(url).status_code == 200
+            assert user_client.get(resource_url).status_code == 200
 
     def test_unauthorized_access(
-        self,
-        user_client: Client,
-        unrelated_workspace: Workspace,
-        uploaded_file: File,
+        self, unrelated_user_client: Client, resource_url: str
     ) -> None:
         """Test that non-team members cannot access workspace picture."""
-        unrelated_workspace.picture = cast(FileDescriptor, uploaded_file)
-        unrelated_workspace.save()
-        url = reverse(
-            "dashboard:workspaces:picture", args=(unrelated_workspace.uuid,)
-        )
-        assert user_client.get(url).status_code == 404
+        assert unrelated_user_client.get(resource_url).status_code == 404
 
 
 class TestWorkspaceSettings:
     """Test django workspace settings view."""
 
     @pytest.fixture
-    def resource_url(self, workspace: Workspace) -> str:
+    def resource_url(self, team_member: TeamMember) -> str:
         """Return URL to this view."""
-        return reverse("dashboard:workspaces:settings", args=(workspace.uuid,))
+        return reverse(
+            "dashboard:workspaces:settings", args=(team_member.workspace.uuid,)
+        )
 
     def test_get_form(
-        self,
-        user: User,
-        user_client: Client,
-        resource_url: str,
-        workspace: Workspace,
-        team_member: TeamMember,
+        self, user_client: Client, resource_url: str, team_member: TeamMember
     ) -> None:
         """Test GETting the page."""
+        workspace = team_member.workspace
         response = user_client.get(resource_url)
         assert response.status_code == 200
         assert workspace.title.encode() in response.content
@@ -204,11 +200,11 @@ class TestWorkspaceSettings:
         user_client: Client,
         resource_url: str,
         uploaded_file: File,
-        workspace: Workspace,
         team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating both title and workspace picture."""
+        workspace = team_member.workspace
         workspace.picture = cast(FileDescriptor, None)
         workspace.save()
         assert not workspace.picture
@@ -438,16 +434,16 @@ class TestWorkspaceSettingsTeamMemberUpdate:
 
     @pytest.fixture
     def resource_url(
-        self, workspace: Workspace, other_team_member: TeamMember
+        self, team_member: TeamMember, other_team_member: TeamMember
     ) -> str:
         """Return URL to this view."""
         return reverse(
             "dashboard:workspaces:team-member-update",
-            args=(workspace.uuid, other_team_member.uuid),
+            args=(team_member.workspace.uuid, other_team_member.uuid),
         )
 
     def test_get_update_form(
-        self, user_client: Client, resource_url: str, team_member: TeamMember
+        self, user_client: Client, resource_url: str
     ) -> None:
         """Test getting the team member update form."""
         response = user_client.get(resource_url)
@@ -457,7 +453,6 @@ class TestWorkspaceSettingsTeamMemberUpdate:
         self,
         user_client: Client,
         resource_url: str,
-        team_member: TeamMember,
         other_team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
@@ -482,15 +477,16 @@ class TestWorkspaceSettingsQuota:
     """Test workspace quota settings view."""
 
     @pytest.fixture
-    def resource_url(self, workspace: Workspace) -> str:
+    def resource_url(self, team_member: TeamMember) -> str:
         """Return URL to this view."""
-        return reverse("dashboard:workspaces:quota", args=(workspace.uuid,))
+        return reverse(
+            "dashboard:workspaces:quota", args=(team_member.workspace.uuid,)
+        )
 
     def test_get_quota_page(
         self,
         user_client: Client,
         resource_url: str,
-        team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test getting the quota page."""
@@ -730,13 +726,12 @@ class TestWorkspaceSettingsBillingCoupon:
         self,
         user_client: Client,
         resource_url: str,
-        team_member: TeamMember,
         coupon: Coupon,
         django_assert_num_queries: DjangoAssertNumQueries,
-        workspace: Workspace,
         unpaid_customer: Customer,
     ) -> None:
         """Test that workspace subscription is activated correctly."""
+        workspace = unpaid_customer.workspace
         assert unpaid_customer.seats != 20
         active = customer_check_active_for_workspace(workspace=workspace)
         assert active == "trial"
