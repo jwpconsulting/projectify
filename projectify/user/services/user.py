@@ -48,6 +48,8 @@ def user_update(
     if profile_picture:
         user.profile_picture = profile_picture
     user.save()
+    # TODO
+    # user_event_log(user=user, type=UserEventType.UPDATE_PROFILE, request=request)
     return user
 
 
@@ -99,6 +101,9 @@ def user_set_password(
     if request is not None:
         update_session_auth_hash(request, user)
 
+    # TODO
+    # user_event_log(user=user, type=UserEventType.SET_PW, request=request)
+
 
 @transaction.atomic
 def user_change_password(
@@ -147,6 +152,9 @@ def user_change_password(
     if request is not None:
         update_session_auth_hash(request, user)
 
+    # TODO
+    # user_event_log(user=user, type=UserEventType.CHANGE_PW, request=request)
+
 
 @transaction.atomic
 def user_request_email_address_update(
@@ -158,6 +166,8 @@ def user_request_email_address_update(
     user.unconfirmed_email = new_email
     user.save()
     UserEmailAddressUpdateEmail(receiver=user, obj=user).send()
+    # TODO
+    # user_event_log(user=user, type=UserEventType.REQUEST_EMAIL_UPDATE request=request)
 
 
 @transaction.atomic
@@ -179,3 +189,5 @@ def user_confirm_email_address_update(
     user.save()
     PreviousEmailAddress.objects.create(user=user, email=old_email)
     UserEmailAddressUpdatedEmail(receiver=user, obj=user).send()
+    # TODO
+    # user_event_log(user=user, type=UserEventType.CONFIRM_EMAIL_UPDATE request=request)

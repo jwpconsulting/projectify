@@ -232,6 +232,10 @@ class Base(Configuration):
     AUTH_USER_MODEL = "user.User"
     LOGIN_URL = "/user/log-in"
 
+    # How long to keep UserEvent records
+    # 30 days
+    USER_EVENT_RETENTION_PERIOD: int = 30 * 24 * 60 * 60
+
     # Password validation
     # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
     AUTH_PASSWORD_VALIDATORS = [

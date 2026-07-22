@@ -3,21 +3,23 @@
 # SPDX-FileCopyrightText: 2024 JWP Consulting GK
 """Test user app internal services."""
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 import pytest
 
+from projectify.lib.settings import get_settings
 from projectify.settings.base import Base
 
-from ...models import User
+from ...models import User, UserEvent
 from ...services.internal import (
     Token,
     TokenKind,
     user_check_token,
     user_create,
     user_create_superuser,
+    user_event_clean,
     user_make_token,
 )
 
@@ -105,3 +107,17 @@ def test_user_check_token(
         user_check_token(user=deterministic_user, kind=kind, token=wrong_token)
         is False
     )
+
+
+def test_user_event_clean(user_event: UserEvent, now: datetime) -> None:
+    """Test user event cleaning."""
+    settings = get_settings()
+    assert UserEvent.objects.count() == 1
+    user_event_clean()
+    assert UserEvent.objects.count() == 1
+    user_event.created = now - timedelta(
+        seconds=settings.USER_EVENT_RETENTION_PERIOD
+    )
+    user_event.save()
+    user_event_clean()
+    assert UserEvent.objects.count() == 0

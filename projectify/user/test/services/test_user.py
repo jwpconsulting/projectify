@@ -44,6 +44,7 @@ def test_user_update(
     user.refresh_from_db()
     assert user.preferred_name == new_name
     assert "profile_picture/uploaded_file.png" in user.profile_picture.path
+    # TODO assert UserEvent.objects.count() == before + 1
 
 
 def test_user_set_password(user: User, mailoutbox: Mailbox) -> None:
@@ -63,6 +64,7 @@ def test_user_set_password(user: User, mailoutbox: Mailbox) -> None:
     assert user.check_password(new_password) is True
     (mail,) = mailoutbox
     assert "password has been set" in mail.body
+    # TODO assert UserEvent.objects.count() == before + 1
 
     # can't set the password twice
     with pytest.raises(ValidationError) as exc_info:
@@ -71,6 +73,7 @@ def test_user_set_password(user: User, mailoutbox: Mailbox) -> None:
     user.refresh_from_db()
     assert user.check_password(new_password) is True
     assert user.check_password("another-password-456") is False
+    # TODO assert UserEvent.objects.count() == before + 1
 
 
 def test_user_set_password_with_request(
@@ -90,6 +93,7 @@ def test_user_set_password_with_request(
     # Verify password was set
     user.refresh_from_db()
     assert user.check_password(new_password) is True
+    # TODO assert UserEvent.objects.count() == before + 1
 
     # We don't need to verify the session directly - if update_session_auth_hash
     # didn't raise an exception, it worked correctly
@@ -133,6 +137,7 @@ def test_user_change_password(
     assert user.check_password(new_password) is True
     (mail,) = mailoutbox
     assert "password has been changed" in mail.body
+    # TODO assert UserEvent.objects.count() == before + 1
 
 
 def test_user_change_password_weak_password(user: User, password: str) -> None:
@@ -169,6 +174,7 @@ def test_user_change_password_with_request(
 
     # We don't need to verify the session directly - if update_session_auth_hash
     # didn't raise an exception, it worked correctly
+    # TODO assert UserEvent.objects.count() == before + 1
 
 
 def test_user_email_update_complete(
@@ -237,3 +243,4 @@ def test_user_email_update_complete(
     assert "has been updated" in body
     assert match
     token = Token(match.group(1))
+    # TODO assert UserEvent.objects.count() == before + 1

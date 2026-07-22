@@ -69,6 +69,8 @@ def test_user_sign_up(faker: Faker) -> None:
     assert user.privacy_policy_agreed is not None
     assert user.tos_agreed is not None
 
+    # TODO assert UserEvent.objects.count() == 1
+
 
 def test_user_sign_up_weak_password(faker: Faker) -> None:
     """Test signing up a new user, and choose a weak passsword."""
@@ -99,6 +101,8 @@ def test_user_active_requires_activated(user: User) -> None:
 
 def test_user_confirm_email(user: User, inactive_user: User) -> None:
     """Test activating an active and inactive user."""
+    # TODO
+    # before = UserEvent.objects.count()
     assert user.activated is not None
     assert user.is_active
     user_confirm_email(
@@ -120,6 +124,7 @@ def test_user_confirm_email(user: User, inactive_user: User) -> None:
     inactive_user.refresh_from_db()
     assert inactive_user.is_active
     assert inactive_user.activated is not None
+    # TODO assert UserEvent.objects.count() == before + 1
 
 
 @pytest.fixture
@@ -147,6 +152,7 @@ def test_user_log_in(
     assert "_auth_user_id" not in session_request.session.keys()
     user_log_in(email=user.email, password=password, request=session_request)
     assert "_auth_user_id" in session_request.session.keys()
+    # TODO assert UserEvent.objects.count() == before + 1
 
 
 def test_user_log_in_wrong_password(
@@ -189,6 +195,7 @@ def test_user_log_out(
     assert "_auth_user_id" in session_request.session.keys()
     user_log_out(request=session_request)
     assert "_auth_user_id" not in session_request.session.keys()
+    # TODO assert UserEvent.objects.count() == before + 1
 
 
 def test_user_log_out_not_logged_in(session_request: HttpRequest) -> None:
@@ -211,6 +218,7 @@ def test_request_password_reset(
         user_request_password_reset(email=faker.email())
     assert error.match("No user could be found")
     assert len(mailoutbox) == 1
+    # TODO assert UserEvent.objects.count() == before + 1
 
 
 def test_request_password_reset_inactive_user(

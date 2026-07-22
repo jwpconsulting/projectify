@@ -20,12 +20,13 @@ from projectify.user.emails import (
     UserEmailConfirmationEmail,
     UserPasswordResetEmail,
 )
-from projectify.user.models import User
+from projectify.user.models import User, UserEventType
 from projectify.user.selectors.user import user_find_by_email
 from projectify.user.services.internal import (
     Token,
     user_check_token,
     user_create,
+    user_event_log,
 )
 
 logger = logging.getLogger(__name__)
@@ -48,7 +49,13 @@ def _validate_password(
 
 @transaction.atomic()
 def user_sign_up(
-    *, email: str, password: str, tos_agreed: bool, privacy_policy_agreed: bool
+    *,
+    email: str,
+    password: str,
+    tos_agreed: bool,
+    privacy_policy_agreed: bool,
+    # TODO add
+    # request: HttpRequest
 ) -> User:
     """Sign up a user."""
     # Check if user exists
@@ -81,6 +88,8 @@ def user_sign_up(
     )
     mail = UserEmailConfirmationEmail(receiver=user, obj=user)
     mail.send()
+    # TODO
+    # user_event_log(user=user, type=UserEventType.SIGN_UP, request=request)
     # TODO do not return User here
     return user
 
@@ -103,6 +112,8 @@ def user_confirm_email(*, email: str, token: Token) -> Optional[User]:
     user.activated = timezone.now()
     user.save()
     logger.info("Confirmed email for user %s", email)
+    # TODO
+    # user_event_log(user=user, type=UserEventType.CONFIRM_EMAIL, request=request)
     # TODO do not return User here
     return user
 
@@ -141,6 +152,7 @@ def user_log_in(*, email: str, password: str, request: HttpRequest) -> User:
     login(request, user)
     if not isinstance(user, User):
         raise ValueError("User is not User, why?")
+    user_event_log(user=user, type=UserEventType.LOG_IN, request=request)
     return user
 
 
@@ -150,13 +162,12 @@ def user_log_out(*, request: HttpRequest) -> None:
     match request.user:
         case AnonymousUser():
             raise ValidationError(_("You're not logged in"))
-        # TODO
-        # case User() as user:
-        case User():
-            # user_log_event(user=user, type=UserEventType.LOG_OUT, request=request)
-            logout(request)
+        case User() as user:
+            pass
         case other:
             raise RuntimeError(f"Encountered unexpected user {other}")
+    user_event_log(user=user, type=UserEventType.LOG_OUT, request=request)
+    logout(request)
 
 
 @transaction.atomic()
@@ -182,8 +193,10 @@ def user_request_password_reset(
                 }
             )
         case user:
-            password_reset_email = UserPasswordResetEmail(receiver=user, obj=user)
-            password_reset_email.send()
+            pass
+    password_reset_email = UserPasswordResetEmail(receiver=user, obj=user)
+    password_reset_email.send()
+    # user_event_log(user=user, type=UserEventType.REQUEST_PW_RESET, request=request)
 
 
 @transaction.atomic
@@ -224,5 +237,6 @@ def user_confirm_password_reset(
     user.set_password(new_password)
     user.save()
     logger.info("Reset password for user with email %s", email)
+    # user_event_log(user=user, type=UserEventType.CONFIRM_PW_RESET, request=request)
     # XXX consider if returning a user is necessary here
     return user

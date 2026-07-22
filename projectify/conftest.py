@@ -28,6 +28,7 @@ from uuid import UUID
 
 from django.core.files.base import File
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import RequestFactory
 from django.test.client import Client
 from django.utils import timezone
 from django.utils.html import format_html
@@ -44,10 +45,11 @@ from projectify.corporate.services.stripe import (
 )
 from projectify.settings.base import Base
 from projectify.user import models as user_models
-from projectify.user.models import User, UserInvite
+from projectify.user.models import User, UserEvent, UserEventType, UserInvite
 from projectify.user.services.internal import (
     user_create,
     user_create_superuser,
+    user_event_log,
 )
 from projectify.user.services.user_invite import (
     user_invite_create,
@@ -518,3 +520,15 @@ def post(faker: Faker, now: datetime, post_content: PostContent) -> Post:
 def null_uuid() -> UUID:
     """Create an all-null UUID."""
     return UUID(int=0)
+
+
+@pytest.fixture
+def user_event(user: User) -> UserEvent:
+    """Create a user event."""
+    factory = RequestFactory(
+        headers={"REMOTE_ADDR": "127.0.0.1", "User-Agent": "hello-world/1.0"}
+    )
+    request = factory.get("/")
+    return user_event_log(
+        user=user, type=UserEventType.LOG_IN, request=request
+    )
