@@ -8,6 +8,7 @@ from collections.abc import Sequence
 from typing import Optional
 
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.password_validation import validate_password
 from django.db import transaction
 from django.forms import ValidationError
@@ -146,10 +147,16 @@ def user_log_in(*, email: str, password: str, request: HttpRequest) -> User:
 @transaction.atomic()
 def user_log_out(*, request: HttpRequest) -> None:
     """Log a user out, update cookies."""
-    user = request.user
-    if user.is_anonymous:
-        raise ValidationError(_("There is no logged in user"))
-    logout(request)
+    match request.user:
+        case AnonymousUser():
+            raise ValidationError(_("You're not logged in"))
+        # TODO
+        # case User() as user:
+        case User():
+            # user_log_event(user=user, type=UserEventType.LOG_OUT, request=request)
+            logout(request)
+        case other:
+            raise RuntimeError(f"Encountered unexpected user {other}")
 
 
 @transaction.atomic()
@@ -159,23 +166,24 @@ def user_request_password_reset(
     email: str,
 ) -> None:
     """Send a password reset email to a user, given their email address."""
-    user = user_find_by_email(email=email)
-    if user is None:
-        raise ValidationError(
-            {"email": [_("No user could be found for this email")]}
-        )
-    if not user.is_active:
-        raise ValidationError(
-            {
-                "email": [
-                    _(
-                        "You need to activate this account first. Please check your email inbox for a confirmation email."
-                    )
-                ]
-            }
-        )
-    password_reset_email = UserPasswordResetEmail(receiver=user, obj=user)
-    password_reset_email.send()
+    match user_find_by_email(email=email):
+        case None:
+            raise ValidationError(
+                {"email": [_("No user could be found for this email")]}
+            )
+        case User(is_active=False):
+            raise ValidationError(
+                {
+                    "email": [
+                        _(
+                            "You need to activate this account first. Please check your email inbox for a confirmation email."
+                        )
+                    ]
+                }
+            )
+        case user:
+            password_reset_email = UserPasswordResetEmail(receiver=user, obj=user)
+            password_reset_email.send()
 
 
 @transaction.atomic

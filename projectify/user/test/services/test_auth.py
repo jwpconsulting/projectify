@@ -196,7 +196,7 @@ def test_user_log_out_not_logged_in(session_request: HttpRequest) -> None:
     assert "_auth_user_id" not in session_request.session.keys()
     with pytest.raises(ValidationError) as error:
         user_log_out(request=session_request)
-    assert "no logged in user" in error.exconly()
+    assert "not logged in" in error.exconly()
     assert "_auth_user_id" not in session_request.session.keys()
 
 
