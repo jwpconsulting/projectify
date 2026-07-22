@@ -9,7 +9,6 @@ from typing import Optional, Union
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import PermissionDenied
-from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import transaction
 from django.db.models.fields.files import FileDescriptor
 from django.forms import ValidationError
@@ -86,7 +85,7 @@ def user_set_password(
 
     try:
         validate_password(password=new_password, user=user)
-    except DjangoValidationError as e:
+    except ValidationError as e:
         raise ValidationError({"new_password": e.messages})
 
     user.set_password(new_password)
@@ -135,7 +134,7 @@ def user_change_password(
         )
     try:
         validate_password(password=new_password, user=user)
-    except DjangoValidationError as e:
+    except ValidationError as e:
         raise ValidationError({"new_password": e.messages})
     user.set_password(new_password)
     user.save()
