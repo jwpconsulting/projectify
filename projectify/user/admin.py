@@ -9,7 +9,18 @@ from django.contrib import admin
 from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
-from projectify.user.models import User, UserInvite
+from projectify.lib.admin import ReadOnlyAdmin
+from projectify.user.models import PreviousEmailAddress, User, UserInvite
+
+
+class PreviousEmailAddressAdmin(
+    ReadOnlyAdmin[PreviousEmailAddress],
+    admin.TabularInline[PreviousEmailAddress],
+):
+    """Inline admin for PreviousEmailAddress."""
+
+    model = PreviousEmailAddress
+    extra = 0
 
 
 @admin.register(User)
@@ -36,6 +47,7 @@ class UserAdmin(admin.ModelAdmin[User]):
     )
     search_fields = ("email", "preferred_name")
     search_help_text = _("You can search by email and preferred name")
+    inlines = [PreviousEmailAddressAdmin]
 
 
 @admin.register(UserInvite)

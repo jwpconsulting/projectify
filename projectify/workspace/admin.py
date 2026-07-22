@@ -3,36 +3,12 @@
 # SPDX-FileCopyrightText: 2021-2024,2026 JWP Consulting GK
 """Workspace admin."""
 
-from typing import Optional, TypeVar
-
 from django.contrib import admin
-from django.db.models import Model
-from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
+from projectify.lib.admin import ReadOnlyAdmin
+
 from .models import Project, Task, TeamMember, TeamMemberInvite, Workspace
-
-M = TypeVar("M", bound=Model)
-
-
-class ReadOnlyAdmin[M]:
-    """Admin Mixin that forbids anyone from making changes to this model."""
-
-    def has_add_permission(
-        self, request: HttpRequest, obj: Optional[M] = None
-    ) -> bool:
-        """Forbid anyone from adding objects."""
-        del request
-        del obj
-        return False
-
-    def has_change_permission(
-        self, request: HttpRequest, obj: Optional[M] = None
-    ) -> bool:
-        """Forbid anyone from changing objects."""
-        del request
-        del obj
-        return False
 
 
 class TeamMemberInline(admin.TabularInline[TeamMember]):
