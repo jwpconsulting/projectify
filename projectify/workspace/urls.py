@@ -34,6 +34,7 @@ from projectify.workspace.views.wiki import (
     wiki_index,
     wiki_page_edit,
     wiki_page_view,
+    wiki_recent_changes,
 )
 from projectify.workspace.views.workspace import (
     workspace_picture_view,
@@ -174,6 +175,11 @@ attachment_patterns = (
 )
 wiki_patterns = (
     path("<uuid:ws_uuid>/wiki", wiki_index, name="index"),
+    path(
+        "<uuid:ws_uuid>/wiki-recent-changes",
+        wiki_recent_changes,
+        name="recent-changes",
+    ),
     path("<uuid:ws_uuid>/wiki/<str:page_title>", wiki_page_view, name="view"),
     path(
         "<uuid:ws_uuid>/wiki/<str:page_title>/edit",

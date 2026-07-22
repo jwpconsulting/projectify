@@ -54,7 +54,8 @@
                 <section class="px-4">
                     <h2 class="text-lg font-bold">{% trans "Wiki" %}</h2>
                     <ul class="flex flex-col gap-1">
-                        <li>{% anchor label=_("Wiki home") href='dashboard:wiki:index' ws_uuid=workspace.uuid %}</li>
+                        <li>{% anchor label=_("Main page") href='dashboard:wiki:index' ws_uuid=workspace.uuid %}</li>
+                        <li>{% anchor label=_("Recent changes") href='dashboard:wiki:recent-changes' ws_uuid=workspace.uuid %}</li>
                     </ul>
                 </section>
             {% endif %}

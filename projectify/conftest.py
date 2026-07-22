@@ -60,6 +60,7 @@ from projectify.workspace.models import (
     TeamMember,
     TeamMemberInvite,
     TeamMemberRoles,
+    WikiPage,
     Workspace,
 )
 from projectify.workspace.selectors.team_member import (
@@ -74,6 +75,7 @@ from projectify.workspace.services.task import task_create
 from projectify.workspace.services.team_member_invite import (
     team_member_invite_create,
 )
+from projectify.workspace.services.wiki import wiki_page_get_or_create_index
 from projectify.workspace.services.workspace import (
     workspace_add_user,
     workspace_create,
@@ -532,3 +534,11 @@ def post(faker: Faker, now: datetime, post_content: PostContent) -> Post:
 def null_uuid() -> UUID:
     """Create an all-null UUID."""
     return UUID(int=0)
+
+
+@pytest.fixture
+def wiki_page(workspace: Workspace, team_member: TeamMember) -> WikiPage:
+    """Return a wiki index page."""
+    return wiki_page_get_or_create_index(
+        workspace=workspace, who=team_member.user
+    )

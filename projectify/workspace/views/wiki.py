@@ -9,6 +9,7 @@ from uuid import UUID
 from django import forms
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_GET, require_http_methods
 
@@ -20,6 +21,7 @@ from ..models import WikiPage, Workspace
 from ..selectors.wiki import (
     WikiPageDetailQuerySet,
     wiki_find_by_workspace_and_page_title,
+    wiki_find_recent_changes,
 )
 from ..selectors.workspace import (
     WorkspaceDetailQuerySet,
@@ -28,6 +30,28 @@ from ..selectors.workspace import (
 from ..services.wiki import wiki_page_get_or_create_index
 
 logger = logging.getLogger(__name__)
+
+
+@platform_view
+@require_GET
+def wiki_recent_changes(
+    request: AuthenticatedHttpRequest, ws_uuid: UUID
+) -> HttpResponse:
+    """Show recently changed wiki pages."""
+    ws = workspace_find_by_workspace_uuid(
+        who=request.user, workspace_uuid=ws_uuid, qs=WorkspaceDetailQuerySet
+    )
+    if ws is None:
+        raise Http404(_("Workspace not found"))
+    pages = wiki_find_recent_changes(who=request.user, workspace=ws)
+    context = {
+        "workspace": ws,
+        "projects": ws.project_set.all(),
+        "pages": pages,
+    }
+    return render(
+        request, "workspace/wiki_recent_changes.html", context=context
+    )
 
 
 @platform_view
@@ -83,8 +107,40 @@ class WikiPageForm(forms.ModelForm):
 
 
 @platform_view
-@require_http_methods(["GET", "POST"])
+@require_GET
 def wiki_page_view(
+    request: AuthenticatedHttpRequest, ws_uuid: UUID, page_title: str
+) -> HttpResponse:
+    """Upload an image attachment to a workspace."""
+    page = wiki_find_by_workspace_and_page_title(
+        ws_uuid=ws_uuid,
+        who=request.user,
+        title=page_title,
+        qs=WikiPageDetailQuerySet,
+    )
+    if page is None:
+        ws = workspace_find_by_workspace_uuid(
+            who=request.user,
+            workspace_uuid=ws_uuid,
+            qs=WorkspaceDetailQuerySet,
+        )
+        if ws is None:
+            raise Http404(_("Workspace not found"))
+        return redirect(
+            reverse("dashboard:wiki:edit", args=(ws_uuid, page_title))
+        )
+    context = {
+        "page": page,
+        "workspace": page.workspace,
+        # XXX slow
+        "projects": page.workspace.project_set.all(),
+    }
+    return render(request, "workspace/wiki_page_detail.html", context=context)
+
+
+@platform_view
+@require_http_methods(["GET", "POST"])
+def wiki_page_edit(
     request: AuthenticatedHttpRequest, ws_uuid: UUID, page_title: str
 ) -> HttpResponse:
     """Upload an image attachment to a workspace."""
@@ -117,68 +173,35 @@ def wiki_page_view(
                 status = 200
             case _:
                 raise RuntimeError("Shouldn't reach this")
-        context = {
+        context: dict[str, Any] = {
             "form": form,
             "workspace": ws,
             "projects": ws.project_set.all(),
             "page_title": page_title,
         }
-        template = "workspace/wiki_page_new.html"
     else:
+        ws = page.workspace
         match request.method:
+            case "POST":
+                form = WikiPageForm(
+                    workspace=ws, instance=page, data=request.POST
+                )
+                if form.is_valid():
+                    form.save()
+                    return redirect(page)
+                else:
+                    status = 400
             case "GET":
+                form = WikiPageForm(workspace=page.workspace, instance=page)
                 status = 200
             case _:
-                status = 405
-                # TODO show flash that the user can't POSt on an existing
-                # wiki page
-        context = {
-            "page": page,
-            "workspace": page.workspace,
-            # XXX slow
-            "projects": page.workspace.project_set.all(),
-        }
-        template = "workspace/wiki_page_detail.html"
-    return render(request, template, status=status, context=context)
-
-
-@platform_view
-@require_http_methods(["GET", "POST"])
-def wiki_page_edit(
-    request: AuthenticatedHttpRequest, ws_uuid: UUID, page_title: str
-) -> HttpResponse:
-    """Upload an image attachment to a workspace."""
-    page = wiki_find_by_workspace_and_page_title(
-        ws_uuid=ws_uuid,
-        who=request.user,
-        title=page_title,
-        qs=WikiPageDetailQuerySet,
-    )
-    if page is None:
-        raise Http404(
-            _("Couldn't find wiki page {title}").format(title=page_title)
-        )
-    match request.method:
-        case "POST":
-            form = WikiPageForm(
-                workspace=page.workspace, instance=page, data=request.POST
-            )
-            if form.is_valid():
-                form.save()
-                return redirect(page)
-            else:
-                status = 400
-        case "GET":
-            form = WikiPageForm(workspace=page.workspace, instance=page)
-            status = 200
-        case _:
-            raise RuntimeError("Shouldn't reach this")
+                raise RuntimeError("Shouldn't reach this")
     context = {
         "page": page,
         "form": form,
-        "workspace": page.workspace,
+        "workspace": ws,
         # XXX slow
-        "projects": page.workspace.project_set.all(),
+        "projects": ws.project_set.all(),
     }
     return render(
         request,
