@@ -54,16 +54,19 @@ from projectify.user.services.user_invite import (
     user_invite_redeem,
 )
 from projectify.workspace.models import (
+    Attachment,
     Project,
     Task,
     TeamMember,
     TeamMemberInvite,
     TeamMemberRoles,
+    WikiPage,
     Workspace,
 )
 from projectify.workspace.selectors.team_member import (
     team_member_find_for_workspace,
 )
+from projectify.workspace.services.attachment import attachment_create
 from projectify.workspace.services.project import (
     project_archive,
     project_create,
@@ -72,6 +75,7 @@ from projectify.workspace.services.task import task_create
 from projectify.workspace.services.team_member_invite import (
     team_member_invite_create,
 )
+from projectify.workspace.services.wiki import wiki_page_get_or_create_index
 from projectify.workspace.services.workspace import (
     workspace_add_user,
     workspace_create,
@@ -464,6 +468,14 @@ def unrelated_task(
 
 
 @pytest.fixture
+def attachment(
+    team_member: TeamMember, uploaded_file: SimpleUploadedFile
+) -> Attachment:
+    """Return an attachment uploaded by the normal user."""
+    return attachment_create(who=team_member, file=uploaded_file)
+
+
+@pytest.fixture
 def unpaid_customer(workspace: Workspace) -> Customer:
     """Create customer."""
     customer_cancel_subscription(customer=workspace.customer)
@@ -510,7 +522,11 @@ def post(faker: Faker, now: datetime, post_content: PostContent) -> Post:
     """Return a blog post."""
     title = faker.sentence()
     return Post.objects.create(
-        title=title, slug=faker.slug(), body=post_content, published=now.date()
+        title=title,
+        slug=faker.slug(),
+        body=post_content,
+        published=now.date(),
+        author=faker.name(),
     )
 
 
@@ -518,3 +534,11 @@ def post(faker: Faker, now: datetime, post_content: PostContent) -> Post:
 def null_uuid() -> UUID:
     """Create an all-null UUID."""
     return UUID(int=0)
+
+
+@pytest.fixture
+def wiki_page(workspace: Workspace, team_member: TeamMember) -> WikiPage:
+    """Return a wiki index page."""
+    return wiki_page_get_or_create_index(
+        workspace=workspace, who=team_member.user
+    )

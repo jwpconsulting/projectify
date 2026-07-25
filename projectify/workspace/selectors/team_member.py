@@ -21,13 +21,28 @@ def team_member_find_for_workspace(
         return None
 
 
+def team_member_find_by_workspace_uuid(
+    *, who: User, workspace_uuid: UUID
+) -> Optional[TeamMember]:
+    """Find team member by workspace UUID."""
+    try:
+        return TeamMember.objects.select_related("user").get(
+            user=who, workspace__uuid=workspace_uuid
+        )
+    except TeamMember.DoesNotExist:
+        return None
+
+
 def team_member_find_by_team_member_uuid(
     *, who: User, team_member_uuid: UUID
 ) -> Optional[TeamMember]:
     """Find team member by UUID according to user access permissions."""
     try:
         return TeamMember.objects.select_related("user").get(
-            workspace__users=who, uuid=team_member_uuid
+            # XXX make this
+            # user=who, uuid=team_member_uuid
+            workspace__users=who,
+            uuid=team_member_uuid,
         )
     except TeamMember.DoesNotExist:
         return None

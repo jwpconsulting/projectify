@@ -28,7 +28,9 @@ then
     echo "djlint --check ran successfully"
 else
     echo "There was an error running djlint --check"
-    uv run djlint --reformat "$target"
+    if uv run djlint --reformat "$target"; then
+        echo "djlint reformatted"
+    fi
     if ! uv run djlint --check "$target"; then
         echo "Couldn't fix with djlint --reformat"
         exit 1

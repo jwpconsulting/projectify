@@ -1,0 +1,20 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "workspace/form_base.html" %}
+{% load projectify %}
+{% load rules %}
+{% load i18n %}
+{% block extrahead %}
+    <meta name="trix-csp-nonce" content="{{ csp_nonce }}">
+    {{ form.media }}
+{% endblock extrahead %}
+{% block title %}
+    {% blocktrans with title=page.title %}Editing {{ title }} - Projectify{% endblocktrans %}
+{% endblock title %}
+{% block form_header %}
+    {% blocktrans with title=page.title %}{{ title }}{% endblocktrans %}
+    {% include "projectify/forms/submit.html" with text=_("Save") small=True form_name="main" %}
+{% endblock form_header %}
+{% block form_content %}
+    {{ form.as_p }}
+{% endblock form_content %}

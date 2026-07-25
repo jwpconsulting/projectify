@@ -6,10 +6,17 @@
 import datetime
 from collections.abc import Iterable, Sequence
 from typing import Any, Callable, Optional
+from uuid import uuid4
 
 from django import forms
 from django.conf import settings
-from django.db.models import CharField, DateTimeField, Model, TextField
+from django.db.models import (
+    CharField,
+    DateTimeField,
+    Model,
+    TextField,
+    UUIDField,
+)
 from django.utils import safestring
 from django.utils.html import strip_tags
 from django.utils.translation import gettext_lazy as _
@@ -140,13 +147,29 @@ class BaseModel(Model):
 
     created = CreationDateTimeField(verbose_name=_("created"))
     modified = ModificationDateTimeField(verbose_name=_("modified"))
-    # TODO add full_clean() on save()
+
+    def save(self, *args: Any, **kwargs: Any) -> None:
+        """Run full_clean()."""
+        # At the time of writing, this applies to _all_ Projectify models
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
     class Meta:
         """Make this model abstract."""
 
         abstract = True
         get_latest_by = "modified"
+
+
+class BaseModelUUID(BaseModel):
+    """BaseModel with an additional hidden uuid field."""
+
+    uuid = UUIDField(unique=True, default=uuid4, editable=False)
+
+    class Meta:
+        """Make this model abstract."""
+
+        abstract = True
 
 
 # SPDX-SnippetBegin

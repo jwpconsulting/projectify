@@ -1,0 +1,19 @@
+{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "dashboard_base.html" %}
+{% load projectify %}
+{% load rules %}
+{% load i18n %}
+{% block title %}
+    {% blocktrans with title=page.title %}{{ title }} - Projectify{% endblocktrans %}
+{% endblock title %}
+{% block dashboard_content %}
+    <main id="main"
+          class="max-w-4xl min-w-0 grow flex flex-col gap-4 p-4 sm:px-8">
+        <header class="flex gap-4 justify-between">
+            <h1>{{ page.title }}</h1>
+            {% go_to_action "dashboard:wiki:edit" label=_("Edit") title=_("Edit this page") ws_uuid=workspace.uuid page_title=page.title %}
+        </header>
+        <div class="prose">{{ page.content }}</div>
+    </main>
+{% endblock dashboard_content %}

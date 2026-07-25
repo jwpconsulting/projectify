@@ -1,12 +1,15 @@
 {# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "storefront_base.html" %}
+{% extends "storefront/storefront_hero.html" %}
 {% load projectify %}
 {% load i18n %}
 {% block title %}
     {% translate "Terms of service - Projectify" %}
 {% endblock title %}
-{% block storefront_content %}
+{% block hero_title %}
+    {% trans "Terms of service" %}
+{% endblock hero_title %}
+{% block hero_content %}
     <main id="main"
           class="flex flex-col items-center gap-10 bg-foreground pb-20 pt-10">
         <div class="flex w-full max-w-5xl grow flex-col gap-4 bg-foreground p-6 sm:flex-row sm:gap-8">
@@ -29,4 +32,4 @@
             </div>
         </div>
     </main>
-{% endblock storefront_content %}
+{% endblock hero_content %}

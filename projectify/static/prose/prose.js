@@ -68,65 +68,67 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 });
 
+function insertLink(trixEditor, dialog, event) {
+  if (!event.target.dataset.url) {
+    console.error("Received click event for a button with no data-url set");
+    return;
+  }
+
+  const { url, title } = event.target.dataset;
+  const [start, end] = trixEditor.getSelectedRange();
+  const textSelected = start !== end;
+  if (textSelected) {
+    // Potential sink for XSS
+    // Trix relies on DOMPurify
+    trixEditor.activateAttribute("href", url);
+  } else {
+    const start = trixEditor.getPosition();
+    trixEditor.insertString(title);
+    const end = trixEditor.getPosition();
+    trixEditor.setSelectedRange([start, end]);
+    trixEditor.activateAttribute("href", url);
+    trixEditor.setSelectedRange([end, end]);
+  }
+  dialog.close();
+}
+
+async function showWidget(trixEditor, suggestLinksUrl, dialog) {
+  const selectedRange = trixEditor.getSelectedRange();
+  const selectedText = selectedRange[0] !== selectedRange[1];
+  const searchString = selectedText
+    ? `?search=${trixEditor.getDocument().toString().slice(selectedRange[0], selectedRange[1])}`
+    : "";
+
+  await htmx.ajax("GET", `${suggestLinksUrl}${searchString}`, {
+    target: dialog,
+    swap: "innerHTML",
+  });
+
+  dialog.showModal();
+
+  const closeButton = dialog.querySelector('[name="close"]');
+  if (closeButton === null) {
+    throw new Error("Couldn't find close button");
+  }
+  // XXX find out why this breaks
+  // closeButton.addEventListener("click", dialog.close);
+  // error:
+  // Uncaught TypeError: 'close' called on an object that does not implement interface HTMLDialogElement.
+  closeButton.addEventListener("click", () => dialog.close());
+
+  // Find list of results inside dialog. The results hold url and
+  // title data- attributes
+  const results = document.getElementById("prose-link-suggestions-results");
+  if (results === null) {
+    throw new Error("Couldn't find #prose-link-suggestions-results");
+  }
+  results.addEventListener("click", insertLink.bind(null, trixEditor, dialog));
+}
+
 function initializeLinkSuggestions(editor, suggestLinksUrl, type) {
   const dialog = document.getElementById("prose-link-suggestions-dialog");
   if (dialog === null) {
     throw new Error("Couldn't find link suggestions dialog");
-  }
-
-  async function showWidget(trixEditor) {
-    const selectedRange = trixEditor.getSelectedRange();
-    const selectedText = selectedRange[0] !== selectedRange[1];
-    const searchString = selectedText
-      ? `?search=${trixEditor.getDocument().toString().slice(selectedRange[0], selectedRange[1])}`
-      : "";
-
-    await htmx.ajax("GET", `${suggestLinksUrl}${searchString}`, {
-      target: dialog,
-      swap: "innerHTML",
-    });
-
-    dialog.showModal();
-
-    const closeButton = dialog.querySelector('[name="close"]');
-    if (closeButton === null) {
-      throw new Error("Couldn't find close button");
-    }
-    closeButton.addEventListener("click", () => {
-      dialog.close();
-    });
-
-    // Find list of results inside dialog. The results hold url and
-    // title data- attributes
-    const results = document.getElementById("prose-link-suggestions-results");
-    if (results === null) {
-      throw new Error("Couldn't find #prose-link-suggestions-results");
-    }
-    results.addEventListener("click", (event) => {
-      if (!event.target.dataset.url) {
-        console.error(
-          "Received click event for a button with no data-url set",
-        );
-        return;
-      }
-
-      const { url, title } = event.target.dataset;
-      const [start, end] = trixEditor.getSelectedRange();
-      const textSelected = start !== end;
-      if (textSelected) {
-        // Potential sink for XSS
-        // Trix relies on DOMPurify
-        trixEditor.activateAttribute("href", url);
-      } else {
-        const start = trixEditor.getPosition();
-        trixEditor.insertString(title);
-        const end = trixEditor.getPosition();
-        trixEditor.setSelectedRange([start, end]);
-        trixEditor.activateAttribute("href", url);
-        trixEditor.setSelectedRange([end, end]);
-      }
-      dialog.close();
-    });
   }
 
   editor.addEventListener("trix-action-invoke", (event) => {
@@ -138,7 +140,7 @@ function initializeLinkSuggestions(editor, suggestLinksUrl, type) {
       return;
     }
     const { editor: trixEditor } = event.target;
-    showWidget(trixEditor);
+    showWidget(trixEditor, suggestLinksUrl, dialog);
   });
 }
 /*! SPDX-SnippetBegin
@@ -199,9 +201,9 @@ function configureToolbar(event) {
       uploadFile(uploadUrl, event.attachment),
     );
   } else {
-    editor.addEventListener("trix-file-accept", function (event) {
-      event.preventDefault();
-    });
+    editor.addEventListener("trix-file-accept", (event) =>
+      event.preventDefault(),
+    );
     const fileToolsGroup = toolbarElement.querySelector(
       ".trix-button-group--file-tools",
     );
@@ -219,23 +221,26 @@ function configureToolbar(event) {
     if (buttonGroup === null) {
       throw new Error("Couldn't find Trix button group");
     }
-    const suggestLinksUrl = editor.dataset.suggestLinksUrl;
-    const suggestProjectsUrl = editor.dataset.suggestProjectsUrl;
-    const suggestProjectsButton = createActionButton(
-      "Project",
-      "Suggest projects",
-      "x-suggest-project",
+    const { suggestLinksUrl, suggestProjectsUrl } = editor.dataset;
+    buttonGroup.appendChild(
+      createActionButton("Project", "Suggest projects", "x-suggest-project"),
     );
-    buttonGroup.appendChild(suggestProjectsButton);
     initializeLinkSuggestions(editor, suggestProjectsUrl, "project");
-
-    const suggestTasksButton = createActionButton(
-      "Task",
-      "Suggest tasks",
-      "x-suggest-task",
+    buttonGroup.appendChild(
+      createActionButton("Task", "Suggest tasks", "x-suggest-task"),
     );
-    buttonGroup.appendChild(suggestTasksButton);
     initializeLinkSuggestions(editor, suggestLinksUrl, "task");
+    const { suggestWikiUrl } = editor.dataset;
+    if (suggestWikiUrl !== undefined) {
+      buttonGroup.appendChild(
+        createActionButton(
+          "Wiki Page",
+          "Suggest Wiki pages",
+          "x-suggest-wiki",
+        ),
+      );
+      initializeLinkSuggestions(editor, suggestWikiUrl, "wiki");
+    }
   }
   editor.classList.add("initialized");
 }

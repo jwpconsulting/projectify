@@ -1,0 +1,31 @@
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "dashboard_base.html" %}
+{% load projectify %}
+{% load i18n %}
+{% block title %}
+    {% blocktrans with title=workspace.title %}Recent changes - {{ title }} - Projectify{% endblocktrans %}
+{% endblock title %}
+{% block dashboard_content %}
+    <main id="main"
+          class="max-w-4xl min-w-0 grow flex flex-col gap-4 p-4 sm:px-8">
+        <header class="flex gap-4 justify-between">
+            <h1 class="font-bold text-2xl">{% translate "Recent changes" %}</h1>
+            {% go_to_action "dashboard:wiki:index" label=_("Wiki home") ws_uuid=workspace.uuid %}
+        </header>
+        {% if pages %}
+            <ul class="flex flex-col gap-2 list-disc list-inside">
+                {% for page in pages %}
+                    <li>
+                        {% anchor href="dashboard:wiki:view" label=page.title ws_uuid=workspace.uuid page_title=page.title as link %}
+                        {% blocktranslate with modified=page.modified %}
+                            {{ link }} - Modified {{ modified }}
+                        {% endblocktranslate %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>{% translate "No wiki pages with recent changes." %}</p>
+        {% endif %}
+    </main>
+{% endblock dashboard_content %}

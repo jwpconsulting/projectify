@@ -4,23 +4,21 @@ SPDX-FileCopyrightText: 2024 JWP Consulting GK
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-# JWP Consulting GK Vulnerability Disclosure Policy
-
-## Introduction
+# Introduction
 
 JWP Consulting GK welcomes feedback from security researchers and the general public to help improve our security. If you believe you have discovered a vulnerability, privacy issue, exposed data, or other security issues in any of our assets, we want to hear from you. This policy outlines steps for reporting vulnerabilities to us, what we expect, what you can expect from us.
 
-## Systems in Scope
+# Systems in Scope
 
 This policy applies to any digital assets related to Projectify that are owned, operated, and maintained by JWP Consulting GK.
 
-## Out of Scope
+# Out of Scope
 
 - Assets or other equipment not owned by parties participating in this policy.
 
 Vulnerabilities discovered or suspected in out-of-scope systems should be reported to the appropriate vendor or applicable authority.
 
-## Our Commitments
+# Our Commitments
 
 When working with us, according to this policy, you can expect us to:
 
@@ -29,7 +27,7 @@ When working with us, according to this policy, you can expect us to:
 - Work to remediate discovered vulnerabilities in a timely manner, within our operational constraints; and
 - Extend Safe Harbor for your vulnerability research that is related to this policy.
 
-## Our Expectations
+# Our Expectations
 
 In participating in our vulnerability disclosure program in good faith, we ask that you:
 
@@ -43,11 +41,11 @@ In participating in our vulnerability disclosure program in good faith, we ask t
 - You should only interact with test accounts you own or with explicit permission from the account holder; and
 - Do not engage in extortion.
 
-## Official Channels
+# Official Channels
 
 Please report security issues via [hello@projectifyapp.com](mailto:hello@projectifyapp.com), providing all relevant information. The more details you provide, the easier it will be for us to triage and fix the issue.
 
-## Safe Harbor
+# Safe Harbor
 
 When conducting vulnerability research, according to this policy, we consider this research conducted under this policy to be:
 

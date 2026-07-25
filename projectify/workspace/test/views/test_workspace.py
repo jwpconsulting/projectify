@@ -148,53 +148,49 @@ class TestWorspaceSearchView:
 class TestWorkspacePictureView:
     """Test workspace_picture_view function."""
 
+    @pytest.fixture
+    def resource_url(
+        self, team_member: TeamMember, uploaded_file: File
+    ) -> str:
+        """Return URL to this view."""
+        team_member.workspace.picture = cast(FileDescriptor, uploaded_file)
+        team_member.workspace.save()
+        return reverse(
+            "dashboard:workspaces:picture", args=(team_member.workspace.uuid,)
+        )
+
     def test_authorized_access(
         self,
         user_client: Client,
-        team_member: TeamMember,
-        uploaded_file: File,
         django_assert_num_queries: DjangoAssertNumQueries,
+        resource_url: str,
     ) -> None:
         """Test that authorized team members can access workspace picture."""
-        workspace = team_member.workspace
-        workspace.picture = cast(FileDescriptor, uploaded_file)
-        workspace.save()
-        url = reverse("dashboard:workspaces:picture", args=(workspace.uuid,))
         with django_assert_num_queries(3):
-            assert user_client.get(url).status_code == 200
+            assert user_client.get(resource_url).status_code == 200
 
     def test_unauthorized_access(
-        self,
-        user_client: Client,
-        unrelated_workspace: Workspace,
-        uploaded_file: File,
+        self, unrelated_user_client: Client, resource_url: str
     ) -> None:
         """Test that non-team members cannot access workspace picture."""
-        unrelated_workspace.picture = cast(FileDescriptor, uploaded_file)
-        unrelated_workspace.save()
-        url = reverse(
-            "dashboard:workspaces:picture", args=(unrelated_workspace.uuid,)
-        )
-        assert user_client.get(url).status_code == 404
+        assert unrelated_user_client.get(resource_url).status_code == 404
 
 
 class TestWorkspaceSettings:
     """Test django workspace settings view."""
 
     @pytest.fixture
-    def resource_url(self, workspace: Workspace) -> str:
+    def resource_url(self, team_member: TeamMember) -> str:
         """Return URL to this view."""
-        return reverse("dashboard:workspaces:settings", args=(workspace.uuid,))
+        return reverse(
+            "dashboard:workspaces:settings", args=(team_member.workspace.uuid,)
+        )
 
     def test_get_form(
-        self,
-        user: User,
-        user_client: Client,
-        resource_url: str,
-        workspace: Workspace,
-        team_member: TeamMember,
+        self, user_client: Client, resource_url: str, team_member: TeamMember
     ) -> None:
         """Test GETting the page."""
+        workspace = team_member.workspace
         response = user_client.get(resource_url)
         assert response.status_code == 200
         assert workspace.title.encode() in response.content
@@ -204,11 +200,11 @@ class TestWorkspaceSettings:
         user_client: Client,
         resource_url: str,
         uploaded_file: File,
-        workspace: Workspace,
         team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating both title and workspace picture."""
+        workspace = team_member.workspace
         workspace.picture = cast(FileDescriptor, None)
         workspace.save()
         assert not workspace.picture
@@ -219,7 +215,7 @@ class TestWorkspaceSettings:
         # Query count went up   from 24 -> 25
         # Query count went down from 25 -> 24
         # Query count went down from 24 -> 22
-        with django_assert_num_queries(22):
+        with django_assert_num_queries(26):
             response = user_client.post(
                 resource_url,
                 {
@@ -351,8 +347,7 @@ class TestWorkspaceSettingsTeamMembers:
         data = {"action": "team_member_remove", "team_member": uid}
         # Gone down from 28 -> 25
         # Gone down from 25 -> 23
-        # Gone down from 23 -> 22
-        with django_assert_num_queries(22):
+        with django_assert_num_queries(23):
             response = user_client.post(resource_url, data)
         assert response.status_code == 200
         assert workspace.teammember_set.count() == initial - 1
@@ -438,16 +433,16 @@ class TestWorkspaceSettingsTeamMemberUpdate:
 
     @pytest.fixture
     def resource_url(
-        self, workspace: Workspace, other_team_member: TeamMember
+        self, team_member: TeamMember, other_team_member: TeamMember
     ) -> str:
         """Return URL to this view."""
         return reverse(
             "dashboard:workspaces:team-member-update",
-            args=(workspace.uuid, other_team_member.uuid),
+            args=(team_member.workspace.uuid, other_team_member.uuid),
         )
 
     def test_get_update_form(
-        self, user_client: Client, resource_url: str, team_member: TeamMember
+        self, user_client: Client, resource_url: str
     ) -> None:
         """Test getting the team member update form."""
         response = user_client.get(resource_url)
@@ -457,7 +452,6 @@ class TestWorkspaceSettingsTeamMemberUpdate:
         self,
         user_client: Client,
         resource_url: str,
-        team_member: TeamMember,
         other_team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
@@ -466,7 +460,7 @@ class TestWorkspaceSettingsTeamMemberUpdate:
         other_team_member.job_title = "Developer"
         other_team_member.save()
 
-        with django_assert_num_queries(13):
+        with django_assert_num_queries(17):
             response = user_client.post(
                 resource_url,
                 {"role": TeamMemberRoles.MAINTAINER, "job_title": "Foo"},
@@ -482,21 +476,21 @@ class TestWorkspaceSettingsQuota:
     """Test workspace quota settings view."""
 
     @pytest.fixture
-    def resource_url(self, workspace: Workspace) -> str:
+    def resource_url(self, team_member: TeamMember) -> str:
         """Return URL to this view."""
-        return reverse("dashboard:workspaces:quota", args=(workspace.uuid,))
+        return reverse(
+            "dashboard:workspaces:quota", args=(team_member.workspace.uuid,)
+        )
 
     def test_get_quota_page(
         self,
         user_client: Client,
         resource_url: str,
-        team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test getting the quota page."""
         # Gone up from 12 -> 13 due to permission checks in sidemenu
-        # Gone down from 13 -> 12
-        with django_assert_num_queries(12):
+        with django_assert_num_queries(13):
             response = user_client.get(resource_url)
             assert response.status_code == 200
 
@@ -517,8 +511,7 @@ class TestWorkspaceSettingsQuota:
         customer_cancel_subscription(customer=team_member.workspace.customer)
         # Gone up from 16 -> 17 due to permission checks in sidemenu
         # Gone down from 17 -> 15
-        # Gone down from 15 -> 13
-        with django_assert_num_queries(13):
+        with django_assert_num_queries(15):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         # These quotas should be listed
@@ -567,7 +560,7 @@ class TestWorkspaceSettingsBilling:
     ) -> None:
         """Assert that an unpaid customer can't edit their billing settings."""
         data = {"action": "checkout", "seats": 5}
-        with django_assert_num_queries(16):
+        with django_assert_num_queries(18):
             response = user_client.post(resource_url, data=data)
             assert response.status_code == 302
         assert response.headers["Location"] == "https://www.example.com"
@@ -614,7 +607,7 @@ class TestWorkspaceSettingsBilling:
     ) -> None:
         """Test we can get a redirect when posting valid checkout data."""
         data = {"action": "checkout", "seats": "99"}
-        with django_assert_num_queries(16):
+        with django_assert_num_queries(18):
             response = user_client.post(resource_url, data=data)
             assert response.status_code == 302, response.content.decode()
         assert response.headers["Location"] == "https://www.example.com"
@@ -669,8 +662,7 @@ class TestWorkspaceSettingsBilling:
         """Test GET request with unpaid customer shows billing form."""
         # Gone up from 16 -> 17 due to permission checks in sidemenu
         # Gone down from 17 -> 15
-        # Gone down from 15 -> 13
-        with django_assert_num_queries(13):
+        with django_assert_num_queries(15):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert b"Use a coupon code" in response.content
@@ -685,8 +677,7 @@ class TestWorkspaceSettingsBilling:
     ) -> None:
         """Test GET request with paying customer shows billing info."""
         # Gone up from 12 -> 13 due to permission checks in sidemenu
-        # Gone down from 13 -> 12
-        with django_assert_num_queries(12):
+        with django_assert_num_queries(13):
             response = user_client.get(resource_url)
             assert response.status_code == 200
         assert b"You have a paid workspace" in response.content
@@ -706,19 +697,17 @@ class TestWorkspaceSettingsBillingCoupon:
         resource_url: str,
         team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
-        workspace: Workspace,
         unpaid_customer: Customer,
     ) -> None:
         """Test that nothing bad happens with an invalid coupon code."""
+        workspace = team_member.workspace
         active = customer_check_active_for_workspace(workspace=workspace)
         assert active == "trial"
         data = {"action": "redeem_coupon", "code": "foo"}
         # Gone up from 21 -> 22 due to permission checks in sidemenu
         # Gone up   from 22 -> 23
         # Gone down from 23 -> 19
-        # Gone down from 19 -> 18
-        # Gone down from 18 -> 17
-        with django_assert_num_queries(17):
+        with django_assert_num_queries(19):
             res = user_client.post(resource_url, data=data)
             assert res.status_code == 400
         assert "No coupon is available for this code" in res.content.decode()
@@ -730,18 +719,17 @@ class TestWorkspaceSettingsBillingCoupon:
         self,
         user_client: Client,
         resource_url: str,
-        team_member: TeamMember,
         coupon: Coupon,
         django_assert_num_queries: DjangoAssertNumQueries,
-        workspace: Workspace,
         unpaid_customer: Customer,
     ) -> None:
         """Test that workspace subscription is activated correctly."""
+        workspace = unpaid_customer.workspace
         assert unpaid_customer.seats != 20
         active = customer_check_active_for_workspace(workspace=workspace)
         assert active == "trial"
         data = {"action": "redeem_coupon", "code": coupon.code}
-        with django_assert_num_queries(17):
+        with django_assert_num_queries(24):
             response = user_client.post(resource_url, data=data)
             assert response.status_code == 302
 

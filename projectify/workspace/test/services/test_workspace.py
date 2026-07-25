@@ -5,7 +5,6 @@
 
 from typing import cast
 
-from django import db
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db.models.fields.files import FileDescriptor
 from django.forms import ValidationError
@@ -119,9 +118,7 @@ def test_add_user(workspace: Workspace, other_user: User) -> None:
         workspace=workspace, user=other_user, role=TeamMemberRoles.OBSERVER
     )
     assert workspace.users.count() == count + 1
-    # XXX TODO should be validationerror, not integrityerror
-    # We might get a bad 500 here, could be 400 instead
-    with pytest.raises(db.IntegrityError):
+    with pytest.raises(ValidationError):
         workspace_add_user(
             workspace=workspace, user=other_user, role=TeamMemberRoles.OBSERVER
         )

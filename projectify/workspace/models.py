@@ -4,7 +4,7 @@
 """Workspace models."""
 
 import logging
-import uuid
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, Optional
 
 from django.conf import settings
@@ -16,6 +16,7 @@ from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import (
     BaseModel,
+    BaseModelUUID,
     RichTextField,
     TitleDescriptionModel,
 )
@@ -35,7 +36,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class Workspace(TitleDescriptionModel, BaseModel):
+class Workspace(TitleDescriptionModel, BaseModelUUID):
     """Workspace."""
 
     users = models.ManyToManyField(
@@ -43,7 +44,6 @@ class Workspace(TitleDescriptionModel, BaseModel):
         through="TeamMember",
         through_fields=("workspace", "user"),
     )  # type: models.ManyToManyField[User, "TeamMember"]
-    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     picture = models.ImageField(
         upload_to="workspace_picture/", blank=True, null=True
     )
@@ -66,11 +66,13 @@ class Workspace(TitleDescriptionModel, BaseModel):
         customer: RelatedField[None, "Customer"]
 
         # Related sets
+        wikipage_set: RelatedManager["WikiPage"]
         task_set: RelatedManager["Task"]
         project_set: RelatedManager["Project"]
         teammember_set: RelatedManager["TeamMember"]
+        attachment_set: RelatedManager["Attachment"]
         teammemberinvite_set: RelatedManager["TeamMemberInvite"]
-        active_invites: Optional[RelatedManager["TeamMemberInvite"]]
+        active_invites: Optional[list["TeamMemberInvite"]]
 
     def __str__(self) -> str:
         """Return title."""
@@ -103,7 +105,35 @@ class Workspace(TitleDescriptionModel, BaseModel):
         )
 
 
-class Project(TitleDescriptionModel, BaseModel):
+class WikiPage(BaseModelUUID):
+    workspace = models.ForeignKey["Workspace"](
+        Workspace, on_delete=models.PROTECT
+    )
+    title = models.CharField(
+        _("title"),
+        help_text=_("Wiki page title"),
+        max_length=255,
+        db_index=True,
+    )
+    content = RichTextField(
+        verbose_name=_("content"),
+        blank=True,
+        null=True,
+        policy=settings.HTML_USER_POLICY,
+    )
+
+    def get_absolute_url(self) -> str:
+        """Return path to wiki page."""
+        return reverse(
+            "dashboard:wiki:view", args=(self.workspace.uuid, self.title)
+        )
+
+    class Meta:
+        # Can only have one page with the same title per workspace
+        unique_together = ("title", "workspace")
+
+
+class Project(TitleDescriptionModel, BaseModelUUID):
     """Project."""
 
     workspace = models.ForeignKey["Workspace"](
@@ -115,7 +145,6 @@ class Project(TitleDescriptionModel, BaseModel):
         null=True,
         policy=settings.HTML_USER_POLICY,
     )
-    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     archived = models.DateTimeField(
         null=True,
         blank=True,
@@ -145,7 +174,7 @@ class Project(TitleDescriptionModel, BaseModel):
         ordering = ("-created",)
 
 
-class Task(TitleDescriptionModel, BaseModel):
+class Task(TitleDescriptionModel, BaseModelUUID):
     """Task, belongs to project."""
 
     # Override description and make it a rich text field
@@ -159,7 +188,6 @@ class Task(TitleDescriptionModel, BaseModel):
         "workspace.Workspace", on_delete=models.CASCADE
     )
     project = models.ForeignKey[Project](Project, on_delete=models.CASCADE)
-    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     assignee = models.ForeignKey["TeamMember"](
         "TeamMember",
         null=True,
@@ -231,7 +259,7 @@ class TeamMemberInvite(BaseModel):
         ordering = ("created",)
 
 
-class TeamMember(BaseModel):
+class TeamMember(BaseModelUUID):
     """Workspace to user mapping."""
 
     workspace = models.ForeignKey["Workspace"](
@@ -249,7 +277,6 @@ class TeamMember(BaseModel):
         default=TeamMemberRoles.OBSERVER,
     )
     job_title = models.CharField(max_length=255, null=True, blank=True)
-    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     last_visited_project = models.ForeignKey(
         Project,
         on_delete=models.SET_NULL,
@@ -284,9 +311,55 @@ class TeamMember(BaseModel):
         ordering = ("created",)
 
 
+class Attachment(BaseModel):
+    """Workspace file attachment."""
+
+    name = models.CharField(
+        max_length=512,
+        unique=True,
+        db_index=True,
+        help_text=_("Attachment file name"),
+    )
+    size = models.PositiveIntegerField(help_text=_("Attachment size in bytes"))
+    uploader = models.ForeignKey["TeamMember"](
+        TeamMember, on_delete=models.SET_NULL, editable=False, null=True
+    )
+    workspace = models.ForeignKey[Workspace](
+        Workspace, on_delete=models.CASCADE
+    )
+    # TODO store a cryptographic digest here to help users deduplicate
+    # file uploads and save on storage
+
+    class Meta:
+        """Meta."""
+
+    def get_absolute_url(self) -> str:
+        """
+        Return URL for direct viewing.
+
+        Direct means that Projectify returns the file as-is and not as
+        part of an attachment edit form or similar.
+        """
+        return reverse(
+            "dashboard:attachments:view", args=(self.workspace.uuid, self.name)
+        )
+
+    @property
+    def storage_path(self) -> Path:
+        """Return full storage path for attachment."""
+        # helloworld.png ->
+        # workspace/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX/attachments/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX.hellowor.png/
+        return (
+            Path("workspace")
+            / str(self.workspace.uuid)
+            / "attachments"
+            / self.name
+        )
+
+
+# TODO remove
 __all__ = (
     "Project",
-    # TODO remove
     "Task",
     "TeamMember",
     "TeamMemberInvite",

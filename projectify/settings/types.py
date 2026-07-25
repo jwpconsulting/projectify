@@ -51,6 +51,8 @@ SocialAccountProvider = TypedDict(
 )
 
 
+# TODO
+# @dataclass(freeze=True, kw_only=True)
 @dataclass
 class StripeConfig:
     """Hold configuration needed to use Stripe."""
@@ -58,6 +60,20 @@ class StripeConfig:
     # XXX it doesn't look like Projectify is using the publishable key
     # TODO consider removing the STRIPE_PUBLISHABLE_KEY
     STRIPE_PUBLISHABLE_KEY: str
+    # TODO lower case the following three fields
+    # stripe_secret_key: str
     STRIPE_SECRET_KEY: str
+    # stripe_endpoint_secret: str
     STRIPE_ENDPOINT_SECRET: str
+    # stripe_price_object: str
     STRIPE_PRICE_OBJECT: str
+
+
+@dataclass(frozen=True, kw_only=True)
+class FeatureFlags:
+    """Projectify feature flags."""
+
+    """Set to True to Enable workspace attachments."""
+    workspace_attachments: bool = False
+    """Set to True to Enable workspace Wikis."""
+    workspace_wikis: bool = False

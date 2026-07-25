@@ -12,24 +12,22 @@ from django.core.exceptions import BadRequest
 from django.http import HttpResponse
 from django.http.response import Http404
 from django.shortcuts import redirect, render
-from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_http_methods, require_POST
 
-from projectify.lib.forms import RichTextEditor
 from projectify.lib.htmx import (
     HttpResponseClientRedirect,
     HttpResponseClientRefresh,
 )
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
+from projectify.workspace.forms import WorkspaceRichTextEditor
 from projectify.workspace.selectors.project import (
     ProjectDetailQuerySet,
     project_find_by_project_uuid,
 )
 from projectify.workspace.utils import extract_first_paragraph_text
 
-from ..const import TASK_EDITOR_MIN_HEIGHT_CLASS
 from ..models import Task, Workspace
 from ..selectors.task import TaskDetailQuerySet, task_find_by_task_uuid
 from ..selectors.team_member import team_member_find_for_workspace
@@ -80,17 +78,8 @@ class TaskForm(forms.Form):
         label=_("Due date"),
         widget=forms.DateTimeInput(attrs={"type": "date"}),
     )
-    description = forms.CharField(
-        label=_("Description"),
-        widget=RichTextEditor(
-            heading_blocks=False,
-            attrs={
-                "expand": True,
-                "placeholder": _("Enter a description for your task"),
-                "class": TASK_EDITOR_MIN_HEIGHT_CLASS,
-            },
-        ),
-    )
+
+    description = forms.CharField(label=_("Description"))
 
     def clean_description(self) -> str:
         """Make sure that the description has at least one child."""
@@ -127,18 +116,7 @@ class TaskForm(forms.Form):
         )
         self.order_fields(["description", "assignee", "due_date"])
 
-        self.fields["description"].widget.attrs["data-suggest-links-url"] = (
-            reverse(
-                "dashboard:workspaces:suggest-links-task",
-                args=(workspace.uuid,),
-            )
-        )
-        self.fields["description"].widget.attrs[
-            "data-suggest-projects-url"
-        ] = reverse(
-            "dashboard:workspaces:suggest-links-project",
-            args=(workspace.uuid,),
-        )
+        self.fields["description"].widget = WorkspaceRichTextEditor(workspace)
 
         if focus_field is None:
             pass
@@ -287,7 +265,7 @@ def task_update_view(
     return render(request, template, context, status=status)
 
 
-# TODO require POST
+@require_POST
 def task_delete_view(
     request: AuthenticatedHttpRequest, task_uuid: UUID
 ) -> HttpResponse:

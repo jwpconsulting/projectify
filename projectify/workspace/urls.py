@@ -2,7 +2,6 @@
 #
 # SPDX-FileCopyrightText: 2024 JWP Consulting GK
 """Workspace URLs for dashboard."""
-# TODO rename to projectify.workspace.urls
 
 import logging
 
@@ -10,6 +9,10 @@ from django.urls import include, path
 
 from projectify.lib.settings import get_settings
 from projectify.lib.types import UrlPatterns
+from projectify.workspace.views.attachment import (
+    attachment_create_view,
+    attachment_view,
+)
 from projectify.workspace.views.avatar_marble import avatar_marble_view
 from projectify.workspace.views.dashboard import redirect_to_dashboard
 from projectify.workspace.views.project import (
@@ -27,6 +30,12 @@ from projectify.workspace.views.task import (
     task_update_view,
 )
 from projectify.workspace.views.team_member import team_member_picture
+from projectify.workspace.views.wiki import (
+    wiki_index,
+    wiki_page_edit,
+    wiki_page_view,
+    wiki_recent_changes,
+)
 from projectify.workspace.views.workspace import (
     workspace_picture_view,
     workspace_search_view,
@@ -42,6 +51,9 @@ from projectify.workspace.views.workspace import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+settings = get_settings()
 
 # TODO rename to workspace
 # app_name = "workspace"
@@ -99,6 +111,16 @@ workspace_patterns: UrlPatterns = (
         name="suggest-links-project",
     ),
 )
+if settings.FEATURE_FLAGS.workspace_wikis:
+    workspace_patterns = (
+        *workspace_patterns,
+        path(
+            "<uuid:workspace_uuid>/suggest-links/wiki",
+            workspace_suggest_links,
+            {"link_type": "wiki"},
+            name="suggest-links-wiki",
+        ),
+    )
 if get_settings().STRIPE_CONFIG is None:
     logger.info(
         "Stripe configuration not present. "
@@ -145,7 +167,27 @@ team_member_patterns = (
         "<uuid:team_member_uuid>/picture", team_member_picture, name="picture"
     ),
 )
-urlpatterns = (
+attachment_patterns = (
+    path("<uuid:ws_uuid>/attachments", attachment_create_view, name="create"),
+    path(
+        "<uuid:ws_uuid>/attachments/<str:name>", attachment_view, name="view"
+    ),
+)
+wiki_patterns = (
+    path("<uuid:ws_uuid>/wiki", wiki_index, name="index"),
+    path(
+        "<uuid:ws_uuid>/wiki-recent-changes",
+        wiki_recent_changes,
+        name="recent-changes",
+    ),
+    path("<uuid:ws_uuid>/wiki/<str:page_title>", wiki_page_view, name="view"),
+    path(
+        "<uuid:ws_uuid>/wiki/<str:page_title>/edit",
+        wiki_page_edit,
+        name="edit",
+    ),
+)
+urlpatterns: UrlPatterns = (
     path("", redirect_to_dashboard, name="dashboard"),
     # Avatar
     path(
@@ -153,12 +195,18 @@ urlpatterns = (
         avatar_marble_view,
         name="avatar-marble",
     ),
-    # Workspace
     path("workspace/", include((workspace_patterns, "workspaces"))),
-    # Project
     path("project/", include((project_patterns, "projects"))),
-    # Task
     path("task/", include((task_patterns, "tasks"))),
-    # Team member
     path("team-member/", include((team_member_patterns, "team-members"))),
 )
+if settings.FEATURE_FLAGS.workspace_attachments:
+    urlpatterns = (
+        *urlpatterns,
+        path("workspace/", include((attachment_patterns, "attachments"))),
+    )
+if settings.FEATURE_FLAGS.workspace_wikis:
+    urlpatterns = (
+        *urlpatterns,
+        path("workspace/", include((wiki_patterns, "wiki"))),
+    )
