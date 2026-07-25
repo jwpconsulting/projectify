@@ -135,10 +135,12 @@ def session_middleware() -> SessionMiddleware:
 
 @pytest.fixture
 def session_request(
-    session_middleware: SessionMiddleware, rf: RequestFactory
+    session_middleware: SessionMiddleware,
+    rf: RequestFactory,
+    user_event_headers: dict[str, str],
 ) -> HttpRequest:
     """Return a request containing a session needed to test auth."""
-    request = rf.get("/")
+    request = rf.get("/", headers=user_event_headers)
     session_middleware.process_request(request)
     request.session.save()
     request.user = AnonymousUser()

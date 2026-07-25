@@ -162,25 +162,41 @@ def redeemed_user_invite(faker: Faker) -> user_models.UserInvite:
 
 
 @pytest.fixture
-def user_client(user: User) -> Client:
+def user_event_headers() -> dict[str, str]:
+    """Create HTTP request headers that work with user event logs."""
+    return {"REMOTE_ADDR": "127.0.0.1", "USER-AGENT": "projectify-test/1"}
+
+
+@pytest.fixture
+def client(user_event_headers: dict[str, str]) -> Client:
+    """Return anonymous user client."""
+    return Client(headers=user_event_headers)
+
+
+@pytest.fixture
+def user_client(user: User, user_event_headers: dict[str, str]) -> Client:
     """Return logged in client."""
-    client = Client()
+    client = Client(headers=user_event_headers)
     client.force_login(user)
     return client
 
 
 @pytest.fixture
-def unrelated_user_client(unrelated_user: User) -> Client:
+def unrelated_user_client(
+    unrelated_user: User, user_event_headers: dict[str, str]
+) -> Client:
     """Client for unrelated user."""
-    client = Client()
+    client = Client(headers=user_event_headers)
     client.force_login(unrelated_user)
     return client
 
 
 @pytest.fixture
-def superuser_client(superuser: User) -> Client:
+def superuser_client(
+    superuser: User, user_event_headers: dict[str, str]
+) -> Client:
     """Return logged in super user client."""
-    client = Client()
+    client = Client(headers=user_event_headers)
     client.force_login(superuser)
     return client
 

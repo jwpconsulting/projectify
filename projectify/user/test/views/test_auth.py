@@ -48,10 +48,9 @@ class TestLogOutDjango:
         assert "user" in response.context, response.context
         assert response.context["user"].is_authenticated, response.content
         # Now log out
-        # went up from 6 -> 7 because we show blog posts on the landing page
-        with django_assert_num_queries(7):
+        with django_assert_num_queries(8):
             response = client.post(resource_url, follow=True)
-        assert response.status_code == 200, response.content
+            assert response.status_code == 200, response.content
         assert response.redirect_chain == [
             (reverse("storefront:landing"), 302)
         ]
@@ -308,7 +307,7 @@ class TestLogInDjango:
     ) -> None:
         """Test logging in a user."""
         data = {"email": user.email, "password": password}
-        with django_assert_num_queries(15):
+        with django_assert_num_queries(16):
             response = client.post(resource_url, data)
         assert response.status_code == 302, response.content
         assert "sessionid" in response.cookies
