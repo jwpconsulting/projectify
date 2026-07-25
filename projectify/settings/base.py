@@ -220,7 +220,7 @@ class Base(Configuration):
 
     # Database
     # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-    DATABASES: dict[str, dj_database_url.DBConfig]
+    DATABASES: dict[str, dj_database_url.DBConfig] = {}
     CONN_MAX_AGE = 0
 
     # Django authentication settings
@@ -554,9 +554,16 @@ class Base(Configuration):
     @classmethod
     def setup(cls) -> None:
         """Load database config, after environment is correctly loaded."""
-        cls.DATABASES = {
-            "default": dj_database_url.config(conn_max_age=cls.CONN_MAX_AGE)
-        }
+        # Configure database only if someone else hasn't already configured it
+        match cls.DATABASES:
+            case {}:
+                cls.DATABASES = {
+                    "default": dj_database_url.config(
+                        conn_max_age=cls.CONN_MAX_AGE
+                    )
+                }
+            case _:
+                pass
         if cls.MEDIA_ROOT is not None:
             cls.SENDFILE_ROOT = cls.MEDIA_ROOT
         else:
