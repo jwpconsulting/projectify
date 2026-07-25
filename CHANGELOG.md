@@ -67,6 +67,8 @@ Here's what this release improves for you:
 - Remove `Section` model
 - Remove WorkspaceUser unused `minimized_project_list` and
    `minimized_team_member_filter` properties.
+- Fix duplicate `dj_database_url.config()` call after already calling it in
+  the local development settings.
 
 ### Security
 
