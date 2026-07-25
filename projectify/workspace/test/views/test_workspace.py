@@ -182,7 +182,9 @@ class TestWorkspaceSettings:
     @pytest.fixture
     def resource_url(self, team_member: TeamMember) -> str:
         """Return URL to this view."""
-        return reverse("dashboard:workspaces:settings", args=(team_member.workspace.uuid,))
+        return reverse(
+            "dashboard:workspaces:settings", args=(team_member.workspace.uuid,)
+        )
 
     def test_get_form(
         self, user_client: Client, resource_url: str, team_member: TeamMember
