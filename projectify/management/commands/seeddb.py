@@ -54,7 +54,13 @@ from projectify.user.services.internal import (
     user_create_superuser,
 )
 from projectify.workspace.const import TeamMemberRoles
-from projectify.workspace.models import Project, Task, TeamMember, Workspace
+from projectify.workspace.models import (
+    Project,
+    Task,
+    TeamMember,
+    WikiPage,
+    Workspace,
+)
 
 
 @dataclass
@@ -94,6 +100,7 @@ class Command(BaseCommand):
     n_tasks: int
     n_add_users: int
     n_posts: int
+    n_wiki_pages: int
 
     seed_data: SeedData
 
@@ -280,6 +287,23 @@ class Command(BaseCommand):
         customers = Customer.objects.bulk_create(customer_descs)
         self.stdout.write(f"Created customers for {len(customers)} workspaces")
 
+    def create_wiki_pages(self, workspaces: list[Workspace]) -> None:
+        """Create wiki pages for each workspace."""
+        wiki_page_descs = [
+            WikiPage(
+                workspace=workspace,
+                title=self.fake.unique.catch_phrase(),
+                content="".join(
+                    f"<p>{self.fake.paragraph()}</p>"
+                    for _ in range(randint(2, 6))
+                ),
+            )
+            for workspace in workspaces
+            for _ in range(self.n_wiki_pages)
+        ]
+        wiki_pages = WikiPage.objects.bulk_create(wiki_page_descs)
+        self.stdout.write(f"Created {len(wiki_pages)} wiki pages")
+
     def create_blog_posts(self) -> None:
         """Create blog posts."""
         existing_posts = Post.objects.count()
@@ -356,6 +380,12 @@ class Command(BaseCommand):
             default=40,
             help="Ensure N blog posts are present",
         )
+        parser.add_argument(
+            "--n-wiki-pages",
+            type=int,
+            default=5,
+            help="Ensure N wiki pages are added to each new workspace",
+        )
 
     def handle(self, *args: object, **options: Any) -> None:
         """Handle."""
@@ -371,6 +401,7 @@ class Command(BaseCommand):
         self.n_tasks = options["n_tasks"]
         self.n_add_users = options["n_add_users"]
         self.n_posts = options["n_posts"]
+        self.n_wiki_pages = options["n_wiki_pages"]
         if self.n_add_users > self.n_users:
             self.stdout.write(
                 f"You are trying to add more users to each workspace "
@@ -391,4 +422,5 @@ class Command(BaseCommand):
             self.create_corporate_accounts(
                 seats=self.n_users, workspaces=workspaces
             )
+            self.create_wiki_pages(workspaces)
             self.create_blog_posts()
