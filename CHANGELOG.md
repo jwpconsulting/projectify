@@ -22,6 +22,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ### Security
 
+- Update [PostCSS](https://nvd.nist.gov/vuln/detail/CVE-2026-42862) -> 8.5.23
 - Update Django -> 6.0.7
 - Update Pillow -> 12.3.0
 - Update JustHTML -> 1.23.0
