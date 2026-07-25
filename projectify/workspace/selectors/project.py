@@ -3,18 +3,10 @@
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 """Project model selectors."""
 
-from typing import Any, Optional, Union
+from typing import Any, Optional
 from uuid import UUID
 
-from django.db.models import (
-    Count,
-    Exists,
-    OuterRef,
-    Prefetch,
-    Q,
-    QuerySet,
-    Value,
-)
+from django.db.models import Count, Prefetch, Q, QuerySet
 
 from projectify.user.models import User
 
@@ -22,51 +14,14 @@ from ..models import Project, Task, TeamMember
 
 
 def project_detail_query_set(
-    *,
-    filter_by_team_members: Optional[QuerySet[TeamMember]] = None,
-    # TODO rename to filter_by_unassigned
-    unassigned_tasks: bool = False,
-    task_search_query: Optional[str] = None,
-    who: Optional[User] = None,
+    *, who: Optional[User] = None
 ) -> QuerySet[Project]:
     """Create a project detail query set."""
     project_not_archived = Q(task__project__archived__isnull=True)
     team_member_qs = TeamMember.objects.select_related("user").annotate(
         task_count=Count("task", filter=project_not_archived)
     )
-    task_q = Q()
-
-    # Annotate team members in side nav with whether they're filtered or not
-    assignee_contained = Q(assignee__in=filter_by_team_members)
-    assignee_empty = Q(assignee__isnull=True)
-    team_member_is_filtered: Union[Value, Exists] = Value(False)
-    match filter_by_team_members, unassigned_tasks:
-        case None, False:
-            pass
-        case None, True:
-            task_q = task_q & assignee_empty
-        case QuerySet(), False:
-            task_q = task_q & assignee_contained
-            team_member_is_filtered = Exists(
-                filter_by_team_members.filter(pk=OuterRef("pk"))
-            )
-        case QuerySet(), True:
-            task_q = task_q & (assignee_contained | assignee_empty)
-            team_member_is_filtered = Exists(
-                filter_by_team_members.filter(pk=OuterRef("pk"))
-            )
-    team_member_qs = team_member_qs.annotate(
-        is_filtered=team_member_is_filtered
-    )
-
-    if task_search_query is not None:
-        task_q = task_q & (
-            Q(title__icontains=task_search_query)
-            # TODO support querying tasks across projects
-            # | Q(project__title__icontains=task_search_query)
-        )
-
-    task_qs = Task.objects.select_related("assignee__user").filter(task_q)
+    task_qs = Task.objects.select_related("assignee__user")
 
     project_prefetches: list[Prefetch[Any]] = [
         # Prefetch for workspace 1 : N relations, projects, and team
