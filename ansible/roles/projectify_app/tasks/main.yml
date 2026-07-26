@@ -236,35 +236,25 @@
   tags:
     - media
 
-- name: Configure Projectify daily cron-like job
+- name: Configure Projectify environment file
   block:
-    - name: Copy daily cron systemd service unit
+    - name: Create projectify config directory
+      ansible.builtin.file:
+          path: /etc/projectify
+          state: directory
+          owner: root
+          group: root
+          mode: '0755'
+    - name: Copy projectify environment file
       ansible.builtin.template:
-          src: projectify-daily-cron.service.j2
-          dest: /etc/systemd/system/projectify-daily-cron.service
+          src: projectify.env.j2
+          dest: /etc/projectify/projectify.env
           owner: root
           group: root
           mode: '0644'
-      register: projectify_daily_cron_service
-    - name: Copy daily cron systemd timer unit
-      ansible.builtin.template:
-          src: projectify-daily-cron.timer.j2
-          dest: /etc/systemd/system/projectify-daily-cron.timer
-          owner: root
-          group: root
-          mode: '0644'
-      register: projectify_daily_cron_timer
-    - name: Reload systemd daemon
-      ansible.builtin.systemd:
-          daemon_reload: true
-      when: projectify_daily_cron_service.changed or projectify_daily_cron_timer.changed
-    - name: Enable and start Projectify daily cron-like job
-      ansible.builtin.systemd:
-          name: projectify-daily-cron.timer
-          enabled: true
-          state: started
-    tags:
-      - projectify
+      register: projectify_env_file
+  tags:
+    - projectify
 
 - name: Check out Projectify
   block:
@@ -407,7 +397,7 @@
           name: gunicorn.service
           enabled: true
           state: restarted
-      when: new_release | default(false)
+      when: (new_release | default(false)) or projectify_env_file.changed
     - name: Check gunicorn health
       ansible.builtin.command:
           cmd: curl --unix-socket /run/gunicorn.sock {{ hostname }}
@@ -470,3 +460,33 @@
           cmd: curl https://{{ hostname }}
   tags:
     - caddy
+
+- name: Configure Projectify daily cron-like job
+  block:
+    - name: Copy daily cron systemd service unit
+      ansible.builtin.template:
+          src: projectify-daily-cron.service.j2
+          dest: /etc/systemd/system/projectify-daily-cron.service
+          owner: root
+          group: root
+          mode: '0644'
+      register: projectify_daily_cron_service
+    - name: Copy daily cron systemd timer unit
+      ansible.builtin.template:
+          src: projectify-daily-cron.timer.j2
+          dest: /etc/systemd/system/projectify-daily-cron.timer
+          owner: root
+          group: root
+          mode: '0644'
+      register: projectify_daily_cron_timer
+    - name: Reload systemd daemon
+      ansible.builtin.systemd:
+          daemon_reload: true
+      when: projectify_daily_cron_service.changed or projectify_daily_cron_timer.changed
+    - name: Enable and start Projectify daily cron-like job
+      ansible.builtin.systemd:
+          name: projectify-daily-cron.timer
+          enabled: true
+          state: started
+  tags:
+    - projectify

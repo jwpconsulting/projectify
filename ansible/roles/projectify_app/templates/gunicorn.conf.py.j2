@@ -20,14 +20,3 @@ logconfig = "{{ gunicorn_log_config_file }}"
 # XXX access log missing in syslog
 accesslog = "-"
 
-raw_env = [
-    "DJANGO_SETTINGS_MODULE=projectify.settings.hetzner",
-    "DJANGO_CONFIGURATION=Hetzner",
-    # TODO hard-code in Hetzner class
-    "DATABASE_URL={{ database_url }}",
-    "STATIC_ROOT={{ static_root }}",
-    "MEDIA_ROOT={{ media_root }}",
-    "ALLOWED_HOSTS={{ hostname }}",
-    # TODO use LoadCredential in systemd for secrets
-    "CREDENTIALS_FILE={{ credentials_file }}",
-]
