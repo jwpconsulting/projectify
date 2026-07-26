@@ -58,6 +58,7 @@ def email_confirm_test(request: HttpRequest) -> HttpResponse:
         password=secrets.token_hex(32),
         tos_agreed=True,
         privacy_policy_agreed=True,
+        request=request,
     )
     user.is_active = False
     user.save()
@@ -108,6 +109,7 @@ def password_reset_confirm_test(request: HttpRequest) -> HttpResponse:
         password=secrets.token_hex(32),
         tos_agreed=True,
         privacy_policy_agreed=True,
+        request=request,
     )
     user.is_active = True
     user.save()

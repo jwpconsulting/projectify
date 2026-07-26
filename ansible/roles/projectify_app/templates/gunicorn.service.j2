@@ -4,8 +4,13 @@
 
 [Unit]
 Description=gunicorn daemon
-Requires=gunicorn.socket
-After=network.target
+# See the following page to learn about the difference
+# between Requires and After:
+# https://serverfault.com/a/812589
+# Requires: Need to activate these units:
+Requires=gunicorn.socket postgresql.service
+# After: Need to start this unit after these units:
+After=network.target postgresql.service
 
 [Service]
 Type=notify

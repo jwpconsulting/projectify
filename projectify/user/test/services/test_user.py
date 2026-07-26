@@ -9,6 +9,7 @@ from typing import cast
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db.models.fields.files import FileDescriptor
 from django.forms import ValidationError
+from django.http import HttpRequest
 from django.test.client import Client
 
 import pytest
@@ -18,7 +19,7 @@ from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.user.services.internal import Token, user_make_token
 from pytest_types import Mailbox
 
-from ...models import User
+from ...models import User, UserEvent
 from ...services.user import (
     user_change_password,
     user_confirm_email_address_update,
@@ -31,22 +32,30 @@ pytestmark = pytest.mark.django_db
 
 
 def test_user_update(
-    user: User, faker: Faker, uploaded_file: SimpleUploadedFile
+    user: User,
+    faker: Faker,
+    uploaded_file: SimpleUploadedFile,
+    session_request: HttpRequest,
 ) -> None:
     """Test updating a user."""
     new_name = faker.name()
+    before = UserEvent.objects.count()
     user_update(
         who=user,
         user=user,
         preferred_name=new_name,
         profile_picture=cast(FileDescriptor, uploaded_file),
+        request=session_request,
     )
     user.refresh_from_db()
     assert user.preferred_name == new_name
     assert "profile_picture/uploaded_file.png" in user.profile_picture.path
+    assert UserEvent.objects.count() == before + 1
 
 
-def test_user_set_password(user: User, mailoutbox: Mailbox) -> None:
+def test_user_set_password(
+    user: User, mailoutbox: Mailbox, session_request: HttpRequest
+) -> None:
     """Test setting a password for a user without one."""
     user.set_unusable_password()
     user.save()
@@ -54,8 +63,12 @@ def test_user_set_password(user: User, mailoutbox: Mailbox) -> None:
     assert user.has_usable_password() is False
 
     new_password = "secure-password-123"
+    before = UserEvent.objects.count()
     user_set_password(
-        user=user, new_password=new_password, new_password_confirm=new_password
+        user=user,
+        new_password=new_password,
+        new_password_confirm=new_password,
+        request=session_request,
     )
 
     user.refresh_from_db()
@@ -63,14 +76,20 @@ def test_user_set_password(user: User, mailoutbox: Mailbox) -> None:
     assert user.check_password(new_password) is True
     (mail,) = mailoutbox
     assert "password has been set" in mail.body
+    assert UserEvent.objects.count() == before + 1
 
     # can't set the password twice
     with pytest.raises(ValidationError) as exc_info:
-        user_set_password(user=user, new_password="another-password-456")
+        user_set_password(
+            user=user,
+            new_password="another-password-456",
+            request=session_request,
+        )
     exc_info.match("already has a password")
     user.refresh_from_db()
     assert user.check_password(new_password) is True
     assert user.check_password("another-password-456") is False
+    # TODO assert UserEvent.objects.count() == before + 1
 
 
 def test_user_set_password_with_request(
@@ -95,19 +114,26 @@ def test_user_set_password_with_request(
     # didn't raise an exception, it worked correctly
 
 
-def test_user_set_password_weak_password(user: User) -> None:
+def test_user_set_password_weak_password(
+    user: User, session_request: HttpRequest
+) -> None:
     """Test setting a weak password fails validation."""
     user.set_unusable_password()
     user.save()
     user.refresh_from_db()
     with pytest.raises(ValidationError):
-        user_set_password(user=user, new_password="weak")
+        user_set_password(
+            user=user, new_password="weak", request=session_request
+        )
     user.refresh_from_db()
     assert user.has_usable_password() is False
 
 
 def test_user_change_password(
-    user: User, password: str, mailoutbox: Mailbox
+    user: User,
+    password: str,
+    mailoutbox: Mailbox,
+    session_request: HttpRequest,
 ) -> None:
     """
     Test changing a user's password. Check that notification email goes out.
@@ -118,7 +144,10 @@ def test_user_change_password(
     # First we give in the wrong old password
     with pytest.raises(ValidationError):
         user_change_password(
-            user=user, current_password="wrongpw123", new_password=new_password
+            user=user,
+            current_password="wrongpw123",
+            new_password=new_password,
+            request=session_request,
         )
 
     user.refresh_from_db()
@@ -126,20 +155,30 @@ def test_user_change_password(
     assert len(mailoutbox) == 0
 
     # Then try with correct current password
+    before = UserEvent.objects.count()
     user_change_password(
-        user=user, current_password=password, new_password=new_password
+        user=user,
+        current_password=password,
+        new_password=new_password,
+        request=session_request,
     )
     user.refresh_from_db()
     assert user.check_password(new_password) is True
     (mail,) = mailoutbox
     assert "password has been changed" in mail.body
+    assert UserEvent.objects.count() == before + 1
 
 
-def test_user_change_password_weak_password(user: User, password: str) -> None:
+def test_user_change_password_weak_password(
+    user: User, password: str, session_request: HttpRequest
+) -> None:
     """Test changing password with weak password."""
     with pytest.raises(ValidationError):
         user_change_password(
-            user=user, current_password=password, new_password="asd123"
+            user=user,
+            current_password=password,
+            new_password="asd123",
+            request=session_request,
         )
 
     user.refresh_from_db()
@@ -172,7 +211,11 @@ def test_user_change_password_with_request(
 
 
 def test_user_email_update_complete(
-    user: User, password: str, faker: Faker, mailoutbox: Mailbox
+    user: User,
+    password: str,
+    faker: Faker,
+    mailoutbox: Mailbox,
+    session_request: HttpRequest,
 ) -> None:
     """
     Test requesting for user's email address to be updated.
@@ -185,18 +228,26 @@ def test_user_email_update_complete(
     """
     old_email = user.email
     new_email = faker.email()
+    before = UserEvent.objects.count()
 
     # Try with wrong password
     with pytest.raises(ValidationError):
         user_request_email_address_update(
-            user=user, new_email=new_email, password="blabla"
+            user=user,
+            new_email=new_email,
+            password="blabla",
+            request=session_request,
         )
     assert len(mailoutbox) == 0
 
     # Request with correct password
     user_request_email_address_update(
-        user=user, new_email=new_email, password=password
+        user=user,
+        new_email=new_email,
+        password=password,
+        request=session_request,
     )
+    assert UserEvent.objects.count() == before + 1
 
     # Assert we get an email
     assert len(mailoutbox) == 1
@@ -208,7 +259,9 @@ def test_user_email_update_complete(
     # Completely invalid token
     with pytest.raises(ValidationError):
         user_confirm_email_address_update(
-            user=user, confirmation_token=Token("wrong-token")
+            user=user,
+            confirmation_token=Token("wrong-token"),
+            request=session_request,
         )
     user.refresh_from_db()
     assert user.email == old_email
@@ -217,19 +270,25 @@ def test_user_email_update_complete(
     wrong_kind_token = user_make_token(user=user, kind="reset_password")
     with pytest.raises(ValidationError):
         user_confirm_email_address_update(
-            user=user, confirmation_token=wrong_kind_token
+            user=user,
+            confirmation_token=wrong_kind_token,
+            request=session_request,
         )
     user.refresh_from_db()
     assert user.email == old_email
 
     # Correct token
-    user_confirm_email_address_update(user=user, confirmation_token=token)
+    user_confirm_email_address_update(
+        user=user, confirmation_token=token, request=session_request
+    )
     user.refresh_from_db()
     assert user.email == new_email
 
     # Can't do it twice
     with pytest.raises(ValidationError):
-        user_confirm_email_address_update(user=user, confirmation_token=token)
+        user_confirm_email_address_update(
+            user=user, confirmation_token=token, request=session_request
+        )
 
     # Ensure second email is sent out
     assert len(mailoutbox) == 2
@@ -237,3 +296,4 @@ def test_user_email_update_complete(
     assert "has been updated" in body
     assert match
     token = Token(match.group(1))
+    assert UserEvent.objects.count() == before + 2

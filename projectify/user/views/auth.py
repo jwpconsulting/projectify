@@ -171,6 +171,7 @@ def sign_up(request: HttpRequest) -> HttpResponse:
                         password=data["password"],
                         tos_agreed=data["tos_agreed"],
                         privacy_policy_agreed=data["privacy_policy_agreed"],
+                        request=request,
                     )
                 except ValidationError as error:
                     populate_form_with_errors(form, error)
@@ -217,7 +218,7 @@ def email_confirm(
     token = Token(token)
 
     try:
-        user_confirm_email(email=email, token=token)
+        user_confirm_email(email=email, token=token, request=request)
         context = {}
     except ValidationError as e:
         match e.error_dict:
@@ -336,7 +337,7 @@ def password_reset_request(request: HttpRequest) -> HttpResponse:
             if form.is_valid():
                 try:
                     user_request_password_reset(
-                        email=form.cleaned_data["email"]
+                        email=form.cleaned_data["email"], request=request
                     )
                 except ValidationError as error:
                     populate_form_with_errors(form, error)
@@ -395,6 +396,7 @@ def password_reset_confirm(
                         new_password_confirm=form.cleaned_data[
                             "new_password_confirm"
                         ],
+                        request=request,
                     )
                 except ValidationError as error:
                     populate_form_with_errors(form, error)

@@ -26,8 +26,13 @@ from datetime import timezone as dt_timezone
 from pathlib import Path
 from uuid import UUID
 
+from django.contrib.auth.models import AnonymousUser
+from django.contrib.sessions.middleware import SessionMiddleware
 from django.core.files.base import File
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.http import HttpRequest
+from django.http.response import HttpResponse
+from django.test import RequestFactory
 from django.test.client import Client
 from django.utils import timezone
 from django.utils.html import format_html
@@ -44,15 +49,17 @@ from projectify.corporate.services.stripe import (
 )
 from projectify.settings.base import Base
 from projectify.user import models as user_models
-from projectify.user.models import User, UserInvite
+from projectify.user.models import User, UserEvent, UserInvite
 from projectify.user.services.internal import (
     user_create,
     user_create_superuser,
+    user_event_log,
 )
 from projectify.user.services.user_invite import (
     user_invite_create,
     user_invite_redeem,
 )
+from projectify.user.types import UserEventType
 from projectify.workspace.models import (
     Project,
     Task,
@@ -160,25 +167,61 @@ def redeemed_user_invite(faker: Faker) -> user_models.UserInvite:
 
 
 @pytest.fixture
-def user_client(user: User) -> Client:
+def user_event_headers() -> dict[str, str]:
+    """Create HTTP request headers that work with user event logs."""
+    return {"REMOTE_ADDR": "127.0.0.1", "USER-AGENT": "projectify-test/1"}
+
+
+@pytest.fixture
+def session_middleware() -> SessionMiddleware:
+    """Create a session middleware instance."""
+    return SessionMiddleware(lambda _: HttpResponse())
+
+
+@pytest.fixture
+def session_request(
+    session_middleware: SessionMiddleware,
+    rf: RequestFactory,
+    user_event_headers: dict[str, str],
+) -> HttpRequest:
+    """Return a request with a session for testing."""
+    request = rf.get("/", headers=user_event_headers)
+    session_middleware.process_request(request)
+    request.session.save()
+    request.user = AnonymousUser()
+    return request
+
+
+@pytest.fixture
+def client(user_event_headers: dict[str, str]) -> Client:
+    """Return anonymous user client."""
+    return Client(headers=user_event_headers)
+
+
+@pytest.fixture
+def user_client(user: User, user_event_headers: dict[str, str]) -> Client:
     """Return logged in client."""
-    client = Client()
+    client = Client(headers=user_event_headers)
     client.force_login(user)
     return client
 
 
 @pytest.fixture
-def unrelated_user_client(unrelated_user: User) -> Client:
+def unrelated_user_client(
+    unrelated_user: User, user_event_headers: dict[str, str]
+) -> Client:
     """Client for unrelated user."""
-    client = Client()
+    client = Client(headers=user_event_headers)
     client.force_login(unrelated_user)
     return client
 
 
 @pytest.fixture
-def superuser_client(superuser: User) -> Client:
+def superuser_client(
+    superuser: User, user_event_headers: dict[str, str]
+) -> Client:
     """Return logged in super user client."""
-    client = Client()
+    client = Client(headers=user_event_headers)
     client.force_login(superuser)
     return client
 
@@ -518,3 +561,13 @@ def post(faker: Faker, now: datetime, post_content: PostContent) -> Post:
 def null_uuid() -> UUID:
     """Create an all-null UUID."""
     return UUID(int=0)
+
+
+@pytest.fixture
+def user_event(user: User, session_request: HttpRequest) -> UserEvent:
+    """Create a user event."""
+    log = user_event_log(
+        user=user, type=UserEventType.LOG_IN, request=session_request
+    )
+    assert log is not None
+    return log

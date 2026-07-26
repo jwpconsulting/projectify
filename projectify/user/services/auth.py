@@ -8,6 +8,7 @@ from collections.abc import Sequence
 from typing import Optional
 
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.password_validation import validate_password
 from django.db import transaction
 from django.forms import ValidationError
@@ -15,17 +16,16 @@ from django.http import HttpRequest
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from projectify.user.emails import (
-    UserEmailConfirmationEmail,
-    UserPasswordResetEmail,
-)
-from projectify.user.models import User
-from projectify.user.selectors.user import user_find_by_email
-from projectify.user.services.internal import (
+from ..emails import UserEmailConfirmationEmail, UserPasswordResetEmail
+from ..models import User
+from ..selectors.user import user_find_by_email
+from ..services.internal import (
     Token,
     user_check_token,
     user_create,
+    user_event_log,
 )
+from ..types import UserEventType
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +47,12 @@ def _validate_password(
 
 @transaction.atomic()
 def user_sign_up(
-    *, email: str, password: str, tos_agreed: bool, privacy_policy_agreed: bool
+    *,
+    email: str,
+    password: str,
+    tos_agreed: bool,
+    privacy_policy_agreed: bool,
+    request: HttpRequest,
 ) -> User:
     """Sign up a user."""
     # Check if user exists
@@ -80,12 +85,15 @@ def user_sign_up(
     )
     mail = UserEmailConfirmationEmail(receiver=user, obj=user)
     mail.send()
+    user_event_log(user=user, type=UserEventType.SIGN_UP, request=request)
     # TODO do not return User here
     return user
 
 
 @transaction.atomic()
-def user_confirm_email(*, email: str, token: Token) -> Optional[User]:
+def user_confirm_email(
+    *, email: str, token: Token, request: HttpRequest
+) -> Optional[User]:
     """Confirm a user's email, return User on success."""
     user = user_find_by_email(email=email)
     if user is None:
@@ -102,6 +110,9 @@ def user_confirm_email(*, email: str, token: Token) -> Optional[User]:
     user.activated = timezone.now()
     user.save()
     logger.info("Confirmed email for user %s", email)
+    user_event_log(
+        user=user, type=UserEventType.CONFIRM_EMAIL, request=request
+    )
     # TODO do not return User here
     return user
 
@@ -140,15 +151,21 @@ def user_log_in(*, email: str, password: str, request: HttpRequest) -> User:
     login(request, user)
     if not isinstance(user, User):
         raise ValueError("User is not User, why?")
+    user_event_log(user=user, type=UserEventType.LOG_IN, request=request)
     return user
 
 
 @transaction.atomic()
 def user_log_out(*, request: HttpRequest) -> None:
     """Log a user out, update cookies."""
-    user = request.user
-    if user.is_anonymous:
-        raise ValidationError(_("There is no logged in user"))
+    match request.user:
+        case AnonymousUser():
+            raise ValidationError(_("You're not logged in"))
+        case User() as user:
+            pass
+        case other:
+            raise RuntimeError(f"Encountered unexpected user {other}")
+    user_event_log(user=user, type=UserEventType.LOG_OUT, request=request)
     logout(request)
 
 
@@ -157,25 +174,31 @@ def user_request_password_reset(
     *,
     # Should this be taking in a user object instead?
     email: str,
+    request: HttpRequest,
 ) -> None:
     """Send a password reset email to a user, given their email address."""
-    user = user_find_by_email(email=email)
-    if user is None:
-        raise ValidationError(
-            {"email": [_("No user could be found for this email")]}
-        )
-    if not user.is_active:
-        raise ValidationError(
-            {
-                "email": [
-                    _(
-                        "You need to activate this account first. Please check your email inbox for a confirmation email."
-                    )
-                ]
-            }
-        )
+    match user_find_by_email(email=email):
+        case None:
+            raise ValidationError(
+                {"email": [_("No user could be found for this email")]}
+            )
+        case User(is_active=False):
+            raise ValidationError(
+                {
+                    "email": [
+                        _(
+                            "You need to activate this account first. Please check your email inbox for a confirmation email."
+                        )
+                    ]
+                }
+            )
+        case user:
+            pass
     password_reset_email = UserPasswordResetEmail(receiver=user, obj=user)
     password_reset_email.send()
+    user_event_log(
+        user=user, type=UserEventType.REQUEST_PW_RESET, request=request
+    )
 
 
 @transaction.atomic
@@ -185,6 +208,7 @@ def user_confirm_password_reset(
     token: Token,
     new_password: str,
     new_password_confirm: Optional[str] = None,
+    request: HttpRequest,
     # TODO don't return anything here
 ) -> Optional[User]:
     """Reset a user's password given a new password and a reset token."""
@@ -216,5 +240,8 @@ def user_confirm_password_reset(
     user.set_password(new_password)
     user.save()
     logger.info("Reset password for user with email %s", email)
+    user_event_log(
+        user=user, type=UserEventType.CONFIRM_PW_RESET, request=request
+    )
     # XXX consider if returning a user is necessary here
     return user

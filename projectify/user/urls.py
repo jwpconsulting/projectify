@@ -23,6 +23,7 @@ from projectify.user.views.user import (
     email_address_update_requested,
     password_change,
     password_set,
+    user_account_activity,
     user_profile,
     user_profile_picture,
 )
@@ -31,6 +32,11 @@ app_name = "users"
 
 urlpatterns = (
     path("profile/", user_profile, name="profile"),
+    path(
+        "profile/account-activity",
+        user_account_activity,
+        name="account-activity",
+    ),
     path(
         "profile/current-picture", user_profile_picture, name="profile-picture"
     ),

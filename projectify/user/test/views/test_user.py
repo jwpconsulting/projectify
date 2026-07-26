@@ -15,10 +15,10 @@ import pytest
 from faker import Faker
 
 from projectify.settings.base import Base
-from projectify.user.services.internal import user_make_token
 from pytest_types import DjangoAssertNumQueries
 
-from ...models import User
+from ...models import User, UserEvent
+from ...services.internal import user_make_token
 
 pytestmark = pytest.mark.django_db
 
@@ -50,7 +50,7 @@ class TestUserProfile:
     ) -> None:
         """Test updating both preferred name and profile picture."""
         data = {"preferred_name": "Foo", "profile_picture": ""}
-        with django_assert_num_queries(14):
+        with django_assert_num_queries(15):
             response = user_client.post(resource_url, data, follow=True)
             assert response.status_code == 200
             assert response.redirect_chain[-1][0] == reverse("users:profile")
@@ -69,7 +69,7 @@ class TestUserProfile:
     ) -> None:
         """Test updating both preferred name and profile picture."""
         data = {"preferred_name": "Jeff", "profile_picture": uploaded_file}
-        with django_assert_num_queries(14):
+        with django_assert_num_queries(15):
             response = user_client.post(resource_url, data, follow=True)
             assert response.status_code == 200
             assert response.redirect_chain[-1][0] == reverse("users:profile")
@@ -94,6 +94,23 @@ class TestUserProfile:
 
         user.refresh_from_db()
         assert not user.profile_picture
+
+
+class TestUserAccountActivity:
+    """Test user_account_activity view."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("users:account-activity")
+
+    def test_get(
+        self, user_client: Client, resource_url: str, user_event: UserEvent
+    ) -> None:
+        """Test that the account activity page is accessible."""
+        response = user_client.get(resource_url)
+        assert response.status_code == 200
+        assert b"log in" in response.content
 
 
 class TestUserProfilePicture:
@@ -169,7 +186,7 @@ class TestPasswordSetDjango:
         """Test successfully setting a password."""
         new_pw = "secure-password-123"
         data = {"new_password": new_pw, "new_password_confirm": new_pw}
-        with django_assert_num_queries(18):
+        with django_assert_num_queries(19):
             response = passwordless_user_client.post(resource_url, data)
             assert response.status_code == 302
         passwordless_user.refresh_from_db()
@@ -229,7 +246,7 @@ class TestPasswordChangeDjango:
             "new_password": "hello-world123",
             "new_password_confirm": "hello-world123",
         }
-        with django_assert_num_queries(20):
+        with django_assert_num_queries(21):
             response = user_client.post(resource_url, data, follow=True)
             assert response.status_code == 200, response.content
         assert response.wsgi_request.user.is_authenticated
@@ -332,7 +349,7 @@ class TestEmailAddressUpdateDjango:
         new_email = "new-email@example.com"
 
         data = {"new_email": new_email, "password": password}
-        with django_assert_num_queries(11):
+        with django_assert_num_queries(12):
             response = user_client.post(resource_url, data, follow=True)
             assert response.status_code == 200
 
@@ -425,7 +442,7 @@ class TestEmailAddressUpdateConfirm:
             args=(user_make_token(user=user, kind="update_email_address"),),
         )
 
-        with django_assert_num_queries(12):
+        with django_assert_num_queries(13):
             response = user_client.get(resource_url, follow=True)
             assert response.status_code == 200
 

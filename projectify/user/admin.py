@@ -9,7 +9,53 @@ from django.contrib import admin
 from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
-from projectify.user.models import User, UserInvite
+from allauth.account.models import EmailAddress
+from allauth.socialaccount.models import SocialAccount
+
+from projectify.lib.admin import ReadOnlyAdmin
+from projectify.user.models import (
+    PreviousEmailAddress,
+    User,
+    UserEvent,
+    UserInvite,
+)
+
+
+class EmailAddressInline(
+    ReadOnlyAdmin[EmailAddress], admin.TabularInline[EmailAddress]
+):
+    """Inline admin for allauth EmailAddress."""
+
+    model = EmailAddress
+    extra = 0
+
+
+class SocialAccountInline(
+    ReadOnlyAdmin[SocialAccount], admin.TabularInline[SocialAccount]
+):
+    """Inline admin for allauth SocialAccount."""
+
+    model = SocialAccount
+    extra = 0
+
+
+class UserEventAdmin(ReadOnlyAdmin[UserEvent], admin.TabularInline[UserEvent]):
+    """Inline admin for UserEvent."""
+
+    model = UserEvent
+    extra = 0
+    readonly_fields = ("created",)
+    fields = ("created", "user_agent", "ip_address")
+
+
+class PreviousEmailAddressAdmin(
+    ReadOnlyAdmin[PreviousEmailAddress],
+    admin.TabularInline[PreviousEmailAddress],
+):
+    """Inline admin for PreviousEmailAddress."""
+
+    model = PreviousEmailAddress
+    extra = 0
 
 
 @admin.register(User)
@@ -36,6 +82,12 @@ class UserAdmin(admin.ModelAdmin[User]):
     )
     search_fields = ("email", "preferred_name")
     search_help_text = _("You can search by email and preferred name")
+    inlines = [
+        EmailAddressInline,
+        SocialAccountInline,
+        PreviousEmailAddressAdmin,
+        UserEventAdmin,
+    ]
 
 
 @admin.register(UserInvite)

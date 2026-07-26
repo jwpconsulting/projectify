@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2021-2026 JWP Consulting GK
 """User app models."""
 
-from typing import Any, ClassVar, Optional
+from typing import TYPE_CHECKING, Any, ClassVar, Optional
 
 from django.conf import settings
 from django.contrib.auth import models as auth_models
@@ -17,6 +17,11 @@ from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import BaseModel
+
+from .types import UserEventType
+
+if TYPE_CHECKING:
+    from django.db.models.manager import RelatedManager
 
 
 class User(BaseModel, AbstractBaseUser, PermissionsMixin):
@@ -74,6 +79,9 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     objects: ClassVar[BaseUserManager["User"]] = BaseUserManager()
 
     USERNAME_FIELD = "email"
+
+    if TYPE_CHECKING:
+        userevent_set: RelatedManager["UserEvent"]
 
     def clean(self) -> None:
         """Validate model fields."""
@@ -146,3 +154,16 @@ class PreviousEmailAddress(BaseModel):
     def __str__(self) -> str:
         """Return email."""
         return self.email
+
+
+class UserEvent(BaseModel):
+    """Store an auditable event for user actions."""
+
+    user = models.ForeignKey[User](User, on_delete=models.CASCADE)
+    type = models.CharField(choices=UserEventType)
+    ip_address = models.GenericIPAddressField()
+    user_agent = models.CharField()
+
+    def __str__(self) -> str:
+        """Return type."""
+        return str(UserEventType[self.type].label)

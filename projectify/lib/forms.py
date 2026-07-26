@@ -10,7 +10,8 @@ from typing import Any, Collection, Optional, Union
 
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import UploadedFile
-from django.forms import BaseForm, FileField, Textarea
+from django.db.models.fields.files import ImageFieldFile
+from django.forms import BaseForm, FileField, Textarea, Widget
 from django.utils.translation import gettext_lazy as _
 
 from PIL import Image
@@ -31,14 +32,14 @@ def populate_form_with_errors(form: BaseForm, error: ValidationError) -> None:
                 form.add_error(k, error)
 
 
-def get_image_format(file: UploadedFile) -> Optional[str]:
+def get_image_format(file: UploadedFile | ImageFieldFile) -> Optional[str]:
     """Detect image format using Pillow."""
     file.seek(0)
     image_data = BytesIO(file.read())
     file.seek(0)
     try:
         with Image.open(image_data) as img:
-            return img.format
+            return img.get_format_mimetype()
     except Exception as e:
         logger.warning(
             "Couldn't detect image format for file %s", file.name, exc_info=e
@@ -85,6 +86,9 @@ class RichTextEditor(Textarea):
         js = ("trix/trix.umd.js", "prose/prose.js")
 
 
+# SPDX-SnippetEnd
+
+
 # TODO Consider using ImageField
 class SafeImageField(FileField):
     """Image field that validates file size and type."""
@@ -97,20 +101,28 @@ class SafeImageField(FileField):
         **kwargs: Any,
     ):
         """Initialize with required allowed_file_types and allowed_file_size."""
-        super().__init__(**kwargs)
         self.allowed_file_types = allowed_file_types
         self.allowed_file_size = allowed_file_size
+        super().__init__(**kwargs)
 
     def clean(
         self, data: Any, initial: Any = None
-    ) -> Union[UploadedFile, bool, None]:
+    ) -> Union[ImageFieldFile, UploadedFile, bool, None]:
         """Validate file size and type."""
-        result: Union[None, UploadedFile, bool] = super().clean(data, initial)
+        result: Union[None, ImageFieldFile, UploadedFile, bool, Any] = (
+            super().clean(data, initial)
+        )
         match result:
             case bool() | None:
                 return result
             case UploadedFile() as file:
                 pass
+            case ImageFieldFile() as file:
+                pass
+            case other:
+                raise RuntimeError(
+                    f"Didn't expect super().clean() to return {type(other)}"
+                )
         size = file.size
         if size > self.allowed_file_size:
             raise ValidationError(
@@ -138,5 +150,9 @@ class SafeImageField(FileField):
 
         return file
 
-
-# SPDX-SnippetEnd
+    def widget_attrs(self, widget: Widget) -> Any:
+        """Add accept= field to input."""
+        return {
+            **super().widget_attrs(widget),
+            "accept": ",".join(self.allowed_file_types),
+        }

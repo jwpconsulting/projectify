@@ -24,6 +24,7 @@ class SocialAccountSignUpForm(SignupForm):
         label=_("I agree to the Privacy Policy")
     )
 
+    # TODO call user_log_event
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Hide email field."""
         super().__init__(*args, **kwargs)  # type: ignore[no-untyped-call]

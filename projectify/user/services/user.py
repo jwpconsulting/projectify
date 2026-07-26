@@ -4,18 +4,17 @@
 """User model services in user app."""
 
 import logging
-from typing import Optional, Union
+from typing import Optional
 
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import PermissionDenied
-from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import transaction
 from django.db.models.fields.files import FileDescriptor
 from django.forms import ValidationError
+from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
-from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.user.emails import (
     UserEmailAddressUpdatedEmail,
     UserEmailAddressUpdateEmail,
@@ -23,7 +22,12 @@ from projectify.user.emails import (
     UserPasswordSetEmail,
 )
 from projectify.user.models import PreviousEmailAddress, User
-from projectify.user.services.internal import Token, user_check_token
+from projectify.user.services.internal import (
+    Token,
+    user_check_token,
+    user_event_log,
+)
+from projectify.user.types import UserEventType
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +44,7 @@ def user_update(
     preferred_name: Optional[str],
     # TODO use File instead of FileDescriptor
     profile_picture: Optional[FileDescriptor],
+    request: HttpRequest,
 ) -> User:
     """Update a user."""
     if not who == user:
@@ -49,6 +54,9 @@ def user_update(
     if profile_picture:
         user.profile_picture = profile_picture
     user.save()
+    user_event_log(
+        user=user, type=UserEventType.UPDATE_PROFILE, request=request
+    )
     return user
 
 
@@ -59,7 +67,7 @@ def user_set_password(
     user: User,
     new_password: str,
     new_password_confirm: Optional[str] = None,
-    request: Union[AuthenticatedHttpRequest, None] = None,
+    request: HttpRequest,
 ) -> None:
     """Set a user's password if they don't have one yet."""
     if user.has_usable_password():
@@ -86,7 +94,7 @@ def user_set_password(
 
     try:
         validate_password(password=new_password, user=user)
-    except DjangoValidationError as e:
+    except ValidationError as e:
         raise ValidationError({"new_password": e.messages})
 
     user.set_password(new_password)
@@ -97,8 +105,8 @@ def user_set_password(
 
     # Ensure the user stays logged in
     # https://docs.djangoproject.com/en/5.0/topics/auth/default/#session-invalidation-on-password-change
-    if request is not None:
-        update_session_auth_hash(request, user)
+    update_session_auth_hash(request, user)
+    user_event_log(user=user, type=UserEventType.SET_PW, request=request)
 
 
 @transaction.atomic
@@ -109,7 +117,7 @@ def user_change_password(
     new_password: str,
     # XXX make not Optional
     new_password_confirm: Optional[str] = None,
-    request: Union[AuthenticatedHttpRequest, None] = None,
+    request: HttpRequest,
 ) -> None:
     """Change a user's password."""
     no_match = (
@@ -135,7 +143,7 @@ def user_change_password(
         )
     try:
         validate_password(password=new_password, user=user)
-    except DjangoValidationError as e:
+    except ValidationError as e:
         raise ValidationError({"new_password": e.messages})
     user.set_password(new_password)
     user.save()
@@ -145,13 +153,13 @@ def user_change_password(
 
     # Ensure the user stays logged in
     # https://docs.djangoproject.com/en/5.0/topics/auth/default/#session-invalidation-on-password-change
-    if request is not None:
-        update_session_auth_hash(request, user)
+    update_session_auth_hash(request, user)
+    user_event_log(user=user, type=UserEventType.CHANGE_PW, request=request)
 
 
 @transaction.atomic
 def user_request_email_address_update(
-    *, user: User, new_email: str, password: str
+    *, user: User, new_email: str, password: str, request: HttpRequest
 ) -> None:
     """Start user email change process."""
     if not user.check_password(password):
@@ -159,11 +167,14 @@ def user_request_email_address_update(
     user.unconfirmed_email = new_email
     user.save()
     UserEmailAddressUpdateEmail(receiver=user, obj=user).send()
+    user_event_log(
+        user=user, type=UserEventType.REQUEST_EMAIL_UPDATE, request=request
+    )
 
 
 @transaction.atomic
 def user_confirm_email_address_update(
-    *, user: User, confirmation_token: Token
+    *, user: User, confirmation_token: Token, request: HttpRequest
 ) -> None:
     """Finalize user email change process."""
     old_email = user.email
@@ -180,3 +191,6 @@ def user_confirm_email_address_update(
     user.save()
     PreviousEmailAddress.objects.create(user=user, email=old_email)
     UserEmailAddressUpdatedEmail(receiver=user, obj=user).send()
+    user_event_log(
+        user=user, type=UserEventType.CONFIRM_EMAIL_UPDATE, request=request
+    )

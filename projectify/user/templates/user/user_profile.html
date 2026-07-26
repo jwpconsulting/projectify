@@ -29,6 +29,13 @@
         {% anchor label=_("Edit third-party account links") href="socialaccount_connections" %}
     </div>
     <div class="flex flex-col gap-2">
+        <h2 class="font-bold text-lg">{% trans "Account activity" %}</h2>
+        <p>
+            {% blocktrans with days=retention_days %}You can review your account activity for the last {{ days }} days.{% endblocktrans %}
+        </p>
+        {% anchor label=_("Review account activity") href="users:account-activity" %}
+    </div>
+    <div class="flex flex-col gap-2">
         <h2 class="font-bold text-lg">{% trans "Account deletion" %}</h2>
         <p>
             {% trans "If you would like to delete your account, please send us an email using the link below. We have not implemented self-serve account deletion at this point, and would like to apologize for the inconvenience." %}

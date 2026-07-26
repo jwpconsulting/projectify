@@ -8,6 +8,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## Unreleased
 
+### Enhancement
+
+- Upload images with more confidence: Image upload file pickers only let
+you select the image types that Projectify accepts. At the moment, the
+image types are PNG and JPEG.
+- Review your account activity in your user profile settings. Go to Profile
+  and open the "Review account activity" page.
+
 ### Fixed
 
 - Fix storefront URLs not rendering by adjusting HTML sanitization
@@ -19,6 +27,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 - Split HTML sanitization configuration between user-generated and
   Projectify-generated content.
 - Track user email confirmation timestamp in `activated` field
+- Track user authentication and account related activities with 30 day
+  retention period
+- Add cron-like job to delete user event data outside of retention period
+- Update user, corporate, and workspace admin usability
 
 ### Security
 
@@ -33,7 +45,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## 2026.6.8
 
-###  Enhancement
+### Enhancement
 
 Here's what this release improves for you:
 

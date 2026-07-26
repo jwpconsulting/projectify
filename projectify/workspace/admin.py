@@ -3,43 +3,15 @@
 # SPDX-FileCopyrightText: 2021-2024,2026 JWP Consulting GK
 """Workspace admin."""
 
-from typing import Optional, TypeVar
-
 from django.contrib import admin
-from django.db.models import Model
-from django.http.request import HttpRequest
+from django.db.models import QuerySet
+from django.http import HttpRequest
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from projectify.lib.admin import ReadOnlyAdmin
+
 from .models import Project, Task, TeamMember, TeamMemberInvite, Workspace
-
-M = TypeVar("M", bound=Model)
-
-
-class ReadOnlyAdmin[M]:
-    """Admin Mixin that forbids anyone from making changes to this model."""
-
-    def has_add_permission(
-        self, request: HttpRequest, obj: Optional[M] = None
-    ) -> bool:
-        """Forbid anyone from adding objects."""
-        del request
-        del obj
-        return False
-
-    def has_change_permission(
-        self, request: HttpRequest, obj: Optional[M] = None
-    ) -> bool:
-        """Forbid anyone from changing objects."""
-        del request
-        del obj
-        return False
-
-
-class TeamMemberInline(admin.TabularInline[TeamMember]):
-    """TeamMember Inline."""
-
-    model = TeamMember
-    extra = 0
 
 
 class ProjectInline(admin.TabularInline[Project]):
@@ -47,62 +19,55 @@ class ProjectInline(admin.TabularInline[Project]):
 
     model = Project
     extra = 0
+    fields = ("archived",)
+    show_change_link = True
+    view_on_site = False
+
+
+class TeamMemberInline(admin.TabularInline[TeamMember]):
+    """TeamMember Inline."""
+
+    model = TeamMember
+    extra = 0
+    fields = ("role", "job_title")
+
+    def get_queryset(self, request: HttpRequest) -> QuerySet[TeamMember]:
+        """Select related user_invite and user."""
+        return super().get_queryset(request).select_related("user")
+
+    # https://docs.djangoproject.com/en/6.0/ref/contrib/admin/#django.contrib.admin.ModelAdmin.view_on_site
+    def view_on_site(self, obj: TeamMember) -> str:  # type: ignore[override]
+        """Return a link to the user's admin change page."""
+        return reverse("admin:user_user_change", args=[obj.user.pk])
+
+
+class TeamMemberInviteInline(
+    ReadOnlyAdmin[TeamMemberInvite], admin.TabularInline[TeamMemberInvite]
+):
+    """Team member invite inline."""
+
+    model = TeamMemberInvite
+    readonly_fields = ("redeemed_when",)
+    fields = ("user_invite", "redeemed", "redeemed_when")
+
+    def get_queryset(self, request: HttpRequest) -> QuerySet[TeamMemberInvite]:
+        """Select related user_invite and user."""
+        return (
+            super()
+            .get_queryset(request)
+            .select_related("user_invite", "user_invite__user")
+        )
 
 
 @admin.register(Workspace)
 class WorkspaceAdmin(ReadOnlyAdmin[Workspace], admin.ModelAdmin[Workspace]):
     """Workspace Admin."""
 
-    inlines = (TeamMemberInline, ProjectInline)
+    inlines = (ProjectInline, TeamMemberInline, TeamMemberInviteInline)
     list_display = ("title", "description", "created", "modified")
-    readonly_fields = ("uuid",)
+    readonly_fields = ("uuid", "customer")
     search_fields = ("title",)
     search_help_text = _("You can search by workspace title")
-
-
-@admin.register(TeamMemberInvite)
-class TeamMemberInviteAdmin(
-    ReadOnlyAdmin[TeamMemberInvite], admin.ModelAdmin[TeamMemberInvite]
-):
-    """Team member invite admin."""
-
-    list_display = ("workspace_title", "redeemed", "redeemed_when")
-    list_select_related = ("workspace",)
-    list_filter = ("redeemed", "redeemed_when")
-
-    @admin.display(description=_("Workspace title"))
-    def workspace_title(self, instance: TeamMemberInvite) -> str:
-        """Return the workspace's title."""
-        return instance.workspace.title
-
-
-@admin.register(TeamMember)
-class TeamMemberAdmin(ReadOnlyAdmin[TeamMember], admin.ModelAdmin[TeamMember]):
-    """TeamMember Admin."""
-
-    list_display = (
-        "workspace_title",
-        "user_email",
-        "created",
-        "modified",
-        "role",
-    )
-    list_filter = ("role",)
-    list_select_related = ("workspace", "user")
-    search_fields = ("workspace__title", "user__email", "user__preferred_name")
-    search_help_text = _(
-        "You can seach by workspace title, user email and preferred name"
-    )
-
-    @admin.display(description=_("Workspace title"))
-    def workspace_title(self, instance: TeamMember) -> str:
-        """Return the workspace's title."""
-        return instance.workspace.title
-
-    @admin.display(description=_("User email"))
-    def user_email(self, instance: TeamMember) -> str:
-        """Return the workspace's title."""
-        return instance.user.email
 
 
 class TaskInline(admin.TabularInline[Task]):
@@ -111,6 +76,16 @@ class TaskInline(admin.TabularInline[Task]):
     model = Task
     extra = 0
     readonly_fields = ("assignee",)
+    fields = ("due_date", "done", "assignee")
+    view_on_site = False
+
+    def get_queryset(self, request: HttpRequest) -> QuerySet[Task]:
+        """Select related user_invite and user."""
+        return (
+            super()
+            .get_queryset(request)
+            .select_related("assignee", "assignee__user")
+        )
 
 
 @admin.register(Project)
@@ -122,33 +97,9 @@ class ProjectAdmin(ReadOnlyAdmin[Project], admin.ModelAdmin[Project]):
     list_select_related = ("workspace",)
     readonly_fields = ("uuid",)
     search_fields = ("title", "workspace__title", "uuid")
+    view_on_site = False
 
     @admin.display(description=_("Workspace title"))
     def workspace_title(self, instance: Project) -> str:
         """Return the workspace's title."""
         return instance.workspace.title
-
-
-@admin.register(Task)
-class TaskAdmin(ReadOnlyAdmin[Task], admin.ModelAdmin[Task]):
-    """Task Admin."""
-
-    list_display = (
-        "title",
-        "project_title",
-        "workspace_title",
-        "created",
-        "modified",
-    )
-    list_select_related = ("project__workspace",)
-    readonly_fields = ("uuid", "assignee")
-
-    @admin.display(description=_("Project title"))
-    def project_title(self, instance: Task) -> str:
-        """Return the project's title."""
-        return str(instance.project.title)
-
-    @admin.display(description=_("Workspace title"))
-    def workspace_title(self, instance: Task) -> str:
-        """Return the workspace's title."""
-        return str(instance.project.workspace.title)

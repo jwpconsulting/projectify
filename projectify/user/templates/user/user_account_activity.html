@@ -1,0 +1,42 @@
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{% extends "user_profile_base.html" %}
+{% load i18n %}
+{% load projectify %}
+{% block title %}
+    {% translate "Account activity - Projectify" %}
+{% endblock title %}
+{% block user_profile_title %}
+    {% trans "User account activity" %}
+{% endblock user_profile_title %}
+{% block user_profile_content %}
+    <p>
+        {% blocktrans with days=retention_days %}This table shows your account activity of the last {{ days }} days.{% endblocktrans %}
+    </p>
+    {% if events %}
+        <table class="w-full">
+            <thead>
+                <tr class="text-left border-b">
+                    <th>{% trans "Activity" %}</th>
+                    <th>{% trans "IP address" %}</th>
+                    <th>{% trans "Date" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                    <tr class="border-b last:border-0">
+                        <td class="font-bold">{{ event.get_type_display }}</td>
+                        <td>{{ event.ip_address }}</td>
+                        <td>{{ event.created }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>{% trans "No account activity recorded." %}</p>
+    {% endif %}
+    <p>
+        {% anchor href="storefront:contact-us" label=_("contact us") as contact_link %}{% blocktrans %}If you have any questions about user account activity, please {{ contact_link }}.{% endblocktrans %}
+    </p>
+    {% go_to_action label=_("Go back") href="users:profile" grow=True %}
+{% endblock user_profile_content %}
