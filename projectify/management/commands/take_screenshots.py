@@ -13,6 +13,7 @@ from django.core.files import File
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.db.models.fields.files import FileDescriptor
+from django.test import RequestFactory
 from django.urls import reverse
 from django.utils.html import format_html
 
@@ -77,7 +78,16 @@ class Command(BaseCommand):
                 password="password",
             )
             token = user_make_token(user=user, kind="confirm_email_address")
-            assert user_confirm_email(email=user.email, token=token)
+            request = RequestFactory().get(
+                "/",
+                headers={
+                    "REMOTE_ADDR": "127.0.0.1",
+                    "USER-AGENT": "projectify-take-screenshots/1",
+                },
+            )
+            assert user_confirm_email(
+                email=user.email, token=token, request=request
+            )
             user.refresh_from_db()
 
             with avatar_path.open("rb") as fd:
@@ -89,6 +99,7 @@ class Command(BaseCommand):
                     user=user,
                     preferred_name=preferred_name,
                     profile_picture=django_file,
+                    request=request,
                 )
             users.append(user)
 

@@ -163,3 +163,7 @@ class UserEvent(BaseModel):
     type = models.CharField(choices=UserEventType)
     ip_address = models.GenericIPAddressField()
     user_agent = models.CharField()
+
+    def __str__(self) -> str:
+        """Return type."""
+        return str(UserEventType[self.type].label)

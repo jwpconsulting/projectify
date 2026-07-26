@@ -7,6 +7,7 @@ from collections.abc import Generator
 from unittest.mock import MagicMock, patch
 
 from django.core.cache import cache
+from django.http import HttpRequest
 from django.test import Client
 from django.urls import reverse
 
@@ -82,7 +83,7 @@ class TestSignUpDjango:
             "tos_agreed": True,
             "privacy_policy_agreed": True,
         }
-        with django_assert_num_queries(11):
+        with django_assert_num_queries(12):
             response = client.post(resource_url, data, follow=True)
         assert response.status_code == 200, response.content
         assert User.objects.count() == 1
@@ -252,7 +253,10 @@ class TestConfirmEmailDjango:
     """Test confirm_email Django view."""
 
     def test_confirm_email(
-        self, client: Client, django_assert_num_queries: DjangoAssertNumQueries
+        self,
+        client: Client,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        session_request: HttpRequest,
     ) -> None:
         """Test confirming a new user's email address."""
         user = user_sign_up(
@@ -260,10 +264,11 @@ class TestConfirmEmailDjango:
             password="random_password",
             tos_agreed=True,
             privacy_policy_agreed=True,
+            request=session_request,
         )
         token = user_make_token(user=user, kind="confirm_email_address")
         url = reverse("users:confirm-email", args=("hello@world.com", token))
-        with django_assert_num_queries(8):
+        with django_assert_num_queries(9):
             response = client.get(url, follow=True)
         assert response.status_code == 200, response.content
 
@@ -271,7 +276,10 @@ class TestConfirmEmailDjango:
         assert user.is_active
 
     def test_confirm_email_invalid_token(
-        self, client: Client, django_assert_num_queries: DjangoAssertNumQueries
+        self,
+        client: Client,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        session_request: HttpRequest,
     ) -> None:
         """Test confirming with an invalid token."""
         user = user_sign_up(
@@ -279,6 +287,7 @@ class TestConfirmEmailDjango:
             password="random_password",
             tos_agreed=True,
             privacy_policy_agreed=True,
+            request=session_request,
         )
         url = reverse("users:confirm-email", args=("hello@world.com", "inv"))
         with django_assert_num_queries(4):
@@ -413,7 +422,7 @@ class TestPasswordResetRequestDjango:
     ) -> None:
         """Test POST request to password reset request page."""
         data = {"email": user.email}
-        with django_assert_num_queries(3):
+        with django_assert_num_queries(4):
             response = client.post(resource_url, data, follow=True)
             assert response.status_code == 200, response.content
         assert response.redirect_chain == [
@@ -465,7 +474,12 @@ class TestPasswordResetRequestDjango:
         assert response.status_code == 429
 
     def test_password_reset_request_rate_limit_by_ip(
-        self, client: Client, resource_url: str, settings: Base, faker: Faker
+        self,
+        client: Client,
+        resource_url: str,
+        settings: Base,
+        faker: Faker,
+        session_request: HttpRequest,
     ) -> None:
         """Test rate limiting by IP address (5/h)."""
         cache.clear()
@@ -478,6 +492,7 @@ class TestPasswordResetRequestDjango:
                 password=faker.password(),
                 tos_agreed=True,
                 privacy_policy_agreed=True,
+                request=session_request,
             )
             for _ in range(6)
         ]
@@ -487,6 +502,7 @@ class TestPasswordResetRequestDjango:
             user_confirm_email(
                 email=u.email,
                 token=user_make_token(user=u, kind="confirm_email_address"),
+                request=session_request,
             )
 
         for i, user in enumerate(first_users):
@@ -545,7 +561,7 @@ class TestPasswordResetConfirmDjango:
         new_pw = "evenmoresecurepassword123"
         data = {"new_password": new_pw, "new_password_confirm": new_pw}
         url = reverse("users:confirm-password-reset", args=(user.email, token))
-        with django_assert_num_queries(8):
+        with django_assert_num_queries(9):
             response = client.post(url, data)
             assert response.status_code == 302, response.content
         user.refresh_from_db()

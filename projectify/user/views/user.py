@@ -97,6 +97,7 @@ def user_profile(request: AuthenticatedHttpRequest) -> HttpResponse:
                     user=user,
                     preferred_name=form.cleaned_data["preferred_name"],
                     profile_picture=form.cleaned_data["profile_picture"],
+                    request=request,
                 )
                 return redirect(reverse("users:profile"))
         case "GET":
@@ -284,7 +285,10 @@ def email_address_update(request: AuthenticatedHttpRequest) -> HttpResponse:
     data = form.cleaned_data
     try:
         user_request_email_address_update(
-            user=user, password=data["password"], new_email=data["new_email"]
+            user=user,
+            password=data["password"],
+            new_email=data["new_email"],
+            request=request,
         )
     except ValidationError as error:
         populate_form_with_errors(form, error)
@@ -306,7 +310,7 @@ def email_address_update_confirm(
     user = request.user
     try:
         user_confirm_email_address_update(
-            user=user, confirmation_token=Token(token)
+            user=user, confirmation_token=Token(token), request=request
         )
     except ValidationError as error:
         context = {"error": str(error)}

@@ -566,6 +566,8 @@ def null_uuid() -> UUID:
 @pytest.fixture
 def user_event(user: User, session_request: HttpRequest) -> UserEvent:
     """Create a user event."""
-    return user_event_log(
+    log = user_event_log(
         user=user, type=UserEventType.LOG_IN, request=session_request
     )
+    assert log is not None
+    return log

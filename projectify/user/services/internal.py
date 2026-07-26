@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 """Internal services, not user facing."""
 
+import logging
 from datetime import datetime
 from typing import Literal, NewType, Optional
 
@@ -15,6 +16,8 @@ from django.utils.timezone import now
 from ..models import User, UserEvent
 from ..services.user_invite import user_invite_redeem_many
 from ..types import UserEventType
+
+logger = logging.getLogger(__name__)
 
 
 def _user_create(
@@ -166,16 +169,32 @@ def user_check_token(*, user: User, kind: TokenKind, token: Token) -> bool:
 
 def user_event_log(
     *, user: User, type: UserEventType, request: HttpRequest
-) -> UserEvent:
+) -> Optional[UserEvent]:
     """Log a user event."""
-    match request.headers:
+    # This assumes that REMOTE_ADDR is correctly populated.
+    # At the time of writing, Projectify uses the homebrew 'reverse_proxy'
+    # middleware in
+    # projectify/middleware.py
+    # to populate the REMOTE_ADDR header from X-Forwarded-For
+    match request.META:
         case {"REMOTE_ADDR": remote_addr}:
             pass
         case _:
-            raise ValueError("No REMOTE_ADDR in request.")
+            logger.error(
+                "No REMOTE_ADDR in request.META. Tried to log user event %s",
+                type,
+            )
+            return None
+    match request.headers:
+        case {"User-Agent": user_agent}:
+            pass
+        case _:
+            logger.warning(
+                "No User-Agent in request.headers. Setting user agent to 'UNKNOWN'. Tried to log user event %s",
+                type,
+            )
+            user_agent = "UNKNOWN"
     event = user.userevent_set.create(
-        type=type,
-        ip_address=remote_addr,
-        user_agent=request.headers["User-Agent"],
+        type=type, ip_address=remote_addr, user_agent=user_agent
     )
     return event
