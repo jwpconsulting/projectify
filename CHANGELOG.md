@@ -8,6 +8,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## Unreleased
 
+### Enhancement
+
+- Help the user upload images with more confidence by changing the image
+  upload file picker to only accept PNG or JPEG files.
+
 ### Fixed
 
 - Fix storefront URLs not rendering by adjusting HTML sanitization
@@ -37,7 +42,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## 2026.6.8
 
-###  Enhancement
+### Enhancement
 
 Here's what this release improves for you:
 
