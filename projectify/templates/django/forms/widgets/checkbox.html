@@ -1,11 +1,10 @@
-{# SPDX-FileCopyrightText: 2025 JWP Consulting GK #}
+{# SPDX-FileCopyrightText: 2025-2026 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% load projectify %}
 <div class="relative m-0.5 size-4 rounded border border-secondary-hover hover:bg-secondary-hover hover:border-foreground">
-    <input class="peer absolute -left-[3px] -top-[3px] size-5 appearance-none rounded-md border border-transparent"
+    <input {% if widget.attrs %}{% include "django/forms/widgets/attrs.html" %}{% else %}class="peer absolute -left-[3px] -top-[3px] size-5 appearance-none rounded-md border border-transparent"{% endif %}
            type="checkbox"
            name="{{ widget.name }}"
-           {% if widget.value != None %}value="{{ widget.value|stringformat:'s' }}"{% endif %}
-           {% include "django/forms/widgets/attrs.html" %}>
+           {% if widget.value != None %}value="{{ widget.value|stringformat:'s' }}"{% endif %}>
     <span class="hidden absolute pointer-events-none peer-checked:block">{% icon "check" size=4 %}</span>
 </div>
