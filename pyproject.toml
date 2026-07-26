@@ -45,7 +45,6 @@ classifiers = [
     "Framework :: Django",
     "Framework :: Django :: 6",
     "Intended Audience :: End Users/Desktop",
-    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
     "Natural Language :: English",
     "Topic :: Software Development :: Bug Tracking",
     "Topic :: Office/Business :: Scheduling",
