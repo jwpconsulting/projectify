@@ -4,7 +4,7 @@
 
 [project]
 name = "projectify-app"
-version = "2026.6.8"
+version = "2026.7.26"
 description = "Projectify is a Free Software project management app"
 keywords = [
     "project management",
@@ -45,7 +45,6 @@ classifiers = [
     "Framework :: Django",
     "Framework :: Django :: 6",
     "Intended Audience :: End Users/Desktop",
-    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
     "Natural Language :: English",
     "Topic :: Software Development :: Bug Tracking",
     "Topic :: Office/Business :: Scheduling",
@@ -116,7 +115,7 @@ source-exclude = ["projectify/*/test"]
 wheel-exclude = ["projectify/*/test"]
 
 [build-system]
-requires = ["uv_build>=0.9.29,<0.10.0"]
+requires = ["uv_build>=0.9.29,<0.12"]
 build-backend = "uv_build"
 
 [tool.ruff]
