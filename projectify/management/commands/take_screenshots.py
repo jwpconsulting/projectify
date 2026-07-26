@@ -285,6 +285,30 @@ class Command(BaseCommand):
             str(output_directory / "project-management-permissions.png")
         )
 
+    def make_firefox_options(self) -> Options:
+        """Create Firefox options with telemetry and ping services disabled."""
+        firefox_options = Options()
+        firefox_options.add_argument("--headless")
+        firefox_options.set_preference("toolkit.telemetry.enabled", False)
+        firefox_options.set_preference("toolkit.telemetry.unified", False)
+        firefox_options.set_preference("toolkit.telemetry.server", "")
+        firefox_options.set_preference(
+            "toolkit.telemetry.newProfilePing.enabled", False
+        )
+        firefox_options.set_preference(
+            "toolkit.telemetry.shutdownPingSender.enabled", False
+        )
+        firefox_options.set_preference(
+            "toolkit.telemetry.updatePing.enabled", False
+        )
+        firefox_options.set_preference(
+            "toolkit.telemetry.bhrPing.enabled", False
+        )
+        firefox_options.set_preference(
+            "toolkit.telemetry.firstShutdownPing.enabled", False
+        )
+        return firefox_options
+
     def add_arguments(self, parser: Any) -> None:
         """Add command arguments."""
         parser.add_argument(
@@ -306,18 +330,15 @@ class Command(BaseCommand):
         output_directory = Path("projectify/storefront/static/solutions")
         output_directory.mkdir(parents=True, exist_ok=True)
 
-        firefox_options = Options()
-        firefox_options.add_argument("--headless")
-        driver = None
+        firefox_options = self.make_firefox_options()
+        driver = webdriver.Firefox(options=firefox_options)
+        driver.set_window_size(1024, 1920)
 
         try:
             self.create_test_data()
-            driver = webdriver.Firefox(options=firefox_options)
-            driver.set_window_size(1024, 1920)
             self.take_screenshot(
                 driver, base_url=url, output_directory=output_directory
             )
         finally:
             self.cleanup_test_data()
-            if driver:
-                driver.quit()
+            driver.quit()
