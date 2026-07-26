@@ -28,3 +28,11 @@ class ReadOnlyAdmin[M]:
         del request
         del obj
         return False
+
+    def has_delete_permission(
+        self, request: HttpRequest, obj: Optional[M] = None
+    ) -> bool:
+        """Forbid anyone from changing objects."""
+        del request
+        del obj
+        return False
