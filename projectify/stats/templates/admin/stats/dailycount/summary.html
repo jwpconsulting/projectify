@@ -1,0 +1,43 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% block content %}
+    <a href="{% url 'admin:stats_dailycount_changelist' %}">{% translate "Back" %}</a>
+    <h2>{% translate "Total counts per page (last 31 days)" %}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>{% translate "Page" %}</th>
+                <th>{% translate "Total" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in per_page_31 %}
+                <tr>
+                    <td>
+                        <a href="{{ row.name }}">{{ row.name }}</a>
+                    </td>
+                    <td>{{ row.total }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2>{% translate "Total counts per day (last 31 days)" %}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>{% translate "Date" %}</th>
+                <th>{% translate "Total" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in per_day_31 %}
+                <tr>
+                    <td>{{ row.date }}</td>
+                    <td>{{ row.total }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

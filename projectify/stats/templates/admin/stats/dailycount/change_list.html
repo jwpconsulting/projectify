@@ -1,0 +1,10 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+{# SPDX-FileCopyrightText: 2026 JWP Consulting GK #}
+{% extends "admin/change_list.html" %}
+{% load i18n %}
+{% block object-tools-items %}
+    <li>
+        <a href="{% url 'admin:stats_dailycount_summary' %}">{% translate "Summary" %}</a>
+    </li>
+    {{ block.super }}
+{% endblock %}

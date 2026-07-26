@@ -31,6 +31,7 @@ image types are PNG and JPEG.
   retention period
 - Add cron-like job to delete user event data outside of retention period
 - Update user, corporate, and workspace admin usability
+- Summarize daily page hit counts
 
 ### Security
 
