@@ -1,14 +1,10 @@
 {# SPDX-FileCopyrightText: 2024-2025 JWP Consulting GK #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
-{% extends "storefront_base.html" %}
+{% extends "storefront/storefront_hero.html" %}
 {% load i18n %}
 {% block title %}
     {% translate "Free software - Projectify" %}
 {% endblock title %}
-{% block storefront_content %}
-    <main id="main"
-          class="flex flex-col items-center gap-10 bg-foreground pb-20">
-        {% include "storefront/common/storefront_header.html" with title=_("Free Software and License Information") %}
-        <div class="prose">{{ content }}</div>
-    </main>
-{% endblock storefront_content %}
+{% block hero_title %}
+    {% trans "Free Software and License Information" %}
+{% endblock hero_title %}

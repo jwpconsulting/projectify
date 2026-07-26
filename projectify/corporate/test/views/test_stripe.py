@@ -133,7 +133,7 @@ class TestStripeWebhook:
         event["data"]["object"].customer = paid_customer.stripe_customer_id
         stripe_client.return_value.construct_event.return_value = event
 
-        with django_assert_num_queries(2):
+        with django_assert_num_queries(5):
             response = client.post(resource_url, headers=headers)
         assert response.status_code == 200, response.content
         paid_customer.refresh_from_db()

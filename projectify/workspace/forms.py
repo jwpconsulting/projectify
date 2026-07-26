@@ -9,9 +9,37 @@ from typing import Any, Optional
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Model, QuerySet
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from projectify.workspace.models import TeamMember
+from projectify.lib.forms import RichTextEditor
+from projectify.lib.settings import get_settings
+
+from .const import TASK_EDITOR_MIN_HEIGHT_CLASS
+from .models import TeamMember, Workspace
+
+settings = get_settings()
+
+
+class WorkspaceRichTextEditor(RichTextEditor):
+    """Rich text editor that takes in a Workspace."""
+
+    def __init__(self, workspace: Workspace, *args: Any, **kwargs: Any):
+        """Initialize the widget with optional heading_blocks and upload_url attributes."""
+        attrs = {
+            "expand": True,
+            "placeholder": _("Enter a description for your task"),
+            "class": TASK_EDITOR_MIN_HEIGHT_CLASS,
+            "data-suggest-projects-url": reverse(
+                "dashboard:workspaces:suggest-links-project",
+                args=(workspace.uuid,),
+            ),
+            "data-suggest-links-url": reverse(
+                "dashboard:workspaces:suggest-links-task",
+                args=(workspace.uuid,),
+            ),
+        }
+        super().__init__(heading_blocks=False, attrs=attrs)
 
 
 @dataclass

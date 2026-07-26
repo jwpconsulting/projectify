@@ -62,7 +62,6 @@ def task_create(
     return task
 
 
-# Update
 @transaction.atomic
 def task_update(
     *,
@@ -98,8 +97,7 @@ def task_mark_done(*, who: User, task: Task, done: bool) -> Task:
     return task
 
 
-# Delete
-# TODO atomic
+@transaction.atomic
 def task_delete(*, task: Task, who: User) -> None:
     """Delete a task."""
     validate_perm("workspace.delete_task", who, task.workspace)

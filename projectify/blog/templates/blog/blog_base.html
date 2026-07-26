@@ -5,9 +5,7 @@
 {% extends "base.html" %}
 {% block body %}
     <div class="flex grow flex-col">
-        {% block storefront_header %}
-            {% include "common/navigation/header/landing.html" %}
-        {% endblock storefront_header %}
+        {% include "common/navigation/header/landing.html" %}
         <div class="mx-auto px-4 py-8 w-full container">
             {% block blog_content %}
             {% endblock blog_content %}

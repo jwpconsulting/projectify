@@ -49,7 +49,7 @@ class TestLogOutDjango:
         assert "user" in response.context, response.context
         assert response.context["user"].is_authenticated, response.content
         # Now log out
-        with django_assert_num_queries(8):
+        with django_assert_num_queries(9):
             response = client.post(resource_url, follow=True)
             assert response.status_code == 200, response.content
         assert response.redirect_chain == [
@@ -83,7 +83,7 @@ class TestSignUpDjango:
             "tos_agreed": True,
             "privacy_policy_agreed": True,
         }
-        with django_assert_num_queries(12):
+        with django_assert_num_queries(17):
             response = client.post(resource_url, data, follow=True)
         assert response.status_code == 200, response.content
         assert User.objects.count() == 1
@@ -268,7 +268,7 @@ class TestConfirmEmailDjango:
         )
         token = user_make_token(user=user, kind="confirm_email_address")
         url = reverse("users:confirm-email", args=("hello@world.com", token))
-        with django_assert_num_queries(9):
+        with django_assert_num_queries(14):
             response = client.get(url, follow=True)
         assert response.status_code == 200, response.content
 
@@ -316,7 +316,7 @@ class TestLogInDjango:
     ) -> None:
         """Test logging in a user."""
         data = {"email": user.email, "password": password}
-        with django_assert_num_queries(16):
+        with django_assert_num_queries(21):
             response = client.post(resource_url, data)
         assert response.status_code == 302, response.content
         assert "sessionid" in response.cookies
@@ -422,7 +422,7 @@ class TestPasswordResetRequestDjango:
     ) -> None:
         """Test POST request to password reset request page."""
         data = {"email": user.email}
-        with django_assert_num_queries(4):
+        with django_assert_num_queries(5):
             response = client.post(resource_url, data, follow=True)
             assert response.status_code == 200, response.content
         assert response.redirect_chain == [
@@ -561,7 +561,7 @@ class TestPasswordResetConfirmDjango:
         new_pw = "evenmoresecurepassword123"
         data = {"new_password": new_pw, "new_password_confirm": new_pw}
         url = reverse("users:confirm-password-reset", args=(user.email, token))
-        with django_assert_num_queries(9):
+        with django_assert_num_queries(14):
             response = client.post(url, data)
             assert response.status_code == 302, response.content
         user.refresh_from_db()

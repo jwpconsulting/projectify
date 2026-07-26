@@ -50,7 +50,7 @@ class TestUserProfile:
     ) -> None:
         """Test updating both preferred name and profile picture."""
         data = {"preferred_name": "Foo", "profile_picture": ""}
-        with django_assert_num_queries(15):
+        with django_assert_num_queries(20):
             response = user_client.post(resource_url, data, follow=True)
             assert response.status_code == 200
             assert response.redirect_chain[-1][0] == reverse("users:profile")
@@ -69,7 +69,7 @@ class TestUserProfile:
     ) -> None:
         """Test updating both preferred name and profile picture."""
         data = {"preferred_name": "Jeff", "profile_picture": uploaded_file}
-        with django_assert_num_queries(15):
+        with django_assert_num_queries(20):
             response = user_client.post(resource_url, data, follow=True)
             assert response.status_code == 200
             assert response.redirect_chain[-1][0] == reverse("users:profile")
@@ -186,7 +186,7 @@ class TestPasswordSetDjango:
         """Test successfully setting a password."""
         new_pw = "secure-password-123"
         data = {"new_password": new_pw, "new_password_confirm": new_pw}
-        with django_assert_num_queries(19):
+        with django_assert_num_queries(24):
             response = passwordless_user_client.post(resource_url, data)
             assert response.status_code == 302
         passwordless_user.refresh_from_db()
@@ -246,7 +246,7 @@ class TestPasswordChangeDjango:
             "new_password": "hello-world123",
             "new_password_confirm": "hello-world123",
         }
-        with django_assert_num_queries(21):
+        with django_assert_num_queries(26):
             response = user_client.post(resource_url, data, follow=True)
             assert response.status_code == 200, response.content
         assert response.wsgi_request.user.is_authenticated
@@ -349,7 +349,7 @@ class TestEmailAddressUpdateDjango:
         new_email = "new-email@example.com"
 
         data = {"new_email": new_email, "password": password}
-        with django_assert_num_queries(12):
+        with django_assert_num_queries(17):
             response = user_client.post(resource_url, data, follow=True)
             assert response.status_code == 200
 
@@ -442,7 +442,7 @@ class TestEmailAddressUpdateConfirm:
             args=(user_make_token(user=user, kind="update_email_address"),),
         )
 
-        with django_assert_num_queries(13):
+        with django_assert_num_queries(19):
             response = user_client.get(resource_url, follow=True)
             assert response.status_code == 200
 

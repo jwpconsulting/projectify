@@ -23,7 +23,7 @@ from django.http import (
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_GET, require_http_methods
 
 from django_sendfile import sendfile
 
@@ -84,8 +84,11 @@ def sanitize_blog_picture_path(picture_name: str) -> Optional[str]:
     return str(Path("blog") / picture_name)
 
 
+@require_GET
 def serve_picture(request: HttpRequest, name: str) -> HttpResponse:
     """Serve a blog picture using sendfile."""
+    # XXX because the url pattern is serve-picture/<str:name>
+    # this can never contain slashes. We may not require the following:
     full_path = sanitize_blog_picture_path(name)
     if full_path is None or not default_storage.exists(str(full_path)):
         logger.warning("Picture with name %s not found at %s", name, full_path)

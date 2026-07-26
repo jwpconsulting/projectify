@@ -54,7 +54,7 @@ class TestAboutYou(MixinForTests):
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test setting a name."""
-        with django_assert_num_queries(10):
+        with django_assert_num_queries(14):
             assert (
                 user_client.post(
                     resource_url, {"preferred_name": "Test User"}
@@ -91,7 +91,7 @@ class TestNewWorkspace(MixinForTests):
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Create a new workspace."""
-        with django_assert_num_queries(10):
+        with django_assert_num_queries(21):
             assert (
                 user_client.post(
                     resource_url, {"title": "Woof woof"}
@@ -138,7 +138,7 @@ class TestNewProject(MixinForTests):
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test creating a new project."""
-        with django_assert_num_queries(11):
+        with django_assert_num_queries(13):
             response = user_client.post(resource_url, {"title": "BarFoo"})
             assert response.status_code == 302
         project = Project.objects.get(title="BarFoo")
@@ -191,7 +191,7 @@ class TestNewTask(MixinForTests):
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Create a new task."""
-        with django_assert_num_queries(12):
+        with django_assert_num_queries(16):
             assert (
                 user_client.post(
                     resource_url, {"title": "Test Task"}

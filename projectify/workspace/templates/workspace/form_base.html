@@ -2,9 +2,6 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 {% extends "dashboard_base.html" %}
 {% load i18n %}
-{% block dashboard_projects %}
-    {% include "workspace/common/sidemenu/project_details.html" %}
-{% endblock dashboard_projects %}
 {% block dashboard_content %}
     <form method="post"
           class="max-w-4xl min-w-0 grow flex flex-col gap-4 p-4 sm:px-8"
