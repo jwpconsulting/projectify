@@ -22,7 +22,12 @@ from projectify.user.emails import (
     UserPasswordSetEmail,
 )
 from projectify.user.models import PreviousEmailAddress, User
-from projectify.user.services.internal import Token, user_check_token
+from projectify.user.services.internal import (
+    Token,
+    user_check_token,
+    user_event_log,
+)
+from projectify.user.types import UserEventType
 
 logger = logging.getLogger(__name__)
 

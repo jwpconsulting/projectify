@@ -45,7 +45,7 @@ from projectify.corporate.services.stripe import (
 )
 from projectify.settings.base import Base
 from projectify.user import models as user_models
-from projectify.user.models import User, UserEvent, UserEventType, UserInvite
+from projectify.user.models import User, UserEvent, UserInvite
 from projectify.user.services.internal import (
     user_create,
     user_create_superuser,
@@ -55,6 +55,7 @@ from projectify.user.services.user_invite import (
     user_invite_create,
     user_invite_redeem,
 )
+from projectify.user.types import UserEventType
 from projectify.workspace.models import (
     Project,
     Task,

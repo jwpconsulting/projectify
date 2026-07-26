@@ -12,8 +12,9 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.http import HttpRequest
 from django.utils.timezone import now
 
-from projectify.user.models import User, UserEvent, UserEventType
-from projectify.user.services.user_invite import user_invite_redeem_many
+from ..models import User, UserEvent
+from ..services.user_invite import user_invite_redeem_many
+from ..types import UserEventType
 
 
 def _user_create(
