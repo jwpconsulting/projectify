@@ -23,6 +23,7 @@ image types are PNG and JPEG.
   a regression in sanitization behavior.
 - Fix broken checkbox in admin caused by improperly overriding checkbox.html
   widget
+- Fix outdated product screenshots
 
 ### Internal
 

@@ -260,7 +260,7 @@ class Command(BaseCommand):
             f"{base_url}{reverse('dashboard:projects:detail', kwargs={'project_uuid': self.in_progress_project.uuid})}"
         )
         self.remove_debug_toolbar(driver)
-        project_main_selector = 'div[role="presentation"] main'
+        project_main_selector = "main #project-tasks"
         in_progress_element = wait.until(
             EC.presence_of_element_located(
                 (By.CSS_SELECTOR, project_main_selector)
@@ -270,23 +270,12 @@ class Command(BaseCommand):
             str(output_directory / "development-teams-tasks.png")
         )
 
-        # project management solutions team member filter
-        team_member_filters_selector = "#team-member-filters"
-        team_member_filters_element = wait.until(
-            EC.presence_of_element_located(
-                (By.CSS_SELECTOR, team_member_filters_selector)
-            )
-        )
-        team_member_filters_element.screenshot(
-            str(output_directory / "project-management-team-member.png")
-        )
-
         # project management solutions permissions screen
         driver.get(
             f"{base_url}{reverse('dashboard:workspaces:team-members', kwargs={'workspace_uuid': self.workspace.uuid})}"
         )
         self.remove_debug_toolbar(driver)
-        team_members_selector = 'div[role="presentation"] main'
+        team_members_selector = "main#main"
         team_members_element = wait.until(
             EC.presence_of_element_located(
                 (By.CSS_SELECTOR, team_members_selector)
@@ -295,6 +284,30 @@ class Command(BaseCommand):
         team_members_element.screenshot(
             str(output_directory / "project-management-permissions.png")
         )
+
+    def make_firefox_options(self) -> Options:
+        """Create Firefox options with telemetry and ping services disabled."""
+        firefox_options = Options()
+        firefox_options.add_argument("--headless")
+        firefox_options.set_preference("toolkit.telemetry.enabled", False)
+        firefox_options.set_preference("toolkit.telemetry.unified", False)
+        firefox_options.set_preference("toolkit.telemetry.server", "")
+        firefox_options.set_preference(
+            "toolkit.telemetry.newProfilePing.enabled", False
+        )
+        firefox_options.set_preference(
+            "toolkit.telemetry.shutdownPingSender.enabled", False
+        )
+        firefox_options.set_preference(
+            "toolkit.telemetry.updatePing.enabled", False
+        )
+        firefox_options.set_preference(
+            "toolkit.telemetry.bhrPing.enabled", False
+        )
+        firefox_options.set_preference(
+            "toolkit.telemetry.firstShutdownPing.enabled", False
+        )
+        return firefox_options
 
     def add_arguments(self, parser: Any) -> None:
         """Add command arguments."""
@@ -317,18 +330,15 @@ class Command(BaseCommand):
         output_directory = Path("projectify/storefront/static/solutions")
         output_directory.mkdir(parents=True, exist_ok=True)
 
-        firefox_options = Options()
-        firefox_options.add_argument("--headless")
-        driver = None
+        firefox_options = self.make_firefox_options()
+        driver = webdriver.Firefox(options=firefox_options)
+        driver.set_window_size(1024, 1920)
 
         try:
             self.create_test_data()
-            driver = webdriver.Firefox(options=firefox_options)
-            driver.set_window_size(1024, 1920)
             self.take_screenshot(
                 driver, base_url=url, output_directory=output_directory
             )
         finally:
             self.cleanup_test_data()
-            if driver:
-                driver.quit()
+            driver.quit()

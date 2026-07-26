@@ -66,22 +66,7 @@
                 {% endif %}
             </div>
             <div class="h-[300px] flex flex-row items-center overflow-hidden">
-                <div class="relative rounded-lg transform -rotate-12 h-48 flex flex-row items-center p-4">
-                    <div class="absolute h-0.5 w-[96px] bg-primary opacity-10 transform -skew-x-12 left-[0%] top-[5%]"></div>
-                    <div class="absolute h-0.25 w-[80px] bg-primary opacity-10 transform -skew-x-12 left-[9%] top-[85%]"></div>
-                    <div class="absolute h-0.5 w-[112px] bg-primary opacity-10 transform -skew-x-12 left-[18%] top-[15%]"></div>
-                    <div class="absolute h-0.5 w-[64px] bg-primary opacity-10 transform -skew-x-12 left-[27%] top-[90%]"></div>
-                    <div class="absolute h-0.5 w-[128px] bg-primary opacity-10 transform -skew-x-12 left-[36%] top-[10%]"></div>
-                    <div class="absolute h-0.25 w-[88px] bg-primary opacity-10 transform -skew-x-12 left-[45%] top-[75%]"></div>
-                    <div class="absolute h-0.5 w-[104px] bg-primary opacity-10 transform -skew-x-12 left-[54%] top-[95%]"></div>
-                    <div class="absolute h-0.5 w-[72px] bg-primary opacity-10 transform -skew-x-12 left-[63%] top-[20%]"></div>
-                    <div class="absolute h-0.5 w-[120px] bg-primary opacity-10 transform -skew-x-12 left-[72%] top-[80%]"></div>
-                    <div class="absolute h-0.5 w-[96px] bg-primary opacity-10 transform -skew-x-12 left-[81%] top-[25%]"></div>
-                    <div class="absolute h-0.5 w-[80px] bg-primary opacity-10 transform -skew-x-12 left-[90%] top-[70%]"></div>
-                    <div class="absolute h-0.5 w-[96px] bg-primary opacity-10 transform -skew-x-12 left-[10%] top-[55%]"></div>
-                    <div class="absolute h-0.5 w-[80px] bg-primary opacity-10 transform -skew-x-12 left-[90%] top-[70%]"></div>
-                    {% picture src="solutions/development-teams-tasks.png" alt=_("An illustration showing the look and feel of tasks in Projectify's user interface") klass="relative z-10 shadow-lg" fetchpriority="high" %}
-                </div>
+                {% picture src="solutions/development-teams-tasks.png" alt=_("An illustration showing the look and feel of tasks in Projectify's user interface") fetchpriority="high" %}
             </div>
         </section>
         <div class="w-full p-6 max-w-4xl flex flex-col gap-16">
@@ -94,37 +79,15 @@
                 </p>
             </section>
             <section class="flex flex-col gap-8">
-                <div class="flex flex-col gap-16">
-                    <section class="flex flex-col items-center gap-6 md:grid grid-cols-2">
-                        <div class="flex flex-col gap-6 order-last md:order-none">
-                            <h3 class="text-2xl font-bold md:text-4xl">{% trans "Plan and execute" %}</h3>
-                            <p>{% trans "Set up and monitor features, QA tasks, bug fixes and more for multiple team members of your team." %}</p>
-                        </div>
-                        <div class="w-full max-w-lg justify-self-center">
-                            {% picture src="solutions/development-teams-tasks.png" alt=_("An illustration showing tasks in a section called 'In Progress'") %}
-                        </div>
-                    </section>
-                </div>
                 <section class="flex flex-col items-center gap-6 md:grid grid-cols-2">
                     <div class="w-full max-w-lg justify-self-center">
-                        {% picture src="solutions/project-management-team-member.png" alt=_("An illustration showing how Projectify displays each team members assigned task count") %}
+                        {% picture src="solutions/project-management-permissions.png" alt=_("An illustration of a settings screen showing team members belonging to a team member and their role within the workspace. The illustration also shows a button allowing filtering by role and another button letting a user invite new team members") %}
                     </div>
-                    <div class="flex flex-col gap-6 order-last md:order-none">
-                        <h3 class="text-2xl font-bold md:text-4xl">{% trans "An ethical approach to management" %}</h3>
-                        <p>
-                            {% trans "View how many tasks a team member has assigned to them, so the workload can be divided equally. Filter by team member to see what individual colleagues are working on." %}
-                        </p>
-                    </div>
-                </section>
-                <section class="flex flex-col items-center gap-6 md:grid grid-cols-2">
                     <div class="flex flex-col gap-6 order-last md:order-none">
                         <h3 class="text-2xl font-bold md:text-4xl">{% trans "Permissions to control access" %}</h3>
                         <p>
                             {% trans "Make sure nothing important gets deleted. With permission roles - Owner, Maintainer, Contributor and Observer, you can be safe in knowing there won't be any accidental data loss." %}
                         </p>
-                    </div>
-                    <div class="w-full max-w-lg justify-self-center">
-                        {% picture src="solutions/project-management-permissions.png" alt=_("An illustration of a settings screen showing team members belonging to a team member and their role within the workspace. The illustration also shows a button allowing filtering by role and another button letting a user invite new team members") %}
                     </div>
                 </section>
             </section>
