@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2023 JWP Consulting GK
 """Internal services, not user facing."""
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Literal, NewType, Optional
 
 from django.contrib.auth.hashers import make_password
@@ -12,7 +12,6 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.http import HttpRequest
 from django.utils.timezone import now
 
-from projectify.lib.settings import get_settings
 from projectify.user.models import User, UserEvent, UserEventType
 from projectify.user.services.user_invite import user_invite_redeem_many
 
@@ -179,11 +178,3 @@ def user_event_log(
         user_agent=request.headers["User-Agent"],
     )
     return event
-
-
-def user_event_clean() -> None:
-    """Clean old user events according to retention period."""
-    settings = get_settings()
-    cutoff = now() - timedelta(seconds=settings.USER_EVENT_RETENTION_PERIOD)
-    old = UserEvent.objects.filter(created__lt=cutoff)
-    old.delete()
