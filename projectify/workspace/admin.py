@@ -36,7 +36,7 @@ class TeamMemberInline(admin.TabularInline[TeamMember]):
         return super().get_queryset(request).select_related("user")
 
     # https://docs.djangoproject.com/en/6.0/ref/contrib/admin/#django.contrib.admin.ModelAdmin.view_on_site
-    def view_on_site(self, obj: TeamMember) -> str:
+    def view_on_site(self, obj: TeamMember) -> str:  # type: ignore[override]
         """Return a link to the user's admin change page."""
         return reverse("admin:user_user_change", args=[obj.user.pk])
 
