@@ -2192,6 +2192,10 @@ video {
   animation-delay: 1s;
 }
 
+.last\:border-0:last-child {
+  border-width: 0px;
+}
+
 .open\:flex[open] {
   display: flex;
 }

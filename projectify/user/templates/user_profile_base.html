@@ -6,14 +6,16 @@
     {% include "common/navigation/header/dashboard.html" %}
 {% endblock storefront_header %}
 {% block storefront_content %}
-    <div class="flex h-full flex-col items-center bg-background p-8">
-        <div class="w-full max-w-lg">
-            <div class="flex flex-col gap-4">
-                <h1 class="text-2xl font-bold">{% trans "User account settings" %}</h1>
-                <div class="flex flex-col gap-12 rounded-lg bg-foreground p-4">
-                    {% block user_profile_content %}
-                    {% endblock user_profile_content %}
-                </div>
+    <div class="flex grow flex-col items-center bg-background p-8">
+        <div class="w-full max-w-lg flex flex-col gap-4">
+            <h1 class="text-2xl font-bold">
+                {% block user_profile_title %}
+                    {% trans "User account settings" %}
+                {% endblock user_profile_title %}
+            </h1>
+            <div class="flex flex-col gap-12 rounded-lg bg-foreground p-4">
+                {% block user_profile_content %}
+                {% endblock user_profile_content %}
             </div>
         </div>
     </div>

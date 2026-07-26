@@ -10,8 +10,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ### Enhancement
 
-- Help the user upload images with more confidence by changing the image
-  upload file picker to only accept PNG or JPEG files.
+- Upload images with more confidence: Image upload file pickers only let
+you select the image types that Projectify accepts. At the moment, the
+image types are PNG and JPEG.
+- Review your account activity in your user profile settings. Go to Profile
+  and open the "Review account activity" page.
 
 ### Fixed
 

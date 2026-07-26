@@ -15,10 +15,10 @@ import pytest
 from faker import Faker
 
 from projectify.settings.base import Base
-from projectify.user.services.internal import user_make_token
 from pytest_types import DjangoAssertNumQueries
 
-from ...models import User
+from ...models import User, UserEvent
+from ...services.internal import user_make_token
 
 pytestmark = pytest.mark.django_db
 
@@ -94,6 +94,23 @@ class TestUserProfile:
 
         user.refresh_from_db()
         assert not user.profile_picture
+
+
+class TestUserAccountActivity:
+    """Test user_account_activity view."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("users:account-activity")
+
+    def test_get(
+        self, user_client: Client, resource_url: str, user_event: UserEvent
+    ) -> None:
+        """Test that the account activity page is accessible."""
+        response = user_client.get(resource_url)
+        assert response.status_code == 200
+        assert b"log in" in response.content
 
 
 class TestUserProfilePicture:

@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2022-2024 JWP Consulting GK
 """User app user model views."""
 
+from datetime import timedelta
 from typing import Any
 
 from django import forms
@@ -26,7 +27,7 @@ from projectify.lib.forms import SafeImageField, populate_form_with_errors
 from projectify.lib.settings import get_settings
 from projectify.lib.types import AuthenticatedHttpRequest
 from projectify.lib.views import platform_view
-from projectify.user.models import User
+from projectify.user.models import User, UserEvent
 from projectify.user.services.internal import Token
 from projectify.user.services.user import (
     user_change_password,
@@ -86,6 +87,10 @@ class UserProfileForm(forms.ModelForm):
 def user_profile(request: AuthenticatedHttpRequest) -> HttpResponse:
     """Show user profile."""
     user = request.user
+    settings = get_settings()
+    retention_days = timedelta(
+        seconds=settings.USER_EVENT_RETENTION_PERIOD
+    ).days
     match request.method:
         case "POST":
             form = UserProfileForm(
@@ -105,8 +110,22 @@ def user_profile(request: AuthenticatedHttpRequest) -> HttpResponse:
         case _:
             # XXX should never be hit because of require_http_methods
             raise BadRequest()
-    context = {"user": user, "form": form}
+    context = {"user": user, "form": form, "retention_days": retention_days}
     return render(request, "user/user_profile.html", context=context)
+
+
+@require_http_methods(["GET"])
+@platform_view
+def user_account_activity(request: AuthenticatedHttpRequest) -> HttpResponse:
+    """Show account activity for current user."""
+    user = request.user
+    settings = get_settings()
+    retention_days = timedelta(
+        seconds=settings.USER_EVENT_RETENTION_PERIOD
+    ).days
+    events = UserEvent.objects.filter(user=user).order_by("-created")
+    context = {"events": events, "retention_days": retention_days}
+    return render(request, "user/user_account_activity.html", context=context)
 
 
 @require_http_methods(["GET"])

@@ -85,6 +85,7 @@ class RichTextEditor(Textarea):
         css = {"all": ("trix/trix.css", "prose/prose.css")}
         js = ("trix/trix.umd.js", "prose/prose.js")
 
+
 # SPDX-SnippetEnd
 
 
