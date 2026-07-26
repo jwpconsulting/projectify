@@ -65,7 +65,7 @@ class WorkspaceAdmin(ReadOnlyAdmin[Workspace], admin.ModelAdmin[Workspace]):
 
     inlines = (ProjectInline, TeamMemberInline, TeamMemberInviteInline)
     list_display = ("title", "description", "created", "modified")
-    readonly_fields = ("uuid",)
+    readonly_fields = ("uuid", "customer")
     search_fields = ("title",)
     search_help_text = _("You can search by workspace title")
 
