@@ -26,8 +26,12 @@ from datetime import timezone as dt_timezone
 from pathlib import Path
 from uuid import UUID
 
+from django.contrib.auth.models import AnonymousUser
+from django.contrib.sessions.middleware import SessionMiddleware
 from django.core.files.base import File
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.http import HttpRequest
+from django.http.response import HttpResponse
 from django.test import RequestFactory
 from django.test.client import Client
 from django.utils import timezone
@@ -166,6 +170,26 @@ def redeemed_user_invite(faker: Faker) -> user_models.UserInvite:
 def user_event_headers() -> dict[str, str]:
     """Create HTTP request headers that work with user event logs."""
     return {"REMOTE_ADDR": "127.0.0.1", "USER-AGENT": "projectify-test/1"}
+
+
+@pytest.fixture
+def session_middleware() -> SessionMiddleware:
+    """Create a session middleware instance."""
+    return SessionMiddleware(lambda _: HttpResponse())
+
+
+@pytest.fixture
+def session_request(
+    session_middleware: SessionMiddleware,
+    rf: RequestFactory,
+    user_event_headers: dict[str, str],
+) -> HttpRequest:
+    """Return a request with a session for testing."""
+    request = rf.get("/", headers=user_event_headers)
+    session_middleware.process_request(request)
+    request.session.save()
+    request.user = AnonymousUser()
+    return request
 
 
 @pytest.fixture
@@ -540,12 +564,8 @@ def null_uuid() -> UUID:
 
 
 @pytest.fixture
-def user_event(user: User) -> UserEvent:
+def user_event(user: User, session_request: HttpRequest) -> UserEvent:
     """Create a user event."""
-    factory = RequestFactory(
-        headers={"REMOTE_ADDR": "127.0.0.1", "User-Agent": "hello-world/1.0"}
-    )
-    request = factory.get("/")
     return user_event_log(
-        user=user, type=UserEventType.LOG_IN, request=request
+        user=user, type=UserEventType.LOG_IN, request=session_request
     )

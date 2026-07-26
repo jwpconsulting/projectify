@@ -127,26 +127,6 @@ def test_user_confirm_email(user: User, inactive_user: User) -> None:
     # TODO assert UserEvent.objects.count() == before + 1
 
 
-@pytest.fixture
-def session_middleware() -> SessionMiddleware:
-    """Create a session middlware instance."""
-    return SessionMiddleware(lambda _: HttpResponse())
-
-
-@pytest.fixture
-def session_request(
-    session_middleware: SessionMiddleware,
-    rf: RequestFactory,
-    user_event_headers: dict[str, str],
-) -> HttpRequest:
-    """Return a request containing a session needed to test auth."""
-    request = rf.get("/", headers=user_event_headers)
-    session_middleware.process_request(request)
-    request.session.save()
-    request.user = AnonymousUser()
-    return request
-
-
 def test_user_log_in(
     user: User, password: str, session_request: HttpRequest
 ) -> None:
