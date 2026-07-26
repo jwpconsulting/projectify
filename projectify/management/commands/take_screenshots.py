@@ -260,7 +260,7 @@ class Command(BaseCommand):
             f"{base_url}{reverse('dashboard:projects:detail', kwargs={'project_uuid': self.in_progress_project.uuid})}"
         )
         self.remove_debug_toolbar(driver)
-        project_main_selector = 'div[role="presentation"] main'
+        project_main_selector = "main #project-tasks"
         in_progress_element = wait.until(
             EC.presence_of_element_located(
                 (By.CSS_SELECTOR, project_main_selector)
@@ -270,23 +270,12 @@ class Command(BaseCommand):
             str(output_directory / "development-teams-tasks.png")
         )
 
-        # project management solutions team member filter
-        team_member_filters_selector = "#team-member-filters"
-        team_member_filters_element = wait.until(
-            EC.presence_of_element_located(
-                (By.CSS_SELECTOR, team_member_filters_selector)
-            )
-        )
-        team_member_filters_element.screenshot(
-            str(output_directory / "project-management-team-member.png")
-        )
-
         # project management solutions permissions screen
         driver.get(
             f"{base_url}{reverse('dashboard:workspaces:team-members', kwargs={'workspace_uuid': self.workspace.uuid})}"
         )
         self.remove_debug_toolbar(driver)
-        team_members_selector = 'div[role="presentation"] main'
+        team_members_selector = "main#main"
         team_members_element = wait.until(
             EC.presence_of_element_located(
                 (By.CSS_SELECTOR, team_members_selector)
