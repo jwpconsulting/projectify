@@ -231,6 +231,7 @@ def go_to_action(
     icon_style: Optional[str] = None,
     style: Literal["primary", "secondary", "destructive"] = "secondary",
     justify_left: bool = False,
+    grow: bool = False,
     *args: Any,
     **kwargs: Any,
 ) -> SafeText:
@@ -251,14 +252,16 @@ def go_to_action(
     }
 
     justify_class = "justify-start" if justify_left else "justify-center"
+    width_class = "w-full " if grow else "min-w-max "
 
     return format_html(
-        '<a href="{url}"{title} class="{color_classes} text-base flex min-w-max flex-row {justify_class} gap-2 rounded-lg px-4 py-2 font-bold">{icon}<span class="truncate">{label}</span></a>',
+        '<a href="{url}"{title} class="{color_classes} text-base flex {width_class}flex-row {justify_class} gap-2 rounded-lg px-4 py-2 font-bold">{icon}<span class="truncate">{label}</span></a>',
         url=url,
         title=format_html(' title="{title}"', title=title)
         if title is not None
         else "",
         color_classes=color_classes[style],
+        width_class=width_class,
         justify_class=justify_class,
         icon=icon(icon_style, style, 6) if icon_style else "",
         label=label,
