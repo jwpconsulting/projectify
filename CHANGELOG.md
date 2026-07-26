@@ -21,6 +21,8 @@ image types are PNG and JPEG.
 - Fix storefront URLs not rendering by adjusting HTML sanitization
   configuration. Projectify's migration from bleach to JustHTML introduced
   a regression in sanitization behavior.
+- Fix broken checkbox in admin caused by improperly overriding checkbox.html
+  widget
 
 ### Internal
 
