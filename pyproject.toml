@@ -115,7 +115,7 @@ source-exclude = ["projectify/*/test"]
 wheel-exclude = ["projectify/*/test"]
 
 [build-system]
-requires = ["uv_build>=0.9.29,<0.10.0"]
+requires = ["uv_build>=0.9.29,<0.12"]
 build-backend = "uv_build"
 
 [tool.ruff]
