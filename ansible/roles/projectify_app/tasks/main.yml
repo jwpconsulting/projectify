@@ -236,6 +236,26 @@
   tags:
     - media
 
+- name: Configure Projectify environment file
+  block:
+    - name: Create projectify config directory
+      ansible.builtin.file:
+          path: /etc/projectify
+          state: directory
+          owner: root
+          group: root
+          mode: '0755'
+    - name: Copy projectify environment file
+      ansible.builtin.template:
+          src: projectify.env.j2
+          dest: /etc/projectify/projectify.env
+          owner: root
+          group: root
+          mode: '0644'
+      register: projectify_env_file
+  tags:
+    - projectify
+
 - name: Check out Projectify
   block:
     - name: Clone Projectify repository to temporary location
@@ -377,7 +397,7 @@
           name: gunicorn.service
           enabled: true
           state: restarted
-      when: new_release | default(false)
+      when: (new_release | default(false)) or projectify_env_file.changed
     - name: Check gunicorn health
       ansible.builtin.command:
           cmd: curl --unix-socket /run/gunicorn.sock {{ hostname }}

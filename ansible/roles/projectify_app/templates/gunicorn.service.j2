@@ -18,6 +18,7 @@ NotifyAccess=main
 User=projectify
 Group=projectify
 SupplementaryGroups=caddy
+EnvironmentFile=/etc/projectify/projectify.env
 WorkingDirectory={{ app_root }}
 ExecStart={{ venv_path }}/bin/python -m gunicorn --config {{ gunicorn_config_file }}
 ExecReload=/bin/kill -s HUP $MAINPID
