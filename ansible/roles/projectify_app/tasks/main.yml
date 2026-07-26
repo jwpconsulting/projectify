@@ -263,8 +263,8 @@
           name: projectify-daily-cron.timer
           enabled: true
           state: started
-    tags:
-      - projectify
+  tags:
+    - projectify
 
 - name: Check out Projectify
   block:
