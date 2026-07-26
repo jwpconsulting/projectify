@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: 2026 JWP Consulting GK
+
+[Unit]
+Description=Projectify user event clean timer
+Requires=projectify-daily-cron.service
+
+[Timer]
+# Run once per day at midnight
+# From man systemd.time:
+# > daily → *-*-* 00:00:00
+OnCalendar=daily
+# When activated, it triggers the service immediately if it missed the last
+# start time (option Persistent=true), for example due to the system being
+# powered off[…]
+# https://wiki.archlinux.org/title/Systemd/Timers#:~:text=option%20Persistent%3Dtrue
+Persistent=true
+# Start with random delay
+# https://man.archlinux.org/man/systemd.timer.5#:~:text=209%2E-,RandomizedDelaySec
+RandomizedDelaySec=30s
+
+[Install]
+WantedBy=timers.target
