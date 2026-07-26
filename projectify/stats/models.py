@@ -18,6 +18,12 @@ class DailyCount(BaseModel):
     class Meta:
         """Meta options."""
 
+        # Speed up daily stats generation
+        indexes = [
+            models.Index(
+                fields=["date", "name"], name="stats_dailycount_date_and_name"
+            )
+        ]
         constraints = [
             models.UniqueConstraint(
                 fields=["name", "date"],
