@@ -54,8 +54,8 @@ def anchor(
     """
     extra: Union[SafeText, str]
     target: Union[SafeText, str]
-    match href:
-        case "":
+    match href, args, kwargs:
+        case "", _, _:
             raise ValueError("Empty href supplied")
         case str(), args, kwargs if len(args) == len(kwargs) == 0:
             try:
