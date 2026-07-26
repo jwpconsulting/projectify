@@ -22,7 +22,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 - Track user authentication and account related activities with 30 day
   retention period
 - Add cron-like job to delete user event data outside of retention period
-- Update user and workspace admin usability
+- Update user, corporate, and workspace admin usability
 
 ### Security
 
