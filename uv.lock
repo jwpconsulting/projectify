@@ -850,7 +850,7 @@ wheels = [
 
 [[package]]
 name = "projectify-app"
-version = "2026.6.8"
+version = "2026.7.26"
 source = { editable = "." }
 dependencies = [
     { name = "dj-database-url" },
