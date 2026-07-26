@@ -15,6 +15,8 @@ you select the image types that Projectify accepts. At the moment, the
 image types are PNG and JPEG.
 - Review your account activity in your user profile settings. Go to Profile
   and open the "Review account activity" page.
+- Filter out empty paragraphs and lines when editing project and task
+  descriptions
 
 ### Fixed
 
@@ -35,6 +37,10 @@ image types are PNG and JPEG.
 - Add cron-like job to delete user event data outside of retention period
 - Update user, corporate, and workspace admin usability
 - Summarize daily page hit counts
+- Remove unused code
+- Refactor base model structure
+- Refactor base template structure
+- Run full_clean() on all models
 
 ### Security
 
