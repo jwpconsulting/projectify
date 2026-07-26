@@ -307,15 +307,15 @@ class Base(Configuration):
     # Blog
     # ----
     # These are the names as returned by Pillow.Image.open().format
-    BLOG_ALLOWED_FILE_TYPES = {"PNG", "JPEG"}
+    BLOG_ALLOWED_FILE_TYPES = {"image/png", "image/jpeg"}
     # 1 MiB
     BLOG_ALLOWED_FILE_SIZE = 1 * 1024 * 1024
     # User pictures
-    USER_PROFILE_PICTURE_FILE_TYPES = {"PNG", "JPEG"}
+    USER_PROFILE_PICTURE_FILE_TYPES = {"image/png", "image/jpeg"}
     # 1 MiB
     USER_PROFILE_PICTURE_FILE_SIZE = 1 * 1024 * 1024
     # Workspace pictures
-    WORKSPACE_PICTURE_FILE_TYPES = {"PNG", "JPEG"}
+    WORKSPACE_PICTURE_FILE_TYPES = {"image/png", "image/jpeg"}
     # 1 MiB
     WORKSPACE_PICTURE_FILE_SIZE = 1 * 1024 * 1024
 
