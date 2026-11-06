@@ -148,6 +148,10 @@ Update the following entries:
 - `.circleci/config.yml`: Update Node.js Docker image version under `executors`
 - `README.md`: Udpate asdf instructions
 
+## Update NPM packages
+
+Run `npm audit` to find outdated packages
+
 # Formatting
 
 Format the Projectify code using [ruff](https://docs.astral.sh/ruff/) and
