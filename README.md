@@ -135,11 +135,18 @@ Updating PyJWT to version 2.12.1 results in the following diff for the `requirem
 When updating the Python version, update references to it in the following
 files:
 
-- `.circleci/config.yml`: Update Python Docker image versions
+- `.circleci/config.yml`: Update Python Docker image versions under `executors`
 - `pyproject.toml`:
   - `requires-python`
 - `uv.lock`: Run `uv lock`
 - `README.md`: Update asdf instructions
+
+# Update Node.js version
+
+Update the following entries:
+
+- `.circleci/config.yml`: Update Node.js Docker image version under `executors`
+- `README.md`: Udpate asdf instructions
 
 # Formatting
 
