@@ -94,7 +94,7 @@ Managing Python and Node.js versions is convenient using [asdf](https://asdf-vm.
 asdf plugin-add python
 asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
 asdf install python 3.13.18
-asdf install node.js 24.13.1
+asdf install node.js 26.13.0
 ```
 
 [Here's how to install asdf](https://asdf-vm.com/guide/getting-started.html)
