@@ -24,7 +24,8 @@
                 {% include "projectify/forms/submit.html" with name="action" value="invite" text=_("Invite team member") %}
             </form>
         {% endif %}
-        <h2 id="team-members-table-title" class="text-xl font-bold">{% trans "Team members" %}</h2>
+        <h2 id="team-members-table-title"
+            class="text-xl font-bold">{% trans "Team members" %}</h2>
         <table aria-labelledby="team-memberts-table-title"
                class="grid w-full grid-cols-[1fr_auto_auto] items-center gap-y-4">
             <thead class="contents">
@@ -77,7 +78,8 @@
         </table>
     </section>
     <section class="flex flex-col gap-4">
-        <h2 id="team-member-invites-table-title" class="text-xl font-bold">{% trans "Team member invites" %}</h2>
+        <h2 id="team-member-invites-table-title"
+            class="text-xl font-bold">{% trans "Team member invites" %}</h2>
         {% if workspace.active_invites %}
             <table aria-labelledby="team-member-invites-table-title"
                    class="grid w-full grid-cols-[1fr_auto_auto] items-center gap-y-4 gap-x-2">

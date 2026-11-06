@@ -50,11 +50,13 @@
         <div class="flex w-full flex-row items-center gap-1 px-4 py-1">
             {% icon "folder" size=4 %}
             {% translate "Your project" as project_title_default %}
-            <div id="project-title" class="max-w-xs line-clamp-1 min-w-0 font-bold">{{ project_title_default }}</div>
+            <div id="project-title"
+                 class="max-w-xs line-clamp-1 min-w-0 font-bold">{{ project_title_default }}</div>
         </div>
     </div>
     {# empty project contents #}
-    <div class="grow mx-4 p-4 rounded-lg flex flex-col border border-border gap-6 truncate"></div>
+    <div class="grow mx-4 p-4 rounded-lg flex flex-col border border-border gap-6 truncate">
+    </div>
     <script nonce="{{ csp_nonce }}">
         (() => {
             const titleInput = document.querySelector('input[name="title"]');

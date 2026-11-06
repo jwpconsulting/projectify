@@ -9,7 +9,8 @@
 {% endblock title %}
 {% block workspace_settings_content %}
     <section class="flex flex-col gap-2">
-        <h1 id="projects-table-title" class="font-bold text-lg">{% translate "Projects" %}</h1>
+        <h1 id="projects-table-title"
+            class="font-bold text-lg">{% translate "Projects" %}</h1>
         <table aria-labelledby="projects-table-title"
                class="grid w-full gap-x-2 gap-y-3 grid-cols-[3fr_max-content]">
             <thead class="contents">
@@ -50,7 +51,8 @@
                 {% endfor %}
             </tbody>
         </table>
-        <h1 id="archived-projects-table-title" class="font-bold text-lg">{% translate "Archived projects" %}</h1>
+        <h1 id="archived-projects-table-title"
+            class="font-bold text-lg">{% translate "Archived projects" %}</h1>
         <table aria-labelledby="archived-projects-table-title"
                class="grid w-full gap-x-2 gap-y-3 grid-cols-[3fr_max-content_max-content]">
             <thead class="contents">

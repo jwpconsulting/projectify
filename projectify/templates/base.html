@@ -38,8 +38,11 @@
             })
         </script>
         <link rel="icon" href="{% static 'favicon.ico' %}" sizes="32x32">
-        <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}">
+        <link rel="icon"
+              href="{% static 'favicon.svg' %}"
+              type="image/svg+xml">
+        <link rel="apple-touch-icon"
+              href="{% static 'apple-touch-icon.png' %}">
         <link rel="manifest" href="{% url "manifest" %}">
         <link rel="canonical" href="{{ request.build_absolute_uri }}">
         <link rel="sitemap"
@@ -54,7 +57,8 @@
         {% endblock structured_data %}
     </head>
     <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-        <a href="#main" class="sr-only">{% translate "Skip to main content" %}</a>
+        <a href="#main"
+           class="sr-only">{% translate "Skip to main content" %}</a>
         {% if debug %}
             {% include "common/navigation/header/development_view_bar.html" %}
         {% endif %}

@@ -8,7 +8,8 @@
 {% endblock title %}
 {% block workspace_settings_content %}
     <section class="flex flex-col gap-2">
-        <h1 class="text-xl font-bold" id="workspace-quotas-title">{% translate "Workspace quotas" %}</h1>
+        <h1 class="text-xl font-bold"
+            id="workspace-quotas-title">{% translate "Workspace quotas" %}</h1>
         <p>
             <strong>{% trans "Workspace status:" %}</strong>
             {% if workspace.quota.workspace_status == "full" %}

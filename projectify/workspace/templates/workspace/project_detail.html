@@ -88,7 +88,9 @@
                       hx-swap="outerHTML"
                       hx-disabled-elt="find button"
                       class="flex">
-                    <input type="hidden" name="task_uuid" value="{{ task.uuid }}">
+                    <input type="hidden"
+                           name="task_uuid"
+                           value="{{ task.uuid }}">
                     <input type="hidden"
                            name="done"
                            value="{% if task.done %}false{% else %}true{% endif %}">

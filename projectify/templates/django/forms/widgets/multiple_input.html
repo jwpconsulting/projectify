@@ -4,17 +4,16 @@
 {# SPDX-FileCopyrightText: Django Software Foundation and individual contributors. #}
 {% with id=widget.attrs.id %}
     <div class="grid grid-cols-[auto_max-content] items-center max-h-[320px] overflow-y-auto w-full"
-         {% if id %}id="{{ id }}"{% endif %}
-         {% if widget.attrs.class %}class="{{ widget.attrs.class }}"{% endif %}>
+         {% if id %}id="{{ id }}"{% endif %}>
         {% for group, options, index in widget.optgroups %}
             {% if group %}
                 <div class="flex items-center">
                     <label>{{ group }}</label>
-                {% endif %}
-                {% for option in options %}
-                    {% include option.template_name with widget=option %}
-                {% endfor %}
-                {% if group %}</div>{% endif %}
+            {% endif %}
+            {% for option in options %}
+                {% include option.template_name with widget=option %}
+            {% endfor %}
+            {% if group %}</div>{% endif %}
         {% endfor %}
     </div>
 {% endwith %}
