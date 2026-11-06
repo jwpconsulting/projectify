@@ -6,6 +6,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Changelog
 
+## 2026-11-6
+
+### Security
+
+- Update outdated dependencies
+
 ## 2026.7.26
 
 ### Enhancement
