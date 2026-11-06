@@ -130,6 +130,17 @@ Updating PyJWT to version 2.12.1 results in the following diff for the `requirem
     --hash=sha256:c74a7a2adf861c04d002db713dd85f84beb242228e671280bf709d765b03672b
 ```
 
+# Update Python version
+
+When updating the Python version, update references to it in the following
+files:
+
+- `.circleci/config.yml`: Update Python Docker image versions
+- `pyproject.toml`:
+  - `requires-python`
+- `uv.lock`: Run `uv lock`
+- `README.md`: Update asdf instructions
+
 # Formatting
 
 Format the Projectify code using [ruff](https://docs.astral.sh/ruff/) and
