@@ -12,7 +12,7 @@ keywords = [
     "free software",
     "projectify",
 ]
-requires-python = ">=3.12.12"
+requires-python = ">=3.13.18"
 readme = "README.md"
 license = "AGPL-3.0-or-later"
 license-files = [
@@ -31,7 +31,6 @@ dependencies = [
     # TODO make this a "hosted" only dependency
     "stripe>=8,<9",
     "django-sendfile2>=0.7.2",
-    "django-minify-compress-staticfiles>=1.1",
 ]
 authors = [
     { name = "The Projectify Authors", email = "hello@projectifyapp.com" },
@@ -91,7 +90,7 @@ test = [
     "django-types>=0,<1",
     "mypy>=1.10,<2",
     "pytest>=9,<10",
-    "pytest-cov>=5.0.0,<6",
+    "pytest-cov>=7.0.0,<8",
     "pytest-django~=4.5.2",
     "pytest-xdist[psutil]~=3.3.1",
     "vulture>=2.9.1,<3",

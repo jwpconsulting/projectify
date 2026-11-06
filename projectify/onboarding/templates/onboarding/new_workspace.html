@@ -40,7 +40,8 @@
         <div class="mx-4 px-4 flex items-center gap-2 font-bold border rounded p-2">
             {% icon "briefcase" size=4 %}
             {% translate "Your workspace" as workspace_title_default %}
-            <span id="workspace-title" class="max-w-xs truncate">{{ workspace_title_default }}</span>
+            <span id="workspace-title"
+                  class="max-w-xs truncate">{{ workspace_title_default }}</span>
         </div>
         <div class="mx-4 flex flex-row items-center justify-start text-utility gap-2">
             {% icon "folder" size=4 %}
@@ -53,7 +54,8 @@
         </div>
     </div>
     {# empty project contents #}
-    <div class="grow mx-4 p-4 rounded-lg flex flex-col border border-border gap-6 truncate"></div>
+    <div class="grow mx-4 p-4 rounded-lg flex flex-col border border-border gap-6 truncate">
+    </div>
     <script nonce="{{ csp_nonce }}">
         (() => {
             const titleInput = document.querySelector('input[name="title"]');

@@ -35,7 +35,7 @@ top right. Use these demo credentials:
 
 To develop with Projectify, you need the install these programs:
 
-- Python version 3.12 or greater
+- Python version 3.13 or greater
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)
 - [Node.js](https://nodejs.org/en/download) version 24 or greater
 
@@ -93,8 +93,8 @@ Managing Python and Node.js versions is convenient using [asdf](https://asdf-vm.
 ```bash
 asdf plugin-add python
 asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
-asdf install python 3.12.12
-asdf install node.js 24.13.1
+asdf install python 3.13.18
+asdf install node.js 26.13.0
 ```
 
 [Here's how to install asdf](https://asdf-vm.com/guide/getting-started.html)
@@ -129,6 +129,28 @@ Updating PyJWT to version 2.12.1 results in the following diff for the `requirem
     --hash=sha256:28ca37c070cad8ba8cd9790cd940535d40274d22f80ab87f3ac6a713e6e8454c \
     --hash=sha256:c74a7a2adf861c04d002db713dd85f84beb242228e671280bf709d765b03672b
 ```
+
+# Update Python version
+
+When updating the Python version, update references to it in the following
+files:
+
+- `.circleci/config.yml`: Update Python Docker image versions under `executors`
+- `pyproject.toml`:
+  - `requires-python`
+- `uv.lock`: Run `uv lock`
+- `README.md`: Update asdf instructions
+
+# Update Node.js version
+
+Update the following entries:
+
+- `.circleci/config.yml`: Update Node.js Docker image version under `executors`
+- `README.md`: Udpate asdf instructions
+
+## Update NPM packages
+
+Run `npm audit` to find outdated packages
 
 # Formatting
 

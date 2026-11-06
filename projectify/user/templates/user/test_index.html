@@ -23,7 +23,8 @@
         {% if user.is_authenticated %}
             {% anchor label="Log out first" href="users:log-out" %}
         {% else %}
-            <form method="post" action="{% url 'users-testing:email-confirm-test' %}">
+            <form method="post"
+                  action="{% url 'users-testing:email-confirm-test' %}">
                 {% csrf_token %}
                 {% include "projectify/forms/submit.html" with text="Go to Email Confirmation Test" %}
             </form>

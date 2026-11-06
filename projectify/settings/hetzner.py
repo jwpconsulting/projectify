@@ -9,9 +9,8 @@ import warnings
 from pathlib import Path
 from typing import Any
 
-from projectify.settings.collect_static import CollectStatic
-
 from .base import Base
+from .collect_static import CollectStatic
 from .types import StripeConfig
 
 

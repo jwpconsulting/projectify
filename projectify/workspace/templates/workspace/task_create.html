@@ -16,7 +16,9 @@
 {% endblock form_title %}
 {% block form_header %}
     {% include "workspace/task/breadcrumbs.html" with current_page_title=_("New task") current_page_href=request.path %}
-    <div class="grow-0">{% include "projectify/forms/submit.html" with text=_("Save") %}</div>
+    <div class="grow-0">
+        {% include "projectify/forms/submit.html" with text=_("Save") %}
+    </div>
 {% endblock form_header %}
 {% block form_content %}
     {{ form.as_p }}

@@ -12,7 +12,8 @@
           enctype="multipart/form-data"
           aria-labelledby="update-profile">
         {% csrf_token %}
-        <h2 id="update-profile" class="font-bold text-lg">{% translate "Update profile" %}</h2>
+        <h2 id="update-profile"
+            class="font-bold text-lg">{% translate "Update profile" %}</h2>
         {{ form.profile_picture.as_field_group }}
         {{ form.preferred_name.as_field_group }}
         {% include "projectify/forms/submit.html" with text=_("Save changes") %}

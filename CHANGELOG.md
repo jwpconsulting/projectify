@@ -6,6 +6,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Changelog
 
+## [Unreleased]
+
+### Internal
+
+- Update Python and Node.js versions
+- Clean up unused NPM packages
+- Remove django-minify-compress-staticfiles
+
 ## 2026.7.26
 
 ### Enhancement

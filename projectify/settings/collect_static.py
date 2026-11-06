@@ -17,8 +17,7 @@ class CollectStatic(Base):
 
     STORAGES = {
         "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
-        # Caddy serves static files
         "staticfiles": {
-            "BACKEND": "django_minify_compress_staticfiles.storage.MinicompressStorage"
+            "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
         },
     }

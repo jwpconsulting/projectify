@@ -7,7 +7,8 @@
       title="{% translate "Workspace search form" %}"
       action="{% url 'dashboard:workspaces:search' workspace_uuid=workspace.uuid %}"
       class="shrink-0 flex max-w-md flex-row gap-2 items-center">
-    <label for="{{ form.query.id_for_label }}" class="sr-only">{{ form.query.label }}</label>
+    <label for="{{ form.query.id_for_label }}"
+           class="sr-only">{{ form.query.label }}</label>
     {{ form.query }}
     {% action_button icon="search" grow=False text=_("Search") type="submit" %}
 </form>

@@ -61,13 +61,13 @@
 {% endpartialdef task_panel %}
 {% partialdef task_inline %}
     {% has_perm "workspace.update_task" user task.workspace as can_update_task %}
-    <main id="main" class="min-w-0 grow flex h-full flex-col p-4 py-8 gap-8">
+    <div class="min-w-0 grow flex h-full flex-col p-4 py-8 gap-8">
         {% partial breadcrumbs %}
         {% if can_update_task %}
             {% go_to_action "dashboard:tasks:update" label=_("Edit task") title=_("Edit this task") task_uuid=task.uuid %}
         {% endif %}
         <div class="flex flex-col gap-8">{% partial task_panel %}</div>
-    </main>
+    </div>
 {% endpartialdef task_inline %}
 {% block dashboard_content %}
     {% has_perm "workspace.update_task" user task.workspace as can_update_task %}
