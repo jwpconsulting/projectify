@@ -35,7 +35,7 @@ top right. Use these demo credentials:
 
 To develop with Projectify, you need the install these programs:
 
-- Python version 3.12 or greater
+- Python version 3.13 or greater
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)
 - [Node.js](https://nodejs.org/en/download) version 24 or greater
 
@@ -93,7 +93,7 @@ Managing Python and Node.js versions is convenient using [asdf](https://asdf-vm.
 ```bash
 asdf plugin-add python
 asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
-asdf install python 3.12.12
+asdf install python 3.13.18
 asdf install node.js 24.13.1
 ```
 

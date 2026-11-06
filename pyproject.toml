@@ -12,7 +12,7 @@ keywords = [
     "free software",
     "projectify",
 ]
-requires-python = ">=3.12.12"
+requires-python = ">=3.13.18"
 readme = "README.md"
 license = "AGPL-3.0-or-later"
 license-files = [
