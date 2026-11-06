@@ -3,8 +3,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 version: 2.1
-orbs:
-  cli: circleci/circleci-cli@0.1.9
 executors:
   node:
     docker:
@@ -124,12 +122,9 @@ jobs:
       - run:
           name: Create junit folder
           command: mkdir junit
-      - cli/install
       - run:
           name: Collect tests and run pytest
-          command: |
-            TEST_FILES=$(circleci tests glob "projectify/**/test_*.py" | circleci tests split --split-by=timings)
-            uv run pytest --junitxml=test-results/junit.xml $TEST_FILES
+          command: uv run pytest --junitxml=test-results/junit.xml -n auto
       - store_test_results:
           path: test-results
       - store_artifacts:
