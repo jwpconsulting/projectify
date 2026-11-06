@@ -221,7 +221,7 @@ def socialaccount_signup_test(request: HttpRequest) -> HttpResponse:
     # DefaultSocialAccountAdapter:list_apps()
     # https://github.com/pennersr/django-allauth/blob/cf7f55d79e421e5d5ba078e31119a799f8b149e8/allauth/socialaccount/adapter.py#L262
     app = SocialApp(provider="openid_connect", client_id="test.id")
-    provider = OpenIDConnectProvider(request, app=app)  # type: ignore
+    provider = OpenIDConnectProvider(request, app=app)
     test_email = f"test-new-{secrets.token_hex(8)}@example.com"
     user = User(email=test_email)
     user.set_unusable_password()
