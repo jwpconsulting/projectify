@@ -32,7 +32,7 @@ read -r _
 eval "$next_cmd"
 
 branch_name=$(git rev-parse --abbrev-ref HEAD)
-next_cmd=$(printf 'git push --setup-upstreadm origin %s' "$branch_name")
+next_cmd=$(printf 'git push --set-upstream origin %s' "$branch_name")
 printf "about to run %s\nContinue? (c-c to exit)" "$next_cmd"
 read -r _
 eval "$next_cmd"
