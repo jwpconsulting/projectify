@@ -86,7 +86,11 @@ class Development(Base):
     CSRF_COOKIE_SECURE = False
 
     # Email
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    MAILERS = {
+        "default": {
+            "BACKEND": "django.core.mail.backends.console.EmailBackend"
+        }
+    }
     SERVER_EMAIL = "hello@projectifyapp.com"
 
     # Static files

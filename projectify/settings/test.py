@@ -41,7 +41,11 @@ class Test(Base):
     SENDFILE_BACKEND = "django_sendfile.backends.simple"
 
     # Email
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    MAILERS = {
+        "default": {
+            "BACKEND": "django.core.mail.backends.console.EmailBackend"
+        }
+    }
 
     # django-ratelimit
     RATELIMIT_ENABLE = False

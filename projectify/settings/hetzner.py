@@ -205,24 +205,29 @@ class Hetzner(Base):
         """Load SMTP mail configuration."""
         keys = "EMAIL_HOST", "EMAIL_HOST_USER", "EMAIL_HOST_PASSWORD"
         if all(key in credentials for key in keys):
-            cls.EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-            # If you're using Lettermint, this is smtp.lettermint.co
-            cls.EMAIL_HOST = credentials["EMAIL_HOST"]
             # Force implicit TLS, see also
             # https://lettermint.co/docs/guides/send-email-with-smtp#available-ports
             email_port = credentials.get("EMAIL_PORT", 465)
             if not isinstance(email_port, int):
                 raise RuntimeError(
-                    f"EMAIL_PORT must be an integer, received {email_port} ({type(email_port)})"
+                    "Environment variable EMAIL_PORT must be an integer, "
+                    f"you've set EMAIL_PORT={email_port} (a {type(email_port)})"
                 )
-            cls.EMAIL_PORT = email_port
-            # Conditionally set explicit/implicit TLS settings
-            cls.EMAIL_USE_TLS = email_port == 587
-            cls.EMAIL_USE_SSL = email_port == 465
-            # If you're using Lettermint, the user is lettermint
-            cls.EMAIL_HOST_USER = credentials["EMAIL_HOST_USER"]
-            # On Lettermint, this is your API token
-            cls.EMAIL_HOST_PASSWORD = credentials["EMAIL_HOST_PASSWORD"]
+            cls.MAILERS["default"] = {
+                "BACKEND": "django.core.mail.backends.smtp.EmailBackend",
+                "OPTIONS": {
+                    # If you're using Lettermint, this is smtp.lettermint.co
+                    "host": credentials["EMAIL_HOST"],
+                    "port": email_port,
+                    # Conditionally set explicit/implicit TLS settings
+                    "use_tls": email_port == 587,
+                    "use_ssl": email_port == 465,
+                    # If you're using Lettermint, the user is lettermint
+                    "username": credentials["EMAIL_HOST_USER"],
+                    # On Lettermint, this is your API token
+                    "password": credentials["EMAIL_HOST_PASSWORD"],
+                },
+            }
         else:
             raise RuntimeError(
                 f"You must specify the SMTP configuration in {credentials_file}"
