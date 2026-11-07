@@ -27,7 +27,7 @@ class SocialAccountSignUpForm(SignupForm):
     # TODO call user_log_event
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Hide email field."""
-        super().__init__(*args, **kwargs)  # type: ignore[no-untyped-call]
+        super().__init__(*args, **kwargs)
         self.fields["email"].widget = forms.HiddenInput()
         # Copied in from
         # projectify/user/views/auth.py:SignUpForm
@@ -46,10 +46,10 @@ class SocialAccountSignUpForm(SignupForm):
     def clean_email(self) -> Any:
         """Make sure user can't mess with readonly."""
         data: str = self.cleaned_data["email"]
-        initial = get_adapter().get_signup_form_initial_data(self.sociallogin)  # type: ignore[no-untyped-call]
+        initial = get_adapter().get_signup_form_initial_data(self.sociallogin)
         initial_email = initial.get("email")
         if initial_email and data != initial_email:
             raise ValidationError(
                 _("Email must be: {email}").format(email=initial_email)
             )
-        return super().clean_email()  # type: ignore[no-untyped-call]
+        return super().clean_email()

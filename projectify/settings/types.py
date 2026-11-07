@@ -5,7 +5,15 @@
 
 from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Any, Mapping, NotRequired, Optional, TypedDict
+from typing import (
+    Any,
+    Literal,
+    Mapping,
+    NotRequired,
+    Optional,
+    TypedDict,
+    Union,
+)
 
 
 class TemplateConfig(TypedDict):
@@ -61,3 +69,32 @@ class StripeConfig:
     STRIPE_SECRET_KEY: str
     STRIPE_ENDPOINT_SECRET: str
     STRIPE_PRICE_OBJECT: str
+
+
+DjangoEmailBackendConfigOptions = TypedDict(
+    "DjangoEmailBackendConfigOptions",
+    {
+        "host": str,
+        "port": NotRequired[int],
+        "use_tls": NotRequired[bool],
+        "use_ssl": NotRequired[bool],
+        "username": NotRequired[str],
+        "password": NotRequired[str],
+        "ssl_certfile": NotRequired[str],
+        "ssl_keyfile": NotRequired[str],
+        "timeout": NotRequired[int],
+        "fail_silently": NotRequired[bool],
+    },
+)
+DjangoEmailBackendConfig = TypedDict(
+    "DjangoEmailBackendConfig",
+    {
+        "BACKEND": Literal["django.core.mail.backends.smtp.EmailBackend"],
+        "OPTIONS": DjangoEmailBackendConfigOptions,
+    },
+)
+DjangoEmailConsoleBackendConfig = TypedDict(
+    "DjangoEmailConsoleBackendConfig",
+    {"BACKEND": Literal["django.core.mail.backends.console.EmailBackend"]},
+)
+MailerConfig = Union[DjangoEmailBackendConfig, DjangoEmailConsoleBackendConfig]

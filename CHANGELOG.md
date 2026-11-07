@@ -6,13 +6,21 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Changelog
 
-## [Unreleased]
+## 2026.11.6
 
 ### Internal
 
 - Update Python and Node.js versions
 - Clean up unused NPM packages
 - Remove django-minify-compress-staticfiles
+- Use new Django MAILERS settings variable
+- Update `bin/prepare-release` command
+- Update djlint and re-format HTML files
+- Fix CircleCI tests from failing because of deprecated API
+
+### Security
+
+- Update outdated dependencies
 
 ## 2026.7.26
 

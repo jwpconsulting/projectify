@@ -43,7 +43,7 @@ def allauth_provider_info(request: HttpRequest) -> list[dict[str, str]]:
     result = []
     # Copied from get_providers in
     # allauth.socialaccount.templatetags.socialaccount
-    adapter = get_adapter()  # type: ignore[no-untyped-call]
+    adapter = get_adapter()
     providers: list[Provider] = adapter.list_providers(request)
     for provider in providers:
         if provider.app is None:

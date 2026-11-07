@@ -29,6 +29,7 @@ from configurations import Configuration
 
 from .monkeypatch import patch
 from .types import (
+    MailerConfig,
     SocialAccountProvider,
     StoragesConfig,
     StripeConfig,
@@ -371,13 +372,7 @@ class Base(Configuration):
     # https://docs.djangoproject.com/en/6.0/ref/settings/#email-subject-prefix
     EMAIL_SUBJECT_PREFIX = "[Projectify-Admin] "
     # SMTP credentials
-    EMAIL_BACKEND: str
-    EMAIL_HOST: str
-    EMAIL_PORT: int
-    EMAIL_HOST_USER: str
-    EMAIL_HOST_PASSWORD: str
-    EMAIL_USE_TLS: bool
-    EMAIL_USE_SSL: bool
+    MAILERS: dict[str, MailerConfig] = {}
 
     # Logging
     LOGGING: Any = {
