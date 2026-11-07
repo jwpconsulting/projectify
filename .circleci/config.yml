@@ -80,10 +80,10 @@ jobs:
       - prepare_uv
       - run:
           name: Run ruff format
-          command: uv run ruff format --check .
+          command: uv run ruff format --check src
       - run:
           name: Run ruff
-          command: uv run ruff check .
+          command: uv run ruff check src
   djlint:
     executor: python
     working_directory: ~/projectify
@@ -91,10 +91,10 @@ jobs:
       - prepare_uv
       - run:
           name: Run djlint --check
-          command: uv run djlint --check .
+          command: uv run djlint --check src
       - run:
           name: Run djlint --lint
-          command: uv run djlint --lint .
+          command: uv run djlint --lint src
   mypy:
     executor: python
     working_directory: ~/projectify
@@ -102,7 +102,7 @@ jobs:
       - prepare_uv
       - run:
           name: Run mypy
-          command: uv run mypy .
+          command: uv run mypy src
   collectstatic:
     executor: python
     working_directory: ~/projectify
@@ -113,10 +113,7 @@ jobs:
           command: bin/test_collectstatic.sh
   tests:
     executor: python_and_postgres
-    # TODO change to
-    # working_directory: ~/projectify
     working_directory: ~/projectify
-    parallelism: 8
     steps:
       - prepare_uv
       - run:

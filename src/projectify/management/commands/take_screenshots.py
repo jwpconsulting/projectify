@@ -45,10 +45,10 @@ from projectify.workspace.services.workspace import (
 )
 
 USER_AVATARS = [
-    Path("projectify/test/test-images/cat1.jpg"),
-    Path("projectify/test/test-images/cat2.jpg"),
-    Path("projectify/test/test-images/cat3.jpg"),
-    Path("projectify/test/test-images/cat4.jpg"),
+    Path("projectify/tests/test-images/cat1.jpg"),
+    Path("projectify/tests/test-images/cat2.jpg"),
+    Path("projectify/tests/test-images/cat3.jpg"),
+    Path("projectify/tests/test-images/cat4.jpg"),
 ]
 USER_NAMES = ["Rebecca Porter", "Joe Swish", "Fran Bauer", "Mina Kidane"]
 

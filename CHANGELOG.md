@@ -6,6 +6,18 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Fix broken static file serve in `projectify-demo` command by re-adding [whitenoise](https://whitenoise.readthedocs.io/en/stable/index.html)
+
+### Internal
+
+- Improve prepare-release command
+- Change project hierarchy to use `src/`
+- CircleCI: Fix forgotten parallelism setting
+
 ## 2026.11.6
 
 ### Internal

@@ -67,7 +67,7 @@ class Base(Configuration):
 
     SECRET_KEY: str
 
-    # Build paths inside the project like this: BASE_DIR / 'subdir'.
+    # Point at src/projectify
     BASE_DIR = Path(__file__).resolve().parent.parent
 
     # Used in admin site to show which environment we are using
