@@ -47,14 +47,11 @@ class StandaloneApplication(BaseApplication):  # type: ignore
 def _main(tmpdir: str) -> None:
     """Take tmpdir, run Projectify demo."""
     db_path = Path(tmpdir) / "demo.db"
-    static_path = Path(tmpdir) / "static"
 
     print(f"Creating temporary database at: {db_path}")
-    print(f"Creating temporary static files directory at: {static_path}")
 
     env = os.environ
     env["DATABASE_URL"] = f"sqlite:///{db_path}"
-    env["STATIC_ROOT"] = str(static_path)
     env["DJANGO_SETTINGS_MODULE"] = "projectify.settings.demo"
     env["DJANGO_CONFIGURATION"] = "Demo"
 
@@ -73,7 +70,7 @@ def _main(tmpdir: str) -> None:
     from projectify.wsgi import application
 
     StandaloneApplication(
-        application, {"bind": "127.0.0.1:8100", "workers": 1}
+        application, {"bind": "127.0.0.1:8100", "workers": 1, "accesslog": "-"}
     ).run()
 
 

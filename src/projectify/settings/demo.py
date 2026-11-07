@@ -3,11 +3,11 @@
 # SPDX-FileCopyrightText: 2026 JWP Consulting GK
 """Demo settings."""
 
-import os
 import secrets
+import tempfile
 from pathlib import Path
 
-from projectify.settings.base import Base
+from .base import Base
 
 
 class Demo(Base):
@@ -17,21 +17,21 @@ class Demo(Base):
 
     ALLOWED_HOSTS = ["localhost"]
 
-    # TODO remove when Svelte frontend is gone
     FRONTEND_URL = "http://localhost:8100"
 
-    # Static files
-    # We allow overriding this value in case the static files come prebuilt,
-    # for example in a container, and an exact path is contained in
-    # the STATIC_ROOT environment variable
-    STATIC_ROOT = (
-        Path(os.environ["STATIC_ROOT"])
-        if "STATIC_ROOT" in os.environ
-        else Base.STATIC_ROOT
-    )
+    MIDDLEWARE = [
+        "django.middleware.security.SecurityMiddleware",
+        "whitenoise.middleware.WhiteNoiseMiddleware",
+        # NOTE: this is a bit flaky and expects the 0th middleware to be
+        # the SecurityMiddleware
+        *Base.MIDDLEWARE[1:],
+    ]
 
     @classmethod
     def setup(cls) -> None:
         """Set up one-time secret key."""
         super().setup()
         cls.SECRET_KEY = secrets.token_hex(32)
+        tmpdir = Path(tempfile.mkdtemp())
+        cls.STATIC_ROOT = tmpdir / "staticfiles"
+        cls.MEDIA_ROOT = tmpdir / "media"
