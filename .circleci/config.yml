@@ -113,10 +113,7 @@ jobs:
           command: bin/test_collectstatic.sh
   tests:
     executor: python_and_postgres
-    # TODO change to
-    # working_directory: ~/projectify
     working_directory: ~/projectify
-    parallelism: 8
     steps:
       - prepare_uv
       - run:

@@ -16,6 +16,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 - Improve prepare-release command
 - Change project hierarchy to use `src/`
+- CircleCI: Fix forgotten parallelism setting
 
 ## 2026.11.6
 
