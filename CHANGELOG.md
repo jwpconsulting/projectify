@@ -6,6 +6,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Changelog
 
+## Unreleased
+
+### Internal
+
+- Improve prepare-release command
+
 ## 2026.11.6
 
 ### Internal
