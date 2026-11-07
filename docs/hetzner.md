@@ -554,7 +554,7 @@ sudo -u projectify \
     DJANGO_CONFIGURATION=Hetzner \
     STATIC_ROOT=$PWD/../static \
     MEDIA_ROOT=/var/lib/projectify/state/media \
-    DATABASE_URL=postgresql://projectify@localhost/projectify \
+    DATABASE_URL=postgres://%2Frun%2Fpostgresql/projectify \
     CREDENTIALS_FILE=/var/lib/projectify/credentials.toml \
     ../venv/bin/python ./manage.py shell
 ```
