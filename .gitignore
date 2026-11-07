@@ -9,30 +9,30 @@
 
 # Direnv, Dotenv
 # --------------
-.direnv/
-.env
-.env.*
-!.env.template
+/.direnv/
+/.env
+/.env.*
+/!.env.template
 
 # NPM
-node_modules/
+/node_modules/
 
 # Backend
 # =======
-projectify/media/
-projectify/staticfiles/
-**/__pycache__
-.mypy_cache/
-.coverage
-*.sqlite
+/media/
+/staticfiles/
+/src/**/__pycache__
+/.mypy_cache/
+/.coverage
+/*.sqlite
 
 # aspell stuff
 # ============
 *.bak
 
 # Nix build
-result*
+/result*
 
 # Ansible
 # =======
-ansible/inventory.*
+/ansible/inventory.*

@@ -71,8 +71,8 @@ POST_CONTENT_MAX_PARAGRAPHS = 15
 
 # Path constants
 BASE_DIR = get_settings().BASE_DIR
-SEEDDB_JSON = BASE_DIR / "test" / "seeddb.json"
-TEST_IMAGES_DIR = Path("projectify") / "test" / "test-images"
+SEEDDB_JSON = BASE_DIR / "tests" / "seeddb.json"
+TEST_IMAGES_DIR = Path("src") / "projectify" / "tests" / "test-images"
 USER_AVATARS = [
     TEST_IMAGES_DIR / c
     for c in ["cat1.jpg", "cat2.jpg", "cat3.jpg", "cat4.jpg"]

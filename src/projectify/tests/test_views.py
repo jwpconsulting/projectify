@@ -87,7 +87,7 @@ handler500 = urls.handler500
 csrf_failure = urls.csrf_failure
 
 
-@pytest.mark.urls("projectify.test.test_views")
+@pytest.mark.urls("projectify.tests.test_views")
 class Test400Error:
     """Test the 400 handler view."""
 
@@ -98,7 +98,7 @@ class Test400Error:
         assert b"Form validation failed" in response.content
 
 
-@pytest.mark.urls("projectify.test.test_views")
+@pytest.mark.urls("projectify.tests.test_views")
 class Test403Forbidden:
     """Test the 403 forbidden view."""
 
@@ -115,7 +115,7 @@ class Test403Forbidden:
         assert b"making too many requests" in response.content
 
 
-@pytest.mark.urls("projectify.test.test_views")
+@pytest.mark.urls("projectify.tests.test_views")
 class TestCsrfFailure:
     """Test the CSRF failure view."""
 
@@ -151,7 +151,7 @@ class Test404NotFound:
         assert caplog.text == ""
 
 
-@pytest.mark.urls("projectify.test.test_views")
+@pytest.mark.urls("projectify.tests.test_views")
 class Test500InternalServerError:
     """Test the 500 internal server error view."""
 

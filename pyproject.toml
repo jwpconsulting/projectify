@@ -109,9 +109,9 @@ module-name = [
     "configurations",
     "rules",
 ]
-module-root = ""
-source-exclude = ["projectify/*/test"]
-wheel-exclude = ["projectify/*/test"]
+# wheel-exclude derives from source-exclude, see
+# https://docs.astral.sh/uv/reference/settings/#build-backend_source-exclude
+source-exclude = ["pytest_types", "conftest.py", "*/tests/*", ".DS_Store"]
 
 [build-system]
 requires = ["uv_build>=0.9.29,<0.12"]
@@ -206,8 +206,7 @@ follow_untyped_imports = true
 
 [[tool.mypy.overrides]]
 module = [
-    "projectify.workspace.test.test_migrations",
-    "projectify.premail.test.*",
+    "projectify.premail.tests.*",
 ]
 disallow_untyped_defs = false
 

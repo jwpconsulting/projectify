@@ -11,6 +11,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 ### Internal
 
 - Improve prepare-release command
+- Change project hierarchy to use `src/`
 
 ## 2026.11.6
 

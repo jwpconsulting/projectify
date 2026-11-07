@@ -5,7 +5,7 @@
 # Note:
 # This script prefixes commands with `uv run`
 set -e
-target="${1-.}"
+target="${1-src}"
 echo "Testing $target"
 
 if uv run mypy "$target"
@@ -60,7 +60,7 @@ else
     exit 1
 fi
 
-if uv run vulture .
+if uv run vulture "$target"
 then
     echo "Vulture did not find any issues"
 else
